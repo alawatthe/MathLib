@@ -2,20 +2,20 @@ module('MathML');
 test('init', 2, function () {
   var mathML = MathLib.MathML('<matrix><matrixrow><cn>1</cn><cn>0</cn></matrixrow><matrixrow><cn>0</cn><cn>1</cn></matrixrow></matrix>'),
     test = function (node) {
-      var treeWalker = document.createTreeWalker(  
-          node,  
-          NodeFilter.SHOW_ELEMENT,  
-          { acceptNode: function(node) { return NodeFilter.FILTER_ACCEPT; } },  
-          false  
-      );  
-      var nodeList = [];  
+      var treeWalker = document.createTreeWalker(
+          node,
+          NodeFilter.SHOW_ELEMENT,
+          { acceptNode: function(node) { return NodeFilter.FILTER_ACCEPT; } },
+          false
+      );
+      var nodeList = [];
       while (treeWalker.nextNode()) {
         nodeList.push(treeWalker.currentNode.nodeName); 
       }
 
       return nodeList;
     };
-  
+
   equals(typeof mathML, 'object', 'Testing typeof the MathML');
   deepEqual(test(mathML), ['matrix', 'matrixrow', 'cn', 'cn', 'matrixrow', 'cn', 'cn'], 'Checking if the MathML was tokenized right.');
 });

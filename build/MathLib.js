@@ -8,9 +8,9 @@
 // see (<http://MathLib.de/en/license>)
 //
 // ## Documentation
-// The source code is annotated using [Docco](https://github.com/jashkenas/docco View Docco on GitHub)
+// The source code is annotated using [Docco](https://github.com/jashkenas/docco "View Docco on GitHub")
 // (with a modified css-file).
-// The syntax is more or less the JSDoc syntax.  
+// The syntax is more or less the JSDoc syntax.
 // A more detailed documentation will be coming soon.
 //
 //
@@ -18,202 +18,202 @@
 // The code is separated into several modules.
 // The first module contains some JavaScript-Polyfills
 //
-// Then there are some [functions](#section-8 "Jump to the functions").  
-// This module while be rewritten shortly. 
+// Then there are some [functions](#section-9 "Jump to the functions").
+// This module while be rewritten shortly.
 //
 // The drawing modules:
 //
-// - [screen](#section-17 "Jump to the screen implementation")
-// - [canvas](#section-25 "Jump to the canvas implementation")
-// - [svg](#section-38 "Jump to the svg implementation")
-// 
-// The next module is the [vector](#section-63 "Jump to the vector implementation") module, because the Point and the Line module 
+// - [screen](#section-18 "Jump to the screen implementation")
+// - [canvas](#section-26 "Jump to the canvas implementation")
+// - [svg](#section-39 "Jump to the svg implementation")
+//
+// The next module is the [vector](#section-64 "Jump to the vector implementation") module, because the Point and the Line module
 // depend on it.
 //
 // And at last the other modules in alphabetic order:
 //
-// - [circle](#section-83 "Jump to the circle implementation")
-// - [complex](#section-93 "Jump to the complex number implementation")
-// - [line](#section-135 "Jump to the line implementation")
-// - [MathML](#section-146 "Jump to the MathML implementation")
-// - [matrix](#section-158 "Jump to the matrix implementation")
-// - [permutation](#section-226 "Jump to the permutation implementation")
-// - [point](#section-239 "Jump to the point implementation")
-// - [polynomial](#section-261 "Jump to the polynomial implementation")
-// - [set](#section-291 "Jump to the set implementation")
-
-
-/*********************************************** 
-     Begin head.js 
-***********************************************/ 
+// - [circle](#section-84 "Jump to the circle implementation")
+// - [complex](#section-94 "Jump to the complex number implementation")
+// - [line](#section-136 "Jump to the line implementation")
+// - [MathML](#section-147 "Jump to the MathML implementation")
+// - [matrix](#section-159 "Jump to the matrix implementation")
+// - [permutation](#section-227 "Jump to the permutation implementation")
+// - [point](#section-240 "Jump to the point implementation")
+// - [polynomial](#section-262 "Jump to the polynomial implementation")
+// - [set](#section-292 "Jump to the set implementation")
 
 // Extending the Array prototype with some ES5 methods,
 // if the method isn't already there.
 // This are the 'official' snippets from MDN.
-if (!Array.prototype.every)  
-{  
-  Array.prototype.every = function(fun /*, thisp */)  
-  {  
-    "use strict";  
-  
-    if (this == null)  
-      throw new TypeError();  
-  
-    var t = Object(this);  
-    var len = t.length >>> 0;  
-    if (typeof fun != "function")  
-      throw new TypeError();  
-  
-    var thisp = arguments[1];  
-    for (var i = 0; i < len; i++)  
-    {  
-      if (i in t && !fun.call(thisp, t[i], i, t))  
-        return false;  
-    }  
-  
-    return true;  
-  };  
-}  
+if (!Array.prototype.every) {
+  Array.prototype.every = function(fun /*, thisp */) {
+    "use strict";
+
+    if (this == null) {
+      throw new TypeError();
+    }
+
+    var t = Object(this);
+    var len = t.length >>> 0;
+    if (typeof fun != "function") {
+      throw new TypeError();
+    }
+
+    var thisp = arguments[1];
+    for (var i = 0; i < len; i++) {
+      if (i in t && !fun.call(thisp, t[i], i, t)) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+}
 
 
 
-if (!Array.prototype.filter)  
-{  
-  Array.prototype.filter = function(fun /*, thisp */)  
-  {  
-    "use strict";  
-  
-    if (this == null)  
-      throw new TypeError();  
-  
-    var t = Object(this);  
-    var len = t.length >>> 0;  
-    if (typeof fun != "function")  
-      throw new TypeError();  
-  
-    var res = [];  
-    var thisp = arguments[1];  
-    for (var i = 0; i < len; i++)  
-    {  
-      if (i in t)  
-      {  
-        var val = t[i]; // in case fun mutates this  
-        if (fun.call(thisp, val, i, t))  
-          res.push(val);  
-      }  
-    }  
-  
-    return res;  
-  };  
-}  
+if (!Array.prototype.filter) {
+  Array.prototype.filter = function(fun /*, thisp */) {
+    "use strict";
+
+    if (this == null) {
+      throw new TypeError();
+    }
+
+    var t = Object(this);
+    var len = t.length >>> 0;
+    if (typeof fun != "function") {
+      throw new TypeError();
+    }
+
+    var res = [];
+    var thisp = arguments[1];
+    for (var i = 0; i < len; i++) {
+      if (i in t) {
+        var val = t[i]; // in case fun mutates this
+        if (fun.call(thisp, val, i, t)) {
+          res.push(val);
+        }
+      }
+    }
+
+    return res;
+  };
+}
 
 
-if ( !Array.prototype.forEach ) {  
-  Array.prototype.forEach = function( callback, thisArg ) {  
-    var T, k;  
-    if ( this == null ) {  
-      throw new TypeError( " this is null or not defined" );  
-    }  
-    var O = Object(this);  
+if ( !Array.prototype.forEach ) {
+  Array.prototype.forEach = function( callback, thisArg ) {
+    var T, k;
+    if ( this == null ) {
+      throw new TypeError( " this is null or not defined" );
+    }
+    var O = Object(this);
     var len = O.length >>> 0;
-    if ( {}.toString.call(callback) != "[object Function]" ) {  
-      throw new TypeError( callback + " is not a function" );  
-    }  
-    if ( thisArg ) {  
-      T = thisArg;  
-    }  
-    k = 0;  
-    while( k < len ) {  
-      var kValue;  
-      if ( k in O ) {  
-        kValue = O[ k ];  
-        callback.call( T, kValue, k, O );  
-      }  
-      k++;  
-    }  
-  };  
-}  
+    if ( {}.toString.call(callback) != "[object Function]" ) {
+      throw new TypeError( callback + " is not a function" );
+    }
+    if ( thisArg ) {
+      T = thisArg;
+    }
+    k = 0;
+    while( k < len ) {
+      var kValue;
+      if ( k in O ) {
+        kValue = O[ k ];
+        callback.call( T, kValue, k, O );
+      }
+      k++;
+    }
+  };
+}
 
 
-if (!Array.prototype.map) {  
-  Array.prototype.map = function(callback, thisArg) {  
-    var T, A, k;  
-    if (this == null) {  
-      throw new TypeError(" this is null or not defined");  
-    }  
-    var O = Object(this);  
-    var len = O.length >>> 0;  
-    if ({}.toString.call(callback) != "[object Function]") {  
-      throw new TypeError(callback + " is not a function");  
-    }  
-    if (thisArg) {  
-      T = thisArg;  
-    }  
-    A = new Array(len);  
-    k = 0;  
-    while(k < len) {  
-      var kValue, mappedValue;  
-      if (k in O) {  
-        kValue = O[ k ];  
-        mappedValue = callback.call(T, kValue, k, O);  
-        A[ k ] = mappedValue;  
-      }  
-      k++;  
-    }  
-    return A;  
-  };        
-}  
+if (!Array.prototype.map) {
+  Array.prototype.map = function(callback, thisArg) {
+    var T, A, k;
+    if (this == null) {
+      throw new TypeError(" this is null or not defined");
+    }
+    var O = Object(this);
+    var len = O.length >>> 0;
+    if ({}.toString.call(callback) != "[object Function]") {
+      throw new TypeError(callback + " is not a function");
+    }
+    if (thisArg) {
+      T = thisArg;
+    }
+    A = new Array(len);
+    k = 0;
+    while(k < len) {
+      var kValue, mappedValue;
+      if (k in O) {
+        kValue = O[ k ];
+        mappedValue = callback.call(T, kValue, k, O);
+        A[ k ] = mappedValue;
+      }
+      k++;
+    }
+    return A;
+  };
+}
 
 
-if (!Array.prototype.reduce) {  
-  Array.prototype.reduce = function reduce(accumulator){  
-    var i = 0, l = this.length >> 0, curr;  
-  
-    if(typeof accumulator !== "function") // ES5 : "If IsCallable(callbackfn) is false, throw a TypeError exception."  
-      throw new TypeError("First argument is not callable");  
-  
-    if(arguments.length < 2) {  
-      if (l === 0) throw new TypeError("Array length is 0 and no second argument");  
-      curr = this[0]; // Increase i to start searching the secondly defined element in the array  
-      i = 1; // start accumulating at the second element  
-    }  
-    else  
-      curr = arguments[1];  
-  
-    while (i < l) {  
-      if(i in this) curr = accumulator.call(undefined, curr, this[i], i, this);  
-      ++i;  
-    }  
-  
-    return curr;  
-  };  
-}  
+if (!Array.prototype.reduce) {
+  Array.prototype.reduce = function reduce(accumulator){
+    var i = 0, l = this.length >> 0, curr;
+
+    if(typeof accumulator !== "function") { // ES5 : "If IsCallable(callbackfn) is false, throw a TypeError exception."
+      throw new TypeError("First argument is not callable");
+    }
+
+    if(arguments.length < 2) {
+      if (l === 0) {
+        throw new TypeError("Array length is 0 and no second argument");
+      }
+      curr = this[0]; // Increase i to start searching the secondly defined element in the array
+      i = 1; // start accumulating at the second element
+    }
+    else {
+      curr = arguments[1];
+    }
+
+    while (i < l) {
+      if(i in this) {
+        curr = accumulator.call(undefined, curr, this[i], i, this);
+      }
+      ++i;
+    }
+
+    return curr;
+  };
+}
 
 
-if (!Array.prototype.some)  
-{  
-  Array.prototype.some = function(fun /*, thisp */)  
-  {  
-    "use strict";  
-  
-    if (this == null)  
-      throw new TypeError();  
-  
-    var t = Object(this);  
-    var len = t.length >>> 0;  
-    if (typeof fun != "function")  
-      throw new TypeError();  
-  
-    var thisp = arguments[1];  
-    for (var i = 0; i < len; i++)  
-    {  
-      if (i in t && fun.call(thisp, t[i], i, t))  
-        return true;  
-    }  
-  
-    return false;  
-  };  
-}  
+if (!Array.prototype.some) {
+  Array.prototype.some = function(fun /*, thisp */) {
+    "use strict";
+
+    if (this == null) {
+      throw new TypeError();
+    }
+
+    var t = Object(this);
+    var len = t.length >>> 0;
+    if (typeof fun != "function") {
+      throw new TypeError();
+    }
+
+    var thisp = arguments[1];
+    for (var i = 0; i < len; i++) {
+      if (i in t && fun.call(thisp, t[i], i, t)) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+}
 
 
 // ## The main function
@@ -256,9 +256,10 @@ if (!Array.prototype.some)
   };
 
   prototypes = {
-    func: new Function(),
-    array: [].__proto__,
-    object: {}.__proto__
+    func: Object.getPrototypeOf(function (){}),
+    // func: new Function(),
+    array: Object.getPrototypeOf([]),
+    object: Object.getPrototypeOf({})
   };
 
   MathLib.prototypes = prototypes;
@@ -302,12 +303,6 @@ if (!Array.prototype.some)
     });
 
   };
-
-
-/*********************************************** 
-     Begin functions.js 
-***********************************************/ 
-
 // ## Functions
 // THE FUNCTION IMPLEMENTATION WILL BE REWRITTEN SOON.
 // I know it's a mess right now...
@@ -802,7 +797,7 @@ for (func in functionList3) {
       value: createFunction3(functionList3[func], func)
     });
 
-    MathLib.extendPrototype('set', func, 
+    MathLib.extendPrototype('set', func,
       (function (name) {
         return function (n) {
           return MathLib[name](this, n);
@@ -821,12 +816,6 @@ for (func in functionList4) {
     });
   }
 }
-
-
-/*********************************************** 
-     Begin screen.js 
-***********************************************/ 
-
 // ## Screen
 // This module contains the common methods of all drawing modules.
 prototypes.screen = {};
@@ -1102,12 +1091,6 @@ MathLib.extendPrototype('screen', 'lineEndPoints', function (l) {
     return l;
   }
 });
-
-
-/*********************************************** 
-     Begin canvas.js 
-***********************************************/ 
-
 // ## Canvas
 // The module for drawing plots on a canvas.
 // A new canvas can be initialised by the following code:
@@ -1394,12 +1377,6 @@ MathLib.extendPrototype('canvas', 'text', function (str, x, y, options) {
   layer.ctx.fillText(str, x * this.zoomX, -y * this.zoomY);
   layer.ctx.restore();
 });
-
-
-/*********************************************** 
-     Begin svg.js 
-***********************************************/ 
-
 // ## SVG
 // The module for drawing plots on SVG elements.
 // A new MathLib svg element can be initialised by the following code:
@@ -1450,8 +1427,8 @@ MathLib.svg = function (svgId) {
 
 
 
-  // Chrome tries desperately to select some text   
-  svgElement.onselectstart = function(){ return false; }; 
+  // Chrome tries desperately to select some text
+  svgElement.onselectstart = function(){ return false; };
   svgElement.onmousedown = function (evt) {
     svg.onmousedown(evt);
   };
@@ -1684,7 +1661,7 @@ MathLib.extendPrototype('svg', 'onmousemove', function (evt) {
   else if(this.state === 'drag' && this.drag) {
     p = this.getEventPoint(evt).matrixTransform(g.getCTM().inverse());
 
-    this.setCTM(this.stateTarget, root.createSVGMatrix().translate(p.x - this.stateOrigin.x, p.y - this.stateOrigin.y).multiply(g.getCTM().inverse()).multiply(this.stateTarget.getCTM()));
+    this.setCTM(this.stateTarget, this.element.createSVGMatrix().translate(p.x - this.stateOrigin.x, p.y - this.stateOrigin.y).multiply(g.getCTM().inverse()).multiply(this.stateTarget.getCTM()));
 
     this.stateOrigin = p;
   }
@@ -1875,12 +1852,6 @@ MathLib.extendPrototype('svg', 'text', function (str, x, y, options) {
   }
   layer.element.appendChild(svgText);
 });
-
-
-/*********************************************** 
-     Begin vector.js 
-***********************************************/ 
-
 // ## Vector
 // The vector implementation of MathLib makes calculations with vectors of
 // arbitrary size possible. The entries of the vector can be numbers and complex
@@ -2132,12 +2103,6 @@ MathLib.extend('vector', 'zero', function (n) {
   }
   return MathLib.vector(res);
 });
-
-
-/*********************************************** 
-     Begin circle.js 
-***********************************************/ 
-
 // ## Circle
 // MathLib.circle expects two arguments.
 // First the center in the form of an Array or a MathLib.point.
@@ -2254,12 +2219,6 @@ MathLib.extendPrototype('circle', 'toMatrix', function () {
       r = this.radius;
   return MathLib.matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x*x + y*y - r*r]]);
 });
-
-
-/*********************************************** 
-     Begin complex.js 
-***********************************************/ 
-
 // ## Complex
 // MathLib.complex is the MathLib implementation of complex numbers.
 //
@@ -2688,12 +2647,6 @@ MathLib.extend('complex', 'one', MathLib.complex([1, 0]));
 //
 // *@returns {complex}*
 MathLib.extend('complex', 'zero', MathLib.complex([0, 0]));
-
-
-/*********************************************** 
-     Begin line.js 
-***********************************************/ 
-
 // ## Line
 // The vector implementation of MathLib makes calculations with lines in the 
 // real plane possible. (Higher dimensions will be supported later)
@@ -2818,12 +2771,6 @@ MathLib.extendPrototype('line', 'normalize', function (q) {
 
 
 MathLib.extend('line', 'infiniteLine', MathLib.line([0,0,1]));
-
-
-/*********************************************** 
-     Begin mathML.js 
-***********************************************/ 
-
 // ## MathML
 // The MathML implementation parses Content MathML.
 prototypes.MathML = {};
@@ -2835,8 +2782,8 @@ MathLib.MathML = function (MathMLString) {
   MathMLString = MathMLString.replace(/\n/g, ''); 
 
   // and the unnecessary whitespace
-  MathMLString = MathMLString.replace(/>\s*<(\w)/g, '><$1'); 
-  MathMLString = MathMLString.replace(/<\/(\w+)>\s*<\/(\w)/g, '</$1></$2'); 
+  MathMLString = MathMLString.replace(/>\s*<(\w)/g, '><$1');
+  MathMLString = MathMLString.replace(/<\/(\w+)>\s*<\/(\w)/g, '</$1></$2');
 
   // Gives an error in Firefox
   /* MathML = tokenizer.parseFromString(MathMLString, 'application/mathml+xml'); */
@@ -3046,18 +2993,13 @@ MathLib.extend('MathML', 'loadMathJax', function (config) {
 // *@param{id}* The id of the element in which the MathML should be inserted.  
 // *@param{math}* The MathML to be inserted.
 MathLib.extend('MathML', 'write', function (id, math) {
+  var formula;
   document.getElementById(id).innerHTML = '<math>' + math + '</math>';
   if (typeof MathJax !== 'undefined') {
     formula = MathJax.Hub.getAllJax(id)[0];
     MathJax.Hub.Queue(['Typeset', MathJax.Hub, id]);
   }
 });
-
-
-/*********************************************** 
-     Begin matrix.js 
-***********************************************/ 
-
 // ## Matrix
 // The matrix implementation of MathLib makes calculations with matrices of
 // arbitrary size possible. The entries of a matrix can be numbers and complex
@@ -4108,12 +4050,6 @@ MathLib.extend('matrix', 'zero', function (r, c) {
   c = c || 1;
   return MathLib.matrix.numbers(0, r, c);
 });
-
-
-/*********************************************** 
-     Begin permutation.js 
-***********************************************/ 
-
 // ## Permutation
 prototypes.permutation = [];
 MathLib.permutation = function (p) {
@@ -4314,12 +4250,6 @@ MathLib.extend('permutation', 'listToCycle', function (list) {
   }
   return res;
 });
-
-
-/*********************************************** 
-     Begin point.js 
-***********************************************/ 
-
 // ## Point
 // The point implementation of MathLib makes calculations with point in
 // arbitrary dimensions possible.
@@ -4633,12 +4563,6 @@ MathLib.extend('point', 'J', (function () {
   var i = MathLib.complex(0, 1);
   return MathLib.point([i, 0, 1]);
 }()));
-
-
-/*********************************************** 
-     Begin polynomial.js 
-***********************************************/ 
-
 // ## Polynomial
 // The polynomial implementation of MathLib makes calculations with polynomials.
 // Both the coefficients and the arguments of a polynomial can be numbers,
@@ -5177,12 +5101,6 @@ MathLib.extend('polynomial', 'roots', function (roots) {
 //
 // *@returns {polynomial}*
 MathLib.extend('polynomial', 'zero', MathLib.polynomial([0]));
-
-
-/*********************************************** 
-     Begin set.js 
-***********************************************/ 
-
 // ## Set
 //
 // To generate the set {1, 2, 3, 4, 5} you simply need to type
@@ -5627,12 +5545,6 @@ MathLib.extend('set', 'fromTo', function (f, t, s) {
     return MathLib.set(arr);
   }
 });
-
-
-/*********************************************** 
-     Begin foot.js 
-***********************************************/ 
-
   // ## Epilog
 
   // Add MathLib to the global namespace

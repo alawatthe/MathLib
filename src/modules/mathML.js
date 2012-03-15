@@ -9,8 +9,8 @@ MathLib.MathML = function (MathMLString) {
   MathMLString = MathMLString.replace(/\n/g, ''); 
 
   // and the unnecessary whitespace
-  MathMLString = MathMLString.replace(/>\s*<(\w)/g, '><$1'); 
-  MathMLString = MathMLString.replace(/<\/(\w+)>\s*<\/(\w)/g, '</$1></$2'); 
+  MathMLString = MathMLString.replace(/>\s*<(\w)/g, '><$1');
+  MathMLString = MathMLString.replace(/<\/(\w+)>\s*<\/(\w)/g, '</$1></$2');
 
   // Gives an error in Firefox
   /* MathML = tokenizer.parseFromString(MathMLString, 'application/mathml+xml'); */
@@ -220,6 +220,7 @@ MathLib.extend('MathML', 'loadMathJax', function (config) {
 // *@param{id}* The id of the element in which the MathML should be inserted.  
 // *@param{math}* The MathML to be inserted.
 MathLib.extend('MathML', 'write', function (id, math) {
+  var formula;
   document.getElementById(id).innerHTML = '<math>' + math + '</math>';
   if (typeof MathJax !== 'undefined') {
     formula = MathJax.Hub.getAllJax(id)[0];

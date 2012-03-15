@@ -492,7 +492,7 @@ for (func in functionList3) {
       value: createFunction3(functionList3[func], func)
     });
 
-    MathLib.extendPrototype('set', func, 
+    MathLib.extendPrototype('set', func,
       (function (name) {
         return function (n) {
           return MathLib[name](this, n);

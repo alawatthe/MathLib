@@ -48,8 +48,8 @@ MathLib.svg = function (svgId) {
 
 
 
-  // Chrome tries desperately to select some text   
-  svgElement.onselectstart = function(){ return false; }; 
+  // Chrome tries desperately to select some text
+  svgElement.onselectstart = function(){ return false; };
   svgElement.onmousedown = function (evt) {
     svg.onmousedown(evt);
   };
@@ -282,7 +282,7 @@ MathLib.extendPrototype('svg', 'onmousemove', function (evt) {
   else if(this.state === 'drag' && this.drag) {
     p = this.getEventPoint(evt).matrixTransform(g.getCTM().inverse());
 
-    this.setCTM(this.stateTarget, root.createSVGMatrix().translate(p.x - this.stateOrigin.x, p.y - this.stateOrigin.y).multiply(g.getCTM().inverse()).multiply(this.stateTarget.getCTM()));
+    this.setCTM(this.stateTarget, this.element.createSVGMatrix().translate(p.x - this.stateOrigin.x, p.y - this.stateOrigin.y).multiply(g.getCTM().inverse()).multiply(this.stateTarget.getCTM()));
 
     this.stateOrigin = p;
   }
