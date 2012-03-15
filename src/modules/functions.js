@@ -157,11 +157,43 @@ var functionList1 = {
         return Math.floor(Math.pow(MathLib.goldenRatio, n) / Math.sqrt(5));
       },
   floor: Math.floor,
-  hypot: function () {
-        var a = Array.prototype.slice.call(arguments);
-        return Math.sqrt(a.reduce(function (old, cur) {
+  hypot: function (a, b) {
+        var args = Array.prototype.slice.call(arguments),
+            p, q, r, s;
+        if (args.length > 2) {
+          return MathLib.hypot(args.shift(), MathLib.hypot.apply(null, args));
+        }
+
+        a = MathLib.abs(a);
+        b = MathLib.abs(b);
+
+        // Return Infinity if one value is infinite
+        if (a === Infinity || b === Infinity) {
+          return Infinity;
+        }
+
+        // Moler-Morrison algorithm
+        p = Math.max(a, b);
+        q = Math.min(a, b);
+        while (q > MathLib.epsilon) {
+          r = Math.pow((q/p), 2);
+          s = r/(4+r);
+          p = p + 2*s*p;
+          q = s * q;
+        }
+        return p;
+      },
+  hypot2: function () {
+        var args = Array.prototype.slice.call(arguments);
+        // Return Infinity if one value is infinite
+        if (args.some(function (x) {
+          return x === Infinity || x === -Infinity;
+        })) {
+          return Infinity;
+        }
+        return args.reduce(function (old, cur) {
           return old + cur*cur;
-        }, 0));
+        }, 0);
       },
   inverse: function (x) {
         return 1/x;
@@ -174,6 +206,9 @@ var functionList1 = {
       },
   isOne: function (a)    {
         return Math.abs(a - 1) < MathLib.epsilon;
+      },
+  isNaN: function (x) {
+        return x !== x;
       },
   isPrime: function (x) {
         var sqrt = Math.sqrt(x), i;
@@ -434,7 +469,7 @@ var createFunction1 = function (f, name) {
     }
     // JavaScript should have this build in!
     else if (typeof x === 'function') {
-      return function (y) {return f(x(y));};  
+      return function (y) {return f(x(y));};
     }
     else if (x.type === 'set') {
       return MathLib.set( x.map(f) );

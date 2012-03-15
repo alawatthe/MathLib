@@ -116,9 +116,23 @@ test('.exp', 2, function () {
 });
 
 
-test('.hypot', 2, function () {
-  equals(MathLib.hypot(3, 4), 5);
-  equals(MathLib.hypot(3, 4, 12), 13);
+test('.hypot', 6, function () {
+  equals(MathLib.isEqual(MathLib.hypot(3, 4), 5), true);
+  equals(MathLib.isEqual(MathLib.hypot(3, 4, 12), 13), true);
+  deepEqual(MathLib.hypot(NaN, 4), NaN);
+  equals(MathLib.hypot(NaN, Infinity), Infinity);
+  equals(MathLib.hypot(-Infinity, NaN), Infinity);
+  equals(MathLib.hypot(Infinity, 4), Infinity);
+});
+
+
+test('.hypot2', 6, function () {
+  equals(MathLib.isEqual(MathLib.hypot2(3, 4), 25), true);
+  equals(MathLib.isEqual(MathLib.hypot2(3, 4, 12), 169), true);
+  deepEqual(MathLib.hypot2(NaN, 4), NaN);
+  equals(MathLib.hypot2(NaN, Infinity), Infinity);
+  equals(MathLib.hypot2(-Infinity, NaN), Infinity);
+  equals(MathLib.hypot2(Infinity, 4), Infinity);
 });
 
 

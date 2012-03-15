@@ -23,24 +23,24 @@
 //
 // The drawing modules:
 //
-// - [screen](#section-18 "Jump to the screen implementation")
-// - [canvas](#section-26 "Jump to the canvas implementation")
-// - [svg](#section-39 "Jump to the svg implementation")
+// - [screen](#section-21 "Jump to the screen implementation")
+// - [canvas](#section-29 "Jump to the canvas implementation")
+// - [svg](#section-42 "Jump to the svg implementation")
 //
-// The next module is the [vector](#section-64 "Jump to the vector implementation") module, because the Point and the Line module
+// The next module is the [vector](#section-67 "Jump to the vector implementation") module, because the Point and the Line module
 // depend on it.
 //
 // And at last the other modules in alphabetic order:
 //
-// - [circle](#section-84 "Jump to the circle implementation")
-// - [complex](#section-94 "Jump to the complex number implementation")
-// - [line](#section-136 "Jump to the line implementation")
-// - [MathML](#section-147 "Jump to the MathML implementation")
-// - [matrix](#section-159 "Jump to the matrix implementation")
-// - [permutation](#section-227 "Jump to the permutation implementation")
-// - [point](#section-240 "Jump to the point implementation")
-// - [polynomial](#section-262 "Jump to the polynomial implementation")
-// - [set](#section-292 "Jump to the set implementation")
+// - [circle](#section-87 "Jump to the circle implementation")
+// - [complex](#section-97 "Jump to the complex number implementation")
+// - [line](#section-139 "Jump to the line implementation")
+// - [MathML](#section-150 "Jump to the MathML implementation")
+// - [matrix](#section-162 "Jump to the matrix implementation")
+// - [permutation](#section-230 "Jump to the permutation implementation")
+// - [point](#section-243 "Jump to the point implementation")
+// - [polynomial](#section-265 "Jump to the polynomial implementation")
+// - [set](#section-295 "Jump to the set implementation")
 
 // Extending the Array prototype with some ES5 methods,
 // if the method isn't already there.
@@ -462,11 +462,43 @@ var functionList1 = {
         return Math.floor(Math.pow(MathLib.goldenRatio, n) / Math.sqrt(5));
       },
   floor: Math.floor,
-  hypot: function () {
-        var a = Array.prototype.slice.call(arguments);
-        return Math.sqrt(a.reduce(function (old, cur) {
+  hypot: function (a, b) {
+        var args = Array.prototype.slice.call(arguments),
+            p, q, r, s;
+        if (args.length > 2) {
+          return MathLib.hypot(args.shift(), MathLib.hypot.apply(null, args));
+        }
+
+        a = MathLib.abs(a);
+        b = MathLib.abs(b);
+
+        // Return Infinity if one value is infinite
+        if (a === Infinity || b === Infinity) {
+          return Infinity;
+        }
+
+        // Moler-Morrison algorithm
+        p = Math.max(a, b);
+        q = Math.min(a, b);
+        while (q > MathLib.epsilon) {
+          r = Math.pow((q/p), 2);
+          s = r/(4+r);
+          p = p + 2*s*p;
+          q = s * q;
+        }
+        return p;
+      },
+  hypot2: function () {
+        var args = Array.prototype.slice.call(arguments);
+        // Return Infinity if one value is infinite
+        if (args.some(function (x) {
+          return x === Infinity || x === -Infinity;
+        })) {
+          return Infinity;
+        }
+        return args.reduce(function (old, cur) {
           return old + cur*cur;
-        }, 0));
+        }, 0);
       },
   inverse: function (x) {
         return 1/x;
@@ -479,6 +511,9 @@ var functionList1 = {
       },
   isOne: function (a)    {
         return Math.abs(a - 1) < MathLib.epsilon;
+      },
+  isNaN: function (x) {
+        return x !== x;
       },
   isPrime: function (x) {
         var sqrt = Math.sqrt(x), i;
@@ -739,7 +774,7 @@ var createFunction1 = function (f, name) {
     }
     // JavaScript should have this build in!
     else if (typeof x === 'function') {
-      return function (y) {return f(x(y));};  
+      return function (y) {return f(x(y));};
     }
     else if (x.type === 'set') {
       return MathLib.set( x.map(f) );
