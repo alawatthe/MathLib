@@ -1,4 +1,4 @@
-// ## Polynomial
+// ## <a id="Polynomial"></a>Polynomial
 // The polynomial implementation of MathLib makes calculations with polynomials.
 // Both the coefficients and the arguments of a polynomial can be numbers,
 // complex numbers and matrices.

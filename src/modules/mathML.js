@@ -1,4 +1,4 @@
-// ## MathML
+// ## <a id="MathML"></a>MathML
 // The MathML implementation parses Content MathML.
 prototypes.MathML = {};
 MathLib.MathML = function (MathMLString) {

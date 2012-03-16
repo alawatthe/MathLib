@@ -1,4 +1,4 @@
-// ## SVG
+// ## <a id="SVG"></a>SVG
 // The module for drawing plots on SVG elements.
 // A new MathLib svg element can be initialised by the following code:
 // ```

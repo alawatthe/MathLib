@@ -1,4 +1,4 @@
-// ## Set
+// ## <a id="Set"></a>Set
 //
 // To generate the set {1, 2, 3, 4, 5} you simply need to type
 // ```
@@ -108,7 +108,7 @@ MathLib.extendPrototype('set', 'isEmpty', function () {
 // ### Set.prototype.isEqual()
 // Determines if the set is equal to an other set.
 //
-// *@param {set}* The set to compare
+// *@param {set}* The set to compare  
 // *@returns {boolean}*
 MathLib.extendPrototype('set', 'isEqual', function (x) {
   if (this.card !== x.card) {
@@ -125,7 +125,7 @@ MathLib.extendPrototype('set', 'isEqual', function (x) {
 // ### Set.prototype.isSubsetOf()
 // Determines if the set is a subset of an other set.
 //
-// *@param {set}* The potential superset 
+// *@param {set}* The potential superset  
 // *@returns {boolean}*
 MathLib.extendPrototype('set', 'isSubsetOf', function (a) {
   return this.every(function (x) {
@@ -138,7 +138,7 @@ MathLib.extendPrototype('set', 'isSubsetOf', function (a) {
 // Array.prototype.indexOf() returns only the position of an element in the
 // array and not the position where one should be inserted.
 //
-// *@param {set}* The element to locate
+// *@param {set}* The element to locate  
 // *@returns {boolean}*
 MathLib.extendPrototype('set', 'locate', function (x) {
 
@@ -272,7 +272,7 @@ MathLib.extendPrototype('set', 'remove', function (a) {
 // Multiplies all elements in the set if no argument is passed.
 // Multiplies all elements by a argument if one is passed.
 //
-// *@param {number|MathLib object}  
+// *@param {number|MathLib object}*  
 // *@returns {set}*
 MathLib.extendPrototype('set', 'times', function (n) {
   if (!arguments.length) {
@@ -428,9 +428,9 @@ MathLib.extendPrototype('set', 'toString', function () {
 // ### Set.prototype.fromTo()
 // Creates a set containing the numbers from a start value to a end value.
 //
-// *@param {number}* The number to start from
-// *@param {number}* The number to end with
-// *@param {number}* The stepsize (default = 1)
+// *@param {number}* The number to start from  
+// *@param {number}* The number to end with  
+// *@param {number}* The stepsize (default = 1)  
 // *@returns {set}*
 MathLib.extend('set', 'fromTo', function (f, t, s) {
   var i, arr = [];

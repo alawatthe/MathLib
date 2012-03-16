@@ -17,7 +17,7 @@ test('init (2 Numbers)', 3, function () {
 
 test('.abs()', 1, function () {
   var c = MathLib.complex([3, 4]);
-  equals(5, c.abs(), 'Absolut value of the complex number');
+  equals(MathLib.isEqual(c.abs(), 5), true, 'Absolut value of the complex number');
 });
 
 
@@ -108,7 +108,7 @@ test('.isZero()', 2, function () {
 test('.ln()', 1, function () {
   var c = MathLib.complex([3, 4]),
       res = MathLib.complex([1.6094379124341003, 0.9272952180016123]);
-  deepEqual(c.ln(), res, 'natural logarithm of the complex number');
+  equals(MathLib.isEqual(c.ln(), res), true, 'natural logarithm of the complex number');
 });
 
 
@@ -195,6 +195,7 @@ test('.toMathML()', 5, function () {
   equals(f.toMathML(), '<mn>4</mn><mo>-</mo><mn>5</mn><mo>&#x2062;</mo><mi>i</mi>', 'Complex part is negative.');
   equals(g.toMathML(), '<mn>0</mn>', 'Number is zero.');
 });
+
 
 test('.toMatrix()', 2, function () {
   var c = MathLib.complex([3, -4]);

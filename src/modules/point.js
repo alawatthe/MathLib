@@ -1,4 +1,4 @@
-// ## Point
+// ## <a id="Point"></a>Point
 // The point implementation of MathLib makes calculations with point in
 // arbitrary dimensions possible.
 //

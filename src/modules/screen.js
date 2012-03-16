@@ -1,4 +1,4 @@
-// ## Screen
+// ## <a id="Screen"></a>Screen
 // This module contains the common methods of all drawing modules.
 prototypes.screen = {};
 MathLib.screen = function (id, options) {

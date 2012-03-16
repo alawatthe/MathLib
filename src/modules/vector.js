@@ -1,4 +1,4 @@
-// ## Vector
+// ## <a id="Vector"></a>Vector
 // The vector implementation of MathLib makes calculations with vectors of
 // arbitrary size possible. The entries of the vector can be numbers and complex
 // numbers.

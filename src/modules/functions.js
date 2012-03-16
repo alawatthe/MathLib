@@ -1,4 +1,4 @@
-// ## Functions
+// ## <a id="Functions"></a>Functions
 // THE FUNCTION IMPLEMENTATION WILL BE REWRITTEN SOON.
 // I know it's a mess right now...
 //

@@ -213,7 +213,6 @@ if (!Array.prototype.some) {
 
   prototypes = {
     func: Object.getPrototypeOf(function (){}),
-    // func: new Function(),
     array: Object.getPrototypeOf([]),
     object: Object.getPrototypeOf({})
   };

@@ -1,4 +1,4 @@
-// ## Canvas
+// ## <a id="Canvas"></a>Canvas
 // The module for drawing plots on a canvas.
 // A new canvas can be initialised by the following code:
 // ```

@@ -1,4 +1,4 @@
-// ## Permutation
+// ## <a id="Permutation"></a>Permutation
 prototypes.permutation = [];
 MathLib.permutation = function (p) {
   var cycle, permutation, max;

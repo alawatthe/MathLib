@@ -1,4 +1,4 @@
-// ## Circle
+// ## <a id="Circle"></a>Circle
 // MathLib.circle expects two arguments.
 // First the center in the form of an Array or a MathLib.point.
 // The second argument should be the radius of the circle.

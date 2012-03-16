@@ -1,4 +1,4 @@
-// ## Line
+// ## <a id="Line"></a>Line
 // The vector implementation of MathLib makes calculations with lines in the 
 // real plane possible. (Higher dimensions will be supported later)
 prototypes.line = MathLib.vector([]);

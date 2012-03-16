@@ -1,4 +1,4 @@
-// ## Complex
+// ## <a id="Complex"></a>Complex
 // MathLib.complex is the MathLib implementation of complex numbers.
 //
 // There are two ways of defining complex numbers:
@@ -60,7 +60,7 @@ MathLib.extendPrototype('complex', 'argument', function (x) {
 
 // Returns the absolute value of the number
 MathLib.extendPrototype('complex', 'abs', function (x) {
-  return MathLib.power(MathLib.plus(MathLib.power(this.re, 2), MathLib.power(this.im, 2)), 0.5);
+  return MathLib.hypot(this.re, this.im);
 });
 
 

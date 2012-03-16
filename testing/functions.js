@@ -7,7 +7,7 @@ test("general", 1, function () {
 test('abs', 3, function () {
   equals(MathLib.abs(42), 42);
   equals(MathLib.abs(-6), 6);
-  equals(MathLib.abs(MathLib.complex([3, 4])), 5);
+  equals(MathLib.isEqual(MathLib.abs(MathLib.complex([3, 4])), 5), true);
 });
 
 

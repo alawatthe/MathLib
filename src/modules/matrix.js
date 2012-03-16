@@ -1,4 +1,4 @@
-// ## Matrix
+// ## <a id="Matrix"></a>Matrix
 // The matrix implementation of MathLib makes calculations with matrices of
 // arbitrary size possible. The entries of a matrix can be numbers and complex
 // numbers.

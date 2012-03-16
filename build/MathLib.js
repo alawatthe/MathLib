@@ -18,29 +18,29 @@
 // The code is separated into several modules.
 // The first module contains some JavaScript-Polyfills
 //
-// Then there are some [functions](#section-9 "Jump to the functions").
+// Then there are some [functions](#Functions "Jump to the functions").
 // This module while be rewritten shortly.
 //
 // The drawing modules:
 //
-// - [screen](#section-21 "Jump to the screen implementation")
-// - [canvas](#section-29 "Jump to the canvas implementation")
-// - [svg](#section-42 "Jump to the svg implementation")
+// - [screen](#Screen "Jump to the screen implementation")
+// - [canvas](#Canvas "Jump to the canvas implementation")
+// - [svg](#SVG "Jump to the svg implementation")
 //
-// The next module is the [vector](#section-67 "Jump to the vector implementation") module, because the Point and the Line module
+// The next module is the [vector](#Vector "Jump to the vector implementation") module, because the Point and the Line module
 // depend on it.
 //
 // And at last the other modules in alphabetic order:
 //
-// - [circle](#section-87 "Jump to the circle implementation")
-// - [complex](#section-97 "Jump to the complex number implementation")
-// - [line](#section-139 "Jump to the line implementation")
-// - [MathML](#section-150 "Jump to the MathML implementation")
-// - [matrix](#section-162 "Jump to the matrix implementation")
-// - [permutation](#section-230 "Jump to the permutation implementation")
-// - [point](#section-243 "Jump to the point implementation")
-// - [polynomial](#section-265 "Jump to the polynomial implementation")
-// - [set](#section-295 "Jump to the set implementation")
+// - [circle](#Circle "Jump to the circle implementation")
+// - [complex](#Complex "Jump to the complex number implementation")
+// - [line](#Line "Jump to the line implementation")
+// - [MathML](#MathML "Jump to the MathML implementation")
+// - [matrix](#Matrix "Jump to the matrix implementation")
+// - [permutation](#Permutation "Jump to the permutation implementation")
+// - [point](#Point "Jump to the point implementation")
+// - [polynomial](#Polynomial "Jump to the polynomial implementation")
+// - [set](#Set "Jump to the set implementation")
 
 // Extending the Array prototype with some ES5 methods,
 // if the method isn't already there.
@@ -257,7 +257,6 @@ if (!Array.prototype.some) {
 
   prototypes = {
     func: Object.getPrototypeOf(function (){}),
-    // func: new Function(),
     array: Object.getPrototypeOf([]),
     object: Object.getPrototypeOf({})
   };
@@ -303,7 +302,7 @@ if (!Array.prototype.some) {
     });
 
   };
-// ## Functions
+// ## <a id="Functions"></a>Functions
 // THE FUNCTION IMPLEMENTATION WILL BE REWRITTEN SOON.
 // I know it's a mess right now...
 //
@@ -851,7 +850,7 @@ for (func in functionList4) {
     });
   }
 }
-// ## Screen
+// ## <a id="Screen"></a>Screen
 // This module contains the common methods of all drawing modules.
 prototypes.screen = {};
 MathLib.screen = function (id, options) {
@@ -1126,7 +1125,7 @@ MathLib.extendPrototype('screen', 'lineEndPoints', function (l) {
     return l;
   }
 });
-// ## Canvas
+// ## <a id="Canvas"></a>Canvas
 // The module for drawing plots on a canvas.
 // A new canvas can be initialised by the following code:
 // ```
@@ -1412,7 +1411,7 @@ MathLib.extendPrototype('canvas', 'text', function (str, x, y, options) {
   layer.ctx.fillText(str, x * this.zoomX, -y * this.zoomY);
   layer.ctx.restore();
 });
-// ## SVG
+// ## <a id="SVG"></a>SVG
 // The module for drawing plots on SVG elements.
 // A new MathLib svg element can be initialised by the following code:
 // ```
@@ -1887,7 +1886,7 @@ MathLib.extendPrototype('svg', 'text', function (str, x, y, options) {
   }
   layer.element.appendChild(svgText);
 });
-// ## Vector
+// ## <a id="Vector"></a>Vector
 // The vector implementation of MathLib makes calculations with vectors of
 // arbitrary size possible. The entries of the vector can be numbers and complex
 // numbers.
@@ -2138,7 +2137,7 @@ MathLib.extend('vector', 'zero', function (n) {
   }
   return MathLib.vector(res);
 });
-// ## Circle
+// ## <a id="Circle"></a>Circle
 // MathLib.circle expects two arguments.
 // First the center in the form of an Array or a MathLib.point.
 // The second argument should be the radius of the circle.
@@ -2254,7 +2253,7 @@ MathLib.extendPrototype('circle', 'toMatrix', function () {
       r = this.radius;
   return MathLib.matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x*x + y*y - r*r]]);
 });
-// ## Complex
+// ## <a id="Complex"></a>Complex
 // MathLib.complex is the MathLib implementation of complex numbers.
 //
 // There are two ways of defining complex numbers:
@@ -2316,7 +2315,7 @@ MathLib.extendPrototype('complex', 'argument', function (x) {
 
 // Returns the absolute value of the number
 MathLib.extendPrototype('complex', 'abs', function (x) {
-  return MathLib.power(MathLib.plus(MathLib.power(this.re, 2), MathLib.power(this.im, 2)), 0.5);
+  return MathLib.hypot(this.re, this.im);
 });
 
 
@@ -2682,7 +2681,7 @@ MathLib.extend('complex', 'one', MathLib.complex([1, 0]));
 //
 // *@returns {complex}*
 MathLib.extend('complex', 'zero', MathLib.complex([0, 0]));
-// ## Line
+// ## <a id="Line"></a>Line
 // The vector implementation of MathLib makes calculations with lines in the 
 // real plane possible. (Higher dimensions will be supported later)
 prototypes.line = MathLib.vector([]);
@@ -2806,7 +2805,7 @@ MathLib.extendPrototype('line', 'normalize', function (q) {
 
 
 MathLib.extend('line', 'infiniteLine', MathLib.line([0,0,1]));
-// ## MathML
+// ## <a id="MathML"></a>MathML
 // The MathML implementation parses Content MathML.
 prototypes.MathML = {};
 MathLib.MathML = function (MathMLString) {
@@ -3035,7 +3034,7 @@ MathLib.extend('MathML', 'write', function (id, math) {
     MathJax.Hub.Queue(['Typeset', MathJax.Hub, id]);
   }
 });
-// ## Matrix
+// ## <a id="Matrix"></a>Matrix
 // The matrix implementation of MathLib makes calculations with matrices of
 // arbitrary size possible. The entries of a matrix can be numbers and complex
 // numbers.
@@ -4085,7 +4084,7 @@ MathLib.extend('matrix', 'zero', function (r, c) {
   c = c || 1;
   return MathLib.matrix.numbers(0, r, c);
 });
-// ## Permutation
+// ## <a id="Permutation"></a>Permutation
 prototypes.permutation = [];
 MathLib.permutation = function (p) {
   var cycle, permutation, max;
@@ -4285,7 +4284,7 @@ MathLib.extend('permutation', 'listToCycle', function (list) {
   }
   return res;
 });
-// ## Point
+// ## <a id="Point"></a>Point
 // The point implementation of MathLib makes calculations with point in
 // arbitrary dimensions possible.
 //
@@ -4598,7 +4597,7 @@ MathLib.extend('point', 'J', (function () {
   var i = MathLib.complex(0, 1);
   return MathLib.point([i, 0, 1]);
 }()));
-// ## Polynomial
+// ## <a id="Polynomial"></a>Polynomial
 // The polynomial implementation of MathLib makes calculations with polynomials.
 // Both the coefficients and the arguments of a polynomial can be numbers,
 // complex numbers and matrices.
@@ -5136,7 +5135,7 @@ MathLib.extend('polynomial', 'roots', function (roots) {
 //
 // *@returns {polynomial}*
 MathLib.extend('polynomial', 'zero', MathLib.polynomial([0]));
-// ## Set
+// ## <a id="Set"></a>Set
 //
 // To generate the set {1, 2, 3, 4, 5} you simply need to type
 // ```
@@ -5246,7 +5245,7 @@ MathLib.extendPrototype('set', 'isEmpty', function () {
 // ### Set.prototype.isEqual()
 // Determines if the set is equal to an other set.
 //
-// *@param {set}* The set to compare
+// *@param {set}* The set to compare  
 // *@returns {boolean}*
 MathLib.extendPrototype('set', 'isEqual', function (x) {
   if (this.card !== x.card) {
@@ -5263,7 +5262,7 @@ MathLib.extendPrototype('set', 'isEqual', function (x) {
 // ### Set.prototype.isSubsetOf()
 // Determines if the set is a subset of an other set.
 //
-// *@param {set}* The potential superset 
+// *@param {set}* The potential superset  
 // *@returns {boolean}*
 MathLib.extendPrototype('set', 'isSubsetOf', function (a) {
   return this.every(function (x) {
@@ -5276,7 +5275,7 @@ MathLib.extendPrototype('set', 'isSubsetOf', function (a) {
 // Array.prototype.indexOf() returns only the position of an element in the
 // array and not the position where one should be inserted.
 //
-// *@param {set}* The element to locate
+// *@param {set}* The element to locate  
 // *@returns {boolean}*
 MathLib.extendPrototype('set', 'locate', function (x) {
 
@@ -5410,7 +5409,7 @@ MathLib.extendPrototype('set', 'remove', function (a) {
 // Multiplies all elements in the set if no argument is passed.
 // Multiplies all elements by a argument if one is passed.
 //
-// *@param {number|MathLib object}  
+// *@param {number|MathLib object}*  
 // *@returns {set}*
 MathLib.extendPrototype('set', 'times', function (n) {
   if (!arguments.length) {
@@ -5566,9 +5565,9 @@ MathLib.extendPrototype('set', 'toString', function () {
 // ### Set.prototype.fromTo()
 // Creates a set containing the numbers from a start value to a end value.
 //
-// *@param {number}* The number to start from
-// *@param {number}* The number to end with
-// *@param {number}* The stepsize (default = 1)
+// *@param {number}* The number to start from  
+// *@param {number}* The number to end with  
+// *@param {number}* The stepsize (default = 1)  
 // *@returns {set}*
 MathLib.extend('set', 'fromTo', function (f, t, s) {
   var i, arr = [];

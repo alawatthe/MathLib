@@ -7,7 +7,7 @@ test("general", 1, function () {
 test('abs', 3, function () {
   equals(MathLib.abs(42), 42);
   equals(MathLib.abs(-6), 6);
-  equals(MathLib.abs(MathLib.complex([3, 4])), 5);
+  equals(MathLib.isEqual(MathLib.abs(MathLib.complex([3, 4])), 5), true);
 });
 
 
@@ -442,7 +442,7 @@ test('init (2 Numbers)', 3, function () {
 
 test('.abs()', 1, function () {
   var c = MathLib.complex([3, 4]);
-  equals(5, c.abs(), 'Absolut value of the complex number');
+  equals(MathLib.isEqual(c.abs(), 5), true, 'Absolut value of the complex number');
 });
 
 
@@ -533,7 +533,7 @@ test('.isZero()', 2, function () {
 test('.ln()', 1, function () {
   var c = MathLib.complex([3, 4]),
       res = MathLib.complex([1.6094379124341003, 0.9272952180016123]);
-  deepEqual(c.ln(), res, 'natural logarithm of the complex number');
+  equals(MathLib.isEqual(c.ln(), res), true, 'natural logarithm of the complex number');
 });
 
 
