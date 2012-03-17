@@ -53,7 +53,7 @@ MathLib.extendPrototype('MathML', 'parse', function (math) {
 
   parser = function (start) {
     var treeWalker = createTreeWalker(start);
-     
+
     do {
       var node = treeWalker.currentNode,
           name = node.nodeName;

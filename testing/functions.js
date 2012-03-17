@@ -103,6 +103,17 @@ test('.binomial', 4, function () {
 });
 
 
+test('.cbrt', 7, function () {
+  equals(MathLib.cbrt(8), 2, 'cbrt(8) = 2');
+  equals(MathLib.cbrt(-8), -2, 'cbrt(-8) = -2');
+  equals(MathLib.cbrt(Infinity), Infinity, 'cbrt(Infinity) = Infinity');
+  equals(MathLib.cbrt(-Infinity), -Infinity, 'cbrt(-Infinity) = -Infinity');
+  equals(MathLib.isPosZero(MathLib.cbrt(+0)), true, 'cbrt(+0) = +0');
+  equals(MathLib.isNegZero(MathLib.cbrt(-0)), true, 'cbrt(-0) = -0');
+  equals(MathLib.isNaN(MathLib.cbrt(NaN)), true, 'cbrt(NaN) = NaN');
+});
+
+
 test('.compare', 3, function () {
   equals(MathLib.compare(12, 12), 0);
   equals(MathLib.compare(1, 2), -1);
@@ -204,9 +215,21 @@ test('.isNaN', 2, function () {
 });
 
 
+test('.isNegZero', 2, function () {
+  equals(MathLib.isNegZero(-0), true);
+  equals(MathLib.isNegZero(+0), false);
+});
+
+
 test('.isOne', 2, function () {
   equals(MathLib.isOne(1), true);
   equals(MathLib.isOne(2), false);
+});
+
+
+test('.isPosZero', 2, function () {
+  equals(MathLib.isPosZero(+0), true);
+  equals(MathLib.isPosZero(-0), false);
 });
 
 

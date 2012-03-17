@@ -61,6 +61,24 @@ var functionList1 = {
           }
           return res;
       },
+  cbrt: function (x) {
+          var a = x, a3, a3x, an;
+          // Handle &plusmn;0, NaN, &plusmn;&infin;
+          if (x === 0 || x !== x || x === Infinity || x === -Infinity) {
+            return x;
+          }
+          // Halley's method
+          while (true) {
+            a3 = Math.pow(a, 3);
+            a3x = a3 + x;
+            an = a * (a3x + x) / (a3x + a3);
+            if (MathLib.isZero(an - a)) {
+              break; 
+            }
+            a = an;
+          }
+          return an;
+        },
   ceil: Math.ceil,
   conjugate: function (x) {
         return x;
@@ -204,11 +222,17 @@ var functionList1 = {
   isInt: function (x) {
         return x % 1 === 0;
       },
+  isNaN: function (x) {
+        return x !== x;
+      },
+  isNegZero: function (x) {
+        return 1/x === -Infinity;
+      },
   isOne: function (a)    {
         return Math.abs(a - 1) < MathLib.epsilon;
       },
-  isNaN: function (x) {
-        return x !== x;
+  isPosZero: function (x) {
+        return 1/x === Infinity;
       },
   isPrime: function (x) {
         var sqrt = Math.sqrt(x), i;
@@ -264,7 +288,7 @@ var functionList1 = {
       },
   power: function (a, b) {
         return Math.pow(a, b);
-  },
+      },
   radToDeg: function (x) {
         return x * 180 / MathLib.pi;
       },
