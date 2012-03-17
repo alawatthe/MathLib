@@ -14,7 +14,7 @@ test('abs', 3, function () {
 test('arccos', 3, function () {
   equals(MathLib.arccos(0), Math.PI / 2);
   equals(MathLib.arccos(1), 0);
-  deepEqual(MathLib.arccos(MathLib.complex([3, 4])), MathLib.complex([0.9368124611557207, -2.305509031243476942041]));
+  equals(MathLib.isEqual(MathLib.arccos(MathLib.complex([3, 4])), MathLib.complex([0.9368124611557207, -2.305509031243476942041])), true);
 });
 
 
@@ -63,7 +63,7 @@ test('arccos', 3, function () {
 test('arcsin', 3, function () {
   equals(MathLib.arcsin(0), 0);
   equals(MathLib.arcsin(1), Math.PI / 2);
-  deepEqual(MathLib.arcsin(MathLib.complex([3, 4])), MathLib.complex([0.6339838656391759, 2.305509031243476942041]));
+  equals(MathLib.isEqual(MathLib.arcsin(MathLib.complex([3, 4])), MathLib.complex([0.6339838656391759, 2.305509031243476942041])), true);
 });
 
 
@@ -195,6 +195,12 @@ test('.isFinite', 3, function () {
 test('.isInt', 2, function () {
   equals(MathLib.isInt(2), true);
   equals(MathLib.isInt(2.5), false);
+});
+
+
+test('.isNaN', 2, function () {
+  equals(MathLib.isNaN(NaN), true);
+  equals(MathLib.isNaN(2), false);
 });
 
 

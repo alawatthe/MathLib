@@ -156,39 +156,6 @@ MathLib.extendPrototype('polynomial', 'isEqual', function (p) {
 });
 
 
-// ### Polynomial.prototype.isIrreducible()
-// Decides if the polynomial is irreducible in Z[X]
-//
-// *@returns {boolean}*
-MathLib.extendPrototype('polynomial', 'isIrreducible', function () {
-  var g, f, n, eisensteinRes;
-  if (!this.isPrimitive) {
-    return false;
-  }
-  // Eisenstein's criterion
-  g = MathLib.factor(MathLib.ggt(this.slice(1, -1)));
-  f = MathLib.factor(this[this.deg]);
-
-  n = g.reduce(function (a, b) {
-
-  });
-
-
-  // Get the primes that divide the constant Term only once
-  eisensteinRes = MathLib.factor(this[0]).filter(function (x) {
-    return x[1] === 1;
-  })
-  .some(function (x) {
-
-  });
-  // If Eisenstein's criterion was successful return the result
-  if (eisensteinRes) {
-    return true;
-  }
-
-});
-
-
 // ### Polynomial.prototype.isPrimitive()
 // Decides if the polynomial is primitive
 //
