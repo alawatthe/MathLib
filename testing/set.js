@@ -2,10 +2,10 @@ module('Set');
 test('init', 4, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true);
-  equals(s.card,     5,     'Testing the cardinality');
-  equals(s.multiset, false, 'Testing .multiset');
-  equals(m.card,     7,     'Testing the cardinality');
-  equals(m.multiset, true,  'Testing .multiset');
+  equal(s.card,     5,     'Testing the cardinality');
+  equal(s.multiset, false, 'Testing .multiset');
+  equal(m.card,     7,     'Testing the cardinality');
+  equal(m.multiset, true,  'Testing .multiset');
 });
 
 
@@ -19,8 +19,8 @@ test('.and()', 1, function () {
 test('.arithMean()', 2, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true);
-  equals(s.arithMean(),  26 / 5, 'Testing .arithMean() (set)');
-  equals(m.arithMean(),  31 / 7, 'Testing .arithMean() (multiset)');
+  equal(s.arithMean(),  26 / 5, 'Testing .arithMean() (set)');
+  equal(m.arithMean(),  31 / 7, 'Testing .arithMean() (multiset)');
 });
 
 test('.compare()', 3, function () {
@@ -35,16 +35,16 @@ test('.compare()', 3, function () {
 test('.geoMean()', 2, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true);
-  equals(s.geoMean(),  Math.pow(1728, 1 / 5), 'Testing .geoMean() (set)');
-  equals(m.geoMean(),  Math.pow(10368, 1 / 7), 'Testing .geoMean() (multiset)');
+  equal(s.geoMean(),  Math.pow(1728, 1 / 5), 'Testing .geoMean() (set)');
+  equal(m.geoMean(),  Math.pow(10368, 1 / 7), 'Testing .geoMean() (multiset)');
 });
 
 
 test('.harmonicMean()', 2, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true);
-  equals(s.harmonicMean(),  3.7894736842105265, 'Testing .geoMean() (set)');
-  equals(m.harmonicMean(),  3.2516129032258068, 'Testing .geoMean() (multiset)');
+  equal(s.harmonicMean(),  3.7894736842105265, 'Testing .geoMean() (set)');
+  equal(m.harmonicMean(),  3.2516129032258068, 'Testing .geoMean() (multiset)');
 });
 
 
@@ -68,9 +68,9 @@ test('.isEmpty()', 3, function () {
   var m = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       n = MathLib.set(),
       o = MathLib.set([]);
-  equals(m.isEmpty(), false, 'Testing .min()');
-  equals(n.isEmpty(), true, 'Testing .min(3)');
-  equals(o.isEmpty(), true, 'Testing .min(3)');
+  equal(m.isEmpty(), false, 'Testing .min()');
+  equal(n.isEmpty(), true, 'Testing .min(3)');
+  equal(o.isEmpty(), true, 'Testing .min(3)');
 });
 
 
@@ -89,17 +89,17 @@ test('.isSubsetOf()', 2, function () {
       m = MathLib.set([3, 8, 2]),
       n = MathLib.set([5, 8, 2]);
 
-  equals(m.isSubsetOf(s),  true, 'Testing .isSubsetOf()');
-  equals(n.isSubsetOf(s),  false, 'Testing .isSubsetOf()');
+  equal(m.isSubsetOf(s),  true, 'Testing .isSubsetOf()');
+  equal(n.isSubsetOf(s),  false, 'Testing .isSubsetOf()');
 });
 
 
 test('.locate()', 4, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]);
-  equals(s.locate(1), 0, 'Testing .locate()');
-  equals(s.locate(3), 1, 'Testing .locate()');
-  equals(s.locate(5), 3, 'Testing .locate()');
-  equals(s.locate(10), 5, 'Testing .locate()');
+  equal(s.locate(1), 0, 'Testing .locate()');
+  equal(s.locate(3), 1, 'Testing .locate()');
+  equal(s.locate(5), 3, 'Testing .locate()');
+  equal(s.locate(10), 5, 'Testing .locate()');
 });
 
 
@@ -112,27 +112,27 @@ test(".map()", 2, function () {
       res = p.map(f);
 
   deepEqual(res, q, ".map()");
-  equals(res.type, 'set', ".type should be set");
+  equal(res.type, 'set', ".type should be set");
 });
 
 
 test('.max()', 4, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true);
-  equals(s.max(),  9, 'Testing .max() (set)');
-  equals(s.max(3), 4, 'Testing .max(3) (set)');
-  equals(m.max(),  9, 'Testing .max() (multiset)');
-  equals(m.max(3), 4, 'Testing .max(3) (multiset)');
+  equal(s.max(),  9, 'Testing .max() (set)');
+  equal(s.max(3), 4, 'Testing .max(3) (set)');
+  equal(m.max(),  9, 'Testing .max() (multiset)');
+  equal(m.max(3), 4, 'Testing .max(3) (multiset)');
 });
 
 
 test('.min()', 4, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true);
-  equals(s.min(),  2, 'Testing .min() (set)');
-  equals(s.min(3), 4, 'Testing .min(3) (set)');
-  equals(m.min(),  2, 'Testing .min() (multiset)');
-  equals(m.min(3), 3, 'Testing .min(3) (multiset)');
+  equal(s.min(),  2, 'Testing .min() (set)');
+  equal(s.min(3), 4, 'Testing .min(3) (set)');
+  equal(m.min(),  2, 'Testing .min() (multiset)');
+  equal(m.min(3), 3, 'Testing .min(3) (multiset)');
 });
 
 
@@ -146,7 +146,7 @@ test('.or()', 1, function () {
 test('.plus()', 3, function () {
   var s = MathLib.set([1, 2, 3, 4]),
       m = MathLib.set([1, 2, 3, 4, 5, 6]);
-  equals(s.plus(), 10, 'Testing .plus() (set)');
+  equal(s.plus(), 10, 'Testing .plus() (set)');
   deepEqual(s.plus(2),  [3, 4, 5, 6], 'Testing .plus(int) (set)');
   deepEqual(s.plus(m),  [2, 3, 4, 5, 6, 7, 8, 9, 10], 'Testing .plus(set) (set)');
 });
@@ -167,7 +167,7 @@ test('.remove()', 1, function () {
 
 test('.times()', 2, function () {
   var s = MathLib.set([1, 2, 3, 4]);
-  equals(s.times(), 24, 'Testing .times() (set)');
+  equal(s.times(), 24, 'Testing .times() (set)');
   deepEqual(s.times(2),  [2, 4, 6, 8], 'Testing .times(int) (set)');
 });
 
@@ -186,9 +186,9 @@ test('.toContentMathML()', 3, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true),
       e = MathLib.set();
-  equals(s.toContentMathML(),  '<set><cn>2</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathML() (set)');
-  equals(m.toContentMathML(),  '<set><cn>2</cn><cn>2</cn><cn>3</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathML() (multiset)');
-  equals(e.toContentMathML(),  '<emptyset/>', 'Testing .toContentMathML() (empty set)');
+  equal(s.toContentMathML(),  '<set><cn>2</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathML() (set)');
+  equal(m.toContentMathML(),  '<set><cn>2</cn><cn>2</cn><cn>3</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathML() (multiset)');
+  equal(e.toContentMathML(),  '<emptyset/>', 'Testing .toContentMathML() (empty set)');
 });
 
 
@@ -196,9 +196,9 @@ test('.toLaTeX()', 3, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true),
       e = MathLib.set();
-  equals(s.toLaTeX(),  '\\{2, 3, 4, 8, 9\\}', 'Testing .toLaTeX() (set)');
-  equals(m.toLaTeX(),  '\\{2, 2, 3, 3, 4, 8, 9\\}', 'Testing .toLaTeX() (multiset)');
-  equals(e.toLaTeX(),  '\\emptyset', 'Testing .toLaTeX() (empty set)');
+  equal(s.toLaTeX(),  '\\{2, 3, 4, 8, 9\\}', 'Testing .toLaTeX() (set)');
+  equal(m.toLaTeX(),  '\\{2, 2, 3, 3, 4, 8, 9\\}', 'Testing .toLaTeX() (multiset)');
+  equal(e.toLaTeX(),  '\\emptyset', 'Testing .toLaTeX() (empty set)');
 });
 
 
@@ -206,9 +206,9 @@ test('.toMathML()', 3, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true),
       e = MathLib.set();
-  equals(s.toMathML(),  '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathML() (set)');
-  equals(m.toMathML(),  '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathML() (multiset)');
-  equals(e.toMathML(),  '<mi>&#x2205;</mi>', 'Testing .toMathML() (empty set)');
+  equal(s.toMathML(),  '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathML() (set)');
+  equal(m.toMathML(),  '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathML() (multiset)');
+  equal(e.toMathML(),  '<mi>&#x2205;</mi>', 'Testing .toMathML() (empty set)');
 });
 
 
@@ -216,7 +216,7 @@ test('.toMultiset()', 2, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = s.toMultiset();
   deepEqual(m.toArray(), [2, 3, 4, 8, 9], 'Testing .toArray()');
-  equals(m.multiset, true, 'Testing .multiset');
+  equal(m.multiset, true, 'Testing .multiset');
 });
 
 
@@ -224,7 +224,7 @@ test('.toSet()', 2, function () {
   var m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true),
       s = m.toSet();
   deepEqual(s.toArray(), [2, 3, 4, 8, 9], 'Testing .toArray()');
-  equals(s.multiset, false, 'Testing .multiset');
+  equal(s.multiset, false, 'Testing .multiset');
 });
 
 
@@ -232,9 +232,9 @@ test('.toString()', 3, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       e = MathLib.set(),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true);
-  equals(s.toString(),  '(2, 3, 4, 8, 9)', 'Testing .toString() (set)');
-  equals(e.toString(),  '∅', 'Testing .toString() (empty set)');
-  equals(m.toString(),  '(2, 2, 3, 3, 4, 8, 9)', 'Testing .toString() (multiset)');
+  equal(s.toString(),  '(2, 3, 4, 8, 9)', 'Testing .toString() (set)');
+  equal(e.toString(),  '∅', 'Testing .toString() (empty set)');
+  equal(m.toString(),  '(2, 2, 3, 3, 4, 8, 9)', 'Testing .toString() (multiset)');
 });
 
 
@@ -257,11 +257,11 @@ test('fromTo()', 1, function () {
 
 test('constructor', 1, function () {
   var s = MathLib.set([1, 2, 3, 4]);
-  equals(s.constructor, MathLib.set, 'Testing .constructor');
+  equal(s.constructor, MathLib.set, 'Testing .constructor');
 });
 
 test('type', 1, function () {
   var s = MathLib.set([1, 2, 3, 4]);
-  equals(s.type, 'set', 'Testing .type');
+  equal(s.type, 'set', 'Testing .type');
 });
 

@@ -1,7 +1,7 @@
 module("Vector");
 test("init", 2, function () {
   var vector = MathLib.vector([1, 2, 3]);
-  equals(vector.dim, 3, "Testing the dimension");
+  equal(vector.dim, 3, "Testing the dimension");
   deepEqual(vector, [1, 2, 3], 'checking the entries');
 });
 
@@ -18,17 +18,17 @@ test('.isEqual()', 3, function () {
       w = MathLib.vector([0, 1, 2]),
       u = MathLib.vector([0, 0, 0]),
       x = MathLib.vector([0, 0, 0, 0]);
-  equals(v.isEqual(w), true, ".isEqual()");
-  equals(v.isEqual(u), false, ".isEqual()");
-  equals(u.isEqual(x), false, ".isEqual()");
+  equal(v.isEqual(w), true, ".isEqual()");
+  equal(v.isEqual(u), false, ".isEqual()");
+  equal(u.isEqual(x), false, ".isEqual()");
 });
 
 
 test('.isZero()', 2, function () {
   var v = MathLib.vector([0, 0, 0]),
       w = MathLib.vector([0, 0, 1]);
-  equals(v.isZero(), true, ".isZero()");
-  equals(w.isZero(), false, ".isZero()");
+  equal(v.isZero(), true, ".isZero()");
+  equal(w.isZero(), false, ".isZero()");
 });
 
 
@@ -41,20 +41,20 @@ test(".map()", 2, function () {
       res = p.map(f);
 
   deepEqual(res, q, ".map()");
-  equals(res.type, 'vector', ".type should be vector");
+  equal(res.type, 'vector', ".type should be vector");
 });
 
 
 test('.scalarproduct()', 1, function () {
   var v = MathLib.vector([3, 1, 4]),
       w = MathLib.vector([1, 5, 9]);
-  equals(v.scalarproduct(w), 44, ".scalarproduct()");
+  equal(v.scalarproduct(w), 44, ".scalarproduct()");
 });
 
 
 test('.size()', 1, function () {
   var v = MathLib.vector([1, 2, 3]);
-  equals(v.size(), Math.sqrt(14), ".size()");
+  equal(v.size(), Math.sqrt(14), ".size()");
 });
 
 test('.times()', 2, function () {
@@ -66,25 +66,25 @@ test('.times()', 2, function () {
 
 test('.toContentMathML()', 1, function () {
   var v = MathLib.vector([1, 2, 3]);
-  equals(v.toContentMathML(), '<vector><cn>1</cn><cn>2</cn><cn>3</cn></vector>', ".toContentMathML()");
+  equal(v.toContentMathML(), '<vector><cn>1</cn><cn>2</cn><cn>3</cn></vector>', ".toContentMathML()");
 });
 
 
 test('.toLaTeX()', 1, function () {
   var v = MathLib.vector([1, 2, 3]);
-  equals(v.toLaTeX(), '\\begin{pmatrix}\n\t1\\\\\n\t2\\\\\n\t3\n\\end{pmatrix}');
+  equal(v.toLaTeX(), '\\begin{pmatrix}\n\t1\\\\\n\t2\\\\\n\t3\n\\end{pmatrix}');
 });
 
 
 test('.toMathML()', 1, function () {
   var v = MathLib.vector([1, 2, 3]);
-  equals(v.toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>)</mo></mrow>', ".toMathML()");
+  equal(v.toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>)</mo></mrow>', ".toMathML()");
 });
 
 
 test('.toString()', 1, function () {
   var v = MathLib.vector([1, 2, 3]);
-  equals(v.toString(), '(1, 2, 3)', ".toString()");
+  equal(v.toString(), '(1, 2, 3)', ".toString()");
 });
 
 
@@ -99,16 +99,16 @@ test('.vectorproduct()', 1, function () {
 
 test('constructor', 1, function () {
   var v = MathLib.vector([1, 2, 3]);
-  equals(v.constructor, MathLib.vector, 'Testing .constructor');
+  equal(v.constructor, MathLib.vector, 'Testing .constructor');
 });
 
 test('type', 1, function () {
   var v = MathLib.vector([1, 2, 3]);
-  equals(v.type, 'vector', 'Testing .type');
+  equal(v.type, 'vector', 'Testing .type');
 });
 
 
 test('zero', 1, function () {
   var v = MathLib.vector.zero(3);
-  equals(v.isZero(), true, 'testing zero vector');
+  equal(v.isZero(), true, 'testing zero vector');
 });

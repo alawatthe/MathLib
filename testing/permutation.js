@@ -2,7 +2,7 @@ module('Permutation');
 test('init', 1, function () {
   var p = MathLib.permutation([[0, 1], [2, 3]]),
       q = MathLib.permutation([[0, 1], [2, 3]]);
-  equals(p.type, 'permutation', 'Testing .type');
+  equal(p.type, 'permutation', 'Testing .type');
 });
 
 test('.applyTo()', 6, function () {
@@ -11,12 +11,12 @@ test('.applyTo()', 6, function () {
       q = MathLib.permutation([]),
       v = MathLib.vector([1, 2, 3]);
 
-  equals(p.applyTo(0), 2, 'Testing .applyTo()');
-  equals(p.applyTo(3), 3, 'Testing .applyTo()');
+  equal(p.applyTo(0), 2, 'Testing .applyTo()');
+  equal(p.applyTo(3), 3, 'Testing .applyTo()');
   deepEqual(r.applyTo(v), MathLib.vector([1, 3, 2]), 'Testing .applyTo()');
-  equals(r.applyTo(v).type, 'vector', 'Testing .applyTo()');
+  equal(r.applyTo(v).type, 'vector', 'Testing .applyTo()');
   deepEqual(r.applyTo([1, 2, 3]), [1, 3, 2], 'Testing .applyTo()');
-  equals(q.applyTo(1), 1, 'Testing .applyTo() with id');
+  equal(q.applyTo(1), 1, 'Testing .applyTo() with id');
 });
 
 
@@ -29,7 +29,7 @@ test(".map()", 2, function () {
       res = p.map(f);
 
   deepEqual(res, q, ".map()");
-  equals(res.type, 'permutation', ".type should be permutation");
+  equal(res.type, 'permutation', ".type should be permutation");
 });
 
 
@@ -43,8 +43,8 @@ test('.times()', 1, function () {
 test('.sgn()', 2, function () {
   var p = MathLib.permutation([[0, 1], [1, 2]]),
       q = MathLib.permutation([[0, 1], [1, 2, 3]]);
-  equals(p.sgn(), 1, 'Testing .sgn()');
-  equals(q.sgn(), -1, 'Testing .sgn()');
+  equal(p.sgn(), 1, 'Testing .sgn()');
+  equal(q.sgn(), -1, 'Testing .sgn()');
 });
 
 
@@ -61,8 +61,8 @@ test('.toMatrix()', 2, function () {
 test('.toString()', 2, function () {
   var p = MathLib.permutation([[0, 1], [2, 3]]),
       q = MathLib.permutation([]);
-  equals(p.toString(), '(0,1)(2,3)', 'Testing .toString()');
-  equals(q.toString(), '', 'Testing .toString() with id permutation');
+  equal(p.toString(), '(0,1)(2,3)', 'Testing .toString()');
+  equal(q.toString(), '', 'Testing .toString() with id permutation');
 });
 
 
@@ -85,11 +85,11 @@ test('.listToCycle()', 1, function () {
 
 test('constructor', 1, function () {
   var p = MathLib.permutation([[0, 1], [2, 3]]);
-  equals(p.constructor, MathLib.permutation, 'Testing .constructor');
+  equal(p.constructor, MathLib.permutation, 'Testing .constructor');
 });
 
 
 test('type', 1, function () {
   var p = MathLib.permutation([[0, 1], [2, 3]]);
-  equals(p.type, 'permutation', 'Testing .type');
+  equal(p.type, 'permutation', 'Testing .type');
 });

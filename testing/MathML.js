@@ -16,7 +16,7 @@ test('init', 2, function () {
       return nodeList;
     };
 
-  equals(typeof mathML, 'object', 'Testing typeof the MathML');
+  equal(typeof mathML, 'object', 'Testing typeof the MathML');
   deepEqual(test(mathML), ['matrix', 'matrixrow', 'cn', 'cn', 'matrixrow', 'cn', 'cn'], 'Checking if the MathML was tokenized right.');
 });
 
@@ -64,5 +64,5 @@ test('constructor', 1, function () {
 
 test('type', 1, function () {
   var m = MathLib.MathML('<cn type="complex-cartesian">3<sep/>4</cn>');
-  equals(m.type, 'MathML', 'Testing .type');
+  equal(m.type, 'MathML', 'Testing .type');
 });

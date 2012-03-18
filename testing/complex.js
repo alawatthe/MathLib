@@ -1,23 +1,23 @@
 module('Complex');
 test('init (1 Array)', 3, function () {
   var c = MathLib.complex([1, 2]);
-  equals(c.re, 1, 'Testing the real part');
-  equals(c.im, 2, 'Testing the complex part');
+  equal(c.re, 1, 'Testing the real part');
+  equal(c.im, 2, 'Testing the complex part');
   deepEqual(c.z, [1, 2], 'Testing the complete complex number');
 });
 
 
 test('init (2 Numbers)', 3, function () {
   var c = MathLib.complex(3, 2);
-  equals(c.re, 3 * Math.cos(2), 'Testing the real part');
-  equals(c.im, 3 * Math.sin(2), 'Testing the complex part');
+  equal(c.re, 3 * Math.cos(2), 'Testing the real part');
+  equal(c.im, 3 * Math.sin(2), 'Testing the complex part');
   deepEqual(c.z, [3 * Math.cos(2), 3 * Math.sin(2)], 'Testing the complete complex number');
 });
 
 
 test('.abs()', 1, function () {
   var c = MathLib.complex([3, 4]);
-  equals(MathLib.isEqual(c.abs(), 5), true, 'Absolut value of the complex number');
+  equal(MathLib.isEqual(c.abs(), 5), true, 'Absolut value of the complex number');
 });
 
 
@@ -25,9 +25,9 @@ test('.argument()', 3, function () {
   var c = MathLib.complex([1, 1]),
       d = MathLib.complex([1, -1]),
       e = MathLib.complex([0, 0]);
-  equals(c.argument(), 0.7853981633974483, '');
-  equals(d.argument(), 5.497787143782138, '');
-  equals(e.argument(), 0,  '');
+  equal(c.argument(), 0.7853981633974483, '');
+  equal(d.argument(), 5.497787143782138, '');
+  equal(e.argument(), 0,  '');
 });
 
 
@@ -35,9 +35,9 @@ test('.compare()', 3, function () {
   var c = MathLib.complex([3, 2]),
       d = MathLib.complex([1, 1]),
       e = MathLib.complex([-1, 1]);
-  equals(c.compare(c), 0, 'equal complex numbers');
-  equals(c.compare(d), 1, 'normal compare');
-  equals(d.compare(e), -1,  '');
+  equal(c.compare(c), 0, 'equal complex numbers');
+  equal(c.compare(d), 1, 'normal compare');
+  equal(d.compare(e), -1,  '');
 });
 
 
@@ -68,54 +68,54 @@ test('.isEqual()', 2, function () {
   var c = MathLib.complex([3, 4]),
       d = MathLib.complex([6 / 2, 4]),
       e = MathLib.complex([5, 3]);
-  equals(c.isEqual(d), true, 'equal number');
-  equals(d.isEqual(e), false, 'different number');
+  equal(c.isEqual(d), true, 'equal number');
+  equal(d.isEqual(e), false, 'different number');
 });
 
 
 test('.isFinite()', 2, function () {
   var c = MathLib.complex([3, 4]),
       d = MathLib.complex([Infinity, 0]);
-  equals(c.isFinite(), true, 'finite complex number');
-  equals(d.isFinite(), false, 'infinte complex number');
+  equal(c.isFinite(), true, 'finite complex number');
+  equal(d.isFinite(), false, 'infinte complex number');
 });
 
 
 test('.isOne()', 2, function () {
   var c = MathLib.complex([3, 4]),
       d = MathLib.complex([1, 0]);
-  equals(c.isOne(), false, '3+4i');
-  equals(d.isOne(), true, 'complex one');
+  equal(c.isOne(), false, '3+4i');
+  equal(d.isOne(), true, 'complex one');
 });
 
 
 test('.isReal()', 2, function () {
   var c = MathLib.complex([3, 4]),
       d = MathLib.complex([3, 0]);
-  equals(c.isReal(), false, '3+4i');
-  equals(d.isReal(), true, '3+0i');
+  equal(c.isReal(), false, '3+4i');
+  equal(d.isReal(), true, '3+0i');
 });
 
 
 test('.isZero()', 2, function () {
   var c = MathLib.complex([3, 4]),
       d = MathLib.complex([0, 0]);
-  equals(c.isZero(), false, 'non zero complex');
-  equals(d.isZero(), true, 'complex zero');
+  equal(c.isZero(), false, 'non zero complex');
+  equal(d.isZero(), true, 'complex zero');
 });
 
 
 test('.ln()', 1, function () {
   var c = MathLib.complex([3, 4]),
       res = MathLib.complex([1.6094379124341003, 0.9272952180016123]);
-  equals(MathLib.isEqual(c.ln(), res), true, 'natural logarithm of the complex number');
+  equal(MathLib.isEqual(c.ln(), res), true, 'natural logarithm of the complex number');
 });
 
 
 test(".mod()", 1, function () {
   var c = MathLib.complex([5, 6]),
       d = MathLib.complex([2, 0]);
-  equals(c.mod(3).isEqual(d), true, ".mod()");
+  equal(c.mod(3).isEqual(d), true, ".mod()");
 });
 
 
@@ -143,7 +143,7 @@ test('.plus()', 2, function () {
 test(".sgn()", 1, function () {
   var c = MathLib.complex([5, 6]),
       d = MathLib.complex(1, Math.atan2(6, 5));
-  equals(c.sgn().isEqual(d), true, ".sgn()");
+  equal(c.sgn().isEqual(d), true, ".sgn()");
 });
 
 
@@ -161,11 +161,11 @@ test('.toContentMathML()', 5, function () {
       e = MathLib.complex([4, 0]),
       f = MathLib.complex([4, -5]),
       g = MathLib.complex([0, 0]);
-  equals(c.toContentMathML(), '<cn type="complex-cartesian">3<sep/>4</cn>', 'Normal complex number.');
-  equals(d.toContentMathML(), '<cn type="complex-cartesian">0<sep/>7</cn>', 'Real part is zero.');
-  equals(e.toContentMathML(), '<cn type="complex-cartesian">4<sep/>0</cn>', 'Complex part is zero.');
-  equals(f.toContentMathML(), '<cn type="complex-cartesian">4<sep/>-5</cn>', 'Complex part is negative.');
-  equals(g.toContentMathML(), '<cn type="complex-cartesian">0<sep/>0</cn>', 'Number is zero.');
+  equal(c.toContentMathML(), '<cn type="complex-cartesian">3<sep/>4</cn>', 'Normal complex number.');
+  equal(d.toContentMathML(), '<cn type="complex-cartesian">0<sep/>7</cn>', 'Real part is zero.');
+  equal(e.toContentMathML(), '<cn type="complex-cartesian">4<sep/>0</cn>', 'Complex part is zero.');
+  equal(f.toContentMathML(), '<cn type="complex-cartesian">4<sep/>-5</cn>', 'Complex part is negative.');
+  equal(g.toContentMathML(), '<cn type="complex-cartesian">0<sep/>0</cn>', 'Number is zero.');
 });
 
 
@@ -175,11 +175,11 @@ test('.toLaTeX()', 5, function () {
       e = MathLib.complex([4, 0]),
       f = MathLib.complex([4, -5]),
       g = MathLib.complex([0, 0]);
-  equals(c.toLaTeX(), '3+4i', 'Normal complex number.');
-  equals(d.toLaTeX(), '7i', 'Real part is zero.');
-  equals(e.toLaTeX(), '4', 'Complex part is zero.');
-  equals(f.toLaTeX(), '4-5i', 'Complex part is negative.');
-  equals(g.toLaTeX(), '0', 'Number is zero.');
+  equal(c.toLaTeX(), '3+4i', 'Normal complex number.');
+  equal(d.toLaTeX(), '7i', 'Real part is zero.');
+  equal(e.toLaTeX(), '4', 'Complex part is zero.');
+  equal(f.toLaTeX(), '4-5i', 'Complex part is negative.');
+  equal(g.toLaTeX(), '0', 'Number is zero.');
 });
 
 
@@ -189,17 +189,17 @@ test('.toMathML()', 5, function () {
       e = MathLib.complex([4, 0]),
       f = MathLib.complex([4, -5]),
       g = MathLib.complex([0, 0]);
-  equals(c.toMathML(), '<mn>3</mn><mo>+</mo><mn>4</mn><mo>&#x2062;</mo><mi>i</mi>', 'Normal complex number.');
-  equals(d.toMathML(), '<mn>7</mn><mo>&#x2062;</mo><mi>i</mi>', 'Real part is zero.');
-  equals(e.toMathML(), '<mn>4</mn>', 'Complex part is zero.');
-  equals(f.toMathML(), '<mn>4</mn><mo>-</mo><mn>5</mn><mo>&#x2062;</mo><mi>i</mi>', 'Complex part is negative.');
-  equals(g.toMathML(), '<mn>0</mn>', 'Number is zero.');
+  equal(c.toMathML(), '<mn>3</mn><mo>+</mo><mn>4</mn><mo>&#x2062;</mo><mi>i</mi>', 'Normal complex number.');
+  equal(d.toMathML(), '<mn>7</mn><mo>&#x2062;</mo><mi>i</mi>', 'Real part is zero.');
+  equal(e.toMathML(), '<mn>4</mn>', 'Complex part is zero.');
+  equal(f.toMathML(), '<mn>4</mn><mo>-</mo><mn>5</mn><mo>&#x2062;</mo><mi>i</mi>', 'Complex part is negative.');
+  equal(g.toMathML(), '<mn>0</mn>', 'Number is zero.');
 });
 
 
 test('.toMatrix()', 2, function () {
   var c = MathLib.complex([3, -4]);
-  equals(c.toMatrix().type, 'matrix', 'type check');
+  equal(c.toMatrix().type, 'matrix', 'type check');
   deepEqual(c.toMatrix().toComplex().z, [3, -4], 'back transformation');
 });
 
@@ -207,8 +207,8 @@ test('.toMatrix()', 2, function () {
 test('.toPoint()', 3, function () {
   var c = MathLib.complex([3, -4]),
       p = c.toPoint();
-  equals(p.type, 'point', 'Converting a complex number to a point: type check');
-  equals(p.dim, 2, 'Converting a complex number to a point: dimension check.');
+  equal(p.type, 'point', 'Converting a complex number to a point: type check');
+  equal(p.dim, 2, 'Converting a complex number to a point: dimension check.');
   deepEqual(p, MathLib.point([3, -4, 1]), 'Converting a complex number to a point: position check.');
 });
 
@@ -219,17 +219,17 @@ test('.toString()', 5, function () {
       e = MathLib.complex([4, 0]),
       f = MathLib.complex([4, -5]),
       g = MathLib.complex([0, 0]);
-  equals(c.toString(), '3+4i', 'Normal complex number.');
-  equals(d.toString(), '7i', 'Real part is zero.');
-  equals(e.toString(), '4', 'Complex part is zero.');
-  equals(f.toString(), '4-5i', 'Complex part is negative.');
-  equals(g.toString(), '0', 'Number is zero.');
+  equal(c.toString(), '3+4i', 'Normal complex number.');
+  equal(d.toString(), '7i', 'Real part is zero.');
+  equal(e.toString(), '4', 'Complex part is zero.');
+  equal(f.toString(), '4-5i', 'Complex part is negative.');
+  equal(g.toString(), '0', 'Number is zero.');
 });
 
 
 test('constructor', 1, function () {
   var c = MathLib.complex([3, 4]);
-  equals(c.constructor, MathLib.complex, 'Testing .constructor');
+  equal(c.constructor, MathLib.complex, 'Testing .constructor');
 });
 
 test('one', 1, function () {
@@ -239,7 +239,7 @@ test('one', 1, function () {
 
 test('type', 1, function () {
   var c = MathLib.complex([3, 4]);
-  equals(c.type, 'complex', 'Testing .type');
+  equal(c.type, 'complex', 'Testing .type');
 });
 
 test('zero', 1, function () {

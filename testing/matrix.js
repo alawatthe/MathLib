@@ -4,8 +4,8 @@
 module('Matrix');
 test('init', 2, function () {
   var m = MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-  equals(m.rows, 3, 'Testing the number of rows');
-  equals(m.cols, 3, 'Testing the number of cols');
+  equal(m.rows, 3, 'Testing the number of rows');
+  equal(m.cols, 3, 'Testing the number of cols');
 });
 
 
@@ -40,9 +40,9 @@ test('.determinant()', 3, function () {
       n = MathLib.matrix([[42]]),
       p = MathLib.matrix([[0, 1, 2], [3, 2, 1]]);
 
-  equals(m.determinant(), 3, 'Determinant of a 3x3 matrix');
-  equals(n.determinant(), 42, 'Determinant of 1x1 matrix');
-  equals(p.determinant(), undefined, 'Determinant of 2x3 matrix should be undefined');
+  equal(m.determinant(), 3, 'Determinant of a 3x3 matrix');
+  equal(n.determinant(), 42, 'Determinant of 1x1 matrix');
+  equal(p.determinant(), undefined, 'Determinant of 2x3 matrix should be undefined');
 });
 
 
@@ -50,24 +50,24 @@ test('.isDiag()', 2, function () {
   var c = MathLib.complex(0, 0),
       m = MathLib.matrix([[1, 0, 0], [0, 5, 0], [0, 0, 9]]),
       n = MathLib.matrix([[1, 4, 7], [2, 5, 8], [2, 5, 8]]);
-  equals(m.isDiag(), true, 'square matrix');
-  equals(n.isDiag(), false, 'non square matrix');
+  equal(m.isDiag(), true, 'square matrix');
+  equal(n.isDiag(), false, 'non square matrix');
 });
 
 
 test('.isIdentity()', 2, function () {
   var m = MathLib.matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
       n = MathLib.matrix([[1, 4, 7], [2, 5, 8], [2, 5, 8]]);
-  equals(m.isIdentity(), true, '.isIdentity() on identity matrix');
-  equals(n.isIdentity(), false, '.isIdentity() on non identity matrix');
+  equal(m.isIdentity(), true, '.isIdentity() on identity matrix');
+  equal(n.isIdentity(), false, '.isIdentity() on non identity matrix');
 });
 
 
 test('.isInvertible()', 2, function () {
   var m = MathLib.matrix([[1, 4, 7], [2, 5, 8], [2, 5, 2]]),
       n = MathLib.matrix([[1, 4, 7], [2, 5, 8], [3, 9, 15]]);
-  equals(m.isInvertible(), true, '.isInvertible(), invertible matrix');
-  equals(n.isInvertible(), false, '.isInvertible(), singular matrix');
+  equal(m.isInvertible(), true, '.isInvertible(), invertible matrix');
+  equal(n.isInvertible(), false, '.isInvertible(), singular matrix');
 });
 
 
@@ -76,18 +76,18 @@ test('.isLower()', 4, function () {
       n = MathLib.matrix([[1, 4, 7], [2, 5, 8], [3, 5, 6]]),
       o = MathLib.matrix([[1, 0, 0], [4, 5, 0]]),
       p = MathLib.matrix([[1, 0, 0], [4, 5, 0], [4, 0, 6], [4, 3, 2]]);
-  equals(m.isLower(), true, 'upper matrix');
-  equals(n.isLower(), false, 'non upper matrix');
-  equals(o.isLower(), true, 'upper matrix');
-  equals(p.isLower(), true, 'upper matrix');
+  equal(m.isLower(), true, 'upper matrix');
+  equal(n.isLower(), false, 'non upper matrix');
+  equal(o.isLower(), true, 'upper matrix');
+  equal(p.isLower(), true, 'upper matrix');
 });
 
 
 test('.isOrthogonal()', 2, function () {
   var m = MathLib.matrix([[0.8, -0.6], [0.6, 0.8]]),
       n = MathLib.matrix([[1, 4, 7], [2, 5, 8], [2, 5, 8]]);
-  equals(m.isOrthogonal(), true, '.isOrthogonal() on orthogal matrix');
-  equals(n.isOrthogonal(), false, '.isOrthogonal() on non orthogonal matrix');
+  equal(m.isOrthogonal(), true, '.isOrthogonal() on orthogal matrix');
+  equal(n.isOrthogonal(), false, '.isOrthogonal() on non orthogonal matrix');
 });
 
 
@@ -95,25 +95,25 @@ test('.isPermutation()', 3, function () {
   var m = MathLib.matrix([[0, 1, 0], [1, 0, 0], [0, 0, 1]]),
       n = MathLib.matrix([[1, 4, 7], [2, 5, 8], [2, 3, 4]]),
       o = MathLib.matrix([[0, 1, 0], [1, 0, 0], [0, 0, 0]]);
-  equals(m.isPermutation(), true, 'permutation matrix');
-  equals(n.isPermutation(), false, 'non permutation matrix');
-  equals(o.isPermutation(), false, 'zero line');
+  equal(m.isPermutation(), true, 'permutation matrix');
+  equal(n.isPermutation(), false, 'non permutation matrix');
+  equal(o.isPermutation(), false, 'zero line');
 });
 
 
 test('.isPosDefinite()', 2, function () {
   var m = MathLib.matrix([[2, -1, 0], [-1, 2, -1], [0, -1, 2]]),
       n = MathLib.matrix([[1, 2], [2, 1]]);
-  equals(m.isPosDefinite(), true, 'positiv definite matrix');
-  equals(n.isPosDefinite(), false, 'non positiv definite matrix');
+  equal(m.isPosDefinite(), true, 'positiv definite matrix');
+  equal(n.isPosDefinite(), false, 'non positiv definite matrix');
 });
 
 
 test('.isSquare()', 2, function () {
   var m = MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
       n = MathLib.matrix([[1, 4, 7], [2, 5, 8]]);
-  equals(m.isSquare(), true, 'square matrix');
-  equals(n.isSquare(), false, 'non square matrix');
+  equal(m.isSquare(), true, 'square matrix');
+  equal(n.isSquare(), false, 'non square matrix');
 });
 
 
@@ -121,8 +121,8 @@ test('.isSymmetric()', 2, function () {
   var c = MathLib.complex(4, 0),
       m = MathLib.matrix([[1, 7, c], [7, 0, 3], [4, 3, 1]]),
       n = MathLib.matrix([[0, 0, 0], [0, 1, c], [0, 0, 0]]);
-  equals(m.isSymmetric(), true, 'symmetric matrix');
-  equals(n.isSymmetric(), false, 'non symmetric matrix');
+  equal(m.isSymmetric(), true, 'symmetric matrix');
+  equal(n.isSymmetric(), false, 'non symmetric matrix');
 });
 
 
@@ -131,18 +131,18 @@ test('.isUpper()', 4, function () {
       n = MathLib.matrix([[1, 4, 7], [2, 5, 8], [3, 5, 6]]),
       o = MathLib.matrix([[1, 4, 7], [0, 5, 8]]),
       p = MathLib.matrix([[1, 4, 7], [0, 5, 8], [0, 0, 6], [0, 0, 0]]);
-  equals(m.isUpper(), true, 'upper matrix');
-  equals(n.isUpper(), false, 'non upper matrix');
-  equals(o.isUpper(), true, 'upper matrix');
-  equals(p.isUpper(), true, 'upper matrix');
+  equal(m.isUpper(), true, 'upper matrix');
+  equal(n.isUpper(), false, 'non upper matrix');
+  equal(o.isUpper(), true, 'upper matrix');
+  equal(p.isUpper(), true, 'upper matrix');
 });
 
 
 test('.isVector()', 2, function () {
   var m = MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
       n = MathLib.matrix([[1, 2, 3]]);
-  equals(m.isVector(), false, 'normal matrix');
-  equals(n.isVector(), true, 'one row matrix');
+  equal(m.isVector(), false, 'normal matrix');
+  equal(n.isVector(), true, 'one row matrix');
 });
 
 
@@ -150,8 +150,8 @@ test('.isZero()', 2, function () {
   var c = MathLib.complex(0, 0),
       m = MathLib.matrix([[0, 0, 0], [0, 0, c], [0, 0, 0]]),
       n = MathLib.matrix([[0, 0, 0], [0, 1, c], [0, 0, 0]]);
-  equals(m.isZero(), true, 'zero matrix');
-  equals(n.isZero(), false, 'non zero matrix');
+  equal(m.isZero(), true, 'zero matrix');
+  equal(n.isZero(), false, 'non zero matrix');
 });
 
 
@@ -175,7 +175,7 @@ test(".map()", 2, function () {
       res = p.map(f);
 
   deepEqual(res, q, ".map()");
-  equals(res.type, 'matrix', ".type should be matrix");
+  equal(res.type, 'matrix', ".type should be matrix");
 });
 
 
@@ -207,8 +207,8 @@ test('.plus()', 1, function () {
 test('.rank()', 2, function () {
   var m = MathLib.matrix([[1, 2, 3], [0, 5, 4], [0, 10, 2]]),
       n = MathLib.matrix([[1, 2, 3], [0, 6, 4], [0, 3, 2]]);
-  equals(m.rank(), 3, '.rank()');
-  equals(n.rank(), 2, '.rank()');
+  equal(m.rank(), 3, '.rank()');
+  equal(n.rank(), 2, '.rank()');
 });
 
 
@@ -275,7 +275,7 @@ test('.trace()', 2, function () {
   var c = MathLib.complex([3, 4]),
       m = MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
       n = MathLib.matrix([[1, 2], [3, c]]);
-  equals(m.trace(), 15, 'trace of a simple matrix');
+  equal(m.trace(), 15, 'trace of a simple matrix');
   deepEqual(n.trace().z, [4, 4], 'trace of a complex matrix');
 });
 
@@ -294,8 +294,8 @@ test('.toArray()', 4, function () {
       a = m.toArray();
 
   deepEqual(a, [[1, 2, 3], [4, 5, 6], [7, 8, 9]], '.toArray()');
-  equals(Object.prototype.toString.call(a), '[object Array]', '.toArray()');
-  equals(a.type, undefined, 'get sure that it is not a Mathlib object');
+  equal(Object.prototype.toString.call(a), '[object Array]', '.toArray()');
+  equal(a.type, undefined, 'get sure that it is not a Mathlib object');
   a[0][0] = 42;
   deepEqual(m, MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]), 'make sure the matrix hasn\'t changed');
 });
@@ -346,12 +346,12 @@ test('.toString()', 1, function () {
 // Static methods
 test('constructor', 1, function () {
   var m = MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-  equals(m.constructor, MathLib.matrix, 'Testing .constructor');
+  equal(m.constructor, MathLib.matrix, 'Testing .constructor');
 });
 
 
 test('identity()', 1, function () {
-  equals(MathLib.matrix.identity(4).isIdentity(), true, 'creating a identity matrix');
+  equal(MathLib.matrix.identity(4).isIdentity(), true, 'creating a identity matrix');
 });
 
 
@@ -367,5 +367,5 @@ test('numbers()', 3, function () {
 
 test('type', 1, function () {
   var m = MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-  equals(m.type, 'matrix', 'Testing .type');
+  equal(m.type, 'matrix', 'Testing .type');
 });

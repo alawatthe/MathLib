@@ -366,11 +366,16 @@ var functionList1 = {
           return res;
       },
   cbrt: function (x) {
-          var a = x, a3, a3x, an;
+          var a3, a3x, an, a;
+
           // Handle &plusmn;0, NaN, &plusmn;&infin;
           if (x === 0 || x !== x || x === Infinity || x === -Infinity) {
             return x;
           }
+          
+          // Get an approximation
+          a = MathLib.sgn(x) * Math.pow(Math.abs(x), 1/3);
+
           // Halley's method
           while (true) {
             a3 = Math.pow(a, 3);
@@ -480,10 +485,16 @@ var functionList1 = {
       },
   floor: Math.floor,
   hypot: function (a, b) {
-        var args = Array.prototype.slice.call(arguments),
-            p, q, r, s;
-        if (args.length > 2) {
-          return MathLib.hypot(args.shift(), MathLib.hypot.apply(null, args));
+        var args, x, y;
+
+        if (arguments.length === 1) {
+          return Math.abs(a);
+        }
+
+        if (arguments.length > 2) {
+          args = Array.prototype.slice.call(arguments);
+          args.shift();
+          b = MathLib.hypot.apply(null, args);
         }
 
         a = MathLib.abs(a);
@@ -494,16 +505,10 @@ var functionList1 = {
           return Infinity;
         }
 
-        // Moler-Morrison algorithm
-        p = Math.max(a, b);
-        q = Math.min(a, b);
-        while (q > MathLib.epsilon) {
-          r = Math.pow((q/p), 2);
-          s = r/(4+r);
-          p = p + 2*s*p;
-          q = s * q;
-        }
-        return p;
+        x = Math.max(a, b);
+        y = Math.min(a, b);
+
+        return x * Math.sqrt(1 + Math.pow(y/x, 2));
       },
   hypot2: function () {
         var args = Array.prototype.slice.call(arguments);

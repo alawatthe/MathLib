@@ -9,7 +9,7 @@ test("init", 2, function () {
 
 test("properties", 2, function () {
   var p = MathLib.polynomial(3);
-  equals(p.deg, 3, "testing if .degree is right");
+  equal(p.deg, 3, "testing if .degree is right");
   deepEqual(p, [0, 0, 0, 1], ".coef");
 });
 
@@ -32,7 +32,7 @@ test(".isEqual()", 1, function () {
   var c = MathLib.complex([0, 0]),
       p = MathLib.polynomial(3),
       q = MathLib.polynomial([c, 0, 0, 1]);
-  equals(q.isEqual(p), true, ".times(polynomial)");
+  equal(q.isEqual(p), true, ".times(polynomial)");
 });
 
 
@@ -45,7 +45,7 @@ test(".map()", 2, function () {
       res = p.map(f);
 
   deepEqual(res, q, ".map()");
-  equals(res.type, 'polynomial', ".type should be polynomial");
+  equal(res.type, 'polynomial', ".type should be polynomial");
 });
 
 
@@ -54,7 +54,7 @@ test(".mod()", 1, function () {
       cq = MathLib.complex([2, 0]),
       p = MathLib.polynomial([3, cp, -2, 0, 4, 5]),
       q = MathLib.polynomial([0, cq, 1, 0, 1, 2]);
-  equals(p.mod(3).isEqual(q), true, ".mod()");
+  equal(p.mod(3).isEqual(q), true, ".mod()");
 });
 
 
@@ -114,21 +114,21 @@ test(".valueAt()", 6, function () {
       p2 = MathLib.polynomial([1, -4, MathLib.complex([4, -1])]),
       m = MathLib.matrix([[1, 0, 1], [2, 2, 1], [4, 2, 1]]),
       charPoly = MathLib.polynomial([4, -1, -4, 1]);
-  equals(p.valueAt(4), 64, ".valueAt()");
-  equals(p1.valueAt(2), 17, ".valueAt()");
+  equal(p.valueAt(4), 64, ".valueAt()");
+  equal(p1.valueAt(2), 17, ".valueAt()");
 
   deepEqual(p1.valueAt(MathLib.complex([2, 3])).z, [-10, 42], ".valueAt()");
   deepEqual(p2.valueAt(2).z, [9, -4], ".valueAt()");
   deepEqual(p2.valueAt(MathLib.complex([2, 3])).z, [-15, 41], ".valueAt()");
 
-  equals(charPoly.valueAt(m).isZero(), true, 'Cayley–Hamilton theorem');
+  equal(charPoly.valueAt(m).isZero(), true, 'Cayley–Hamilton theorem');
 });
 
 
 
 test('constructor', 1, function () {
   var p = MathLib.polynomial([1, 2, 3]);
-  equals(p.constructor, MathLib.polynomial, 'Testing .constructor');
+  equal(p.constructor, MathLib.polynomial, 'Testing .constructor');
 });
 
 test('one', 1, function () {
@@ -138,7 +138,7 @@ test('one', 1, function () {
 
 test('type', 1, function () {
   var p = MathLib.polynomial([1, 2, 3]);
-  equals(p.type, 'polynomial', 'Testing .type');
+  equal(p.type, 'polynomial', 'Testing .type');
 });
 
 test('zero', 1, function () {
