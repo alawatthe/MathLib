@@ -119,6 +119,14 @@ test('.compare()', 3, function () {
 });
 
 
+test('cos()', 4, function () {
+  equal(MathLib.cos(Math.PI), -1, 'MathLib.cos(Math.PI) should be -1');
+  deepEqual(MathLib.cos(Infinity), NaN, 'MathLib.cos(Infinity) should be NaN');
+  deepEqual(MathLib.cos(-Infinity), NaN, 'MathLib.cos(-Infinity) should be NaN');
+  deepEqual(MathLib.cos(NaN), NaN, 'MathLib.cos(NaN) should be NaN');
+});
+
+
 test('.exp()', 2, function () {
   equal(MathLib.exp(0), 1);
   equal(MathLib.exp(1), MathLib.e);
@@ -244,11 +252,120 @@ test('.isZero()', 2, function () {
   equal(MathLib.isZero(1), false);
 });
 
-
 test('.max()', 2, function () {
   equal(MathLib.max([1, 42, 17, 4]), 42);
   equal(MathLib.max([1, 42, 17, 4], 2), 17);
 });
+
+test('pow()', 65, function () {
+  equal(MathLib.pow(2, 3), 8, 'simple check');
+  equal(MathLib.pow(2, -3), 0.125, 'simple check');
+
+  //  1. MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or infinity)
+  equal(MathLib.pow(1, +0), 1, 'Specification: 1.');
+  equal(MathLib.pow(0, +0), 1, 'Specification: 1.');
+  equal(MathLib.pow(-0, +0), 1, 'Specification: 1.');
+  equal(MathLib.pow(NaN, +0), 1, 'Specification: 1.');
+  equal(MathLib.pow(Infinity, +0), 1, 'Specification: 1.');
+  equal(MathLib.pow(-Infinity, +0), 1, 'Specification: 1.');
+  equal(MathLib.pow(1, -0), 1, 'Specification: 1.');
+  equal(MathLib.pow(0, -0), 1, 'Specification: 1.');
+  equal(MathLib.pow(-0, -0), 1, 'Specification: 1.');
+  equal(MathLib.pow(NaN, -0), 1, 'Specification: 1.');
+  equal(MathLib.pow(Infinity, -0), 1, 'Specification: 1.');
+  equal(MathLib.pow(-Infinity, -0), 1, 'Specification: 1.');
+
+  //  2. MathLib.pow (&plusmn;0, y) = &plusmn;&infin; (for y an odd integer < 0)
+  equal(MathLib.pow(+0, -5), +Infinity, 'Specification: 2.');
+  equal(MathLib.pow(-0, -5), -Infinity, 'Specification: 2.');
+
+  //  3. MathLib.pow(&plusmn;0, -&infin;) = +&infin;.
+  equal(MathLib.pow(+0, -Infinity), Infinity, 'Specification: 3.');
+  equal(MathLib.pow(-0, -Infinity), Infinity, 'Specification: 3.');
+
+  //  4. MathLib.pow(&plusmn;0, +&infin;) = +0.
+  equal(MathLib.isPosZero(MathLib.pow(+0, Infinity)), true, 'Specification: 4.');
+  equal(MathLib.isPosZero(MathLib.pow(-0, Infinity)), true, 'Specification: 4.');
+
+  //  5. MathLib.pow (&plusmn;0, y) = +&infin; (for finite y < 0 and not an odd integer)
+  equal(MathLib.pow(+0, -4), +Infinity, 'Specification: 5.');
+  equal(MathLib.pow(-0, -4), +Infinity, 'Specification: 5.');
+  equal(MathLib.pow(+0, -5.5), +Infinity, 'Specification: 5.');
+  equal(MathLib.pow(-0, -5.5), +Infinity, 'Specification: 5.');
+
+  //  6. MathLib.pow (&plusmn;0, y) = &plusmn;0 (for finite y > 0 an odd integer)
+  equal(MathLib.isPosZero(MathLib.pow(+0, 5)), true, 'Specification: 6.');
+  equal(MathLib.isNegZero(MathLib.pow(-0, 5)), true, 'Specification: 6.');
+
+  //  7. MathLib.pow (&plusmn;0, y) = +0 (for finite y > 0 and not an odd integer)
+  equal(MathLib.isPosZero(MathLib.pow(+0, 4)), true, 'Specification: 7.');
+  equal(MathLib.isPosZero(MathLib.pow(-0, 4)), true, 'Specification: 7.');
+  equal(MathLib.isPosZero(MathLib.pow(+0, 5.5)), true, 'Specification: 7.');
+  equal(MathLib.isPosZero(MathLib.pow(-0, 5.5)), true, 'Specification: 7.');
+
+  //  8. MathLib.pow(-1, &plusmn;&infin;) = 1
+  equal(MathLib.pow(-1, +Infinity), 1, 'Specification: 8.');
+  equal(MathLib.pow(-1, -Infinity), 1, 'Specification: 8.');
+
+  //  9. MathLib.pow(+1, y) = 1 (for any y, even &plusmn;&infin; and NaN)
+  equal(MathLib.pow(1, 2), 1, 'Specification: 9.');
+  equal(MathLib.pow(1, -2), 1, 'Specification: 9.');
+  equal(MathLib.pow(1, +Infinity), 1, 'Specification: 9.');
+  equal(MathLib.pow(1, -Infinity), 1, 'Specification: 9.');
+  equal(MathLib.pow(1, NaN), 1, 'Specification: 9.');
+
+  // 10. MathLib.pow (x, y) = NaN (for finite x < 0 and finite non-integer y.)
+  equal(MathLib.isNaN(MathLib.pow(-2, 2.5)), true, 'Specification: 10.');
+  equal(MathLib.isNaN(MathLib.pow(-2, 2.5)), true, 'Specification: 10.');
+
+
+  // 11. MathLib.pow(x, +&infin;) = +&infin; (for |x| > 1)
+  equal(MathLib.pow(3, Infinity), Infinity, 'Specification: 11.');
+  equal(MathLib.pow(-3, Infinity), Infinity, 'Specification: 11.');
+
+  // 12. MathLib.pow(x, -&infin;) = +0 (for |x| > 1)
+  equal(MathLib.isPosZero(MathLib.pow(3, -Infinity)), true, 'Specification: 12.');
+  equal(MathLib.isPosZero(MathLib.pow(-3, -Infinity)), true, 'Specification: 12.');
+
+  // 13. MathLib.pow(x, +&infin;) = +0 (for |x| < 1)
+  equal(MathLib.isPosZero(MathLib.pow(0.5, +Infinity)), true, 'Specification: 13.');
+  equal(MathLib.isPosZero(MathLib.pow(-0.5, +Infinity)), true, 'Specification: 13.');
+
+  // 14. MathLib.pow(x, -&infin;) = +&infin; (for |x| < 1)
+  equal(MathLib.pow(0.5, -Infinity), Infinity, 'Specification: 14.');
+  equal(MathLib.pow(-0.5, -Infinity), Infinity, 'Specification: 14.');
+
+  // 15. MathLib.pow(+&infin;, y) = +&infin; (for y > 0)
+  equal(MathLib.pow(+Infinity, 2), Infinity, 'Specification: 15.');
+  equal(MathLib.pow(+Infinity, 2), Infinity, 'Specification: 15.');
+ 
+  // 16. MathLib.pow(+&infin;, y) = +0 (for y < 0)
+  equal(MathLib.isPosZero(MathLib.pow(+Infinity, -2)), true, 'Specification: 16.');
+  equal(MathLib.isPosZero(MathLib.pow(+Infinity, -Infinity)), true, 'Specification: 16.');
+  
+  // 17. MathLib.pow(-&infin;, y) = MathLib.pow(-0, -y)
+  equal(MathLib.pow(-Infinity, 2), Infinity, 'Specification: 17.');
+  equal(MathLib.pow(-Infinity, +0), 1, 'Specification: 17.');
+  equal(MathLib.pow(-Infinity, -0), 1, 'Specification: 17.');
+  equal(MathLib.pow(-Infinity, Infinity), Infinity, 'Specification: 17.');
+  equal(MathLib.pow(-Infinity, -Infinity), 0, 'Specification: 17.');
+
+  // 18. MathLib.pow(NaN, y) = NaN (for all y except &plusmn;0)
+  equal(MathLib.isNaN(MathLib.pow(NaN, 1)), true, 'Specification: 18.');
+  equal(MathLib.isNaN(MathLib.pow(NaN, Infinity)), true, 'Specification: 18.');
+  equal(MathLib.isNaN(MathLib.pow(NaN, -Infinity)), true, 'Specification: 18.');
+  equal(MathLib.isNaN(MathLib.pow(NaN, NaN)), true, 'Specification: 18.');
+
+  // 19. MathLib.pow(x, NaN) = NaN (for all x except +1)
+  equal(MathLib.isNaN(MathLib.pow(2, NaN)), true, 'Specification: 19.');
+  equal(MathLib.isNaN(MathLib.pow(Infinity, NaN)), true, 'Specification: 19.');
+  equal(MathLib.isNaN(MathLib.pow(-Infinity, NaN)), true, 'Specification: 19.');
+  equal(MathLib.isNaN(MathLib.pow(0, NaN)), true, 'Specification: 19.');
+  equal(MathLib.isNaN(MathLib.pow(-0, NaN)), true, 'Specification: 19.');
+});
+
+
+
 
 
 test('risingFactorial()', 3, function () {
@@ -258,10 +375,13 @@ test('risingFactorial()', 3, function () {
 });
 
 
-test('sin()', 3, function () {
-  equal(MathLib.sin(0), 0);
-  equal(MathLib.sin(Math.PI / 2), 1);
-  ok(MathLib.isEqual(MathLib.sin(MathLib.complex([3, 4])), MathLib.complex([3.853738037919377, -27.016813258003932])));
+test('sin()', 6, function () {
+  equal(MathLib.sin(Math.PI / 2), 1, 'MathLib.sin(Math.PI / 2) should be 1');
+  equal(MathLib.isPosZero(MathLib.sin(+0)), true, 'MathLib.sin(+0) should be +0');
+  equal(MathLib.isNegZero(MathLib.sin(-0)), true, 'MathLib.sin(-0) should be -0');
+  deepEqual(MathLib.sin(Infinity), NaN, 'MathLib.sin(Infinity) should be NaN');
+  deepEqual(MathLib.sin(-Infinity), NaN, 'MathLib.sin(-Infinity) should be NaN');
+  deepEqual(MathLib.sin(NaN), NaN, 'MathLib.sin(NaN) should be NaN');
 });
 
 
@@ -269,120 +389,6 @@ test('type', 3, function () {
   equal(MathLib.type(42), 'number');
   equal(MathLib.type([6, 3]), 'array');
   equal(MathLib.type(MathLib.complex([2, 3])), 'complex');
-});
-module("Vector");
-test("init", 2, function () {
-  var vector = MathLib.vector([1, 2, 3]);
-  equal(vector.dim, 3, "Testing the dimension");
-  deepEqual(vector, [1, 2, 3], 'checking the entries');
-});
-
-
-test('.dyadicProduct()', 1, function () {
-  var v = MathLib.vector([1, 2, 3]),
-      w = MathLib.vector([2, 4, 6]);
-  deepEqual(v.dyadicProduct(w), [[2, 4, 6], [4, 8, 12], [6, 12, 18]], ".dyadicProduct()");
-});
-
-
-test('.isEqual()', 3, function () {
-  var v = MathLib.vector([0, 1, 2]),
-      w = MathLib.vector([0, 1, 2]),
-      u = MathLib.vector([0, 0, 0]),
-      x = MathLib.vector([0, 0, 0, 0]);
-  equal(v.isEqual(w), true, ".isEqual()");
-  equal(v.isEqual(u), false, ".isEqual()");
-  equal(u.isEqual(x), false, ".isEqual()");
-});
-
-
-test('.isZero()', 2, function () {
-  var v = MathLib.vector([0, 0, 0]),
-      w = MathLib.vector([0, 0, 1]);
-  equal(v.isZero(), true, ".isZero()");
-  equal(w.isZero(), false, ".isZero()");
-});
-
-
-test(".map()", 2, function () {
-  var p = MathLib.vector([1, 2, 3]),
-      q = MathLib.vector([2, 4, 6]),
-      f = function (x) {
-        return 2 * x;
-      },
-      res = p.map(f);
-
-  deepEqual(res, q, ".map()");
-  equal(res.type, 'vector', ".type should be vector");
-});
-
-
-test('.scalarproduct()', 1, function () {
-  var v = MathLib.vector([3, 1, 4]),
-      w = MathLib.vector([1, 5, 9]);
-  equal(v.scalarproduct(w), 44, ".scalarproduct()");
-});
-
-
-test('.size()', 1, function () {
-  var v = MathLib.vector([1, 2, 3]);
-  equal(v.size(), Math.sqrt(14), ".size()");
-});
-
-test('.times()', 2, function () {
-  var v = MathLib.vector([1, 2, 3]),
-      m = MathLib.matrix([[1,2,3],[4,5,6],[7,8,9]]);
-  deepEqual(v.times(3), MathLib.vector([3, 6, 9]), ".times(number)");
-  deepEqual(v.times(m), MathLib.vector([30, 36, 42]), ".times(matrix)");
-});
-
-test('.toContentMathML()', 1, function () {
-  var v = MathLib.vector([1, 2, 3]);
-  equal(v.toContentMathML(), '<vector><cn>1</cn><cn>2</cn><cn>3</cn></vector>', ".toContentMathML()");
-});
-
-
-test('.toLaTeX()', 1, function () {
-  var v = MathLib.vector([1, 2, 3]);
-  equal(v.toLaTeX(), '\\begin{pmatrix}\n\t1\\\\\n\t2\\\\\n\t3\n\\end{pmatrix}');
-});
-
-
-test('.toMathML()', 1, function () {
-  var v = MathLib.vector([1, 2, 3]);
-  equal(v.toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>)</mo></mrow>', ".toMathML()");
-});
-
-
-test('.toString()', 1, function () {
-  var v = MathLib.vector([1, 2, 3]);
-  equal(v.toString(), '(1, 2, 3)', ".toString()");
-});
-
-
-test('.vectorproduct()', 1, function () {
-  var v = MathLib.vector([1, 2, 3]),
-      w = MathLib.vector([-7, 8, 9]);
-  deepEqual(v.vectorproduct(w), [-6, -30, 22], ".vectorProduct()");
-});
-
-
-
-
-test('constructor', 1, function () {
-  var v = MathLib.vector([1, 2, 3]);
-  equal(v.constructor, MathLib.vector, 'Testing .constructor');
-});
-
-test('type', 1, function () {
-  var v = MathLib.vector([1, 2, 3]);
-  equal(v.type, 'vector', 'Testing .type');
-});
-
-
-test('zero', 1, function () {
-  var v = MathLib.vector.zero(3);
-  equal(v.isZero(), true, 'testing zero vector');
 });
 module("Circle");
 test("init", 2, function () {
@@ -598,6 +604,11 @@ test(".sgn()", 1, function () {
   var c = MathLib.complex([5, 6]),
       d = MathLib.complex(1, Math.atan2(6, 5));
   equal(c.sgn().isEqual(d), true, ".sgn()");
+});
+
+
+test('.sin()', 1, function () {
+  ok(MathLib.isEqual(MathLib.sin(MathLib.complex([3, 4])), MathLib.complex([3.853738037919377, -27.016813258003932])));
 });
 
 
@@ -1831,3 +1842,117 @@ test('type', 1, function () {
   equal(s.type, 'set', 'Testing .type');
 });
 
+module("Vector");
+test("init", 2, function () {
+  var vector = MathLib.vector([1, 2, 3]);
+  equal(vector.dim, 3, "Testing the dimension");
+  deepEqual(vector, [1, 2, 3], 'checking the entries');
+});
+
+
+test('.dyadicProduct()', 1, function () {
+  var v = MathLib.vector([1, 2, 3]),
+      w = MathLib.vector([2, 4, 6]);
+  deepEqual(v.dyadicProduct(w), [[2, 4, 6], [4, 8, 12], [6, 12, 18]], ".dyadicProduct()");
+});
+
+
+test('.isEqual()', 3, function () {
+  var v = MathLib.vector([0, 1, 2]),
+      w = MathLib.vector([0, 1, 2]),
+      u = MathLib.vector([0, 0, 0]),
+      x = MathLib.vector([0, 0, 0, 0]);
+  equal(v.isEqual(w), true, ".isEqual()");
+  equal(v.isEqual(u), false, ".isEqual()");
+  equal(u.isEqual(x), false, ".isEqual()");
+});
+
+
+test('.isZero()', 2, function () {
+  var v = MathLib.vector([0, 0, 0]),
+      w = MathLib.vector([0, 0, 1]);
+  equal(v.isZero(), true, ".isZero()");
+  equal(w.isZero(), false, ".isZero()");
+});
+
+
+test(".map()", 2, function () {
+  var p = MathLib.vector([1, 2, 3]),
+      q = MathLib.vector([2, 4, 6]),
+      f = function (x) {
+        return 2 * x;
+      },
+      res = p.map(f);
+
+  deepEqual(res, q, ".map()");
+  equal(res.type, 'vector', ".type should be vector");
+});
+
+
+test('.scalarproduct()', 1, function () {
+  var v = MathLib.vector([3, 1, 4]),
+      w = MathLib.vector([1, 5, 9]);
+  equal(v.scalarproduct(w), 44, ".scalarproduct()");
+});
+
+
+test('.size()', 1, function () {
+  var v = MathLib.vector([1, 2, 3]);
+  equal(v.size(), Math.sqrt(14), ".size()");
+});
+
+test('.times()', 2, function () {
+  var v = MathLib.vector([1, 2, 3]),
+      m = MathLib.matrix([[1,2,3],[4,5,6],[7,8,9]]);
+  deepEqual(v.times(3), MathLib.vector([3, 6, 9]), ".times(number)");
+  deepEqual(v.times(m), MathLib.vector([30, 36, 42]), ".times(matrix)");
+});
+
+test('.toContentMathML()', 1, function () {
+  var v = MathLib.vector([1, 2, 3]);
+  equal(v.toContentMathML(), '<vector><cn>1</cn><cn>2</cn><cn>3</cn></vector>', ".toContentMathML()");
+});
+
+
+test('.toLaTeX()', 1, function () {
+  var v = MathLib.vector([1, 2, 3]);
+  equal(v.toLaTeX(), '\\begin{pmatrix}\n\t1\\\\\n\t2\\\\\n\t3\n\\end{pmatrix}');
+});
+
+
+test('.toMathML()', 1, function () {
+  var v = MathLib.vector([1, 2, 3]);
+  equal(v.toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>)</mo></mrow>', ".toMathML()");
+});
+
+
+test('.toString()', 1, function () {
+  var v = MathLib.vector([1, 2, 3]);
+  equal(v.toString(), '(1, 2, 3)', ".toString()");
+});
+
+
+test('.vectorproduct()', 1, function () {
+  var v = MathLib.vector([1, 2, 3]),
+      w = MathLib.vector([-7, 8, 9]);
+  deepEqual(v.vectorproduct(w), [-6, -30, 22], ".vectorProduct()");
+});
+
+
+
+
+test('constructor', 1, function () {
+  var v = MathLib.vector([1, 2, 3]);
+  equal(v.constructor, MathLib.vector, 'Testing .constructor');
+});
+
+test('type', 1, function () {
+  var v = MathLib.vector([1, 2, 3]);
+  equal(v.type, 'vector', 'Testing .type');
+});
+
+
+test('zero', 1, function () {
+  var v = MathLib.vector.zero(3);
+  equal(v.isZero(), true, 'testing zero vector');
+});

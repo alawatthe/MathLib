@@ -92,8 +92,8 @@ MathLib.screen = function (id, options) {
 // ### Screen.prototype.axis()
 // Draws axis on the screen
 //
-// *@param {string}* The type of axis to be drawn
-// *@param {object}*
+// *@param {string}* The type of axis to be drawn  
+// *@param {object}*  
 // *@returns {screen}*
 MathLib.extendPrototype('screen', 'axis', function (axis, options) {
   var axisOptions = {
@@ -158,7 +158,7 @@ MathLib.extendPrototype('screen', 'axis', function (axis, options) {
 // ### Screen.prototype.getX()
 // Returns the x coordinate of the event.
 //
-// *@param {event}*
+// *@param {event}*  
 // *@returns {number}*
 MathLib.extendPrototype('screen', 'getX', function (evt) {
   var osX;
@@ -175,7 +175,7 @@ MathLib.extendPrototype('screen', 'getX', function (evt) {
 // ### Screen.prototype.getY()
 // Returns the y coordinate of the event.
 //
-// *@param {event}*
+// *@param {event}*  
 // *@returns {number}*
 MathLib.extendPrototype('screen', 'getY', function (evt) {
   var osY;
@@ -192,8 +192,7 @@ MathLib.extendPrototype('screen', 'getY', function (evt) {
 // ### Screen.prototype.grid()
 // Draws the grid on the screen
 //
-// *@param {string}* The type of the grid to be drawn currently 'cartesian' or 
-// 'polar'
+// *@param {string}* The type of the grid to be drawn currently 'cartesian' or 'polar'  
 // *@param {object}* [options] Optional drawing options
 MathLib.extendPrototype('screen', 'grid', function (type, options) {
   options = options || {};

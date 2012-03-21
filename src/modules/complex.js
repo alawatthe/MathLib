@@ -160,8 +160,8 @@ MathLib.extendPrototype('complex', 'exp', function () {
 //
 // *@returns {complex}*
 MathLib.extendPrototype('complex', 'inverse', function () {
-  return MathLib.complex([MathLib.divide(this.re, MathLib.plus(MathLib.power(this.re, 2), MathLib.power(this.im, 2))),
-    MathLib.divide(MathLib.negative(this.im), MathLib.plus(MathLib.power(this.re, 2), MathLib.power(this.im, 2)))]);
+  return MathLib.complex([MathLib.divide(this.re, MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2))),
+    MathLib.divide(MathLib.negative(this.im), MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2)))]);
 });
 
 
@@ -269,12 +269,12 @@ MathLib.extendPrototype('complex', 'plus', function (c) {
 });
 
 
-// ### Complex.prototype.power()
-// Calculates the n-th power of the complex number
+// ### Complex.prototype.pow()
+// Calculates the n-th pow of the complex number
 //
-// *@param {number}* The power to which the complex number should be raised   
+// *@param {number}* The pow to which the complex number should be raised   
 // *@returns {complex}*
-MathLib.extendPrototype('complex', 'power', function (n) {
+MathLib.extendPrototype('complex', 'pow', function (n) {
   return MathLib.complex(Math.pow(this.abs(), n), n * this.argument());
 });
 

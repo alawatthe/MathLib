@@ -28,7 +28,6 @@ BASE_FILES = ${SRC_DIR}/modules/functions.js\
 	${SRC_DIR}/modules/set.js\
 
 TEST_FILES = ${TEST_DIR}/functions.js\
-	${TEST_DIR}/vector.js\
 	${TEST_DIR}/circle.js\
 	${TEST_DIR}/complex.js\
 	${TEST_DIR}/line.js\
@@ -38,6 +37,7 @@ TEST_FILES = ${TEST_DIR}/functions.js\
 	${TEST_DIR}/point.js\
 	${TEST_DIR}/polynomial.js\
 	${TEST_DIR}/set.js\
+	${TEST_DIR}/vector.js\
 
 MODULES = ${SRC_DIR}/license.js\
 	${SRC_DIR}/head.js\

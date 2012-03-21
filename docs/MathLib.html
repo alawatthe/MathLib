@@ -565,11 +565,14 @@ TODO: is this formula working if n is not an integer?</p>             </td>     
   <span class="nx">negative</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="o">-</span><span class="nx">x</span><span class="p">;</span>
       <span class="p">},</span>
-  <span class="nx">power</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">pow</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">a</span> <span class="o">===</span> <span class="mi">1</span> <span class="o">||</span> <span class="p">(</span><span class="nx">a</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">b</span> <span class="o">===</span> <span class="kc">Infinity</span> <span class="o">||</span> <span class="nx">b</span> <span class="o">===</span> <span class="o">-</span><span class="kc">Infinity</span><span class="p">)))</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
         <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
       <span class="p">},</span>
   <span class="nx">radToDeg</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">x</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">pi</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">x</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">;</span>
       <span class="p">},</span>
   <span class="nx">random</span><span class="o">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">,</span>
   <span class="nx">risingFactorial</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">m</span><span class="p">,</span> <span class="nx">s</span><span class="p">)</span> <span class="p">{</span>
@@ -922,8 +925,8 @@ TODO: is this formula working if n is not an integer?</p>             </td>     
 
 <p>Draws axis on the screen</p>
 
-<p><em>@param {string}</em> The type of axis to be drawn
-<em>@param {object}</em>
+<p><em>@param {string}</em> The type of axis to be drawn <br />
+<em>@param {object}</em> <br />
 <em>@returns {screen}</em></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;screen&#39;</span><span class="p">,</span> <span class="s1">&#39;axis&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">axis</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">axisOptions</span> <span class="o">=</span> <span class="p">{</span>
         <span class="nx">stroke</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">axisColor</span><span class="p">,</span>
@@ -985,7 +988,7 @@ TODO: is this formula working if n is not an integer?</p>             </td>     
 
 <p>Returns the x coordinate of the event.</p>
 
-<p><em>@param {event}</em>
+<p><em>@param {event}</em> <br />
 <em>@returns {number}</em></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;screen&#39;</span><span class="p">,</span> <span class="s1">&#39;getX&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">osX</span><span class="p">;</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">offsetX</span><span class="p">)</span> <span class="p">{</span>
@@ -999,7 +1002,7 @@ TODO: is this formula working if n is not an integer?</p>             </td>     
 
 <p>Returns the y coordinate of the event.</p>
 
-<p><em>@param {event}</em>
+<p><em>@param {event}</em> <br />
 <em>@returns {number}</em></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;screen&#39;</span><span class="p">,</span> <span class="s1">&#39;getY&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">osY</span><span class="p">;</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">offsetY</span><span class="p">)</span> <span class="p">{</span>
@@ -1013,8 +1016,7 @@ TODO: is this formula working if n is not an integer?</p>             </td>     
 
 <p>Draws the grid on the screen</p>
 
-<p><em>@param {string}</em> The type of the grid to be drawn currently 'cartesian' or 
-'polar'
+<p><em>@param {string}</em> The type of the grid to be drawn currently 'cartesian' or 'polar' <br />
 <em>@param {object}</em> [options] Optional drawing options</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;screen&#39;</span><span class="p">,</span> <span class="s1">&#39;grid&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">type</span> <span class="o">===</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
@@ -2112,8 +2114,8 @@ var c = MathLib.complex([1, 2]); <br />
 <p>Calculates the inverse of a complex number</p>
 
 <p><em>@returns {complex}</em></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;complex&#39;</span><span class="p">,</span> <span class="s1">&#39;inverse&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">complex</span><span class="p">([</span><span class="nx">MathLib</span><span class="p">.</span><span class="nx">divide</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">re</span><span class="p">,</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">MathLib</span><span class="p">.</span><span class="nx">power</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">re</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">power</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">im</span><span class="p">,</span> <span class="mi">2</span><span class="p">))),</span>
-    <span class="nx">MathLib</span><span class="p">.</span><span class="nx">divide</span><span class="p">(</span><span class="nx">MathLib</span><span class="p">.</span><span class="nx">negative</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">im</span><span class="p">),</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">MathLib</span><span class="p">.</span><span class="nx">power</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">re</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">power</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">im</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))]);</span>
+  <span class="k">return</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">complex</span><span class="p">([</span><span class="nx">MathLib</span><span class="p">.</span><span class="nx">divide</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">re</span><span class="p">,</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">MathLib</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">re</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">im</span><span class="p">,</span> <span class="mi">2</span><span class="p">))),</span>
+    <span class="nx">MathLib</span><span class="p">.</span><span class="nx">divide</span><span class="p">(</span><span class="nx">MathLib</span><span class="p">.</span><span class="nx">negative</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">im</span><span class="p">),</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">MathLib</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">re</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">im</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))]);</span>
 <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-117">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-117">&#182;</a>               </div>               <h3>Complex.prototype.isEqual()</h3>
 
 <p>Determines if the complex number is equal to another number.</p>
@@ -2188,12 +2190,12 @@ var c = MathLib.complex([1, 2]); <br />
   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">c</span> <span class="o">===</span> <span class="s2">&quot;number&quot;</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">complex</span><span class="p">([</span><span class="nx">MathLib</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">re</span><span class="p">,</span> <span class="nx">c</span><span class="p">),</span> <span class="k">this</span><span class="p">.</span><span class="nx">im</span><span class="p">]);</span>
   <span class="p">}</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-127">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-127">&#182;</a>               </div>               <h3>Complex.prototype.power()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-127">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-127">&#182;</a>               </div>               <h3>Complex.prototype.pow()</h3>
 
-<p>Calculates the n-th power of the complex number</p>
+<p>Calculates the n-th pow of the complex number</p>
 
-<p><em>@param {number}</em> The power to which the complex number should be raised <br />
-<em>@returns {complex}</em></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;complex&#39;</span><span class="p">,</span> <span class="s1">&#39;power&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+<p><em>@param {number}</em> The pow to which the complex number should be raised <br />
+<em>@returns {complex}</em></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;complex&#39;</span><span class="p">,</span> <span class="s1">&#39;pow&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">complex</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">abs</span><span class="p">(),</span> <span class="nx">n</span><span class="p">),</span> <span class="nx">n</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">argument</span><span class="p">());</span>
 <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-128">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-128">&#182;</a>               </div>               <h3>Complex.prototype.sin()</h3>
 
@@ -2471,6 +2473,7 @@ Setting it this way fails in all browsers except Chrome</p>             </td>   
     <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">),</span>
         <span class="nx">funcName</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">shift</span><span class="p">().</span><span class="nx">nodeName</span><span class="p">,</span>
         <span class="nx">names</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="nx">power</span><span class="o">:</span> <span class="s1">&#39;pow&#39;</span><span class="p">,</span>
           <span class="nx">rem</span><span class="o">:</span> <span class="s1">&#39;mod&#39;</span><span class="p">,</span>
           <span class="nx">union</span><span class="o">:</span> <span class="s1">&#39;or&#39;</span><span class="p">,</span>
           <span class="nx">intersection</span><span class="o">:</span> <span class="s1">&#39;and&#39;</span><span class="p">,</span>

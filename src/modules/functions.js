@@ -291,11 +291,14 @@ var functionList1 = {
   negative: function (x) {
         return -x;
       },
-  power: function (a, b) {
+  pow: function (a, b) {
+        if (a === 1 || (a === -1 && (b === Infinity || b === -Infinity))) {
+          return 1;
+        }
         return Math.pow(a, b);
       },
   radToDeg: function (x) {
-        return x * 180 / MathLib.pi;
+        return x * 180 / Math.PI;
       },
   random: Math.random,
   risingFactorial: function (n, m, s) {

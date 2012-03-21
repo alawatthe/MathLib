@@ -147,6 +147,11 @@ test(".sgn()", 1, function () {
 });
 
 
+test('.sin()', 1, function () {
+  ok(MathLib.isEqual(MathLib.sin(MathLib.complex([3, 4])), MathLib.complex([3.853738037919377, -27.016813258003932])));
+});
+
+
 test('.times()', 2, function () {
   var c = MathLib.complex([2, 5]);
   var d = MathLib.complex([3, 7]);

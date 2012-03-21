@@ -93,6 +93,7 @@ MathLib.extendPrototype('MathML', 'parse', function (math) {
     var children = Array.prototype.slice.call(node.childNodes),
         funcName = children.shift().nodeName,
         names = {
+          power: 'pow',
           rem: 'mod',
           union: 'or',
           intersection: 'and',

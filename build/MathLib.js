@@ -595,11 +595,14 @@ var functionList1 = {
   negative: function (x) {
         return -x;
       },
-  power: function (a, b) {
+  pow: function (a, b) {
+        if (a === 1 || (a === -1 && (b === Infinity || b === -Infinity))) {
+          return 1;
+        }
         return Math.pow(a, b);
       },
   radToDeg: function (x) {
-        return x * 180 / MathLib.pi;
+        return x * 180 / Math.PI;
       },
   random: Math.random,
   risingFactorial: function (n, m, s) {
@@ -973,8 +976,8 @@ MathLib.screen = function (id, options) {
 // ### Screen.prototype.axis()
 // Draws axis on the screen
 //
-// *@param {string}* The type of axis to be drawn
-// *@param {object}*
+// *@param {string}* The type of axis to be drawn  
+// *@param {object}*  
 // *@returns {screen}*
 MathLib.extendPrototype('screen', 'axis', function (axis, options) {
   var axisOptions = {
@@ -1039,7 +1042,7 @@ MathLib.extendPrototype('screen', 'axis', function (axis, options) {
 // ### Screen.prototype.getX()
 // Returns the x coordinate of the event.
 //
-// *@param {event}*
+// *@param {event}*  
 // *@returns {number}*
 MathLib.extendPrototype('screen', 'getX', function (evt) {
   var osX;
@@ -1056,7 +1059,7 @@ MathLib.extendPrototype('screen', 'getX', function (evt) {
 // ### Screen.prototype.getY()
 // Returns the y coordinate of the event.
 //
-// *@param {event}*
+// *@param {event}*  
 // *@returns {number}*
 MathLib.extendPrototype('screen', 'getY', function (evt) {
   var osY;
@@ -1073,8 +1076,7 @@ MathLib.extendPrototype('screen', 'getY', function (evt) {
 // ### Screen.prototype.grid()
 // Draws the grid on the screen
 //
-// *@param {string}* The type of the grid to be drawn currently 'cartesian' or 
-// 'polar'
+// *@param {string}* The type of the grid to be drawn currently 'cartesian' or 'polar'  
 // *@param {object}* [options] Optional drawing options
 MathLib.extendPrototype('screen', 'grid', function (type, options) {
   options = options || {};
@@ -2444,8 +2446,8 @@ MathLib.extendPrototype('complex', 'exp', function () {
 //
 // *@returns {complex}*
 MathLib.extendPrototype('complex', 'inverse', function () {
-  return MathLib.complex([MathLib.divide(this.re, MathLib.plus(MathLib.power(this.re, 2), MathLib.power(this.im, 2))),
-    MathLib.divide(MathLib.negative(this.im), MathLib.plus(MathLib.power(this.re, 2), MathLib.power(this.im, 2)))]);
+  return MathLib.complex([MathLib.divide(this.re, MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2))),
+    MathLib.divide(MathLib.negative(this.im), MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2)))]);
 });
 
 
@@ -2553,12 +2555,12 @@ MathLib.extendPrototype('complex', 'plus', function (c) {
 });
 
 
-// ### Complex.prototype.power()
-// Calculates the n-th power of the complex number
+// ### Complex.prototype.pow()
+// Calculates the n-th pow of the complex number
 //
-// *@param {number}* The power to which the complex number should be raised   
+// *@param {number}* The pow to which the complex number should be raised   
 // *@returns {complex}*
-MathLib.extendPrototype('complex', 'power', function (n) {
+MathLib.extendPrototype('complex', 'pow', function (n) {
   return MathLib.complex(Math.pow(this.abs(), n), n * this.argument());
 });
 
@@ -2929,6 +2931,7 @@ MathLib.extendPrototype('MathML', 'parse', function (math) {
     var children = Array.prototype.slice.call(node.childNodes),
         funcName = children.shift().nodeName,
         names = {
+          power: 'pow',
           rem: 'mod',
           union: 'or',
           intersection: 'and',
