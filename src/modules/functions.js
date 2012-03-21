@@ -329,6 +329,12 @@ var functionList1 = {
   sinh: Math.sinh || function (x) {
         return (Math.exp(x) - Math.exp(-x)) / 2;
       },
+  sqrt: function (x) {
+        if (x === 0) {
+          return 0;
+        }
+        return Math.sqrt(x);
+      },
   tan: Math.tan,
   tanh: Math.tanh || function (x) {
         return (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));

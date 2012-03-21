@@ -385,6 +385,18 @@ test('sin()', 6, function () {
 });
 
 
+test('.sqrt()', 8, function () {
+  equal(MathLib.isNaN(MathLib.sqrt(NaN)), true, 'MathLib.sqrt(NaN) = NaN');
+  equal(MathLib.isNaN(MathLib.sqrt(-Infinity)), true, 'MathLib.sqrt(-Infinity) = NaN');
+  equal(MathLib.isNaN(MathLib.sqrt(-4)), true, 'MathLib.sqrt(-4) = NaN');
+  equal(MathLib.isPosZero(MathLib.sqrt(+0)), true, 'MathLib.sqrt(+0) = -0');
+  equal(MathLib.isPosZero(MathLib.sqrt(-0)), true, 'MathLib.sqrt(-0) = +0');
+  equal(MathLib.sqrt(Infinity), Infinity, 'MathLib.sqrt(Infinity) = Infinity');
+  equal(MathLib.sqrt(9), 3, 'MathLib.sqrt(9)');
+  equal(MathLib.sqrt(2), 1.4142135623730950488016887242096980785696, 'MathLib.sqrt(2)');
+});
+
+
 test('type', 3, function () {
   equal(MathLib.type(42), 'number');
   equal(MathLib.type([6, 3]), 'array');
