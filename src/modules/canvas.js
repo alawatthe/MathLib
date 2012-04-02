@@ -8,19 +8,19 @@ prototypes.canvas = MathLib.screen();
 MathLib.canvas = function (canvasId) {
   var canvas = MathLib.screen(canvasId);
   canvas[proto] = prototypes.canvas;
+  Object.defineProperty(canvas, 'drawingStack', {value: []});
 
   // Wrapper
   var wrapperDiv = document.createElement('div');
-  wrapperDiv.style.setProperty('width', canvas.width + 'px');
-  wrapperDiv.style.setProperty('height', canvas.height + 'px');
+  wrapperDiv.style.setProperty('width', '100%');
+  wrapperDiv.style.setProperty('height', '100%');
   wrapperDiv.style.setProperty('position', 'relative');
   canvas.element.parentNode.insertBefore(wrapperDiv, canvas.element.wrapperDiv);
-
   
   // The back layer
   var backLayer = document.createElement('canvas');
-  backLayer.setAttribute('width', canvas.width);
-  backLayer.setAttribute('height', canvas.height);
+  backLayer.setAttribute('width', canvas.width + 'px');
+  backLayer.setAttribute('height', canvas.height + 'px');
   backLayer.classList.add('MathLib-backLayer');
   backLayer.classList.add('MathLib-canvas');
   canvas.backLayer = {
@@ -38,8 +38,8 @@ MathLib.canvas = function (canvasId) {
 
   // The front layer
   var frontLayer = document.createElement('canvas');
-  frontLayer.setAttribute('width', canvas.width);
-  frontLayer.setAttribute('height', canvas.height);
+  frontLayer.setAttribute('width', canvas.width + 'px');
+  frontLayer.setAttribute('height', canvas.height + 'px');
   frontLayer.classList.add('MathLib-frontLayer');
   frontLayer.classList.add('MathLib-canvas');
   canvas.frontLayer = {
@@ -55,12 +55,11 @@ MathLib.canvas = function (canvasId) {
   layers.forEach(function (l) {
     // Transform the canvases
     l.ctx.save();
-    l.ctx.transform(canvas.zoomX,  // The first coordinate must
-      0,                           // only be zoomed.
-      0,                           // The second coordinate must
-      -canvas.zoomY,               // point in the opposite direction.
-      -canvas.left * canvas.stepSizeX * canvas.zoomX,
-      canvas.up   * canvas.stepSizeY * canvas.zoomY
+    l.ctx.transform(
+      canvas.curZoomX,  0,  // The first coordinate must  only be zoomed.
+      0, -canvas.curZoomY,  // The second coordinate must point in the opposite direction.
+      canvas.curTranslateX,
+      canvas.curTranslateY
     );
 
     // Placing the layers on top of each other
@@ -69,186 +68,399 @@ MathLib.canvas = function (canvasId) {
     l.element.style.setProperty('top', '0px');
   });
 
-  canvas.frontLayer.element.onselectstart = function(){ return false; }; 
+
+
+  // Chrome tries desperately to select some text
+  canvas.frontLayer.element.onselectstart = function(){ return false; };
+  // canvas.frontLayer.element.onmousedown = function (evt) {
+  //   canvas.onmousedown(evt);
+  // };
+  canvas.frontLayer.element.oncontextmenu = function (evt) {
+    canvas.oncontextmenu(evt);
+  };
+  // canvas.frontLayer.element.onmousemove = function (evt) {
+  //   canvas.onmousemove(evt);
+  // };
+  // canvas.frontLayer.element.onmouseup = function (evt) {
+  //   canvas.onmouseup(evt);
+  // };
+  // if('onmousewheel' in canvas.frontLayer.element) {
+  //   canvas.frontLayer.element.onmousewheel = function (evt) {
+  //      canvas.onmousewheel(evt);
+  //   };
+  // }
+  // else {  // Firefox names it a bit different
+  //   canvas.frontLayer.element.DOMMouseScroll = function (evt) {
+  //      canvas.onmousewheel(evt);
+  //   };
+  // }
+
+
   return canvas;
 };
+
 
 
 // ### Canvas.prototype.circle
 // Draws a circle on the screen.
 //
 // *@param {canvas}* The canvas to be drawn  
-// *@param {object}* [options] Optional drawing options
-MathLib.extendPrototype('canvas', 'circle', function (circle, options) {
-  var ctx;
-  options = options || {};
+// *@param {object}* [options] Optional drawing options  
+// *@returns {canvas}* Returns the canvas
+MathLib.extendPrototype('canvas', 'circle', function (circle, userOpt) {
+  var defaultOpt = {
+        fillColor:  'rgba(0, 0, 255, 0.05)',
+        lineColor:  'rgba(0, 0, 255, 1)',
+        lineWidth:  0.05,
+        dash:       [],
+        dashOffset: 0
+      },
+      ctx, prop, opt;
+      userOpt = userOpt || {};
 
-  if(options.layer) {
-    ctx = this[options.layer + 'Layer'].ctx; 
+  // Determine the layer to draw onto
+  if('layer' in userOpt) {
+    ctx = this[userOpt.layer + 'Layer'].ctx;
   }
   else {
     ctx = this.mainLayer.ctx;
   }
 
+  // Determine the drawing options
+  if (userOpt.redraw) {
+    opt = userOpt;
+  }
+  else {
+    opt = this.normalizeOptions(defaultOpt, userOpt);
+  }
+
+  // Set the drawing options
+  for (prop in opt) {
+    if (opt.hasOwnProperty(prop)) {
+      ctx[prop] = opt[prop];
+    }
+  }
+
+  // Draw the line
   ctx.beginPath();
   ctx.arc(circle.center[0], circle.center[1], circle.radius, 0, 2*Math.PI);
-
-  ctx.strokeStyle = 'blue';
-  ctx.fillStyle = 'rgba(0, 0, 255, 0.05)';
-  ctx.lineWidth = '0.05';
-
-  if ('color' in options) {
-    ctx.strokeStyle = options.color;
-  }
-  if ('stroke' in options) {
-    ctx.strokeStyle = options.stroke;
-  }
-  if ('stroke_width' in options) {
-    ctx.lineWidth = options.stroke_width;
-  }
-
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
+
+  // Push the circle onto the drawing Stack
+  if (ctx === this.mainLayer.ctx && !opt.redraw) {
+    opt.redraw = true;
+    this.drawingStack.push({
+      object: circle,
+      options: opt,
+      type: 'circle'
+    });
+  }
+
+  return this;
 });
+
 
 
 // ### Canvas.prototype.clearLayer
 // Clears the specified layer completely
 //
-// *@param {string}* The layer to be cleared ('back', 'main', 'front')
-MathLib.extendPrototype('canvas', 'clearLayer', function (layer) {
-  this[layer + 'Layer'].ctx.clearRect(-5, -5, 10, 10);
+// *@param {string}* The layer to be cleared ('back', 'main', 'front')  
+// *@returns {canvas}* Returns the canvas
+MathLib.extendPrototype('canvas', 'clearLayer', function () {
+  var canvas = this;
+  Array.prototype.forEach.call(arguments, function (layer) {
+    canvas[layer + 'Layer'].ctx.clearRect(-50, -50, 100, 100);
+  });
+  return this;
 });
+
 
 
 // ### Canvas.prototype.line
 // Draws a line on the screen.
 //
 // *@param {line}* The line to be drawn  
-// *@param {object}* [options] Optional drawing options
-MathLib.extendPrototype('canvas', 'line', function (line, options) {
-  options = options || {};
-  var ctx,
-      points  = this.lineEndPoints(line);
+// *@param {object}* [options] Optional drawing options  
+// *@returns {canvas}* Returns the canvas
+MathLib.extendPrototype('canvas', 'line', function (line, userOpt) {
+  var defaultOpt = {
+        fillColor:  'rgba(0, 0, 0, 0)',
+        lineColor:  'rgba(0, 0, 0, 1)',
+        lineWidth:  0.05,
+        dash:       [],
+        dashOffset: 0
+      },
+      points  = this.lineEndPoints(line),
+      ctx, prop, opt;
+      userOpt = userOpt || {};
 
-  if(options.layer) {
-    ctx = this[options.layer + 'Layer'].ctx; 
+  // Determine the layer to draw onto
+  if('layer' in userOpt) {
+    ctx = this[userOpt.layer + 'Layer'].ctx;
   }
   else {
     ctx = this.mainLayer.ctx;
   }
 
-  ctx.strokeStyle = 'black';
-  ctx.lineWidth = '0.05';
+  // Determine the drawing options
+  if (userOpt.redraw) {
+    opt = userOpt;
+  }
+  else {
+    opt = this.normalizeOptions(defaultOpt, userOpt);
+  }
 
+  // Set the drawing options
+  for (prop in opt) {
+    if (opt.hasOwnProperty(prop)) {
+      ctx[prop] = opt[prop];
+    }
+  }
 
+  // Draw the line
   ctx.beginPath();
   ctx.moveTo(points[0][0], points[0][1]);
   ctx.lineTo(points[1][0], points[1][1]);
-
-  if ('color' in options) {
-    ctx.strokeStyle = options.color;
-  }
-  if ('stroke' in options) {
-    ctx.strokeStyle = options.stroke;
-  }
-  if ('stroke_width' in options) {
-    ctx.lineWidth = options.stroke_width;
-  }
-
-  if (('stroke_dasharray' in options) && ('mozDash' in ctx)) {
-    ctx.mozDash = options.stroke_dasharray.split(',').map(parseFloat);
-    ctx.mozDashOffset = parseFloat(options.stroke_dashoffset);
-  }
-
-  ctx.closePath();
   ctx.stroke();
-  ctx.mozDash = null;
+  ctx.closePath();
+
+  // Push the line onto the drawing Stack
+  if (ctx === this.mainLayer.ctx && !opt.redraw) {
+    opt.redraw = true;
+    this.drawingStack.push({
+      object: line,
+      options: opt,
+      type: 'line'
+    });
+  }
+
+  return this;
 });
+
+
+
+// ### Canvas.prototype.oncontextmenu()
+// Handles the contextmenu event
+//
+// *@param {event}*
+MathLib.extendPrototype('canvas', 'oncontextmenu', function (evt) {
+  this.contextmenu(evt);
+});
+
+
+
+// ### Canvas.prototype.onmousewheel()
+// Handles the mousewheel event
+//
+// *@param {event}* 
+MathLib.extendPrototype('canvas', 'onmousewheel', function (evt) {
+});
+
+
+
+// ### Canvas.prototype.normalizeOptions
+// Converts the options to the internal format
+//
+// *@param {object}* default options  
+// *@param {object}* user options  
+// *@returns {object}* the normalized options
+MathLib.extendPrototype('canvas', 'normalizeOptions', function (defaultOpt, userOpt) {
+  return {
+    fillStyle:            userOpt.fillColor  || userOpt.color          || defaultOpt.fillColor || defaultOpt.color,
+    lineWidth:            userOpt.lineWidth  || defaultOpt.lineWidth, 
+    font:                 userOpt.font       || defaultOpt.font,
+    fontSize:             userOpt.fontSize   || defaultOpt.fontSize,
+    size:                 userOpt.size       || defaultOpt.size,
+    mozDash:              userOpt.dash       || defaultOpt.dash,   
+    mozDashOffset:        userOpt.dashOffset || defaultOpt.dashOffset, 
+    strokeStyle:          userOpt.lineColor  || userOpt.color          || defaultOpt.lineColor || defaultOpt.color,
+    webkitLineDash:       userOpt.dash       || defaultOpt.dash,   
+    webkitLineDashOffset: userOpt.dashOffset || defaultOpt.dashOffset
+  };
+});
+
 
 
 // ### Canvas.prototype.path
 // Draws a path on the screen.
 //
 // *@param {path}* The path to be drawn  
-// *@param {object}* [options] Optional drawing options
-MathLib.extendPrototype('canvas', 'path', function (path, options) {
-  options = options || {};
-  var ctx;
-  if(options.layer) {
-    ctx = this[options.layer + 'Layer'].ctx; 
+// *@param {object}* [options] Optional drawing options  
+// *@returns {canvas}* Returns the canvas
+MathLib.extendPrototype('canvas', 'path', function (path, userOpt) {
+  var defaultOpt = {
+        fillColor:  'rgba(0, 0, 0, 0)',
+        lineColor:  'rgba(0, 0, 0, 1)',
+        lineWidth:  0.05,
+        dash:       [],
+        dashOffset: 0
+      },
+      ctx, prop, opt;
+      userOpt = userOpt || {};
+
+  // Determine the layer to draw onto
+  if('layer' in userOpt) {
+    ctx = this[userOpt.layer + 'Layer'].ctx;
   }
   else {
     ctx = this.mainLayer.ctx;
   }
 
+  // Determine the drawing options
+  if (userOpt.redraw) {
+    opt = userOpt;
+  }
+  else {
+    opt = this.normalizeOptions(defaultOpt, userOpt);
+  }
+
+  // Set the drawing options
+  for (prop in opt) {
+    if (opt.hasOwnProperty(prop)) {
+      ctx[prop] = opt[prop];
+    }
+  }
+
+  // Draw the path
   ctx.beginPath();
   ctx.moveTo(path[0][0], path[0][1]);
   path.forEach(function (x) {
     ctx.lineTo(x[0], x[1]);
   });
-
-  if ('color' in options) {
-    ctx.strokeStyle = options.color;
-  }
-  if ('stroke' in options) {
-    ctx.strokeStyle = options.stroke;
-  }
-  if ('stroke_width' in options) {
-    ctx.lineWidth = options.stroke_width;
-  }
-
-  if (('stroke_dasharray' in options) && ('mozDash' in ctx)) {
-    ctx.mozDash = options.stroke_dasharray.split(',').map(parseFloat);
-    ctx.mozDashOffset = parseFloat(options.stroke_dashoffset);
-  }
-
   ctx.stroke();
   ctx.closePath();
-  ctx.mozDash = null;
+
+  // Push the path onto the drawing Stack
+  if (ctx === this.mainLayer.ctx && !opt.redraw) {
+    opt.redraw = true;
+    this.drawingStack.push({
+      object: path,
+      options: opt,
+      type: 'path'
+    });
+  }
+
+  return this;
 });
+
 
 
 // ### Canvas.prototype.point
 // Draws a point on the screen.
 //
 // *@param {point}* The point to be drawn  
-// *@param {object}* [options] Optional drawing options
-MathLib.extendPrototype('canvas', 'point', function (point, options) {
-  options = options || {};
-  var ctx;
-  if(options.layer) {
-    ctx = this[options.layer + 'Layer'].ctx; 
+// *@param {object}* [options] Optional drawing options  
+// *@returns {canvas}* Returns the canvas
+MathLib.extendPrototype('canvas', 'point', function (point, userOpt) {
+  var defaultOpt = {
+        fillColor:  'rgba(0, 0, 0, 1)',
+        lineColor:  'rgba(0, 0, 0, 1)',
+        lineWidth:  0.05,
+        dash:       [],
+        dashOffset: 0
+      },
+      ctx, prop, opt;
+      userOpt = userOpt || {};
+
+  // Determine the layer to draw onto
+  if('layer' in userOpt) {
+    ctx = this[userOpt.layer + 'Layer'].ctx;
   }
   else {
     ctx = this.mainLayer.ctx;
   }
 
+  // Determine the drawing options
+  if (userOpt.redraw) {
+    opt = userOpt;
+  }
+  else {
+    opt = this.normalizeOptions(defaultOpt, userOpt);
+  }
+
+  // Set the drawing options
+  for (prop in opt) {
+    if (opt.hasOwnProperty(prop)) {
+      ctx[prop] = opt[prop];
+    }
+  }
+
+  // Draw the path
   ctx.beginPath();
-  ctx.strokeStyle = 'black';
-  ctx.fillStyle = 'black';
-  ctx.lineWidth = '0.05';
-
-  if (options.stroke) {
-    ctx.strokeStyle = options.stroke;
-  }
-  if (options.stroke_width) {
-    ctx.lineWidth = options.stroke_width;
-  }
-  if (options.color) {
-    ctx.fillStyle = options.color;
-    ctx.strokeStyle = options.color;
-  }
-  if (options.fill) {
-    ctx.fillStyle = options.fill;
-  }
-
   ctx.arc(point[0]/point[2], point[1]/point[2], 0.05, 0, 2*Math.PI);
   ctx.closePath();
   ctx.stroke();
   ctx.fill();
+
+  // Push the point onto the drawing Stack
+  if (ctx === this.mainLayer.ctx && !opt.redraw) {
+    opt.redraw = true;
+    this.drawingStack.push({
+      object: point,
+      options: opt,
+      type: 'point'
+    });
+  }
+
+  return this;
 });
+
+
+
+// ### Canvas.prototype.redraw()
+// Redraws the canvas
+//
+// *@returns {canvas}* Returns the canvas
+MathLib.extendPrototype('canvas', 'redraw', function () {
+  var canvas = this;
+
+  // redraw the background
+  this.grid();
+  this.axis();
+
+  // redraw the main layer
+  this.drawingStack.forEach(function(x, i) {
+    canvas[x.type](x.object, x.options); 
+  });
+
+  return this;
+});
+
+
+
+// ### Canvas.prototype.resetView
+// Resets the view to the default values.
+//
+// *@returns {canvas}* Returns the canvas
+MathLib.extendPrototype('canvas', 'resetView', function () {
+  this.clearLayer('back');
+  this.clearLayer('main');
+  this.clearLayer('front');
+  this.backLayer.ctx.setTransform(this.origZoomX, 0, 0, -this.origZoomY, this.origTranslateX, this.origTranslateY);
+  this.mainLayer.ctx.setTransform(this.origZoomX, 0, 0, -this.origZoomY, this.origTranslateX, this.origTranslateY);
+  this.frontLayer.ctx.setTransform(this.origZoomX, 0, 0, -this.origZoomY, this.origTranslateX, this.origTranslateY);
+  this.redraw();
+  return this;
+});
+
+
+
+// ### Canvas.prototype.resize()
+// Resizes the canvas
+//
+// *@param {number}* The new width in px.  
+// *@param {number}* The new height in px.  
+// *@returns {canvas}* Returns the canvas
+MathLib.extendPrototype('canvas', 'resize', function (x, y) {
+  [this.backLayer, this.mainLayer, this.frontLayer].forEach(function (l) {
+    l.element.setAttribute('width',   x + 'px');
+    l.element.setAttribute('height',  y + 'px');
+  });
+  return this;
+});
+
 
 
 // ### Canvas.prototype.text
@@ -257,30 +469,84 @@ MathLib.extendPrototype('canvas', 'point', function (point, options) {
 // *@param {str}* The string to be drawn  
 // *@param {x}* The x coordinate  
 // *@param {y}* The y coordinate  
-// *@param {object}* [options] Optional drawing options
-MathLib.extendPrototype('canvas', 'text', function (str, x, y, options) {
-  options = options || {};
-  var scale = options.scale || 0.4,
-      layer;
+// *@param {object}* [options] Optional drawing options  
+// *@returns {canvas}* Returns the canvas
+MathLib.extendPrototype('canvas', 'text', function (str, x, y, userOpt) {
+  var defaultOpt = {
+        font:       'Helvetica',
+        fontSize:   '16px',
+        fillColor:  'rgba(0, 0, 0, 1)',
+        lineColor:  'rgba(0, 0, 0, 1)',
+        lineWidth:  0.05,
+        dash:       [],
+        dashOffset: 0,
+        size:       0.4
+      },
+      ctx, prop, opt;
+      userOpt = userOpt || {};
 
-
-  if('layer' in options) {
-    layer = this[options.layer + 'Layer'];
+  // Determine the layer to draw onto
+  if('layer' in userOpt) {
+    ctx = this[userOpt.layer + 'Layer'].ctx;
   }
   else {
-    layer = this.mainLayer;
+    ctx = this.mainLayer.ctx;
   }
 
+  // Determine the drawing options
+  if (userOpt.redraw) {
+    opt = userOpt;
+  }
+  else {
+    opt = this.normalizeOptions(defaultOpt, userOpt);
+  }
 
-  layer.ctx.save();
-  layer.ctx.transform(1/this.zoomX,  // The first coordinate must
-      0,                             // only be zoomed.
-      0,                             // The second coordinate must
-      -1/this.zoomY,                 // point in the opposite direction.
-      -this.left * this.stepSizeX / this.zoomX,
-      this.up   * this.stepSizeY / this.zoomY
-    );
-  layer.ctx.font = "20px Arial";
-  layer.ctx.fillText(str, x * this.zoomX, -y * this.zoomY);
-  layer.ctx.restore();
+  // Set the drawing options
+  for (prop in opt) {
+    if (opt.hasOwnProperty(prop)) {
+      ctx[prop] = opt[prop];
+    }
+  }
+
+  ctx.font = opt.fontSize + ' ' + opt.font;
+
+  // Draw the path
+  ctx.save();
+  ctx.transform(
+    1 / this.curZoomX,  0,  // The first coordinate must only be zoomed.
+    0, -1 / this.curZoomY,  // The second coordinate must point in the opposite direction. 
+    -this.left * this.stepSizeX / this.curZoomX,
+     this.up   * this.stepSizeY / this.curZoomY
+  );
+  ctx.fillText(str, x * this.curZoomX, -y * this.curZoomY);
+  ctx.restore();
+
+  // Push the text onto the drawing Stack
+  if (ctx === this.mainLayer.ctx && !opt.redraw) {
+    opt.redraw = true;
+    this.drawingStack.push({
+      object: str,
+      options: opt,
+      type: 'text'
+    });
+  }
+
+  return this;
+});
+
+
+// ### Canvas.prototype.translateTo
+// Translates the canvas
+//
+// *@param {x}* The x coordinate  
+// *@param {y}* The y coordinate  
+// *@returns {canvas}* Returns the canvas
+MathLib.extendPrototype('canvas', 'translateTo', function (x, y) {
+  this.clearLayer('back', 'main', 'front');
+  this.backLayer.ctx.setTransform(this.curZoomX, 0, 0, -this.curZoomY, x, y);
+  this.mainLayer.ctx.setTransform(this.curZoomX, 0, 0, -this.curZoomY, x, y);
+  this.frontLayer.ctx.setTransform(this.curZoomX, 0, 0, -this.curZoomY, x, y);
+
+  this.redraw();
+  return this;
 });

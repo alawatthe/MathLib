@@ -65,7 +65,7 @@ core: MathLib min testing hint
 # MathLib
 MathLib: ${ML}
 ${ML}: ${MODULES} | ${BUILD_DIR}
-	@@echo "Building" ${ML}
+	@@echo "Building MathLib " ${ML}
 
 	@@cat ${MODULES} | \
 		sed 's/.function..MathLib...{//' | \
@@ -90,7 +90,7 @@ ${TESTING}: ${TEST_MODULES} | ${BUILD_DIR}
 # JSHint testing
 hint: MathLib
 	@@if test ! -z ${JS_ENGINE}; then \
-		echo "Checking MathLib against JSHint..."; \
+		echo "\nChecking MathLib against JSHint..."; \
 		${JS_ENGINE} vendor/jsHint-check.js; \
 	else \
 		echo "You must have NodeJS installed in order to test MathLib against JSHint."; \

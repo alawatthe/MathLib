@@ -14,14 +14,9 @@ MathLib.svg = function (svgId) {
       svg = MathLib.screen(svgId);
 
   svg[proto] = prototypes.svg;
-  Object.defineProperties(svg, {
-    sadf: {
-      value: 'foo'
-    }
-  });
 
   var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  ctx.setAttributeNS(null, 'transform', 'matrix(' + svg.zoomX + ',0, 0,'+-svg.zoomY+', ' + svg.width/2 + ', ' + svg.height/2 + ')');
+  ctx.setAttributeNS(null, 'transform', 'matrix(' + svg.curZoomX + ',0, 0,'+-svg.curZoomY+', ' + svg.width/2 + ', ' + svg.height/2 + ')');
   svgElement.appendChild(ctx);
   svg.ctx = ctx;
 
@@ -45,7 +40,6 @@ MathLib.svg = function (svgId) {
   svg.frontLayer = {
     element: frontLayer
   };
-
 
 
   // Chrome tries desperately to select some text
@@ -77,105 +71,117 @@ MathLib.svg = function (svgId) {
 };
 
 
+
 // ### SVG.prototype.circle
 // Draws a circle on the screen.
 //
 // *@param {circle}* The circle to be drawn  
-// *@param {object}* [options] Optional drawing options
-MathLib.extendPrototype('svg', 'circle', function (circle, options) {
+// *@param {object}* [options] Optional drawing options  
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'circle', function (circle, userOpt) {
   var svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle'),
-      set = {
-        center: 'rgba(255, 0, 0, 1)',
-        fill:   'rgba(0, 0, 255, 0.05)',
-        stroke: 'rgba(0, 0, 255, 1)',
-        stroke_width: '0.05',
-        moveable: true
+      defaultOpt = {
+        fillColor: 'rgba(0, 0, 255, 0.05)',
+        lineColor: 'rgba(0, 0, 255, 1)',
+        lineWidth: '0.05'
       },
-      layer;
+      layer, prop, opt;
+      userOpt = userOpt || {};
 
-  options = options || {};
-
-  if('layer' in options) {
-    layer = this[options.layer + 'Layer'];
+  // Determine the layer to draw onto
+  if('layer' in userOpt) {
+    layer = this[userOpt.layer + 'Layer'];
   }
   else {
     layer = this.mainLayer;
   }
 
-  for (var opt in options) {
-    if (options.hasOwnProperty(opt)) {
-      set[opt] = options[opt];
+  opt = this.normalizeOptions(defaultOpt, userOpt);
+
+  // Set the drawing options
+  for (prop in opt) {
+    if (opt.hasOwnProperty(prop)) {
+      svgCircle.setAttributeNS(null, prop, opt[prop]);
     }
   }
 
+  // Set the geometry
   svgCircle.setAttributeNS(null, 'cx', circle.center[0] / circle.center[2]);
   svgCircle.setAttributeNS(null, 'cy', circle.center[1] / circle.center[2]);
   svgCircle.setAttributeNS(null, 'r',  circle.radius);
-  svgCircle.setAttributeNS(null, 'contextmenu',  'fullscreenmenu');
-  svgCircle.circle = circle;
 
-  var prop;
-  for (prop in set) {
-    if (set.hasOwnProperty(prop)) {
-      svgCircle.setAttributeNS(null, prop.replace('_', '-'), set[prop]);
-    }
-  }
+  // Draw the circle
   layer.element.appendChild(svgCircle);
+
+  return this;
 });
+
 
 
 // ### SVG.prototype.clearLayer
 // Clears the specified layer completely
 //
-// *@param {string}* The layer to be cleared ('back', 'main', 'front')
-MathLib.extendPrototype('svg', 'clearLayer', function (layer) {
-  layer = this[layer + 'Layer'].element;
-  while (layer.hasChildNodes()) {
-    layer.removeChild(layer.firstChild);
-  }
+// *@param {string}* The layer to be cleared ('back', 'main', 'front')  
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'clearLayer', function () {
+  var svg = this;
+  Array.prototype.forEach.call(arguments, function (layer) {
+    layer = svg[layer + 'Layer'].element;
+    while (layer.hasChildNodes()) {
+      layer.removeChild(layer.firstChild);
+    }
+  });
+  return this;
 });
+
 
 
 // ### SVG.prototype.line
 // Draws a line on the screen.
 //
 // *@param {line}* The line to be drawn  
-// *@param {object}* [options] Optional drawing options
-MathLib.extendPrototype('svg', 'line', function (line, options) {
+// *@param {object}* [options] Optional drawing options  
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'line', function (line, userOpt) {
   var svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line'),
       points  = this.lineEndPoints(line),
-      layer;
+      defaultOpt = {
+        lineColor: 'rgba(0, 0, 0, 1)',
+        lineWidth: '0.05'
+      },
+      layer, prop, opt;
+      userOpt = userOpt || {};
 
-  options = options || {};
-  if('layer' in options) {
-    layer = this[options.layer + 'Layer'];
+  // Determine the layer to draw onto
+  if('layer' in userOpt) {
+    layer = this[userOpt.layer + 'Layer'];
   }
   else {
     layer = this.mainLayer;
   }
 
+  // Determine the drawing options
+  opt = this.normalizeOptions(defaultOpt, userOpt);
+
+  // Set the drawing options
+  for (prop in opt) {
+    if (opt.hasOwnProperty(prop)) {
+      svgLine.setAttributeNS(null, prop, opt[prop]);
+    }
+  }
+
+  // Set the geometry
   svgLine.setAttributeNS(null, 'x1', points[0][0]);
   svgLine.setAttributeNS(null, 'y1', points[0][1]);
   svgLine.setAttributeNS(null, 'x2', points[1][0]);
   svgLine.setAttributeNS(null, 'y2', points[1][1]);
-  svgLine.setAttributeNS(null, 'stroke-width', 0.05);
-  svgLine.setAttributeNS(null, 'stroke', 'black');
 
-  svgLine.line = line;
-  line.svg = svgLine;
+  // Draw the line
   layer.element.appendChild(svgLine);
 
-  if (options.hasOwnProperty('color')) {
-    svgLine.setAttributeNS(null, 'fill', options.color);
-    svgLine.setAttributeNS(null, 'stroke', options.color);
-  }
-  for (var prop in options) {
-    if (options.hasOwnProperty(prop) && prop !== 'layer') {
-      svgLine.setAttributeNS(null, prop.replace('_', '-'), options[prop]);
-    }
-  }
-
+  return this;
 });
+
 
 
 // ### SVG.prototype.getEventPoint
@@ -190,39 +196,42 @@ MathLib.extendPrototype('svg', 'getEventPoint', function (evt) {
 });
 
 
+
+// ### SVG.prototype.normalizeOptions
+// Converts the options to the internal format
+//
+// *@param {object}* default options  
+// *@param {object}* user options  
+// *@returns {object}* the normalized options
+MathLib.extendPrototype('svg', 'normalizeOptions', function (defaultOpt, userOpt) {
+  return {
+    fill:                userOpt.fillColor  || userOpt.color          || defaultOpt.fillColor || defaultOpt.color,
+    'font-family':       userOpt.font       || defaultOpt.font,
+    'font-size':         userOpt.fontSize   || defaultOpt.fontSize,
+    size:                userOpt.size       || defaultOpt.size,
+    stroke:              userOpt.lineColor  || userOpt.color          || defaultOpt.lineColor || defaultOpt.color,
+    'stroke-dasharray':  userOpt.dash       || defaultOpt.dash,
+    'stroke-dashoffset': userOpt.dashOffset || defaultOpt.dashOffset,
+    'stroke-width':      userOpt.lineWidth  || defaultOpt.lineWidth
+  };
+});
+
+
+
 // ### SVG.prototype.oncontextmenu()
 // Handles the contextmenu event
 //
-// *@param {event}* 
+// *@param {event}*
 MathLib.extendPrototype('svg', 'oncontextmenu', function (evt) {
-  if (evt.preventDefault) {
-   evt.preventDefault();
-  }
-  evt.returnValue = false;
-
-  var menu = this.contextmenu;
-  menu.style.setProperty('display', 'block');
-  menu.style.setProperty('top', (evt.clientY-20) + 'px');
-  menu.style.setProperty('left', evt.clientX + 'px');
-  var wrapper = this.contextmenuWrapper;
-  wrapper.style.setProperty('width', '100%');
-  wrapper.style.setProperty('height', '100%'); 
-
-  var screen = this,
-      listener = function () {
-        screen.contextmenu.style.setProperty('display', 'none');
-        wrapper.style.setProperty('width', '0px');
-        wrapper.style.setProperty('height', '0px'); 
-        screen.contextmenuWrapper.removeEventListener('click', listener); 
-      };
-  this.contextmenuWrapper.addEventListener('click', listener);
+  this.contextmenu(evt);
 });
+
 
 
 // ### SVG.prototype.onmousedown()
 // Handles the mousedown event
 //
-// *@param {event}* 
+// *@param {event}*
 MathLib.extendPrototype('svg', 'onmousedown', function (evt) {
   // Only start the action if the left mouse button was clicked
   if (evt.button !== 0) {
@@ -246,7 +255,7 @@ MathLib.extendPrototype('svg', 'onmousedown', function (evt) {
     this.stateTf = g.getCTM().inverse();
     this.stateOrigin = this.getEventPoint(evt).matrixTransform(this.stateTf);
   }
-  
+
   // Drag mode
   else {
     this.state = 'drag';
@@ -257,10 +266,11 @@ MathLib.extendPrototype('svg', 'onmousedown', function (evt) {
 });
 
 
+
 // ### SVG.prototype.onmousemove()
 // Handles the mousemove event
 //
-// *@param {event}* 
+// *@param {event}*
 MathLib.extendPrototype('svg', 'onmousemove', function (evt) {
   if (evt.preventDefault) {
     evt.preventDefault();
@@ -270,14 +280,18 @@ MathLib.extendPrototype('svg', 'onmousemove', function (evt) {
 
   var svgDoc = evt.target.ownerDocument,
       g = this.ctx,
-      p;
+      p, transform;
 
   // Pan mode
   if(this.state === 'pan' && this.pan) {
     p = this.getEventPoint(evt).matrixTransform(this.stateTf);
     this.setCTM(g, this.stateTf.inverse().translate(p.x - this.stateOrigin.x, p.y - this.stateOrigin.y));
+
+    transform = this.element.childNodes[0].transform.baseVal.getItem(0);
+    this.curTranslateX = transform.matrix.e;
+    this.curTranslateY = transform.matrix.f;
   }
-  
+
   // Drag mode
   else if(this.state === 'drag' && this.drag) {
     p = this.getEventPoint(evt).matrixTransform(g.getCTM().inverse());
@@ -289,10 +303,11 @@ MathLib.extendPrototype('svg', 'onmousemove', function (evt) {
 });
 
 
+
 // ### SVG.prototype.onmouseup()
 // Handles the mouseup event
 //
-// *@param {event}* 
+// *@param {event}*
 MathLib.extendPrototype('svg', 'onmouseup', function (evt) {
   if (evt.preventDefault) {
     evt.preventDefault();
@@ -306,13 +321,15 @@ MathLib.extendPrototype('svg', 'onmouseup', function (evt) {
   if(this.state === 'pan' || this.state === 'drag') {
     this.state = '';
   }
+
 });
+
 
 
 // ### SVG.prototype.onmousewheel()
 // Handles the mousewheel event
 //
-// *@param {event}* 
+// *@param {event}*
 MathLib.extendPrototype('svg', 'onmousewheel', function (evt) {
   if (!this.zoom) {
     return;
@@ -336,7 +353,7 @@ MathLib.extendPrototype('svg', 'onmousewheel', function (evt) {
     delta = evt.detail / -9;
   }
 
-  z = Math.pow(1 + this.zoomScale, delta);
+  z = Math.pow(1 + this.zoomSpeed, delta);
   g = this.ctx;
   p = this.getEventPoint(evt);
   p = p.matrixTransform(g.getCTM().inverse());
@@ -354,84 +371,137 @@ MathLib.extendPrototype('svg', 'onmousewheel', function (evt) {
 });
 
 
-// ### SVG.prototype.resetView
-// Resets the view to the default values.
-MathLib.extendPrototype('svg', 'resetView', function () {
-  this.ctx.setAttribute('transform', 'matrix(50, 0, 0, -50, 250, 250)');
-});
-
 
 // ### SVG.prototype.path
 // Draws a path on the screen.
 //
 // *@param {path}* The path to be drawn  
-// *@param {object}* [options] Optional drawing options
-MathLib.extendPrototype('svg', 'path', function (path, options) {
+// *@param {object}* [options] Optional drawing options  
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'path', function (path, userOpt) {
   var svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
       pathString = 'M' + path.reduce(function(prev, cur) {
         return prev + ' L' + cur.join(' ');
-      }).slice(1, -1);
+      }).slice(1, -1),
+      defaultOpt = {
+        fillColor: 'rgba(255, 255, 255, 0)',
+        lineColor: 'rgba(0, 0, 255, 1)',
+        lineWidth: '0.05'
+      },
+      layer, prop, opt;
+      userOpt = userOpt || {};
 
-  options = options || {};
-
-  svgPath.setAttributeNS(null, 'd', pathString);
-  svgPath.setAttributeNS(null, 'fill',  'transparent');
-  svgPath.setAttributeNS(null, 'stroke-width',  0.05);
-
-  if (options.hasOwnProperty('color')) {
-    svgPath.setAttributeNS(null, 'fill', options.color);
-    svgPath.setAttributeNS(null, 'stroke', options.color);
+  // Determine the layer to draw onto
+  if('layer' in userOpt) {
+    layer = this[userOpt.layer + 'Layer'];
   }
-  for (var prop in options) {
-    if (options.hasOwnProperty(prop)) {
-      svgPath.setAttributeNS(null, prop.replace('_', '-'), options[prop]);
+  else {
+    layer = this.mainLayer;
+  }
+
+  // Determine the drawing options
+  opt = this.normalizeOptions(defaultOpt, userOpt);
+
+  // Set the drawing options
+  for (prop in opt) {
+    if (opt.hasOwnProperty(prop)) {
+      svgPath.setAttributeNS(null, prop, opt[prop]);
     }
   }
-  this.mainLayer.element.appendChild(svgPath);
+
+  // Set the geometry
+  svgPath.setAttributeNS(null, 'd', pathString);
+
+  // Draw the path
+  layer.element.appendChild(svgPath);
+
+  return this;
 });
+
 
 
 // ### SVG.prototype.point
 // Draws a point on the screen.
 //
 // *@param {point}* The point to be drawn  
-// *@param {object}* [options] Optional drawing options
-MathLib.extendPrototype('svg', 'point', function (point, options) {
-  var svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+// *@param {object}* [options] Optional drawing options  
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'point', function (point, userOpt) {
+  var svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle'),
+      defaultOpt = {
+        fillColor: 'rgba(0, 0, 0, 1)',
+        lineColor: 'rgba(0, 0, 0, 1)',
+        lineWidth: '0.05'
+      },
+      layer, prop, opt;
+      userOpt = userOpt || {};
 
-  options = options || {};
+  // Determine the layer to draw onto
+  if('layer' in userOpt) {
+    layer = this[userOpt.layer + 'Layer'];
+  }
+  else {
+    layer = this.mainLayer;
+  }
 
+  // Determine the drawing options
+  opt = this.normalizeOptions(defaultOpt, userOpt);
+
+  // Set the drawing options
+  for (prop in opt) {
+    if (opt.hasOwnProperty(prop)) {
+      svgPoint.setAttributeNS(null, prop, opt[prop]);
+    }
+  }
+
+  // Set the geometry
   svgPoint.setAttributeNS(null, 'cx', point[0]/point[2]);
   svgPoint.setAttributeNS(null, 'cy', point[1]/point[2]);
   svgPoint.setAttributeNS(null, 'r',  0.1);
-  svgPoint.setAttributeNS(null, 'stroke-width',  0.05);
 
-  svgPoint.point = point;
+  // Draw the path
+  layer.element.appendChild(svgPoint);
 
-  if (options.hasOwnProperty('color')) {
-    svgPoint.setAttributeNS(null, 'fill', options.color);
-    svgPoint.setAttributeNS(null, 'stroke', options.color);
-  }
-  for (var prop in options) {
-    if (options.hasOwnProperty(prop)) {
-      svgPoint.setAttributeNS(null, prop.replace('_', '-'), options[prop]);
-    }
-  }
-  this.mainLayer.element.appendChild(svgPoint);
-  point.svg = svgPoint;
-
+  return this;
 });
+
+
+
+// ### SVG.prototype.resetView
+// Resets the view to the default values.
+//
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'resetView', function () {
+  this.ctx.setAttribute('transform', 'matrix(' + this.origZoomX + ', 0, 0, -' + this.origZoomY + ', ' + this.origTranslateX + ', ' + this.origTranslateY + ')');
+  return this;
+});
+
+
+
+// ### SVG.prototype.resize()
+// Resizes the SVG element
+//
+// *@param {number}* The new width in px.  
+// *@param {number}* The new height in px.  
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'resize', function (x, y) {
+  this.element.setAttribute('width', x + 'px');
+  this.element.setAttribute('height', y + 'px');
+  return this;
+});
+
 
 
 // ### SVG.prototype.setCTM
 // Sets the transformation matrix for an elemen.
 //
-// *@param {SVG-element}* The SVG-element which CTM should be set
+// *@param {SVG-element}* The SVG-element which CTM should be set  
 // *@param {SVG-matrix}* The SVG-matrix
 MathLib.extendPrototype('svg', 'setCTM', function (element, matrix) {
   var s = 'matrix(' + matrix.a + ',' + matrix.b + ',' + matrix.c + ',' + matrix.d + ',' + matrix.e + ',' + matrix.f + ')';
   element.setAttribute('transform', s);
 });
+
 
 
 // ### SVG.prototype.text
@@ -440,36 +510,66 @@ MathLib.extendPrototype('svg', 'setCTM', function (element, matrix) {
 // *@param {str}* The string to be drawn  
 // *@param {x}* The x coordinate  
 // *@param {y}* The y coordinate  
-// *@param {object}* [options] Optional drawing options
-MathLib.extendPrototype('svg', 'text', function (str, x, y, options) {
-  options = options || {};
+// *@param {object}* [options] Optional drawing options  
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'text', function (str, x, y, userOpt) {
   var svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
-      scale = options.scale || 0.4,
-      layer;
+      defaultOpt = {
+        font:      'Helvetica',
+        fontSize:  '16px',
+        lineColor: 'rgba(0, 0, 0, 1)',
+        lineWidth: 0.05
+      },
+      layer, prop, opt, size;
+      userOpt = userOpt || {};
 
-
-  if('layer' in options) {
-    layer = this[options.layer + 'Layer'];
+  // Determine the layer to draw onto
+  if('layer' in userOpt) {
+    layer = this[userOpt.layer + 'Layer'];
   }
   else {
     layer = this.mainLayer;
   }
 
-  svgText.textContent = str;
-  svgText.setAttributeNS(null, 'x', 1/scale*x);
-  svgText.setAttributeNS(null, 'y', -1/scale*y);
-  svgText.setAttributeNS(null, 'font-size',  '1');
-  svgText.setAttributeNS(null, 'stroke-width',  0.05);
-  svgText.setAttributeNS(null, 'transform',  'scale(' + scale + ', -' + scale + ')');
+  // Determine the drawing options
+  opt = this.normalizeOptions(defaultOpt, userOpt);
 
-  if (options.hasOwnProperty('color')) {
-    svgText.setAttributeNS(null, 'fill', options.color);
-    svgText.setAttributeNS(null, 'stroke', options.color);
-  }
-  for (var prop in options) {
-    if (options.hasOwnProperty(prop)) {
-      svgText.setAttributeNS(null, prop.replace('_', '-'), options[prop]);
+  size = 1 / (3*parseFloat(opt['font-size']));
+
+  // Set the drawing options
+  for (prop in opt) {
+    if (opt.hasOwnProperty(prop) && prop !== 'size') {
+      svgText.setAttributeNS(null, prop, opt[prop]);
     }
   }
+  svgText.setAttributeNS(null, 'transform',  'scale(' + size + ', -' + size + ')');
+
+  // Set the geometry
+  svgText.textContent = str;
+  svgText.setAttributeNS(null, 'x', 1 / size * x);
+  svgText.setAttributeNS(null, 'y', -1 / size * y);
+
+  // Draw the line
   layer.element.appendChild(svgText);
+
+  return this;
+});
+
+
+
+// ### SVG.prototype.translateTo
+// Translates the plot
+//
+// *@param {x}* The x coordinate  
+// *@param {y}* The y coordinate  
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'translateTo', function (x, y) {
+  var matrix = this.ctx.getCTM();
+  matrix.e = x;
+  matrix.f = y;
+  this.setCTM(this.ctx, matrix);
+  this.curTranslateX = x;
+  this.curTranslateY = y;
+
+  return this;
 });

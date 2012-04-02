@@ -4,12 +4,13 @@
   position: fixed;
   top: 0px;
   left: 0px;
+  display: none;
+  z-index: 1000;
 }
 
 .MathLib.contextmenu {
   border: 1px solid #ccc;
   background: white;
-  display: none;
   width: 200px;
   -webkit-box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
      -moz-box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
@@ -44,4 +45,16 @@
   background-image:         linear-gradient(to bottom, #658bf1, #2a63ee);
 
   color: white;
+}
+
+
+/* Make the background white in Firefox */
+.MathLib.screenWrapper:-moz-full-screen {
+  background: white!important;
+}
+
+/* Webkit isn't using the whole screen in fullscreen mode */
+.MathLib.screenWrapper:-webkit-full-screen {
+  width: 100%!important;
+  height: 100%!important;
 }

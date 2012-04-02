@@ -9,7 +9,7 @@ if (!Array.prototype.every) {
       throw new TypeError();
     }
 
-    var t = Object(this);
+    var t =  new Object(this);
     var len = t.length >>> 0;
     if (typeof fun != "function") {
       throw new TypeError();
@@ -36,7 +36,7 @@ if (!Array.prototype.filter) {
       throw new TypeError();
     }
 
-    var t = Object(this);
+    var t = new Object(this);
     var len = t.length >>> 0;
     if (typeof fun != "function") {
       throw new TypeError();
@@ -154,7 +154,7 @@ if (!Array.prototype.some) {
       throw new TypeError();
     }
 
-    var t = Object(this);
+    var t = new Object(this);
     var len = t.length >>> 0;
     if (typeof fun != "function") {
       throw new TypeError();

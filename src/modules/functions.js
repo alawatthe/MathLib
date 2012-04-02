@@ -222,7 +222,7 @@ var functionList1 = {
         return 1/x;
       },
   isFinite: function (x) {
-       return Math.abs(x) !== Infinity;
+       return Math.abs(x) < Infinity;
       },
   isInt: function (x) {
         return x % 1 === 0;
@@ -266,14 +266,7 @@ var functionList1 = {
   lg: function (x) {
         return Math.log(x) / Math.ln10;
       },
-  ln: function (x) {
-        if (x > 0) {
-          return Math.log(x);
-        }
-        else {
-          return MathLib.complex([Math.log(-x), Math.PI]);
-        }
-      },
+  ln: Math.log,
   log: function (base, x) {
         if (arguments.length === 1) {
           x = base;
@@ -310,6 +303,12 @@ var functionList1 = {
         }
         return res;
       },
+  round: function (x, n) {
+          if (arguments.length === 1) {
+            return Math.round(x);
+          }
+          return Math.round(x*Math.pow(10, n)) / Math.pow(10, n);
+        },
   root: function (x, root) {
         if (arguments.length === 1) {
           return Math.sqrt(x);
