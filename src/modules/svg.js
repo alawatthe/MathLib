@@ -4,9 +4,6 @@
 // ```
 // MathLib.svg('svgId')
 // ```
-//
-// Panning, dragging and zooming are based on Andrea Leofreddi's SVGPan.js (v 1.2.2)
-// <http://code.google.com/p/svgpan/>
 
 prototypes.svg = MathLib.screen();
 MathLib.svg = function (svgId) {

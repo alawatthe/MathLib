@@ -181,8 +181,8 @@ MathLib.extendPrototype('canvas', 'circle', function (circle, userOpt) {
 // *@returns {canvas}* Returns the canvas
 MathLib.extendPrototype('canvas', 'clearLayer', function () {
   var canvas = this,
-      p1 = this.curTransformation.inverse().times(MathLib.point(this.width, 0)),
-      p2 = this.curTransformation.inverse().times(MathLib.point(0, this.height));
+      p1 = this.curTransformation.inverse().times(MathLib.point(this.element.width, 0)),
+      p2 = this.curTransformation.inverse().times(MathLib.point(0, this.element.height));
   Array.prototype.forEach.call(arguments, function (layer) {
     canvas[layer + 'Layer'].ctx.clearRect(p1[0], p1[1], p2[0]-p1[0], p2[1]-p1[1]);
   });
@@ -441,11 +441,7 @@ MathLib.extendPrototype('canvas', 'redraw', function () {
 //
 // *@returns {canvas}* Returns the canvas
 MathLib.extendPrototype('canvas', 'resetView', function () {
-  this.clearLayer('back', 'main', 'front');
-  var m = this.origTransformation;
-  this.backLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
-  this.mainLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
-  this.frontLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+  this.curTransformation = this.origTransformation;
   this.redraw();
   return this;
 });
@@ -515,15 +511,10 @@ MathLib.extendPrototype('canvas', 'text', function (str, x, y, userOpt) {
 
   ctx.font = opt.fontSize + ' ' + opt.font;
 
-  // Draw the path
+  // Draw the text
   ctx.save();
-  ctx.transform(
-    1 / this.curZoomX,  0,  // The first coordinate must only be zoomed.
-    0, 1 / this.curZoomY,  // The second coordinate must point in the opposite direction. 
-    -this.left * this.stepSizeX / this.curZoomX,
-     this.up   * this.stepSizeY / this.curZoomY
-  );
-  ctx.fillText(str, x * this.curZoomX, -y * this.curZoomY);
+  ctx.transform(1 / this.origZoomX,  0, 0, 1 / this.origZoomY, 0, 0);
+  ctx.fillText(str, x * this.origZoomX, -y * this.origZoomY);
   ctx.restore();
 
   // Push the text onto the drawing Stack

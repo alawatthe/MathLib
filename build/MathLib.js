@@ -913,7 +913,7 @@ MathLib.screen = function (id, options) {
         gridColor:          '#cccccc',
         gridLineWidth:      0.05,
         gridType:           'cartesian',
-        height:             element.height.baseVal ? element.height.baseVal.value : element.height,
+        height:             parseInt(element.getAttribute('height'), 10),
         label:              true,
         labelColor:         'black',
         labelFont:          'Helvetica',
@@ -927,7 +927,7 @@ MathLib.screen = function (id, options) {
         stepSizeY:          1,
         state:              '',
         up:                 5,
-        width:              element.width.baseVal ? element.width.baseVal.value : element.width,
+        width:              parseInt(element.getAttribute('width'), 10),
         zoom:               true,
         zoomSpeed:          0.2
       };
@@ -1167,8 +1167,8 @@ MathLib.extendPrototype('screen', 'axis', function (options) {
 
 
   if (type === 'in') {
-    var lengthX = 10 / this.curZoomX,
-        lengthY = 10 / this.curZoomY;
+    var lengthX = 10 / this.origZoomX,
+        lengthY = 10 / this.origZoomY;
 
     this.line([[-50, 0], [50, 0]], axisOpt);
     this.line([[0, -50], [0, 50]], axisOpt);
@@ -1297,8 +1297,8 @@ MathLib.extendPrototype('screen', 'getEventPoint', function (evt) {
     y = evt.offsetY;
   }
   else {
-    x = evt.layerX + this.element.offsetTop;
-    y = evt.layerY - this.element.offsetLeft;
+    x = evt.layerX;
+    y = evt.layerY;
   }
   return MathLib.point([x, y, 1]);
 });
@@ -1316,7 +1316,7 @@ MathLib.extendPrototype('screen', 'getX', function (evt) {
     osX = evt.offsetX;
   }
   else {
-    osX = evt.layerX + this.element.offsetTop;
+    osX = evt.layerX;
   }
   return (osX - this.curTranslateX) / this.curZoomX; 
 });
@@ -1334,7 +1334,7 @@ MathLib.extendPrototype('screen', 'getY', function (evt) {
     osY = evt.offsetY;
   }
   else {
-    osY = evt.layerY-this.element.offsetLeft;
+    osY = evt.layerY;
   }
   return (osY - this.curTranslateY) / this.curZoomY;
 });
@@ -1461,8 +1461,6 @@ MathLib.extendPrototype('screen', 'onmousedown', function (evt) {
     this.interaction = 'pan';
     this.startPoint = this.getEventPoint(evt);
     this.startTransformation = this.curTransformation.copy();
-    // this.stateOrigin = this.getEventPoint(evt).matrixTransform(this.stateTf);
-    // this.stateOrigin = this.curTransformation.inverse().times(this.getEventPoint(evt));
   }
 
   // Drag mode
@@ -1481,19 +1479,17 @@ MathLib.extendPrototype('screen', 'onmousedown', function (evt) {
 //
 // *@param {event}*
 MathLib.extendPrototype('screen', 'onmousemove', function (evt) {
+  var p;
+
   if (evt.preventDefault) {
     evt.preventDefault();
   }
 
   evt.returnValue = false;
-
-  var svgDoc = evt.target.ownerDocument,
-      g = this.ctx,
-      p, m, transform;
+  
 
   // Pan mode
   if(this.interaction === 'pan' && this.pan) {
-    // p = this.stateTf.times(this.stateTf.inverse().times(this.getEventPoint(evt)).minus(this.stateOrigin));
     p = this.getEventPoint(evt).minus(this.startPoint);
     this.curTranslateX = this.startTransformation[0][2] + p[0];
     this.curTranslateY = this.startTransformation[1][2] + p[1];
@@ -1754,8 +1750,8 @@ MathLib.extendPrototype('canvas', 'circle', function (circle, userOpt) {
 // *@returns {canvas}* Returns the canvas
 MathLib.extendPrototype('canvas', 'clearLayer', function () {
   var canvas = this,
-      p1 = this.curTransformation.inverse().times(MathLib.point(this.width, 0)),
-      p2 = this.curTransformation.inverse().times(MathLib.point(0, this.height));
+      p1 = this.curTransformation.inverse().times(MathLib.point(this.element.width, 0)),
+      p2 = this.curTransformation.inverse().times(MathLib.point(0, this.element.height));
   Array.prototype.forEach.call(arguments, function (layer) {
     canvas[layer + 'Layer'].ctx.clearRect(p1[0], p1[1], p2[0]-p1[0], p2[1]-p1[1]);
   });
@@ -2014,11 +2010,7 @@ MathLib.extendPrototype('canvas', 'redraw', function () {
 //
 // *@returns {canvas}* Returns the canvas
 MathLib.extendPrototype('canvas', 'resetView', function () {
-  this.clearLayer('back', 'main', 'front');
-  var m = this.origTransformation;
-  this.backLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
-  this.mainLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
-  this.frontLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+  this.curTransformation = this.origTransformation;
   this.redraw();
   return this;
 });
@@ -2088,15 +2080,10 @@ MathLib.extendPrototype('canvas', 'text', function (str, x, y, userOpt) {
 
   ctx.font = opt.fontSize + ' ' + opt.font;
 
-  // Draw the path
+  // Draw the text
   ctx.save();
-  ctx.transform(
-    1 / this.curZoomX,  0,  // The first coordinate must only be zoomed.
-    0, 1 / this.curZoomY,  // The second coordinate must point in the opposite direction. 
-    -this.left * this.stepSizeX / this.curZoomX,
-     this.up   * this.stepSizeY / this.curZoomY
-  );
-  ctx.fillText(str, x * this.curZoomX, -y * this.curZoomY);
+  ctx.transform(1 / this.origZoomX,  0, 0, 1 / this.origZoomY, 0, 0);
+  ctx.fillText(str, x * this.origZoomX, -y * this.origZoomY);
   ctx.restore();
 
   // Push the text onto the drawing Stack
@@ -2117,9 +2104,6 @@ MathLib.extendPrototype('canvas', 'text', function (str, x, y, userOpt) {
 // ```
 // MathLib.svg('svgId')
 // ```
-//
-// Panning, dragging and zooming are based on Andrea Leofreddi's SVGPan.js (v 1.2.2)
-// <http://code.google.com/p/svgpan/>
 
 prototypes.svg = MathLib.screen();
 MathLib.svg = function (svgId) {
