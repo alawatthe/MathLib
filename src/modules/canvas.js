@@ -55,12 +55,7 @@ MathLib.canvas = function (canvasId) {
   layers.forEach(function (l) {
     // Transform the canvases
     l.ctx.save();
-    l.ctx.transform(
-      canvas.curZoomX,  0,  // The first coordinate must  only be zoomed.
-      0, -canvas.curZoomY,  // The second coordinate must point in the opposite direction.
-      canvas.curTranslateX,
-      canvas.curTranslateY
-    );
+    l.ctx.transform(canvas.curZoomX, 0, 0, canvas.curZoomY, canvas.curTranslateX, canvas.curTranslateY);
 
     // Placing the layers on top of each other
     l.element.style.setProperty('position', 'absolute');
@@ -72,32 +67,48 @@ MathLib.canvas = function (canvasId) {
 
   // Chrome tries desperately to select some text
   canvas.frontLayer.element.onselectstart = function(){ return false; };
-  // canvas.frontLayer.element.onmousedown = function (evt) {
-  //   canvas.onmousedown(evt);
-  // };
+  canvas.frontLayer.element.onmousedown = function (evt) {
+    canvas.onmousedown(evt);
+  };
   canvas.frontLayer.element.oncontextmenu = function (evt) {
     canvas.oncontextmenu(evt);
   };
-  // canvas.frontLayer.element.onmousemove = function (evt) {
-  //   canvas.onmousemove(evt);
-  // };
-  // canvas.frontLayer.element.onmouseup = function (evt) {
-  //   canvas.onmouseup(evt);
-  // };
-  // if('onmousewheel' in canvas.frontLayer.element) {
-  //   canvas.frontLayer.element.onmousewheel = function (evt) {
-  //      canvas.onmousewheel(evt);
-  //   };
-  // }
-  // else {  // Firefox names it a bit different
-  //   canvas.frontLayer.element.DOMMouseScroll = function (evt) {
-  //      canvas.onmousewheel(evt);
-  //   };
-  // }
+  canvas.frontLayer.element.onmousemove = function (evt) {
+    canvas.onmousemove(evt);
+  };
+  canvas.frontLayer.element.onmouseup = function (evt) {
+    canvas.onmouseup(evt);
+  };
+  if('onmousewheel' in canvas.frontLayer.element) {
+    canvas.frontLayer.element.onmousewheel = function (evt) {
+       canvas.onmousewheel(evt);
+    };
+  }
+  else {  // Firefox names it a bit different
+    canvas.frontLayer.element.DOMMouseScroll = function (evt) {
+       canvas.onmousewheel(evt);
+    };
+  }
 
 
   return canvas;
 };
+
+
+
+// ### Canvas.prototype.applyTransformation
+// Applies the current transformation
+//
+// *@returns {canvas}* Returns the canvas
+MathLib.extendPrototype('canvas', 'applyTransformation', function () {
+  this.clearLayer('back', 'main', 'front');
+  var m = this.curTransformation;
+  this.backLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+  this.mainLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+  this.frontLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+
+  return this;
+});
 
 
 
@@ -169,9 +180,11 @@ MathLib.extendPrototype('canvas', 'circle', function (circle, userOpt) {
 // *@param {string}* The layer to be cleared ('back', 'main', 'front')  
 // *@returns {canvas}* Returns the canvas
 MathLib.extendPrototype('canvas', 'clearLayer', function () {
-  var canvas = this;
+  var canvas = this,
+      p1 = this.curTransformation.inverse().times(MathLib.point(this.width, 0)),
+      p2 = this.curTransformation.inverse().times(MathLib.point(0, this.height));
   Array.prototype.forEach.call(arguments, function (layer) {
-    canvas[layer + 'Layer'].ctx.clearRect(-50, -50, 100, 100);
+    canvas[layer + 'Layer'].ctx.clearRect(p1[0], p1[1], p2[0]-p1[0], p2[1]-p1[1]);
   });
   return this;
 });
@@ -247,15 +260,6 @@ MathLib.extendPrototype('canvas', 'line', function (line, userOpt) {
 // *@param {event}*
 MathLib.extendPrototype('canvas', 'oncontextmenu', function (evt) {
   this.contextmenu(evt);
-});
-
-
-
-// ### Canvas.prototype.onmousewheel()
-// Handles the mousewheel event
-//
-// *@param {event}* 
-MathLib.extendPrototype('canvas', 'onmousewheel', function (evt) {
 });
 
 
@@ -416,6 +420,8 @@ MathLib.extendPrototype('canvas', 'point', function (point, userOpt) {
 MathLib.extendPrototype('canvas', 'redraw', function () {
   var canvas = this;
 
+  this.clearLayer('back', 'main', 'front');
+
   // redraw the background
   this.grid();
   this.axis();
@@ -435,12 +441,11 @@ MathLib.extendPrototype('canvas', 'redraw', function () {
 //
 // *@returns {canvas}* Returns the canvas
 MathLib.extendPrototype('canvas', 'resetView', function () {
-  this.clearLayer('back');
-  this.clearLayer('main');
-  this.clearLayer('front');
-  this.backLayer.ctx.setTransform(this.origZoomX, 0, 0, -this.origZoomY, this.origTranslateX, this.origTranslateY);
-  this.mainLayer.ctx.setTransform(this.origZoomX, 0, 0, -this.origZoomY, this.origTranslateX, this.origTranslateY);
-  this.frontLayer.ctx.setTransform(this.origZoomX, 0, 0, -this.origZoomY, this.origTranslateX, this.origTranslateY);
+  this.clearLayer('back', 'main', 'front');
+  var m = this.origTransformation;
+  this.backLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+  this.mainLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+  this.frontLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
   this.redraw();
   return this;
 });
@@ -514,7 +519,7 @@ MathLib.extendPrototype('canvas', 'text', function (str, x, y, userOpt) {
   ctx.save();
   ctx.transform(
     1 / this.curZoomX,  0,  // The first coordinate must only be zoomed.
-    0, -1 / this.curZoomY,  // The second coordinate must point in the opposite direction. 
+    0, 1 / this.curZoomY,  // The second coordinate must point in the opposite direction. 
     -this.left * this.stepSizeX / this.curZoomX,
      this.up   * this.stepSizeY / this.curZoomY
   );
@@ -531,22 +536,5 @@ MathLib.extendPrototype('canvas', 'text', function (str, x, y, userOpt) {
     });
   }
 
-  return this;
-});
-
-
-// ### Canvas.prototype.translateTo
-// Translates the canvas
-//
-// *@param {x}* The x coordinate  
-// *@param {y}* The y coordinate  
-// *@returns {canvas}* Returns the canvas
-MathLib.extendPrototype('canvas', 'translateTo', function (x, y) {
-  this.clearLayer('back', 'main', 'front');
-  this.backLayer.ctx.setTransform(this.curZoomX, 0, 0, -this.curZoomY, x, y);
-  this.mainLayer.ctx.setTransform(this.curZoomX, 0, 0, -this.curZoomY, x, y);
-  this.frontLayer.ctx.setTransform(this.curZoomX, 0, 0, -this.curZoomY, x, y);
-
-  this.redraw();
   return this;
 });

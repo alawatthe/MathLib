@@ -53,95 +53,6 @@ MathLib.screen = function (id, options) {
   set.id             = id;
   set.element        = element;
   set.type           = element.localName;
-  set.origTranslateX = set.width  / 2;
-  set.origTranslateY = set.height / 2;
-  set.curTranslateX  = set.width  / 2;
-  set.curTranslateY  = set.height / 2;
-  set.origZoomX      = set.width  / ((-set.left + set.right) * set.stepSizeX); 
-  set.origZoomY      = set.height / ((set.up - set.down)  * set.stepSizeY);
-  set.curZoomX       = set.width  / ((-set.left + set.right) * set.stepSizeX); 
-  set.curZoomY       = set.height / ((set.up - set.down)  * set.stepSizeY);
-
-
-  // Create a div which contains the svg/canvas element and the contextmenu
-  set.screenWrapper = document.createElement('div');
-  set.screenWrapper.className = 'MathLib screenWrapper';
-  element.parentNode.insertBefore(set.screenWrapper, element);
-  set.screenWrapper.appendChild(element);
-
-
-  // The context menu
-  set.contextmenuWrapper = document.createElement('div');
-  set.contextmenuWrapper.className = 'MathLib contextmenuWrapper';
-  set.screenWrapper.appendChild(set.contextmenuWrapper);
-
-
-  // The coordinates menu item
-  contextmenu = document.createElement('ul');
-  contextmenu.className = 'MathLib contextmenu';
-  set.contextmenuWrapper.appendChild(contextmenu);
-
-  var coordinates = document.createElement('li');
-  coordinates.className = 'MathLib menuitem';
-  coordinates.onclick = function () {
-    set.contextmenuWrapper.style.setProperty('display', 'none');
-  };
-  contextmenu.appendChild(coordinates);
-
-
-  // The reset view menu item
-  var reset = document.createElement('li');
-  reset.className = 'MathLib menuitem';
-  reset.innerHTML = 'Reset View';
-  reset.onclick = function () {
-    screen.resetView();
-    set.contextmenuWrapper.style.setProperty('display', 'none');
-  };
-  contextmenu.appendChild(reset);
-
-
-  // Firefox support will be enabled when FF is supporting the fullscreenchange event
-  // see https://bugzilla.mozilla.org/show_bug.cgi?id=724816
-  if (document.webkitCancelFullScreen /*|| document.mozCancelFullScreen*/) {
-    // The fullscreen menuitem
-    // (Only enabled if the browser supports fullscreen mode)
-    var fullscreen = document.createElement('li');
-    fullscreen.className = 'MathLib menuitem';
-    fullscreen.innerHTML = 'View Fullscreen';
-    fullscreen.onclick = function (evt) {
-      if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
-        screen.enterFullscreen();
-      }
-      else {
-        screen.exitFullscreen();
-      }
-
-      set.contextmenuWrapper.style.setProperty('display', 'none');
-    };
-    contextmenu.appendChild(fullscreen);
-
-
-    // Handle the fullscreenchange event
-    var fullscreenchange = function (evt) {
-      if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
-        fullscreen.innerHTML = 'View Fullscreen';
-        screen.resize(set.width, set.height);
-        screen.translateTo(set.origTranslateX, set.origTranslateY);
-      }
-      else {
-        fullscreen.innerHTML = 'Exit Fullscreen';
-        screen.resize(window.outerWidth, window.outerHeight);
-        screen.translateTo(window.outerWidth/2, window.outerHeight/2);
-      }
-    };
-
-    if (document.webkitCancelFullScreen) {
-      set.screenWrapper.addEventListener('webkitfullscreenchange', fullscreenchange, false);
-    }
-    else if (document.mozCancelFullScreen) {
-      set.screenWrapper.addEventListener('mozfullscreenchange', fullscreenchange, false);
-    }
-  }
 
 
   for (var prop in set) {
@@ -153,6 +64,157 @@ MathLib.screen = function (id, options) {
       });
     }
   }
+
+  var curTransformation = MathLib.matrix([[screen.width/((screen.right-screen.left)*screen.stepSizeX), 0, screen.width/2],[0, -screen.height/((screen.up-screen.down)*screen.stepSizeY), screen.height/2],[0, 0, 1]]);
+  Object.defineProperty(screen, 'curTransformation', {
+    get: function (){return curTransformation;},
+    set: function (x){curTransformation = x; screen.applyTransformation();}
+  });
+  Object.defineProperty(screen, 'origTransformation', {
+    value: MathLib.matrix([[screen.width/((screen.right-screen.left)*screen.stepSizeX), 0, screen.width/2],[0, -screen.height/((screen.up-screen.down)*screen.stepSizeY), screen.height/2],[0, 0, 1]])
+  });
+
+  Object.defineProperty(screen, 'curTranslateX', {
+    get: function (){return screen.curTransformation[0][2];},
+    set: function (x){screen.curTransformation[0][2] = x; screen.applyTransformation();}
+  });
+  Object.defineProperty(screen, 'curTranslateY', {
+    get: function (){return screen.curTransformation[1][2];},
+    set: function (y){screen.curTransformation[1][2] = y; screen.applyTransformation();}
+  });
+  Object.defineProperty(screen, 'origTranslateX', {
+    get: function (){return screen.origTransformation[0][2];},
+    set: function (x){screen.origTransformation[0][2] = x;}
+  });
+  Object.defineProperty(screen, 'origTranslateY', {
+    get: function (){return screen.origTransformation[1][2];},
+    set: function (y){screen.origTransformation[1][2] = y;}
+  });
+
+  Object.defineProperty(screen, 'curZoomX', {
+    get: function (){return screen.curTransformation[0][0];},
+    set: function (x){screen.curTransformation[0][0] = x; screen.applyTransformation();}
+  });
+  Object.defineProperty(screen, 'curZoomY', {
+    get: function (){return screen.curTransformation[1][1];},
+    set: function (y){screen.curTransformation[1][1] = y; screen.applyTransformation();}
+  });
+  Object.defineProperty(screen, 'origZoomX', {
+    get: function (){return screen.origTransformation[0][0];},
+    set: function (x){screen.origTransformation[0][0] = x;}
+  });
+  Object.defineProperty(screen, 'origZoomY', {
+    get: function (){return screen.origTransformation[1][1];},
+    set: function (y){set.origTransformation[1][1] = y;}
+  });
+
+
+  // Create a div which contains the svg/canvas element and the contextmenu
+  screen.screenWrapper = document.createElement('div');
+  screen.screenWrapper.className = 'MathLib screenWrapper';
+  element.parentNode.insertBefore(screen.screenWrapper, element);
+  screen.screenWrapper.appendChild(element);
+
+
+  // The context menu
+  screen.contextmenuWrapper = document.createElement('div');
+  screen.contextmenuWrapper.className = 'MathLib contextmenuWrapper';
+  screen.screenWrapper.appendChild(screen.contextmenuWrapper);
+
+
+  contextmenu = document.createElement('ul');
+  contextmenu.className = 'MathLib contextmenu';
+  screen.contextmenuWrapper.appendChild(contextmenu);
+
+  // The coordinates menu item
+  var coordinates = document.createElement('li');
+  coordinates.className = 'MathLib menuitem';
+  coordinates.innerHTML = '<span>Position</span><span style="float: right; padding-right: 10px">❯</span>';
+  coordinates.onclick = function () {
+    screen.contextmenuWrapper.style.setProperty('display', 'none');
+  };
+  contextmenu.appendChild(coordinates);
+
+  var coordinatesSubmenu = document.createElement('ul');
+  coordinatesSubmenu.className = 'MathLib contextmenu submenu';
+  coordinates.appendChild(coordinatesSubmenu);
+
+  var cartesian = document.createElement('li');
+  cartesian.className = 'MathLib menuitem';
+  cartesian.onclick = function () {
+    screen.contextmenuWrapper.style.setProperty('display', 'none');
+  };
+  coordinatesSubmenu.appendChild(cartesian);
+
+  var polar = document.createElement('li');
+  polar.className = 'MathLib menuitem';
+  polar.onclick = function () {
+    screen.contextmenuWrapper.style.setProperty('display', 'none');
+  };
+  coordinatesSubmenu.appendChild(polar);
+  
+
+
+
+  // The reset view menu item
+  var reset = document.createElement('li');
+  reset.className = 'MathLib menuitem';
+  reset.innerHTML = 'Reset View';
+  reset.onclick = function () {
+    screen.resetView();
+    screen.contextmenuWrapper.style.setProperty('display', 'none');
+  };
+  contextmenu.appendChild(reset);
+
+
+  // Firefox support will be enabled when FF is supporting the fullscreenchange event
+  // see https://bugzilla.mozilla.org/show_bug.cgi?id=724816
+  if (document.webkitCancelFullScreen /*|| document.mozCancelFullScreen*/) {
+    // The fullscreen menuitem
+    // (Only enabled if the browser supports fullscreen mode)
+    var fullscreen = document.createElement('li');
+    fullscreen.className = 'MathLib menuitem';
+    fullscreen.innerHTML = 'View full screen';
+    fullscreen.onclick = function (evt) {
+      if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+        screen.enterFullscreen();
+      }
+      else {
+        screen.exitFullscreen();
+      }
+
+      screen.contextmenuWrapper.style.setProperty('display', 'none');
+    };
+    contextmenu.appendChild(fullscreen);
+
+
+    // Handle the fullscreenchange event
+    var fullscreenchange = function (evt) {
+      if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+        fullscreen.innerHTML = 'View Fullscreen';
+        screen.resize(screen.width, screen.height);
+        screen.curTranslateX = screen.origTranslateX;
+        screen.curTranslateY = screen.origTranslateY;
+        screen.redraw();
+      }
+      else {
+        fullscreen.innerHTML = 'Exit Fullscreen';
+        screen.resize(window.outerWidth, window.outerHeight);
+        screen.curTranslateX = window.outerWidth/2;
+        screen.curTranslateY = window.outerHeight/2;
+        screen.redraw();
+      }
+    };
+
+    if (document.webkitCancelFullScreen) {
+      screen.screenWrapper.addEventListener('webkitfullscreenchange', fullscreenchange, false);
+    }
+    else if (document.mozCancelFullScreen) {
+      screen.screenWrapper.addEventListener('mozfullscreenchange', fullscreenchange, false);
+    }
+  }
+
+
 
   return screen;
 };
@@ -267,6 +329,8 @@ MathLib.extendPrototype('screen', 'contextmenu', function (evt) {
    evt.preventDefault();
   }
   evt.returnValue = false;
+  var x = this.getX(evt),
+      y = this.getY(evt);
 
   var menu = this.contextmenuWrapper.childNodes[0];
   menu.style.setProperty('top', (evt.clientY-20) + 'px');
@@ -276,7 +340,8 @@ MathLib.extendPrototype('screen', 'contextmenu', function (evt) {
   wrapper.style.setProperty('width', '100%');
   wrapper.style.setProperty('height', '100%');
   
-  menu.childNodes[0].innerHTML = 'Position: (' + MathLib.round(this.getX(evt), 2) + ', ' + MathLib.round(this.getY(evt), 2) + ')';
+  menu.childNodes[0].childNodes[2].childNodes[0].innerHTML = 'cartesian: (' + MathLib.round(x, 2) + ', ' + MathLib.round(y, 2) + ')';
+  menu.childNodes[0].childNodes[2].childNodes[1].innerHTML = 'polar: (' + MathLib.round(MathLib.hypot(x, y), 2) + ', ' + MathLib.round(Math.atan2(y, x), 2) + ')';
 
   var screen = this,
       listener = function () {
@@ -331,6 +396,26 @@ MathLib.extendPrototype('screen', 'exitFullscreen', function () {
 
 
 
+// ### Screen.prototype.getEventPoint
+// Creates a point based on the coordinates of an event.
+//
+// *@param {event}*  
+// *@returns {point}*
+MathLib.extendPrototype('screen', 'getEventPoint', function (evt) {
+  var x, y;
+  if (evt.offsetX) {
+    x = evt.offsetX;
+    y = evt.offsetY;
+  }
+  else {
+    x = evt.layerX + this.element.offsetTop;
+    y = evt.layerY - this.element.offsetLeft;
+  }
+  return MathLib.point([x, y, 1]);
+});
+
+
+
 // ### Screen.prototype.getX()
 // Returns the x coordinate of the event.
 //
@@ -362,7 +447,7 @@ MathLib.extendPrototype('screen', 'getY', function (evt) {
   else {
     osY = evt.layerY-this.element.offsetLeft;
   }
-  return (this.curTranslateY - osY) / this.curZoomY;
+  return (osY - this.curTranslateY) / this.curZoomY;
 });
 
 
@@ -461,4 +546,139 @@ MathLib.extendPrototype('screen', 'lineEndPoints', function (l) {
   else {
     return l;
   }
+});
+
+
+
+// ### Screen.prototype.onmousedown()
+// Handles the mousedown event
+//
+// *@param {event}*
+MathLib.extendPrototype('screen', 'onmousedown', function (evt) {
+  // Only start the action if the left mouse button was clicked
+  if (evt.button !== 0) {
+    return;
+  }
+
+  if (evt.preventDefault) {
+    evt.preventDefault();
+  }
+
+  evt.returnValue = false;
+
+  // Pan mode
+  // Pan anyway when drag is disabled and the user clicked on an element 
+  if(evt.target.tagName === 'canvas' || evt.target.tagName === 'svg' || !this.drag) {
+    this.interaction = 'pan';
+    this.startPoint = this.getEventPoint(evt);
+    this.startTransformation = this.curTransformation.copy();
+    // this.stateOrigin = this.getEventPoint(evt).matrixTransform(this.stateTf);
+    // this.stateOrigin = this.curTransformation.inverse().times(this.getEventPoint(evt));
+  }
+
+  // Drag mode
+  // else {
+  //   this.interaction = 'drag';
+  //   this.stateTarget = evt.target;
+  //   this.stateTf = g.getCTM().inverse();
+  //   this.stateOrigin = this.getEventPoint(evt).matrixTransform(this.stateTf);
+  // }
+});
+
+
+
+// ### Screen.prototype.onmousemove()
+// Handles the mousemove event
+//
+// *@param {event}*
+MathLib.extendPrototype('screen', 'onmousemove', function (evt) {
+  if (evt.preventDefault) {
+    evt.preventDefault();
+  }
+
+  evt.returnValue = false;
+
+  var svgDoc = evt.target.ownerDocument,
+      g = this.ctx,
+      p, m, transform;
+
+  // Pan mode
+  if(this.interaction === 'pan' && this.pan) {
+    // p = this.stateTf.times(this.stateTf.inverse().times(this.getEventPoint(evt)).minus(this.stateOrigin));
+    p = this.getEventPoint(evt).minus(this.startPoint);
+    this.curTranslateX = this.startTransformation[0][2] + p[0];
+    this.curTranslateY = this.startTransformation[1][2] + p[1];
+    this.redraw();
+  }
+
+  // Drag mode
+  // else if(this.state === 'drag' && this.drag) {
+  //   p = this.getEventPoint(evt).matrixTransform(g.getCTM().inverse());
+  //   this.setCTM(this.stateTarget, this.element.createSVGMatrix().translate(p.x - this.stateOrigin.x, p.y - this.stateOrigin.y).multiply(g.getCTM().inverse()).multiply(this.stateTarget.getCTM()));
+  //   this.stateOrigin = p;
+  // }
+});
+
+
+
+// ### Screen.prototype.onmouseup()
+// Handles the mouseup event
+//
+// *@param {event}*
+MathLib.extendPrototype('screen', 'onmouseup', function (evt) {
+  if (evt.preventDefault) {
+    evt.preventDefault();
+  }
+
+  evt.returnValue = false;
+
+  // Go back to normal mode
+  if(this.interaction === 'pan' || this.interaction === 'drag') {
+    this.interaction = '';
+  }
+
+});
+
+
+
+// ### Screen.prototype.onmousewheel()
+// Handles the mousewheel event
+//
+// *@param {event}*
+MathLib.extendPrototype('screen', 'onmousewheel', function (evt) {
+  var delta, k, p, z;
+
+  if (!this.zoom) {
+    return;
+  }
+
+  if (evt.preventDefault) {
+    evt.preventDefault();
+  }
+
+  evt.returnValue = false;
+
+  // Chrome/Safari
+  if (evt.wheelDelta) {
+    delta = evt.wheelDelta / 360;
+  }
+  // Firefox
+  else {
+    delta = evt.detail / -9;
+  }
+
+  z = Math.pow(1 + this.zoomSpeed, delta);
+  p = this.curTransformation.inverse().times(this.getEventPoint(evt));
+
+  // Compute new scale matrix in current mouse position
+  k = MathLib.matrix([[z, 0, p[0] - p[0]*z], [0, z, p[1] - p[1]*z ], [0, 0, 1]]);
+
+  this.curTransformation = this.curTransformation.times(k);
+  this.redraw();
+
+  if (typeof this.startTransformation === "undefined") {
+    this.startTransformation = this.curTransformation.inverse();
+  }
+
+  this.startTransformation = this.startTransformation.times(k.inverse());
 });

@@ -48,6 +48,19 @@
 }
 
 
+.MathLib.submenu {
+  display: none;
+  position: absolute;
+  left: 200px;
+  top: -1px;
+}
+.MathLib.menuitem:hover .submenu {
+  display: block;
+  color: black;
+}
+
+
+
 /* Make the background white in Firefox */
 .MathLib.screenWrapper:-moz-full-screen {
   background: white!important;

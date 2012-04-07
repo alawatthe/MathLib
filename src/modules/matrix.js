@@ -109,6 +109,17 @@ MathLib.extendPrototype('matrix', 'cholesky', function () {
 });
 
 
+
+// ### Matrix.prototype.copy()
+// Copies the matrix
+//
+// *@returns {matrix}*
+MathLib.extendPrototype('matrix', 'copy', function (n) {
+  return this.map(MathLib.copy);
+});
+
+
+
 // ### Matrix.prototype.determinant()
 // Calculates the determinant of the matrix via the LU decomposition.
 // The result is cached.
@@ -151,7 +162,7 @@ MathLib.extendPrototype('matrix', 'diag', function () {
 //
 // *@returns {matrix}*
 MathLib.extendPrototype('matrix', 'divide', function (n) {
- return this.multiply(MathLib.inverse(n));
+  return this.times(MathLib.inverse(n));
 });
 
 

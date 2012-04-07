@@ -16,7 +16,7 @@ MathLib.svg = function (svgId) {
   svg[proto] = prototypes.svg;
 
   var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  ctx.setAttributeNS(null, 'transform', 'matrix(' + svg.curZoomX + ',0, 0,'+-svg.curZoomY+', ' + svg.width/2 + ', ' + svg.height/2 + ')');
+  ctx.setAttributeNS(null, 'transform', 'matrix(' + svg.curZoomX + ',0, 0,' + svg.curZoomY + ', ' + svg.width/2 + ', ' + svg.height/2 + ')');
   svgElement.appendChild(ctx);
   svg.ctx = ctx;
 
@@ -70,6 +70,17 @@ MathLib.svg = function (svgId) {
   return svg;
 };
 
+
+
+// ### SVG.prototype.applyTransformation
+// Applies the current transformation
+//
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'applyTransformation', function () {
+  var m = this.curTransformation;
+  this.ctx.setAttribute('transform', 'matrix(' + m[0][0] + ',' + m[1][0] + ',' + m[0][1] + ',' + m[1][1] + ',' + m[0][2] + ',' + m[1][2] + ')');
+  return this;
+});
 
 
 // ### SVG.prototype.circle
@@ -184,19 +195,6 @@ MathLib.extendPrototype('svg', 'line', function (line, userOpt) {
 
 
 
-// ### SVG.prototype.getEventPoint
-// Creates a SVG Point based on the coordinates of an event.
-//
-// *@param {event}*
-MathLib.extendPrototype('svg', 'getEventPoint', function (evt) {
-  var p = this.element.createSVGPoint();
-  p.x = evt.clientX;
-  p.y = evt.clientY;
-  return p;
-});
-
-
-
 // ### SVG.prototype.normalizeOptions
 // Converts the options to the internal format
 //
@@ -224,150 +222,6 @@ MathLib.extendPrototype('svg', 'normalizeOptions', function (defaultOpt, userOpt
 // *@param {event}*
 MathLib.extendPrototype('svg', 'oncontextmenu', function (evt) {
   this.contextmenu(evt);
-});
-
-
-
-// ### SVG.prototype.onmousedown()
-// Handles the mousedown event
-//
-// *@param {event}*
-MathLib.extendPrototype('svg', 'onmousedown', function (evt) {
-  // Only start the action if the left mouse button was clicked
-  if (evt.button !== 0) {
-    return;
-  }
-
-  if (evt.preventDefault) {
-    evt.preventDefault();
-  }
-
-  evt.returnValue = false;
-
-  var svgDoc = evt.target.ownerDocument;
-
-  var g = this.ctx;
-
-  // Pan mode
-  // Pan anyway when drag is disabled and the user clicked on an element 
-  if(evt.target.tagName === "svg" || !this.drag) {
-    this.state = 'pan';
-    this.stateTf = g.getCTM().inverse();
-    this.stateOrigin = this.getEventPoint(evt).matrixTransform(this.stateTf);
-  }
-
-  // Drag mode
-  else {
-    this.state = 'drag';
-    this.stateTarget = evt.target;
-    this.stateTf = g.getCTM().inverse();
-    this.stateOrigin = this.getEventPoint(evt).matrixTransform(this.stateTf);
-  }
-});
-
-
-
-// ### SVG.prototype.onmousemove()
-// Handles the mousemove event
-//
-// *@param {event}*
-MathLib.extendPrototype('svg', 'onmousemove', function (evt) {
-  if (evt.preventDefault) {
-    evt.preventDefault();
-  }
-
-  evt.returnValue = false;
-
-  var svgDoc = evt.target.ownerDocument,
-      g = this.ctx,
-      p, transform;
-
-  // Pan mode
-  if(this.state === 'pan' && this.pan) {
-    p = this.getEventPoint(evt).matrixTransform(this.stateTf);
-    this.setCTM(g, this.stateTf.inverse().translate(p.x - this.stateOrigin.x, p.y - this.stateOrigin.y));
-
-    transform = this.element.childNodes[0].transform.baseVal.getItem(0);
-    this.curTranslateX = transform.matrix.e;
-    this.curTranslateY = transform.matrix.f;
-  }
-
-  // Drag mode
-  else if(this.state === 'drag' && this.drag) {
-    p = this.getEventPoint(evt).matrixTransform(g.getCTM().inverse());
-
-    this.setCTM(this.stateTarget, this.element.createSVGMatrix().translate(p.x - this.stateOrigin.x, p.y - this.stateOrigin.y).multiply(g.getCTM().inverse()).multiply(this.stateTarget.getCTM()));
-
-    this.stateOrigin = p;
-  }
-});
-
-
-
-// ### SVG.prototype.onmouseup()
-// Handles the mouseup event
-//
-// *@param {event}*
-MathLib.extendPrototype('svg', 'onmouseup', function (evt) {
-  if (evt.preventDefault) {
-    evt.preventDefault();
-  }
-
-  evt.returnValue = false;
-
-  var svgDoc = evt.target.ownerDocument;
-
-  // Go back to normal mode
-  if(this.state === 'pan' || this.state === 'drag') {
-    this.state = '';
-  }
-
-});
-
-
-
-// ### SVG.prototype.onmousewheel()
-// Handles the mousewheel event
-//
-// *@param {event}*
-MathLib.extendPrototype('svg', 'onmousewheel', function (evt) {
-  if (!this.zoom) {
-    return;
-  }
-
-  if (evt.preventDefault) {
-    evt.preventDefault();
-  }
-
-  evt.returnValue = false;
-
-  var svgDoc = evt.target.ownerDocument,
-      delta, g, k, p, z;
-
-  // Chrome/Safari
-  if (evt.wheelDelta) {
-    delta = evt.wheelDelta / 360;
-  }
-  // Firefox
-  else {
-    delta = evt.detail / -9;
-  }
-
-  z = Math.pow(1 + this.zoomSpeed, delta);
-  g = this.ctx;
-  p = this.getEventPoint(evt);
-  p = p.matrixTransform(g.getCTM().inverse());
-
-  // Compute new scale matrix in current mouse position
-  k = this.element.createSVGMatrix().translate(p.x, p.y).scale(z).translate(-p.x, -p.y);
-
- this.setCTM(g, g.getCTM().multiply(k));
-
-  if (typeof this.stateTf === "undefined") {
-    this.stateTf = g.getCTM().inverse();
-  }
-
-  this.stateTf = this.stateTf.multiply(k.inverse());
 });
 
 
@@ -467,12 +321,23 @@ MathLib.extendPrototype('svg', 'point', function (point, userOpt) {
 
 
 
+// ### SVG.prototype.redraw
+// This method is necessary because we want to generalize
+// some methods and canvas needs the redraw method.
+//
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'redraw', function () {
+  return this;
+});
+
+
+
 // ### SVG.prototype.resetView
 // Resets the view to the default values.
 //
 // *@returns {svg}* Returns the svg element
 MathLib.extendPrototype('svg', 'resetView', function () {
-  this.ctx.setAttribute('transform', 'matrix(' + this.origZoomX + ', 0, 0, -' + this.origZoomY + ', ' + this.origTranslateX + ', ' + this.origTranslateY + ')');
+  this.ctx.setAttribute('transform', 'matrix(' + this.origZoomX + ', 0, 0, ' + this.origZoomY + ', ' + this.origTranslateX + ', ' + this.origTranslateY + ')');
   return this;
 });
 
@@ -488,18 +353,6 @@ MathLib.extendPrototype('svg', 'resize', function (x, y) {
   this.element.setAttribute('width', x + 'px');
   this.element.setAttribute('height', y + 'px');
   return this;
-});
-
-
-
-// ### SVG.prototype.setCTM
-// Sets the transformation matrix for an elemen.
-//
-// *@param {SVG-element}* The SVG-element which CTM should be set  
-// *@param {SVG-matrix}* The SVG-matrix
-MathLib.extendPrototype('svg', 'setCTM', function (element, matrix) {
-  var s = 'matrix(' + matrix.a + ',' + matrix.b + ',' + matrix.c + ',' + matrix.d + ',' + matrix.e + ',' + matrix.f + ')';
-  element.setAttribute('transform', s);
 });
 
 
@@ -547,29 +400,10 @@ MathLib.extendPrototype('svg', 'text', function (str, x, y, userOpt) {
   // Set the geometry
   svgText.textContent = str;
   svgText.setAttributeNS(null, 'x', 1 / size * x);
-  svgText.setAttributeNS(null, 'y', -1 / size * y);
+  svgText.setAttributeNS(null, 'y', 1 / size * y);
 
   // Draw the line
   layer.element.appendChild(svgText);
-
-  return this;
-});
-
-
-
-// ### SVG.prototype.translateTo
-// Translates the plot
-//
-// *@param {x}* The x coordinate  
-// *@param {y}* The y coordinate  
-// *@returns {svg}* Returns the svg element
-MathLib.extendPrototype('svg', 'translateTo', function (x, y) {
-  var matrix = this.ctx.getCTM();
-  matrix.e = x;
-  matrix.f = y;
-  this.setCTM(this.ctx, matrix);
-  this.curTranslateX = x;
-  this.curTranslateY = y;
 
   return this;
 });

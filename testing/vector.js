@@ -1,7 +1,7 @@
 module("Vector");
 test("init", 2, function () {
   var vector = MathLib.vector([1, 2, 3]);
-  equal(vector.dim, 3, "Testing the dimension");
+  equal(vector.length, 3, "Testing the dimension");
   deepEqual(vector, [1, 2, 3], 'checking the entries');
 });
 

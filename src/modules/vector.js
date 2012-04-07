@@ -27,11 +27,7 @@ MathLib.vector = function (vector) {
 
 
   vector[proto] = prototypes.vector;
-  Object.defineProperties(vector, {
-    dim: {
-      value: vector.length
-    }
-  });
+  /*Object.defineProperties(vector, {});*/
   return vector;
 };
 
@@ -43,6 +39,7 @@ MathLib.extendPrototype('vector', 'constructor', MathLib.vector);
 MathLib.extendPrototype('vector', 'type', 'vector');
 
 
+
 // ### Vector.prototype.conjugate()
 // Calculates the conjugate of a vector
 //
@@ -50,6 +47,7 @@ MathLib.extendPrototype('vector', 'type', 'vector');
 MathLib.extendPrototype('vector', 'conjugate', function () {
   return MathLib.vector(this.map(MathLib.conjugate));
 });
+
 
 
 // ### Vector.prototype.dyadicProduct()
@@ -66,13 +64,14 @@ MathLib.extendPrototype('vector', 'dyadicProduct', function (v) {
 });
 
 
+
 // ### Vector.prototype.isEqual()
 // Determines if two vectors are equal
 //
 // *@param {vector}* v The vector to compare  
 // *@returns {boolean}*
 MathLib.extendPrototype('vector', 'isEqual', function (v) {
-  if(this.dim !== v.dim) {
+  if(this.length !== v.length) {
     return false;
   }
 
@@ -80,6 +79,7 @@ MathLib.extendPrototype('vector', 'isEqual', function (v) {
     return MathLib.isEqual(x, v[i]);
   });
 });
+
 
 
 // ### Vector.prototype.isZero()
@@ -91,6 +91,7 @@ MathLib.extendPrototype('vector', 'isZero', function (v) {
 });
 
 
+
 // ### Vector.prototype.map()
 // Works like Array.prototype.map.
 //
@@ -98,6 +99,18 @@ MathLib.extendPrototype('vector', 'isZero', function (v) {
 MathLib.extendPrototype('vector', 'map', function (f) {
   return this.constructor(Array.prototype.map.call(this, f));
 });
+
+
+
+// ### Vector.prototype.minus()
+// Calculates the difference of two vectors
+//
+// *@param {vector}* The vector to be subtracted.  
+// *@returns {vector}*
+MathLib.extendPrototype('vector', 'minus', function (m) {
+  return this.plus(m.negative());
+});
+
 
 
 // ### Vector.prototype.negative()
@@ -109,6 +122,7 @@ MathLib.extendPrototype('vector', 'negative', function () {
 });
 
 
+
 // ### Vector.prototype.normalize()
 // Normalizes the vector to have length one
 //
@@ -116,6 +130,21 @@ MathLib.extendPrototype('vector', 'negative', function () {
 MathLib.extendPrototype('vector', 'normalize', function () {
   return this.times(1 / this.size);
 });
+
+
+
+// ### Vector.prototype.plus()
+// Calculates the sum of two vectors
+//
+// *@returns {vector}*
+MathLib.extendPrototype('vector', 'plus', function (v) {
+  if (this.length === v.length) {
+    return MathLib.vector(this.map(function (x, i) {
+      return MathLib.plus(x, v[i]);
+    }));
+  }
+});
+
 
 
 // ### Vector.prototype.scalarproduct()
@@ -132,6 +161,7 @@ MathLib.extendPrototype('vector', 'scalarproduct', function (v) {
 });
 
 
+
 // ### Vector.prototype.size()
 // Determines the length of the vector.
 // Named size, as length is already used by JavaScript.
@@ -140,6 +170,7 @@ MathLib.extendPrototype('vector', 'scalarproduct', function (v) {
 MathLib.extendPrototype('vector', 'size', function () {
   return Math.sqrt(this.conjugate().scalarproduct(this));
 });
+
 
 
 // ### Vector.prototype.times()
@@ -167,6 +198,7 @@ MathLib.extendPrototype('vector', 'times', function (n) {
 });
 
 
+
 // ### Vector.prototype.toArray()
 // Converts the vector to an Array
 //
@@ -174,6 +206,7 @@ MathLib.extendPrototype('vector', 'times', function (n) {
 MathLib.extendPrototype('vector', 'toArray', function () {
   return this.slice();
 });
+
 
 
 // ### Vector.prototype.toContentMathML()
@@ -187,6 +220,7 @@ MathLib.extendPrototype('vector', 'toContentMathML', function () {
 });
 
 
+
 // ### Vector.prototype.toLaTeX()
 // Returns a LaTeX representation of the vector
 //
@@ -196,6 +230,7 @@ MathLib.extendPrototype('vector', 'toLaTeX', function () {
     return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
   }) + '\n\\end{pmatrix}';
 });
+
 
 
 // ### Vector.prototype.toMathML()
@@ -209,6 +244,7 @@ MathLib.extendPrototype('vector', 'toMathML', function () {
 });
 
 
+
 // ### Vector.prototype.toString()
 // Returns a string representation of the vector
 //
@@ -220,6 +256,7 @@ MathLib.extendPrototype('vector', 'toString', function () {
 });
 
 
+
 // ### Vector.prototype.vectorproduct()
 // Calculates the vectorproduct of two vectors
 //
@@ -228,13 +265,14 @@ MathLib.extendPrototype('vector', 'toString', function () {
 MathLib.extendPrototype('vector', 'vectorproduct', function (v) {
   var res = [];
   /* TODO: Extend vectorproduct for non three-dimensional vectors */
-  if (this.dim === 3 && v.dim === 3) {
+  if (this.length === 3 && v.length === 3) {
     res.push(MathLib.minus(MathLib.times(this[1], v[2]), MathLib.times(this[2], v[1])));
     res.push(MathLib.minus(MathLib.times(this[2], v[0]), MathLib.times(this[0], v[2])));
     res.push(MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0])));
   }
   return MathLib.vector(res);
 });
+
 
 
 // ### Vector.zero()

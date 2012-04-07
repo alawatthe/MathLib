@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript Library for mathematical computations.
 //
 // MathLib is currently in public beta testing phase
-// v0.1pre - 14.3.2012
+// v0.1pre
 //
 // ##License
 // MathLib.js JavaScript Library is dual licensed under the MIT and GPL licenses.
@@ -942,95 +942,6 @@ MathLib.screen = function (id, options) {
   set.id             = id;
   set.element        = element;
   set.type           = element.localName;
-  set.origTranslateX = set.width  / 2;
-  set.origTranslateY = set.height / 2;
-  set.curTranslateX  = set.width  / 2;
-  set.curTranslateY  = set.height / 2;
-  set.origZoomX      = set.width  / ((-set.left + set.right) * set.stepSizeX); 
-  set.origZoomY      = set.height / ((set.up - set.down)  * set.stepSizeY);
-  set.curZoomX       = set.width  / ((-set.left + set.right) * set.stepSizeX); 
-  set.curZoomY       = set.height / ((set.up - set.down)  * set.stepSizeY);
-
-
-  // Create a div which contains the svg/canvas element and the contextmenu
-  set.screenWrapper = document.createElement('div');
-  set.screenWrapper.className = 'MathLib screenWrapper';
-  element.parentNode.insertBefore(set.screenWrapper, element);
-  set.screenWrapper.appendChild(element);
-
-
-  // The context menu
-  set.contextmenuWrapper = document.createElement('div');
-  set.contextmenuWrapper.className = 'MathLib contextmenuWrapper';
-  set.screenWrapper.appendChild(set.contextmenuWrapper);
-
-
-  // The coordinates menu item
-  contextmenu = document.createElement('ul');
-  contextmenu.className = 'MathLib contextmenu';
-  set.contextmenuWrapper.appendChild(contextmenu);
-
-  var coordinates = document.createElement('li');
-  coordinates.className = 'MathLib menuitem';
-  coordinates.onclick = function () {
-    set.contextmenuWrapper.style.setProperty('display', 'none');
-  };
-  contextmenu.appendChild(coordinates);
-
-
-  // The reset view menu item
-  var reset = document.createElement('li');
-  reset.className = 'MathLib menuitem';
-  reset.innerHTML = 'Reset View';
-  reset.onclick = function () {
-    screen.resetView();
-    set.contextmenuWrapper.style.setProperty('display', 'none');
-  };
-  contextmenu.appendChild(reset);
-
-
-  // Firefox support will be enabled when FF is supporting the fullscreenchange event
-  // see https://bugzilla.mozilla.org/show_bug.cgi?id=724816
-  if (document.webkitCancelFullScreen /*|| document.mozCancelFullScreen*/) {
-    // The fullscreen menuitem
-    // (Only enabled if the browser supports fullscreen mode)
-    var fullscreen = document.createElement('li');
-    fullscreen.className = 'MathLib menuitem';
-    fullscreen.innerHTML = 'View Fullscreen';
-    fullscreen.onclick = function (evt) {
-      if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
-        screen.enterFullscreen();
-      }
-      else {
-        screen.exitFullscreen();
-      }
-
-      set.contextmenuWrapper.style.setProperty('display', 'none');
-    };
-    contextmenu.appendChild(fullscreen);
-
-
-    // Handle the fullscreenchange event
-    var fullscreenchange = function (evt) {
-      if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
-        fullscreen.innerHTML = 'View Fullscreen';
-        screen.resize(set.width, set.height);
-        screen.translateTo(set.origTranslateX, set.origTranslateY);
-      }
-      else {
-        fullscreen.innerHTML = 'Exit Fullscreen';
-        screen.resize(window.outerWidth, window.outerHeight);
-        screen.translateTo(window.outerWidth/2, window.outerHeight/2);
-      }
-    };
-
-    if (document.webkitCancelFullScreen) {
-      set.screenWrapper.addEventListener('webkitfullscreenchange', fullscreenchange, false);
-    }
-    else if (document.mozCancelFullScreen) {
-      set.screenWrapper.addEventListener('mozfullscreenchange', fullscreenchange, false);
-    }
-  }
 
 
   for (var prop in set) {
@@ -1042,6 +953,157 @@ MathLib.screen = function (id, options) {
       });
     }
   }
+
+  var curTransformation = MathLib.matrix([[screen.width/((screen.right-screen.left)*screen.stepSizeX), 0, screen.width/2],[0, -screen.height/((screen.up-screen.down)*screen.stepSizeY), screen.height/2],[0, 0, 1]]);
+  Object.defineProperty(screen, 'curTransformation', {
+    get: function (){return curTransformation;},
+    set: function (x){curTransformation = x; screen.applyTransformation();}
+  });
+  Object.defineProperty(screen, 'origTransformation', {
+    value: MathLib.matrix([[screen.width/((screen.right-screen.left)*screen.stepSizeX), 0, screen.width/2],[0, -screen.height/((screen.up-screen.down)*screen.stepSizeY), screen.height/2],[0, 0, 1]])
+  });
+
+  Object.defineProperty(screen, 'curTranslateX', {
+    get: function (){return screen.curTransformation[0][2];},
+    set: function (x){screen.curTransformation[0][2] = x; screen.applyTransformation();}
+  });
+  Object.defineProperty(screen, 'curTranslateY', {
+    get: function (){return screen.curTransformation[1][2];},
+    set: function (y){screen.curTransformation[1][2] = y; screen.applyTransformation();}
+  });
+  Object.defineProperty(screen, 'origTranslateX', {
+    get: function (){return screen.origTransformation[0][2];},
+    set: function (x){screen.origTransformation[0][2] = x;}
+  });
+  Object.defineProperty(screen, 'origTranslateY', {
+    get: function (){return screen.origTransformation[1][2];},
+    set: function (y){screen.origTransformation[1][2] = y;}
+  });
+
+  Object.defineProperty(screen, 'curZoomX', {
+    get: function (){return screen.curTransformation[0][0];},
+    set: function (x){screen.curTransformation[0][0] = x; screen.applyTransformation();}
+  });
+  Object.defineProperty(screen, 'curZoomY', {
+    get: function (){return screen.curTransformation[1][1];},
+    set: function (y){screen.curTransformation[1][1] = y; screen.applyTransformation();}
+  });
+  Object.defineProperty(screen, 'origZoomX', {
+    get: function (){return screen.origTransformation[0][0];},
+    set: function (x){screen.origTransformation[0][0] = x;}
+  });
+  Object.defineProperty(screen, 'origZoomY', {
+    get: function (){return screen.origTransformation[1][1];},
+    set: function (y){set.origTransformation[1][1] = y;}
+  });
+
+
+  // Create a div which contains the svg/canvas element and the contextmenu
+  screen.screenWrapper = document.createElement('div');
+  screen.screenWrapper.className = 'MathLib screenWrapper';
+  element.parentNode.insertBefore(screen.screenWrapper, element);
+  screen.screenWrapper.appendChild(element);
+
+
+  // The context menu
+  screen.contextmenuWrapper = document.createElement('div');
+  screen.contextmenuWrapper.className = 'MathLib contextmenuWrapper';
+  screen.screenWrapper.appendChild(screen.contextmenuWrapper);
+
+
+  contextmenu = document.createElement('ul');
+  contextmenu.className = 'MathLib contextmenu';
+  screen.contextmenuWrapper.appendChild(contextmenu);
+
+  // The coordinates menu item
+  var coordinates = document.createElement('li');
+  coordinates.className = 'MathLib menuitem';
+  coordinates.innerHTML = '<span>Position</span><span style="float: right; padding-right: 10px">❯</span>';
+  coordinates.onclick = function () {
+    screen.contextmenuWrapper.style.setProperty('display', 'none');
+  };
+  contextmenu.appendChild(coordinates);
+
+  var coordinatesSubmenu = document.createElement('ul');
+  coordinatesSubmenu.className = 'MathLib contextmenu submenu';
+  coordinates.appendChild(coordinatesSubmenu);
+
+  var cartesian = document.createElement('li');
+  cartesian.className = 'MathLib menuitem';
+  cartesian.onclick = function () {
+    screen.contextmenuWrapper.style.setProperty('display', 'none');
+  };
+  coordinatesSubmenu.appendChild(cartesian);
+
+  var polar = document.createElement('li');
+  polar.className = 'MathLib menuitem';
+  polar.onclick = function () {
+    screen.contextmenuWrapper.style.setProperty('display', 'none');
+  };
+  coordinatesSubmenu.appendChild(polar);
+  
+
+
+
+  // The reset view menu item
+  var reset = document.createElement('li');
+  reset.className = 'MathLib menuitem';
+  reset.innerHTML = 'Reset View';
+  reset.onclick = function () {
+    screen.resetView();
+    screen.contextmenuWrapper.style.setProperty('display', 'none');
+  };
+  contextmenu.appendChild(reset);
+
+
+  // Firefox support will be enabled when FF is supporting the fullscreenchange event
+  // see https://bugzilla.mozilla.org/show_bug.cgi?id=724816
+  if (document.webkitCancelFullScreen /*|| document.mozCancelFullScreen*/) {
+    // The fullscreen menuitem
+    // (Only enabled if the browser supports fullscreen mode)
+    var fullscreen = document.createElement('li');
+    fullscreen.className = 'MathLib menuitem';
+    fullscreen.innerHTML = 'View full screen';
+    fullscreen.onclick = function (evt) {
+      if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+        screen.enterFullscreen();
+      }
+      else {
+        screen.exitFullscreen();
+      }
+
+      screen.contextmenuWrapper.style.setProperty('display', 'none');
+    };
+    contextmenu.appendChild(fullscreen);
+
+
+    // Handle the fullscreenchange event
+    var fullscreenchange = function (evt) {
+      if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+        fullscreen.innerHTML = 'View Fullscreen';
+        screen.resize(screen.width, screen.height);
+        screen.curTranslateX = screen.origTranslateX;
+        screen.curTranslateY = screen.origTranslateY;
+        screen.redraw();
+      }
+      else {
+        fullscreen.innerHTML = 'Exit Fullscreen';
+        screen.resize(window.outerWidth, window.outerHeight);
+        screen.curTranslateX = window.outerWidth/2;
+        screen.curTranslateY = window.outerHeight/2;
+        screen.redraw();
+      }
+    };
+
+    if (document.webkitCancelFullScreen) {
+      screen.screenWrapper.addEventListener('webkitfullscreenchange', fullscreenchange, false);
+    }
+    else if (document.mozCancelFullScreen) {
+      screen.screenWrapper.addEventListener('mozfullscreenchange', fullscreenchange, false);
+    }
+  }
+
+
 
   return screen;
 };
@@ -1156,6 +1218,8 @@ MathLib.extendPrototype('screen', 'contextmenu', function (evt) {
    evt.preventDefault();
   }
   evt.returnValue = false;
+  var x = this.getX(evt),
+      y = this.getY(evt);
 
   var menu = this.contextmenuWrapper.childNodes[0];
   menu.style.setProperty('top', (evt.clientY-20) + 'px');
@@ -1165,7 +1229,8 @@ MathLib.extendPrototype('screen', 'contextmenu', function (evt) {
   wrapper.style.setProperty('width', '100%');
   wrapper.style.setProperty('height', '100%');
   
-  menu.childNodes[0].innerHTML = 'Position: (' + MathLib.round(this.getX(evt), 2) + ', ' + MathLib.round(this.getY(evt), 2) + ')';
+  menu.childNodes[0].childNodes[2].childNodes[0].innerHTML = 'cartesian: (' + MathLib.round(x, 2) + ', ' + MathLib.round(y, 2) + ')';
+  menu.childNodes[0].childNodes[2].childNodes[1].innerHTML = 'polar: (' + MathLib.round(MathLib.hypot(x, y), 2) + ', ' + MathLib.round(Math.atan2(y, x), 2) + ')';
 
   var screen = this,
       listener = function () {
@@ -1220,6 +1285,26 @@ MathLib.extendPrototype('screen', 'exitFullscreen', function () {
 
 
 
+// ### Screen.prototype.getEventPoint
+// Creates a point based on the coordinates of an event.
+//
+// *@param {event}*  
+// *@returns {point}*
+MathLib.extendPrototype('screen', 'getEventPoint', function (evt) {
+  var x, y;
+  if (evt.offsetX) {
+    x = evt.offsetX;
+    y = evt.offsetY;
+  }
+  else {
+    x = evt.layerX + this.element.offsetTop;
+    y = evt.layerY - this.element.offsetLeft;
+  }
+  return MathLib.point([x, y, 1]);
+});
+
+
+
 // ### Screen.prototype.getX()
 // Returns the x coordinate of the event.
 //
@@ -1251,7 +1336,7 @@ MathLib.extendPrototype('screen', 'getY', function (evt) {
   else {
     osY = evt.layerY-this.element.offsetLeft;
   }
-  return (this.curTranslateY - osY) / this.curZoomY;
+  return (osY - this.curTranslateY) / this.curZoomY;
 });
 
 
@@ -1351,6 +1436,141 @@ MathLib.extendPrototype('screen', 'lineEndPoints', function (l) {
     return l;
   }
 });
+
+
+
+// ### Screen.prototype.onmousedown()
+// Handles the mousedown event
+//
+// *@param {event}*
+MathLib.extendPrototype('screen', 'onmousedown', function (evt) {
+  // Only start the action if the left mouse button was clicked
+  if (evt.button !== 0) {
+    return;
+  }
+
+  if (evt.preventDefault) {
+    evt.preventDefault();
+  }
+
+  evt.returnValue = false;
+
+  // Pan mode
+  // Pan anyway when drag is disabled and the user clicked on an element 
+  if(evt.target.tagName === 'canvas' || evt.target.tagName === 'svg' || !this.drag) {
+    this.interaction = 'pan';
+    this.startPoint = this.getEventPoint(evt);
+    this.startTransformation = this.curTransformation.copy();
+    // this.stateOrigin = this.getEventPoint(evt).matrixTransform(this.stateTf);
+    // this.stateOrigin = this.curTransformation.inverse().times(this.getEventPoint(evt));
+  }
+
+  // Drag mode
+  // else {
+  //   this.interaction = 'drag';
+  //   this.stateTarget = evt.target;
+  //   this.stateTf = g.getCTM().inverse();
+  //   this.stateOrigin = this.getEventPoint(evt).matrixTransform(this.stateTf);
+  // }
+});
+
+
+
+// ### Screen.prototype.onmousemove()
+// Handles the mousemove event
+//
+// *@param {event}*
+MathLib.extendPrototype('screen', 'onmousemove', function (evt) {
+  if (evt.preventDefault) {
+    evt.preventDefault();
+  }
+
+  evt.returnValue = false;
+
+  var svgDoc = evt.target.ownerDocument,
+      g = this.ctx,
+      p, m, transform;
+
+  // Pan mode
+  if(this.interaction === 'pan' && this.pan) {
+    // p = this.stateTf.times(this.stateTf.inverse().times(this.getEventPoint(evt)).minus(this.stateOrigin));
+    p = this.getEventPoint(evt).minus(this.startPoint);
+    this.curTranslateX = this.startTransformation[0][2] + p[0];
+    this.curTranslateY = this.startTransformation[1][2] + p[1];
+    this.redraw();
+  }
+
+  // Drag mode
+  // else if(this.state === 'drag' && this.drag) {
+  //   p = this.getEventPoint(evt).matrixTransform(g.getCTM().inverse());
+  //   this.setCTM(this.stateTarget, this.element.createSVGMatrix().translate(p.x - this.stateOrigin.x, p.y - this.stateOrigin.y).multiply(g.getCTM().inverse()).multiply(this.stateTarget.getCTM()));
+  //   this.stateOrigin = p;
+  // }
+});
+
+
+
+// ### Screen.prototype.onmouseup()
+// Handles the mouseup event
+//
+// *@param {event}*
+MathLib.extendPrototype('screen', 'onmouseup', function (evt) {
+  if (evt.preventDefault) {
+    evt.preventDefault();
+  }
+
+  evt.returnValue = false;
+
+  // Go back to normal mode
+  if(this.interaction === 'pan' || this.interaction === 'drag') {
+    this.interaction = '';
+  }
+
+});
+
+
+
+// ### Screen.prototype.onmousewheel()
+// Handles the mousewheel event
+//
+// *@param {event}*
+MathLib.extendPrototype('screen', 'onmousewheel', function (evt) {
+  var delta, k, p, z;
+
+  if (!this.zoom) {
+    return;
+  }
+
+  if (evt.preventDefault) {
+    evt.preventDefault();
+  }
+
+  evt.returnValue = false;
+
+  // Chrome/Safari
+  if (evt.wheelDelta) {
+    delta = evt.wheelDelta / 360;
+  }
+  // Firefox
+  else {
+    delta = evt.detail / -9;
+  }
+
+  z = Math.pow(1 + this.zoomSpeed, delta);
+  p = this.curTransformation.inverse().times(this.getEventPoint(evt));
+
+  // Compute new scale matrix in current mouse position
+  k = MathLib.matrix([[z, 0, p[0] - p[0]*z], [0, z, p[1] - p[1]*z ], [0, 0, 1]]);
+
+  this.curTransformation = this.curTransformation.times(k);
+  this.redraw();
+
+  if (typeof this.startTransformation === "undefined") {
+    this.startTransformation = this.curTransformation.inverse();
+  }
+
+  this.startTransformation = this.startTransformation.times(k.inverse());
+});
 // ## <a id="Canvas"></a>Canvas
 // The module for drawing plots on a canvas.
 // A new canvas can be initialised by the following code:
@@ -1408,12 +1628,7 @@ MathLib.canvas = function (canvasId) {
   layers.forEach(function (l) {
     // Transform the canvases
     l.ctx.save();
-    l.ctx.transform(
-      canvas.curZoomX,  0,  // The first coordinate must  only be zoomed.
-      0, -canvas.curZoomY,  // The second coordinate must point in the opposite direction.
-      canvas.curTranslateX,
-      canvas.curTranslateY
-    );
+    l.ctx.transform(canvas.curZoomX, 0, 0, canvas.curZoomY, canvas.curTranslateX, canvas.curTranslateY);
 
     // Placing the layers on top of each other
     l.element.style.setProperty('position', 'absolute');
@@ -1425,32 +1640,48 @@ MathLib.canvas = function (canvasId) {
 
   // Chrome tries desperately to select some text
   canvas.frontLayer.element.onselectstart = function(){ return false; };
-  // canvas.frontLayer.element.onmousedown = function (evt) {
-  //   canvas.onmousedown(evt);
-  // };
+  canvas.frontLayer.element.onmousedown = function (evt) {
+    canvas.onmousedown(evt);
+  };
   canvas.frontLayer.element.oncontextmenu = function (evt) {
     canvas.oncontextmenu(evt);
   };
-  // canvas.frontLayer.element.onmousemove = function (evt) {
-  //   canvas.onmousemove(evt);
-  // };
-  // canvas.frontLayer.element.onmouseup = function (evt) {
-  //   canvas.onmouseup(evt);
-  // };
-  // if('onmousewheel' in canvas.frontLayer.element) {
-  //   canvas.frontLayer.element.onmousewheel = function (evt) {
-  //      canvas.onmousewheel(evt);
-  //   };
-  // }
-  // else {  // Firefox names it a bit different
-  //   canvas.frontLayer.element.DOMMouseScroll = function (evt) {
-  //      canvas.onmousewheel(evt);
-  //   };
-  // }
+  canvas.frontLayer.element.onmousemove = function (evt) {
+    canvas.onmousemove(evt);
+  };
+  canvas.frontLayer.element.onmouseup = function (evt) {
+    canvas.onmouseup(evt);
+  };
+  if('onmousewheel' in canvas.frontLayer.element) {
+    canvas.frontLayer.element.onmousewheel = function (evt) {
+       canvas.onmousewheel(evt);
+    };
+  }
+  else {  // Firefox names it a bit different
+    canvas.frontLayer.element.DOMMouseScroll = function (evt) {
+       canvas.onmousewheel(evt);
+    };
+  }
 
 
   return canvas;
 };
+
+
+
+// ### Canvas.prototype.applyTransformation
+// Applies the current transformation
+//
+// *@returns {canvas}* Returns the canvas
+MathLib.extendPrototype('canvas', 'applyTransformation', function () {
+  this.clearLayer('back', 'main', 'front');
+  var m = this.curTransformation;
+  this.backLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+  this.mainLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+  this.frontLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+
+  return this;
+});
 
 
 
@@ -1522,9 +1753,11 @@ MathLib.extendPrototype('canvas', 'circle', function (circle, userOpt) {
 // *@param {string}* The layer to be cleared ('back', 'main', 'front')  
 // *@returns {canvas}* Returns the canvas
 MathLib.extendPrototype('canvas', 'clearLayer', function () {
-  var canvas = this;
+  var canvas = this,
+      p1 = this.curTransformation.inverse().times(MathLib.point(this.width, 0)),
+      p2 = this.curTransformation.inverse().times(MathLib.point(0, this.height));
   Array.prototype.forEach.call(arguments, function (layer) {
-    canvas[layer + 'Layer'].ctx.clearRect(-50, -50, 100, 100);
+    canvas[layer + 'Layer'].ctx.clearRect(p1[0], p1[1], p2[0]-p1[0], p2[1]-p1[1]);
   });
   return this;
 });
@@ -1600,15 +1833,6 @@ MathLib.extendPrototype('canvas', 'line', function (line, userOpt) {
 // *@param {event}*
 MathLib.extendPrototype('canvas', 'oncontextmenu', function (evt) {
   this.contextmenu(evt);
-});
-
-
-
-// ### Canvas.prototype.onmousewheel()
-// Handles the mousewheel event
-//
-// *@param {event}* 
-MathLib.extendPrototype('canvas', 'onmousewheel', function (evt) {
 });
 
 
@@ -1769,6 +1993,8 @@ MathLib.extendPrototype('canvas', 'point', function (point, userOpt) {
 MathLib.extendPrototype('canvas', 'redraw', function () {
   var canvas = this;
 
+  this.clearLayer('back', 'main', 'front');
+
   // redraw the background
   this.grid();
   this.axis();
@@ -1788,12 +2014,11 @@ MathLib.extendPrototype('canvas', 'redraw', function () {
 //
 // *@returns {canvas}* Returns the canvas
 MathLib.extendPrototype('canvas', 'resetView', function () {
-  this.clearLayer('back');
-  this.clearLayer('main');
-  this.clearLayer('front');
-  this.backLayer.ctx.setTransform(this.origZoomX, 0, 0, -this.origZoomY, this.origTranslateX, this.origTranslateY);
-  this.mainLayer.ctx.setTransform(this.origZoomX, 0, 0, -this.origZoomY, this.origTranslateX, this.origTranslateY);
-  this.frontLayer.ctx.setTransform(this.origZoomX, 0, 0, -this.origZoomY, this.origTranslateX, this.origTranslateY);
+  this.clearLayer('back', 'main', 'front');
+  var m = this.origTransformation;
+  this.backLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+  this.mainLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+  this.frontLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
   this.redraw();
   return this;
 });
@@ -1867,7 +2092,7 @@ MathLib.extendPrototype('canvas', 'text', function (str, x, y, userOpt) {
   ctx.save();
   ctx.transform(
     1 / this.curZoomX,  0,  // The first coordinate must only be zoomed.
-    0, -1 / this.curZoomY,  // The second coordinate must point in the opposite direction. 
+    0, 1 / this.curZoomY,  // The second coordinate must point in the opposite direction. 
     -this.left * this.stepSizeX / this.curZoomX,
      this.up   * this.stepSizeY / this.curZoomY
   );
@@ -1884,23 +2109,6 @@ MathLib.extendPrototype('canvas', 'text', function (str, x, y, userOpt) {
     });
   }
 
-  return this;
-});
-
-
-// ### Canvas.prototype.translateTo
-// Translates the canvas
-//
-// *@param {x}* The x coordinate  
-// *@param {y}* The y coordinate  
-// *@returns {canvas}* Returns the canvas
-MathLib.extendPrototype('canvas', 'translateTo', function (x, y) {
-  this.clearLayer('back', 'main', 'front');
-  this.backLayer.ctx.setTransform(this.curZoomX, 0, 0, -this.curZoomY, x, y);
-  this.mainLayer.ctx.setTransform(this.curZoomX, 0, 0, -this.curZoomY, x, y);
-  this.frontLayer.ctx.setTransform(this.curZoomX, 0, 0, -this.curZoomY, x, y);
-
-  this.redraw();
   return this;
 });
 // ## <a id="SVG"></a>SVG
@@ -1921,7 +2129,7 @@ MathLib.svg = function (svgId) {
   svg[proto] = prototypes.svg;
 
   var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  ctx.setAttributeNS(null, 'transform', 'matrix(' + svg.curZoomX + ',0, 0,'+-svg.curZoomY+', ' + svg.width/2 + ', ' + svg.height/2 + ')');
+  ctx.setAttributeNS(null, 'transform', 'matrix(' + svg.curZoomX + ',0, 0,' + svg.curZoomY + ', ' + svg.width/2 + ', ' + svg.height/2 + ')');
   svgElement.appendChild(ctx);
   svg.ctx = ctx;
 
@@ -1975,6 +2183,17 @@ MathLib.svg = function (svgId) {
   return svg;
 };
 
+
+
+// ### SVG.prototype.applyTransformation
+// Applies the current transformation
+//
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'applyTransformation', function () {
+  var m = this.curTransformation;
+  this.ctx.setAttribute('transform', 'matrix(' + m[0][0] + ',' + m[1][0] + ',' + m[0][1] + ',' + m[1][1] + ',' + m[0][2] + ',' + m[1][2] + ')');
+  return this;
+});
 
 
 // ### SVG.prototype.circle
@@ -2089,19 +2308,6 @@ MathLib.extendPrototype('svg', 'line', function (line, userOpt) {
 
 
 
-// ### SVG.prototype.getEventPoint
-// Creates a SVG Point based on the coordinates of an event.
-//
-// *@param {event}*
-MathLib.extendPrototype('svg', 'getEventPoint', function (evt) {
-  var p = this.element.createSVGPoint();
-  p.x = evt.clientX;
-  p.y = evt.clientY;
-  return p;
-});
-
-
-
 // ### SVG.prototype.normalizeOptions
 // Converts the options to the internal format
 //
@@ -2129,150 +2335,6 @@ MathLib.extendPrototype('svg', 'normalizeOptions', function (defaultOpt, userOpt
 // *@param {event}*
 MathLib.extendPrototype('svg', 'oncontextmenu', function (evt) {
   this.contextmenu(evt);
-});
-
-
-
-// ### SVG.prototype.onmousedown()
-// Handles the mousedown event
-//
-// *@param {event}*
-MathLib.extendPrototype('svg', 'onmousedown', function (evt) {
-  // Only start the action if the left mouse button was clicked
-  if (evt.button !== 0) {
-    return;
-  }
-
-  if (evt.preventDefault) {
-    evt.preventDefault();
-  }
-
-  evt.returnValue = false;
-
-  var svgDoc = evt.target.ownerDocument;
-
-  var g = this.ctx;
-
-  // Pan mode
-  // Pan anyway when drag is disabled and the user clicked on an element 
-  if(evt.target.tagName === "svg" || !this.drag) {
-    this.state = 'pan';
-    this.stateTf = g.getCTM().inverse();
-    this.stateOrigin = this.getEventPoint(evt).matrixTransform(this.stateTf);
-  }
-
-  // Drag mode
-  else {
-    this.state = 'drag';
-    this.stateTarget = evt.target;
-    this.stateTf = g.getCTM().inverse();
-    this.stateOrigin = this.getEventPoint(evt).matrixTransform(this.stateTf);
-  }
-});
-
-
-
-// ### SVG.prototype.onmousemove()
-// Handles the mousemove event
-//
-// *@param {event}*
-MathLib.extendPrototype('svg', 'onmousemove', function (evt) {
-  if (evt.preventDefault) {
-    evt.preventDefault();
-  }
-
-  evt.returnValue = false;
-
-  var svgDoc = evt.target.ownerDocument,
-      g = this.ctx,
-      p, transform;
-
-  // Pan mode
-  if(this.state === 'pan' && this.pan) {
-    p = this.getEventPoint(evt).matrixTransform(this.stateTf);
-    this.setCTM(g, this.stateTf.inverse().translate(p.x - this.stateOrigin.x, p.y - this.stateOrigin.y));
-
-    transform = this.element.childNodes[0].transform.baseVal.getItem(0);
-    this.curTranslateX = transform.matrix.e;
-    this.curTranslateY = transform.matrix.f;
-  }
-
-  // Drag mode
-  else if(this.state === 'drag' && this.drag) {
-    p = this.getEventPoint(evt).matrixTransform(g.getCTM().inverse());
-
-    this.setCTM(this.stateTarget, this.element.createSVGMatrix().translate(p.x - this.stateOrigin.x, p.y - this.stateOrigin.y).multiply(g.getCTM().inverse()).multiply(this.stateTarget.getCTM()));
-
-    this.stateOrigin = p;
-  }
-});
-
-
-
-// ### SVG.prototype.onmouseup()
-// Handles the mouseup event
-//
-// *@param {event}*
-MathLib.extendPrototype('svg', 'onmouseup', function (evt) {
-  if (evt.preventDefault) {
-    evt.preventDefault();
-  }
-
-  evt.returnValue = false;
-
-  var svgDoc = evt.target.ownerDocument;
-
-  // Go back to normal mode
-  if(this.state === 'pan' || this.state === 'drag') {
-    this.state = '';
-  }
-
-});
-
-
-
-// ### SVG.prototype.onmousewheel()
-// Handles the mousewheel event
-//
-// *@param {event}*
-MathLib.extendPrototype('svg', 'onmousewheel', function (evt) {
-  if (!this.zoom) {
-    return;
-  }
-
-  if (evt.preventDefault) {
-    evt.preventDefault();
-  }
-
-  evt.returnValue = false;
-
-  var svgDoc = evt.target.ownerDocument,
-      delta, g, k, p, z;
-
-  // Chrome/Safari
-  if (evt.wheelDelta) {
-    delta = evt.wheelDelta / 360;
-  }
-  // Firefox
-  else {
-    delta = evt.detail / -9;
-  }
-
-  z = Math.pow(1 + this.zoomSpeed, delta);
-  g = this.ctx;
-  p = this.getEventPoint(evt);
-  p = p.matrixTransform(g.getCTM().inverse());
-
-  // Compute new scale matrix in current mouse position
-  k = this.element.createSVGMatrix().translate(p.x, p.y).scale(z).translate(-p.x, -p.y);
-
- this.setCTM(g, g.getCTM().multiply(k));
-
-  if (typeof this.stateTf === "undefined") {
-    this.stateTf = g.getCTM().inverse();
-  }
-
-  this.stateTf = this.stateTf.multiply(k.inverse());
 });
 
 
@@ -2372,12 +2434,23 @@ MathLib.extendPrototype('svg', 'point', function (point, userOpt) {
 
 
 
+// ### SVG.prototype.redraw
+// This method is necessary because we want to generalize
+// some methods and canvas needs the redraw method.
+//
+// *@returns {svg}* Returns the svg element
+MathLib.extendPrototype('svg', 'redraw', function () {
+  return this;
+});
+
+
+
 // ### SVG.prototype.resetView
 // Resets the view to the default values.
 //
 // *@returns {svg}* Returns the svg element
 MathLib.extendPrototype('svg', 'resetView', function () {
-  this.ctx.setAttribute('transform', 'matrix(' + this.origZoomX + ', 0, 0, -' + this.origZoomY + ', ' + this.origTranslateX + ', ' + this.origTranslateY + ')');
+  this.ctx.setAttribute('transform', 'matrix(' + this.origZoomX + ', 0, 0, ' + this.origZoomY + ', ' + this.origTranslateX + ', ' + this.origTranslateY + ')');
   return this;
 });
 
@@ -2393,18 +2466,6 @@ MathLib.extendPrototype('svg', 'resize', function (x, y) {
   this.element.setAttribute('width', x + 'px');
   this.element.setAttribute('height', y + 'px');
   return this;
-});
-
-
-
-// ### SVG.prototype.setCTM
-// Sets the transformation matrix for an elemen.
-//
-// *@param {SVG-element}* The SVG-element which CTM should be set  
-// *@param {SVG-matrix}* The SVG-matrix
-MathLib.extendPrototype('svg', 'setCTM', function (element, matrix) {
-  var s = 'matrix(' + matrix.a + ',' + matrix.b + ',' + matrix.c + ',' + matrix.d + ',' + matrix.e + ',' + matrix.f + ')';
-  element.setAttribute('transform', s);
 });
 
 
@@ -2452,29 +2513,10 @@ MathLib.extendPrototype('svg', 'text', function (str, x, y, userOpt) {
   // Set the geometry
   svgText.textContent = str;
   svgText.setAttributeNS(null, 'x', 1 / size * x);
-  svgText.setAttributeNS(null, 'y', -1 / size * y);
+  svgText.setAttributeNS(null, 'y', 1 / size * y);
 
   // Draw the line
   layer.element.appendChild(svgText);
-
-  return this;
-});
-
-
-
-// ### SVG.prototype.translateTo
-// Translates the plot
-//
-// *@param {x}* The x coordinate  
-// *@param {y}* The y coordinate  
-// *@returns {svg}* Returns the svg element
-MathLib.extendPrototype('svg', 'translateTo', function (x, y) {
-  var matrix = this.ctx.getCTM();
-  matrix.e = x;
-  matrix.f = y;
-  this.setCTM(this.ctx, matrix);
-  this.curTranslateX = x;
-  this.curTranslateY = y;
 
   return this;
 });
@@ -2507,11 +2549,7 @@ MathLib.vector = function (vector) {
 
 
   vector[proto] = prototypes.vector;
-  Object.defineProperties(vector, {
-    dim: {
-      value: vector.length
-    }
-  });
+  /*Object.defineProperties(vector, {});*/
   return vector;
 };
 
@@ -2523,6 +2561,7 @@ MathLib.extendPrototype('vector', 'constructor', MathLib.vector);
 MathLib.extendPrototype('vector', 'type', 'vector');
 
 
+
 // ### Vector.prototype.conjugate()
 // Calculates the conjugate of a vector
 //
@@ -2530,6 +2569,7 @@ MathLib.extendPrototype('vector', 'type', 'vector');
 MathLib.extendPrototype('vector', 'conjugate', function () {
   return MathLib.vector(this.map(MathLib.conjugate));
 });
+
 
 
 // ### Vector.prototype.dyadicProduct()
@@ -2546,13 +2586,14 @@ MathLib.extendPrototype('vector', 'dyadicProduct', function (v) {
 });
 
 
+
 // ### Vector.prototype.isEqual()
 // Determines if two vectors are equal
 //
 // *@param {vector}* v The vector to compare  
 // *@returns {boolean}*
 MathLib.extendPrototype('vector', 'isEqual', function (v) {
-  if(this.dim !== v.dim) {
+  if(this.length !== v.length) {
     return false;
   }
 
@@ -2560,6 +2601,7 @@ MathLib.extendPrototype('vector', 'isEqual', function (v) {
     return MathLib.isEqual(x, v[i]);
   });
 });
+
 
 
 // ### Vector.prototype.isZero()
@@ -2571,6 +2613,7 @@ MathLib.extendPrototype('vector', 'isZero', function (v) {
 });
 
 
+
 // ### Vector.prototype.map()
 // Works like Array.prototype.map.
 //
@@ -2578,6 +2621,18 @@ MathLib.extendPrototype('vector', 'isZero', function (v) {
 MathLib.extendPrototype('vector', 'map', function (f) {
   return this.constructor(Array.prototype.map.call(this, f));
 });
+
+
+
+// ### Vector.prototype.minus()
+// Calculates the difference of two vectors
+//
+// *@param {vector}* The vector to be subtracted.  
+// *@returns {vector}*
+MathLib.extendPrototype('vector', 'minus', function (m) {
+  return this.plus(m.negative());
+});
+
 
 
 // ### Vector.prototype.negative()
@@ -2589,6 +2644,7 @@ MathLib.extendPrototype('vector', 'negative', function () {
 });
 
 
+
 // ### Vector.prototype.normalize()
 // Normalizes the vector to have length one
 //
@@ -2596,6 +2652,21 @@ MathLib.extendPrototype('vector', 'negative', function () {
 MathLib.extendPrototype('vector', 'normalize', function () {
   return this.times(1 / this.size);
 });
+
+
+
+// ### Vector.prototype.plus()
+// Calculates the sum of two vectors
+//
+// *@returns {vector}*
+MathLib.extendPrototype('vector', 'plus', function (v) {
+  if (this.length === v.length) {
+    return MathLib.vector(this.map(function (x, i) {
+      return MathLib.plus(x, v[i]);
+    }));
+  }
+});
+
 
 
 // ### Vector.prototype.scalarproduct()
@@ -2612,6 +2683,7 @@ MathLib.extendPrototype('vector', 'scalarproduct', function (v) {
 });
 
 
+
 // ### Vector.prototype.size()
 // Determines the length of the vector.
 // Named size, as length is already used by JavaScript.
@@ -2620,6 +2692,7 @@ MathLib.extendPrototype('vector', 'scalarproduct', function (v) {
 MathLib.extendPrototype('vector', 'size', function () {
   return Math.sqrt(this.conjugate().scalarproduct(this));
 });
+
 
 
 // ### Vector.prototype.times()
@@ -2647,6 +2720,7 @@ MathLib.extendPrototype('vector', 'times', function (n) {
 });
 
 
+
 // ### Vector.prototype.toArray()
 // Converts the vector to an Array
 //
@@ -2654,6 +2728,7 @@ MathLib.extendPrototype('vector', 'times', function (n) {
 MathLib.extendPrototype('vector', 'toArray', function () {
   return this.slice();
 });
+
 
 
 // ### Vector.prototype.toContentMathML()
@@ -2667,6 +2742,7 @@ MathLib.extendPrototype('vector', 'toContentMathML', function () {
 });
 
 
+
 // ### Vector.prototype.toLaTeX()
 // Returns a LaTeX representation of the vector
 //
@@ -2676,6 +2752,7 @@ MathLib.extendPrototype('vector', 'toLaTeX', function () {
     return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
   }) + '\n\\end{pmatrix}';
 });
+
 
 
 // ### Vector.prototype.toMathML()
@@ -2689,6 +2766,7 @@ MathLib.extendPrototype('vector', 'toMathML', function () {
 });
 
 
+
 // ### Vector.prototype.toString()
 // Returns a string representation of the vector
 //
@@ -2700,6 +2778,7 @@ MathLib.extendPrototype('vector', 'toString', function () {
 });
 
 
+
 // ### Vector.prototype.vectorproduct()
 // Calculates the vectorproduct of two vectors
 //
@@ -2708,13 +2787,14 @@ MathLib.extendPrototype('vector', 'toString', function () {
 MathLib.extendPrototype('vector', 'vectorproduct', function (v) {
   var res = [];
   /* TODO: Extend vectorproduct for non three-dimensional vectors */
-  if (this.dim === 3 && v.dim === 3) {
+  if (this.length === 3 && v.length === 3) {
     res.push(MathLib.minus(MathLib.times(this[1], v[2]), MathLib.times(this[2], v[1])));
     res.push(MathLib.minus(MathLib.times(this[2], v[0]), MathLib.times(this[0], v[2])));
     res.push(MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0])));
   }
   return MathLib.vector(res);
 });
+
 
 
 // ### Vector.zero()
@@ -3738,6 +3818,17 @@ MathLib.extendPrototype('matrix', 'cholesky', function () {
 });
 
 
+
+// ### Matrix.prototype.copy()
+// Copies the matrix
+//
+// *@returns {matrix}*
+MathLib.extendPrototype('matrix', 'copy', function (n) {
+  return this.map(MathLib.copy);
+});
+
+
+
 // ### Matrix.prototype.determinant()
 // Calculates the determinant of the matrix via the LU decomposition.
 // The result is cached.
@@ -3780,7 +3871,7 @@ MathLib.extendPrototype('matrix', 'diag', function () {
 //
 // *@returns {matrix}*
 MathLib.extendPrototype('matrix', 'divide', function (n) {
- return this.multiply(MathLib.inverse(n));
+  return this.times(MathLib.inverse(n));
 });
 
 
