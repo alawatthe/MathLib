@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript Library for mathematical computations.
 //
 // MathLib is currently in public beta testing phase
-// v0.1pre
+// v0.2pre
 //
 // ##License
 // MathLib.js JavaScript Library is dual licensed under the MIT and GPL licenses.
@@ -18,10 +18,10 @@
 // The code is separated into several modules.
 // The first module contains some JavaScript-Polyfills
 //
-// Then there are some [functions](#Functions "Jump to the functions").
-// This module while be rewritten shortly.
+// Next is the [MathML](#MathML "Jump to the functions") module 
+// and the [functions](#Functions "Jump to the functions") module.
 //
-// The drawing modules:
+// Then drawing modules:
 //
 // - [screen](#Screen "Jump to the screen implementation")
 // - [canvas](#Canvas "Jump to the canvas implementation")

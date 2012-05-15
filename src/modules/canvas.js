@@ -296,7 +296,7 @@ MathLib.extendPrototype('canvas', 'normalizeOptions', function (defaultOpt, user
 MathLib.extendPrototype('canvas', 'path', function (path, userOpt) {
   var defaultOpt = {
         fillColor:  'rgba(0, 0, 0, 0)',
-        lineColor:  'rgba(0, 0, 0, 1)',
+        lineColor:  'rgba(0, 0, 255, 1)',
         lineWidth:  0.05,
         dash:       [],
         dashOffset: 0

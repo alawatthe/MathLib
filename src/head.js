@@ -185,9 +185,16 @@ if (!Array.prototype.some) {
       prototypes,
       // Works only for "double" Arrays
       flatten = function (a) {
-        return a.reduce(function(a,b){
-          return a.concat(b);
+        var res = [];
+        a.forEach(function (x) {
+          if (Array.isArray(x)) {
+            res = res.concat(flatten(x));
+          }
+          else {
+            res.push(x);
+          }
         });
+        return res;
       },
       toArray = Array.prototype.slice;
 
@@ -229,8 +236,9 @@ if (!Array.prototype.some) {
 // TODO: allow get & set
   MathLib.extend = function (obj, name, prop, options) {
     options = options || {enumerable: true};
+    var o = MathLib[obj] || MathLib;
 
-    Object.defineProperty(MathLib[obj], name, {
+    Object.defineProperty(o, name, {
       value: prop,
       writable: options.writable,
       enumerable: options.enumerable,

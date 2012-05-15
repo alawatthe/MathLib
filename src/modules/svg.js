@@ -233,7 +233,7 @@ MathLib.extendPrototype('svg', 'path', function (path, userOpt) {
   var svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
       pathString = 'M' + path.reduce(function(prev, cur) {
         return prev + ' L' + cur.join(' ');
-      }).slice(1, -1),
+      }),
       defaultOpt = {
         fillColor: 'rgba(255, 255, 255, 0)',
         lineColor: 'rgba(0, 0, 255, 1)',

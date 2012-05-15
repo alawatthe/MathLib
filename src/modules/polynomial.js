@@ -53,7 +53,7 @@ MathLib.polynomial = function (polynomial) {
 // Setting the .constructor property to MathLib.polynomial
 MathLib.extendPrototype('polynomial', 'constructor', MathLib.polynomial);
 
-// Setting the .type property to 'type'
+// Setting the .type property to 'polynomial'
 MathLib.extendPrototype('polynomial', 'type', 'polynomial');
 
 
@@ -111,7 +111,7 @@ MathLib.extendPrototype('polynomial', 'draw', function (screen, options) {
 
   else {
     for (i = -50; i <= 50; i = Math.round((i + 0.01) * 100) / 100) {
-      path.push([i, Math.round(this.valueAt(i)*100) / 100]);
+      path.push([i, this.valueAt(i)]);
     }
     if (Array.isArray(screen)) {
       screen.forEach(function (x) {
@@ -285,8 +285,8 @@ MathLib.extendPrototype('polynomial', 'times', function (a) {
 });
 
 
-// ### Polynomial.prototype.toMathML()
-// Returns a MathML representation of the polynomial
+// ### Polynomial.prototype.toContentMathML()
+// Returns a content MathML representation of the polynomial
 //
 // *@returns {string}*
 MathLib.extendPrototype('polynomial', 'toContentMathML', function () {

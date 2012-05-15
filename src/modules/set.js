@@ -216,7 +216,7 @@ Set.prototype.median = function (a) {
 MathLib.extendPrototype('set', 'plus', function (n) {
   var res = [];
   if (!arguments.length) {
-    return MathLib.plus(this);
+    return MathLib.plus.apply(null, this);
   }
   else if (Array.isArray(n)) {
     this.forEach(function (x) {
@@ -276,7 +276,7 @@ MathLib.extendPrototype('set', 'remove', function (a) {
 // *@returns {set}*
 MathLib.extendPrototype('set', 'times', function (n) {
   if (!arguments.length) {
-    return MathLib.times(this);
+    return MathLib.times.apply(null, this);
   }
   else {
     return this.map(function (x) {
@@ -416,8 +416,8 @@ MathLib.extendPrototype('set', 'toString', function () {
     };
   };
 
-  MathLib.extendPrototype('set', 'or', createSetOperation(true, true, true));
-  MathLib.extendPrototype('set', 'and', createSetOperation(false, true, false));
+  MathLib.extendPrototype('set', 'union', createSetOperation(true, true, true));
+  MathLib.extendPrototype('set', 'intersect', createSetOperation(false, true, false));
   MathLib.extendPrototype('set', 'without', createSetOperation(true, false, false));
   MathLib.extendPrototype('set', 'xor', createSetOperation(true, false, true));
 }());

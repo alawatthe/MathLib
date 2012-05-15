@@ -2,7 +2,7 @@ MathLib.js
 ==========
 
 
-MathLib.js is a JavaScript Framework for mathematical computations. It can handle circles, complex numbers, lines, matrices, permutations, points, polynomials, sets, and vectors.
+MathLib.js is a JavaScript Framework for mathematical computations. It can handle circles, complex numbers, functions, lines, matrices, permutations, points, polynomials, sets, and vectors.
 
 Further it can parse Content MathML and write Content MathML, Presentation MathML and LaTeX.
 

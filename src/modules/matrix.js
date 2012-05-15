@@ -12,6 +12,7 @@
 //    ⎜ 4 5 6 ⎟  
 //    ⎝ 7 8 9 ⎠
 
+
 prototypes.matrix = [];
 MathLib.matrix = function (matrix) {
   if (typeof matrix === 'string') {
@@ -133,7 +134,7 @@ MathLib.extendPrototype('matrix', 'determinant', function () {
     }
     else {
       arr = this.LU();
-      determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times(arr.diag()));
+      determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, arr.diag()));
     }
 
     this.determinant = function () {
@@ -916,7 +917,7 @@ MathLib.extendPrototype('matrix', 'toString', function () {
 //
 // *@returns {number|complex}*
 MathLib.extendPrototype('matrix', 'trace', function () {
-  var trace = MathLib.plus(this.diag());
+  var trace = MathLib.plus.apply(null, this.diag());
 
   this.trace = function () {
     return trace;

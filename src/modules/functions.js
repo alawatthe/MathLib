@@ -1,43 +1,231 @@
 // ## <a id="Functions"></a>Functions
-// THE FUNCTION IMPLEMENTATION WILL BE REWRITTEN SOON.
-// I know it's a mess right now...
 //
-// The functions are separated into two categories: <br>
-// - functions which act on numbers, like sin, log risingFactorial, ...
-// - functions which act on sets, like mean, median, ...
+// Because 'function' is a reserved word in JavaScript the module is called 
+// 'functn'.  
+// More improvements to the module coming soon.
 
+
+prototypes.functn = function(){};
+MathLib.functn = function (f, options) {
+  var functn = function (x) {
+    if (typeof x === 'number') {
+      return f.apply('', arguments);
+    }
+    else if (x.type === 'functn') {
+      var outerVar = functn.MathML.childNodes[0].childNodes[0].childNodes[0].outerMathML,
+          innerVar = x.MathML.childNodes[0].childNodes[0].childNodes[0].outerMathML,
+          innerStr = x.MathML.childNodes[0].childNodes[2].outerMathML.replace('<bvar>' + innerVar + '</bvar>', ''), 
+          outerStr = functn.MathML.childNodes[0].childNodes[2].outerMathML.replace(outerVar, innerStr),
+          res = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><complexes/></domainofapplication>' + outerStr + '</lambda></math>';
+      return MathLib.functn(function (y) {return f(x(y));}, {MathMLString: res});
+    }
+    else if (typeof x === 'function') {
+      return function (y) {return f(x(y));};
+    }
+    else if (x.type === 'set') {
+      return MathLib.set( x.map(f) );
+    }
+    else if(x.type === 'complex') {
+      return x[f.name].apply(x, Array.prototype.slice.call(arguments, 1));
+    }
+    else if (Array.isArray(x)) {
+      return x.map(f);
+    }
+    else {
+      return x[name]();
+    }
+  };
+
+  functn[proto] = prototypes.functn;
+  options = options || {};
+  var MathML = options.MathMLString || '';
+  
+  Object.defineProperties(functn, {
+    id: { value: f.name},
+    MathML: { value: MathLib.MathML(MathML) }
+  });
+
+  return functn;
+};
+
+// Setting the .constructor property to MathLib.functn
+MathLib.extendPrototype('functn', 'constructor', MathLib.functn);
+
+// Setting the .type property to 'functn'
+MathLib.extendPrototype('functn', 'type', 'functn');
+
+
+
+// ### Functn.prototype.draw()
+// Draws the function on the screen
+//
+// *@param {screen}* The screen to draw the function onto.  
+// *@param {object}* [options] Optional drawing options.  
+// *@returns {functn}*
+MathLib.extendPrototype('functn', 'draw', function (screen, options) {
+  var path = [], i;
+
+  for (i = -50; i <= 50; i = Math.round((i + 0.01) * 100) / 100) {
+    path.push([i, this(i)]);
+  }
+  if (Array.isArray(screen)) {
+    screen.forEach(function (x) {
+      x.path(path, options);
+    });
+  }
+  else {
+    screen.path(path, options);
+  }
+
+  return this;
+});
+
+
+
+// ### Functn.prototype.toContentMathML()
+// Returns a content MathML representation of the function
+//
+// *@returns {MathML}*
+MathLib.extendPrototype('functn', 'toContentMathML', function () {
+  return this.MathML.outerMathML;
+});
+
+
+
+// ### Functn.prototype.toMathML()
+// Returns a MathML representation of the function
+//
+// *@returns {MathML}*
+MathLib.extendPrototype('functn', 'toMathML', function () {
+  return this.MathML.toMathML();
+});
+
+
+
+// ### Functn.prototype.toString()
+// Returns a string representation of the function
+//
+// *@returns {string}*
+MathLib.extendPrototype('functn', 'toString', function () {
+  return this.MathML.toString();
+});
+
+
+
+var mathStart = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><',
+    mathEnd   = '/><ci>x</ci></apply></lambda></math>';
+
+
+// ## Elementary functions
+// Some functions for the functn prototype
+var functionList = {
+  abs: function abs(x) {
+    return Math.abs(x);
+  },
+  arccos: function arccos(x){
+    return Math.acos(x);
+  },
+  arccot: function arccot(x){
+    return MathLib.pi / 2 - Math.atan(x);
+  },
+  arccsc: function arccsc(x){
+    return Math.asin(1 / x);
+  },
+  arcosh: function arcosh(x){
+    return Math.log(x + Math.sqrt(x * x - 1));
+  },  
+  arcoth: function arcoth(x){
+    return 0.5 * Math.log((x + 1) / (x - 1));
+  },
+  arcsch: function arcsch(x){
+    return Math.log((1 + Math.sqrt(1 + x * x)) / (x));
+  },
+  arcsec: function arcsec(x){
+    return Math.acos(1 / x);
+  },
+  arcsin: function arcsin(x){
+    return Math.asin(x);
+  },
+  arctan: function arctan(x){
+    return Math.atan(x);
+  },
+  arsech: function arsech(x){
+    return Math.log((1 + Math.sqrt(1 - x * x)) / (x));
+  },
+  arsinh: function arsinh(x){
+    return Math.log(x + Math.sqrt(x * x + 1));
+  },
+  artanh: function artanh(x){
+    return 0.5 * Math.log((1 + x) / (1 - x));
+  },
+  ceil: function ceil(x) {
+    return Math.ceil(x);
+  },
+  floor: function floor(x) {
+    return Math.floor(x);
+  },
+  cos: function cos(x){
+    return Math.cos(x);
+  },
+  cosh: function cosh(x) {
+    return (Math.exp(x) + Math.exp(-x)) / 2;
+  },
+  cot: function cot(x) {
+    return 1 / Math.tan(x);
+  },
+  coth: function coth(x) {
+    return (Math.exp(x) + Math.exp(-x)) / (Math.exp(x) - Math.exp(-x));
+  },
+  csc: function csc(x) {
+    return 1 / Math.sin(x);
+  },
+  csch: function csch(x) {
+    return 2 / (Math.exp(x) - Math.exp(-x));
+  },
+  exp: function exp(x){
+    return Math.exp(x);
+  },
+  inverse: function inverse(x){
+    return 1/x;
+  },
+  sec: function (x) {
+    return 1 / Math.cos(x);
+  },
+  sech: function (x) {
+    return 2 / (Math.exp(x) + Math.exp(-x));
+  },
+  sin: function sin(x){
+    return Math.sin(x);
+  },
+  sinh: function sinh(x) {
+    return (Math.exp(x) - Math.exp(-x)) / 2;
+  },
+  tan: function (x) {
+    return Math.tan(x);
+  },
+  tanh: Math.tanh || function (x) {
+    return (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));
+  }
+};
+
+
+// Create the elementary functions
+for (var elemfn in functionList) {
+  if (functionList.hasOwnProperty(elemfn)) {
+    MathLib.extend('', elemfn, MathLib.functn(functionList[elemfn], {MathMLString: mathStart + elemfn + mathEnd}));
+  }
+}
+
+
+MathLib.identity = MathLib.functn(function identity(x){
+    return x;
+  }, {MathMLString: mathStart + 'ident' + mathEnd}
+);
+
+
+
+// These functions will be added to the functn prototype soon.
 var functionList1 = {
-  abs: Math.abs,
-  arccos: Math.acos,
-  arccot: function (x) {
-        return MathLib.pi / 2 - Math.atan(x);
-      },
-  arccsc: function (x) {
-        return Math.asin(1 / x);
-      },
-  arcosh: function (x) {
-        return Math.log(x + Math.sqrt(x * x - 1));
-      },
-  arcoth: function (x) {
-        return 0.5 * Math.log((x + 1) / (x - 1));
-      },
-  arcsch: function (x) {
-        return Math.log((1 + Math.sqrt(1 + x * x)) / (x));
-      },
-  arcsec: function (x) {
-        return Math.acos(1 / x);
-      },
-  arcsin: Math.asin,
-  arctan: Math.atan,
-  arsech: function (x) {
-        return Math.log((1 + Math.sqrt(1 - x * x)) / (x));
-      },
-  arsinh: function (x) {
-        return Math.log(x + Math.sqrt(x * x + 1));
-      },
-  artanh: function (x) {
-        return 0.5 * Math.log((1 + x) / (1 - x));
-      },
   binomial: function (n, k) {
         var res = 1, i;
 
@@ -84,28 +272,11 @@ var functionList1 = {
           }
           return an;
         },
-  ceil: Math.ceil,
   conjugate: function (x) {
         return x;
       },
   copy: function (x) {
         return x;
-      },
-  cos:  Math.cos,
-  cosh: Math.cosh || function (x) {
-        return (Math.exp(x) + Math.exp(-x)) / 2;
-      },
-  cot: function (x) {
-        return 1 / Math.tan(x);
-      },
-  coth: function (x) {
-        return (Math.exp(x) + Math.exp(-x)) / (Math.exp(x) - Math.exp(-x));
-      },
-  csc: function (x) {
-        return 1 / Math.sin(x);
-      },
-  csch: function (x) {
-        return 2 / (Math.exp(x) - Math.exp(-x));
       },
   degToRad: function (x) {
         return x / 180 * MathLib.pi;
@@ -140,7 +311,6 @@ var functionList1 = {
         res.push(x);
         return MathLib.set(res);
       },
-  exp: Math.exp,
   factor: function (n) {
         var res = [],
             i;
@@ -179,7 +349,6 @@ var functionList1 = {
   fibonacci: function (n) {
         return Math.floor(Math.pow(MathLib.goldenRatio, n) / Math.sqrt(5));
       },
-  floor: Math.floor,
   hypot: function (a, b) {
         var args, x, y;
 
@@ -217,9 +386,6 @@ var functionList1 = {
         return args.reduce(function (old, cur) {
           return old + cur*cur;
         }, 0);
-      },
-  inverse: function (x) {
-        return 1/x;
       },
   isFinite: function (x) {
        return Math.abs(x) < Infinity;
@@ -284,11 +450,11 @@ var functionList1 = {
   negative: function (x) {
         return -x;
       },
-  pow: function (a, b) {
-        if (a === 1 || (a === -1 && (b === Infinity || b === -Infinity))) {
+  pow: function (x, y) {
+        if (x === 1 || (x === -1 && (y === Infinity || y === -Infinity))) {
           return 1;
         }
-        return Math.pow(a, b);
+        return Math.pow(x, y);
       },
   radToDeg: function (x) {
         return x * 180 / Math.PI;
@@ -315,18 +481,8 @@ var functionList1 = {
         }
         return Math.pow(x, 1 / root);
       },
-  sec: function (x) {
-        return 1 / Math.cos(x);
-      },
-  sech: function (x) {
-        return 2 / (Math.exp(x) + Math.exp(-x));
-      },
   sgn: function (x) {
         return x > 0 ? 1:x < 0 ? -1 : 0;
-      },
-  sin: Math.sin,
-  sinh: Math.sinh || function (x) {
-        return (Math.exp(x) - Math.exp(-x)) / 2;
       },
   sqrt: function (x) {
         if (x === 0) {
@@ -334,15 +490,8 @@ var functionList1 = {
         }
         return Math.sqrt(x);
       },
-  tan: Math.tan,
-  tanh: Math.tanh || function (x) {
-        return (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));
-      },
   trunc: function (x, n) {
         return x.toFixed(n || 0);
-      },
-  toContentMathML: function (x) {
-        return '<cn>' + x + '</cn>';
       },
   toLaTeX: function (x, plus) {
         if (plus) {
@@ -370,6 +519,62 @@ var functionList1 = {
       }
 };
 
+MathLib.toContentMathML = function (x) {
+  if (typeof x === 'number'){
+    return '<cn>' + x + '</cn>';
+  }
+  else {
+    return x.toContentMathML();
+  }
+};
+
+
+
+
+
+// ### MathLib.and()
+// Returns true iff all arguments are true.
+// 
+// *@param {boolean}* Expects an arbitrary number of boolean arguments  
+// *@returns {boolean}*
+MathLib.and = function () {
+  return Array.prototype.slice.call(arguments).every(function (x) {return !!x;});
+};
+
+
+// ### MathLib.or()
+// Returns true iff at least one argument is true.
+// 
+// *@param {boolean}* Expects an arbitrary number of boolean arguments  
+// *@returns {boolean}*
+MathLib.or = function () {
+  return Array.prototype.slice.call(arguments).some(function (x) {return !!x;});
+};
+
+
+// ### MathLib.xor()
+// Returns true iff an odd number of the arguments is true.
+// 
+// *@param {boolean}* Expects an arbitrary number of boolean arguments  
+// *@returns {boolean}*
+MathLib.xor = function () {
+  return Array.prototype.slice.call(arguments).reduce(function (x, y) {return x + y;}) % 2 !== 0;
+};
+
+
+// ### MathLib.not()
+// Negates the argument.
+// 
+// *@param {boolean}* Expects one boolean argument  
+// *@returns {boolean}*
+MathLib.not = function (x) {
+  return !x;
+};
+
+
+
+
+
 
 MathLib.compare = function (a, b) {
   if(MathLib.type(a) !== MathLib.type(b)) {
@@ -396,7 +601,7 @@ MathLib.is = function (obj, type) {
 
 var functionList3 = {
   arithMean: function () {
-        return MathLib.plus(this) / this.length;
+        return MathLib.plus.apply(null, this) / this.length;
       },
   gcd: function () {
         var min,
@@ -424,10 +629,10 @@ var functionList3 = {
         return a[0] || min;
       },
   geoMean: function () {
-        return MathLib.root(MathLib.times(this), this.length);
+        return MathLib.root(MathLib.times.apply(null, this), this.length);
       },
   harmonicMean: function () {
-        return this.length / MathLib.plus(Array.prototype.map.call(this, MathLib.inverse));
+        return this.length / MathLib.plus.apply(null, Array.prototype.map.call(this, MathLib.inverse));
       },
   lcm: function () {
         return MathLib.times(this) / MathLib.gcd(this);
@@ -447,55 +652,119 @@ var functionList3 = {
 };
 
 
-var functionList4 = {
-  plus: function () {
-        return flatten(toArray.apply(arguments)).reduce(function (a, b) {
-          if (typeof a === 'number' && typeof b === 'number') {
-            return a + b;
-          }
-          else if (typeof a === 'object') {
-            return a.plus(b);
-          }
-          // We're assuming that the operations are commutative
-          else if (typeof b === 'object') {
-            return b.plus(a);
-          }
-        });
-      },
-  isEqual: function () {
-        return flatten(toArray.apply(arguments)).every(function (a, i, arr) {
-          if (a === arr[0]) {
-            return true;
-          }
-          else if (typeof a === 'number' && typeof arr[0] === 'number') {
-            // MathLib.epsilon is too small...
-            return Math.abs(a - arr[0]) <= 3e-15;
-          }
-          else if (typeof a === 'object') {
-            return a.isEqual(arr[0]);
-          }
-          else if (typeof arr[0] === 'object') {
-            return arr[0].isEqual(a);
-          }
-          return false;
-        });
-      },
-  times: function () {
-        return flatten(toArray.apply(arguments)).reduce(function (a, b) {
-          if (typeof a === 'number' && typeof b === 'number') {
-            return a * b;
-          }
-          else if (typeof a === 'object') {
-            return a.times(b);
-          }
-          // We're assuming that the operations are commutative
-          else if (typeof b === 'object') {
-            return b.times(a);
-          }
-        });
+
+// ### MathLib.plus()
+// Returns the sum of all arguments.
+// 
+// *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
+// *@returns {number, MathLib object}*
+MathLib.plus = function () {
+  return Array.prototype.slice.apply(arguments).reduce(function (a, b) {
+    var f1, f2, astr, bstr;
+    if (typeof a === 'number' && typeof b === 'number') {
+      return a + b;
+    }
+    else if (a.type === 'functn' || b.type === 'functn') {
+      astr = a.type === 'functn' ? a.MathML.childNodes[0].apply.outerMathML : MathLib.toContentMathML(a);
+      bstr = b.type === 'functn' ? b.MathML.childNodes[0].apply.outerMathML : MathLib.toContentMathML(b);
+      f1 = a;
+      f2 = b;
+      if (a.type !== 'functn') {
+        f1 = function () {
+          return a;
+        };
       }
+      else if(b.type !== 'functn') {
+        f2 = function () {
+          return b;
+        };
+      }
+      var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
+      return MathLib.functn(function (x) {
+        return MathLib.plus(f1(x), f2(x));
+      }, {
+        MathMLString: MathML
+      });
+    }
+    else if (typeof a === 'object') {
+      return a.plus(b);
+    }
+    // We're assuming that the operations are commutative
+    else if (typeof b === 'object') {
+      return b.plus(a);
+    }
+  });
 };
 
+
+
+// ### MathLib.isEqual()
+// Determines if all arguments are equal.
+// 
+// *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
+// *@returns {boolean}*
+MathLib.isEqual = function () {
+  return flatten(toArray.apply(arguments)).every(function (a, i, arr) {
+    if (a === arr[0]) {
+      return true;
+    }
+    else if (typeof a === 'number' && typeof arr[0] === 'number') {
+      return Math.abs(a - arr[0]) <= 3e-15;
+    }
+    else if (typeof a === 'object') {
+      return a.isEqual(arr[0]);
+    }
+    else if (typeof arr[0] === 'object') {
+      return arr[0].isEqual(a);
+    }
+    return false;
+  });
+};
+
+
+
+// ### MathLib.times()
+// Returns the product of all arguments.
+// 
+// *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
+// *@returns {boolean}*
+MathLib.times = function () {
+  return Array.prototype.slice.apply(arguments).reduce(function (a, b) {
+    var f1, f2, astr, bstr;
+    if (typeof a === 'number' && typeof b === 'number') {
+      return a * b;
+    }
+    else if (a.type === 'functn' || b.type === 'functn') {
+      astr = a.type === 'functn' ? a.MathML.childNodes[0].apply.outerMathML : MathLib.toContentMathML(a);
+      bstr = b.type === 'functn' ? b.MathML.childNodes[0].apply.outerMathML : MathLib.toContentMathML(b);
+      f1 = a;
+      f2 = b;
+      if (a.type !== 'functn') {
+        f1 = function () {
+          return a;
+        };
+      }
+      else if(b.type !== 'functn') {
+        f2 = function () {
+          return b;
+        };
+      }
+      var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
+      return MathLib.functn(function (x) {
+        return MathLib.times(f1(x), f2(x));
+      }, {
+        MathMLString: MathML
+      });
+    }
+    else if (typeof a === 'object') {
+      return a.times(b);
+    }
+    // We're assuming that the operations are commutative
+    else if (typeof b === 'object') {
+      return b.times(a);
+    }
+  });
+};
 
 
 
@@ -504,7 +773,6 @@ var createFunction1 = function (f, name) {
     if (typeof x === 'number') {
       return f.apply('', arguments);
     }
-    // JavaScript should have this build in!
     else if (typeof x === 'function') {
       return function (y) {return f(x(y));};
     }
@@ -531,17 +799,6 @@ var createFunction3 = function (f, name) {
   };
 };
 
-
-var createFunction4 = function (f, name) {
-  return function () {
-    if (arguments.length > 1) {
-      return f(Array.prototype.slice.apply(arguments));
-    }
-    else {
-      return f(arguments[0]);
-    }
-  };
-};
 
 // Add the functions to the MathLib object
 var func, cur;
@@ -571,15 +828,5 @@ for (func in functionList3) {
         };
       }(func))
     );
-  }
-}
-
-for (func in functionList4) {
-  if (functionList4.hasOwnProperty(func)) {
-
-    cur = functionList4[func];
-    Object.defineProperty(MathLib, func, {
-      value: createFunction4(functionList4[func], func)
-    });
   }
 }

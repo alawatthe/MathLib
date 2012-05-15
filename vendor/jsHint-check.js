@@ -14,7 +14,7 @@ var jshint = require('./jshint').JSHINT,
         'MathJax',
         'NodeFilter'
 			],
-			maxerr: 10
+			maxerr: 50
 		};
 
 if ( jshint( src, config ) ) {

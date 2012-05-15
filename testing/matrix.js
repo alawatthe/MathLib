@@ -245,12 +245,12 @@ test('.solve()', 4, function () {
       b3 = MathLib.vector([c([5, 37]), c([5, 19]), c([21, 0])]),
       x3 = MathLib.vector([c([4, 2]), c([3, 0]), c([1, 7])]);
 
-  ok(MathLib.isEqual(A1.solve(b1), x1), 'Solving a system of linear equations');
+  ok(A1.solve(b1).isEqual(x1), 'Solving a system of linear equations');
   deepEqual(A1.times(x1), b1, 'Showing the solution is right');
 
   deepEqual(A2.solve(b2), x2, 'Solving a system of linear equations');
 
-  ok(MathLib.isEqual(A3.solve(b3), x3), 'Solving a complex system of linear equations');
+  ok(A3.solve(b3).isEqual(x3), 'Solving a complex system of linear equations');
 });
 
 

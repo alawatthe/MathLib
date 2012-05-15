@@ -12,32 +12,33 @@ JS_ENGINE ?= `which node nodejs 2>/dev/null`
 COMPILER = ${JS_ENGINE} ${VENDOR_DIR}/uglify.js --unsafe
 POST_COMPILER = ${JS_ENGINE} ${VENDOR_DIR}/post-compile.js
 
-BASE_FILES = ${SRC_DIR}/modules/functions.js\
-	${SRC_DIR}/modules/screen.js\
-	${SRC_DIR}/modules/canvas.js\
-	${SRC_DIR}/modules/svg.js\
-	${SRC_DIR}/modules/vector.js\
-	${SRC_DIR}/modules/circle.js\
-	${SRC_DIR}/modules/complex.js\
-	${SRC_DIR}/modules/line.js\
-	${SRC_DIR}/modules/mathML.js\
-	${SRC_DIR}/modules/matrix.js\
-	${SRC_DIR}/modules/permutation.js\
-	${SRC_DIR}/modules/point.js\
-	${SRC_DIR}/modules/polynomial.js\
-	${SRC_DIR}/modules/set.js\
+BASE_FILES =  ${SRC_DIR}/modules/MathML.js\
+							${SRC_DIR}/modules/functions.js\
+							${SRC_DIR}/modules/screen.js\
+							${SRC_DIR}/modules/canvas.js\
+							${SRC_DIR}/modules/svg.js\
+							${SRC_DIR}/modules/vector.js\
+							${SRC_DIR}/modules/circle.js\
+							${SRC_DIR}/modules/complex.js\
+							${SRC_DIR}/modules/line.js\
+							${SRC_DIR}/modules/matrix.js\
+							${SRC_DIR}/modules/permutation.js\
+							${SRC_DIR}/modules/point.js\
+							${SRC_DIR}/modules/polynomial.js\
+							${SRC_DIR}/modules/set.js\
 
-TEST_FILES = ${TEST_DIR}/functions.js\
-	${TEST_DIR}/circle.js\
-	${TEST_DIR}/complex.js\
-	${TEST_DIR}/line.js\
-	${TEST_DIR}/mathML.js\
-	${TEST_DIR}/matrix.js\
-	${TEST_DIR}/permutation.js\
-	${TEST_DIR}/point.js\
-	${TEST_DIR}/polynomial.js\
-	${TEST_DIR}/set.js\
-	${TEST_DIR}/vector.js\
+TEST_FILES =  ${TEST_DIR}/general.js\
+							${TEST_DIR}/circle.js\
+							${TEST_DIR}/complex.js\
+							${TEST_DIR}/functions.js\
+							${TEST_DIR}/line.js\
+							${TEST_DIR}/mathML.js\
+							${TEST_DIR}/matrix.js\
+							${TEST_DIR}/permutation.js\
+							${TEST_DIR}/point.js\
+							${TEST_DIR}/polynomial.js\
+							${TEST_DIR}/set.js\
+							${TEST_DIR}/vector.js\
 
 MODULES = ${SRC_DIR}/license.js\
 	${SRC_DIR}/head.js\

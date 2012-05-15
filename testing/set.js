@@ -9,13 +9,6 @@ test('init', 4, function () {
 });
 
 
-test('.and()', 1, function () {
-  var s = MathLib.set([1, 2, 3, 4]),
-      m = MathLib.set([1, 3, 5, 7]);
-  deepEqual(s.and(m),  [1, 3], 'Testing .and() (set)');
-});
-
-
 test('.arithMean()', 2, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true);
@@ -61,6 +54,13 @@ test('.insert()', 8, function () {
   deepEqual(m.insert(3), [1, 2, 2, 3, 3, 3, 4, 8, 9], 'Testing .locate() (multiset, existing)');
   deepEqual(m.insert(5), [1, 2, 2, 3, 3, 3, 4, 5, 8, 9], 'Testing .locate() (multiset, not existing)');
   deepEqual(m.insert(10), [1, 2, 2, 3, 3, 3, 4, 5, 8, 9, 10], 'Testing .locate() (multiset, back)');
+});
+
+
+test('.intersect()', 1, function () {
+  var s = MathLib.set([1, 2, 3, 4]),
+      m = MathLib.set([1, 3, 5, 7]);
+  deepEqual(s.intersect(m),  [1, 3], 'Testing .intersect() (set)');
 });
 
 
@@ -133,13 +133,6 @@ test('.min()', 4, function () {
   equal(s.min(3), 4, 'Testing .min(3) (set)');
   equal(m.min(),  2, 'Testing .min() (multiset)');
   equal(m.min(3), 3, 'Testing .min(3) (multiset)');
-});
-
-
-test('.or()', 1, function () {
-  var s = MathLib.set([1, 2, 3, 4]),
-      m = MathLib.set([1, 3, 5, 7]);
-  deepEqual(s.or(m),  [1, 2, 3, 4, 5, 7], 'Testing .or() (set)');
 });
 
 
@@ -235,6 +228,13 @@ test('.toString()', 3, function () {
   equal(s.toString(),  '(2, 3, 4, 8, 9)', 'Testing .toString() (set)');
   equal(e.toString(),  '∅', 'Testing .toString() (empty set)');
   equal(m.toString(),  '(2, 2, 3, 3, 4, 8, 9)', 'Testing .toString() (multiset)');
+});
+
+
+test('.union()', 1, function () {
+  var s = MathLib.set([1, 2, 3, 4]),
+      m = MathLib.set([1, 3, 5, 7]);
+  deepEqual(s.union(m),  [1, 2, 3, 4, 5, 7], 'Testing .union() (set)');
 });
 
 
