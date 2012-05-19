@@ -1,11 +1,12 @@
-// MathLib.js is a JavaScript Library for mathematical computations.
+// MathLib.js is a JavaScript library for mathematical computations.
 //
-// MathLib is currently in public beta testing phase
-// v0.2pre
+// ## Version
+// v0.3.0 - 2012-05-20  
+// MathLib is currently in public beta testing.
 //
-// ##License
-// MathLib.js JavaScript Library is dual licensed under the MIT and GPL licenses.
-// see (<http://MathLib.de/en/license>)
+// ## License
+// Copyright (c) 2012 Alexander Zeilmann  
+// MathLib.js is [dual licensed under the MIT and GPL licenses](<http://MathLib.de/en/license>)
 //
 // ## Documentation
 // The source code is annotated using [Docco](https://github.com/jashkenas/docco "View Docco on GitHub")
@@ -16,10 +17,10 @@
 //
 // ## Code structure
 // The code is separated into several modules.
-// The first module contains some JavaScript-Polyfills
+// The first module contains some internal functions
 //
-// Next is the [MathML](#MathML "Jump to the functions") module 
-// and the [functions](#Functions "Jump to the functions") module.
+// Next is the [MathML](#MathML "Jump to the MathML implementation") module 
+// and the [functions](#Functions "Jump to the function implementation") module.
 //
 // Then drawing modules:
 //
@@ -27,197 +28,21 @@
 // - [canvas](#Canvas "Jump to the canvas implementation")
 // - [svg](#SVG "Jump to the svg implementation")
 //
-// The next module is the [vector](#Vector "Jump to the vector implementation") module, because the Point and the Line module
-// depend on it.
+// The next module is the [vector](#Vector "Jump to the vector implementation") module, because the Point and the Line module depend on it.
 //
 // And at last the other modules in alphabetic order:
 //
 // - [circle](#Circle "Jump to the circle implementation")
 // - [complex](#Complex "Jump to the complex number implementation")
 // - [line](#Line "Jump to the line implementation")
-// - [MathML](#MathML "Jump to the MathML implementation")
 // - [matrix](#Matrix "Jump to the matrix implementation")
 // - [permutation](#Permutation "Jump to the permutation implementation")
 // - [point](#Point "Jump to the point implementation")
 // - [polynomial](#Polynomial "Jump to the polynomial implementation")
 // - [set](#Set "Jump to the set implementation")
 
-// Extending the Array prototype with some ES5 methods,
-// if the method isn't already there.
-// This are the 'official' snippets from MDN.
-if (!Array.prototype.every) {
-  Array.prototype.every = function(fun /*, thisp */) {
-    "use strict";
 
-    if (this == null) {
-      throw new TypeError();
-    }
-
-    var t =  new Object(this);
-    var len = t.length >>> 0;
-    if (typeof fun != "function") {
-      throw new TypeError();
-    }
-
-    var thisp = arguments[1];
-    for (var i = 0; i < len; i++) {
-      if (i in t && !fun.call(thisp, t[i], i, t)) {
-        return false;
-      }
-    }
-
-    return true;
-  };
-}
-
-
-
-if (!Array.prototype.filter) {
-  Array.prototype.filter = function(fun /*, thisp */) {
-    "use strict";
-
-    if (this == null) {
-      throw new TypeError();
-    }
-
-    var t = new Object(this);
-    var len = t.length >>> 0;
-    if (typeof fun != "function") {
-      throw new TypeError();
-    }
-
-    var res = [];
-    var thisp = arguments[1];
-    for (var i = 0; i < len; i++) {
-      if (i in t) {
-        var val = t[i]; // in case fun mutates this
-        if (fun.call(thisp, val, i, t)) {
-          res.push(val);
-        }
-      }
-    }
-
-    return res;
-  };
-}
-
-
-if ( !Array.prototype.forEach ) {
-  Array.prototype.forEach = function( callback, thisArg ) {
-    var T, k;
-    if ( this == null ) {
-      throw new TypeError( " this is null or not defined" );
-    }
-    var O = Object(this);
-    var len = O.length >>> 0;
-    if ( {}.toString.call(callback) != "[object Function]" ) {
-      throw new TypeError( callback + " is not a function" );
-    }
-    if ( thisArg ) {
-      T = thisArg;
-    }
-    k = 0;
-    while( k < len ) {
-      var kValue;
-      if ( k in O ) {
-        kValue = O[ k ];
-        callback.call( T, kValue, k, O );
-      }
-      k++;
-    }
-  };
-}
-
-
-if (!Array.prototype.map) {
-  Array.prototype.map = function(callback, thisArg) {
-    var T, A, k;
-    if (this == null) {
-      throw new TypeError(" this is null or not defined");
-    }
-    var O = Object(this);
-    var len = O.length >>> 0;
-    if ({}.toString.call(callback) != "[object Function]") {
-      throw new TypeError(callback + " is not a function");
-    }
-    if (thisArg) {
-      T = thisArg;
-    }
-    A = new Array(len);
-    k = 0;
-    while(k < len) {
-      var kValue, mappedValue;
-      if (k in O) {
-        kValue = O[ k ];
-        mappedValue = callback.call(T, kValue, k, O);
-        A[ k ] = mappedValue;
-      }
-      k++;
-    }
-    return A;
-  };
-}
-
-
-if (!Array.prototype.reduce) {
-  Array.prototype.reduce = function reduce(accumulator){
-    var i = 0, l = this.length >> 0, curr;
-
-    if(typeof accumulator !== "function") { // ES5 : "If IsCallable(callbackfn) is false, throw a TypeError exception."
-      throw new TypeError("First argument is not callable");
-    }
-
-    if(arguments.length < 2) {
-      if (l === 0) {
-        throw new TypeError("Array length is 0 and no second argument");
-      }
-      curr = this[0]; // Increase i to start searching the secondly defined element in the array
-      i = 1; // start accumulating at the second element
-    }
-    else {
-      curr = arguments[1];
-    }
-
-    while (i < l) {
-      if(i in this) {
-        curr = accumulator.call(undefined, curr, this[i], i, this);
-      }
-      ++i;
-    }
-
-    return curr;
-  };
-}
-
-
-if (!Array.prototype.some) {
-  Array.prototype.some = function(fun /*, thisp */) {
-    "use strict";
-
-    if (this == null) {
-      throw new TypeError();
-    }
-
-    var t = new Object(this);
-    var len = t.length >>> 0;
-    if (typeof fun != "function") {
-      throw new TypeError();
-    }
-
-    var thisp = arguments[1];
-    for (var i = 0; i < len; i++) {
-      if (i in t && fun.call(thisp, t[i], i, t)) {
-        return true;
-      }
-    }
-
-    return false;
-  };
-}
-
-
-// ## The main function
-// This is the beginning of the main function
+// ## The wrapping function
 (function (document) {
 
   var name = 'MathLib',
@@ -227,7 +52,6 @@ if (!Array.prototype.some) {
       MathLib,
       proto = '__proto__',
       prototypes,
-      // Works only for "double" Arrays
       flatten = function (a) {
         var res = [];
         a.forEach(function (x) {
@@ -239,17 +63,16 @@ if (!Array.prototype.some) {
           }
         });
         return res;
-      },
-      toArray = Array.prototype.slice;
+      };
 
 
 
   MathLib = {
-    version:          0.1,
+    version:          '0.3.0',
     apery:            1.2020569031595942,
     e:                Math.E,
-    // Number.EPSILON is probably coming in ES6 see
-    // <http://wiki.ecmascript.org/doku.php?id=strawman:number_epsilon>
+    // Number.EPSILON is probably coming in ES6
+    // (see section 15.7.3.7 in the current draft)
     epsilon: Number.EPSILON || (function () {
         var next, result;
         for (next = 1; 1 + next !== 1; next = next / 2) {
@@ -310,6 +133,7 @@ if (!Array.prototype.some) {
     });
 
   };
+
 // ## <a id="MathML"></a>MathML
 // The MathML implementation of MathLib parses and creates content MathML.
 
@@ -410,12 +234,9 @@ MathLib.MathML = function (MathMLString) {
   // Remove the Linebreaks ...
   MathMLString = MathMLString.replace(/\n/g, ''); 
 
-  // and the unnecessary whitespace
+  // ... and the unnecessary whitespace
   MathMLString = MathMLString.replace(/((?!cs)[^>]{2})>(\s)*</g, '$1><');
     
-    // .replace(/(?!cs)\w{2}>(\s)*</g, '><');
-
-
   // Gives an error in Firefox
   /* MathML = tokenizer.parseFromString(MathMLString, 'application/mathml+xml'); */
   MathMLdoc = tokenizer.parseFromString(MathMLString, 'application/xml');
@@ -825,6 +646,7 @@ MathLib.extend('MathML', 'write', function (id, math) {
     MathJax.Hub.Queue(['Typeset', MathJax.Hub, id]);
   }
 });
+
 // ## <a id="Functions"></a>Functions
 //
 // Because 'function' is a reserved word in JavaScript the module is called 
@@ -1531,7 +1353,7 @@ MathLib.plus = function () {
 // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
 // *@returns {boolean}*
 MathLib.isEqual = function () {
-  return flatten(toArray.apply(arguments)).every(function (a, i, arr) {
+  return flatten(Array.prototype.slice.apply(arguments)).every(function (a, i, arr) {
     if (a === arr[0]) {
       return true;
     }
@@ -1657,6 +1479,7 @@ for (func in functionList3) {
     );
   }
 }
+
 // ## <a id="Screen"></a>Screen
 // This module contains the common methods of all drawing modules.
 prototypes.screen = {};
@@ -2337,6 +2160,7 @@ MathLib.extendPrototype('screen', 'onmousewheel', function (evt) {
 
   this.startTransformation = this.startTransformation.times(k.inverse());
 });
+
 // ## <a id="Canvas"></a>Canvas
 // The module for drawing plots on a canvas.
 // A new canvas can be initialised by the following code:
@@ -2868,6 +2692,7 @@ MathLib.extendPrototype('canvas', 'text', function (str, x, y, userOpt) {
 
   return this;
 });
+
 // ## <a id="SVG"></a>SVG
 // The module for drawing plots on SVG elements.
 // A new MathLib svg element can be initialised by the following code:
@@ -3274,6 +3099,7 @@ MathLib.extendPrototype('svg', 'text', function (str, x, y, userOpt) {
 
   return this;
 });
+
 // ## <a id="Vector"></a>Vector
 // The vector implementation of MathLib makes calculations with vectors of
 // arbitrary size possible. The entries of the vector can be numbers and complex
@@ -3563,6 +3389,7 @@ MathLib.extend('vector', 'zero', function (n) {
   }
   return MathLib.vector(res);
 });
+
 // ## <a id="Circle"></a>Circle
 // MathLib.circle expects two arguments.
 // First the center in the form of an Array or a MathLib.point.
@@ -3679,6 +3506,7 @@ MathLib.extendPrototype('circle', 'toMatrix', function () {
       r = this.radius;
   return MathLib.matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x*x + y*y - r*r]]);
 });
+
 // ## <a id="Complex"></a>Complex
 // MathLib.complex is the MathLib implementation of complex numbers.
 //
@@ -4107,6 +3935,7 @@ MathLib.extend('complex', 'one', MathLib.complex([1, 0]));
 //
 // *@returns {complex}*
 MathLib.extend('complex', 'zero', MathLib.complex([0, 0]));
+
 // ## <a id="Line"></a>Line
 // The vector implementation of MathLib makes calculations with lines in the 
 // real plane possible. (Higher dimensions will be supported later)
@@ -4231,6 +4060,7 @@ MathLib.extendPrototype('line', 'normalize', function (q) {
 
 
 MathLib.extend('line', 'infiniteLine', MathLib.line([0,0,1]));
+
 // ## <a id="Matrix"></a>Matrix
 // The matrix implementation of MathLib makes calculations with matrices of
 // arbitrary size possible. The entries of a matrix can be numbers and complex
@@ -5293,6 +5123,7 @@ MathLib.extend('matrix', 'zero', function (r, c) {
   c = c || 1;
   return MathLib.matrix.numbers(0, r, c);
 });
+
 // ## <a id="Permutation"></a>Permutation
 prototypes.permutation = [];
 MathLib.permutation = function (p) {
@@ -5493,6 +5324,7 @@ MathLib.extend('permutation', 'listToCycle', function (list) {
   }
   return res;
 });
+
 // ## <a id="Point"></a>Point
 // The point implementation of MathLib makes calculations with point in
 // arbitrary dimensions possible.
@@ -5806,6 +5638,7 @@ MathLib.extend('point', 'J', (function () {
   var i = MathLib.complex(0, 1);
   return MathLib.point([i, 0, 1]);
 }()));
+
 // ## <a id="Polynomial"></a>Polynomial
 // The polynomial implementation of MathLib makes calculations with polynomials.
 // Both the coefficients and the arguments of a polynomial can be numbers,
@@ -6329,6 +6162,7 @@ MathLib.extend('polynomial', 'roots', function (roots) {
 //
 // *@returns {polynomial}*
 MathLib.extend('polynomial', 'zero', MathLib.polynomial([0]));
+
 // ## <a id="Set"></a>Set
 //
 // To generate the set {1, 2, 3, 4, 5} you simply need to type
@@ -6773,6 +6607,7 @@ MathLib.extend('set', 'fromTo', function (f, t, s) {
     return MathLib.set(arr);
   }
 });
+
   // ## Epilog
 
   // Add MathLib to the global namespace

@@ -17,7 +17,7 @@ test('.abs()', 7, function () {
 test('.arccos()', 4, function () {
   equal(MathLib.arccos(0), Math.PI / 2);
   equal(MathLib.arccos(1), 0);
-  equal(MathLib.isEqual(MathLib.arccos(MathLib.complex([3, 4])), MathLib.complex([0.9368124611557207, -2.305509031243476942041])), true);
+  equal(MathLib.arccos(MathLib.complex([3, 4])).isEqual(MathLib.complex([0.9368124611557207, -2.305509031243476942041])), true);
   deepEqual(MathLib.arccos(NaN), NaN);
 });
 

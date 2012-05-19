@@ -98,12 +98,9 @@ MathLib.MathML = function (MathMLString) {
   // Remove the Linebreaks ...
   MathMLString = MathMLString.replace(/\n/g, ''); 
 
-  // and the unnecessary whitespace
+  // ... and the unnecessary whitespace
   MathMLString = MathMLString.replace(/((?!cs)[^>]{2})>(\s)*</g, '$1><');
     
-    // .replace(/(?!cs)\w{2}>(\s)*</g, '><');
-
-
   // Gives an error in Firefox
   /* MathML = tokenizer.parseFromString(MathMLString, 'application/mathml+xml'); */
   MathMLdoc = tokenizer.parseFromString(MathMLString, 'application/xml');

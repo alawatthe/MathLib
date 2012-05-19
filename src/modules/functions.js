@@ -704,7 +704,7 @@ MathLib.plus = function () {
 // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
 // *@returns {boolean}*
 MathLib.isEqual = function () {
-  return flatten(toArray.apply(arguments)).every(function (a, i, arr) {
+  return flatten(Array.prototype.slice.apply(arguments)).every(function (a, i, arr) {
     if (a === arr[0]) {
       return true;
     }
