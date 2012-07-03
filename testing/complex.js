@@ -2,19 +2,40 @@ module('Complex');
 test('init (1 Array)', 3, function () {
   var c = MathLib.complex([1, 2]);
   equal(c.re, 1, 'Testing the real part');
-  equal(c.im, 2, 'Testing the complex part');
+  equal(c.im, 2, 'Testing the imaginary part');
   deepEqual(c.z, [1, 2], 'Testing the complete complex number');
 });
 
+test('init (1 Number)', 3, function () {
+  var c = MathLib.complex(3);
+  equal(c.re, 3, 'Testing the real part');
+  equal(c.im, 0, 'Testing the imaginary part');
+  deepEqual(c.z, [3, 0], 'Testing the complete complex number');
+});
 
 test('init (2 Numbers)', 3, function () {
   var c = MathLib.complex(3, 2);
   equal(c.re, 3 * Math.cos(2), 'Testing the real part');
-  equal(c.im, 3 * Math.sin(2), 'Testing the complex part');
+  equal(c.im, 3 * Math.sin(2), 'Testing the imaginary part');
   deepEqual(c.z, [3 * Math.cos(2), 3 * Math.sin(2)], 'Testing the complete complex number');
 });
 
 
+
+// Properties
+test('.constructor', 1, function () {
+  var c = MathLib.complex([3, 4]);
+  equal(c.constructor, MathLib.complex, 'Testing .constructor');
+});
+
+test('.type', 1, function () {
+  var c = MathLib.complex([3, 4]);
+  equal(c.type, 'complex', 'Testing .type');
+});
+
+
+
+// Methods
 test('.abs()', 1, function () {
   var c = MathLib.complex([3, 4]);
   equal(MathLib.isEqual(c.abs(), 5), true, 'Absolut value of the complex number');
@@ -232,24 +253,15 @@ test('.toString()', 5, function () {
 });
 
 
-test('constructor', 1, function () {
-  var c = MathLib.complex([3, 4]);
-  equal(c.constructor, MathLib.complex, 'Testing .constructor');
-});
 
+// Static Properties
 test('one', 1, function () {
   var c = MathLib.complex.one;
   deepEqual(c, MathLib.complex([1, 0]), '.one');
 });
 
-test('type', 1, function () {
-  var c = MathLib.complex([3, 4]);
-  equal(c.type, 'complex', 'Testing .type');
-});
 
 test('zero', 1, function () {
   var c = MathLib.complex.zero;
   deepEqual(c, MathLib.complex([0, 0]), '.zero');
 });
-
-

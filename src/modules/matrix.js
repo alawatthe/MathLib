@@ -115,7 +115,7 @@ MathLib.extendPrototype('matrix', 'cholesky', function () {
 // Copies the matrix
 //
 // *@returns {matrix}*
-MathLib.extendPrototype('matrix', 'copy', function (n) {
+MathLib.extendPrototype('matrix', 'copy', function () {
   return this.map(MathLib.copy);
 });
 
@@ -202,16 +202,144 @@ MathLib.extendPrototype('matrix', 'forEach', function (f) {
 });
 
 
+
+// ### Matrix.prototype.gershgorin()
+// Returns the Gershgorin circles of the matrix.
+//
+// *@returns {array}* Returns an array of circles
+MathLib.extendPrototype('matrix', 'gershgorin', function () {
+  var c = [],
+      rc = [],
+      rr = [],
+      res = [],
+      i, ii;
+
+  for (i=0, ii=this.rows; i<ii; i++) {
+    rc.push(0);
+    rr.push(0);
+  }
+
+  this.forEach(function(x, i, j) {
+    if (i === j) {
+      if (MathLib.is(x, 'complex')) {
+        c.push(x.toPoint());
+      }
+      else {
+        c.push([x, 0, 1]);
+      }
+    }
+    else {
+      rc[j] += MathLib.abs(x); 
+      rr[i] += MathLib.abs(x); 
+    }
+  });
+
+  for (i=0, ii=this.rows; i<ii; i++) {
+    res.push(MathLib.circle([c[i], 0, 1], Math.min(rc[i], rr[i])));
+  }
+
+  return res;
+});
+
+
+
+// ### Matrix.prototype.givens()
+// QR decomposition with the givens method.
+//
+// *@returns {[matrix, matrix]}*
+MathLib.extendPrototype('matrix', 'givens', function (){
+  var rows = this.rows,
+      cols = this.cols,
+      R = this.copy(),
+      Q = MathLib.matrix.identity(rows),
+      c, s, rho, i, j, k, ri, rj, qi, qj; 
+      
+  for (i=0; i<cols; i++) {
+    for (j=i+1; j<rows; j++) {
+
+      if (!MathLib.isZero(R[j][i])) {
+        // We can't use the sign function here, because we want the factor 
+        // to be 1 if A[i][i] is zero.
+        rho = (R[i][i]<0 ? -1 : 1) * MathLib.hypot(R[i][i],  R[j][i]);
+        c   = R[i][i] / rho;
+        s   = R[j][i] / rho;
+
+        // Apply the rotation
+        ri = [];
+        rj = [];
+        qi = [];
+        qj = [];
+        
+        // Multiply to R
+        for (k=0; k<cols; k++) {
+          ri.push(R[i][k]);
+          rj.push(R[j][k]);
+        }
+        for (k=0; k<cols; k++) {
+          R[i][k] = rj[k] * s + ri[k] * c;
+          R[j][k] = rj[k] * c - ri[k] * s;
+        }
+
+        // Multiply to Q
+        for (k=0; k<rows; k++) {
+          qi.push(Q[k][i]);
+          qj.push(Q[k][j]);
+        }
+        for (k=0; k<rows; k++) {
+          Q[k][i] =  qi[k] * c + qj[k] * s;
+          Q[k][j] = -qi[k] * s + qj[k] * c;
+        }
+      }
+    }
+  }
+
+  return [Q, R];
+});
+
+
+
 // ### Matrix.prototype.inverse()
 // Calculates the inverse matrix.
 //
 // *@returns {matrix}*
+// TODO: optimize this calculation. But hey, you shouldn't use inverse anyway ;-)
 MathLib.extendPrototype('matrix', 'inverse', function () {
   if (!this.isSquare() && this.determinant()) {
     return;
   }
   return this.adjugate().divide(this.determinant());
 });
+
+
+
+// ### Matrix.prototype.isBandMatrix()
+// Determines if the matrix is a band matrix.
+//
+// *@param {number}*  
+// *@param {number}*   
+// *@returns {boolean}*
+MathLib.extendPrototype('matrix', 'isBandMatrix', function (l, u) {
+  var i, j, ii, jj;
+  
+  if (arguments.length === 1) {
+    u = l;
+  }
+
+  return this.every(function (x, i, j) {
+    return (i-l <= j && i+u >= j) || MathLib.isZero(x);
+  });
+
+
+  // for (i = 0, ii = this.rows; i < ii; i++) {
+  //   for (j = 0, jj = this.cols; j < jj; j++) {
+  //     if (i - j < l && this[i][j] !== 0) {
+  //       return false;
+  //     }
+  //   }
+  // }
+  // return true;
+});
+
 
 
 // ### Matrix.prototype.isDiag()

@@ -590,12 +590,28 @@ MathLib.compare = function (a, b) {
 };
 
 MathLib.type = function (x) {
+  if (x === null) {
+    return 'null';
+  }
+  if (x === undefined) {
+    return 'undefined';
+  }
   return x.type ? x.type : Object.prototype.toString.call(x).slice(8, -1).toLowerCase();
 };
 
 MathLib.is = function (obj, type) {
-  return prototypes[type] ? prototypes[type].isPrototypeOf(obj) : typeof obj === type;
-  /* return Object.getPrototypeOf(new a.constructor(a)).isPrototypeOf(new b.constructor(b)) */
+  // if (MathLib.type(obj) === type) {
+  //   return true;
+  // }
+  // return prototypes[type] ? prototypes[type].isPrototypeOf(obj) : typeof obj === type;
+
+  do {
+    if (MathLib.type(obj) === type) {
+      return true;
+    }
+  }
+  while (obj = Object.getPrototypeOf(Object(obj)));
+  return false;
 };
 
 

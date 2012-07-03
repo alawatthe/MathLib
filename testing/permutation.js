@@ -5,6 +5,23 @@ test('init', 1, function () {
   equal(p.type, 'permutation', 'Testing .type');
 });
 
+
+
+// Properties
+test('.constructor', 1, function () {
+  var p = MathLib.permutation([[0, 1], [2, 3]]);
+  equal(p.constructor, MathLib.permutation, 'Testing .constructor');
+});
+
+
+test('.type', 1, function () {
+  var p = MathLib.permutation([[0, 1], [2, 3]]);
+  equal(p.type, 'permutation', 'Testing .type');
+});
+
+
+
+// Methods
 test('.applyTo()', 6, function () {
   var p = MathLib.permutation([[0, 1, 2], [0, 1, 2]]),
       r = MathLib.permutation([0, 2, 1]),
@@ -67,9 +84,8 @@ test('.toString()', 2, function () {
 
 
 
-
-
-test('.cycleToList()', 2, function () {
+// Static Methods
+test('cycleToList()', 2, function () {
   var p = [[0, 1, 2], [3, 4]],
       q = [[0, 1], [2, 3]];
   deepEqual(MathLib.permutation.cycleToList(p), [1, 2, 0, 4, 3], 'Testing .cycleToList()');
@@ -77,19 +93,7 @@ test('.cycleToList()', 2, function () {
 });
 
 
-test('.listToCycle()', 1, function () {
+test('listToCycle()', 1, function () {
   var p = [1, 2, 0, 4, 3];
   deepEqual(MathLib.permutation.listToCycle(p), [[0, 1, 2], [3, 4]], 'Testing .listToCycle()');
-});
-
-
-test('constructor', 1, function () {
-  var p = MathLib.permutation([[0, 1], [2, 3]]);
-  equal(p.constructor, MathLib.permutation, 'Testing .constructor');
-});
-
-
-test('type', 1, function () {
-  var p = MathLib.permutation([[0, 1], [2, 3]]);
-  equal(p.type, 'permutation', 'Testing .type');
 });

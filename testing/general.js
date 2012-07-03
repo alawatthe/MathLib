@@ -3,6 +3,8 @@ test("general", 1, function () {
   equal(typeof MathLib, 'object', "is MathLib defined");
 });
 
+
+// Static methods
 test('.abs()', 7, function () {
   equal(MathLib.abs(2), 2, 'MathLib.abs(2) should be 2');
   equal(MathLib.abs(-2), 2, 'MathLib.abs(-2) should be 2');
@@ -22,44 +24,44 @@ test('.arccos()', 4, function () {
 });
 
 
-test('arccot()', 3, function () {
+test('.arccot()', 3, function () {
   equal(MathLib.arccot(0), Math.PI / 2);
   equal(MathLib.arccot(1), Math.PI / 4);
   deepEqual(MathLib.arccot(NaN), NaN);
 });
 
 
-test('arccsc()', 2, function () {
+test('.arccsc()', 2, function () {
   equal(MathLib.arccsc(1), Math.PI / 2);
   deepEqual(MathLib.arccsc(NaN), NaN);
 });
 
 
-test('arcosh()', 2, function () {
+test('.arcosh()', 2, function () {
   equal(MathLib.arcosh(1), 0);
   deepEqual(MathLib.arcosh(NaN), NaN);
 });
 
 
-test('arcoth()', 2, function () {
+test('.arcoth()', 2, function () {
   equal(MathLib.arcoth(1), Infinity);
   deepEqual(MathLib.arcoth(NaN), NaN);
 });
 
 
-test('arcsch()', 2, function () {
+test('.arcsch()', 2, function () {
   equal(MathLib.arcsch(1), 0.8813735870195429);
   deepEqual(MathLib.arcsch(NaN), NaN);
 });
 
 
-test('arcsec()', 2, function () {
+test('.arcsec()', 2, function () {
   equal(MathLib.arcsec(1), 0);
   deepEqual(MathLib.arcsec(NaN), NaN);
 });
 
 
-test('arcsin()', 4, function () {
+test('.arcsin()', 4, function () {
   equal(MathLib.arcsin(0), 0);
   equal(MathLib.arcsin(1), Math.PI / 2);
   equal(MathLib.isEqual(MathLib.arcsin(MathLib.complex([3, 4])), MathLib.complex([0.6339838656391759, 2.305509031243476942041])), true);
@@ -67,28 +69,28 @@ test('arcsin()', 4, function () {
 });
 
 
-test('arctan()', 3, function () {
+test('.arctan()', 3, function () {
   equal(MathLib.arctan(0), 0);
   equal(MathLib.arctan(1), Math.PI / 4);
   deepEqual(MathLib.arctan(NaN), NaN);
 });
 
 
-test('arsech()', 3, function () {
+test('.arsech()', 3, function () {
   equal(MathLib.arsech(0), Infinity);
   equal(MathLib.arsech(1), 0);
   deepEqual(MathLib.arsech(NaN), NaN);
 });
 
 
-test('arsinh()', 3, function () {
+test('.arsinh()', 3, function () {
   equal(MathLib.arsinh(0), 0);
   equal(MathLib.arsinh(1), 0.8813735870195429);
   deepEqual(MathLib.arsinh(NaN), NaN);
 });
 
 
-test('artanh()', 3, function () {
+test('.artanh()', 3, function () {
   equal(MathLib.artanh(0), 0);
   equal(MathLib.artanh(1), Infinity);
   deepEqual(MathLib.artanh(NaN), NaN);
@@ -174,7 +176,7 @@ test('.fibonacci()', 1, function () {
 });
 
 
-test('floor()', 7, function () {
+test('.floor()', 7, function () {
   equal(MathLib.floor(1.5), 1, 'MathLib.floor(1.5) should be 1');
   equal(MathLib.floor(-1.5), -2, 'MathLib.floor(-1.5) should be -2');
   equal(MathLib.floor(+Infinity), +Infinity, 'MathLib.floor(+Infinity) should be +Infinity');
@@ -216,15 +218,23 @@ test('.inverse()', 2, function () {
 });
 
 
-test('.is()', 7, function () {
-  var p = MathLib.point([1, 2, 3]);
+test('.is()', 13, function () {
+  var p = MathLib.point([1, 2, 3]),
+      v = MathLib.vector([1, 2, 3]);
   equal(MathLib.is(2, 'number'), true);
   equal(MathLib.is(p, 'point'), true);
   equal(MathLib.is(p, 'vector'), true);
   equal(MathLib.is(p, 'array'), true);
   equal(MathLib.is(p, 'object'), true);
   equal(MathLib.is(p, 'line'), false);
+  equal(MathLib.is(v, 'vector'), true);
+  equal(MathLib.is(v, 'point'), false);
   equal(MathLib.is([], 'array'), true);
+  equal(MathLib.is(function(){}, 'function'), true);
+  equal(MathLib.is({}, 'null'), false);
+  equal(MathLib.is(null, 'null'), true);
+  equal(MathLib.is(undefined, 'undefined'), true);
+
 });
 
 
@@ -278,7 +288,7 @@ test('.isZero()', 2, function () {
 });
 
 
-test('ln()', 8, function () {
+test('.ln()', 8, function () {
   equal(MathLib.ln(1), 0, 'MathLib.ln(1) should be 0');
   equal(MathLib.ln(Math.E), 1, 'MathLib.ln(Math.E) should be 1');
   equal(MathLib.ln(+Infinity), +Infinity, 'MathLib.ln(+Infinity) should be +Infinity');
@@ -408,14 +418,14 @@ test('pow()', 65, function () {
 });
 
 
-test('risingFactorial()', 3, function () {
+test('.risingFactorial()', 3, function () {
   equal(MathLib.risingFactorial(2, 0), 1);
   equal(MathLib.risingFactorial(2, 3), 24);
   equal(MathLib.risingFactorial(3, 4, 0.5), 189);
 });
 
 
-test('round()', 7, function () {
+test('.round()', 7, function () {
   equal(MathLib.round(1.5), 2, 'MathLib.round(1.5) should be 2');
   equal(MathLib.round(-1.5), -1, 'MathLib.round(-1.5) should be -1');
   equal(MathLib.round(+Infinity), +Infinity, 'MathLib.round(+Infinity) should be +Infinity');
@@ -426,7 +436,7 @@ test('round()', 7, function () {
 });
 
 
-test('sin()', 6, function () {
+test('.sin()', 6, function () {
   equal(MathLib.sin(Math.PI / 2), 1, 'MathLib.sin(Math.PI / 2) should be 1');
   equal(MathLib.isPosZero(MathLib.sin(+0)), true, 'MathLib.sin(+0) should be +0');
   equal(MathLib.isNegZero(MathLib.sin(-0)), true, 'MathLib.sin(-0) should be -0');
@@ -459,8 +469,16 @@ test('tan()', 7, function () {
 });
 
 
-test('type', 3, function () {
-  equal(MathLib.type(42), 'number');
-  equal(MathLib.type([6, 3]), 'array');
-  equal(MathLib.type(MathLib.complex([2, 3])), 'complex');
+test('.type()', 11, function () {
+  equal(MathLib.type(MathLib.complex([2, 3])), 'complex', "MathLib.type(MathLib.complex([2, 3])) = 'complex'");
+  equal(MathLib.type(42), 'number', "MathLib.type(42) = 'number'");
+  equal(MathLib.type(['ar', 'ray']), 'array', "MathLib.type(['ar', 'ray']) = 'array'");
+  equal(MathLib.type({ob: 'ject'}), 'object', "MathLib.type({ob: 'ject'}) = 'object'");
+  equal(MathLib.type(true), 'boolean', "MathLib.type(true) = 'boolean'");
+  equal(MathLib.type('string'), 'string', "MathLib.type('string') = 'string'");
+  equal(MathLib.type(function(){}), 'function', "MathLib.type(function(){}) = 'function'");
+  equal(MathLib.type(/regexp/), 'regexp', "MathLib.type(/regexp/) = 'regexp'");
+  equal(MathLib.type(document.getElementsByTagName('div')[0]), 'htmldivelement', "MathLib.type(document.getElementsByTagName('div')[0]) = 'htmldivelement'");
+  equal(MathLib.type(undefined), 'undefined', "MathLib.type(undefined) = 'undefined'");
+  equal(MathLib.type(null), 'null', "MathLib.type(null) = 'null'");
 });

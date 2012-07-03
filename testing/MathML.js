@@ -27,6 +27,22 @@ test('whitespaces', 2, function () {
 });
 
 
+
+// Properties
+test('.constructor', 1, function () {
+  var m = MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><cn type="complex-cartesian">3<sep/>4</cn></math>');
+  deepEqual(m.constructor, MathLib.MathML, 'Testing .constructor');
+});
+
+
+test('.type', 1, function () {
+  var m = MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><cn type="complex-cartesian">3<sep/>4</cn></math>');
+  equal(m.type, 'MathML', 'Testing .type');
+});
+
+
+
+// Methods
 test('.parse() boolean', 8, function () {
   equal(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><and/><true/><true/></apply></math>').parse(), true, '</and> true true');
   equal(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><and/><true/><false/><true/></apply></math>').parse(), false, '</and> true false true');
@@ -74,7 +90,6 @@ test('.parse() function constructing', 6, function () {
 });
 
 
-
 test('.parse() function evaluation', 5, function () {
   MathLib.MathML.variables.n = 42;
 
@@ -84,8 +99,6 @@ test('.parse() function evaluation', 5, function () {
   deepEqual(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><ln/><cn>42</cn></apply></math>').parse(), Math.log(42), '.parse() apply');
   deepEqual(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><factorial/><cn>6</cn></apply></math>').parse(), 720, 'factorial');
 });
-
-
 
 
 test('.parse() matrix', 2, function () {
@@ -101,6 +114,7 @@ test('.parse() set', 4, function () {
   deepEqual(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><set><cs>A</cs><cs>B</cs><cs> </cs></set></math>').parse(), MathLib.set(['A', 'B', ' ']), '.parse() set');
 });
 
+
 test('.parse() vector', 1, function () {
   deepEqual(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><vector><cn>1</cn><cn>2</cn><cn>3</cn></vector></math>').parse(), MathLib.vector([1, 2, 3]), '.parse() vector');
 });
@@ -108,38 +122,15 @@ test('.parse() vector', 1, function () {
   // deepEqual(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><cn>34</cn><cn>16</cn></apply></math>').parse(), 18, 'binary minus');
   // deepEqual(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><cn>34</cn></apply></math>').parse(), -34, 'unary minus');
 
-
-
-test('constructor', 1, function () {
-  var m = MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><cn type="complex-cartesian">3<sep/>4</cn></math>');
-  deepEqual(m.constructor, MathLib.MathML, 'Testing .constructor');
-});
-
-/*
-x^2 + x^3
-<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>x</bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><apply><power/><ci>x</ci><cn>2</cn></apply><apply><power/><ci>x</ci><cn>3</cn></apply></apply></lambda></math>
-
-sin(x)^2+cos(x)^2
-<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>x</bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><apply><power/><apply><sin/><ci>x</ci></apply><cn>2</cn></apply><apply><power/><apply><cos/><ci>x</ci></apply><cn>2</cn></apply></apply></lambda></math>
-
-*/
-
-test('toString', 2, function (){
+test('.toString()', 2, function (){
   equal(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>x</bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><apply><power/><ci>x</ci><cn>2</cn></apply><apply><power/><ci>x</ci><cn>3</cn></apply></apply></lambda></math>').toString(), 'x^2+x^3');
   equal(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>x</bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><apply><power/><apply><sin/><ci>x</ci></apply><cn>2</cn></apply><apply><power/><apply><cos/><ci>x</ci></apply><cn>2</cn></apply></apply></lambda></math>').toString(), 'sin(x)^2+cos(x)^2');
 });
 
 
 
-
-
-test('type', 1, function () {
-  var m = MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><cn type="complex-cartesian">3<sep/>4</cn></math>');
-  equal(m.type, 'MathML', 'Testing .type');
-});
-
-
-// I need a better test...
+// Static methods
+// TODO: test if the result is right
 test('.isSupported()', 1, function () {
   var supp = MathLib.MathML.isSupported();
   ok(supp === true || supp === false, '.isEqual()');

@@ -9,12 +9,29 @@ test('init', 4, function () {
 });
 
 
+
+// Properties
+test('.constructor', 1, function () {
+  var s = MathLib.set([1, 2, 3, 4]);
+  equal(s.constructor, MathLib.set, 'Testing .constructor');
+});
+
+
+test('.type', 1, function () {
+  var s = MathLib.set([1, 2, 3, 4]);
+  equal(s.type, 'set', 'Testing .type');
+});
+
+
+
+// Methods
 test('.arithMean()', 2, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true);
   equal(s.arithMean(),  26 / 5, 'Testing .arithMean() (set)');
   equal(m.arithMean(),  31 / 7, 'Testing .arithMean() (multiset)');
 });
+
 
 test('.compare()', 3, function () {
   var s = MathLib.set([1, 2, 3, 4]),
@@ -24,6 +41,7 @@ test('.compare()', 3, function () {
   deepEqual(s.compare(m),  -1, '.compare()');
   deepEqual(m.compare(n),  -1, '.compare()');
 });
+
 
 test('.geoMean()', 2, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
@@ -144,6 +162,7 @@ test('.plus()', 3, function () {
   deepEqual(s.plus(m),  [2, 3, 4, 5, 6, 7, 8, 9, 10], 'Testing .plus(set) (set)');
 });
 
+
 test('.powerset()', 1, function () {
   var s = MathLib.set,
       m = MathLib.set([1, 2, 3]),
@@ -251,17 +270,9 @@ test('.xor()', 1, function () {
   deepEqual(s.xor(m),  [2, 4, 5, 7], 'Testing .xor() (set)');
 });
 
+
+
+// Static methods
 test('fromTo()', 1, function () {
   deepEqual(MathLib.set.fromTo(1, 5, 2),  [1, 3, 5], 'Testing MathLib.set.fromTo()');
 });
-
-test('constructor', 1, function () {
-  var s = MathLib.set([1, 2, 3, 4]);
-  equal(s.constructor, MathLib.set, 'Testing .constructor');
-});
-
-test('type', 1, function () {
-  var s = MathLib.set([1, 2, 3, 4]);
-  equal(s.type, 'set', 'Testing .type');
-});
-

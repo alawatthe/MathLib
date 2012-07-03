@@ -16,11 +16,21 @@
 prototypes.complex = {};
 MathLib.complex = function () {
   var z, re, im;
-  if (arguments.length === 1 && Array.isArray(arguments[0]) && arguments[0].length === 2) {
-    z = arguments[0];
-    re = arguments[0][0];
-    im = arguments[0][1];
+  if (arguments.length === 1) {
+    // Array of form [re, im]
+    if (Array.isArray(arguments[0]) && arguments[0].length === 2) {
+      z = arguments[0];
+      re = arguments[0][0];
+      im = arguments[0][1];
+    }
+    // single numbers n convert to n + 0*i
+    else {
+      z = [arguments[0], 0];
+      re = arguments[0];
+      im = 0;
+    }
   }
+  // two numbers are interpreted as absolute value and argument.
   else if (arguments.length === 2) {
     re = arguments[0] * Math.cos(arguments[1]);
     im = arguments[0] * Math.sin(arguments[1]);
@@ -50,12 +60,6 @@ MathLib.extendPrototype('complex', 'constructor', MathLib.complex);
 
 // Set the type property to 'complex'.
 MathLib.extendPrototype('complex', 'type', 'complex');
-
-
-// Returns the argument (= the angle) of the complex number
-MathLib.extendPrototype('complex', 'argument', function (x) {
-    return (Math.atan2(this.im, this.re) + 2 * Math.PI) % (2*Math.PI);
-});
 
 
 // Returns the absolute value of the number
@@ -96,6 +100,12 @@ MathLib.extendPrototype('complex', 'arcsin', function () {
 MathLib.extendPrototype('complex', 'arctan', function () {
   var z = MathLib.complex(-this.im, this.re);
   return MathLib.times(MathLib.complex([0, 0.5]), MathLib.ln(MathLib.divide( MathLib.plus(1, z), MathLib.minus(1, z))));
+});
+
+
+// Returns the argument (= the angle) of the complex number
+MathLib.extendPrototype('complex', 'argument', function (x) {
+    return (Math.atan2(this.im, this.re) + 2 * Math.PI) % (2*Math.PI);
 });
 
 

@@ -52,7 +52,7 @@ module.exports = function(grunt) {
         src: ['<banner:meta.banner>',
               '<file_strip_banner:src/head.js>',
               '<file_strip_banner:src/modules/MathML.js>',
-              '<file_strip_banner:src/modules/functions.js>',
+              '<file_strip_banner:src/modules/functn.js>',
               '<file_strip_banner:src/modules/screen.js>',
               '<file_strip_banner:src/modules/canvas.js>',
               '<file_strip_banner:src/modules/svg.js>',
@@ -70,11 +70,11 @@ module.exports = function(grunt) {
         dest: 'build/<%= pkg.name %>.js'
       },
       tests: {
-        src: ['<banner:meta.banner>',
+        src: ['<banner:meta.banner_min>',
               '<file_strip_banner:testing/general.js>',
               '<file_strip_banner:testing/circle.js>',
               '<file_strip_banner:testing/complex.js>',
-              '<file_strip_banner:testing/functions.js>',
+              '<file_strip_banner:testing/functn.js>',
               '<file_strip_banner:testing/line.js>',
               '<file_strip_banner:testing/MathML.js>',
               '<file_strip_banner:testing/matrix.js>',

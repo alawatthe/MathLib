@@ -6,13 +6,22 @@ test("init", 2, function () {
 });
 
 
-test('.dyadicProduct()', 1, function () {
-  var v = MathLib.vector([1, 2, 3]),
-      w = MathLib.vector([2, 4, 6]);
-  deepEqual(v.dyadicProduct(w), [[2, 4, 6], [4, 8, 12], [6, 12, 18]], ".dyadicProduct()");
+
+// Properties
+test('.constructor', 1, function () {
+  var v = MathLib.vector([1, 2, 3]);
+  equal(v.constructor, MathLib.vector, 'Testing .constructor');
 });
 
 
+test('.type', 1, function () {
+  var v = MathLib.vector([1, 2, 3]);
+  equal(v.type, 'vector', 'Testing .type');
+});
+
+
+
+// Methods
 test('.isEqual()', 3, function () {
   var v = MathLib.vector([0, 1, 2]),
       w = MathLib.vector([0, 1, 2]),
@@ -45,17 +54,51 @@ test(".map()", 2, function () {
 });
 
 
-test('.scalarproduct()', 1, function () {
+test('.minus()', 1, function () {
   var v = MathLib.vector([3, 1, 4]),
       w = MathLib.vector([1, 5, 9]);
-  equal(v.scalarproduct(w), 44, ".scalarproduct()");
+  equal(v.minus(w).isEqual(MathLib.vector([2, -4, -5])), true, ".minus()");
+});
+
+
+test('.neagtive()', 1, function () {
+  var v = MathLib.vector([3, 1, 4]);
+  equal(v.negative().isEqual(MathLib.vector([-3, -1, -4])), true, ".negative()");
+});
+
+
+test('.normalize()', 1, function () {
+  var v = MathLib.vector([2, 3, 6]);
+  equal(v.normalize().isEqual(MathLib.vector([2/7, 3/7, 6/7])), true, ".normalize()");
+});
+
+
+test('.outerProduct()', 1, function () {
+  var v = MathLib.vector([3, 1, 4]),
+      w = MathLib.vector([1, 5, 9]);
+  equal(v.outerProduct(w).isEqual(MathLib.matrix([[3, 15, 27], [1, 5, 9], [4, 20, 36]])), true, ".outerProduct()");
+});
+
+
+test('.plus()', 1, function () {
+  var v = MathLib.vector([3, 1, 4]),
+      w = MathLib.vector([1, 5, 9]);
+  equal(v.plus(w).isEqual(MathLib.vector([4, 6, 13])), true, ".plus()");
+});
+
+
+test('.scalarProduct()', 1, function () {
+  var v = MathLib.vector([3, 1, 4]),
+      w = MathLib.vector([1, 5, 9]);
+  equal(v.scalarProduct(w), 44, ".scalarProduct()");
 });
 
 
 test('.size()', 1, function () {
-  var v = MathLib.vector([1, 2, 3]);
-  equal(v.size(), Math.sqrt(14), ".size()");
+  var v = MathLib.vector([1, 2, 2]);
+  equal(v.size(), 3, ".size()");
 });
+
 
 test('.times()', 2, function () {
   var v = MathLib.vector([1, 2, 3]),
@@ -63,6 +106,13 @@ test('.times()', 2, function () {
   deepEqual(v.times(3), MathLib.vector([3, 6, 9]), ".times(number)");
   deepEqual(v.times(m), MathLib.vector([30, 36, 42]), ".times(matrix)");
 });
+
+
+test('.toArray()', 1, function () {
+  var v = MathLib.vector([1, 2, 3]);
+  equal(MathLib.type(v.toArray()), 'array', ".toArray()");
+});
+
 
 test('.toContentMathML()', 1, function () {
   var v = MathLib.vector([1, 2, 3]);
@@ -96,19 +146,8 @@ test('.vectorproduct()', 1, function () {
 
 
 
-
-test('constructor', 1, function () {
-  var v = MathLib.vector([1, 2, 3]);
-  equal(v.constructor, MathLib.vector, 'Testing .constructor');
-});
-
-test('type', 1, function () {
-  var v = MathLib.vector([1, 2, 3]);
-  equal(v.type, 'vector', 'Testing .type');
-});
-
-
-test('zero', 1, function () {
+// Static methods
+test('zero()', 1, function () {
   var v = MathLib.vector.zero(3);
   equal(v.isZero(), true, 'testing zero vector');
 });

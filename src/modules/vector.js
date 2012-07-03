@@ -25,7 +25,6 @@ MathLib.vector = function (vector) {
     }
   }
 
-
   vector[proto] = prototypes.vector;
   /*Object.defineProperties(vector, {});*/
   return vector;
@@ -46,21 +45,6 @@ MathLib.extendPrototype('vector', 'type', 'vector');
 // *@returns {vector}*
 MathLib.extendPrototype('vector', 'conjugate', function () {
   return MathLib.vector(this.map(MathLib.conjugate));
-});
-
-
-
-// ### Vector.prototype.dyadicProduct()
-// Calculates the dyadic product of two vectors.
-//
-// *@param {vector}*  
-// *@returns {boolean}*
-MathLib.extendPrototype('vector', 'dyadicProduct', function (v) {
-  return MathLib.matrix(this.map(function (x) {
-    return v.map(function (y) {
-      return MathLib.times(x, y);
-    });
-  }));
 });
 
 
@@ -128,7 +112,22 @@ MathLib.extendPrototype('vector', 'negative', function () {
 //
 // *@returns {vector}*
 MathLib.extendPrototype('vector', 'normalize', function () {
-  return this.times(1 / this.size);
+  return this.times(1 / this.size());
+});
+
+
+
+// ### Vector.prototype.outerProduct()
+// Calculates the outer product of two vectors.
+//
+// *@param {vector}*  
+// *@returns {matrix}*
+MathLib.extendPrototype('vector', 'outerProduct', function (v) {
+  return MathLib.matrix(this.map(function (x) {
+    return v.map(function (y) {
+      return MathLib.times(x, y);
+    });
+  }));
 });
 
 
@@ -136,6 +135,7 @@ MathLib.extendPrototype('vector', 'normalize', function () {
 // ### Vector.prototype.plus()
 // Calculates the sum of two vectors
 //
+// *@param {vector}*  
 // *@returns {vector}*
 MathLib.extendPrototype('vector', 'plus', function (v) {
   if (this.length === v.length) {
@@ -147,17 +147,15 @@ MathLib.extendPrototype('vector', 'plus', function (v) {
 
 
 
-// ### Vector.prototype.scalarproduct()
-// Calculates the scalarproduct of two vectors
+// ### Vector.prototype.scalarProduct()
+// Calculates the scalar product of two vectors
 //
 // *@param {vector}*  
 // *@returns {number|complex}*
-MathLib.extendPrototype('vector', 'scalarproduct', function (v) {
-  var res = 0, i, ii;
-  for (i = 0, ii = this.length; i < ii; i++) {
-    res = MathLib.plus(res, MathLib.times(this[i], v[i]));
-  }
-  return res;
+MathLib.extendPrototype('vector', 'scalarProduct', function (v) {
+  return this.reduce(function (old, cur, i, w) {
+    return MathLib.plus(old, MathLib.times(w[i], v[i]));
+  }, 0);
 });
 
 
@@ -168,7 +166,7 @@ MathLib.extendPrototype('vector', 'scalarproduct', function (v) {
 //
 // *@returns {number}*
 MathLib.extendPrototype('vector', 'size', function () {
-  return Math.sqrt(this.conjugate().scalarproduct(this));
+  return MathLib.hypot.apply(null, this);
 });
 
 
@@ -191,7 +189,7 @@ MathLib.extendPrototype('vector', 'times', function (n) {
   if (n.type === "matrix") {
     res = n.toColVectors();
     for (i = 0, ii = res.length; i < ii; i++) {
-      res[i] = this.scalarproduct(res[i]);
+      res[i] = this.scalarProduct(res[i]);
     }
     return MathLib.vector(res);
   }

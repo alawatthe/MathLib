@@ -7,14 +7,30 @@ test("init", 2, function () {
 });
 
 
-test('area', 1, function () {
+
+// Properties
+test('.constructor', 1, function () {
+  var c = MathLib.circle(MathLib.point([2, 4, 2]), 2);
+  equal(c.constructor, MathLib.circle, 'Testing .constructor');
+});
+
+
+test('.type', 1, function () {
+  var c = MathLib.circle(MathLib.point([2, 4, 2]), 2);
+  equal(c.type, 'circle', 'Testing .type');
+});
+
+
+
+// Methods
+test('.area()', 1, function () {
   var p = MathLib.point(1, 2),
       circle = MathLib.circle(p, 2);
   equal(MathLib.isEqual(circle.area(), 4 * MathLib.pi), true, ".area()");
 });
 
 
-test('circumference', 1, function () {
+test('.circumference()', 1, function () {
   var p = MathLib.point(1, 2),
       circle = MathLib.circle(p, 2);
   equal(MathLib.isEqual(circle.circumference(), 4 * MathLib.pi), true, ".circumference()");
@@ -52,17 +68,4 @@ test(".reflectAt()", 2, function () {
 
   equal(newcircle.radius, 2, "Checking the radius.");
   deepEqual(newcircle.center, MathLib.point(5, 12), "Checking the center.");
-});
-
-
-
-test('constructor', 1, function () {
-  var c = MathLib.circle(MathLib.point([2, 4, 2]), 2);
-  equal(c.constructor, MathLib.circle, 'Testing .constructor');
-});
-
-
-test('type', 1, function () {
-  var c = MathLib.circle(MathLib.point([2, 4, 2]), 2);
-  equal(c.type, 'circle', 'Testing .type');
 });

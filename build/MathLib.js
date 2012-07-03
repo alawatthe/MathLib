@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.0 - 2012-05-20  
+// v0.3.1 - 2012-07-04  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -68,7 +68,7 @@
 
 
   MathLib = {
-    version:          '0.3.0',
+    version:          '0.3.1',
     apery:            1.2020569031595942,
     e:                Math.E,
     // Number.EPSILON is probably coming in ES6
@@ -86,8 +86,8 @@
   };
 
   prototypes = {
-    func: Object.getPrototypeOf(function (){}),
     array: Object.getPrototypeOf([]),
+    func: Object.getPrototypeOf(function (){}),
     object: Object.getPrototypeOf({})
   };
 
@@ -1239,12 +1239,28 @@ MathLib.compare = function (a, b) {
 };
 
 MathLib.type = function (x) {
+  if (x === null) {
+    return 'null';
+  }
+  if (x === undefined) {
+    return 'undefined';
+  }
   return x.type ? x.type : Object.prototype.toString.call(x).slice(8, -1).toLowerCase();
 };
 
 MathLib.is = function (obj, type) {
-  return prototypes[type] ? prototypes[type].isPrototypeOf(obj) : typeof obj === type;
-  /* return Object.getPrototypeOf(new a.constructor(a)).isPrototypeOf(new b.constructor(b)) */
+  // if (MathLib.type(obj) === type) {
+  //   return true;
+  // }
+  // return prototypes[type] ? prototypes[type].isPrototypeOf(obj) : typeof obj === type;
+
+  do {
+    if (MathLib.type(obj) === type) {
+      return true;
+    }
+  }
+  while (obj = Object.getPrototypeOf(Object(obj)));
+  return false;
 };
 
 
@@ -3127,7 +3143,6 @@ MathLib.vector = function (vector) {
     }
   }
 
-
   vector[proto] = prototypes.vector;
   /*Object.defineProperties(vector, {});*/
   return vector;
@@ -3148,21 +3163,6 @@ MathLib.extendPrototype('vector', 'type', 'vector');
 // *@returns {vector}*
 MathLib.extendPrototype('vector', 'conjugate', function () {
   return MathLib.vector(this.map(MathLib.conjugate));
-});
-
-
-
-// ### Vector.prototype.dyadicProduct()
-// Calculates the dyadic product of two vectors.
-//
-// *@param {vector}*  
-// *@returns {boolean}*
-MathLib.extendPrototype('vector', 'dyadicProduct', function (v) {
-  return MathLib.matrix(this.map(function (x) {
-    return v.map(function (y) {
-      return MathLib.times(x, y);
-    });
-  }));
 });
 
 
@@ -3230,7 +3230,22 @@ MathLib.extendPrototype('vector', 'negative', function () {
 //
 // *@returns {vector}*
 MathLib.extendPrototype('vector', 'normalize', function () {
-  return this.times(1 / this.size);
+  return this.times(1 / this.size());
+});
+
+
+
+// ### Vector.prototype.outerProduct()
+// Calculates the outer product of two vectors.
+//
+// *@param {vector}*  
+// *@returns {matrix}*
+MathLib.extendPrototype('vector', 'outerProduct', function (v) {
+  return MathLib.matrix(this.map(function (x) {
+    return v.map(function (y) {
+      return MathLib.times(x, y);
+    });
+  }));
 });
 
 
@@ -3238,6 +3253,7 @@ MathLib.extendPrototype('vector', 'normalize', function () {
 // ### Vector.prototype.plus()
 // Calculates the sum of two vectors
 //
+// *@param {vector}*  
 // *@returns {vector}*
 MathLib.extendPrototype('vector', 'plus', function (v) {
   if (this.length === v.length) {
@@ -3249,17 +3265,15 @@ MathLib.extendPrototype('vector', 'plus', function (v) {
 
 
 
-// ### Vector.prototype.scalarproduct()
-// Calculates the scalarproduct of two vectors
+// ### Vector.prototype.scalarProduct()
+// Calculates the scalar product of two vectors
 //
 // *@param {vector}*  
 // *@returns {number|complex}*
-MathLib.extendPrototype('vector', 'scalarproduct', function (v) {
-  var res = 0, i, ii;
-  for (i = 0, ii = this.length; i < ii; i++) {
-    res = MathLib.plus(res, MathLib.times(this[i], v[i]));
-  }
-  return res;
+MathLib.extendPrototype('vector', 'scalarProduct', function (v) {
+  return this.reduce(function (old, cur, i, w) {
+    return MathLib.plus(old, MathLib.times(w[i], v[i]));
+  }, 0);
 });
 
 
@@ -3270,7 +3284,7 @@ MathLib.extendPrototype('vector', 'scalarproduct', function (v) {
 //
 // *@returns {number}*
 MathLib.extendPrototype('vector', 'size', function () {
-  return Math.sqrt(this.conjugate().scalarproduct(this));
+  return MathLib.hypot.apply(null, this);
 });
 
 
@@ -3293,7 +3307,7 @@ MathLib.extendPrototype('vector', 'times', function (n) {
   if (n.type === "matrix") {
     res = n.toColVectors();
     for (i = 0, ii = res.length; i < ii; i++) {
-      res[i] = this.scalarproduct(res[i]);
+      res[i] = this.scalarProduct(res[i]);
     }
     return MathLib.vector(res);
   }
@@ -3525,11 +3539,21 @@ MathLib.extendPrototype('circle', 'toMatrix', function () {
 prototypes.complex = {};
 MathLib.complex = function () {
   var z, re, im;
-  if (arguments.length === 1 && Array.isArray(arguments[0]) && arguments[0].length === 2) {
-    z = arguments[0];
-    re = arguments[0][0];
-    im = arguments[0][1];
+  if (arguments.length === 1) {
+    // Array of form [re, im]
+    if (Array.isArray(arguments[0]) && arguments[0].length === 2) {
+      z = arguments[0];
+      re = arguments[0][0];
+      im = arguments[0][1];
+    }
+    // single numbers n convert to n + 0*i
+    else {
+      z = [arguments[0], 0];
+      re = arguments[0];
+      im = 0;
+    }
   }
+  // two numbers are interpreted as absolute value and argument.
   else if (arguments.length === 2) {
     re = arguments[0] * Math.cos(arguments[1]);
     im = arguments[0] * Math.sin(arguments[1]);
@@ -3559,12 +3583,6 @@ MathLib.extendPrototype('complex', 'constructor', MathLib.complex);
 
 // Set the type property to 'complex'.
 MathLib.extendPrototype('complex', 'type', 'complex');
-
-
-// Returns the argument (= the angle) of the complex number
-MathLib.extendPrototype('complex', 'argument', function (x) {
-    return (Math.atan2(this.im, this.re) + 2 * Math.PI) % (2*Math.PI);
-});
 
 
 // Returns the absolute value of the number
@@ -3605,6 +3623,12 @@ MathLib.extendPrototype('complex', 'arcsin', function () {
 MathLib.extendPrototype('complex', 'arctan', function () {
   var z = MathLib.complex(-this.im, this.re);
   return MathLib.times(MathLib.complex([0, 0.5]), MathLib.ln(MathLib.divide( MathLib.plus(1, z), MathLib.minus(1, z))));
+});
+
+
+// Returns the argument (= the angle) of the complex number
+MathLib.extendPrototype('complex', 'argument', function (x) {
+    return (Math.atan2(this.im, this.re) + 2 * Math.PI) % (2*Math.PI);
 });
 
 
@@ -4178,7 +4202,7 @@ MathLib.extendPrototype('matrix', 'cholesky', function () {
 // Copies the matrix
 //
 // *@returns {matrix}*
-MathLib.extendPrototype('matrix', 'copy', function (n) {
+MathLib.extendPrototype('matrix', 'copy', function () {
   return this.map(MathLib.copy);
 });
 
@@ -4265,16 +4289,144 @@ MathLib.extendPrototype('matrix', 'forEach', function (f) {
 });
 
 
+
+// ### Matrix.prototype.gershgorin()
+// Returns the Gershgorin circles of the matrix.
+//
+// *@returns {array}* Returns an array of circles
+MathLib.extendPrototype('matrix', 'gershgorin', function () {
+  var c = [],
+      rc = [],
+      rr = [],
+      res = [],
+      i, ii;
+
+  for (i=0, ii=this.rows; i<ii; i++) {
+    rc.push(0);
+    rr.push(0);
+  }
+
+  this.forEach(function(x, i, j) {
+    if (i === j) {
+      if (MathLib.is(x, 'complex')) {
+        c.push(x.toPoint());
+      }
+      else {
+        c.push([x, 0, 1]);
+      }
+    }
+    else {
+      rc[j] += MathLib.abs(x); 
+      rr[i] += MathLib.abs(x); 
+    }
+  });
+
+  for (i=0, ii=this.rows; i<ii; i++) {
+    res.push(MathLib.circle([c[i], 0, 1], Math.min(rc[i], rr[i])));
+  }
+
+  return res;
+});
+
+
+
+// ### Matrix.prototype.givens()
+// QR decomposition with the givens method.
+//
+// *@returns {[matrix, matrix]}*
+MathLib.extendPrototype('matrix', 'givens', function (){
+  var rows = this.rows,
+      cols = this.cols,
+      R = this.copy(),
+      Q = MathLib.matrix.identity(rows),
+      c, s, rho, i, j, k, ri, rj, qi, qj; 
+      
+  for (i=0; i<cols; i++) {
+    for (j=i+1; j<rows; j++) {
+
+      if (!MathLib.isZero(R[j][i])) {
+        // We can't use the sign function here, because we want the factor 
+        // to be 1 if A[i][i] is zero.
+        rho = (R[i][i]<0 ? -1 : 1) * MathLib.hypot(R[i][i],  R[j][i]);
+        c   = R[i][i] / rho;
+        s   = R[j][i] / rho;
+
+        // Apply the rotation
+        ri = [];
+        rj = [];
+        qi = [];
+        qj = [];
+        
+        // Multiply to R
+        for (k=0; k<cols; k++) {
+          ri.push(R[i][k]);
+          rj.push(R[j][k]);
+        }
+        for (k=0; k<cols; k++) {
+          R[i][k] = rj[k] * s + ri[k] * c;
+          R[j][k] = rj[k] * c - ri[k] * s;
+        }
+
+        // Multiply to Q
+        for (k=0; k<rows; k++) {
+          qi.push(Q[k][i]);
+          qj.push(Q[k][j]);
+        }
+        for (k=0; k<rows; k++) {
+          Q[k][i] =  qi[k] * c + qj[k] * s;
+          Q[k][j] = -qi[k] * s + qj[k] * c;
+        }
+      }
+    }
+  }
+
+  return [Q, R];
+});
+
+
+
 // ### Matrix.prototype.inverse()
 // Calculates the inverse matrix.
 //
 // *@returns {matrix}*
+// TODO: optimize this calculation. But hey, you shouldn't use inverse anyway ;-)
 MathLib.extendPrototype('matrix', 'inverse', function () {
   if (!this.isSquare() && this.determinant()) {
     return;
   }
   return this.adjugate().divide(this.determinant());
 });
+
+
+
+// ### Matrix.prototype.isBandMatrix()
+// Determines if the matrix is a band matrix.
+//
+// *@param {number}*  
+// *@param {number}*   
+// *@returns {boolean}*
+MathLib.extendPrototype('matrix', 'isBandMatrix', function (l, u) {
+  var i, j, ii, jj;
+  
+  if (arguments.length === 1) {
+    u = l;
+  }
+
+  return this.every(function (x, i, j) {
+    return (i-l <= j && i+u >= j) || MathLib.isZero(x);
+  });
+
+
+  // for (i = 0, ii = this.rows; i < ii; i++) {
+  //   for (j = 0, jj = this.cols; j < jj; j++) {
+  //     if (i - j < l && this[i][j] !== 0) {
+  //       return false;
+  //     }
+  //   }
+  // }
+  // return true;
+});
+
 
 
 // ### Matrix.prototype.isDiag()

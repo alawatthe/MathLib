@@ -24,7 +24,7 @@
 
 
   MathLib = {
-    version:          '0.3.0',
+    version:          '0.3.1',
     apery:            1.2020569031595942,
     e:                Math.E,
     // Number.EPSILON is probably coming in ES6
@@ -42,8 +42,8 @@
   };
 
   prototypes = {
-    func: Object.getPrototypeOf(function (){}),
     array: Object.getPrototypeOf([]),
+    func: Object.getPrototypeOf(function (){}),
     object: Object.getPrototypeOf({})
   };
 

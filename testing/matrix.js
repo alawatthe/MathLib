@@ -1,6 +1,3 @@
-//=======================================
-// Matrix
-//=======================================
 module('Matrix');
 test('init', 2, function () {
   var m = MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
@@ -9,6 +6,22 @@ test('init', 2, function () {
 });
 
 
+
+// Properties
+test('.constructor', 1, function () {
+  var m = MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+  equal(m.constructor, MathLib.matrix, 'Testing .constructor');
+});
+
+
+test('.type', 1, function () {
+  var m = MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+  equal(m.type, 'matrix', 'Testing .type');
+});
+
+
+
+// Methods
 test('.adjugate()', 1, function () {
   var c = MathLib.complex,
       m = MathLib.matrix([[-3, 2, -5], [-1, 0, -3], [3, -4, 1]]),
@@ -31,7 +44,7 @@ test('.cholesky()', 1, function () {
   var m = MathLib.matrix([[25, 15, -5], [15, 18, 0], [-5, 0, 11]]),
       res = MathLib.matrix([[5, 0, 0], [3, 3, 0], [-1, 1, 3]]);
 
-  deepEqual(m.cholesky(), res, 'Cholesky decomposition of  3x3 matrix');
+  deepEqual(m.cholesky(), res, 'Cholesky decomposition of a 3x3 matrix');
 });
 
 
@@ -45,6 +58,59 @@ test('.determinant()', 3, function () {
   equal(p.determinant(), undefined, 'Determinant of 2x3 matrix should be undefined');
 });
 
+
+test('.gershgorin()', 2, function () {
+  var c = MathLib.complex,
+      m = MathLib.matrix([[1,2,3], [4,5,6], [7,8,9]]),
+      n = MathLib.matrix([[c([1,4]),2,3], [c([2,3]),c([4,2]),6], [7,c([0,5]),9]]),
+      resm = [MathLib.circle([1,0,1], 5), MathLib.circle([5,0,1], 10), MathLib.circle([9,0,1], 9)],
+      resn = [MathLib.circle([1,4,1], 5), MathLib.circle([4,2,1], 10), MathLib.circle([9,0,1], 9)];
+
+  deepEqual(m.gershgorin(), resm, 'Gershgorin circles of a 3x3 matrix');
+  deepEqual(m.gershgorin(), resn, 'Gershgorin circles of a complex 3x3 matrix');
+});
+
+
+test('.givens()', 9, function () {
+  var m = MathLib.matrix([[3, 5], [0, 2], [0, 0], [4, 5]]),
+      n = MathLib.matrix([[6, 5, 0], [5, 1, 4], [0, 4, 3]]),
+      o = MathLib.matrix([[0, 1, 6], [3, 5, 7], [4, 9, 2]]),
+      QRm = m.givens(),
+      Qm = QRm[0],
+      Rm = QRm[1],
+      Q1 = MathLib.matrix([[3/5, 4/(5*Math.sqrt(5)), 0, -8/(5*Math.sqrt(5))], [0, 2/Math.sqrt(5), 0, 1/Math.sqrt(5)], [0, 0, 1, 0], [4/5, -3/(5*Math.sqrt(5)), 0, 6/(5*Math.sqrt(5))]]),
+      R1 = MathLib.matrix([[5, 7], [0, 2.23606797749979], [0, 0], [0, 0]]),
+
+      QRn = n.givens(),
+      Qn = QRn[0],
+      Rn = QRn[1],
+      Q2 = MathLib.matrix([[0.768221279597376, -0.332654179360071, -0.546970988744419], [0.640184399664480 , 0.399185015232086 , 0.656365186493303], [0, -0.854395997514289, 0.519622439307198]]),
+      R2 = MathLib.matrix([[7.810249675906652, 4.481290797651358, 2.560737598657919], [0, -4.681669871625427, -0.966447931614524], [0, 0, 4.184328063894809]]),
+
+      QRo = o.givens(),
+      Qo = QRo[0],
+      Ro = QRo[1],
+      Q3 = MathLib.matrix([[0, -0.581238193719096, -0.813733471206735], [0.6, 0.650986776965388, -0.464990554975277], [0.8, -0.488240082724041, 0.348742916231458]]),
+      R3 = MathLib.matrix([[5, 10.2, 5.8], [0, -1.720465053408526, 0.09299811099505462], [0, 0, -7.439848879604435]]);
+  
+  ok(Qm.isEqual(Q1), 'Q is original matrix');
+  ok(Rm.isEqual(R1), 'R is original matrix');
+  ok(Qm.times(Rm).isEqual(m), 'Q*R is original matrix');
+  ok(Qn.isEqual(Q2), 'Q is original matrix');
+  ok(Rn.isEqual(R2), 'R is original matrix');
+  ok(Qn.times(Rn).isEqual(n), 'Q*R is original matrix');
+  ok(Qo.isEqual(Q3), 'Q is original matrix');
+  ok(Ro.isEqual(R3), 'R is original matrix');
+  ok(Qo.times(Ro).isEqual(o), 'Q*R is original matrix');
+});
+
+
+test('.isBandMatrix()', 2, function () {
+  var m = MathLib.matrix([[2,1,3,0],[1,2,1,3],[0,1,2,1],[0,0,1,2]]);
+
+  equal(m.isBandMatrix(1,2), true, 'band matrix');
+  equal(m.isBandMatrix(1,1), false, 'upper bandwidth to small');
+});
 
 test('.isDiag()', 2, function () {
   var c = MathLib.complex(0, 0),
@@ -343,13 +409,8 @@ test('.toString()', 1, function () {
 });
 
 
+
 // Static methods
-test('constructor', 1, function () {
-  var m = MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-  equal(m.constructor, MathLib.matrix, 'Testing .constructor');
-});
-
-
 test('identity()', 1, function () {
   equal(MathLib.matrix.identity(4).isIdentity(), true, 'creating a identity matrix');
 });
@@ -362,10 +423,4 @@ test('numbers()', 3, function () {
   deepEqual(m, [[3, 3], [3, 3]], 'static number method');
   deepEqual(n, [[4, 4], [4, 4]], 'static number method');
   deepEqual(o, [[5]], 'static number method');
-});
-
-
-test('type', 1, function () {
-  var m = MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-  equal(m.type, 'matrix', 'Testing .type');
 });

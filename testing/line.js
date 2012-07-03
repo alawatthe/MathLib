@@ -5,7 +5,24 @@ test('init', 2, function () {
   deepEqual(line, [3,2,1], 'Testing the entries');
 });
 
-test('.isEqual', 3, function () {
+
+
+// Properties
+test('.constructor', 1, function () {
+  var line = MathLib.line([3, 2, 1]);
+  equal(line.constructor, MathLib.line, 'Testing .constructor');
+});
+
+
+test('.type', 1, function () {
+  var line = MathLib.line([3, 2, 1]);
+  equal(line.type, 'line', 'Testing .type');
+});
+
+
+
+// Methods
+test('.isEqual()', 3, function () {
   var line1 = MathLib.line([3, 2, 1]),
       line2 = MathLib.line([6, 4, 2]),
       line3 = MathLib.line([1, 1, 1]),
@@ -16,7 +33,7 @@ test('.isEqual', 3, function () {
 });
 
 
-test('.isFinite', 2, function () {
+test('.isFinite()', 2, function () {
   var line1 = MathLib.line([3, 2, 1]),
       line2 = MathLib.line([6, 4, 0]);
   equal(line1.isFinite(), true, '.isFinite()');
@@ -36,6 +53,7 @@ test(".map()", 2, function () {
   equal(res.type, 'line', ".type should be line");
 });
 
+
 // TODO: implement
 // test('.toContentMathML', 2, function () {
 //   var point = MathLib.point([3, 2, 1]);
@@ -43,30 +61,20 @@ test(".map()", 2, function () {
 //   equal(point.toContentMathML(true), '', '.toContentMathML()');
 // });
 
-test('.toLaTeX', 1, function () {
+
+test('.toLaTeX()', 1, function () {
   var line = MathLib.line([3, 2, 1]);
   equal(line.toLaTeX(), '\\begin{pmatrix}\n\t3\\\\\n\t2\\\\\n\t1\n\\end{pmatrix}', '.toLaTeX()');
 });
 
-test('.toMathML', 1, function () {
+
+test('.toMathML()', 1, function () {
   var line = MathLib.line([3, 2, 1]);
   equal(line.toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>)</mo></mrow>', '.toMathML()');
 });
 
 
-test('.toString', 1, function () {
+test('.toString()', 1, function () {
   var line = MathLib.line([3, 2, 1]);
   equal(line.toString(), '(3, 2, 1)', '.toString()');
-});
-
-
-
-test('constructor', 1, function () {
-  var line = MathLib.line([3, 2, 1]);
-  equal(line.constructor, MathLib.line, 'Testing .constructor');
-});
-
-test('type', 1, function () {
-  var line = MathLib.line([3, 2, 1]);
-  equal(line.type, 'line', 'Testing .type');
 });

@@ -4,7 +4,24 @@ test('init', 1, function () {
   equal(point.dim, 2, 'Testing the dimension');
 });
 
-test('.isEqual', 3, function () {
+
+
+// Properties
+test('.constructor', 1, function () {
+  var p = MathLib.point([3, 2, 1]);
+  equal(p.constructor, MathLib.point, 'Testing .constructor');
+});
+
+
+test('.type', 1, function () {
+  var p = MathLib.point([3, 2, 1]);
+  equal(p.type, 'point', 'Testing .type');
+});
+
+
+
+// Methods
+test('.isEqual()', 3, function () {
   var point1 = MathLib.point([3, 2, 1]),
       point2 = MathLib.point([6, 4, 2]),
       point3 = MathLib.point([1, 1, 1]),
@@ -14,12 +31,14 @@ test('.isEqual', 3, function () {
   equal(point3.isEqual(point4), false, ".isEqual()");
 });
 
-test('.isFinite', 2, function () {
+
+test('.isFinite()', 2, function () {
   var point1 = MathLib.point([3, 2, 1]),
       point2 = MathLib.point([6, 4, 0]);
   equal(point1.isFinite(), true, '.isFinite()');
   equal(point2.isFinite(), false, '.isFinite()');
 });
+
 
 test('.isInside()', 3, function () {
   var p1 = MathLib.point([1, 0, 1]),
@@ -31,6 +50,7 @@ test('.isInside()', 3, function () {
   equal(p3.isInside(c), false, '.isInside()');
 });
 
+
 test('.isOn()', 3, function () {
   var p1 = MathLib.point([1, 0, 1]),
       p2 = MathLib.point([2, 0, 1]),
@@ -41,6 +61,7 @@ test('.isOn()', 3, function () {
   equal(p3.isOn(c), false, '.isOn()');
 });
 
+
 test('.isOutside()', 3, function () {
   var p1 = MathLib.point([1, 0, 1]),
       p2 = MathLib.point([2, 0, 1]),
@@ -50,6 +71,7 @@ test('.isOutside()', 3, function () {
   equal(p2.isOutside(c), false, '.isOutside()');
   equal(p3.isOutside(c), true, '.isOutside()');
 });
+
 
 test(".map()", 2, function () {
   var p = MathLib.point([1, 2, 3]),
@@ -71,6 +93,7 @@ test('.reflectAt()', 1, function () {
   deepEqual(point1.reflectAt(point2), point3, '.reflectAt()');
 });
 
+
 // TODO: implement
 // test('.toContentMathML', 2, function () {
 //   var point = MathLib.point([3, 2, 1]);
@@ -78,32 +101,23 @@ test('.reflectAt()', 1, function () {
 //   equal(point.toContentMathML(true), '', '.toContentMathML()');
 // });
 
-test('.toLaTeX', 2, function () {
+
+test('.toLaTeX()', 2, function () {
   var point = MathLib.point([3, 2, 1]);
   equal(point.toLaTeX(), '\\begin{pmatrix}\n\t3\\\\\n\t2\n\\end{pmatrix}', '.toLaTeX()');
   equal(point.toLaTeX(true), '\\begin{pmatrix}\n\t3\\\\\n\t2\\\\\n\t1\n\\end{pmatrix}', '.toLaTeX()');
 });
 
-test('.toMathML', 2, function () {
+
+test('.toMathML()', 2, function () {
   var point = MathLib.point([3, 2, 1]);
   equal(point.toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr></mtable><mo>)</mo></mrow>', '.toMathML()');
   equal(point.toMathML(true), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>)</mo></mrow>', '.toMathML()');
 });
 
-test('.toString', 2, function () {
+
+test('.toString()', 2, function () {
   var point = MathLib.point([3, 2, 1]);
   equal(point.toString(), '(3, 2)', '.toString()');
   equal(point.toString(true), '(3, 2, 1)', '.toString()');
-});
-
-
-
-test('constructor', 1, function () {
-  var p = MathLib.point([3, 2, 1]);
-  equal(p.constructor, MathLib.point, 'Testing .constructor');
-});
-
-test('type', 1, function () {
-  var p = MathLib.point([3, 2, 1]);
-  equal(p.type, 'point', 'Testing .type');
 });

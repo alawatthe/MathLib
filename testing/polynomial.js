@@ -7,13 +7,34 @@ test("init", 2, function () {
 });
 
 
-test("properties", 2, function () {
+
+// Properties
+test(".coef", 1, function () {
   var p = MathLib.polynomial(3);
-  equal(p.deg, 3, "testing if .degree is right");
   deepEqual(p, [0, 0, 0, 1], ".coef");
 });
 
 
+test('.constructor', 1, function () {
+  var p = MathLib.polynomial([1, 2, 3]);
+  equal(p.constructor, MathLib.polynomial, 'Testing .constructor');
+});
+
+
+test(".deg", 1, function () {
+  var p = MathLib.polynomial(3);
+  equal(p.deg, 3, "testing if .degree is right");
+});
+
+
+test('.type', 1, function () {
+  var p = MathLib.polynomial([1, 2, 3]);
+  equal(p.type, 'polynomial', 'Testing .type');
+});
+
+
+
+// Methods
 test(".differentiate()", 3, function () {
   var p = MathLib.polynomial(3);
   deepEqual(p.differentiate(), [0, 0, 3], ".differentiate()");
@@ -27,6 +48,7 @@ test(".integrate()", 2, function () {
   deepEqual(p.integrate(), [0, 0, 0, 0, 0.25], ".integrate()");
   deepEqual(p.integrate(2), [0, 0, 0, 0, 0,  0.05], ".integrate(2)");
 });
+
 
 test(".isEqual()", 1, function () {
   var c = MathLib.complex([0, 0]),
@@ -126,22 +148,14 @@ test(".valueAt()", 6, function () {
 
 
 
-test('constructor', 1, function () {
-  var p = MathLib.polynomial([1, 2, 3]);
-  equal(p.constructor, MathLib.polynomial, 'Testing .constructor');
-});
-
-test('one', 1, function () {
+// Static methods
+test('one()', 1, function () {
   var p = MathLib.polynomial.one;
   deepEqual(p, MathLib.polynomial([1]), 'Testing .one');
 });
 
-test('type', 1, function () {
-  var p = MathLib.polynomial([1, 2, 3]);
-  equal(p.type, 'polynomial', 'Testing .type');
-});
 
-test('zero', 1, function () {
+test('zero()', 1, function () {
   var p = MathLib.polynomial.zero;
   deepEqual(p, MathLib.polynomial([0]), 'Testing .zero');
 });
