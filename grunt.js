@@ -1,5 +1,8 @@
 module.exports = function(grunt) {
 
+  // grunt.loadNpmTasks('grunt-docco');
+  grunt.loadTasks('node_modules/grunt-docco/tasks');
+
   grunt.initConfig({
     pkg: '<json:package.json>',
     meta: {
@@ -94,7 +97,7 @@ module.exports = function(grunt) {
       }
     },
     qunit: {
-      index: ['testing/testing.html']
+      index: ['testing/testing.html', 'testing/testing.min.html']
     },
     test: {
       files: ['test/*.js']
@@ -137,7 +140,12 @@ module.exports = function(grunt) {
         module: false
       }
     },
-    uglify: {}
+    uglify: {},
+    docco: {
+			app: {
+				src: ['build/MathLib.js']
+      }      
+    }
   });
 
   grunt.registerTask('default', 'concat min lint qunit');

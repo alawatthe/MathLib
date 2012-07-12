@@ -7,6 +7,8 @@
 
 prototypes.functn = function(){};
 MathLib.functn = function (f, options) {
+  options = options || {};
+
   var functn = function (x) {
     if (typeof x === 'number') {
       return f.apply('', arguments);
@@ -26,7 +28,7 @@ MathLib.functn = function (f, options) {
       return MathLib.set( x.map(f) );
     }
     else if(x.type === 'complex') {
-      return x[f.name].apply(x, Array.prototype.slice.call(arguments, 1));
+      return x[options.name].apply(x, Array.prototype.slice.call(arguments, 1));
     }
     else if (Array.isArray(x)) {
       return x.map(f);
@@ -37,11 +39,10 @@ MathLib.functn = function (f, options) {
   };
 
   functn[proto] = prototypes.functn;
-  options = options || {};
   var MathML = options.MathMLString || '';
   
   Object.defineProperties(functn, {
-    id: { value: f.name},
+    id: { value: options.name},
     MathML: { value: MathLib.MathML(MathML) }
   });
 
@@ -119,73 +120,59 @@ var mathStart = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>
 // ## Elementary functions
 // Some functions for the functn prototype
 var functionList = {
-  abs: function abs(x) {
-    return Math.abs(x);
-  },
-  arccos: function arccos(x){
-    return Math.acos(x);
-  },
-  arccot: function arccot(x){
+  abs: Math.abs,
+  arccos: Math.acos,
+  arccot: function (x) {
     return MathLib.pi / 2 - Math.atan(x);
   },
-  arccsc: function arccsc(x){
+  arccsc: function (x) {
     return Math.asin(1 / x);
   },
-  arcosh: function arcosh(x){
+  arcosh: Math.acosh || function (x){
     return Math.log(x + Math.sqrt(x * x - 1));
   },  
-  arcoth: function arcoth(x){
+  arcoth: function (x) {
     return 0.5 * Math.log((x + 1) / (x - 1));
   },
-  arcsch: function arcsch(x){
+  arcsch: function (x) {
     return Math.log((1 + Math.sqrt(1 + x * x)) / (x));
   },
-  arcsec: function arcsec(x){
+  arcsec: function (x) {
     return Math.acos(1 / x);
   },
-  arcsin: function arcsin(x){
-    return Math.asin(x);
-  },
-  arctan: function arctan(x){
-    return Math.atan(x);
-  },
-  arsech: function arsech(x){
+  arcsin: Math.asin,
+  arctan: Math.atan,
+  arsech: function (x) {
     return Math.log((1 + Math.sqrt(1 - x * x)) / (x));
   },
-  arsinh: function arsinh(x){
+  arsinh: Math.asinh || function (x) {
     return Math.log(x + Math.sqrt(x * x + 1));
   },
-  artanh: function artanh(x){
+  artanh: Math.atanh || function (x) {
     return 0.5 * Math.log((1 + x) / (1 - x));
   },
-  ceil: function ceil(x) {
-    return Math.ceil(x);
-  },
-  floor: function floor(x) {
-    return Math.floor(x);
-  },
-  cos: function cos(x){
-    return Math.cos(x);
-  },
-  cosh: function cosh(x) {
+  ceil: Math.ceil,
+  floor: Math.floor,
+  cos: Math.cos,
+  cosh: Math.cosh || function (x) {
     return (Math.exp(x) + Math.exp(-x)) / 2;
   },
-  cot: function cot(x) {
+  cot: function (x) {
     return 1 / Math.tan(x);
   },
-  coth: function coth(x) {
+  coth: function (x) {
     return (Math.exp(x) + Math.exp(-x)) / (Math.exp(x) - Math.exp(-x));
   },
-  csc: function csc(x) {
+  csc: function (x) {
     return 1 / Math.sin(x);
   },
-  csch: function csch(x) {
+  csch: function (x) {
     return 2 / (Math.exp(x) - Math.exp(-x));
   },
-  exp: function exp(x){
+  exp: function (x) {
     return Math.exp(x);
   },
-  inverse: function inverse(x){
+  inverse: function (x) {
     return 1/x;
   },
   sec: function (x) {
@@ -194,25 +181,23 @@ var functionList = {
   sech: function (x) {
     return 2 / (Math.exp(x) + Math.exp(-x));
   },
-  sin: function sin(x){
-    return Math.sin(x);
-  },
-  sinh: function sinh(x) {
+  sin: Math.sin,
+  sinh: Math.sinh || function (x) {
     return (Math.exp(x) - Math.exp(-x)) / 2;
   },
-  tan: function (x) {
-    return Math.tan(x);
-  },
+  tan: Math.tan,
   tanh: Math.tanh || function (x) {
     return (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));
   }
 };
 
+	
+
 
 // Create the elementary functions
 for (var elemfn in functionList) {
   if (functionList.hasOwnProperty(elemfn)) {
-    MathLib.extend('', elemfn, MathLib.functn(functionList[elemfn], {MathMLString: mathStart + elemfn + mathEnd}));
+    MathLib.extend('', elemfn, MathLib.functn(functionList[elemfn], {name: elemfn, MathMLString: mathStart + elemfn + mathEnd}));
   }
 }
 

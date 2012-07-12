@@ -1,4 +1,4 @@
-/*! MathLib v0.3.1 MathLib.de | MathLib.de/en/license */
+/*! MathLib v0.3.2 MathLib.de | MathLib.de/en/license */
 
 module("MathLib");
 test("general", 1, function () {
