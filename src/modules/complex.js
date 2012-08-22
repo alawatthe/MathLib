@@ -90,8 +90,8 @@ MathLib.extendPrototype('complex', 'arccsc', function () {
 MathLib.extendPrototype('complex', 'arcsin', function () {
   var a = this.re, b = this.im;
   return MathLib.complex([
-     MathLib.sgn(a)/2 * MathLib.arccos(Math.sqrt(Math.pow(a*a + b*b - 1, 2) +4*b*b) - (a*a + b*b)),
-     MathLib.sgn(b)/2 * MathLib.arcosh(Math.sqrt(Math.pow(a*a + b*b - 1, 2) +4*b*b) + (a*a + b*b))
+     MathLib.sign(a)/2 * MathLib.arccos(Math.sqrt(Math.pow(a*a + b*b - 1, 2) +4*b*b) - (a*a + b*b)),
+     MathLib.sign(b)/2 * MathLib.arcosh(Math.sqrt(Math.pow(a*a + b*b - 1, 2) +4*b*b) + (a*a + b*b))
     ]);
 });
 
@@ -104,8 +104,8 @@ MathLib.extendPrototype('complex', 'arctan', function () {
 
 
 // Returns the argument (= the angle) of the complex number
-MathLib.extendPrototype('complex', 'argument', function (x) {
-    return (Math.atan2(this.im, this.re) + 2 * Math.PI) % (2*Math.PI);
+MathLib.extendPrototype('complex', 'arg', function () {
+    return Math.atan2(this.im, this.re);
 });
 
 
@@ -117,8 +117,8 @@ MathLib.extendPrototype('complex', 'artanh', function () {
 
 // Compares two complex numbers
 MathLib.extendPrototype('complex', 'compare', function (x) {
-  var a = MathLib.sgn(this.abs() - x.abs());
-  return a ? a : MathLib.sgn(this.argument() - x.argument());
+  var a = MathLib.sign(this.abs() - x.abs());
+  return a ? a : MathLib.sign(this.arg() - x.arg());
 });
 
 
@@ -231,7 +231,7 @@ MathLib.extendPrototype('complex', 'isZero', function () {
 //
 // *@returns {complex}*
 MathLib.extendPrototype('complex', 'ln', function () {
-  return MathLib.complex([MathLib.ln(this.abs()), this.argument()]);
+  return MathLib.complex([MathLib.ln(this.abs()), this.arg()]);
 });
 
 
@@ -307,12 +307,12 @@ MathLib.extendPrototype('complex', 'sinh', function () {
 });
 
 
-// ### Complex.prototype.sgn()
+// ### Complex.prototype.sign()
 // Calculates the signum of a complex number
 //
 // *@returns {complex}*
-MathLib.extendPrototype('complex', 'sgn', function () {
-  return MathLib.complex(1, this.argument());
+MathLib.extendPrototype('complex', 'sign', function () {
+  return MathLib.complex(1, this.arg());
 });
 
 
@@ -336,7 +336,7 @@ MathLib.extendPrototype('complex', 'times', function (c) {
 // Returns the content MathML representation of the number
 //
 // *@returns {string}*
-MathLib.extendPrototype('complex', 'toContentMathML', function () {
+MathLib.extendPrototype('complex', 'toContentMathMLString', function () {
   return '<cn type="complex-cartesian">' + this.re + '<sep/>' + this.im + '</cn>';
 });
 
@@ -367,15 +367,15 @@ MathLib.extendPrototype('complex', 'toLaTeX', function () {
 // Returns the (presentation) MathML representation of the number
 //
 // *@returns {string}*
-MathLib.extendPrototype('complex', 'toMathML', function () {
+MathLib.extendPrototype('complex', 'toMathMLString', function () {
   var str = '', reFlag = false;
 
   if (!MathLib.isZero(this.re)) {
-    str = MathLib.toMathML(this.re);
+    str = MathLib.toMathMLString(this.re);
     reFlag = true;
   }
   if (!MathLib.isZero(this.im)) {
-    str += MathLib.toMathML(this.im, reFlag) + '<mo>&#x2062;</mo><mi>i</mi>';
+    str += MathLib.toMathMLString(this.im, reFlag) + '<mo>&#x2062;</mo><mi>i</mi>';
   }
   if (str.length === 0) {
     str = '<mn>0</mn>';

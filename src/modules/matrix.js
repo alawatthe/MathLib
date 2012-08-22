@@ -12,7 +12,6 @@
 //    ⎜ 4 5 6 ⎟  
 //    ⎝ 7 8 9 ⎠
 
-
 prototypes.matrix = [];
 MathLib.matrix = function (matrix) {
   if (typeof matrix === 'string') {
@@ -110,7 +109,6 @@ MathLib.extendPrototype('matrix', 'cholesky', function () {
 });
 
 
-
 // ### Matrix.prototype.copy()
 // Copies the matrix
 //
@@ -118,7 +116,6 @@ MathLib.extendPrototype('matrix', 'cholesky', function () {
 MathLib.extendPrototype('matrix', 'copy', function () {
   return this.map(MathLib.copy);
 });
-
 
 
 // ### Matrix.prototype.determinant()
@@ -983,10 +980,10 @@ MathLib.extendPrototype('matrix', 'toComplex', function () {
 // converting the matrix to content MathML
 //
 // *@returns {string}*
-MathLib.extendPrototype('matrix', 'toContentMathML', function () {
+MathLib.extendPrototype('matrix', 'toContentMathMLString', function () {
   return this.reduce(function (str, x) {
     return str + x.reduce(function(prev, cur) {
-      return prev + MathLib.toContentMathML(cur);
+      return prev + MathLib.toContentMathMLString(cur);
     }, '<matrixrow>') + '</matrixrow>';
   }, '<matrix>') + '</matrix>';
 });
@@ -1009,10 +1006,10 @@ MathLib.extendPrototype('matrix', 'toLaTeX', function () {
 // converting the matrix to (presentation) MathML
 //
 // *@returns {string}*
-MathLib.extendPrototype('matrix', 'toMathML', function () {
+MathLib.extendPrototype('matrix', 'toMathMLString', function () {
   return this.reduce(function (str, x) {
     return str + x.reduce(function(prev, cur) {
-      return prev + '<mtd>' + MathLib.toMathML(cur) + '</mtd>';
+      return prev + '<mtd>' + MathLib.toMathMLString(cur) + '</mtd>';
     }, '<mtr>') + '</mtr>';
   }, '<mrow><mo> ( </mo><mtable>') + '</mtable><mo> ) </mo></mrow>';
 });

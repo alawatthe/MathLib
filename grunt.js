@@ -1,6 +1,5 @@
 module.exports = function(grunt) {
 
-  // grunt.loadNpmTasks('grunt-docco');
   grunt.loadTasks('node_modules/grunt-docco/tasks');
 
   grunt.initConfig({
@@ -54,7 +53,7 @@ module.exports = function(grunt) {
       MathLib: {
         src: ['<banner:meta.banner>',
               '<file_strip_banner:src/head.js>',
-              '<file_strip_banner:src/modules/MathML.js>',
+              '<file_strip_banner:src/modules/mathML.js>',
               '<file_strip_banner:src/modules/functn.js>',
               '<file_strip_banner:src/modules/screen.js>',
               '<file_strip_banner:src/modules/canvas.js>',
@@ -79,7 +78,7 @@ module.exports = function(grunt) {
               '<file_strip_banner:testing/complex.js>',
               '<file_strip_banner:testing/functn.js>',
               '<file_strip_banner:testing/line.js>',
-              '<file_strip_banner:testing/MathML.js>',
+              '<file_strip_banner:testing/mathML.js>',
               '<file_strip_banner:testing/matrix.js>',
               '<file_strip_banner:testing/permutation.js>',
               '<file_strip_banner:testing/point.js>',
@@ -94,6 +93,10 @@ module.exports = function(grunt) {
       MathLib: {
         src: ['<banner:meta.banner_min>', '<config:concat.MathLib.dest>'],
         dest: 'build/<%= pkg.name %>.min.js'
+      },
+      tests: {
+        src: ['<banner:meta.banner_min>', '<config:concat.tests.dest>'],
+        dest: 'build/<%= pkg.name %>.testing.min.js'
       }
     },
     qunit: {
@@ -106,8 +109,10 @@ module.exports = function(grunt) {
       files: ['grunt.js', 'dist/MathLib.js', 'testing/*.js']
     },
     watch: {
-      files: '<config:lint.files>',
-      tasks: 'lint test'
+      concat: {
+        files: ['src/modules/*.js', 'testing/*.js'],
+        tasks: 'concat min lint'
+      }
     },
     jshint: {
       options: {

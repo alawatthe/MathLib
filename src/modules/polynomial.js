@@ -289,26 +289,61 @@ MathLib.extendPrototype('polynomial', 'times', function (a) {
 // Returns a content MathML representation of the polynomial
 //
 // *@returns {string}*
-MathLib.extendPrototype('polynomial', 'toContentMathML', function () {
-  var str = '<apply><plus/>', i, ii;
-  for (i=0, ii=this.deg; i<=ii; i++) {
+MathLib.extendPrototype('polynomial', 'toContentMathMLString', function (math) {
+  var str = '<apply><plus/>', i;
+  for (i=this.deg; i>=0; i--) {
     if (!MathLib.isZero(this[i])) {
       if(i === 0) {
-        str += MathLib.toContentMathML(this[i]);
+        str += MathLib.toContentMathMLString(this[i]);
       }
       else {
-        str += '<apply><times/>' + MathLib.toContentMathML(this[i], true);
+        str += '<apply><times/>' + MathLib.toContentMathMLString(this[i], true);
       }
 
       if (i > 1) {
-        str += '<apply><power/><ci>x</ci>' + MathLib.toContentMathML(i) + '</apply></apply>';
+        str += '<apply><power/><ci>x</ci>' + MathLib.toContentMathMLString(i) + '</apply></apply>';
       }
       else if (i === 1) {
         str += '<ci>x</ci></apply>';
       }
     }
   }
-  return str + '</apply>';
+
+  str += '</apply>';
+
+  if (math) {
+    str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>'
+  }
+
+  return str;
+});
+
+
+// ### Polynomial.prototype.toFunctn()
+// Converts the polynomial to a functn
+//
+// *@returns {functn}*
+MathLib.extendPrototype('polynomial', 'toFunctn', function () {
+  var str = '', i, ii;
+  for (i=0, ii=this.deg; i<=ii; i++) {
+    if (!MathLib.isZero(this[i])) {
+      if(i === 0) {
+        str += MathLib.toString(this[i]);
+      }
+      else {
+        str += MathLib.toString(this[i], true);
+      }
+
+      if (i > 1) {
+        str += '* Math.pow(x,' + MathLib.toString(i) + ')';
+      }
+      else if (i === 1) {
+        str += '*x';
+      }
+    }
+  }
+
+  return MathLib.functn(new Function('x', 'return ' + str), {contentMathMLString: this.toContentMathMLString(true)});
 });
 
 
@@ -317,15 +352,17 @@ MathLib.extendPrototype('polynomial', 'toContentMathML', function () {
 //
 // *@returns {string}*
 MathLib.extendPrototype('polynomial', 'toLaTeX', function () {
-  var str = '', i, ii;
-  for (i=0, ii=this.deg; i<=ii; i++) {
+  var str = MathLib.toString(this[this.deg]) + '*x^{' + this.deg + '}',
+      i;
+
+  for (i=this.deg-1; i>=0; i--) {
     if (!MathLib.isZero(this[i])) {
-      if(i === 0) {
-        str += MathLib.toLaTeX(this[i]);
-      }
-      else {
+      // if(i === 0) {
+      //   str += MathLib.toLaTeX(this[i]);
+      // }
+      // else {
         str += MathLib.toLaTeX(this[i], true);
-      }
+      // }
 
       if (i > 1) {
         str += 'x^{' + MathLib.toLaTeX(i) + '}';
@@ -343,26 +380,34 @@ MathLib.extendPrototype('polynomial', 'toLaTeX', function () {
 // Returns a MathML representation of the polynomial
 //
 // *@returns {string}*
-MathLib.extendPrototype('polynomial', 'toMathML', function () {
-  var str = '<mrow>', i, ii;
-  for (i=0, ii=this.deg; i<=ii; i++) {
+MathLib.extendPrototype('polynomial', 'toMathMLString', function (math) {
+  var str = '<mrow>' + MathLib.toMathMLString(this[this.deg], true) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathMLString(this.deg) + '</msup>',
+      i;
+  for (i=this.deg-1; i>=0; i--) {
     if (!MathLib.isZero(this[i])) {
-      if(i === 0) {
-        str += MathLib.toMathML(this[i]);
-      }
-      else {
-        str += MathLib.toMathML(this[i], true);
-      }
+      // if(i === 0) {
+      //   str += MathLib.toMathML(this[i]);
+      // }
+      // else {
+        str += MathLib.toMathMLString(this[i], true);
+      // }
 
       if (i > 1) {
-        str += '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(i) + '</msup>';
+        str += '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathMLString(i) + '</msup>';
       }
       else if (i === 1) {
         str += '<mo>&#x2062;</mo><mi>x</mi>';
       }
     }
   }
-  return str + '</mrow>';
+
+  str += '</mrow>';
+
+  if (math) {
+    str = '<math xmlns="http://www.w3.org/1998/Math/MathML">' + str + '</math>'
+  }
+
+  return str;
 });
 
 
@@ -371,15 +416,12 @@ MathLib.extendPrototype('polynomial', 'toMathML', function () {
 //
 // *@returns {string}*
 MathLib.extendPrototype('polynomial', 'toString', function (opt) {
-  var str = '', i, ii;
-  for (i=0, ii=this.deg; i<=ii; i++) {
+  var str = MathLib.toString(this[this.deg]) + '*x^' + this.deg,
+      i;
+  for (i=this.deg-1; i>=0; i--) {
     if (!MathLib.isZero(this[i])) {
-      if(i === 0) {
-        str += MathLib.toString(this[i]);
-      }
-      else {
-        str += MathLib.toString(this[i], true);
-      }
+
+      str += MathLib.toString(this[i], true);
 
       if (i > 1) {
         str += '*x^' + MathLib.toString(i);

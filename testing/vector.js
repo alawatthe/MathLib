@@ -114,9 +114,9 @@ test('.toArray()', 1, function () {
 });
 
 
-test('.toContentMathML()', 1, function () {
+test('.toContentMathMLString()', 1, function () {
   var v = MathLib.vector([1, 2, 3]);
-  equal(v.toContentMathML(), '<vector><cn>1</cn><cn>2</cn><cn>3</cn></vector>', ".toContentMathML()");
+  equal(v.toContentMathMLString(), '<vector><cn>1</cn><cn>2</cn><cn>3</cn></vector>', ".toContentMathML()String");
 });
 
 
@@ -126,9 +126,9 @@ test('.toLaTeX()', 1, function () {
 });
 
 
-test('.toMathML()', 1, function () {
+test('.toMathMLString()', 1, function () {
   var v = MathLib.vector([1, 2, 3]);
-  equal(v.toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>)</mo></mrow>', ".toMathML()");
+  equal(v.toMathMLString(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>)</mo></mrow>', ".toMathMLString()");
 });
 
 

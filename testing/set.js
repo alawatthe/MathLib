@@ -194,13 +194,13 @@ test('.toArray()', 3, function () {
 });
 
 
-test('.toContentMathML()', 3, function () {
+test('.toContentMathMLString()', 3, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true),
       e = MathLib.set();
-  equal(s.toContentMathML(),  '<set><cn>2</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathML() (set)');
-  equal(m.toContentMathML(),  '<set><cn>2</cn><cn>2</cn><cn>3</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathML() (multiset)');
-  equal(e.toContentMathML(),  '<emptyset/>', 'Testing .toContentMathML() (empty set)');
+  equal(s.toContentMathMLString(),  '<set><cn>2</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathMLString() (set)');
+  equal(m.toContentMathMLString(),  '<set><cn>2</cn><cn>2</cn><cn>3</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathMLString() (multiset)');
+  equal(e.toContentMathMLString(),  '<emptyset/>', 'Testing .toContentMathMLString() (empty set)');
 });
 
 
@@ -214,13 +214,13 @@ test('.toLaTeX()', 3, function () {
 });
 
 
-test('.toMathML()', 3, function () {
+test('.toMathMLString()', 3, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true),
       e = MathLib.set();
-  equal(s.toMathML(),  '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathML() (set)');
-  equal(m.toMathML(),  '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathML() (multiset)');
-  equal(e.toMathML(),  '<mi>&#x2205;</mi>', 'Testing .toMathML() (empty set)');
+  equal(s.toMathMLString(),  '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathMLString() (set)');
+  equal(m.toMathMLString(),  '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathMLString() (multiset)');
+  equal(e.toMathMLString(),  '<mi>&#x2205;</mi>', 'Testing .toMathMLString() (empty set)');
 });
 
 

@@ -211,9 +211,9 @@ MathLib.extendPrototype('vector', 'toArray', function () {
 // Returns the content MathML representation of the vector
 //
 // *@returns {string}*
-MathLib.extendPrototype('vector', 'toContentMathML', function () {
+MathLib.extendPrototype('vector', 'toContentMathMLString', function () {
   return this.reduce(function (old, cur) {
-    return old + MathLib.toContentMathML(cur);
+    return old + MathLib.toContentMathMLString(cur);
   }, '<vector>') + '</vector>';
 });
 
@@ -235,9 +235,9 @@ MathLib.extendPrototype('vector', 'toLaTeX', function () {
 // Returns the (presentation) MathML representation of the vector
 //
 // *@returns {string}*
-MathLib.extendPrototype('vector', 'toMathML', function () {
+MathLib.extendPrototype('vector', 'toMathMLString', function () {
   return this.reduce(function (old, cur) {
-    return old + '<mtr><mtd>' + MathLib.toMathML(cur) + '</mtd></mtr>';
+    return old + '<mtr><mtd>' + MathLib.toMathMLString(cur) + '</mtd></mtr>';
   }, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
 });
 

@@ -55,7 +55,7 @@ MathLib.extendPrototype('set', 'type', 'set');
 // *@returns {number}*
 MathLib.extendPrototype('set', 'compare', function (x) {
   if (this.card !== x.card) {
-    return MathLib.sgn(this.card - x.card);
+    return MathLib.sign(this.card - x.card);
   }
   else {
     var res = 0, stop = false;
@@ -295,6 +295,22 @@ MathLib.extendPrototype('set', 'toArray', function () {
 });
 
 
+// ### Set.prototype.toContentMathML()
+// Returns the content MathML representation of the set
+//
+// *@returns {string}*
+MathLib.extendPrototype('set', 'toContentMathMLString', function () {
+  if (this.isEmpty()) {
+    return '<emptyset/>';
+  }
+  else {
+    return this.reduce(function(old, cur) {
+      return old + MathLib.toContentMathMLString(cur);
+    }, '<set>') + '</set>';
+  }
+});
+
+
 // ### Set.prototype.toLaTeX()
 // Returns the LaTeX representation of the set
 //
@@ -311,33 +327,17 @@ MathLib.extendPrototype('set', 'toLaTeX', function () {
 });
 
 
-// ### Set.prototype.toContentMathML()
-// Returns the content MathML representation of the set
-//
-// *@returns {string}*
-MathLib.extendPrototype('set', 'toContentMathML', function () {
-  if (this.isEmpty()) {
-    return '<emptyset/>';
-  }
-  else {
-    return this.reduce(function(old, cur) {
-      return old + MathLib.toContentMathML(cur);
-    }, '<set>') + '</set>';
-  }
-});
-
-
 // ### Set.prototype.toMathML()
 // Returns the (presentation) MathML representation of the set
 //
 // *@returns {string}*
-MathLib.extendPrototype('set', 'toMathML', function () {
+MathLib.extendPrototype('set', 'toMathMLString', function () {
   if (this.isEmpty()) {
     return '<mi>&#x2205;</mi>';
   }
   else {
     return this.reduce(function(old, cur) {
-      return old +  MathLib.toMathML(cur) + '<mo>,</mo>';
+      return old +  MathLib.toMathMLString(cur) + '<mo>,</mo>';
     }, '<mrow><mo>{</mo>').slice(0, -10) + '<mo>}</mo></mrow>';
   }
 });

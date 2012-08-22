@@ -1,4 +1,4 @@
-/*! MathLib v0.3.2 MathLib.de | MathLib.de/en/license */
+/*! MathLib v0.3.3 MathLib.de | MathLib.de/en/license */
 
 module("MathLib");
 test("general", 1, function () {
@@ -99,6 +99,56 @@ test('.artanh()', 3, function () {
 });
 
 
+test('.arctan2()', 24, function () {
+  equal(MathLib.arctan2(1, 1), Math.PI/4, 'simple check');
+  equal(MathLib.arctan2(-1, 1), -Math.PI/4, 'simple check');
+
+  // arctan2(&plusmn;0, -0) is &plusmn;&pi;
+  equal(MathLib.arctan2(+0, -0), Math.PI, 'Spec. 1: arctan2(&plusmn;0, -0) is &plusmn;&pi;');
+  equal(MathLib.arctan2(-0, -0), -Math.PI, 'Spec. 1: arctan2(&plusmn;0, -0) is &plusmn;&pi;');
+
+  // arctan2(&plusmn;0, +0) is &plusmn;0
+  equal(MathLib.isPosZero(MathLib.arctan2(+0, 0)), true, 'Spec. 2: arctan2(&plusmn;0, +0) is &plusmn;0');
+  equal(MathLib.isNegZero(MathLib.arctan2(-0, 0)), true, 'Spec. 2: arctan2(&plusmn;0, +0) is &plusmn;0');
+
+  // arctan2(&plusmn;0, x) is &plusmn;&pi; for x<0
+  equal(MathLib.arctan2(+0, -4), Math.PI, 'Spec. 3: arctan2(&plusmn;0, x) is &plusmn;&pi; for x<0');
+  equal(MathLib.arctan2(-0, -4), -Math.PI, 'Spec. 3: arctan2(&plusmn;0, x) is &plusmn;&pi; for x<0');
+
+  // arctan2(&plusmn;0, x) is &plusmn;0 for x>0
+  equal(MathLib.isPosZero(MathLib.arctan2(+0, 4)), true, 'Spec. 4: arctan2(&plusmn;0, x) is &plusmn;0 for x>0');
+  equal(MathLib.isNegZero(MathLib.arctan2(-0, 4)), true, 'Spec. 4: arctan2(&plusmn;0, x) is &plusmn;0 for x>0');
+
+  // arctan2(y, &plusmn;0) is -&pi;/2 for y < 0
+  equal(MathLib.arctan2(-4, 0), -Math.PI/2, 'Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0');
+  equal(MathLib.arctan2(-4, -0), -Math.PI/2, 'Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0');
+
+  // arctan2(y, &plusmn;0) is +&pi;/2 for y > 0
+  equal(MathLib.arctan2(4, 0), Math.PI/2, 'Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0');
+  equal(MathLib.arctan2(4, -0), Math.PI/2, 'Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0');
+
+  // arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0
+  equal(MathLib.arctan2(4, -Infinity), Math.PI, 'Spec. 7: arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0');
+  equal(MathLib.arctan2(-4, -Infinity), -Math.PI, 'Spec. 7: arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0');
+
+  // arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0
+  equal(MathLib.isPosZero(MathLib.arctan2(4, Infinity)), true, 'Spec. 8: arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0');
+  equal(MathLib.isNegZero(MathLib.arctan2(-4, Infinity)), true, 'Spec. 8: arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0');
+
+  // arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x
+  equal(MathLib.arctan2(Infinity, 4), Math.PI/2, 'Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x');
+  equal(MathLib.arctan2(-Infinity, 4), -Math.PI/2, 'Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x');
+
+  // arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4
+  equal(MathLib.arctan2(Infinity, -Infinity), 3/4*Math.PI, 'Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4');
+  equal(MathLib.arctan2(-Infinity, -Infinity), -3/4*Math.PI, 'Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4');
+
+  // arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4
+  equal(MathLib.arctan2(Infinity, Infinity), Math.PI/4, 'Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4');
+  equal(MathLib.arctan2(-Infinity, Infinity), -Math.PI/4, 'Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4');
+});
+
+
 test('.binomial()', 4, function () {
   equal(MathLib.binomial(0, 0), 1);
   equal(MathLib.binomial(6, 3), 20);
@@ -189,11 +239,12 @@ test('.floor()', 7, function () {
 });
 
 
-test('.hypot()', 8, function () {
+test('.hypot()', 9, function () {
   equal(MathLib.isEqual(MathLib.hypot(3), 3), true, 'MathLib.hypot(x) is Math.abs(x)');
   equal(MathLib.isEqual(MathLib.hypot(-3), 3), true, 'MathLib.hypot(x) is Math.abs(x)');
   equal(MathLib.isEqual(MathLib.hypot(3, 4), 5), true);
   equal(MathLib.isEqual(MathLib.hypot(3, 4, 12), 13), true);
+  equal(MathLib.isPosZero(MathLib.hypot(0, 0)), true);
   deepEqual(MathLib.hypot(NaN, 4), NaN);
   equal(MathLib.hypot(NaN, Infinity), Infinity);
   equal(MathLib.hypot(-Infinity, NaN), Infinity);
@@ -438,6 +489,26 @@ test('.round()', 7, function () {
 });
 
 
+test('.sign()', 7, function () {
+  // MathLib.sign(NaN) is NaN
+  equal(MathLib.isNaN(MathLib.sign(NaN)), true, 'Spec. 1: MathLib.sign(NaN) is NaN');
+
+  // MathLib.sign(0) is 0
+  equal(MathLib.isPosZero(MathLib.sign(0)), true, 'Spec. 2: MathLib.sign(0) is 0');
+
+  // MathLib.sign(-0) is -0
+  equal(MathLib.isNegZero(MathLib.sign(-0)), true, 'Spec. 3: MathLib.sign(-0) is -0');
+
+  // MathLib.sign(x) is 1 for x > 0
+  equal(MathLib.sign(4), 1, 'Spec. 4: MathLib.sign(x) is 1 for x > 0');
+  equal(MathLib.sign(Infinity), 1, 'Spec. 4: MathLib.sign(x) is 1 for x > 0');
+
+  // MathLib.sign(x) is -1 for x < 0
+  equal(MathLib.sign(-4), -1, 'Spec. 5: MathLib.sign(x) is -1 for x < 0');
+  equal(MathLib.sign(-Infinity), -1, 'Spec. 5: MathLib.sign(x) is -1 for x < 0');
+});
+
+
 test('.sin()', 6, function () {
   equal(MathLib.sin(Math.PI / 2), 1, 'MathLib.sin(Math.PI / 2) should be 1');
   equal(MathLib.isPosZero(MathLib.sin(+0)), true, 'MathLib.sin(+0) should be +0');
@@ -595,19 +666,25 @@ test('.type', 1, function () {
 
 
 // Methods
-test('.abs()', 1, function () {
-  var c = MathLib.complex([3, 4]);
-  equal(MathLib.isEqual(c.abs(), 5), true, 'Absolut value of the complex number');
+test('.abs()', 2, function () {
+  var c1 = MathLib.complex([3, 4]),
+      c2 = MathLib.complex([0, 0]);
+
+  equal(MathLib.isEqual(c1.abs(), 5), true, 'Absolut value of a complex number');
+  equal(MathLib.isEqual(c2.abs(), 0), true, 'Absolut value of a complex number');
 });
 
 
-test('.argument()', 3, function () {
-  var c = MathLib.complex([1, 1]),
-      d = MathLib.complex([1, -1]),
-      e = MathLib.complex([0, 0]);
-  equal(c.argument(), 0.7853981633974483, '');
-  equal(d.argument(), 5.497787143782138, '');
-  equal(e.argument(), 0,  '');
+test('.arg()', 4, function () {
+  var c1 = MathLib.complex([1, 1]),
+      c2 = MathLib.complex([1, -1]),
+      c3 = MathLib.complex([0, 0]),
+      c4 = MathLib.complex([-1, 0]);
+
+  equal(c1.arg(), 0.7853981633974483, '');
+  equal(c2.arg(), -0.7853981633974483, '');
+  equal(c3.arg(), 0,  '');
+  equal(c4.arg(), 3.141592653589793,  '');
 });
 
 
@@ -720,10 +797,10 @@ test('.plus()', 2, function () {
 });
 
 
-test(".sgn()", 1, function () {
+test(".sign()", 1, function () {
   var c = MathLib.complex([5, 6]),
       d = MathLib.complex(1, Math.atan2(6, 5));
-  equal(c.sgn().isEqual(d), true, ".sgn()");
+  equal(c.sign().isEqual(d), true, ".sign()");
 });
 
 
@@ -740,17 +817,17 @@ test('.times()', 2, function () {
 });
 
 
-test('.toContentMathML()', 5, function () {
+test('.toContentMathMLString()', 5, function () {
   var c = MathLib.complex([3, 4]),
       d = MathLib.complex([0, 7]),
       e = MathLib.complex([4, 0]),
       f = MathLib.complex([4, -5]),
       g = MathLib.complex([0, 0]);
-  equal(c.toContentMathML(), '<cn type="complex-cartesian">3<sep/>4</cn>', 'Normal complex number.');
-  equal(d.toContentMathML(), '<cn type="complex-cartesian">0<sep/>7</cn>', 'Real part is zero.');
-  equal(e.toContentMathML(), '<cn type="complex-cartesian">4<sep/>0</cn>', 'Complex part is zero.');
-  equal(f.toContentMathML(), '<cn type="complex-cartesian">4<sep/>-5</cn>', 'Complex part is negative.');
-  equal(g.toContentMathML(), '<cn type="complex-cartesian">0<sep/>0</cn>', 'Number is zero.');
+  equal(c.toContentMathMLString(), '<cn type="complex-cartesian">3<sep/>4</cn>', 'Normal complex number.');
+  equal(d.toContentMathMLString(), '<cn type="complex-cartesian">0<sep/>7</cn>', 'Real part is zero.');
+  equal(e.toContentMathMLString(), '<cn type="complex-cartesian">4<sep/>0</cn>', 'Complex part is zero.');
+  equal(f.toContentMathMLString(), '<cn type="complex-cartesian">4<sep/>-5</cn>', 'Complex part is negative.');
+  equal(g.toContentMathMLString(), '<cn type="complex-cartesian">0<sep/>0</cn>', 'Number is zero.');
 });
 
 
@@ -768,17 +845,17 @@ test('.toLaTeX()', 5, function () {
 });
 
 
-test('.toMathML()', 5, function () {
+test('.toMathMLString()', 5, function () {
   var c = MathLib.complex([3, 4]),
       d = MathLib.complex([0, 7]),
       e = MathLib.complex([4, 0]),
       f = MathLib.complex([4, -5]),
       g = MathLib.complex([0, 0]);
-  equal(c.toMathML(), '<mn>3</mn><mo>+</mo><mn>4</mn><mo>&#x2062;</mo><mi>i</mi>', 'Normal complex number.');
-  equal(d.toMathML(), '<mn>7</mn><mo>&#x2062;</mo><mi>i</mi>', 'Real part is zero.');
-  equal(e.toMathML(), '<mn>4</mn>', 'Complex part is zero.');
-  equal(f.toMathML(), '<mn>4</mn><mo>-</mo><mn>5</mn><mo>&#x2062;</mo><mi>i</mi>', 'Complex part is negative.');
-  equal(g.toMathML(), '<mn>0</mn>', 'Number is zero.');
+  equal(c.toMathMLString(), '<mn>3</mn><mo>+</mo><mn>4</mn><mo>&#x2062;</mo><mi>i</mi>', 'Normal complex number.');
+  equal(d.toMathMLString(), '<mn>7</mn><mo>&#x2062;</mo><mi>i</mi>', 'Real part is zero.');
+  equal(e.toMathMLString(), '<mn>4</mn>', 'Complex part is zero.');
+  equal(f.toMathMLString(), '<mn>4</mn><mo>-</mo><mn>5</mn><mo>&#x2062;</mo><mi>i</mi>', 'Complex part is negative.');
+  equal(g.toMathMLString(), '<mn>0</mn>', 'Number is zero.');
 });
 
 
@@ -846,30 +923,45 @@ test('.type', 4, function () {
 
 
 // Methods
-test('.toContentMathML()', 6, function () {
-  equal(MathLib.sin.toContentMathML().toString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><sin/><ci>x</ci></apply></lambda></math>', 'MathLib.sin.toContentMathML()');
-  equal(MathLib.exp(MathLib.sin).toContentMathML().toString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><exp/><apply><sin/><ci>x</ci></apply></apply></lambda></math>', 'MathLib.exp(MathLib.sin).toContentMathML()');
-// equal(MathLib.pow(MathLib.sin, 2).toContentMathML(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><power/><apply><sin/><ci>x</ci></apply><cn>2</cn></apply></lambda></math>', 'MathLib.pow(MathLib.sin, 2).toContentMathML()');
-  equal(MathLib.plus(MathLib.sin, 2).toContentMathML(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><apply><sin/><ci>x</ci></apply><cn>2</cn></apply></lambda></math>', 'MathLib.plus(MathLib.sin, 2).toContentMathML()');
-  equal(MathLib.plus(2, MathLib.sin).toContentMathML(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><cn>2</cn><apply><sin/><ci>x</ci></apply></apply></lambda></math>', 'MathLib.plus(2, MathLib.sin).toContentMathML()');
-  equal(MathLib.times(2, MathLib.sin).toContentMathML(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/><cn>2</cn><apply><sin/><ci>x</ci></apply></apply></lambda></math>', 'MathLib.times(2, MathLib.sin).toContentMathML()');
-  equal(MathLib.plus(MathLib.sin, MathLib.cos).toContentMathML(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><apply><sin/><ci>x</ci></apply><apply><cos/><ci>x</ci></apply></apply></lambda></math>', 'MathLib.plus(MathLib.sin, MathLib.cos).toContentMathML()');
+test('.toContentMathMLString()', 6, function () {
+  equal(MathLib.sin.toContentMathMLString().toString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><sin/><ci>x</ci></apply></lambda></math>', 'MathLib.sin.toContentMathMLString()');
+  equal(MathLib.exp(MathLib.sin).toContentMathMLString().toString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><exp/><apply><sin/><ci>x</ci></apply></apply></lambda></math>', 'MathLib.exp(MathLib.sin).toContentMathMLString()');
+// equal(MathLib.pow(MathLib.sin, 2).toContentMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><power/><apply><sin/><ci>x</ci></apply><cn>2</cn></apply></lambda></math>', 'MathLib.pow(MathLib.sin, 2).toContentMathMLString()');
+  equal(MathLib.plus(MathLib.sin, 2).toContentMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><apply><sin/><ci>x</ci></apply><cn>2</cn></apply></lambda></math>', 'MathLib.plus(MathLib.sin, 2).toContentMathMLString()');
+  equal(MathLib.plus(2, MathLib.sin).toContentMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><cn>2</cn><apply><sin/><ci>x</ci></apply></apply></lambda></math>', 'MathLib.plus(2, MathLib.sin).toContentMathMLString()');
+  equal(MathLib.times(2, MathLib.sin).toContentMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/><cn>2</cn><apply><sin/><ci>x</ci></apply></apply></lambda></math>', 'MathLib.times(2, MathLib.sin).toContentMathMLString()');
+  equal(MathLib.plus(MathLib.sin, MathLib.cos).toContentMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><apply><sin/><ci>x</ci></apply><apply><cos/><ci>x</ci></apply></apply></lambda></math>', 'MathLib.plus(MathLib.sin, MathLib.cos).toContentMathMLString()');
 });
 
 
-test('.toMathML()', 6, function () {
-  equal(MathLib.sin.toMathML(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></math>', 'MathLib.sin.toMathML()');
-  equal(MathLib.exp(MathLib.sin).toMathML(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>exp</mi><mo>&af;</mo><mfenced><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></mfenced></mrow></math>', 'MathLib.exp(MathLib.sin).toMathML()');
-  // equal(MathLib.pow(MathLib.sin, 2).toMathML(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow><mn>2</mn></msup></mrow></math>', 'MathLib.pow(MathLib.sin, 2).toMathML()');
-  equal(MathLib.plus(MathLib.sin, 2).toMathML(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow><mo>+</mo><mn>2</mn></mrow></math>', 'MathLib.plus(MathLib.sin, 2).toMathML()');
-  equal(MathLib.plus(2, MathLib.sin).toMathML(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>+</mo><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></mrow></math>', 'MathLib.plus(2, MathLib.sin).toMathML()');
-  equal(MathLib.times(2, MathLib.sin).toMathML(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>*</mo><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></mrow></math>', 'MathLib.times(2, MathLib.sin).toMathML()');
-  equal(MathLib.plus(MathLib.sin, MathLib.cos).toMathML(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow><mo>+</mo><mrow><mi>cos</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></mrow></math>', 'MathLib.plus(MathLib.sin, MathLib.cos).toMathML()');
+
+test('.toLaTeX()', 7, function () {
+  equal(MathLib.sin.toLaTeX(), '\\sin(x)', 'MathLib.sin.toLaTeX() should be sin(x)');
+  equal(MathLib.sin.toLaTeX('z'), '\\sin(z)', 'custom bound variable');
+  equal(MathLib.exp(MathLib.sin).toLaTeX(), '\\exp(\\sin(x))', 'MathLib.exp(MathLib.sin).toLaTeX() should be exp(sin(x))');
+  // equal(MathLib.pow(MathLib.sin, 2).toLaTeX(), 'sin(x)^2', 'MathLib.pow(MathLib.sin, 2).toLaTeX() = sin(x)^2');
+  equal(MathLib.plus(MathLib.sin, 2).toLaTeX(), '\\sin(x)+2', 'MathLib.plus(MathLib.sin, 2).toLaTeX() = sin(x)+2');
+  equal(MathLib.plus(2, MathLib.sin).toLaTeX(), '2+\\sin(x)', 'MathLib.plus(2, MathLib.sin).toLaTeX() = 2+sin(x)');
+  equal(MathLib.times(2, MathLib.sin).toLaTeX(), '2*\\sin(x)', 'MathLib.times(2, MathLib.sin).toLaTeX() = 2*sin(x)');
+  equal(MathLib.plus(MathLib.sin, MathLib.cos).toLaTeX(), '\\sin(x)+\\cos(x)', 'MathLib.plus(MathLib.sin, MathLib.cos).toLaTeX() = sin(x)+cos(x)');
 });
 
 
-test('.toString()', 6, function () {
+
+test('.toMathMLString()', 6, function () {
+  equal(MathLib.sin.toMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></math>', 'MathLib.sin.toMathML()');
+  equal(MathLib.exp(MathLib.sin).toMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>exp</mi><mo>&af;</mo><mfenced><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></mfenced></mrow></math>', 'MathLib.exp(MathLib.sin).toMathML()');
+  // equal(MathLib.pow(MathLib.sin, 2).toMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow><mn>2</mn></msup></mrow></math>', 'MathLib.pow(MathLib.sin, 2).toMathML()');
+  equal(MathLib.plus(MathLib.sin, 2).toMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow><mo>+</mo><mn>2</mn></mrow></math>', 'MathLib.plus(MathLib.sin, 2).toMathML()');
+  equal(MathLib.plus(2, MathLib.sin).toMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>+</mo><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></mrow></math>', 'MathLib.plus(2, MathLib.sin).toMathML()');
+  equal(MathLib.times(2, MathLib.sin).toMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>*</mo><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></mrow></math>', 'MathLib.times(2, MathLib.sin).toMathML()');
+  equal(MathLib.plus(MathLib.sin, MathLib.cos).toMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow><mo>+</mo><mrow><mi>cos</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></mrow></math>', 'MathLib.plus(MathLib.sin, MathLib.cos).toMathML()');
+});
+
+
+test('.toString()', 7, function () {
   equal(MathLib.sin.toString(), 'sin(x)', 'MathLib.sin.toString() should be sin(x)');
+  equal(MathLib.sin.toString('z'), 'sin(z)', 'custom bound variable');
   equal(MathLib.exp(MathLib.sin).toString(), 'exp(sin(x))', 'MathLib.exp(MathLib.sin).toString() should be exp(sin(x))');
   // equal(MathLib.pow(MathLib.sin, 2).toString(), 'sin(x)^2', 'MathLib.pow(MathLib.sin, 2).toString() = sin(x)^2');
   equal(MathLib.plus(MathLib.sin, 2).toString(), 'sin(x)+2', 'MathLib.plus(MathLib.sin, 2).toString() = sin(x)+2');
@@ -948,9 +1040,9 @@ test('.toLaTeX()', 1, function () {
 });
 
 
-test('.toMathML()', 1, function () {
+test('.toMathMLString()', 1, function () {
   var line = MathLib.line([3, 2, 1]);
-  equal(line.toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>)</mo></mrow>', '.toMathML()');
+  equal(line.toMathMLString(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>)</mo></mrow>', '.toMathMLString()');
 });
 
 
@@ -1084,8 +1176,10 @@ test('.parse() vector', 1, function () {
   // deepEqual(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><cn>34</cn></apply></math>').parse(), -34, 'unary minus');
 
 test('.toString()', 2, function (){
-  equal(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>x</bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><apply><power/><ci>x</ci><cn>2</cn></apply><apply><power/><ci>x</ci><cn>3</cn></apply></apply></lambda></math>').toString(), 'x^2+x^3');
-  equal(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>x</bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><apply><power/><apply><sin/><ci>x</ci></apply><cn>2</cn></apply><apply><power/><apply><cos/><ci>x</ci></apply><cn>2</cn></apply></apply></lambda></math>').toString(), 'sin(x)^2+cos(x)^2');
+  var s1 = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>x</bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><apply><power/><ci>x</ci><cn>2</cn></apply><apply><power/><ci>x</ci><cn>3</cn></apply></apply></lambda></math>',
+      s2 = '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>a</mi><mo>&InvisibleTimes;</mo><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mi>b</mi><mo>&InvisibleTimes;</mo><mi>x</mi><mo>+</mo><mi>c</mi></mrow></math>';
+  equal(MathLib.MathML(s1).toString(), s1);
+  equal(MathLib.MathML(s2).toString(), s2);
 });
 
 
@@ -1478,9 +1572,9 @@ test('.toComplex()', 1, function () {
 });
 
 
-test('.toContentMathML()', 1, function () {
+test('.toContentMathMLString()', 1, function () {
   var m = MathLib.matrix([[1, 2], [3, 4]]);
-  deepEqual(m.toContentMathML(), '<matrix><matrixrow><cn>1</cn><cn>2</cn></matrixrow><matrixrow><cn>3</cn><cn>4</cn></matrixrow></matrix>', '.toContentMathML()');
+  deepEqual(m.toContentMathMLString(), '<matrix><matrixrow><cn>1</cn><cn>2</cn></matrixrow><matrixrow><cn>3</cn><cn>4</cn></matrixrow></matrix>', '.toContentMathMLString()');
 });
 
 
@@ -1490,9 +1584,9 @@ test('.toLaTeX()', 1, function () {
 });
 
 
-test('.toMathML()', 1, function () {
+test('.toMathMLString()', 1, function () {
   var m = MathLib.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-  deepEqual(m.toMathML(), '<mrow><mo> ( </mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>4</mn></mtd><mtd><mn>5</mn></mtd><mtd><mn>6</mn></mtd></mtr><mtr><mtd><mn>7</mn></mtd><mtd><mn>8</mn></mtd><mtd><mn>9</mn></mtd></mtr></mtable><mo> ) </mo></mrow>', '.toMathML()');
+  deepEqual(m.toMathMLString(), '<mrow><mo> ( </mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>4</mn></mtd><mtd><mn>5</mn></mtd><mtd><mn>6</mn></mtd></mtr><mtr><mtd><mn>7</mn></mtd><mtd><mn>8</mn></mtd><mtd><mn>9</mn></mtd></mtr></mtable><mo> ) </mo></mrow>', '.toMathMLString()');
 });
 
 
@@ -1735,10 +1829,10 @@ test('.toLaTeX()', 2, function () {
 });
 
 
-test('.toMathML()', 2, function () {
+test('.toMathMLString()', 2, function () {
   var point = MathLib.point([3, 2, 1]);
-  equal(point.toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr></mtable><mo>)</mo></mrow>', '.toMathML()');
-  equal(point.toMathML(true), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>)</mo></mrow>', '.toMathML()');
+  equal(point.toMathMLString(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr></mtable><mo>)</mo></mrow>', '.toMathMLString()');
+  equal(point.toMathMLString(true), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>)</mo></mrow>', '.toMathMLString()');
 });
 
 
@@ -1848,35 +1942,47 @@ test(".times()", 3, function () {
   deepEqual(p1.times(p), [0, 0, 0, 1, 2, 3], ".times(polynomial)");
 });
 
-test(".toContentMathML()", 2, function () {
+test(".toContentMathMLString()", 2, function () {
   var p = MathLib.polynomial([1, 2, 3]),
       q = MathLib.polynomial([-1, 0, 1]);
-  deepEqual(p.toContentMathML(), '<apply><plus/><cn>1</cn><apply><times/><cn>2</cn><ci>x</ci></apply><apply><times/><cn>3</cn><apply><power/><ci>x</ci><cn>2</cn></apply></apply></apply>', ".toContentMathML()");
-  deepEqual(q.toContentMathML(), '<apply><plus/><cn>-1</cn><apply><times/><cn>1</cn><apply><power/><ci>x</ci><cn>2</cn></apply></apply></apply>', ".toContentMathML()");
+  deepEqual(p.toContentMathMLString(), '<apply><plus/><apply><times/><cn>3</cn><apply><power/><ci>x</ci><cn>2</cn></apply></apply><apply><times/><cn>2</cn><ci>x</ci></apply><cn>1</cn></apply>', ".toContentMathMLString()");
+  deepEqual(q.toContentMathMLString(), '<apply><plus/><apply><times/><cn>1</cn><apply><power/><ci>x</ci><cn>2</cn></apply></apply><cn>-1</cn></apply>', ".toContentMathMLString()");
+});
+
+
+
+test(".toFunctn()", 3, function () {
+  var p = MathLib.polynomial([1, 2, 3]),
+      f = p.toFunctn(),
+      sinf = MathLib.sin(f);
+
+  equal(f.type, 'functn', '.type should be functn');
+  equal(sinf.toString(), 'sin(3*x^2+2*x+1)', 'composition with other functions');
+  equal(f(42), 5377, 'fuctn evaluation');
 });
 
 
 test(".toLaTeX()", 2, function () {
   var p = MathLib.polynomial([1, 2, 3]),
       q = MathLib.polynomial([-1, 0, 1]);
-  deepEqual(p.toLaTeX(), '1+2x+3x^{2}', ".toLaTeX()");
-  deepEqual(q.toLaTeX(), '-1+1x^{2}', ".toLaTeX()");
+  deepEqual(p.toLaTeX(), '3*x^{2}+2x+1', ".toLaTeX()");
+  deepEqual(q.toLaTeX(), '1*x^{2}-1', ".toLaTeX()");
 });
 
 
-test(".toMathML()", 2, function () {
+test(".toMathMLString()", 2, function () {
   var p = MathLib.polynomial([1, 2, 3]),
       q = MathLib.polynomial([-1, 0, 1]);
-  deepEqual(p.toMathML(), '<mrow><mn>1</mn><mo>+</mo><mn>2</mn><mo>&#x2062;</mo><mi>x</mi><mo>+</mo><mn>3</mn><mo>&#x2062;</mo><msup><mi>x</mi><mn>2</mn></msup></mrow>', ".toMathML()");
-  deepEqual(q.toMathML(), '<mrow><mo>-</mo><mn>1</mn><mo>+</mo><mn>1</mn><mo>&#x2062;</mo><msup><mi>x</mi><mn>2</mn></msup></mrow>', ".toMathML()");
+  deepEqual(p.toMathMLString(), '<mrow><mo>+</mo><mn>3</mn><mo>&#x2062;</mo><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>2</mn><mo>&#x2062;</mo><mi>x</mi><mo>+</mo><mn>1</mn></mrow>', ".toMathMLString()");
+  deepEqual(q.toMathMLString(), '<mrow><mo>+</mo><mn>1</mn><mo>&#x2062;</mo><msup><mi>x</mi><mn>2</mn></msup><mo>-</mo><mn>1</mn></mrow>', ".toMathMLString()");
 });
 
 
 test(".toString()", 2, function () {
   var p = MathLib.polynomial([1, 2, 3]),
       q = MathLib.polynomial([-1, 0, 1]);
-  deepEqual(p.toString(), '1+2*x+3*x^2', ".toString()");
-  deepEqual(q.toString(), '-1+1*x^2', ".toString()");
+  deepEqual(p.toString(), '3*x^2+2*x+1', ".toString()");
+  deepEqual(q.toString(), '1*x^2-1', ".toString()");
 });
 
 
@@ -2106,13 +2212,13 @@ test('.toArray()', 3, function () {
 });
 
 
-test('.toContentMathML()', 3, function () {
+test('.toContentMathMLString()', 3, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true),
       e = MathLib.set();
-  equal(s.toContentMathML(),  '<set><cn>2</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathML() (set)');
-  equal(m.toContentMathML(),  '<set><cn>2</cn><cn>2</cn><cn>3</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathML() (multiset)');
-  equal(e.toContentMathML(),  '<emptyset/>', 'Testing .toContentMathML() (empty set)');
+  equal(s.toContentMathMLString(),  '<set><cn>2</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathMLString() (set)');
+  equal(m.toContentMathMLString(),  '<set><cn>2</cn><cn>2</cn><cn>3</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathMLString() (multiset)');
+  equal(e.toContentMathMLString(),  '<emptyset/>', 'Testing .toContentMathMLString() (empty set)');
 });
 
 
@@ -2126,13 +2232,13 @@ test('.toLaTeX()', 3, function () {
 });
 
 
-test('.toMathML()', 3, function () {
+test('.toMathMLString()', 3, function () {
   var s = MathLib.set([3, 3, 4, 9, 2, 8, 2]),
       m = MathLib.set([3, 3, 4, 9, 2, 8, 2], true),
       e = MathLib.set();
-  equal(s.toMathML(),  '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathML() (set)');
-  equal(m.toMathML(),  '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathML() (multiset)');
-  equal(e.toMathML(),  '<mi>&#x2205;</mi>', 'Testing .toMathML() (empty set)');
+  equal(s.toMathMLString(),  '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathMLString() (set)');
+  equal(m.toMathMLString(),  '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathMLString() (multiset)');
+  equal(e.toMathMLString(),  '<mi>&#x2205;</mi>', 'Testing .toMathMLString() (empty set)');
 });
 
 
@@ -2305,9 +2411,9 @@ test('.toArray()', 1, function () {
 });
 
 
-test('.toContentMathML()', 1, function () {
+test('.toContentMathMLString()', 1, function () {
   var v = MathLib.vector([1, 2, 3]);
-  equal(v.toContentMathML(), '<vector><cn>1</cn><cn>2</cn><cn>3</cn></vector>', ".toContentMathML()");
+  equal(v.toContentMathMLString(), '<vector><cn>1</cn><cn>2</cn><cn>3</cn></vector>', ".toContentMathML()String");
 });
 
 
@@ -2317,9 +2423,9 @@ test('.toLaTeX()', 1, function () {
 });
 
 
-test('.toMathML()', 1, function () {
+test('.toMathMLString()', 1, function () {
   var v = MathLib.vector([1, 2, 3]);
-  equal(v.toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>)</mo></mrow>', ".toMathML()");
+  equal(v.toMathMLString(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>)</mo></mrow>', ".toMathMLString()");
 });
 
 

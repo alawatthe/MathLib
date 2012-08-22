@@ -1,7 +1,7 @@
 {
   "name": "MathLib",
   "description": "JavaScript library for mathematical computations.",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "homepage": "http://MathLib.de",
   "author": {
     "name": "Alexander Zeilmann"

@@ -3,88 +3,6 @@
 
 
 prototypes.MathML = {};
-var listPrototype = {
-  toMathML: function () {
-    var handlers = {
-      apply: function (n) {
-        var f = n.childNodes[0],
-            args = n.childNodes.slice(1).map(function(x) {
-              return x.toMathML();
-            }),
-            str = '';
-
-        if (f.nodeName === 'plus') {
-          str = '<mrow>' + args.join('<mo>+</mo>') + '</mrow>';
-        }
-        else if (f.nodeName === 'times') {
-          str = '<mrow>' + args.join('<mo>*</mo>') + '</mrow>';
-        }
-        else if (f.nodeName === 'power') {
-          str = '<msup>' + args[0] + args[1] + '</msup>';
-        }
-        else {
-          str = '<mrow><mi>' + f.nodeName + '</mi><mo>&af;</mo><mfenced>' + args.join('') + '</mfenced></mrow>';
-        }
-        return str;
-      },
-      bvar: function () {return '';},
-      ci: function (n) {return '<mi>' + n.innerMathML + '</mi>';},
-      cn: function (n) {return '<mn>' + n.innerMathML + '</mn>';},
-      cs: function (n) {return '<ms>' + n.innerMathML + '</ms>';},
-      domainofapplication: function () {return '';},
-      lambda: function (n) {
-        return n.childNodes.reduce(function(old, cur) {
-          return old + cur.toMathML();
-        });
-      }, 
-      '#text': function (n) {return n.innerMathML;}
-    };
-    return handlers[this.nodeName](this);
-  },
-
-
-  toString: function () {
-    var handlers = {
-      apply: function (n) {
-        var f = n.childNodes[0],
-            args = n.childNodes.slice(1).map(function(x) {
-              return x.toString();
-            }),
-            str = '';
-
-        if (f.nodeName === 'plus') {
-          str = args.join('+');
-        }
-        else if (f.nodeName === 'times') {
-          str = args.join('*');
-        }
-        else if (f.nodeName === 'power') {
-          str = args[0] + '^' + args[1];
-        }
-        else {
-          str = f.nodeName + '(' + args.join(', ') + ')';
-        }
-        return str;
-      },
-      bvar: function () {return '';},
-      ci: function (n) {return n.innerMathML;},
-      cn: function (n) {return n.innerMathML;},
-      cs: function (n) {return n.innerMathML;},
-      domainofapplication: function () {return '';},
-      lambda: function (n) {
-        return n.childNodes.reduce(function(old, cur) {
-          return old + cur.toString();
-        });
-      }, 
-      '#text': function (n) {return n.innerMathML;}
-    };
-    return handlers[this.nodeName](this);
-  }
-};
-
-
-
-
 MathLib.MathML = function (MathMLString) {
   var tokenizer = new DOMParser(),
       MathMLdoc,
@@ -100,6 +18,9 @@ MathLib.MathML = function (MathMLString) {
 
   // ... and the unnecessary whitespace
   MathMLString = MathMLString.replace(/((?!cs)[^>]{2})>(\s)*</g, '$1><');
+
+  // Replace &InvisibleTimes; etc. before parsing
+  MathMLString = MathMLString.replace(/&(\w*);/g, '#$1;');
     
   // Gives an error in Firefox
   /* MathML = tokenizer.parseFromString(MathMLString, 'application/mathml+xml'); */
@@ -118,7 +39,8 @@ MathLib.MathML = function (MathMLString) {
       }
     }
     
-    var newToken = Object.create(listPrototype, {
+    //var newToken = Object.create(tokenPrototype, {
+    var newToken = Object.create({}, {
       attributes: {value: attributes},
       nodeName:   {value: t.nodeName},
       parentNode: {value: tokenStack[tokenStack.length-1]},
@@ -154,7 +76,8 @@ MathLib.MathML = function (MathMLString) {
 
     if (newToken.childNodes.length === 0) {
       if (newToken.nodeName === '#text') {
-        newToken.outerMathML = t.textContent;
+        // Restore &InvisibleTimes; etc.
+        newToken.outerMathML = t.textContent.replace(/#(\w*);/g, '&$1;')
       }
       else {
         newToken.outerMathML = '<' + newToken.nodeName + attributesString(newToken) + '/>';
@@ -210,7 +133,48 @@ MathLib.extendPrototype('MathML', 'constructor', MathLib.MathML);
 MathLib.extendPrototype('MathML', 'type', 'MathML');
 
 
+/*
+var tokenPrototype = {
+  toString: function () {
+      var handlers = {
+      apply: function (n) {
+        var f = n.childNodes[0],
+            args = n.childNodes.slice(1).map(function(x) {
+              return x.toString();
+            }),
+            str = '';
 
+        if (f.nodeName === 'plus') {
+          str = args.join('+');
+        }
+        else if (f.nodeName === 'times') {
+          str = args.join('*');
+        }
+        else if (f.nodeName === 'power') {
+          str = args[0] + '^' + args[1];
+        }
+        else {
+          str = f.nodeName + '(' + args.join(', ') + ')';
+        }
+        return str;
+      },
+      bvar: function () {return '';},
+      ci: function (n) {return n.innerMathML;},
+      cn: function (n) {return n.innerMathML;},
+      cs: function (n) {return n.innerMathML;},
+      domainofapplication: function () {return '';},
+      lambda: function (n) {
+        return n.childNodes.reduce(function(old, cur) {
+          return old + cur.toString();
+        });
+      }, 
+      '#text': function (n) {return n.innerMathML;}
+    };
+    return handlers[this.nodeName](this); 
+  }
+
+};
+*/
 // ### MathML.prototype.parse()
 // Parses the MathML.
 //
@@ -246,12 +210,12 @@ MathLib.extendPrototype('MathML', 'parse', function () {
         
         if (innerFunc === undefined) {
           return MathLib.functn(function (x) {return MathLib[funcName](x);}, {
-            MathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + node.outerMathML + '</lambda></math>'
+            contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + node.outerMathML + '</lambda></math>'
           });
         }
         else {
           return MathLib.functn(function (x) {return MathLib[funcName](innerFunc(x));}, {
-            MathMLString: node.outerMathML
+            contentMathMLString: node.outerMathML
           });
         }
         
@@ -282,7 +246,7 @@ MathLib.extendPrototype('MathML', 'parse', function () {
         return MathLib.MathML.variables[node.innerMathML];
       }
       else {
-        return MathLib.functn(function (x) {return x;}, {MathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><ident/><ci>x</ci></apply></lambda></math>'});
+        return MathLib.functn(function (x) {return x;}, {contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><ident/><ci>x</ci></apply></lambda></math>'});
       }
     },
 
@@ -330,7 +294,7 @@ MathLib.extendPrototype('MathML', 'parse', function () {
 
       if (innerFunc[0] === undefined) {
         return MathLib.functn(function (x) {return MathLib[funcName](x);}, {
-          MathMLString: node.outerMathML,
+          contentMathMLString: node.outerMathML,
           domain: domain
         });
       }
@@ -338,7 +302,7 @@ MathLib.extendPrototype('MathML', 'parse', function () {
         return MathLib.functn(function (x) {return MathLib[funcName].apply(null, innerFunc.map(function (f){
           return typeof f === 'function' ? f(x) : f;
         }));}, {
-          MathMLString: node.outerMathML,
+          contentMathMLString: node.outerMathML,
           domain: domain
         });
       }
@@ -361,10 +325,10 @@ MathLib.extendPrototype('MathML', 'parse', function () {
       return MathLib.set(node.childNodes.map(parser), type);
     },
 
-    "false": function () {
+    'false': function () {
       return false;
     },
-    "true": function () {
+    'true': function () {
       return true;
     },
     exponentiale: function () {
@@ -404,23 +368,49 @@ MathLib.extendPrototype('MathML', 'parse', function () {
 
 
 
-// ### MathML.prototype.toContentMathML()
-// Returns a presentation MathML string
+// ### MathML.prototype.toMathMLString()
+// Converts the content MathMl to a presentation MathML string
 // 
 // *@return{string}*
-MathLib.extendPrototype('MathML', 'toContentMathML', function () {
-  return '<math xmlns="http://www.w3.org/1998/Math/MathML">' + this.childNodes[0].toMathML() +'</math>';
+MathLib.extendPrototype('MathML', 'toMathMLString', function () {
+  var handlers = {
+    apply: function (n) {
+      var f = n.childNodes[0],
+          args = n.childNodes.slice(1).map(function(x) {
+            return handlers[x.nodeName](x);
+          }),
+          str = '';
+
+      if (f.nodeName === 'plus') {
+        str = '<mrow>' + args.join('<mo>+</mo>') + '</mrow>';
+      }
+      else if (f.nodeName === 'times') {
+        str = '<mrow>' + args.join('<mo>*</mo>') + '</mrow>';
+      }
+      else if (f.nodeName === 'power') {
+        str = '<msup>' + args[0] + args[1] + '</msup>';
+      }
+      else {
+        str = '<mrow><mi>' + f.nodeName + '</mi><mo>&af;</mo><mfenced>' + args.join('') + '</mfenced></mrow>';
+      }
+      return str;
+    },
+    bvar: function () {return '';},
+    ci: function (n) {return '<mi>' + n.innerMathML + '</mi>';},
+    cn: function (n) {return '<mn>' + n.innerMathML + '</mn>';},
+    cs: function (n) {return '<ms>' + n.innerMathML + '</ms>';},
+    domainofapplication: function () {return '';},
+    lambda: function (n) {
+      return n.childNodes.reduce(function(old, cur) {
+        return old + handlers[cur.nodeName](cur);
+      }, '');
+    }, 
+    '#text': function (n) {return n.innerMathML;}
+  };
+
+  return'<math xmlns="http://www.w3.org/1998/Math/MathML">' + handlers[this.childNodes[0].nodeName](this.childNodes[0]) + '</math>';
 });
 
-
-
-// ### MathML.prototype.toMathML()
-// Returns a presentation MathML string
-// 
-// *@return{string}*
-MathLib.extendPrototype('MathML', 'toMathML', function () {
-  return '<math xmlns="http://www.w3.org/1998/Math/MathML">' + this.childNodes[0].toMathML() +'</math>';
-});
 
 
 
@@ -429,7 +419,7 @@ MathLib.extendPrototype('MathML', 'toMathML', function () {
 // 
 // *@return{string}*
 MathLib.extendPrototype('MathML', 'toString', function () {
-  return this.childNodes[0].toString();
+  return this.outerMathML;
 });
 
 

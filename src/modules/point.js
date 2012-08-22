@@ -268,11 +268,11 @@ MathLib.extendPrototype('point', 'toLaTeX', function (opt) {
 //
 // *@returns {boolean}* Optional parameter to indicate if the output should be projective.
 // *@returns {string}*
-MathLib.extendPrototype('point', 'toMathML', function (opt) {
+MathLib.extendPrototype('point', 'toMathMLString', function (opt) {
   var p = opt ? this : this.normalize().slice(0, -1);
 
   return p.reduce(function (old, cur) {
-    return old + '<mtr><mtd>' + MathLib.toMathML(cur) + '</mtd></mtr>';
+    return old + '<mtr><mtd>' + MathLib.toMathMLString(cur) + '</mtd></mtr>';
   }, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
 });
 

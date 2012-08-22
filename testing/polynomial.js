@@ -98,35 +98,47 @@ test(".times()", 3, function () {
   deepEqual(p1.times(p), [0, 0, 0, 1, 2, 3], ".times(polynomial)");
 });
 
-test(".toContentMathML()", 2, function () {
+test(".toContentMathMLString()", 2, function () {
   var p = MathLib.polynomial([1, 2, 3]),
       q = MathLib.polynomial([-1, 0, 1]);
-  deepEqual(p.toContentMathML(), '<apply><plus/><cn>1</cn><apply><times/><cn>2</cn><ci>x</ci></apply><apply><times/><cn>3</cn><apply><power/><ci>x</ci><cn>2</cn></apply></apply></apply>', ".toContentMathML()");
-  deepEqual(q.toContentMathML(), '<apply><plus/><cn>-1</cn><apply><times/><cn>1</cn><apply><power/><ci>x</ci><cn>2</cn></apply></apply></apply>', ".toContentMathML()");
+  deepEqual(p.toContentMathMLString(), '<apply><plus/><apply><times/><cn>3</cn><apply><power/><ci>x</ci><cn>2</cn></apply></apply><apply><times/><cn>2</cn><ci>x</ci></apply><cn>1</cn></apply>', ".toContentMathMLString()");
+  deepEqual(q.toContentMathMLString(), '<apply><plus/><apply><times/><cn>1</cn><apply><power/><ci>x</ci><cn>2</cn></apply></apply><cn>-1</cn></apply>', ".toContentMathMLString()");
+});
+
+
+
+test(".toFunctn()", 3, function () {
+  var p = MathLib.polynomial([1, 2, 3]),
+      f = p.toFunctn(),
+      sinf = MathLib.sin(f);
+
+  equal(f.type, 'functn', '.type should be functn');
+  equal(sinf.toString(), 'sin(3*x^2+2*x+1)', 'composition with other functions');
+  equal(f(42), 5377, 'fuctn evaluation');
 });
 
 
 test(".toLaTeX()", 2, function () {
   var p = MathLib.polynomial([1, 2, 3]),
       q = MathLib.polynomial([-1, 0, 1]);
-  deepEqual(p.toLaTeX(), '1+2x+3x^{2}', ".toLaTeX()");
-  deepEqual(q.toLaTeX(), '-1+1x^{2}', ".toLaTeX()");
+  deepEqual(p.toLaTeX(), '3*x^{2}+2x+1', ".toLaTeX()");
+  deepEqual(q.toLaTeX(), '1*x^{2}-1', ".toLaTeX()");
 });
 
 
-test(".toMathML()", 2, function () {
+test(".toMathMLString()", 2, function () {
   var p = MathLib.polynomial([1, 2, 3]),
       q = MathLib.polynomial([-1, 0, 1]);
-  deepEqual(p.toMathML(), '<mrow><mn>1</mn><mo>+</mo><mn>2</mn><mo>&#x2062;</mo><mi>x</mi><mo>+</mo><mn>3</mn><mo>&#x2062;</mo><msup><mi>x</mi><mn>2</mn></msup></mrow>', ".toMathML()");
-  deepEqual(q.toMathML(), '<mrow><mo>-</mo><mn>1</mn><mo>+</mo><mn>1</mn><mo>&#x2062;</mo><msup><mi>x</mi><mn>2</mn></msup></mrow>', ".toMathML()");
+  deepEqual(p.toMathMLString(), '<mrow><mo>+</mo><mn>3</mn><mo>&#x2062;</mo><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>2</mn><mo>&#x2062;</mo><mi>x</mi><mo>+</mo><mn>1</mn></mrow>', ".toMathMLString()");
+  deepEqual(q.toMathMLString(), '<mrow><mo>+</mo><mn>1</mn><mo>&#x2062;</mo><msup><mi>x</mi><mn>2</mn></msup><mo>-</mo><mn>1</mn></mrow>', ".toMathMLString()");
 });
 
 
 test(".toString()", 2, function () {
   var p = MathLib.polynomial([1, 2, 3]),
       q = MathLib.polynomial([-1, 0, 1]);
-  deepEqual(p.toString(), '1+2*x+3*x^2', ".toString()");
-  deepEqual(q.toString(), '-1+1*x^2', ".toString()");
+  deepEqual(p.toString(), '3*x^2+2*x+1', ".toString()");
+  deepEqual(q.toString(), '1*x^2-1', ".toString()");
 });
 
 

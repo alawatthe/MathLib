@@ -97,6 +97,56 @@ test('.artanh()', 3, function () {
 });
 
 
+test('.arctan2()', 24, function () {
+  equal(MathLib.arctan2(1, 1), Math.PI/4, 'simple check');
+  equal(MathLib.arctan2(-1, 1), -Math.PI/4, 'simple check');
+
+  // arctan2(&plusmn;0, -0) is &plusmn;&pi;
+  equal(MathLib.arctan2(+0, -0), Math.PI, 'Spec. 1: arctan2(&plusmn;0, -0) is &plusmn;&pi;');
+  equal(MathLib.arctan2(-0, -0), -Math.PI, 'Spec. 1: arctan2(&plusmn;0, -0) is &plusmn;&pi;');
+
+  // arctan2(&plusmn;0, +0) is &plusmn;0
+  equal(MathLib.isPosZero(MathLib.arctan2(+0, 0)), true, 'Spec. 2: arctan2(&plusmn;0, +0) is &plusmn;0');
+  equal(MathLib.isNegZero(MathLib.arctan2(-0, 0)), true, 'Spec. 2: arctan2(&plusmn;0, +0) is &plusmn;0');
+
+  // arctan2(&plusmn;0, x) is &plusmn;&pi; for x<0
+  equal(MathLib.arctan2(+0, -4), Math.PI, 'Spec. 3: arctan2(&plusmn;0, x) is &plusmn;&pi; for x<0');
+  equal(MathLib.arctan2(-0, -4), -Math.PI, 'Spec. 3: arctan2(&plusmn;0, x) is &plusmn;&pi; for x<0');
+
+  // arctan2(&plusmn;0, x) is &plusmn;0 for x>0
+  equal(MathLib.isPosZero(MathLib.arctan2(+0, 4)), true, 'Spec. 4: arctan2(&plusmn;0, x) is &plusmn;0 for x>0');
+  equal(MathLib.isNegZero(MathLib.arctan2(-0, 4)), true, 'Spec. 4: arctan2(&plusmn;0, x) is &plusmn;0 for x>0');
+
+  // arctan2(y, &plusmn;0) is -&pi;/2 for y < 0
+  equal(MathLib.arctan2(-4, 0), -Math.PI/2, 'Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0');
+  equal(MathLib.arctan2(-4, -0), -Math.PI/2, 'Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0');
+
+  // arctan2(y, &plusmn;0) is +&pi;/2 for y > 0
+  equal(MathLib.arctan2(4, 0), Math.PI/2, 'Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0');
+  equal(MathLib.arctan2(4, -0), Math.PI/2, 'Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0');
+
+  // arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0
+  equal(MathLib.arctan2(4, -Infinity), Math.PI, 'Spec. 7: arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0');
+  equal(MathLib.arctan2(-4, -Infinity), -Math.PI, 'Spec. 7: arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0');
+
+  // arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0
+  equal(MathLib.isPosZero(MathLib.arctan2(4, Infinity)), true, 'Spec. 8: arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0');
+  equal(MathLib.isNegZero(MathLib.arctan2(-4, Infinity)), true, 'Spec. 8: arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0');
+
+  // arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x
+  equal(MathLib.arctan2(Infinity, 4), Math.PI/2, 'Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x');
+  equal(MathLib.arctan2(-Infinity, 4), -Math.PI/2, 'Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x');
+
+  // arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4
+  equal(MathLib.arctan2(Infinity, -Infinity), 3/4*Math.PI, 'Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4');
+  equal(MathLib.arctan2(-Infinity, -Infinity), -3/4*Math.PI, 'Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4');
+
+  // arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4
+  equal(MathLib.arctan2(Infinity, Infinity), Math.PI/4, 'Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4');
+  equal(MathLib.arctan2(-Infinity, Infinity), -Math.PI/4, 'Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4');
+});
+
+
 test('.binomial()', 4, function () {
   equal(MathLib.binomial(0, 0), 1);
   equal(MathLib.binomial(6, 3), 20);
@@ -187,11 +237,12 @@ test('.floor()', 7, function () {
 });
 
 
-test('.hypot()', 8, function () {
+test('.hypot()', 9, function () {
   equal(MathLib.isEqual(MathLib.hypot(3), 3), true, 'MathLib.hypot(x) is Math.abs(x)');
   equal(MathLib.isEqual(MathLib.hypot(-3), 3), true, 'MathLib.hypot(x) is Math.abs(x)');
   equal(MathLib.isEqual(MathLib.hypot(3, 4), 5), true);
   equal(MathLib.isEqual(MathLib.hypot(3, 4, 12), 13), true);
+  equal(MathLib.isPosZero(MathLib.hypot(0, 0)), true);
   deepEqual(MathLib.hypot(NaN, 4), NaN);
   equal(MathLib.hypot(NaN, Infinity), Infinity);
   equal(MathLib.hypot(-Infinity, NaN), Infinity);
@@ -433,6 +484,26 @@ test('.round()', 7, function () {
   equal(MathLib.isPosZero(MathLib.round(+0)), true, 'MathLib.round(+0) should be +0');
   equal(MathLib.isNegZero(MathLib.round(-0)), true, 'MathLib.round(-0) should be -0');
   equal(MathLib.isNaN(MathLib.round(NaN)), true, 'MathLib.round(NaN) should be NaN');
+});
+
+
+test('.sign()', 7, function () {
+  // MathLib.sign(NaN) is NaN
+  equal(MathLib.isNaN(MathLib.sign(NaN)), true, 'Spec. 1: MathLib.sign(NaN) is NaN');
+
+  // MathLib.sign(0) is 0
+  equal(MathLib.isPosZero(MathLib.sign(0)), true, 'Spec. 2: MathLib.sign(0) is 0');
+
+  // MathLib.sign(-0) is -0
+  equal(MathLib.isNegZero(MathLib.sign(-0)), true, 'Spec. 3: MathLib.sign(-0) is -0');
+
+  // MathLib.sign(x) is 1 for x > 0
+  equal(MathLib.sign(4), 1, 'Spec. 4: MathLib.sign(x) is 1 for x > 0');
+  equal(MathLib.sign(Infinity), 1, 'Spec. 4: MathLib.sign(x) is 1 for x > 0');
+
+  // MathLib.sign(x) is -1 for x < 0
+  equal(MathLib.sign(-4), -1, 'Spec. 5: MathLib.sign(x) is -1 for x < 0');
+  equal(MathLib.sign(-Infinity), -1, 'Spec. 5: MathLib.sign(x) is -1 for x < 0');
 });
 
 
