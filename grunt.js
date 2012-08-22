@@ -53,7 +53,7 @@ module.exports = function(grunt) {
       MathLib: {
         src: ['<banner:meta.banner>',
               '<file_strip_banner:src/head.js>',
-              '<file_strip_banner:src/modules/mathML.js>',
+              '<file_strip_banner:src/modules/MathML.js>',
               '<file_strip_banner:src/modules/functn.js>',
               '<file_strip_banner:src/modules/screen.js>',
               '<file_strip_banner:src/modules/canvas.js>',
@@ -78,7 +78,7 @@ module.exports = function(grunt) {
               '<file_strip_banner:testing/complex.js>',
               '<file_strip_banner:testing/functn.js>',
               '<file_strip_banner:testing/line.js>',
-              '<file_strip_banner:testing/mathML.js>',
+              '<file_strip_banner:testing/MathML.js>',
               '<file_strip_banner:testing/matrix.js>',
               '<file_strip_banner:testing/permutation.js>',
               '<file_strip_banner:testing/point.js>',
