@@ -257,9 +257,9 @@ MathLib.extendPrototype('point', 'toComplex', function () {
 MathLib.extendPrototype('point', 'toLaTeX', function (opt) {
   var p = opt ? this : this.normalize().slice(0, -1);
 
-  return '\\begin{pmatrix}\n\t' + p.reduce(function (old, cur) {
-    return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
-  }) + '\n\\end{pmatrix}';
+  return '\\begin{pmatrix}' + p.reduce(function (old, cur) {
+    return old + '\\\\' + MathLib.toLaTeX(cur);
+  }) + '\\end{pmatrix}';
 });
 
 

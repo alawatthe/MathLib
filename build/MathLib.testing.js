@@ -1,4 +1,4 @@
-/*! MathLib v0.3.3 MathLib.de | MathLib.de/en/license */
+/*! MathLib v0.3.4 MathLib.de | MathLib.de/en/license */
 
 module("MathLib");
 test("general", 1, function () {
@@ -8,21 +8,59 @@ test("general", 1, function () {
 
 // Static methods
 test('.abs()', 7, function () {
-  equal(MathLib.abs(2), 2, 'MathLib.abs(2) should be 2');
-  equal(MathLib.abs(-2), 2, 'MathLib.abs(-2) should be 2');
-  equal(MathLib.abs(+Infinity), +Infinity, 'MathLib.abs(+Infinity) should be +Infinity');
-  equal(MathLib.abs(-Infinity), +Infinity, 'MathLib.abs(-Infinity) should be +Infinity');
-  equal(MathLib.isPosZero(MathLib.abs(+0)), true, 'MathLib.abs(Infinity) should be +0');
-  equal(MathLib.isPosZero(MathLib.abs(-0)), true, 'MathLib.abs(-Infinity) should be +0');
-  equal(MathLib.isNaN(MathLib.abs(NaN)), true, 'MathLib.abs(NaN) should be NaN');
+  // Spec. 1: MathLib.abs(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.abs(NaN)), true, 'Spec. 1: MathLib.abs(NaN) = NaN');
+
+  // Spec. 2: MathLib.abs(+0) = +0
+  equal(MathLib.isPosZero(MathLib.abs(+0)), true, 'Spec. 2: MathLib.abs(+0) = +0');
+
+  // Spec. 3: MathLib.abs(-0) = +0
+  equal(MathLib.isPosZero(MathLib.abs(-0)), true, 'Spec. 3: MathLib.abs(-0) = +0');
+
+  // Spec. 4: MathLib.abs(+&infin;) = &infin;
+  equal(MathLib.abs(+Infinity), +Infinity, 'Spec. 4: MathLib.abs(+&infin;) = &infin;');
+
+  // Spec. 5: MathLib.abs(-&infin;) = &infin;
+  equal(MathLib.abs(-Infinity), +Infinity, 'Spec. 5: MathLib.abs(-&infin;) = &infin;');
+
+  // Spec. 6: otherwise MathLib.abs(x) = absolute value of x
+  equal(MathLib.abs(1), 1, 'Spec. 6: otherwise MathLib.abs(x) = absolute value of x');
+  equal(MathLib.abs(-1), 1, 'Spec. 6: otherwise MathLib.abs(x) =  absolute value of x');
 });
 
 
-test('.arccos()', 4, function () {
-  equal(MathLib.arccos(0), Math.PI / 2);
-  equal(MathLib.arccos(1), 0);
-  equal(MathLib.arccos(MathLib.complex([3, 4])).isEqual(MathLib.complex([0.9368124611557207, -2.305509031243476942041])), true);
-  deepEqual(MathLib.arccos(NaN), NaN);
+test('.arccos()', 8, function () {
+  // Spec. 1: MathLib.arccos(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.arccos(NaN)), true, 'Spec. 1: MathLib.arccos(NaN) = NaN');
+
+  // Spec. 2: MathLib.arccos(x) = NaN if x>1
+  equal(MathLib.isNaN(MathLib.arccos(+Infinity)), true, 'Spec. 2: MathLib.arccos(x) = NaN if x>1');
+  equal(MathLib.isNaN(MathLib.arccos(+2)), true, 'Spec. 2: MathLib.arccos(x) = NaN if x>1');
+
+  // Spec. 3: MathLib.arccos(x) = NaN if x<-1
+  equal(MathLib.isNaN(MathLib.arccos(-Infinity)), true, 'Spec. 3: MathLib.arccos(x) = NaN if x<-1');
+  equal(MathLib.isNaN(MathLib.arccos(-2)), true, 'Spec. 3: MathLib.arccos(x) = NaN if x<-1');
+
+  // Spec. 4: otherwise MathLib.arccos(x) = inverse cosine of x
+  equal(MathLib.arccos(1), 0, 'Spec. 4: otherwise MathLib.arccos(x) = inverse cosine of x');
+  equal(MathLib.arccos(+0), Math.PI/2, 'Spec. 4: otherwise MathLib.arccos(x) = inverse cosine of x');
+  equal(MathLib.arccos(-1), Math.PI, 'Spec. 4: otherwise MathLib.arccos(x) = inverse cosine of x');
+});
+
+
+test('.arccot()', 5, function () {
+  // Spec. 1: MathLib.arccot(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.arccot(NaN)), true, 'Spec. 1: MathLib.arccot(NaN) = NaN');
+
+  // Spec. 2: MathLib.arccot(+&infin;) = +0
+  equal(MathLib.isPosZero(MathLib.arccot(+Infinity)), true, 'Spec. 2: MathLib.arccot(+&infin;) = +0');
+
+  // Spec. 3: MathLib.arccot(-&infin;) = &pi;
+  equal(MathLib.arccot(-Infinity), Math.PI, 'Spec. 3: MathLib.arccot(-&infin;) = &pi;');
+
+  // Spec. 4: otherwise MathLib.arccot(x) = inverse cotangent of x
+  equal(MathLib.arccot(1), Math.PI/4, 'Spec. 4: otherwise MathLib.arccot(x) = inverse cotangent of x');
+  equal(MathLib.arccot(+0), Math.PI/2, 'Spec. 4: otherwise MathLib.arccot(x) = inverse cotangent of x');
 });
 
 
@@ -33,9 +71,25 @@ test('.arccot()', 3, function () {
 });
 
 
-test('.arccsc()', 2, function () {
-  equal(MathLib.arccsc(1), Math.PI / 2);
-  deepEqual(MathLib.arccsc(NaN), NaN);
+test('.arccsc()', 9, function () {
+  // Spec. 1: MathLib.arccsc(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.arccsc(NaN)), true, 'Spec. 1: MathLib.arccsc(NaN) = NaN');
+
+  // Spec. 2: MathLib.arccsc(x) = NaN (if -1<x<1)
+  equal(MathLib.isNaN(MathLib.arccsc(+0)), true, 'Spec. 2: MathLib.arccsc(x) = NaN (if -1<x<1)');
+  equal(MathLib.isNaN(MathLib.arccsc(-0)), true, 'Spec. 2: MathLib.arccsc(x) = NaN (if -1<x<1)');
+  equal(MathLib.isNaN(MathLib.arccsc(0.5)), true, 'Spec. 2: MathLib.arccsc(x) = NaN (if -1<x<1)');
+
+  // Spec. 3: MathLib.arccsc(+&infin;) = +0
+  equal(MathLib.isPosZero(MathLib.arccsc(+Infinity)), true, 'Spec. 3: MathLib.arccsc(+&infin;) = +0');
+
+  // Spec. 4: MathLib.arccsc(-&infin;) = -0
+  equal(MathLib.isNegZero(MathLib.arccsc(-Infinity)), true, 'Spec. 4: MathLib.arccsc(-&infin;) = -0');
+
+  // Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x
+  equal(MathLib.arccsc(1), Math.PI / 2, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
+  equal(MathLib.arccsc(-1), -Math.PI / 2, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
+  equal(MathLib.arccsc(2), Math.PI / 6, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
 });
 
 
@@ -57,24 +111,124 @@ test('.arcsch()', 2, function () {
 });
 
 
-test('.arcsec()', 2, function () {
-  equal(MathLib.arcsec(1), 0);
-  deepEqual(MathLib.arcsec(NaN), NaN);
+test('.arcsec()', 9, function () {
+  // Spec. 1: MathLib.arcsec(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.arcsec(NaN)), true, 'Spec. 1: MathLib.arcsec(NaN) = NaN');
+
+  // Spec. 2: MathLib.arcsec(x) = NaN (if -1<x<1)
+  equal(MathLib.isNaN(MathLib.arcsec(+0)), true, 'Spec. 2: MathLib.arcsec(x) = NaN (if -1<x<1)');
+  equal(MathLib.isNaN(MathLib.arcsec(-0)), true, 'Spec. 2: MathLib.arcsec(x) = NaN (if -1<x<1)');
+  equal(MathLib.isNaN(MathLib.arcsec(0.5)), true, 'Spec. 2: MathLib.arcsec(x) = NaN (if -1<x<1)');
+
+  // Spec. 3: MathLib.arcsec(+&infin;) = &pi;/2
+  equal(MathLib.arcsec(+Infinity), Math.PI/2, 'Spec. 3: MathLib.arcsec(+&infin;) = &pi;/2');
+
+  // Spec. 4: MathLib.arcsec(-&infin;) = &pi;/2
+  equal(MathLib.arcsec(-Infinity), Math.PI/2, 'Spec. 4: MathLib.arcsec(-&infin;) = &pi;/2');
+
+  // Spec. 5: MathLib.arcsec(1) = +0
+  equal(MathLib.isPosZero(MathLib.arcsec(1)), true, 'Spec. 5: otherwise MathLib.arcsec(1) = +0');
+
+  // Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x
+  equal(MathLib.arcsec(-1), Math.PI, 'Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x');
+  equal(MathLib.arcsec(2), 2 * Math.PI / 6, 'Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x');
 });
 
 
-test('.arcsin()', 4, function () {
-  equal(MathLib.arcsin(0), 0);
-  equal(MathLib.arcsin(1), Math.PI / 2);
-  equal(MathLib.isEqual(MathLib.arcsin(MathLib.complex([3, 4])), MathLib.complex([0.6339838656391759, 2.305509031243476942041])), true);
-  deepEqual(MathLib.arcsin(NaN), NaN);
+test('.arcsin()', 9, function () {
+  // Spec. 1: MathLib.arcsin(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.arcsin(NaN)), true, 'Spec. 1: MathLib.arcsin(NaN) = NaN');
+
+  // Spec. 2: MathLib.arcsin(+0) = +0
+  equal(MathLib.isPosZero(MathLib.arcsin(+0)), true, 'Spec. 2: MathLib.arcsin(+0) = +0');
+
+  // Spec. 3: MathLib.arcsin(-0) = -0
+  equal(MathLib.isNegZero(MathLib.arcsin(-0)), true, 'Spec. 3: MathLib.arcsin(-0) = -0');
+
+  // Spec. 4: MathLib.arcsin(x) = NaN if x>1
+  equal(MathLib.isNaN(MathLib.arcsin(+Infinity)), true, 'Spec. 4: MathLib.arcsin(x) = NaN if x>1');
+  equal(MathLib.isNaN(MathLib.arcsin(+2)), true, 'Spec. 4: MathLib.arcsin(x) = NaN if x>1');
+
+  // Spec. 5: MathLib.arcsin(x) = NaN if x<-1
+  equal(MathLib.isNaN(MathLib.arcsin(-Infinity)), true, 'Spec. 5: MathLib.arcsin(x) = NaN if x<-1');
+  equal(MathLib.isNaN(MathLib.arcsin(-2)), true, 'Spec. 5: MathLib.arcsin(x) = NaN if x<-1');
+
+  // Spec. 6: otherwise MathLib.arcsin(x) = inverse sine of x
+  equal(MathLib.arcsin(1), Math.PI / 2, 'Spec. 6: otherwise MathLib.arcsin(x) = inverse sine of x');
+  equal(MathLib.arcsin(-1), -Math.PI / 2, 'Spec. 6: otherwise MathLib.arcsin(x) = inverse sine of x');
 });
 
 
-test('.arctan()', 3, function () {
-  equal(MathLib.arctan(0), 0);
-  equal(MathLib.arctan(1), Math.PI / 4);
-  deepEqual(MathLib.arctan(NaN), NaN);
+test('.arctan()', 7, function () {
+  // Spec. 1: MathLib.arctan(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.arctan(NaN)), true, 'Spec. 1: MathLib.arctan(NaN) = NaN');
+
+  // Spec. 2: MathLib.arctan(+0) = +0
+  equal(MathLib.isPosZero(MathLib.arctan(+0)), true, 'Spec. 2: MathLib.arctan(+0) = +0');
+
+  // Spec. 3: MathLib.arctan(-0) = -0
+  equal(MathLib.isNegZero(MathLib.arctan(-0)), true, 'Spec. 3: MathLib.arctan(-0) = -0');
+
+  // Spec. 4: MathLib.arctan(+&infin;) = +&pi;/2
+  equal(MathLib.arctan(+Infinity), +Math.PI / 2, 'Spec. 4: MathLib.arctan(+&infin;) = +&pi;/2');
+
+  // Spec. 5: MathLib.arctan(-&infin;) = -&pi;/2
+  equal(MathLib.arctan(-Infinity), -Math.PI / 2, 'Spec. 5: MathLib.arctan(-&infin;) = -&pi;/2');
+
+  // Spec. 6: otherwise MathLib.arctan(x) = inverse tangent of x
+  equal(MathLib.arctan(1), Math.PI / 4, 'Spec. 6: otherwise MathLib.arctan(x) = inverse tangent of x');
+  equal(MathLib.arctan(-1), -Math.PI / 4, 'Spec. 6: otherwise MathLib.arctan(x) = inverse tangent of x');
+});
+
+
+test('.arctan2()', 24, function () {
+  // Spec. 1: arctan2(&plusmn;0, -0) is &plusmn;&pi;
+  equal(MathLib.arctan2(+0, -0), Math.PI, 'Spec. 1: arctan2(&plusmn;0, -0) is &plusmn;&pi;');
+  equal(MathLib.arctan2(-0, -0), -Math.PI, 'Spec. 1: arctan2(&plusmn;0, -0) is &plusmn;&pi;');
+
+  // Spec. 2: arctan2(&plusmn;0, +0) is &plusmn;0
+  equal(MathLib.isPosZero(MathLib.arctan2(+0, 0)), true, 'Spec. 2: arctan2(&plusmn;0, +0) is &plusmn;0');
+  equal(MathLib.isNegZero(MathLib.arctan2(-0, 0)), true, 'Spec. 2: arctan2(&plusmn;0, +0) is &plusmn;0');
+
+  // Spec. 3: arctan2(&plusmn;0, x) is &plusmn;&pi; for x<0
+  equal(MathLib.arctan2(+0, -4), Math.PI, 'Spec. 3: arctan2(&plusmn;0, x) is &plusmn;&pi; for x<0');
+  equal(MathLib.arctan2(-0, -4), -Math.PI, 'Spec. 3: arctan2(&plusmn;0, x) is &plusmn;&pi; for x<0');
+
+  // Spec. 4: arctan2(&plusmn;0, x) is &plusmn;0 for x>0
+  equal(MathLib.isPosZero(MathLib.arctan2(+0, 4)), true, 'Spec. 4: arctan2(&plusmn;0, x) is &plusmn;0 for x>0');
+  equal(MathLib.isNegZero(MathLib.arctan2(-0, 4)), true, 'Spec. 4: arctan2(&plusmn;0, x) is &plusmn;0 for x>0');
+
+  // Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0
+  equal(MathLib.arctan2(-4, 0), -Math.PI/2, 'Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0');
+  equal(MathLib.arctan2(-4, -0), -Math.PI/2, 'Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0');
+
+  // Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0
+  equal(MathLib.arctan2(4, 0), Math.PI/2, 'Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0');
+  equal(MathLib.arctan2(4, -0), Math.PI/2, 'Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0');
+
+  // Spec. 7: arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0
+  equal(MathLib.arctan2(4, -Infinity), Math.PI, 'Spec. 7: arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0');
+  equal(MathLib.arctan2(-4, -Infinity), -Math.PI, 'Spec. 7: arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0');
+
+  // Spec. 8: arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0
+  equal(MathLib.isPosZero(MathLib.arctan2(4, Infinity)), true, 'Spec. 8: arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0');
+  equal(MathLib.isNegZero(MathLib.arctan2(-4, Infinity)), true, 'Spec. 8: arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0');
+
+  // Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x
+  equal(MathLib.arctan2(Infinity, 4), Math.PI/2, 'Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x');
+  equal(MathLib.arctan2(-Infinity, 4), -Math.PI/2, 'Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x');
+
+  // Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4
+  equal(MathLib.arctan2(Infinity, -Infinity), 3/4*Math.PI, 'Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4');
+  equal(MathLib.arctan2(-Infinity, -Infinity), -3/4*Math.PI, 'Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4');
+
+  // Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4
+  equal(MathLib.arctan2(Infinity, Infinity), Math.PI/4, 'Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4');
+  equal(MathLib.arctan2(-Infinity, Infinity), -Math.PI/4, 'Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4');
+
+  // Spec. 12: otherwise MathLib.arctan2(y, x) = -i ln((x+iy)/sqrt(x^2+y^2)
+  equal(MathLib.arctan2(1, 1), Math.PI/4, 'Spec. 12: otherwise MathLib.arctan2(y, x) = -i ln((x+iy)/sqrt(x^2+y^2)');
+  equal(MathLib.arctan2(-1, 1), -Math.PI/4, 'Spec. 12: otherwise MathLib.arctan2(y, x) = -i ln((x+iy)/sqrt(x^2+y^2)');
 });
 
 
@@ -99,56 +253,6 @@ test('.artanh()', 3, function () {
 });
 
 
-test('.arctan2()', 24, function () {
-  equal(MathLib.arctan2(1, 1), Math.PI/4, 'simple check');
-  equal(MathLib.arctan2(-1, 1), -Math.PI/4, 'simple check');
-
-  // arctan2(&plusmn;0, -0) is &plusmn;&pi;
-  equal(MathLib.arctan2(+0, -0), Math.PI, 'Spec. 1: arctan2(&plusmn;0, -0) is &plusmn;&pi;');
-  equal(MathLib.arctan2(-0, -0), -Math.PI, 'Spec. 1: arctan2(&plusmn;0, -0) is &plusmn;&pi;');
-
-  // arctan2(&plusmn;0, +0) is &plusmn;0
-  equal(MathLib.isPosZero(MathLib.arctan2(+0, 0)), true, 'Spec. 2: arctan2(&plusmn;0, +0) is &plusmn;0');
-  equal(MathLib.isNegZero(MathLib.arctan2(-0, 0)), true, 'Spec. 2: arctan2(&plusmn;0, +0) is &plusmn;0');
-
-  // arctan2(&plusmn;0, x) is &plusmn;&pi; for x<0
-  equal(MathLib.arctan2(+0, -4), Math.PI, 'Spec. 3: arctan2(&plusmn;0, x) is &plusmn;&pi; for x<0');
-  equal(MathLib.arctan2(-0, -4), -Math.PI, 'Spec. 3: arctan2(&plusmn;0, x) is &plusmn;&pi; for x<0');
-
-  // arctan2(&plusmn;0, x) is &plusmn;0 for x>0
-  equal(MathLib.isPosZero(MathLib.arctan2(+0, 4)), true, 'Spec. 4: arctan2(&plusmn;0, x) is &plusmn;0 for x>0');
-  equal(MathLib.isNegZero(MathLib.arctan2(-0, 4)), true, 'Spec. 4: arctan2(&plusmn;0, x) is &plusmn;0 for x>0');
-
-  // arctan2(y, &plusmn;0) is -&pi;/2 for y < 0
-  equal(MathLib.arctan2(-4, 0), -Math.PI/2, 'Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0');
-  equal(MathLib.arctan2(-4, -0), -Math.PI/2, 'Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0');
-
-  // arctan2(y, &plusmn;0) is +&pi;/2 for y > 0
-  equal(MathLib.arctan2(4, 0), Math.PI/2, 'Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0');
-  equal(MathLib.arctan2(4, -0), Math.PI/2, 'Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0');
-
-  // arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0
-  equal(MathLib.arctan2(4, -Infinity), Math.PI, 'Spec. 7: arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0');
-  equal(MathLib.arctan2(-4, -Infinity), -Math.PI, 'Spec. 7: arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0');
-
-  // arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0
-  equal(MathLib.isPosZero(MathLib.arctan2(4, Infinity)), true, 'Spec. 8: arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0');
-  equal(MathLib.isNegZero(MathLib.arctan2(-4, Infinity)), true, 'Spec. 8: arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0');
-
-  // arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x
-  equal(MathLib.arctan2(Infinity, 4), Math.PI/2, 'Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x');
-  equal(MathLib.arctan2(-Infinity, 4), -Math.PI/2, 'Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x');
-
-  // arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4
-  equal(MathLib.arctan2(Infinity, -Infinity), 3/4*Math.PI, 'Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4');
-  equal(MathLib.arctan2(-Infinity, -Infinity), -3/4*Math.PI, 'Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4');
-
-  // arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4
-  equal(MathLib.arctan2(Infinity, Infinity), Math.PI/4, 'Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4');
-  equal(MathLib.arctan2(-Infinity, Infinity), -Math.PI/4, 'Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4');
-});
-
-
 test('.binomial()', 4, function () {
   equal(MathLib.binomial(0, 0), 1);
   equal(MathLib.binomial(6, 3), 20);
@@ -158,24 +262,46 @@ test('.binomial()', 4, function () {
 
 
 test('.cbrt()', 7, function () {
-  equal(MathLib.cbrt(8), 2, 'cbrt(8) = 2');
-  equal(MathLib.cbrt(-8), -2, 'cbrt(-8) = -2');
-  equal(MathLib.cbrt(Infinity), Infinity, 'cbrt(Infinity) = Infinity');
-  equal(MathLib.cbrt(-Infinity), -Infinity, 'cbrt(-Infinity) = -Infinity');
-  equal(MathLib.isPosZero(MathLib.cbrt(+0)), true, 'cbrt(+0) = +0');
-  equal(MathLib.isNegZero(MathLib.cbrt(-0)), true, 'cbrt(-0) = -0');
-  equal(MathLib.isNaN(MathLib.cbrt(NaN)), true, 'cbrt(NaN) = NaN');
+  // Spec. 1: MathLib.cbrt(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.cbrt(NaN)), true, 'Spec. 1: MathLib.cbrt(NaN) = NaN');
+
+  // Spec. 2: MathLib.cbrt(+0) = +0
+  equal(MathLib.isPosZero(MathLib.cbrt(+0)), true, 'Spec. 2: MathLib.cbrt(+0) = +0');
+
+  // Spec. 3: MathLib.cbrt(-0) = -0
+  equal(MathLib.isNegZero(MathLib.cbrt(-0)), true, 'Spec. 3: MathLib.cbrt(-0) = -0');
+
+  // Spec. 4: MathLib.cbrt(+&infin;) = +&infin;
+  equal(MathLib.cbrt(+Infinity), +Infinity, 'Spec. 4: MathLib.cbrt(+&infin;) = +&infin;');
+
+  // Spec. 5: MathLib.cbrt(-&infin;) = -&infin;
+  equal(MathLib.cbrt(-Infinity), -Infinity, 'Spec. 5: MathLib.cbrt(-&infin;) = -&infin;');
+
+  // Spec. 6: otherwise MathLib.cbrt(x) = cube root of x
+  equal(MathLib.cbrt(8), 2, 'Spec. 6: otherwise MathLib.cbrt(x) = cube root of x');
+  equal(MathLib.cbrt(-8), -2, 'Spec. 6: otherwise MathLib.cbrt(x) = cube root of x');
 });
 
 
-test('ceil()', 7, function () {
-  equal(MathLib.ceil(1.5), 2, 'MathLib.ceil(1.5) should be 2');
-  equal(MathLib.ceil(-1.5), -1, 'MathLib.ceil(-1.5) should be -1');
-  equal(MathLib.ceil(+Infinity), +Infinity, 'MathLib.ceil(+Infinity) should be +Infinity');
-  equal(MathLib.ceil(-Infinity), -Infinity, 'MathLib.ceil(-Infinity) should be -Infinity');
-  equal(MathLib.isPosZero(MathLib.ceil(+0)), true, 'MathLib.ceil(+0) should be +0');
-  equal(MathLib.isNegZero(MathLib.ceil(-0)), true, 'MathLib.ceil(-0) should be -0');
-  equal(MathLib.isNaN(MathLib.ceil(NaN)), true, 'MathLib.ceil(NaN) should be NaN');
+test('.ceil()', 7, function () {
+  // Spec. 1: MathLib.ceil(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.ceil(NaN)), true, 'Spec. 1: MathLib.ceil(NaN) = NaN');
+
+  // Spec. 2: MathLib.ceil(+0) = +0
+  equal(MathLib.isPosZero(MathLib.ceil(+0)), true, 'Spec. 2: MathLib.ceil(+0) = +0');
+
+  // Spec. 3: MathLib.ceil(-0) = -0
+  equal(MathLib.isNegZero(MathLib.ceil(-0)), true, 'Spec. 3: MathLib.ceil(-0) = -0');
+
+  // Spec. 4: MathLib.ceil(+&infin;) = +&infin;
+  equal(MathLib.ceil(+Infinity), +Infinity, 'Spec. 4: MathLib.ceil(+&infin;) = +&infin;');
+
+  // Spec. 5: MathLib.ceil(-&infin;) = -&infin;
+  equal(MathLib.ceil(-Infinity), -Infinity, 'Spec. 5: MathLib.ceil(-&infin;) = -&infin;');
+
+  // Spec. 6: otherwise MathLib.ceil(x) = ⎡x⎤
+  equal(MathLib.ceil(2.2), 3, 'Spec. 6: otherwise MathLib.ceil(x) =  ⎡x⎤');
+  equal(MathLib.ceil(-2.2), -2, 'Spec. 6: otherwise MathLib.ceil(x) = ⎡x⎤');
 });
 
 
@@ -186,21 +312,103 @@ test('.compare()', 3, function () {
 });
 
 
-test('cos()', 5, function () {
-  equal(MathLib.cos(0), 1, 'MathLib.cos(0) should be 1');
-  equal(MathLib.cos(Math.PI), -1, 'MathLib.cos(Math.PI) should be -1');
-  equal(MathLib.isNaN(MathLib.cos(Infinity)), true, 'MathLib.cos(Infinity) should be NaN');
-  equal(MathLib.isNaN(MathLib.cos(-Infinity)), true, 'MathLib.cos(-Infinity) should be NaN');
-  equal(MathLib.isNaN(MathLib.cos(NaN)), true, 'MathLib.cos(NaN) should be NaN');
+test('.cos()', 6, function () {
+  // Spec. 1: MathLib.cos(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.cos(NaN)), true, 'Spec. 1: MathLib.cos(NaN) = NaN');
+
+  // Spec. 2: MathLib.cos(+&infin;) = NaN
+  equal(MathLib.isNaN(MathLib.cos(+Infinity)), true, 'Spec. 2: MathLib.cos(+&infin;) = NaN');
+
+  // Spec. 3: MathLib.cos(-&infin;) = NaN
+  equal(MathLib.isNaN(MathLib.cos(-Infinity)), true, 'Spec. 3: MathLib.cos(-&infin;) = NaN');
+
+  // Spec. 4: otherwise MathLib.cos(x) = cosine of x
+  equal(MathLib.cos(+0), 1, 'Spec. 4: otherwise MathLib.cos(x) = cosine of x');
+  equal(MathLib.cos(-0), 1, 'Spec. 4: otherwise MathLib.cos(x) = cosine of x');
+  equal(MathLib.cos(Math.PI), -1, 'Spec. 4: otherwise MathLib.cos(x) = cosine of x');
 });
 
 
-test('.exp()', 5, function () {
-  equal(MathLib.isNaN(MathLib.exp(NaN)), true);
-  equal(MathLib.exp(-Infinity), 0);
-  equal(MathLib.exp(+Infinity), Infinity);
-  equal(MathLib.exp(0), 1);
-  equal(MathLib.exp(1), Math.E);
+test('.cot()', 7, function () {
+  // Spec. 1: MathLib.cot(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.cot(NaN)), true, 'Spec. 1: MathLib.cot(NaN) = NaN');
+
+  // Spec. 2: MathLib.cot(+0) = +&infin;
+  equal(MathLib.cot(+0), Infinity, 'Spec. 2: MathLib.cot(+0) = +&infin;');
+
+  // Spec. 3: MathLib.cot(-0) = -&infin;
+  equal(MathLib.cot(-0), -Infinity, 'Spec. 3: MathLib.cot(-0) = -&infin;');
+
+  // Spec. 4: MathLib.cot(+&infin;) = NaN
+  equal(MathLib.isNaN(MathLib.cot(+Infinity)), true, 'Spec. 4: MathLib.cot(+&infin;) = NaN');
+
+  // Spec. 5: MathLib.cot(-&infin;) = NaN
+  equal(MathLib.isNaN(MathLib.cot(-Infinity)), true, 'Spec. 5: MathLib.cot(-&infin;) = NaN');
+
+  // Spec. 6: otherwise MathLib.cot(x) = cotangent of x
+  equal(MathLib.cot(Math.PI/3), 1/Math.sqrt(3), 'Spec. 6: otherwise MathLib.cot(x) = cotangent of x');
+  equal(MathLib.cot(Math.PI/2), 0, 'Spec. 6: otherwise MathLib.cot(x) = cotangent of x');
+});
+
+
+test('.csc()', 7, function () {
+  // Spec. 1: MathLib.csc(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.csc(NaN)), true, 'Spec. 1: MathLib.csc(NaN) = NaN');
+
+  // Spec. 2: MathLib.csc(+0) = +&infin;
+  equal(MathLib.csc(+0), +Infinity, 'Spec. 2: MathLib.csc(+0) = +&infin;');
+
+  // Spec. 3: MathLib.csc(-0) = -&infin;
+  equal(MathLib.csc(-0), -Infinity, 'Spec. 3: MathLib.csc(-0) = -&infin;');
+
+  // Spec. 4: MathLib.csc(+&infin;) = NaN
+  equal(MathLib.isNaN(MathLib.csc(+Infinity)), true, 'Spec. 4: MathLib.csc(+&infin;) = NaN');
+
+  // Spec. 5: MathLib.csc(-&infin;) = NaN
+  equal(MathLib.isNaN(MathLib.csc(-Infinity)), true, 'Spec. 5: MathLib.csc(-&infin;) = NaN');
+
+  // Spec. 6: otherwise MathLib.csc(x) = cosecant of x
+  equal(MathLib.csc(Math.PI/2), 1, 'Spec. 6: otherwise MathLib.csc(x) = cosecant of x');
+  equal(MathLib.csc(-Math.PI/2), -1, 'Spec. 6: otherwise MathLib.csc(x) = cosecant of x');
+});
+
+
+test('.degToRad()', 7, function () {
+  // Spec. 1: MathLib.degToRad(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.degToRad(NaN)), true, 'Spec. 1: MathLib.degToRad(NaN) = NaN');
+
+  // Spec. 2: MathLib.degToRad(+0) = +0
+  equal(MathLib.isPosZero(MathLib.degToRad(+0)), true, 'Spec. 2: MathLib.degToRad(+0) = +0');
+
+  // Spec. 3: MathLib.degToRad(-0) = -0
+  equal(MathLib.isNegZero(MathLib.degToRad(-0)), true, 'Spec. 3: MathLib.degToRad(-0) = -0');
+
+  // Spec. 4: MathLib.degToRad(+&infin;) = +&infin;
+  equal(MathLib.degToRad(+Infinity), Infinity, 'Spec. 4: MathLib.degToRad(+&infin;) = +&infin;');
+
+  // Spec. 5: MathLib.degToRad(-&infin;) = -&infin;
+  equal(MathLib.degToRad(-Infinity), -Infinity, 'Spec. 5: MathLib.degToRad(-&infin;) = -&infin;');
+
+  // Spec. 6: otherwise MathLib.degToRad(x) = x * π/180
+  equal(MathLib.degToRad(90), Math.PI / 2, 'Spec. 6: otherwise MathLib.degToRad(x) = x * π/180');
+  equal(MathLib.degToRad(180), Math.PI, 'Spec. 6: otherwise MathLib.degToRad(x) = x * π/180');
+});
+
+
+test('.exp()', 6, function () {
+  // Spec. 1: MathLib.exp(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.exp(NaN)), true, 'Spec. 1: MathLib.exp(NaN) = NaN');
+
+  // Spec. 2: MathLib.exp(+&infin;) = +&infin;
+  equal(MathLib.exp(+Infinity), +Infinity, 'Spec. 2: MathLib.exp(+&infin;) = +&infin;');
+
+  // Spec. 3: MathLib.exp(-&infin;) = +0
+  equal(MathLib.isPosZero(MathLib.exp(-Infinity)), true, 'Spec. 3: MathLib.exp(-&infin;) = 0');
+
+  // Spec. 4: otherwise MathLib.exp(x) = e^x
+  equal(MathLib.exp(+0), 1, 'Spec. 4: otherwise MathLib.exp(x) = e^x');
+  equal(MathLib.exp(-0), 1, 'Spec. 4: otherwise MathLib.exp(x) = e^x');
+  equal(MathLib.exp(1), Math.E, 'Spec. 4: otherwise MathLib.exp(x) = e^x');
 });
 
 
@@ -229,26 +437,52 @@ test('.fibonacci()', 1, function () {
 
 
 test('.floor()', 7, function () {
-  equal(MathLib.floor(1.5), 1, 'MathLib.floor(1.5) should be 1');
-  equal(MathLib.floor(-1.5), -2, 'MathLib.floor(-1.5) should be -2');
-  equal(MathLib.floor(+Infinity), +Infinity, 'MathLib.floor(+Infinity) should be +Infinity');
-  equal(MathLib.floor(-Infinity), -Infinity, 'MathLib.floor(-Infinity) should be -Infinity');
-  equal(MathLib.isPosZero(MathLib.floor(+0)), true, 'MathLib.floor(+0) should be +0');
-  equal(MathLib.isNegZero(MathLib.floor(-0)), true, 'MathLib.floor(-0) should be -0');
-  equal(MathLib.isNaN(MathLib.floor(NaN)), true, 'MathLib.floor(NaN) should be NaN');
+  // Spec. 1: MathLib.floor(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.floor(NaN)), true, 'Spec. 1: MathLib.floor(NaN) = NaN');
+
+  // Spec. 2: MathLib.floor(+0) = +0
+  equal(MathLib.isPosZero(MathLib.floor(+0)), true, 'Spec. 2: MathLib.floor(+0) = +0');
+
+  // Spec. 3: MathLib.floor(-0) = -0
+  equal(MathLib.isNegZero(MathLib.floor(-0)), true, 'Spec. 3: MathLib.floor(-0) = -0');
+
+  // Spec. 4: MathLib.floor(+&infin;) = +&infin;
+  equal(MathLib.floor(+Infinity), +Infinity, 'Spec. 4: MathLib.floor(+&infin;) = +&infin;');
+
+  // Spec. 5: MathLib.floor(-&infin;) = -&infin;
+  equal(MathLib.floor(-Infinity), -Infinity, 'Spec. 5: MathLib.floor(-&infin;) = -&infin;');
+
+  // Spec. 6: otherwise MathLib.floor(x) = ⎣x⎦
+  equal(MathLib.floor(2.2), 2, 'Spec. 6: otherwise MathLib.floor(x) =  ⎣x⎦');
+  equal(MathLib.floor(-2.2), -3, 'Spec. 6: otherwise MathLib.floor(x) = ⎣x⎦');
 });
 
 
-test('.hypot()', 9, function () {
-  equal(MathLib.isEqual(MathLib.hypot(3), 3), true, 'MathLib.hypot(x) is Math.abs(x)');
-  equal(MathLib.isEqual(MathLib.hypot(-3), 3), true, 'MathLib.hypot(x) is Math.abs(x)');
-  equal(MathLib.isEqual(MathLib.hypot(3, 4), 5), true);
-  equal(MathLib.isEqual(MathLib.hypot(3, 4, 12), 13), true);
-  equal(MathLib.isPosZero(MathLib.hypot(0, 0)), true);
-  deepEqual(MathLib.hypot(NaN, 4), NaN);
-  equal(MathLib.hypot(NaN, Infinity), Infinity);
-  equal(MathLib.hypot(-Infinity, NaN), Infinity);
-  equal(MathLib.hypot(Infinity, 4), Infinity);
+test('.hypot()', 16, function () {
+  // Spec. 1: MathLib.hypot(x, y, ...) = +&infin; if any argument is infinite
+  equal(MathLib.hypot(+Infinity, NaN), Infinity, 'Spec. 1: MathLib.hypot(x, y, ...) = +&infin; if any argument is infinite');
+  equal(MathLib.hypot(NaN, +Infinity), Infinity, 'Spec. 1: MathLib.hypot(x, y, ...) = +&infin; if any argument is infinite');
+  equal(MathLib.hypot(-Infinity, NaN), Infinity, 'Spec. 1: MathLib.hypot(x, y, ...) = +&infin; if any argument is infinite');
+  equal(MathLib.hypot(NaN, -Infinity), Infinity, 'Spec. 1: MathLib.hypot(x, y, ...) = +&infin; if any argument is infinite');
+  equal(MathLib.hypot(+Infinity, 2), Infinity, 'Spec. 1: MathLib.hypot(x, y, ...) = +&infin; if any argument is infinite');
+  equal(MathLib.hypot(2, +Infinity), Infinity, 'Spec. 1: MathLib.hypot(x, y, ...) = +&infin; if any argument is infinite');
+  equal(MathLib.hypot(-Infinity, 2), Infinity, 'Spec. 1: MathLib.hypot(x, y, ...) = +&infin; if any argument is infinite');
+  equal(MathLib.hypot(2, -Infinity), Infinity, 'Spec. 1: MathLib.hypot(x, y, ...) = +&infin; if any argument is infinite');
+
+  // Spec. 2: MathLib.hypot(x, y, ...) = NaN if any argument is NaN, and none infinite
+  equal(MathLib.isNaN(MathLib.hypot(NaN, 2)), true, 'Spec. 2: MathLib.hypot(x, y, ...) = NaN if any argument is NaN, and none infinite');
+  equal(MathLib.isNaN(MathLib.hypot(2, NaN)), true, 'Spec. 2: MathLib.hypot(x, y, ...) = NaN if any argument is NaN, and none infinite');
+
+  // Spec. 3: MathLib.hypot(x, y, ...) = +0 if all arguments are &plusmn;0
+  equal(MathLib.isPosZero(MathLib.hypot(0, 0)), true, 'Spec. 3: MathLib.hypot(x, y, ...) = +0 if all arguments are &plusmn;0');
+  equal(MathLib.isPosZero(MathLib.hypot(-0, -0)), true, 'Spec. 3:MathLib.hypot(x, y, ...) = +0 if all arguments are &plusmn;0');
+
+
+  // Spec. 4: Otherwise MathLib.hypot(x, y, ...) = the square root of the sum of the squared arguments
+  equal(MathLib.isEqual(MathLib.hypot(3), 3), true, 'Spec. 4: Otherwise MathLib.hypot(x, y, ...) = the square root of the sum of the squared arguments');
+  equal(MathLib.isEqual(MathLib.hypot(-3), 3), true, 'Spec. 4: Otherwise MathLib.hypot(x, y, ...) = the square root of the sum of the squared arguments');
+  equal(MathLib.isEqual(MathLib.hypot(3, 4), 5), true, 'Spec. 4: Otherwise MathLib.hypot(x, y, ...) = the square root of the sum of the squared arguments');
+  equal(MathLib.isEqual(MathLib.hypot(3, 4, 12), 13), true, 'Spec. 4: Otherwise MathLib.hypot(x, y, ...) = the square root of the sum of the squared arguments');
 });
 
 
@@ -265,9 +499,6 @@ test('.hypot2()', 6, function () {
 test('.inverse()', 2, function () {
   equal(MathLib.inverse(2), 0.5, 'MathLib.inverse(2) should be 0.5');
   equal(MathLib.isNaN(MathLib.inverse(NaN)), true, 'MathLib.inverse(NaN) should be NaN');
-  // What makes most sense to return Infinity, NaN, undefined, ...?
-  // I'm not convinced by Infinity, because it is not the inverse.
-  // equal(MathLib.inverse(0), );
 });
 
 
@@ -287,7 +518,6 @@ test('.is()', 13, function () {
   equal(MathLib.is({}, 'null'), false);
   equal(MathLib.is(null, 'null'), true);
   equal(MathLib.is(undefined, 'undefined'), true);
-
 });
 
 
@@ -364,110 +594,132 @@ test('.plus()', 2, function () {
 });
 
 test('pow()', 65, function () {
-  equal(MathLib.pow(2, 3), 8, 'simple check');
-  equal(MathLib.pow(2, -3), 0.125, 'simple check');
+  // Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)
+  equal(MathLib.pow(1, +0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
+  equal(MathLib.pow(0, +0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
+  equal(MathLib.pow(-0, +0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
+  equal(MathLib.pow(NaN, +0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
+  equal(MathLib.pow(Infinity, +0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
+  equal(MathLib.pow(-Infinity, +0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
+  equal(MathLib.pow(1, -0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
+  equal(MathLib.pow(0, -0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
+  equal(MathLib.pow(-0, -0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
+  equal(MathLib.pow(NaN, -0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
+  equal(MathLib.pow(Infinity, -0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
+  equal(MathLib.pow(-Infinity, -0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
 
-  //  1. MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or infinity)
-  equal(MathLib.pow(1, +0), 1, 'Specification: 1.');
-  equal(MathLib.pow(0, +0), 1, 'Specification: 1.');
-  equal(MathLib.pow(-0, +0), 1, 'Specification: 1.');
-  equal(MathLib.pow(NaN, +0), 1, 'Specification: 1.');
-  equal(MathLib.pow(Infinity, +0), 1, 'Specification: 1.');
-  equal(MathLib.pow(-Infinity, +0), 1, 'Specification: 1.');
-  equal(MathLib.pow(1, -0), 1, 'Specification: 1.');
-  equal(MathLib.pow(0, -0), 1, 'Specification: 1.');
-  equal(MathLib.pow(-0, -0), 1, 'Specification: 1.');
-  equal(MathLib.pow(NaN, -0), 1, 'Specification: 1.');
-  equal(MathLib.pow(Infinity, -0), 1, 'Specification: 1.');
-  equal(MathLib.pow(-Infinity, -0), 1, 'Specification: 1.');
+  // Spec. 2: MathLib.pow (&plusmn;0, y) = &plusmn;&infin; (for y an odd integer < 0)
+  equal(MathLib.pow(+0, -5), +Infinity, 'Spec. 2: MathLib.pow (&plusmn;0, y) = &plusmn;&infin; (for y an odd integer < 0)');
+  equal(MathLib.pow(-0, -5), -Infinity, 'Spec. 2: MathLib.pow (&plusmn;0, y) = &plusmn;&infin; (for y an odd integer < 0)');
 
-  //  2. MathLib.pow (&plusmn;0, y) = &plusmn;&infin; (for y an odd integer < 0)
-  equal(MathLib.pow(+0, -5), +Infinity, 'Specification: 2.');
-  equal(MathLib.pow(-0, -5), -Infinity, 'Specification: 2.');
+  // Spec. 3: MathLib.pow(&plusmn;0, -&infin;) = +&infin;
+  equal(MathLib.pow(+0, -Infinity), Infinity, 'Spec. 3: MathLib.pow(&plusmn;0, -&infin;) = +&infin;');
+  equal(MathLib.pow(-0, -Infinity), Infinity, 'Spec. 3: MathLib.pow(&plusmn;0, -&infin;) = +&infin;');
 
-  //  3. MathLib.pow(&plusmn;0, -&infin;) = +&infin;.
-  equal(MathLib.pow(+0, -Infinity), Infinity, 'Specification: 3.');
-  equal(MathLib.pow(-0, -Infinity), Infinity, 'Specification: 3.');
+  // Spec. 4: MathLib.pow(&plusmn;0, +&infin;) = +0
+  equal(MathLib.isPosZero(MathLib.pow(+0, Infinity)), true, 'Spec. 4: MathLib.pow(&plusmn;0, +&infin;) = +0');
+  equal(MathLib.isPosZero(MathLib.pow(-0, Infinity)), true, 'Spec. 4: MathLib.pow(&plusmn;0, +&infin;) = +0');
 
-  //  4. MathLib.pow(&plusmn;0, +&infin;) = +0.
-  equal(MathLib.isPosZero(MathLib.pow(+0, Infinity)), true, 'Specification: 4.');
-  equal(MathLib.isPosZero(MathLib.pow(-0, Infinity)), true, 'Specification: 4.');
+  // Spec. 5: MathLib.pow (&plusmn;0, y) = +&infin; (for finite y < 0 and not an odd integer)
+  equal(MathLib.pow(+0, -4), +Infinity, 'Spec. 5: MathLib.pow (&plusmn;0, y) = +&infin; (for finite y < 0 and not an odd integer)');
+  equal(MathLib.pow(-0, -4), +Infinity, 'Spec. 5: MathLib.pow (&plusmn;0, y) = +&infin; (for finite y < 0 and not an odd integer)');
+  equal(MathLib.pow(+0, -5.5), +Infinity, 'Spec. 5: MathLib.pow (&plusmn;0, y) = +&infin; (for finite y < 0 and not an odd integer)');
+  equal(MathLib.pow(-0, -5.5), +Infinity, 'Spec. 5: MathLib.pow (&plusmn;0, y) = +&infin; (for finite y < 0 and not an odd integer)');
 
-  //  5. MathLib.pow (&plusmn;0, y) = +&infin; (for finite y < 0 and not an odd integer)
-  equal(MathLib.pow(+0, -4), +Infinity, 'Specification: 5.');
-  equal(MathLib.pow(-0, -4), +Infinity, 'Specification: 5.');
-  equal(MathLib.pow(+0, -5.5), +Infinity, 'Specification: 5.');
-  equal(MathLib.pow(-0, -5.5), +Infinity, 'Specification: 5.');
+  // Spec. 6: MathLib.pow (&plusmn;0, y) = &plusmn;0 (for finite y > 0 an odd integer)
+  equal(MathLib.isPosZero(MathLib.pow(+0, 5)), true, 'Spec. 6: MathLib.pow (&plusmn;0, y) = &plusmn;0 (for finite y > 0 an odd integer)');
+  equal(MathLib.isNegZero(MathLib.pow(-0, 5)), true, 'Spec. 6: MathLib.pow (&plusmn;0, y) = &plusmn;0 (for finite y > 0 an odd integer)');
 
-  //  6. MathLib.pow (&plusmn;0, y) = &plusmn;0 (for finite y > 0 an odd integer)
-  equal(MathLib.isPosZero(MathLib.pow(+0, 5)), true, 'Specification: 6.');
-  equal(MathLib.isNegZero(MathLib.pow(-0, 5)), true, 'Specification: 6.');
+  // Spec. 7: MathLib.pow (&plusmn;0, y) = +0 (for finite y > 0 and not an odd integer)
+  equal(MathLib.isPosZero(MathLib.pow(+0, 4)), true, 'Spec. 7: MathLib.pow (&plusmn;0, y) = +0 (for finite y > 0 and not an odd integer)');
+  equal(MathLib.isPosZero(MathLib.pow(-0, 4)), true, 'Spec. 7: MathLib.pow (&plusmn;0, y) = +0 (for finite y > 0 and not an odd integer)');
+  equal(MathLib.isPosZero(MathLib.pow(+0, 5.5)), true, 'Spec. 7: MathLib.pow (&plusmn;0, y) = +0 (for finite y > 0 and not an odd integer)');
+  equal(MathLib.isPosZero(MathLib.pow(-0, 5.5)), true, 'Spec. 7: MathLib.pow (&plusmn;0, y) = +0 (for finite y > 0 and not an odd integer)');
 
-  //  7. MathLib.pow (&plusmn;0, y) = +0 (for finite y > 0 and not an odd integer)
-  equal(MathLib.isPosZero(MathLib.pow(+0, 4)), true, 'Specification: 7.');
-  equal(MathLib.isPosZero(MathLib.pow(-0, 4)), true, 'Specification: 7.');
-  equal(MathLib.isPosZero(MathLib.pow(+0, 5.5)), true, 'Specification: 7.');
-  equal(MathLib.isPosZero(MathLib.pow(-0, 5.5)), true, 'Specification: 7.');
+  // Spec. 8: MathLib.pow(-1, &plusmn;&infin;) = 1
+  equal(MathLib.pow(-1, +Infinity), 1, 'Spec. 8: MathLib.pow(-1, &plusmn;&infin;) = 1');
+  equal(MathLib.pow(-1, -Infinity), 1, 'Spec. 8: MathLib.pow(-1, &plusmn;&infin;) = 1');
 
-  //  8. MathLib.pow(-1, &plusmn;&infin;) = 1
-  equal(MathLib.pow(-1, +Infinity), 1, 'Specification: 8.');
-  equal(MathLib.pow(-1, -Infinity), 1, 'Specification: 8.');
+  // Spec. 9: MathLib.pow(+1, y) = 1 (for any y, even &plusmn;&infin; and NaN)
+  equal(MathLib.pow(1, 2), 1, 'Spec. 9: MathLib.pow(+1, y) = 1 (for any y, even &plusmn;&infin; and NaN)');
+  equal(MathLib.pow(1, -2), 1, 'Spec. 9: MathLib.pow(+1, y) = 1 (for any y, even &plusmn;&infin; and NaN)');
+  equal(MathLib.pow(1, +Infinity), 1, 'Spec. 9: MathLib.pow(+1, y) = 1 (for any y, even &plusmn;&infin; and NaN)');
+  equal(MathLib.pow(1, -Infinity), 1, 'Spec. 9: MathLib.pow(+1, y) = 1 (for any y, even &plusmn;&infin; and NaN)');
+  equal(MathLib.pow(1, NaN), 1, 'Spec. 9: MathLib.pow(+1, y) = 1 (for any y, even &plusmn;&infin; and NaN)');
 
-  //  9. MathLib.pow(+1, y) = 1 (for any y, even &plusmn;&infin; and NaN)
-  equal(MathLib.pow(1, 2), 1, 'Specification: 9.');
-  equal(MathLib.pow(1, -2), 1, 'Specification: 9.');
-  equal(MathLib.pow(1, +Infinity), 1, 'Specification: 9.');
-  equal(MathLib.pow(1, -Infinity), 1, 'Specification: 9.');
-  equal(MathLib.pow(1, NaN), 1, 'Specification: 9.');
+  // Spec. 10: MathLib.pow (x, y) = NaN (for finite x < 0 and finite non-integer y.)
+  equal(MathLib.isNaN(MathLib.pow(-2, 2.5)), true, 'Spec. 10: MathLib.pow (x, y) = NaN (for finite x < 0 and finite non-integer y.)');
+  equal(MathLib.isNaN(MathLib.pow(-2, 2.5)), true, 'Spec. 10: MathLib.pow (x, y) = NaN (for finite x < 0 and finite non-integer y.)');
 
-  // 10. MathLib.pow (x, y) = NaN (for finite x < 0 and finite non-integer y.)
-  equal(MathLib.isNaN(MathLib.pow(-2, 2.5)), true, 'Specification: 10.');
-  equal(MathLib.isNaN(MathLib.pow(-2, 2.5)), true, 'Specification: 10.');
+  // Spec. 11: MathLib.pow(x, +&infin;) = +&infin; (for |x| > 1)
+  equal(MathLib.pow(3, Infinity), Infinity, 'Spec. 11: MathLib.pow(x, +&infin;) = +&infin; (for |x| > 1)');
+  equal(MathLib.pow(-3, Infinity), Infinity, 'Spec. 11: MathLib.pow(x, +&infin;) = +&infin; (for |x| > 1)');
 
+  // Spec. 12: MathLib.pow(x, -&infin;) = +0 (for |x| > 1)
+  equal(MathLib.isPosZero(MathLib.pow(3, -Infinity)), true, 'Spec. 12: MathLib.pow(x, -&infin;) = +0 (for |x| > 1)');
+  equal(MathLib.isPosZero(MathLib.pow(-3, -Infinity)), true, 'Spec. 12: MathLib.pow(x, -&infin;) = +0 (for |x| > 1)');
 
-  // 11. MathLib.pow(x, +&infin;) = +&infin; (for |x| > 1)
-  equal(MathLib.pow(3, Infinity), Infinity, 'Specification: 11.');
-  equal(MathLib.pow(-3, Infinity), Infinity, 'Specification: 11.');
+  // Spec. 13: MathLib.pow(x, +&infin;) = +0 (for |x| < 1)
+  equal(MathLib.isPosZero(MathLib.pow(0.5, +Infinity)), true, 'Spec. 13: MathLib.pow(x, +&infin;) = +0 (for |x| < 1)');
+  equal(MathLib.isPosZero(MathLib.pow(-0.5, +Infinity)), true, 'Spec. 13: MathLib.pow(x, +&infin;) = +0 (for |x| < 1)');
 
-  // 12. MathLib.pow(x, -&infin;) = +0 (for |x| > 1)
-  equal(MathLib.isPosZero(MathLib.pow(3, -Infinity)), true, 'Specification: 12.');
-  equal(MathLib.isPosZero(MathLib.pow(-3, -Infinity)), true, 'Specification: 12.');
+  // Spec. 14: MathLib.pow(x, -&infin;) = +&infin; (for |x| < 1)
+  equal(MathLib.pow(0.5, -Infinity), Infinity, 'Spec. 14: MathLib.pow(x, -&infin;) = +&infin; (for |x| < 1)');
+  equal(MathLib.pow(-0.5, -Infinity), Infinity, 'Spec. 14: MathLib.pow(x, -&infin;) = +&infin; (for |x| < 1)');
 
-  // 13. MathLib.pow(x, +&infin;) = +0 (for |x| < 1)
-  equal(MathLib.isPosZero(MathLib.pow(0.5, +Infinity)), true, 'Specification: 13.');
-  equal(MathLib.isPosZero(MathLib.pow(-0.5, +Infinity)), true, 'Specification: 13.');
-
-  // 14. MathLib.pow(x, -&infin;) = +&infin; (for |x| < 1)
-  equal(MathLib.pow(0.5, -Infinity), Infinity, 'Specification: 14.');
-  equal(MathLib.pow(-0.5, -Infinity), Infinity, 'Specification: 14.');
-
-  // 15. MathLib.pow(+&infin;, y) = +&infin; (for y > 0)
-  equal(MathLib.pow(+Infinity, 2), Infinity, 'Specification: 15.');
-  equal(MathLib.pow(+Infinity, 2), Infinity, 'Specification: 15.');
+  // Spec. 15: MathLib.pow(+&infin;, y) = +&infin; (for y > 0)
+  equal(MathLib.pow(+Infinity, 2), Infinity, 'Spec. 15: MathLib.pow(+&infin;, y) = +&infin; (for y > 0)');
+  equal(MathLib.pow(+Infinity, 2), Infinity, 'Spec. 15: MathLib.pow(+&infin;, y) = +&infin; (for y > 0)');
  
-  // 16. MathLib.pow(+&infin;, y) = +0 (for y < 0)
-  equal(MathLib.isPosZero(MathLib.pow(+Infinity, -2)), true, 'Specification: 16.');
-  equal(MathLib.isPosZero(MathLib.pow(+Infinity, -Infinity)), true, 'Specification: 16.');
+  // Spec. 16: MathLib.pow(+&infin;, y) = +0 (for y < 0)
+  equal(MathLib.isPosZero(MathLib.pow(+Infinity, -2)), true, 'Spec. 16: MathLib.pow(+&infin;, y) = +0 (for y < 0)');
+  equal(MathLib.isPosZero(MathLib.pow(+Infinity, -Infinity)), true, 'Spec. 16: MathLib.pow(+&infin;, y) = +0 (for y < 0)');
   
-  // 17. MathLib.pow(-&infin;, y) = MathLib.pow(-0, -y)
-  equal(MathLib.pow(-Infinity, 2), Infinity, 'Specification: 17.');
-  equal(MathLib.pow(-Infinity, +0), 1, 'Specification: 17.');
-  equal(MathLib.pow(-Infinity, -0), 1, 'Specification: 17.');
-  equal(MathLib.pow(-Infinity, Infinity), Infinity, 'Specification: 17.');
-  equal(MathLib.pow(-Infinity, -Infinity), 0, 'Specification: 17.');
+  // Spec. 17: MathLib.pow(-&infin;, y) = MathLib.pow(-0, -y)
+  equal(MathLib.pow(-Infinity, 2), Infinity, 'Spec. 17: MathLib.pow(-&infin;, y) = MathLib.pow(-0, -y)');
+  equal(MathLib.pow(-Infinity, +0), 1, 'Spec. 17: MathLib.pow(-&infin;, y) = MathLib.pow(-0, -y)');
+  equal(MathLib.pow(-Infinity, -0), 1, 'Spec. 17: MathLib.pow(-&infin;, y) = MathLib.pow(-0, -y)');
+  equal(MathLib.pow(-Infinity, Infinity), Infinity, 'Spec. 17: MathLib.pow(-&infin;, y) = MathLib.pow(-0, -y)');
+  equal(MathLib.pow(-Infinity, -Infinity), 0, 'Spec. 17: MathLib.pow(-&infin;, y) = MathLib.pow(-0, -y)');
 
-  // 18. MathLib.pow(NaN, y) = NaN (for all y except &plusmn;0)
-  equal(MathLib.isNaN(MathLib.pow(NaN, 1)), true, 'Specification: 18.');
-  equal(MathLib.isNaN(MathLib.pow(NaN, Infinity)), true, 'Specification: 18.');
-  equal(MathLib.isNaN(MathLib.pow(NaN, -Infinity)), true, 'Specification: 18.');
-  equal(MathLib.isNaN(MathLib.pow(NaN, NaN)), true, 'Specification: 18.');
+  // Spec. 18: MathLib.pow(NaN, y) = NaN (for all y except &plusmn;0)
+  equal(MathLib.isNaN(MathLib.pow(NaN, 1)), true, 'Spec. 18: MathLib.pow(NaN, y) = NaN (for all y except &plusmn;0)');
+  equal(MathLib.isNaN(MathLib.pow(NaN, Infinity)), true, 'Spec. 18: MathLib.pow(NaN, y) = NaN (for all y except &plusmn;0)');
+  equal(MathLib.isNaN(MathLib.pow(NaN, -Infinity)), true, 'Spec. 18: MathLib.pow(NaN, y) = NaN (for all y except &plusmn;0)');
+  equal(MathLib.isNaN(MathLib.pow(NaN, NaN)), true, 'Spec. 18: MathLib.pow(NaN, y) = NaN (for all y except &plusmn;0)');
 
-  // 19. MathLib.pow(x, NaN) = NaN (for all x except +1)
-  equal(MathLib.isNaN(MathLib.pow(2, NaN)), true, 'Specification: 19.');
-  equal(MathLib.isNaN(MathLib.pow(Infinity, NaN)), true, 'Specification: 19.');
-  equal(MathLib.isNaN(MathLib.pow(-Infinity, NaN)), true, 'Specification: 19.');
-  equal(MathLib.isNaN(MathLib.pow(0, NaN)), true, 'Specification: 19.');
-  equal(MathLib.isNaN(MathLib.pow(-0, NaN)), true, 'Specification: 19.');
+  // Spec. 19: MathLib.pow(x, NaN) = NaN (for all x except +1)
+  equal(MathLib.isNaN(MathLib.pow(2, NaN)), true, 'Spec. 19: MathLib.pow(x, NaN) = NaN (for all x except +1)');
+  equal(MathLib.isNaN(MathLib.pow(Infinity, NaN)), true, 'Spec. 19: MathLib.pow(x, NaN) = NaN (for all x except +1)');
+  equal(MathLib.isNaN(MathLib.pow(-Infinity, NaN)), true, 'Spec. 19: MathLib.pow(x, NaN) = NaN (for all x except +1)');
+  equal(MathLib.isNaN(MathLib.pow(0, NaN)), true, 'Spec. 19: MathLib.pow(x, NaN) = NaN (for all x except +1)');
+  equal(MathLib.isNaN(MathLib.pow(-0, NaN)), true, 'Spec. 19: MathLib.pow(x, NaN) = NaN (for all x except +1)');
+
+  // Spec. 20: otherwise MathLib.pow(x, n) = x^n
+  equal(MathLib.pow(2, 3), 8, 'Spec. 20: otherwise MathLib.pow(x, n) = x^n');
+  equal(MathLib.pow(2, -3), 0.125, 'Spec. 20: otherwise MathLib.pow(x, n) = x^n');
+});
+
+
+test('.radToDeg()', 7, function () {
+  // Spec. 1: MathLib.radToDeg(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.radToDeg(NaN)), true, 'Spec. 1: MathLib.radToDeg(NaN) = NaN');
+
+  // Spec. 2: MathLib.radToDeg(+0) = +0
+  equal(MathLib.isPosZero(MathLib.radToDeg(+0)), true, 'Spec. 2: MathLib.radToDeg(+0) = +0');
+
+  // Spec. 3: MathLib.radToDeg(-0) = -0
+  equal(MathLib.isNegZero(MathLib.radToDeg(-0)), true, 'Spec. 3: MathLib.radToDeg(-0) = -0');
+
+  // Spec. 4: MathLib.radToDeg(+&infin;) = +&infin;
+  equal(MathLib.radToDeg(+Infinity), Infinity, 'Spec. 4: MathLib.radToDeg(+&infin;) = +&infin;');
+
+  // Spec. 5: MathLib.radToDeg(-&infin;) = -&infin;
+  equal(MathLib.radToDeg(-Infinity), -Infinity, 'Spec. 5: MathLib.radToDeg(-&infin;) = -&infin;');
+
+  // Spec. 6: otherwise MathLib.radToDeg(x) = x * 180/π
+  equal(MathLib.radToDeg(Math.PI/2), 90, 'Spec. 6: otherwise MathLib.radToDeg(x) = x * π/180');
+  equal(MathLib.radToDeg(Math.PI), 180, 'Spec. 6: otherwise MathLib.radToDeg(x) = x * π/180');
 });
 
 
@@ -478,67 +730,138 @@ test('.risingFactorial()', 3, function () {
 });
 
 
-test('.round()', 7, function () {
-  equal(MathLib.round(1.5), 2, 'MathLib.round(1.5) should be 2');
-  equal(MathLib.round(-1.5), -1, 'MathLib.round(-1.5) should be -1');
-  equal(MathLib.round(+Infinity), +Infinity, 'MathLib.round(+Infinity) should be +Infinity');
-  equal(MathLib.round(-Infinity), -Infinity, 'MathLib.round(-Infinity) should be -Infinity');
-  equal(MathLib.isPosZero(MathLib.round(+0)), true, 'MathLib.round(+0) should be +0');
-  equal(MathLib.isNegZero(MathLib.round(-0)), true, 'MathLib.round(-0) should be -0');
-  equal(MathLib.isNaN(MathLib.round(NaN)), true, 'MathLib.round(NaN) should be NaN');
+test('.round()', 10, function () {
+  // Spec. 1: MathLib.round(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.round(NaN)), true, 'Spec. 1: MathLib.round(NaN) = NaN');
+
+  // Spec. 2: MathLib.round(x) = +0 if +0 ≤ x < 0.5
+  equal(MathLib.isPosZero(MathLib.round(+0)), true, 'Spec. 2: MathLib.round(x) = +0 if +0 ≤ x < 0.5');
+  equal(MathLib.isPosZero(MathLib.round(+0.2)), true, 'Spec. 2: MathLib.round(x) = +0 if +0 ≤ x < 0.5');
+
+
+  // Spec. 3: MathLib.round(x) = -0 if -0.5 ≤ x ≤ -0
+  equal(MathLib.isNegZero(MathLib.round(-0)), true, 'Spec. 3: MathLib.round(x) = -0 if -0.5 ≤ x ≤ -0');
+  equal(MathLib.isNegZero(MathLib.round(-0.5)), true, 'Spec. 3: MathLib.round(x) = -0 if -0.5 ≤ x ≤ -0');
+
+  // Spec. 4: MathLib.round(+&infin;) = +&infin;
+  equal(MathLib.round(+Infinity), +Infinity, 'Spec. 4: MathLib.round(+&infin;) = +&infin;');
+
+  // Spec. 5: MathLib.round(-&infin;) = -&infin;
+  equal(MathLib.round(-Infinity), -Infinity, 'Spec. 5: MathLib.round(-&infin;) = -&infin;');
+
+  // Spec. 6: otherwise MathLib.round(x) = ⎣ x+0.5 ⎦
+  equal(MathLib.round(2.2), 2, 'Spec. 6: otherwise MathLib.round(x) =  ⎣ x+0.5 ⎦');
+  equal(MathLib.round(2.5), 3, 'Spec. 6: otherwise MathLib.round(x) = ⎣ x+0.5 ⎦');
+  equal(MathLib.round(-2.2), -2, 'Spec. 6: otherwise MathLib.round(x) = ⎣ x+0.5 ⎦');
+});
+
+
+test('.sec()', 7, function () {
+  // Spec. 1: MathLib.sec(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.sec(NaN)), true, 'Spec. 1: MathLib.sec(NaN) = NaN');
+
+  // Spec. 2: MathLib.sec(+0) = 1
+  equal(MathLib.sec(+0), 1, 'Spec. 2: MathLib.sec(+0) = 1');
+
+  // Spec. 3: MathLib.sec(-0) = 1
+  equal(MathLib.sec(-0), 1, 'Spec. 3: MathLib.sec(-0) = 1');
+
+  // Spec. 4: MathLib.sec(+&infin;) = NaN
+  equal(MathLib.isNaN(MathLib.sec(+Infinity)), true, 'Spec. 4: MathLib.sec(+&infin;) = NaN');
+
+  // Spec. 5: MathLib.sec(-&infin;) = NaN
+  equal(MathLib.isNaN(MathLib.sec(-Infinity)), true, 'Spec. 5: MathLib.sec(-&infin;) = NaN');
+
+  // Spec. 6: otherwise MathLib.sec(x) = secant of x
+  equal(MathLib.sec(Math.PI), -1, 'Spec. 6: otherwise MathLib.sec(x) = secant of x');
+  equal(MathLib.sec(2*Math.PI), 1, 'Spec. 6: otherwise MathLib.sec(x) = secant of x');
 });
 
 
 test('.sign()', 7, function () {
-  // MathLib.sign(NaN) is NaN
-  equal(MathLib.isNaN(MathLib.sign(NaN)), true, 'Spec. 1: MathLib.sign(NaN) is NaN');
+  // Spec. 1: MathLib.sign(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.sign(NaN)), true, 'Spec. 1: MathLib.sign(NaN) = NaN');
 
-  // MathLib.sign(0) is 0
-  equal(MathLib.isPosZero(MathLib.sign(0)), true, 'Spec. 2: MathLib.sign(0) is 0');
+  // Spec. 2: MathLib.sign(0) = 0
+  equal(MathLib.isPosZero(MathLib.sign(0)), true, 'Spec. 2: MathLib.sign(0) = 0');
 
-  // MathLib.sign(-0) is -0
-  equal(MathLib.isNegZero(MathLib.sign(-0)), true, 'Spec. 3: MathLib.sign(-0) is -0');
+  // Spec. 3: MathLib.sign(-0) = -0
+  equal(MathLib.isNegZero(MathLib.sign(-0)), true, 'Spec. 3: MathLib.sign(-0) = -0');
 
-  // MathLib.sign(x) is 1 for x > 0
-  equal(MathLib.sign(4), 1, 'Spec. 4: MathLib.sign(x) is 1 for x > 0');
-  equal(MathLib.sign(Infinity), 1, 'Spec. 4: MathLib.sign(x) is 1 for x > 0');
+  // Spec. 4: MathLib.sign(x) = 1 for x > 0
+  equal(MathLib.sign(4), 1, 'Spec. 4: MathLib.sign(x) = 1 for x > 0');
+  equal(MathLib.sign(Infinity), 1, 'Spec. 4: MathLib.sign(x) = 1 for x > 0');
 
-  // MathLib.sign(x) is -1 for x < 0
-  equal(MathLib.sign(-4), -1, 'Spec. 5: MathLib.sign(x) is -1 for x < 0');
-  equal(MathLib.sign(-Infinity), -1, 'Spec. 5: MathLib.sign(x) is -1 for x < 0');
+  // Spec. 5: MathLib.sign(x) = -1 for x < 0
+  equal(MathLib.sign(-4), -1, 'Spec. 5: MathLib.sign(x) = -1 for x < 0');
+  equal(MathLib.sign(-Infinity), -1, 'Spec. 5: MathLib.sign(x) = -1 for x < 0');
 });
 
 
-test('.sin()', 6, function () {
-  equal(MathLib.sin(Math.PI / 2), 1, 'MathLib.sin(Math.PI / 2) should be 1');
-  equal(MathLib.isPosZero(MathLib.sin(+0)), true, 'MathLib.sin(+0) should be +0');
-  equal(MathLib.isNegZero(MathLib.sin(-0)), true, 'MathLib.sin(-0) should be -0');
-  equal(MathLib.isNaN(MathLib.sin(Infinity)), true, 'MathLib.sin(Infinity) should be NaN');
-  equal(MathLib.isNaN(MathLib.sin(-Infinity)), true, 'MathLib.sin(-Infinity) should be NaN');
-  equal(MathLib.isNaN(MathLib.sin(NaN)), true, 'MathLib.sin(NaN) should be NaN');
+test('.sin()', 7, function () {
+  // Spec. 1: MathLib.sin(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.sin(NaN)), true, 'Spec. 1: MathLib.sin(NaN) = NaN');
+
+  // Spec. 2: MathLib.sin(+0) = +0
+  equal(MathLib.isPosZero(MathLib.sin(+0)), true, 'Spec. 2: MathLib.sin(+0) = +0');
+
+  // Spec. 3: MathLib.sin(-0) = -0
+  equal(MathLib.isNegZero(MathLib.sin(-0)), true, 'Spec. 3: MathLib.sin(-0) = -0');
+
+  // Spec. 4: MathLib.sin(+&infin;) = NaN
+  equal(MathLib.isNaN(MathLib.sin(+Infinity)), true, 'Spec. 4: MathLib.sin(+&infin;) = NaN');
+
+  // Spec. 5: MathLib.sin(-&infin;) = NaN
+  equal(MathLib.isNaN(MathLib.sin(-Infinity)), true, 'Spec. 5: MathLib.sin(-&infin;) = NaN');
+
+  // Spec. 6: otherwise MathLib.sin(x) = sine of x
+  equal(MathLib.sin(Math.PI/2), 1, 'Spec. 6: otherwise MathLib.sin(x) = sine of x');
+  equal(MathLib.sin(-Math.PI/2), -1, 'Spec. 6: otherwise MathLib.sin(x) = sine of x');
 });
 
 
 test('.sqrt()', 8, function () {
-  equal(MathLib.isNaN(MathLib.sqrt(NaN)), true, 'MathLib.sqrt(NaN) = NaN');
-  equal(MathLib.isNaN(MathLib.sqrt(-Infinity)), true, 'MathLib.sqrt(-Infinity) = NaN');
-  equal(MathLib.isNaN(MathLib.sqrt(-4)), true, 'MathLib.sqrt(-4) = NaN');
-  equal(MathLib.isPosZero(MathLib.sqrt(+0)), true, 'MathLib.sqrt(+0) = -0');
-  equal(MathLib.isPosZero(MathLib.sqrt(-0)), true, 'MathLib.sqrt(-0) = +0');
-  equal(MathLib.sqrt(Infinity), Infinity, 'MathLib.sqrt(Infinity) = Infinity');
-  equal(MathLib.sqrt(9), 3, 'MathLib.sqrt(9)');
-  equal(MathLib.sqrt(2), 1.4142135623730950488016887242096980785696, 'MathLib.sqrt(2)');
+  // Spec. 1: MathLib.sqrt(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.sqrt(NaN)), true, 'Spec. 1: MathLib.sqrt(NaN) = NaN');
+
+  // Spec. 2: MathLib.sqrt(+0) = +0
+  equal(MathLib.isPosZero(MathLib.sqrt(+0)), true, 'Spec. 2: MathLib.sqrt(+0) = +0');
+
+  // Spec. 3: MathLib.sqrt(-0) = -0
+  equal(MathLib.isPosZero(MathLib.sqrt(-0)), true, 'Spec. 3: MathLib.sqrt(-0) = +0');
+
+  // Spec. 4: MathLib.sqrt(+&infin;) = +&infin;
+  equal(MathLib.sqrt(+Infinity), +Infinity, 'Spec. 4: MathLib.sqrt(+&infin;) = +&infin;');
+
+  // Spec. 5: MathLib.sqrt(x) = NaN if x < 0
+  equal(MathLib.isNaN(MathLib.sqrt(-Infinity)), true, 'Spec. 5: MathLib.sqrt(x) = NaN if x < 0');
+  equal(MathLib.isNaN(MathLib.sqrt(-2)), true, 'Spec. 5: MathLib.sqrt(x) = NaN if x < 0');
+
+  // Spec. 6: otherwise MathLib.sqrt(x) = square root of x
+  equal(MathLib.sqrt(9), 3, 'Spec. 6: otherwise MathLib.sqrt(x) = square root of x');
+  equal(MathLib.sqrt(2), 1.41421356237309504, 'Spec. 6: otherwise MathLib.sqrt(x) = square root of x');
 });
 
 
-test('tan()', 7, function () {
-  equal(MathLib.isZero(MathLib.tan(Math.PI)), true, 'MathLib.tan(Math.PI) should be (more or less) 0');
-  equal(MathLib.isOne(MathLib.tan(Math.PI/4)), true, 'MathLib.tan(Math.PI/4) should be (more or less) 1');
-  equal(MathLib.isPosZero(MathLib.tan(+0)), true, 'MathLib.tan(+0) should be +0');
-  equal(MathLib.isNegZero(MathLib.tan(-0)), true, 'MathLib.tan(-0) should be -0');
-  equal(MathLib.isNaN(MathLib.tan(Infinity)), true, 'MathLib.tan(Infinity) should be NaN');
-  equal(MathLib.isNaN(MathLib.tan(-Infinity)), true, 'MathLib.tan(-Infinity) should be NaN');
-  equal(MathLib.isNaN(MathLib.tan(NaN)), true, 'MathLib.tan(NaN) should be NaN');
+test('.tan()', 7, function () {
+  // Spec. 1: MathLib.tan(NaN) = NaN
+  equal(MathLib.isNaN(MathLib.tan(NaN)), true, 'Spec. 1: MathLib.tan(NaN) = NaN');
+
+  // Spec. 2: MathLib.tan(+0) = +0
+  equal(MathLib.isPosZero(MathLib.tan(+0)), true, 'Spec. 2: MathLib.tan(+0) = +0');
+
+  // Spec. 3: MathLib.tan(-0) = -0
+  equal(MathLib.isNegZero(MathLib.tan(-0)), true, 'Spec. 3: MathLib.tan(-0) = -0');
+
+  // Spec. 4: MathLib.tan(+&infin;) = NaN
+  equal(MathLib.isNaN(MathLib.tan(+Infinity)), true, 'Spec. 4: MathLib.tan(+&infin;) = NaN');
+
+  // Spec. 5: MathLib.tan(-&infin;) = NaN
+  equal(MathLib.isNaN(MathLib.tan(-Infinity)), true, 'Spec. 5: MathLib.tan(-&infin;) = NaN');
+
+  // Spec. 6: otherwise MathLib.tan(x) = tangent of x
+  equal(MathLib.isZero(MathLib.tan(Math.PI)), true, 'Spec. 6: otherwise MathLib.tan(x) = tangent of x');
+  equal(MathLib.isOne(MathLib.tan(Math.PI/4)), true, 'Spec. 6: otherwise MathLib.tan(x) = tangent of x');
 });
 
 
@@ -581,17 +904,53 @@ test('.type', 1, function () {
 
 
 // Methods
-test('.area()', 1, function () {
+test('.area()', 5, function () {
   var p = MathLib.point(1, 2),
-      circle = MathLib.circle(p, 2);
-  equal(MathLib.isEqual(circle.area(), 4 * MathLib.pi), true, ".area()");
+      c1 = MathLib.circle(p, NaN),
+      c2 = MathLib.circle(p, +0),
+      c3 = MathLib.circle(p, -0),
+      c4 = MathLib.circle(p, Infinity),
+      c5 = MathLib.circle(p, 2);
+
+  // Spec. 1: c.area() = NaN if r = NaN
+  equal(MathLib.isNaN(c1.area()), true, 'Spec. 1: c.area() = NaN if r = NaN');
+
+  // Spec. 2: c.area() = +0 if r = +0
+  equal(MathLib.isPosZero(c2.area()), true, 'Spec. 2: c.area() = +0 if r = +0');
+
+  // Spec. 3: c.area() = -0 if r = +0
+  equal(MathLib.isPosZero(c3.area()), true, 'Spec. 3: c.area() = -0 if r = +0');
+
+  // Spec. 4: c.area() = &infin; if r = &infin;
+  equal(c4.area(), Infinity, 'Spec. 4: c.area() = &infin; if r = &infin;');
+
+  // Spec. 5: otherwise c.area() = &pi; r * r
+  equal(c5.area(), 4 * MathLib.pi, 'Spec. 5: otherwise c.area() = &pi; * r * r');
 });
 
 
-test('.circumference()', 1, function () {
+test('.circumference()', 5, function () {
   var p = MathLib.point(1, 2),
-      circle = MathLib.circle(p, 2);
-  equal(MathLib.isEqual(circle.circumference(), 4 * MathLib.pi), true, ".circumference()");
+      c1 = MathLib.circle(p, NaN),
+      c2 = MathLib.circle(p, +0),
+      c3 = MathLib.circle(p, -0),
+      c4 = MathLib.circle(p, Infinity),
+      c5 = MathLib.circle(p, 2);
+
+  // Spec. 1: c.circumference() = NaN if r = NaN
+  equal(MathLib.isNaN(c1.circumference()), true, 'Spec. 1: c.circumference() = NaN if r = NaN');
+
+  // Spec. 2: c.circumference() = +0 if r = +0
+  equal(MathLib.isPosZero(c2.circumference()), true, 'Spec. 2: c.circumference() = +0 if r = +0');
+
+  // Spec. 3: c.circumference() = -0 if r = -0
+  equal(MathLib.isNegZero(c3.circumference()), true, 'Spec. 3: c.circumference() = -0 if r = -0');
+
+  // Spec. 4: c.circumference() = &infin; if r = &infin;
+  equal(c4.circumference(), Infinity, 'Spec. 4: c.circumference() = &infin; if r = &infin;');
+
+  // Spec. 5: otherwise c.circumference() = 2 &pi; r
+  equal(c5.circumference(), 4 * MathLib.pi, 'Spec. 5: otherwise c.circumference() = 2 &pi; r');
 });
 
 
@@ -628,6 +987,12 @@ test(".reflectAt()", 2, function () {
   deepEqual(newcircle.center, MathLib.point(5, 12), "Checking the center.");
 });
 
+test('.toLaTeX()', 1, function () {
+  var p = MathLib.point(1, 2),
+      c = MathLib.circle(p, 2);
+
+  equal(c.toLaTeX(), 'B_{2}\\left(\\begin{pmatrix}1\\\\2\\end{pmatrix}\\right)', 'Spec. 1: ');
+});
 module('Complex');
 test('init (1 Array)', 3, function () {
   var c = MathLib.complex([1, 2]);
@@ -1824,8 +2189,8 @@ test('.reflectAt()', 1, function () {
 
 test('.toLaTeX()', 2, function () {
   var point = MathLib.point([3, 2, 1]);
-  equal(point.toLaTeX(), '\\begin{pmatrix}\n\t3\\\\\n\t2\n\\end{pmatrix}', '.toLaTeX()');
-  equal(point.toLaTeX(true), '\\begin{pmatrix}\n\t3\\\\\n\t2\\\\\n\t1\n\\end{pmatrix}', '.toLaTeX()');
+  equal(point.toLaTeX(), '\\begin{pmatrix}3\\\\2\\end{pmatrix}', '.toLaTeX()');
+  equal(point.toLaTeX(true), '\\begin{pmatrix}3\\\\2\\\\1\\end{pmatrix}', '.toLaTeX()');
 });
 
 

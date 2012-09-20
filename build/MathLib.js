@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.3 - 2012-08-22  
+// v0.3.4 - 2012-09-21  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -68,7 +68,7 @@
 
 
   MathLib = {
-    version:          '0.3.3',
+    version:          '0.3.4',
     apery:            1.2020569031595942,
     e:                Math.E,
     // Number.EPSILON is probably coming in ES6
@@ -874,7 +874,7 @@ var functionList = {
   abs: Math.abs,
   arccos: Math.acos,
   arccot: function (x) {
-    return MathLib.pi / 2 - Math.atan(x);
+    return 1.5707963267948966 - Math.atan(x);
   },
   arccsc: function (x) {
     return Math.asin(1 / x);
@@ -902,14 +902,25 @@ var functionList = {
   artanh: Math.atanh || function (x) {
     return 0.5 * Math.log((1 + x) / (1 - x));
   },
-  ceil: Math.ceil,
+  ceil: function (x) {
+    // Some implementations have a bug where Math.ceil(-0) = +0 (instead of -0)
+    if (x === 0) {
+      return x;
+    }
+    return Math.ceil(x);
+  },
   floor: Math.floor,
   cos: Math.cos,
   cosh: Math.cosh || function (x) {
     return (Math.exp(x) + Math.exp(-x)) / 2;
   },
   cot: function (x) {
-    return 1 / Math.tan(x);
+    // Handle ±0 separate, because tan(pi/2 ± 0) is not ±∞
+    if (x === 0) {
+      return 1/x;
+    }
+    // cot(x) = tan(pi/2 - x) is better than 1/tan(x)
+    return Math.tan(1.5707963267948966 - x);
   },
   coth: function (x) {
     return (Math.exp(x) + Math.exp(-x)) / (Math.exp(x) - Math.exp(-x));
@@ -1016,15 +1027,8 @@ var functionList1 = {
         return x;
       },
   degToRad: function (x) {
-        return x / 180 * MathLib.pi;
-      },
-  digitproduct: function (x) {
-        var out = 1;
-        while (x > 9) {
-          out *= x % 10;
-          x = Math.floor(x / 10);
-        }
-        return out * x;
+      // Math.PI / 180 = 57.29577951308232
+        return x * 0.017453292519943295;
       },
   digitsum: function (x) {
         var out = 0;
@@ -1036,7 +1040,7 @@ var functionList1 = {
       },
   divide: function (a, b) {
         return MathLib.times(a, MathLib.inverse(b));
-  },
+      },
   divisors: function (x) {
         var res = x===1 ? [] : [1],
             i, ii;
@@ -1199,7 +1203,8 @@ var functionList1 = {
         return Math.pow(x, y);
       },
   radToDeg: function (x) {
-        return x * 180 / Math.PI;
+        // 180 / Math.PI = 57.29577951308232
+        return x*57.29577951308232;
       },
   random: Math.random,
   risingFactorial: function (n, m, s) {
@@ -1211,12 +1216,13 @@ var functionList1 = {
         }
         return res;
       },
-  round: function (x, n) {
-          if (arguments.length === 1) {
-            return Math.round(x);
-          }
-          return Math.round(x*Math.pow(10, n)) / Math.pow(10, n);
-        },
+  round: function (x) {
+        // Some implementations have a bug where Math.round(-0) = +0 (instead of -0).
+        if (x === 0) {
+          return x;
+        }
+        return Math.round(x);
+      },
   root: function (x, root) {
         if (arguments.length === 1) {
           return Math.sqrt(x);
@@ -1227,6 +1233,7 @@ var functionList1 = {
         return x && (x<0 ? -1 : 1);
       },
   sqrt: function (x) {
+        // sqrt(-0) = -0 in JavaScript, but we want sqrt(-0) = +0
         if (x === 0) {
           return 0;
         }
@@ -3603,6 +3610,15 @@ MathLib.extendPrototype('circle', 'reflectAt', function (a) {
 });
 
 
+// ### Circle.prototype.toLaTeX()
+// Returns a LaTeX expression of the circle
+//
+// *@return {string}* 
+MathLib.extendPrototype('circle', 'toLaTeX', function () {
+  return 'B_{' + MathLib.toLaTeX(this.radius) + '}\\left(' + this.center.toLaTeX() + '\\right)';
+});
+
+
 // ### Circle.prototype.toMatrix()
 // Converts the circle to the corresponding matrix.
 //
@@ -3613,7 +3629,6 @@ MathLib.extendPrototype('circle', 'toMatrix', function () {
       r = this.radius;
   return MathLib.matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x*x + y*y - r*r]]);
 });
-
 // ## <a id="Complex"></a>Complex
 // MathLib.complex is the MathLib implementation of complex numbers.
 //
@@ -5826,9 +5841,9 @@ MathLib.extendPrototype('point', 'toComplex', function () {
 MathLib.extendPrototype('point', 'toLaTeX', function (opt) {
   var p = opt ? this : this.normalize().slice(0, -1);
 
-  return '\\begin{pmatrix}\n\t' + p.reduce(function (old, cur) {
-    return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
-  }) + '\n\\end{pmatrix}';
+  return '\\begin{pmatrix}' + p.reduce(function (old, cur) {
+    return old + '\\\\' + MathLib.toLaTeX(cur);
+  }) + '\\end{pmatrix}';
 });
 
 
