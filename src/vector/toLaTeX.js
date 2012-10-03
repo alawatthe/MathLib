@@ -1,0 +1,9 @@
+// ### Vector.prototype.toLaTeX()
+// Returns a LaTeX representation of the vector
+//
+// *@returns {string}*
+MathLib.extendPrototype('vector', 'toLaTeX', function () {
+  return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
+    return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
+  }) + '\n\\end{pmatrix}';
+});

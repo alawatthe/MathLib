@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
 
-  grunt.loadTasks('node_modules/grunt-docco/tasks');
+grunt.loadTasks('node_modules/grunt-docco/tasks');
 
   grunt.initConfig({
     pkg: '<json:package.json>',
@@ -46,45 +46,76 @@ module.exports = function(grunt) {
               '// - [permutation](#Permutation "Jump to the permutation implementation")\n' +
               '// - [point](#Point "Jump to the point implementation")\n' +
               '// - [polynomial](#Polynomial "Jump to the polynomial implementation")\n' +
-              '// - [set](#Set "Jump to the set implementation")\n', 
+              '// - [set](#Set "Jump to the set implementation")\n',
       banner_min: '/*! MathLib v<%= pkg.version %> MathLib.de | MathLib.de/en/license */'
     },
     concat: {
       MathLib: {
         src: ['<banner:meta.banner>',
-              '<file_strip_banner:src/head.js>',
-              '<file_strip_banner:src/modules/MathML.js>',
-              '<file_strip_banner:src/modules/functn.js>',
-              '<file_strip_banner:src/modules/screen.js>',
-              '<file_strip_banner:src/modules/canvas.js>',
-              '<file_strip_banner:src/modules/svg.js>',
-              '<file_strip_banner:src/modules/vector.js>',
-              '<file_strip_banner:src/modules/circle.js>',
-              '<file_strip_banner:src/modules/complex.js>',
-              '<file_strip_banner:src/modules/line.js>',
-              '<file_strip_banner:src/modules/matrix.js>',
-              '<file_strip_banner:src/modules/permutation.js>',
-              '<file_strip_banner:src/modules/point.js>',
-              '<file_strip_banner:src/modules/polynomial.js>',
-              '<file_strip_banner:src/modules/set.js>',
-              '<file_strip_banner:src/foot.js>'
+
+              'src/head.js',
+
+              'src/MathML/init.js',
+              'src/MathML/!(init).js',
+
+              'src/functn/init.js',
+              'src/functn/!(init).js',
+
+              'src/screen/init.js',
+              'src/screen/!(init).js',
+
+              'src/canvas/init.js',
+              'src/canvas/!(init).js',
+
+              'src/svg/init.js',
+              'src/svg/!(init).js',
+
+              'src/vector/init.js',
+              'src/vector/!(init).js',
+
+              'src/circle/init.js',
+              'src/circle/!(init).js',
+
+              'src/complex/init.js',
+              'src/complex/!(init).js',
+
+              'src/line/init.js',
+              'src/line/!(init).js',
+
+              'src/matrix/init.js',
+              'src/matrix/!(init).js',
+
+              'src/permutation/init.js',
+              'src/permutation/!(init).js',
+
+              'src/point/init.js',
+              'src/point/!(init).js',
+
+              'src/polynomial/init.js',
+              'src/polynomial/!(init).js',
+
+              'src/set/init.js',
+              'src/set/!(init).js',
+              
+              'src/foot.js'
               ],
-        dest: 'build/<%= pkg.name %>.js'
+        dest: 'build/<%= pkg.name %>.js',
+        separator: '\n\n\n'
       },
       tests: {
         src: ['<banner:meta.banner_min>',
-              '<file_strip_banner:testing/general.js>',
-              '<file_strip_banner:testing/circle.js>',
-              '<file_strip_banner:testing/complex.js>',
-              '<file_strip_banner:testing/functn.js>',
-              '<file_strip_banner:testing/line.js>',
-              '<file_strip_banner:testing/MathML.js>',
-              '<file_strip_banner:testing/matrix.js>',
-              '<file_strip_banner:testing/permutation.js>',
-              '<file_strip_banner:testing/point.js>',
-              '<file_strip_banner:testing/polynomial.js>',
-              '<file_strip_banner:testing/set.js>',
-              '<file_strip_banner:testing/vector.js>'
+              'testing/general/general.js',
+              'testing/circle/circle.js',
+              'testing/complex/complex.js',
+              'testing/functn/functn.js',
+              'testing/line/line.js',
+              'testing/MathML/MathML.js',
+              'testing/matrix/matrix.js',
+              'testing/permutation/permutation.js',
+              'testing/point/point.js',
+              'testing/polynomial/polynomial.js',
+              'testing/set/set.js',
+              'testing/vector/vector.js'
               ],
         dest: 'build/<%= pkg.name %>.testing.js'
       }
@@ -110,7 +141,7 @@ module.exports = function(grunt) {
     },
     watch: {
       concat: {
-        files: ['src/modules/*.js', 'testing/*.js'],
+        files: ['src/*/*.js', 'testing/*.js'],
         tasks: 'concat min lint'
       }
     },
@@ -149,7 +180,7 @@ module.exports = function(grunt) {
     docco: {
 			app: {
 				src: ['build/MathLib.js']
-      }      
+      }
     }
   });
 

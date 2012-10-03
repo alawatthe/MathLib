@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.4 - 2012-09-21  
+// v0.3.5 - 2012-10-03  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -42,6 +42,8 @@
 // - [set](#Set "Jump to the set implementation")
 
 
+
+
 // ## The wrapping function
 (function (document) {
 
@@ -68,7 +70,7 @@
 
 
   MathLib = {
-    version:          '0.3.4',
+    version:          '0.3.5',
     apery:            1.2020569031595942,
     e:                Math.E,
     // Number.EPSILON is probably coming in ES6
@@ -133,6 +135,8 @@
     });
 
   };
+
+
 
 // ## <a id="MathML"></a>MathML
 // The MathML implementation of MathLib parses and creates content MathML.
@@ -259,10 +263,8 @@ MathLib.MathML = function (MathMLString) {
 };
 
 
-
 // Setting the .constructor property to MathLib.MathML  
 MathLib.extendPrototype('MathML', 'constructor', MathLib.MathML);
-
 
 
 // Setting the .type property to 'MathML'
@@ -311,6 +313,65 @@ var tokenPrototype = {
 
 };
 */
+
+
+
+
+// ### MathML.isSupported()
+// Checks if MathML is supported by the browser.  
+// Code stolen from [Modernizr](http://www.modernizr.com/)
+//
+// *@return {boolean}*
+MathLib.extend('MathML', 'isSupported', function () {
+  var hasMathML = false,
+      ns, div, mfrac;
+  if ( document.createElementNS ) {
+    ns = 'http://www.w3.org/1998/Math/MathML';
+    div = document.createElement('div');
+    div.style.position = 'absolute';
+    mfrac = div.appendChild(document.createElementNS(ns,'math'))
+                 .appendChild(document.createElementNS(ns,'mfrac'));
+    mfrac.appendChild(document.createElementNS(ns,'mi'))
+         .appendChild(document.createTextNode('xx'));
+    mfrac.appendChild(document.createElementNS(ns,'mi'))
+         .appendChild(document.createTextNode('yy'));
+    document.body.appendChild(div);
+    hasMathML = div.offsetHeight > div.offsetWidth;
+    document.body.removeChild(div);
+  }
+  return hasMathML;
+});
+
+
+// ### MathML.loadMathJax()
+// Loads MathJax dynamically.
+//
+// *@param{string}* [config] Optional config options
+MathLib.extend('MathML', 'loadMathJax', function (config) {
+  var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src  = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js';
+
+    config = config || 'MathJax.Hub.Config({' +
+                         'config: ["MMLorHTML.js"],' +
+                         'jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],' +
+                         'extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js"],' +
+                         'TeX: {' +
+                           'extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]' +
+                         '}' +
+                       '});';
+
+    if (window.opera) {
+      script.innerHTML = config;
+    }
+    else {
+      script.text = config;
+    }
+
+    document.getElementsByTagName('head')[0].appendChild(script);
+});
+
+
 // ### MathML.prototype.parse()
 // Parses the MathML.
 //
@@ -503,7 +564,6 @@ MathLib.extendPrototype('MathML', 'parse', function () {
 });
 
 
-
 // ### MathML.prototype.toMathMLString()
 // Converts the content MathMl to a presentation MathML string
 // 
@@ -548,8 +608,6 @@ MathLib.extendPrototype('MathML', 'toMathMLString', function () {
 });
 
 
-
-
 // ### MathML.prototype.toString()
 // Custom toString method
 // 
@@ -559,68 +617,9 @@ MathLib.extendPrototype('MathML', 'toString', function () {
 });
 
 
-
-// ### MathML.isSupported()
-// Checks if MathML is supported by the browser.  
-// Code stolen from [Modernizr](http://www.modernizr.com/)
-//
-// *@return {boolean}*
-MathLib.extend('MathML', 'isSupported', function () {
-  var hasMathML = false,
-      ns, div, mfrac;
-  if ( document.createElementNS ) {
-    ns = 'http://www.w3.org/1998/Math/MathML';
-    div = document.createElement('div');
-    div.style.position = 'absolute';
-    mfrac = div.appendChild(document.createElementNS(ns,'math'))
-                 .appendChild(document.createElementNS(ns,'mfrac'));
-    mfrac.appendChild(document.createElementNS(ns,'mi'))
-         .appendChild(document.createTextNode('xx'));
-    mfrac.appendChild(document.createElementNS(ns,'mi'))
-         .appendChild(document.createTextNode('yy'));
-    document.body.appendChild(div);
-    hasMathML = div.offsetHeight > div.offsetWidth;
-    document.body.removeChild(div);
-  }
-  return hasMathML;
-});
-
-
-
-// ### MathML.loadMathJax()
-// Loads MathJax dynamically.
-//
-// *@param{string}* [config] Optional config options
-MathLib.extend('MathML', 'loadMathJax', function (config) {
-  var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src  = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js';
-
-    config = config || 'MathJax.Hub.Config({' +
-                         'config: ["MMLorHTML.js"],' +
-                         'jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],' +
-                         'extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js"],' +
-                         'TeX: {' +
-                           'extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]' +
-                         '}' +
-                       '});';
-
-    if (window.opera) {
-      script.innerHTML = config;
-    }
-    else {
-      script.text = config;
-    }
-
-    document.getElementsByTagName('head')[0].appendChild(script);
-});
-
-
-
 // ### MathML.variables
 // Object for variable storage.
 MathLib.extend('MathML', 'variables', {});
-
 
 
 // ### MathML.write()
@@ -636,6 +635,7 @@ MathLib.extend('MathML', 'write', function (id, math) {
     MathJax.Hub.Queue(['Typeset', MathJax.Hub, id]);
   }
 });
+
 
 // ## <a id="Functions"></a>Functions
 //
@@ -690,7 +690,6 @@ MathLib.extendPrototype('functn', 'constructor', MathLib.functn);
 MathLib.extendPrototype('functn', 'type', 'functn');
 
 
-
 // ### Functn.prototype.draw()
 // Draws the function on the screen
 //
@@ -714,154 +713,6 @@ MathLib.extendPrototype('functn', 'draw', function (screen, options) {
 
   return this;
 });
-
-
-
-// ### Functn.prototype.toContentMathML()
-// Returns a content MathML representation of the function
-//
-// *@returns {MathML}*
-MathLib.extendPrototype('functn', 'toContentMathML', function () {
-  return this.contentMathML;
-});
-
-
-
-// ### Functn.prototype.toContentMathMLString()
-// Returns a content MathML representation of the function
-//
-// *@returns {string}*
-MathLib.extendPrototype('functn', 'toContentMathMLString', function () {
-  return this.contentMathML.outerMathML;
-});
-
-
-
-// ### Functn.prototype.toLaTeX()
-// Returns a LaTeX representation of the function
-//
-// *@param {string}* Optional: custom name for the bound variable (default: x)
-// *@returns {string}*
-MathLib.extendPrototype('functn', 'toLaTeX', function (bvar) {
-
-  // List of functions to be executed on the specified node type
-  var handlers = {
-    apply: function (n) {
-      var f = n.childNodes[0],
-          args = n.childNodes.slice(1).map(function(x) {
-            return handlers[x.nodeName](x);
-          }),
-          str = '';
-
-      if (f.nodeName === 'plus') {
-        str = args.join('+');
-      }
-      else if (f.nodeName === 'times') {
-        str = args.join('*');
-      }
-      else if (f.nodeName === 'power') {
-        str = args[0] + '^{' + args[1] + '}';
-      }
-      else {
-        // TODO: not all functions can be written like \sin some have to be written like \operatorname{argmax}
-        str = '\\' +f.nodeName + '(' + args.join(', ') + ')';
-      }
-      return str;
-    },
-    bvar: function () {return '';},
-    ci: function (n) {return bvar || n.innerMathML;},
-    cn: function (n) {return n.innerMathML;},
-    cs: function (n) {return n.innerMathML;},
-    domainofapplication: function () {return '';},
-    lambda: function (n) {
-      return n.childNodes.reduce(function(old, cur) {
-        return old + handlers[cur.nodeName](cur);
-      }, '');
-    },
-    '#text': function (n) {return n.innerMathML;}
-  };
-
-  // Start the node handling with the first real element (not the <math> element)
-  return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
-});
-
-
-
-// ### Functn.prototype.toMathML()
-// Returns a MathML representation of the function
-//
-// *@returns {string}*
-MathLib.extendPrototype('functn', 'toMathML', function () {
-  // Get the content MathML and convert it to presentation MathML
-  return this.contentMathML.toMathML();
-});
-
-
-
-// ### Functn.prototype.toMathMLString()
-// Returns a MathML representation of the function
-//
-// *@returns {string}*
-MathLib.extendPrototype('functn', 'toMathMLString', function () {
-  return this.contentMathML.toMathMLString();
-});
-
-
-
-// ### Functn.prototype.toString()
-// Returns a string representation of the function
-//
-// *@param {string}* Optional: custom name for the bound variable (default: x)
-// *@returns {string}*
-MathLib.extendPrototype('functn', 'toString', function (bvar) {
-
-  // List of functions to be executed on the specified node type
-  var handlers = {
-    apply: function (n) {
-      var f = n.childNodes[0],
-          args = n.childNodes.slice(1).map(function(x) {
-            return handlers[x.nodeName](x);
-          }),
-          str = '';
-
-      if (f.nodeName === 'plus') {
-        str = args.join('+');
-      }
-      else if (f.nodeName === 'times') {
-        str = args.join('*');
-      }
-      else if (f.nodeName === 'power') {
-        str = args[0] + '^' + args[1];
-      }
-      else {
-        str = f.nodeName + '(' + args.join(', ') + ')';
-      }
-      return str;
-    },
-    bvar: function () {return '';},
-    ci: function (n) {return bvar || n.innerMathML;},
-    cn: function (n) {return n.innerMathML;},
-    cs: function (n) {return n.innerMathML;},
-    domainofapplication: function () {return '';},
-    lambda: function (n) {
-      return n.childNodes.reduce(function(old, cur) {
-        return old + handlers[cur.nodeName](cur);
-      }, '');
-    }, 
-    '#text': function (n) {return n.innerMathML;}
-  };
-
-  // Start the node handling with the first real element (not the <math> element)
-  return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
-});
-
-
-
-
-
-
-
-
 
 
 var mathStart = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><',
@@ -1596,6 +1447,142 @@ for (func in functionList3) {
   }
 }
 
+
+
+// ### Functn.prototype.toContentMathML()
+// Returns a content MathML representation of the function
+//
+// *@returns {MathML}*
+MathLib.extendPrototype('functn', 'toContentMathML', function () {
+  return this.contentMathML;
+});
+
+
+// ### Functn.prototype.toContentMathMLString()
+// Returns a content MathML representation of the function
+//
+// *@returns {string}*
+MathLib.extendPrototype('functn', 'toContentMathMLString', function () {
+  return this.contentMathML.outerMathML;
+});
+
+
+// ### Functn.prototype.toLaTeX()
+// Returns a LaTeX representation of the function
+//
+// *@param {string}* Optional: custom name for the bound variable (default: x)
+// *@returns {string}*
+MathLib.extendPrototype('functn', 'toLaTeX', function (bvar) {
+
+  // List of functions to be executed on the specified node type
+  var handlers = {
+    apply: function (n) {
+      var f = n.childNodes[0],
+          args = n.childNodes.slice(1).map(function(x) {
+            return handlers[x.nodeName](x);
+          }),
+          str = '';
+
+      if (f.nodeName === 'plus') {
+        str = args.join('+');
+      }
+      else if (f.nodeName === 'times') {
+        str = args.join('*');
+      }
+      else if (f.nodeName === 'power') {
+        str = args[0] + '^{' + args[1] + '}';
+      }
+      else {
+        // TODO: not all functions can be written like \sin some have to be written like \operatorname{argmax}
+        str = '\\' +f.nodeName + '(' + args.join(', ') + ')';
+      }
+      return str;
+    },
+    bvar: function () {return '';},
+    ci: function (n) {return bvar || n.innerMathML;},
+    cn: function (n) {return n.innerMathML;},
+    cs: function (n) {return n.innerMathML;},
+    domainofapplication: function () {return '';},
+    lambda: function (n) {
+      return n.childNodes.reduce(function(old, cur) {
+        return old + handlers[cur.nodeName](cur);
+      }, '');
+    },
+    '#text': function (n) {return n.innerMathML;}
+  };
+
+  // Start the node handling with the first real element (not the <math> element)
+  return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
+});
+
+
+// ### Functn.prototype.toMathML()
+// Returns a MathML representation of the function
+//
+// *@returns {string}*
+MathLib.extendPrototype('functn', 'toMathML', function () {
+  // Get the content MathML and convert it to presentation MathML
+  return this.contentMathML.toMathML();
+});
+
+
+// ### Functn.prototype.toMathMLString()
+// Returns a MathML representation of the function
+//
+// *@returns {string}*
+MathLib.extendPrototype('functn', 'toMathMLString', function () {
+  return this.contentMathML.toMathMLString();
+});
+
+
+// ### Functn.prototype.toString()
+// Returns a string representation of the function
+//
+// *@param {string}* Optional: custom name for the bound variable (default: x)
+// *@returns {string}*
+MathLib.extendPrototype('functn', 'toString', function (bvar) {
+
+  // List of functions to be executed on the specified node type
+  var handlers = {
+    apply: function (n) {
+      var f = n.childNodes[0],
+          args = n.childNodes.slice(1).map(function(x) {
+            return handlers[x.nodeName](x);
+          }),
+          str = '';
+
+      if (f.nodeName === 'plus') {
+        str = args.join('+');
+      }
+      else if (f.nodeName === 'times') {
+        str = args.join('*');
+      }
+      else if (f.nodeName === 'power') {
+        str = args[0] + '^' + args[1];
+      }
+      else {
+        str = f.nodeName + '(' + args.join(', ') + ')';
+      }
+      return str;
+    },
+    bvar: function () {return '';},
+    ci: function (n) {return bvar || n.innerMathML;},
+    cn: function (n) {return n.innerMathML;},
+    cs: function (n) {return n.innerMathML;},
+    domainofapplication: function () {return '';},
+    lambda: function (n) {
+      return n.childNodes.reduce(function(old, cur) {
+        return old + handlers[cur.nodeName](cur);
+      }, '');
+    }, 
+    '#text': function (n) {return n.innerMathML;}
+  };
+
+  // Start the node handling with the first real element (not the <math> element)
+  return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
+});
+
+
 // ## <a id="Screen"></a>Screen
 // This module contains the common methods of all drawing modules.
 prototypes.screen = {};
@@ -1812,11 +1799,8 @@ MathLib.screen = function (id, options) {
     }
   }
 
-
-
   return screen;
 };
-
 
 
 // ### Screen.prototype.axis()
@@ -1917,7 +1901,6 @@ MathLib.extendPrototype('screen', 'axis', function (options) {
 });
 
 
-
 // ### Screen.prototype.contextmenu()
 // Handles the contextmenu event
 //
@@ -1952,7 +1935,6 @@ MathLib.extendPrototype('screen', 'contextmenu', function (evt) {
 });
 
 
-
 // ### Screen.prototype.enterFullscreen()
 // Displays the current plot in fullscreen mode.
 //
@@ -1971,7 +1953,6 @@ MathLib.extendPrototype('screen', 'enterFullscreen', function () {
 
   return this;
 });
-
 
 
 // ### Screen.prototype.exitFullscreen()
@@ -1993,7 +1974,6 @@ MathLib.extendPrototype('screen', 'exitFullscreen', function () {
 });
 
 
-
 // ### Screen.prototype.getEventPoint
 // Creates a point based on the coordinates of an event.
 //
@@ -2013,7 +1993,6 @@ MathLib.extendPrototype('screen', 'getEventPoint', function (evt) {
 });
 
 
-
 // ### Screen.prototype.getX()
 // Returns the x coordinate of the event.
 //
@@ -2031,7 +2010,6 @@ MathLib.extendPrototype('screen', 'getX', function (evt) {
 });
 
 
-
 // ### Screen.prototype.getY()
 // Returns the y coordinate of the event.
 //
@@ -2047,7 +2025,6 @@ MathLib.extendPrototype('screen', 'getY', function (evt) {
   }
   return (osY - this.curTranslateY) / this.curZoomY;
 });
-
 
 
 // ### Screen.prototype.grid()
@@ -2112,7 +2089,6 @@ MathLib.extendPrototype('screen', 'grid', function (options) {
 });
 
 
-
 // ### Screen.prototype.lineEndPoint()
 // Calculates the both endpoints for the line
 // for drawing purposes
@@ -2145,7 +2121,6 @@ MathLib.extendPrototype('screen', 'lineEndPoints', function (l) {
     return l;
   }
 });
-
 
 
 // ### Screen.prototype.onmousedown()
@@ -2182,7 +2157,6 @@ MathLib.extendPrototype('screen', 'onmousedown', function (evt) {
 });
 
 
-
 // ### Screen.prototype.onmousemove()
 // Handles the mousemove event
 //
@@ -2214,7 +2188,6 @@ MathLib.extendPrototype('screen', 'onmousemove', function (evt) {
 });
 
 
-
 // ### Screen.prototype.onmouseup()
 // Handles the mouseup event
 //
@@ -2232,7 +2205,6 @@ MathLib.extendPrototype('screen', 'onmouseup', function (evt) {
   }
 
 });
-
 
 
 // ### Screen.prototype.onmousewheel()
@@ -2276,6 +2248,8 @@ MathLib.extendPrototype('screen', 'onmousewheel', function (evt) {
 
   this.startTransformation = this.startTransformation.times(k.inverse());
 });
+
+
 
 // ## <a id="Canvas"></a>Canvas
 // The module for drawing plots on a canvas.
@@ -2374,7 +2348,6 @@ MathLib.canvas = function (canvasId) {
 };
 
 
-
 // ### Canvas.prototype.applyTransformation
 // Applies the current transformation
 //
@@ -2388,7 +2361,6 @@ MathLib.extendPrototype('canvas', 'applyTransformation', function () {
 
   return this;
 });
-
 
 
 // ### Canvas.prototype.circle
@@ -2452,7 +2424,6 @@ MathLib.extendPrototype('canvas', 'circle', function (circle, userOpt) {
 });
 
 
-
 // ### Canvas.prototype.clearLayer
 // Clears the specified layer completely
 //
@@ -2467,7 +2438,6 @@ MathLib.extendPrototype('canvas', 'clearLayer', function () {
   });
   return this;
 });
-
 
 
 // ### Canvas.prototype.line
@@ -2532,17 +2502,6 @@ MathLib.extendPrototype('canvas', 'line', function (line, userOpt) {
 });
 
 
-
-// ### Canvas.prototype.oncontextmenu()
-// Handles the contextmenu event
-//
-// *@param {event}*
-MathLib.extendPrototype('canvas', 'oncontextmenu', function (evt) {
-  this.contextmenu(evt);
-});
-
-
-
 // ### Canvas.prototype.normalizeOptions
 // Converts the options to the internal format
 //
@@ -2564,6 +2523,14 @@ MathLib.extendPrototype('canvas', 'normalizeOptions', function (defaultOpt, user
   };
 });
 
+
+// ### Canvas.prototype.oncontextmenu()
+// Handles the contextmenu event
+//
+// *@param {event}*
+MathLib.extendPrototype('canvas', 'oncontextmenu', function (evt) {
+  this.contextmenu(evt);
+});
 
 
 // ### Canvas.prototype.path
@@ -2629,7 +2596,6 @@ MathLib.extendPrototype('canvas', 'path', function (path, userOpt) {
 });
 
 
-
 // ### Canvas.prototype.point
 // Draws a point on the screen.
 //
@@ -2691,7 +2657,6 @@ MathLib.extendPrototype('canvas', 'point', function (point, userOpt) {
 });
 
 
-
 // ### Canvas.prototype.redraw()
 // Redraws the canvas
 //
@@ -2714,7 +2679,6 @@ MathLib.extendPrototype('canvas', 'redraw', function () {
 });
 
 
-
 // ### Canvas.prototype.resetView
 // Resets the view to the default values.
 //
@@ -2724,7 +2688,6 @@ MathLib.extendPrototype('canvas', 'resetView', function () {
   this.redraw();
   return this;
 });
-
 
 
 // ### Canvas.prototype.resize()
@@ -2740,7 +2703,6 @@ MathLib.extendPrototype('canvas', 'resize', function (x, y) {
   });
   return this;
 });
-
 
 
 // ### Canvas.prototype.text
@@ -2808,6 +2770,7 @@ MathLib.extendPrototype('canvas', 'text', function (str, x, y, userOpt) {
 
   return this;
 });
+
 
 // ## <a id="SVG"></a>SVG
 // The module for drawing plots on SVG elements.
@@ -2879,7 +2842,6 @@ MathLib.svg = function (svgId) {
 };
 
 
-
 // ### SVG.prototype.applyTransformation
 // Applies the current transformation
 //
@@ -2936,7 +2898,6 @@ MathLib.extendPrototype('svg', 'circle', function (circle, userOpt) {
 });
 
 
-
 // ### SVG.prototype.clearLayer
 // Clears the specified layer completely
 //
@@ -2952,7 +2913,6 @@ MathLib.extendPrototype('svg', 'clearLayer', function () {
   });
   return this;
 });
-
 
 
 // ### SVG.prototype.line
@@ -3002,7 +2962,6 @@ MathLib.extendPrototype('svg', 'line', function (line, userOpt) {
 });
 
 
-
 // ### SVG.prototype.normalizeOptions
 // Converts the options to the internal format
 //
@@ -3023,7 +2982,6 @@ MathLib.extendPrototype('svg', 'normalizeOptions', function (defaultOpt, userOpt
 });
 
 
-
 // ### SVG.prototype.oncontextmenu()
 // Handles the contextmenu event
 //
@@ -3031,7 +2989,6 @@ MathLib.extendPrototype('svg', 'normalizeOptions', function (defaultOpt, userOpt
 MathLib.extendPrototype('svg', 'oncontextmenu', function (evt) {
   this.contextmenu(evt);
 });
-
 
 
 // ### SVG.prototype.path
@@ -3081,7 +3038,6 @@ MathLib.extendPrototype('svg', 'path', function (path, userOpt) {
 });
 
 
-
 // ### SVG.prototype.point
 // Draws a point on the screen.
 //
@@ -3128,7 +3084,6 @@ MathLib.extendPrototype('svg', 'point', function (point, userOpt) {
 });
 
 
-
 // ### SVG.prototype.redraw
 // This method is necessary because we want to generalize
 // some methods and canvas needs the redraw method.
@@ -3139,7 +3094,6 @@ MathLib.extendPrototype('svg', 'redraw', function () {
 });
 
 
-
 // ### SVG.prototype.resetView
 // Resets the view to the default values.
 //
@@ -3148,7 +3102,6 @@ MathLib.extendPrototype('svg', 'resetView', function () {
   this.ctx.setAttribute('transform', 'matrix(' + this.origZoomX + ', 0, 0, ' + this.origZoomY + ', ' + this.origTranslateX + ', ' + this.origTranslateY + ')');
   return this;
 });
-
 
 
 // ### SVG.prototype.resize()
@@ -3162,7 +3115,6 @@ MathLib.extendPrototype('svg', 'resize', function (x, y) {
   this.element.setAttribute('height', y + 'px');
   return this;
 });
-
 
 
 // ### SVG.prototype.text
@@ -3216,6 +3168,8 @@ MathLib.extendPrototype('svg', 'text', function (str, x, y, userOpt) {
   return this;
 });
 
+
+
 // ## <a id="Vector"></a>Vector
 // The vector implementation of MathLib makes calculations with vectors of
 // arbitrary size possible. The entries of the vector can be numbers and complex
@@ -3256,7 +3210,6 @@ MathLib.extendPrototype('vector', 'constructor', MathLib.vector);
 MathLib.extendPrototype('vector', 'type', 'vector');
 
 
-
 // ### Vector.prototype.conjugate()
 // Calculates the conjugate of a vector
 //
@@ -3264,7 +3217,6 @@ MathLib.extendPrototype('vector', 'type', 'vector');
 MathLib.extendPrototype('vector', 'conjugate', function () {
   return MathLib.vector(this.map(MathLib.conjugate));
 });
-
 
 
 // ### Vector.prototype.isEqual()
@@ -3283,7 +3235,6 @@ MathLib.extendPrototype('vector', 'isEqual', function (v) {
 });
 
 
-
 // ### Vector.prototype.isZero()
 // Determines if the vector is the zero vector.
 //
@@ -3293,7 +3244,6 @@ MathLib.extendPrototype('vector', 'isZero', function (v) {
 });
 
 
-
 // ### Vector.prototype.map()
 // Works like Array.prototype.map.
 //
@@ -3301,7 +3251,6 @@ MathLib.extendPrototype('vector', 'isZero', function (v) {
 MathLib.extendPrototype('vector', 'map', function (f) {
   return this.constructor(Array.prototype.map.call(this, f));
 });
-
 
 
 // ### Vector.prototype.minus()
@@ -3314,7 +3263,6 @@ MathLib.extendPrototype('vector', 'minus', function (m) {
 });
 
 
-
 // ### Vector.prototype.negative()
 // Returns the negative vector
 //
@@ -3324,7 +3272,6 @@ MathLib.extendPrototype('vector', 'negative', function () {
 });
 
 
-
 // ### Vector.prototype.normalize()
 // Normalizes the vector to have length one
 //
@@ -3332,7 +3279,6 @@ MathLib.extendPrototype('vector', 'negative', function () {
 MathLib.extendPrototype('vector', 'normalize', function () {
   return this.times(1 / this.size());
 });
-
 
 
 // ### Vector.prototype.outerProduct()
@@ -3349,7 +3295,6 @@ MathLib.extendPrototype('vector', 'outerProduct', function (v) {
 });
 
 
-
 // ### Vector.prototype.plus()
 // Calculates the sum of two vectors
 //
@@ -3364,7 +3309,6 @@ MathLib.extendPrototype('vector', 'plus', function (v) {
 });
 
 
-
 // ### Vector.prototype.scalarProduct()
 // Calculates the scalar product of two vectors
 //
@@ -3377,7 +3321,6 @@ MathLib.extendPrototype('vector', 'scalarProduct', function (v) {
 });
 
 
-
 // ### Vector.prototype.size()
 // Determines the length of the vector.
 // Named size, as length is already used by JavaScript.
@@ -3386,7 +3329,6 @@ MathLib.extendPrototype('vector', 'scalarProduct', function (v) {
 MathLib.extendPrototype('vector', 'size', function () {
   return MathLib.hypot.apply(null, this);
 });
-
 
 
 // ### Vector.prototype.times()
@@ -3414,7 +3356,6 @@ MathLib.extendPrototype('vector', 'times', function (n) {
 });
 
 
-
 // ### Vector.prototype.toArray()
 // Converts the vector to an Array
 //
@@ -3424,8 +3365,7 @@ MathLib.extendPrototype('vector', 'toArray', function () {
 });
 
 
-
-// ### Vector.prototype.toContentMathML()
+// ### Vector.prototype.toContentMathMLString()
 // Returns the content MathML representation of the vector
 //
 // *@returns {string}*
@@ -3434,7 +3374,6 @@ MathLib.extendPrototype('vector', 'toContentMathMLString', function () {
     return old + MathLib.toContentMathMLString(cur);
   }, '<vector>') + '</vector>';
 });
-
 
 
 // ### Vector.prototype.toLaTeX()
@@ -3448,8 +3387,7 @@ MathLib.extendPrototype('vector', 'toLaTeX', function () {
 });
 
 
-
-// ### Vector.prototype.toMathML()
+// ### Vector.prototype.toMathMLString()
 // Returns the (presentation) MathML representation of the vector
 //
 // *@returns {string}*
@@ -3460,17 +3398,15 @@ MathLib.extendPrototype('vector', 'toMathMLString', function () {
 });
 
 
-
 // ### Vector.prototype.toString()
 // Returns a string representation of the vector
 //
 // *@returns {string}*
 MathLib.extendPrototype('vector', 'toString', function () {
   return '(' + this.reduce(function (old, cur) {
-    return old + ', ' + MathLib.toLaTeX(cur);
+    return old + ', ' + MathLib.toString(cur);
   }) + ')';
 });
-
 
 
 // ### Vector.prototype.vectorproduct()
@@ -3490,7 +3426,6 @@ MathLib.extendPrototype('vector', 'vectorproduct', function (v) {
 });
 
 
-
 // ### Vector.zero()
 // Returns a zero vector of given size
 //
@@ -3503,6 +3438,7 @@ MathLib.extend('vector', 'zero', function (n) {
   }
   return MathLib.vector(res);
 });
+
 
 // ## <a id="Circle"></a>Circle
 // MathLib.circle expects two arguments.
@@ -3548,7 +3484,7 @@ MathLib.extendPrototype('circle', 'type', 'circle');
 //
 // *@param {number}* The area of the circle
 MathLib.extendPrototype('circle', 'area', function () {
-  return this.radius * this.radius * MathLib.pi;
+  return this.radius * this.radius * Math.PI;
 });
 
 
@@ -3557,7 +3493,7 @@ MathLib.extendPrototype('circle', 'area', function () {
 //
 // *@param {number}* The circumference of the circle
 MathLib.extendPrototype('circle', 'circumference', function () {
-  return 2 * this.radius * MathLib.pi;
+  return 2 * this.radius * Math.PI;
 });
 
 
@@ -3629,6 +3565,8 @@ MathLib.extendPrototype('circle', 'toMatrix', function () {
       r = this.radius;
   return MathLib.matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x*x + y*y - r*r]]);
 });
+
+
 // ## <a id="Complex"></a>Complex
 // MathLib.complex is the MathLib implementation of complex numbers.
 //
@@ -3895,6 +3833,13 @@ MathLib.extendPrototype('complex', 'negative', function () {
 });
 
 
+// ### Complex.one()
+// Complex representation of 1.
+//
+// *@returns {complex}*
+MathLib.extend('complex', 'one', MathLib.complex([1, 0]));
+
+
 // ### Complex.prototype.plus()
 // Add complex numbers
 //
@@ -3916,7 +3861,16 @@ MathLib.extendPrototype('complex', 'plus', function (c) {
 // *@param {number}* The pow to which the complex number should be raised   
 // *@returns {complex}*
 MathLib.extendPrototype('complex', 'pow', function (n) {
-  return MathLib.complex(Math.pow(this.abs(), n), n * this.argument());
+  return MathLib.complex(Math.pow(this.abs(), n), n * this.arg());
+});
+
+
+// ### Complex.prototype.sign()
+// Calculates the signum of a complex number
+//
+// *@returns {complex}*
+MathLib.extendPrototype('complex', 'sign', function () {
+  return MathLib.complex(1, this.arg());
 });
 
 
@@ -3938,15 +3892,6 @@ MathLib.extendPrototype('complex', 'sinh', function () {
 });
 
 
-// ### Complex.prototype.sign()
-// Calculates the signum of a complex number
-//
-// *@returns {complex}*
-MathLib.extendPrototype('complex', 'sign', function () {
-  return MathLib.complex(1, this.arg());
-});
-
-
 // ### Complex.prototype.times()
 // Multiplies complex numbers
 //
@@ -3963,7 +3908,7 @@ MathLib.extendPrototype('complex', 'times', function (c) {
 });
 
 
-// ### Complex.prototype.toContentMathML()
+// ### Complex.prototype.toContentMathMLString()
 // Returns the content MathML representation of the number
 //
 // *@returns {string}*
@@ -3994,7 +3939,7 @@ MathLib.extendPrototype('complex', 'toLaTeX', function () {
 });
 
 
-// ### Complex.prototype.toMathML()
+// ### Complex.prototype.toMathMLString()
 // Returns the (presentation) MathML representation of the number
 //
 // *@returns {string}*
@@ -4053,20 +3998,12 @@ MathLib.extendPrototype('complex', 'toString', function () {
 });
 
 
-
-
-// ### Complex.one()
-// Complex representation of 1.
-//
-// *@returns {complex}*
-MathLib.extend('complex', 'one', MathLib.complex([1, 0]));
-
-
 // ### Complex.zero()
 // Complex representation of 0.
 //
 // *@returns {complex}*
 MathLib.extend('complex', 'zero', MathLib.complex([0, 0]));
+
 
 // ## <a id="Line"></a>Line
 // The vector implementation of MathLib makes calculations with lines in the 
@@ -4144,7 +4081,13 @@ MathLib.extendPrototype('line', 'isFinite', function (q) {
 // *@param {line}*  
 // *@returns {boolean}*
 MathLib.extendPrototype('line', 'isOrthogonalTo', function (l) {
-  return MathLib.isEqual(MathLib.point([0,0,1]).crossRatio(this.meet(MathLib.line.infinteLine), l.meet(MathLib.line.infinteLine), MathLib.point.I, MathLib.point.J), -1);
+  return MathLib.isEqual(
+    MathLib.point([0,0,1]).crossRatio(
+      this.meet(MathLib.line([0,0,1])),
+      l.meet(MathLib.line([0,0,1])), 
+      MathLib.point.I,
+      MathLib.point.J
+    ), -1);
 });
 
 
@@ -4182,16 +4125,6 @@ MathLib.extendPrototype('line', 'normalize', function (q) {
   });
 });
 
-
-// ### Line.prototype.toContentMathML()
-// Returns content MathML representation of the line
-//
-// *@returns {string}*
-/* MathLib.extendPrototype('line', 'toContentMathML', function (opt) { */
-/* }); */
-
-
-MathLib.extend('line', 'infiniteLine', MathLib.line([0,0,1]));
 
 // ## <a id="Matrix"></a>Matrix
 // The matrix implementation of MathLib makes calculations with matrices of
@@ -4241,6 +4174,15 @@ MathLib.extendPrototype('matrix', 'constructor', MathLib.matrix);
 MathLib.extendPrototype('matrix', 'type', 'matrix');
 
 
+// ### Matrix.prototype.adjoint()
+// Calculates the adjoint matrix
+//
+// *@returns {matrix}*
+MathLib.extendPrototype('matrix', 'adjoint', function (n) {
+  return this.map(MathLib.conjugate).transpose();
+});
+
+
 // ### Matrix.prototype.adjugate()
 // Calculates the adjugate matrix
 //
@@ -4249,15 +4191,6 @@ MathLib.extendPrototype('matrix', 'adjugate', function (n) {
   return this.map(function (x, r, c, m) {
     return MathLib.times(m.remove(c, r).determinant(), 1 - ((r+c)%2) * 2);
   });
-});
-
-
-// ### Matrix.prototype.adjoint()
-// Calculates the adjoint matrix
-//
-// *@returns {matrix}*
-MathLib.extendPrototype('matrix', 'adjoint', function (n) {
-  return this.map(MathLib.conjugate).transpose();
 });
 
 
@@ -4394,7 +4327,6 @@ MathLib.extendPrototype('matrix', 'forEach', function (f) {
 });
 
 
-
 // ### Matrix.prototype.gershgorin()
 // Returns the Gershgorin circles of the matrix.
 //
@@ -4432,7 +4364,6 @@ MathLib.extendPrototype('matrix', 'gershgorin', function () {
 
   return res;
 });
-
 
 
 // ### Matrix.prototype.givens()
@@ -4489,6 +4420,47 @@ MathLib.extendPrototype('matrix', 'givens', function (){
 });
 
 
+// ### Matrix.givensMatrix()
+// This function returns a givens matrix
+//
+// *@param {number}* The size of the matrix.  
+// *@param {number}* The first row/column.  
+// *@param {number}* The second row/column.  
+// *@param {number}* The angle (in radians).  
+// *@returns {matrix}*
+MathLib.extend('matrix', 'givensMatrix', function (n, i, k, phi) {
+  var givens = MathLib.matrix.identity(n);
+  givens[k][k] = givens[i][i]=Math.cos(phi);
+  givens[i][k] = Math.sin(phi);
+  givens[k][i] = -givens[i][k];
+  return givens;
+});
+
+
+// ### Matrix.identity
+// Returns the identity matrix.
+//
+// *@param {number}* The number of rows and columns.  
+// *@returns {matrix}*
+MathLib.extend('matrix', 'identity', function (n) {
+  var temp = [], arr = [],
+      i, ii;
+  n = n || 1;
+
+  for (i=0, ii=n-1; i<ii; i++) {
+    temp.push(0);
+  }
+  temp.push(1);
+  temp = temp.concat(temp);
+  temp = temp.slice(0, -1);
+
+  for (i=0, ii=n; i<ii; i++) {
+    arr.push(temp.slice(n-i-1, 2*n-i- 1));
+  }
+
+  return MathLib.matrix(arr);
+});
+
 
 // ### Matrix.prototype.inverse()
 // Calculates the inverse matrix.
@@ -4501,7 +4473,6 @@ MathLib.extendPrototype('matrix', 'inverse', function () {
   }
   return this.adjugate().divide(this.determinant());
 });
-
 
 
 // ### Matrix.prototype.isBandMatrix()
@@ -4531,7 +4502,6 @@ MathLib.extendPrototype('matrix', 'isBandMatrix', function (l, u) {
   // }
   // return true;
 });
-
 
 
 // ### Matrix.prototype.isDiag()
@@ -4699,6 +4669,7 @@ MathLib.extendPrototype('matrix', 'isReal', function () {
   return this.every(MathLib.isReal);
 });
 
+
 // ### Matrix.prototype.isScalar()
 // Determines if the matrix is a scalar matrix
 // (that is a multiple of the scalar matrix)
@@ -4764,7 +4735,7 @@ lp: for (i = 0; i < this.rows; i++) {
 });
 
 
-// ### Matrix.prototype.isSymmetric()
+// ### Matrix.prototype.isUpper()
 // Determines if the matrix is a upper triangular matrix
 //
 // *@returns {boolean}*
@@ -4904,6 +4875,39 @@ MathLib.extendPrototype('matrix', 'negative', function () {
 });
 
 
+// ### Matrix.numbers()
+// Returns a matrix consisting completely of a given number
+//
+// *@param {number}* The number.  
+// *@param {number}* The number of rows.  
+// *@param {number}* The number of columns.  
+// *@returns {matrix}*
+MathLib.extend('matrix', 'numbers', function (n, r, c) {
+  var help = [], res = [],
+      i, ii;
+  for (i = 0, ii = c || r || 1; i < ii; i++) {
+    help.push(n);
+  }
+  for (i = 0, ii = r || 1; i < ii ; i++) {
+    res.push(help.slice());
+  }
+  return MathLib.matrix(res);
+});
+
+
+// ### Matrix.one()
+// Returns a matrix consisting completely of ones.
+//
+// *@param {number}* The number of rows.  
+// *@param {number}* The number of columns.  
+// *@returns {matrix}*
+MathLib.extend('matrix', 'one', function (r, c) {
+  r = r || 1;
+  c = c || 1;
+  return MathLib.matrix.numbers(1, r, c);
+});
+
+
 // ### Matrix.prototype.plus()
 // This function adds a matrix to the current matrix
 // and returns the result as a new matrix.
@@ -4923,6 +4927,26 @@ MathLib.extendPrototype('matrix', 'plus', function (m) {
     }
   }
   return MathLib.matrix(res);
+});
+
+
+// ### Matrix.random()
+// Returns a matrix consisting completely of random numbers between 0 and 1
+//
+// *@param {number}* The number of rows.
+// *@param {number}* The number of columns.
+// *@returns {matrix}*
+MathLib.extend('matrix', 'random', function (r, c) {
+  var temp, arr = [],
+      i, j, ii, jj;
+  for (i = 0, ii = r || 1; i < ii; i++) {
+    temp = [];
+    for (j = 0, jj = c || r || 1; j < jj; j++) {
+      temp.push(Math.random());
+    }
+    arr.push(temp);
+  }
+  return MathLib.matrix(arr);
 });
 
 
@@ -5031,7 +5055,6 @@ MathLib.extendPrototype('matrix', 'rref', function () {
   }
   return MathLib.matrix(rref);
 });
-
 
 
 // ### Matrix.prototype.solve()
@@ -5171,7 +5194,7 @@ MathLib.extendPrototype('matrix', 'toComplex', function () {
 });
 
 
-// ### Matrix.prototype.toContentMathML()
+// ### Matrix.prototype.toContentMathMLString()
 // converting the matrix to content MathML
 //
 // *@returns {string}*
@@ -5197,7 +5220,7 @@ MathLib.extendPrototype('matrix', 'toLaTeX', function () {
 });
 
 
-// ### Matrix.prototype.toMathML()
+// ### Matrix.prototype.toMathMLString()
 // converting the matrix to (presentation) MathML
 //
 // *@returns {string}*
@@ -5272,103 +5295,6 @@ MathLib.extendPrototype('matrix', 'transpose', function () {
 });
 
 
-
-
-// ### Matrix.identity
-// Returns the identity matrix.
-//
-// *@param {number}* The number of rows and columns.  
-// *@returns {matrix}*
-MathLib.extend('matrix', 'identity', function (n) {
-  var temp = [], arr = [],
-      i, ii;
-  n = n || 1;
-
-  for (i=0, ii=n-1; i<ii; i++) {
-    temp.push(0);
-  }
-  temp.push(1);
-  temp = temp.concat(temp);
-  temp = temp.slice(0, -1);
-
-  for (i=0, ii=n; i<ii; i++) {
-    arr.push(temp.slice(n-i-1, 2*n-i- 1));
-  }
-
-  return MathLib.matrix(arr);
-});
-
-
-// ### Matrix.givensMatrix()
-// This function returns a givens matrix
-//
-// *@param {number}* The size of the matrix.  
-// *@param {number}* The first row/column.  
-// *@param {number}* The second row/column.  
-// *@param {number}* The angle (in radians).  
-// *@returns {matrix}*
-MathLib.extend('matrix', 'givensMatrix', function (n, i, k, phi) {
-  var givens = MathLib.matrix.identity(n);
-  givens[k][k] = givens[i][i]=Math.cos(phi);
-  givens[i][k] = Math.sin(phi);
-  givens[k][i] = -givens[i][k];
-  return givens;
-});
-
-
-// ### Matrix.numbers()
-// Returns a matrix consisting completely of a given number
-//
-// *@param {number}* The number.  
-// *@param {number}* The number of rows.  
-// *@param {number}* The number of columns.  
-// *@returns {matrix}*
-MathLib.extend('matrix', 'numbers', function (n, r, c) {
-  var help = [], res = [],
-      i, ii;
-  for (i = 0, ii = c || r || 1; i < ii; i++) {
-    help.push(n);
-  }
-  for (i = 0, ii = r || 1; i < ii ; i++) {
-    res.push(help.slice());
-  }
-  return MathLib.matrix(res);
-});
-
-
-// ### Matrix.one()
-// Returns a matrix consisting completely of ones.
-//
-// *@param {number}* The number of rows.  
-// *@param {number}* The number of columns.  
-// *@returns {matrix}*
-MathLib.extend('matrix', 'one', function (r, c) {
-  r = r || 1;
-  c = c || 1;
-  return MathLib.matrix.numbers(1, r, c);
-});
-
-
-// ### Matrix.random()
-// Returns a matrix consisting completely of random numbers between 0 and 1
-//
-// *@param {number}* The number of rows.
-// *@param {number}* The number of columns.
-// *@returns {matrix}*
-MathLib.extend('matrix', 'random', function (r, c) {
-  var temp, arr = [],
-      i, j, ii, jj;
-  for (i = 0, ii = r || 1; i < ii; i++) {
-    temp = [];
-    for (j = 0, jj = c || r || 1; j < jj; j++) {
-      temp.push(Math.random());
-    }
-    arr.push(temp);
-  }
-  return MathLib.matrix(arr);
-});
-
-
 // ### Matrix.zero()
 // Returns a matrix consisting completely of zeros.
 //
@@ -5380,6 +5306,7 @@ MathLib.extend('matrix', 'zero', function (r, c) {
   c = c || 1;
   return MathLib.matrix.numbers(0, r, c);
 });
+
 
 // ## <a id="Permutation"></a>Permutation
 prototypes.permutation = [];
@@ -5439,6 +5366,41 @@ MathLib.extendPrototype('permutation', 'applyTo', function (n) {
 });
 
 
+// ### Permutation.cycleToList()
+// Converts a cycle representation to a list representation
+// 
+// *@param{array}* cycle The cycle to be converted  
+// *@returns {array}*
+MathLib.extend('permutation', 'cycleToList', function (cycle) {
+  var index, res = [],
+      i, ii, j, jj, max;
+
+  max = cycle.map(function (b) {
+    return Math.max.apply(null, b);
+  });
+  max = Math.max.apply(null, max);
+
+  for (i=0, ii=max; i<=ii; i++) {
+    cur = i;
+    for (j = 0, jj = cycle.length; j < jj; j++) {
+      index = cycle[j].indexOf(cur);
+      if (++index) {
+        cur = cycle[j][index % cycle[j].length];
+      }
+    }
+    res.push(cur);
+  }
+  return res;
+});
+
+
+// ### Permutation.id()
+// The id permutation
+// 
+// *@returns {permutation}*
+MathLib.extend('permutation', 'id', MathLib.permutation([[]]));
+
+
 // ### Permutation.prototype.inverse()
 // Calculates the inverse of the permutation
 //
@@ -5449,6 +5411,31 @@ MathLib.extendPrototype('permutation', 'inverse', function () {
     e.reverse();
   });
   return MathLib.permutation(cycle);
+});
+
+
+// ### Permutation.listToCycle()
+// Converts a list representation to a cycle representation
+// 
+// *@param{array}* list The list to be converted  
+// *@returns {array}*
+MathLib.extend('permutation', 'listToCycle', function (list) {
+  var finished = [],
+      cur, i, ii, temp, res = [];
+
+  for (i=0, ii=list.length; i<ii; i++) {
+    cur = i;
+    temp = [];
+    while(!finished[cur]) {
+      finished[cur] = true;
+      temp.push(cur);
+      cur = list[cur];
+    }
+    if (temp.length) {
+      res.push(temp);
+    }
+  }
+  return res;
 });
 
 
@@ -5522,65 +5509,6 @@ MathLib.extendPrototype('permutation', 'toString', function () {
   return str;
 });
 
-
-// ### Permutation.cycleToList()
-// Converts a cycle representation to a list representation
-// 
-// *@param{array}* cycle The cycle to be converted  
-// *@returns {array}*
-MathLib.extend('permutation', 'cycleToList', function (cycle) {
-  var index, res = [],
-      i, ii, j, jj, max;
-
-  max = cycle.map(function (b) {
-    return Math.max.apply(null, b);
-  });
-  max = Math.max.apply(null, max);
-
-  for (i=0, ii=max; i<=ii; i++) {
-    cur = i;
-    for (j = 0, jj = cycle.length; j < jj; j++) {
-      index = cycle[j].indexOf(cur);
-      if (++index) {
-        cur = cycle[j][index % cycle[j].length];
-      }
-    }
-    res.push(cur);
-  }
-  return res;
-});
-
-
-// ### Permutation.id()
-// The id permutation
-// 
-// *@returns {permutation}*
-MathLib.extend('permutation', 'id', MathLib.permutation([[]]));
-
-
-// ### Permutation.listToCycle()
-// Converts a list representation to a cycle representation
-// 
-// *@param{array}* list The list to be converted  
-// *@returns {array}*
-MathLib.extend('permutation', 'listToCycle', function (list) {
-  var finished = [],
-      cur, i, ii, temp, res = [];
-
-  for (i=0, ii=list.length; i<ii; i++) {
-    cur = i;
-    temp = [];
-    while(!finished[cur]) {
-      finished[cur] = true;
-      temp.push(cur);
-      cur = list[cur];
-    }
-    if (temp.length) {
-      res.push(temp);
-    }
-  }
-  return res;
-});
 
 // ## <a id="Point"></a>Point
 // The point implementation of MathLib makes calculations with point in
@@ -5689,6 +5617,17 @@ MathLib.extendPrototype('point', 'draw', function (screen, options) {
 });
 
 
+// ### Point.I
+// The Point I = (-i, 0, 1).
+// This is NOT the complex number i.
+//
+// *@returns {point}*
+MathLib.extend('point', 'I', (function () {
+  var i = MathLib.complex(0, -1);
+  return MathLib.point([i, 0, 1]);
+}()));
+
+
 // ### Point.prototype.isEqual()
 // Determines if the point has the same coordinates as an other point
 //
@@ -5716,7 +5655,7 @@ MathLib.extendPrototype('point', 'isFinite', function (q) {
   return !MathLib.isZero(this[this.length - 1]);
 });
 
- 
+
 // ### Point.prototype.isInside()
 // Determines wether a point is inside a circle
 //
@@ -5754,6 +5693,16 @@ MathLib.extendPrototype('point', 'isOutside', function (a) {
     return this.distanceTo(a.center) > a.radius;
   }
 });
+
+
+// ### Point.J
+// The Point J = (i, 0, 1).
+//
+// *@returns {point}*
+MathLib.extend('point', 'J', (function () {
+  var i = MathLib.complex(0, 1);
+  return MathLib.point([i, 0, 1]);
+}()));
 
 
 // ### Point.prototype.lineTo()
@@ -5825,11 +5774,11 @@ MathLib.extendPrototype('point', 'toComplex', function () {
 });
 
 
-// ### Point.prototype.toContentMathML()
+// ### Point.prototype.toContentMathMLString()
 // Returns content MathML representation of the point
 //
 // *@returns {string}*
-/* MathLib.extendPrototype('point', 'toContentMathML', function (opt) { */
+/* MathLib.extendPrototype('point', 'toContentMathMLString', function (opt) { */
 /* }); */
 
 
@@ -5847,7 +5796,7 @@ MathLib.extendPrototype('point', 'toLaTeX', function (opt) {
 });
 
 
-// ### Point.prototype.toMathML()
+// ### Point.prototype.toMathMLString()
 // Returns (presentation) MathML representation of the point
 //
 // *@returns {boolean}* Optional parameter to indicate if the output should be projective.
@@ -5874,27 +5823,6 @@ MathLib.extendPrototype('point', 'toString', function (opt) {
   }) + ')';
 });
 
-
-
-// ### Point.I
-// The Point I = (-i, 0, 1).
-// This is NOT the complex number i.
-//
-// *@returns {point}*
-MathLib.extend('point', 'I', (function () {
-  var i = MathLib.complex(0, -1);
-  return MathLib.point([i, 0, 1]);
-}()));
-
-
-// ### Point.J
-// The Point J = (i, 0, 1).
-//
-// *@returns {point}*
-MathLib.extend('point', 'J', (function () {
-  var i = MathLib.complex(0, 1);
-  return MathLib.point([i, 0, 1]);
-}()));
 
 // ## <a id="Polynomial"></a>Polynomial
 // The polynomial implementation of MathLib makes calculations with polynomials.
@@ -6053,6 +5981,35 @@ MathLib.extendPrototype('polynomial', 'integrate', function (n) {
 });
 
 
+// ### Polynomial.interpolation
+// Interpolates points.
+//
+// *@returns {polynomial}*
+MathLib.extend('polynomial', 'interpolation', function (a, b) {
+  var temp,
+      res = MathLib.polynomial([0]),
+      n = a.length,
+      i, j, x, y;
+
+  if(arguments.length === 2) {
+    a = a.map(function (x, i) {
+      return [x, b[i]];
+    });
+  }
+
+  for (i = 0; i < n; i++) {
+    temp = MathLib.polynomial([1]);
+    for (j = 0; j < n; j++) {
+      if (i !== j) {
+        temp = temp.times(MathLib.polynomial([-a[j][0] / (a[i][0] - a[j][0]), 1 / (a[i][0] - a[j][0])]));
+      }
+    }
+    res = res.plus(temp.times(a[i][1]));
+  }
+  return res;
+});
+
+
 // ### Polynomial.prototype.isEqual()
 // Decides if two polynomials are equal.
 //
@@ -6120,6 +6077,13 @@ MathLib.extendPrototype('polynomial', 'negative', function () {
 });
 
 
+// ### Polynomial.one
+// Returns the one polynomial
+//
+// *@returns {polynomial}*
+MathLib.extend('polynomial', 'one', MathLib.polynomial([1]));
+
+
 // ### Polynomial.prototype.plus()
 // Adds a number or a polynomial
 //
@@ -6150,6 +6114,72 @@ MathLib.extendPrototype('polynomial', 'plus', function (a, all) {
 });
 
 
+// ### Polynomial.regression
+// Calculates the regression line for some points
+//
+// *@returns {polynomial}*
+MathLib.extend('polynomial', 'regression', function (x, y) {
+  var length = x.length,
+      xy = 0,
+      xi = 0,
+      yi = 0,
+      x2 = 0,
+      m, c, i;
+
+  if (arguments.length === 2) {
+    for (i = 0; i < length; i++) {
+      xy += x[i] * y[i];
+      xi += x[i];
+      yi += y[i];
+      x2 += x[i] * x[i];
+    }
+  }
+  else {
+    for (i = 0; i < length; i++) {
+      xy += x[i][0] * x[i][1];
+      xi += x[i][0];
+      yi += x[i][1];
+      x2 += x[i][0] * x[i][0];
+    }
+  }
+
+  m = (length * xy - xi * yi) / (length * x2 - xi * xi);
+  c = (yi * x2 - xy * xi) / (length * x2 - xi * xi);
+  return MathLib.polynomial([c, m]);
+});
+
+
+// ### Polynomial.roots
+// Returns a polynomial with the specified roots
+//
+// *@returns {polynomial}*
+MathLib.extend('polynomial', 'roots', function (roots) {
+  var temp, coef = [], i, ii;
+  if (MathLib.type(roots) === 'array') {
+    roots = MathLib.set(roots, true);
+  }
+
+  temp = roots.powerset();
+  for (i=0, ii=roots.card; i<ii; i++) {
+    coef[i] = 0; 
+  }
+
+  // Vieta's theorem
+  temp.slice(1).forEach(function (x, i) {
+    coef[ii-x.card] = MathLib.plus(coef[ii-x.card], x.times());
+  });
+
+  coef = coef.map(function (x, i) {
+    if((ii-i)%2) {
+      return MathLib.negative(x);
+    }
+    return x;
+  });
+
+  coef.push(1);
+  return MathLib.polynomial(coef);
+});
+
 
 // ### Polynomial.prototype.tangent()
 // Returns the tangent to the polynomial at a given point
@@ -6157,12 +6187,17 @@ MathLib.extendPrototype('polynomial', 'plus', function (a, all) {
 // *@param{number}* The x-value of the point.  
 // *@returns {polynomial}*
 MathLib.extendPrototype('polynomial', 'tangent', function (p) {
-  var value = this.valueat(p),
+  var value = this.valueAt(p),
       slope = this.differentiate().valueAt(p);
   return MathLib.polynomial([value - slope * p, slope]);
 });
 
 
+// ### Polynomial.prototype.tangent()
+// Returns the tangent to the polynomial at a given point
+//
+// *@param{number}* The x-value of the point.  
+// *@returns {polynomial}*
 MathLib.extendPrototype('polynomial', 'times', function (a) {
   var temparr = [],
       i,
@@ -6183,7 +6218,7 @@ MathLib.extendPrototype('polynomial', 'times', function (a) {
 });
 
 
-// ### Polynomial.prototype.toContentMathML()
+// ### Polynomial.prototype.toContentMathMLString()
 // Returns a content MathML representation of the polynomial
 //
 // *@returns {string}*
@@ -6274,7 +6309,7 @@ MathLib.extendPrototype('polynomial', 'toLaTeX', function () {
 });
 
 
-// ### Polynomial.prototype.toMathML()
+// ### Polynomial.prototype.toMathMLString()
 // Returns a MathML representation of the polynomial
 //
 // *@returns {string}*
@@ -6351,116 +6386,12 @@ MathLib.extendPrototype('polynomial', 'valueAt', function (x) {
 });
 
 
-
-
-// ### Polynomial.regression
-// Calculates the regression line for some points
-//
-// *@returns {polynomial}*
-MathLib.extend('polynomial', 'regression', function (x, y) {
-  var length = x.length,
-      xy = 0,
-      xi = 0,
-      yi = 0,
-      x2 = 0,
-      m, c, i;
-
-  if (arguments.length === 2) {
-    for (i = 0; i < length; i++) {
-      xy += x[i] * y[i];
-      xi += x[i];
-      yi += y[i];
-      x2 += x[i] * x[i];
-    }
-  }
-  else {
-    for (i = 0; i < length; i++) {
-      xy += x[i][0] * x[i][1];
-      xi += x[i][0];
-      yi += x[i][1];
-      x2 += x[i][0] * x[i][0];
-    }
-  }
-
-  m = (length * xy - xi * yi) / (length * x2 - xi * xi);
-  c = (yi * x2 - xy * xi) / (length * x2 - xi * xi);
-  return MathLib.polynomial([c, m]);
-});
-
-
-// ### Polynomial.interpolation
-// Interpolates points.
-//
-// *@returns {polynomial}*
-MathLib.extend('polynomial', 'interpolation', function (a, b) {
-  var temp,
-      res = MathLib.polynomial([0]),
-      n = a.length,
-      i, j, x, y;
-
-  if(arguments.length === 2) {
-    a = a.map(function (x, i) {
-      return [x, b[i]];
-    });
-  }
-
-  for (i = 0; i < n; i++) {
-    temp = MathLib.polynomial([1]);
-    for (j = 0; j < n; j++) {
-      if (i !== j) {
-        temp = temp.times(MathLib.polynomial([-a[j][0] / (a[i][0] - a[j][0]), 1 / (a[i][0] - a[j][0])]));
-      }
-    }
-    res = res.plus(temp.times(a[i][1]));
-  }
-  return res;
-});
-
-
-// ### Polynomial.one
-// Returns the one polynomial
-//
-// *@returns {polynomial}*
-MathLib.extend('polynomial', 'one', MathLib.polynomial([1]));
-
-
-// ### Polynomial.roots
-// Returns a polynomial with the specified roots
-//
-// *@returns {polynomial}*
-MathLib.extend('polynomial', 'roots', function (roots) {
-  var temp, coef = [], i, ii;
-  if (MathLib.type(roots) === 'array') {
-    roots = MathLib.set(roots, true);
-  }
-
-  temp = roots.powerset();
-  for (i=0, ii=roots.card; i<ii; i++) {
-    coef[i] = 0; 
-  }
-
-  // Vieta's theorem
-  temp.slice(1).forEach(function (x, i) {
-    coef[ii-x.card] = MathLib.plus(coef[ii-x.card], x.times());
-  });
-
-  coef = coef.map(function (x, i) {
-    if((ii-i)%2) {
-      return MathLib.negative(x);
-    }
-    return x;
-  });
-
-  coef.push(1);
-  return MathLib.polynomial(coef);
-});
-
-
 // ### Polynomial.zero
 // Returns the zero polynomial
 //
 // *@returns {polynomial}*
 MathLib.extend('polynomial', 'zero', MathLib.polynomial([0]));
+
 
 // ## <a id="Set"></a>Set
 //
@@ -6545,6 +6476,26 @@ MathLib.extendPrototype('set', 'compare', function (x) {
 MathLib.extendPrototype('set', 'filter', function (f) {
   return MathLib.set(Array.prototype.filter.call(this, f));
 });
+
+
+// ### Set.prototype.fromTo()
+// Creates a set containing the numbers from a start value to a end value.
+//
+// *@param {number}* The number to start from  
+// *@param {number}* The number to end with  
+// *@param {number}* The stepsize (default = 1)  
+// *@returns {set}*
+MathLib.extend('set', 'fromTo', function (f, t, s) {
+  var i, arr = [];
+  s = s || 1;
+  if (f <= t) {
+    for (i = f; i <= t; i += s) {
+      arr.push(i);
+    }
+    return MathLib.set(arr);
+  }
+});
+
 
 
 // ### Set.prototype.insert()
@@ -6639,44 +6590,6 @@ MathLib.extendPrototype('set', 'map', function (f) {
 });
 
 
-/*
-Set.prototype.mean = function (p) {
-  var res = 0,
-      i;
-
-  if (typeof p === "undefined" || p === 1) {
-    return this.arithMean();
-  }
-  if (p === 0) {
-    return this.geoMean();
-  }
-  if (p === -1) {
-    return this.harMean();
-  }
-
-  for (i = 0; i < this.card; i++) {
-    res += Math.pow(this.elements[i], p);
-  }
-  return MathLib.pow(res / this.card, 1 / p);
-};
-
-Set.prototype.median = function (a) {
-  if (this.card % 2 === 0) {
-    if (a === "min") {
-      return this.elements[this.card / 2 - 1];
-    }
-    if (a === "max") {
-      return this.elements[this.card / 2];
-    }
-    return (this.elements[this.card / 2] + this.elements[this.card / 2 + 1]) / 2;
-  }
-  else {
-    return this.elements[(this.card - 1) / 2];
-  }
-};
-*/
-
-
 MathLib.extendPrototype('set', 'plus', function (n) {
   var res = [];
   if (!arguments.length) {
@@ -6732,111 +6645,6 @@ MathLib.extendPrototype('set', 'remove', function (a) {
 });
 
 
-// ### Set.prototype.times()
-// Multiplies all elements in the set if no argument is passed.
-// Multiplies all elements by a argument if one is passed.
-//
-// *@param {number|MathLib object}*  
-// *@returns {set}*
-MathLib.extendPrototype('set', 'times', function (n) {
-  if (!arguments.length) {
-    return MathLib.times.apply(null, this);
-  }
-  else {
-    return this.map(function (x) {
-      return MathLib.times(x, n);
-    });
-  }
-});
-
-
-// ### Set.prototype.toArray()
-// Converts the set to an array
-//
-// *@returns {array}*
-MathLib.extendPrototype('set', 'toArray', function () {
-  return this.slice();
-});
-
-
-// ### Set.prototype.toContentMathML()
-// Returns the content MathML representation of the set
-//
-// *@returns {string}*
-MathLib.extendPrototype('set', 'toContentMathMLString', function () {
-  if (this.isEmpty()) {
-    return '<emptyset/>';
-  }
-  else {
-    return this.reduce(function(old, cur) {
-      return old + MathLib.toContentMathMLString(cur);
-    }, '<set>') + '</set>';
-  }
-});
-
-
-// ### Set.prototype.toLaTeX()
-// Returns the LaTeX representation of the set
-//
-// *@returns {string}*
-MathLib.extendPrototype('set', 'toLaTeX', function () {
-  if (this.isEmpty()) {
-    return '\\emptyset';
-  }
-  else {
-    return this.reduce(function(old, cur) {
-      return old + MathLib.toLaTeX(cur) + ', ';
-    }, '\\{').slice(0, -2) + '\\}';
-  }
-});
-
-
-// ### Set.prototype.toMathML()
-// Returns the (presentation) MathML representation of the set
-//
-// *@returns {string}*
-MathLib.extendPrototype('set', 'toMathMLString', function () {
-  if (this.isEmpty()) {
-    return '<mi>&#x2205;</mi>';
-  }
-  else {
-    return this.reduce(function(old, cur) {
-      return old +  MathLib.toMathMLString(cur) + '<mo>,</mo>';
-    }, '<mrow><mo>{</mo>').slice(0, -10) + '<mo>}</mo></mrow>';
-  }
-});
-
-
-// ### Set.prototype.toMultiset()
-// Converts a set to a multiset
-//
-// *@returns {set}*
-MathLib.extendPrototype('set', 'toMultiset', function () {
-  return MathLib.set(this.toArray(), true);
-});
-
-
-// ### Set.prototype.toSet()
-// Converts a multiset to a set
-//
-// *@returns {set}*
-MathLib.extendPrototype('set', 'toSet', function () {
-  return MathLib.set(this.toArray());
-});
-
-
-// ### Set.prototype.toString()
-// Returns a string representation of the set
-//
-// *@returns {string}*
-MathLib.extendPrototype('set', 'toString', function () {
-  if (this.isEmpty()) {
-    return '∅';
-  }
-  return '(' + this.join(', ') +  ')';
-});
-
-
 (function () {
   var createSetOperation = function(left, both, right) {
     return function (a) {
@@ -6887,25 +6695,110 @@ MathLib.extendPrototype('set', 'toString', function () {
 }());
 
 
-
-
-// ### Set.prototype.fromTo()
-// Creates a set containing the numbers from a start value to a end value.
+// ### Set.prototype.times()
+// Multiplies all elements in the set if no argument is passed.
+// Multiplies all elements by a argument if one is passed.
 //
-// *@param {number}* The number to start from  
-// *@param {number}* The number to end with  
-// *@param {number}* The stepsize (default = 1)  
+// *@param {number|MathLib object}*  
 // *@returns {set}*
-MathLib.extend('set', 'fromTo', function (f, t, s) {
-  var i, arr = [];
-  s = s || 1;
-  if (f <= t) {
-    for (i = f; i <= t; i += s) {
-      arr.push(i);
-    }
-    return MathLib.set(arr);
+MathLib.extendPrototype('set', 'times', function (n) {
+  if (!arguments.length) {
+    return MathLib.times.apply(null, this);
+  }
+  else {
+    return this.map(function (x) {
+      return MathLib.times(x, n);
+    });
   }
 });
+
+
+// ### Set.prototype.toArray()
+// Converts the set to an array
+//
+// *@returns {array}*
+MathLib.extendPrototype('set', 'toArray', function () {
+  return this.slice();
+});
+
+
+// ### Set.prototype.toContentMathMLString()
+// Returns the content MathML representation of the set
+//
+// *@returns {string}*
+MathLib.extendPrototype('set', 'toContentMathMLString', function () {
+  if (this.isEmpty()) {
+    return '<emptyset/>';
+  }
+  else {
+    return this.reduce(function(old, cur) {
+      return old + MathLib.toContentMathMLString(cur);
+    }, '<set>') + '</set>';
+  }
+});
+
+
+// ### Set.prototype.toLaTeX()
+// Returns the LaTeX representation of the set
+//
+// *@returns {string}*
+MathLib.extendPrototype('set', 'toLaTeX', function () {
+  if (this.isEmpty()) {
+    return '\\emptyset';
+  }
+  else {
+    return this.reduce(function(old, cur) {
+      return old + MathLib.toLaTeX(cur) + ', ';
+    }, '\\{').slice(0, -2) + '\\}';
+  }
+});
+
+
+// ### Set.prototype.toMathMLString()
+// Returns the (presentation) MathML representation of the set
+//
+// *@returns {string}*
+MathLib.extendPrototype('set', 'toMathMLString', function () {
+  if (this.isEmpty()) {
+    return '<mi>&#x2205;</mi>';
+  }
+  else {
+    return this.reduce(function(old, cur) {
+      return old +  MathLib.toMathMLString(cur) + '<mo>,</mo>';
+    }, '<mrow><mo>{</mo>').slice(0, -10) + '<mo>}</mo></mrow>';
+  }
+});
+
+
+// ### Set.prototype.toMultiset()
+// Converts a set to a multiset
+//
+// *@returns {set}*
+MathLib.extendPrototype('set', 'toMultiset', function () {
+  return MathLib.set(this.toArray(), true);
+});
+
+
+// ### Set.prototype.toSet()
+// Converts a multiset to a set
+//
+// *@returns {set}*
+MathLib.extendPrototype('set', 'toSet', function () {
+  return MathLib.set(this.toArray());
+});
+
+
+// ### Set.prototype.toString()
+// Returns a string representation of the set
+//
+// *@returns {string}*
+MathLib.extendPrototype('set', 'toString', function () {
+  if (this.isEmpty()) {
+    return '∅';
+  }
+  return '(' + this.join(', ') +  ')';
+});
+
 
   // ## Epilog
 

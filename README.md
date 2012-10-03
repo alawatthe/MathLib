@@ -25,7 +25,7 @@ In your web page:
 
 
 ## Documentation
-The documentation isn't ready yet. In the meantime you can browse the [annotated Source](http://mathlib.de/en/docs/annotatedSource).
+The documentation isn't ready yet. In the meantime you can browse the [annotated source](http://mathlib.de/en/docs/annotatedSource).
 
 
 ## Demos
@@ -33,7 +33,7 @@ Some demos can be found on the [MathLib demo site](http://mathlib.de/en/demos).
 
 
 ## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [grunt](https://github.com/cowboy/grunt).
+In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [grunt](http://gruntjs.com/).
 
 
 ### Building MathLib
@@ -49,7 +49,7 @@ Make your changes to the files in the _src_ directory. Do not edit the files in 
 Running ```grunt``` will update the library, the minified version of MathLib and the testing files.
 To update the annotated source run ```docco build/MathLib.js```.
 
-You need to have [Node.js](nodejs.org) and [grunt](https://github.com/cowboy/grunt) installed. 
+You need to have [Node.js](nodejs.org) and [grunt](http://gruntjs.com/) installed. 
 
 ## Release History
 * v0.3.0: grunt integration

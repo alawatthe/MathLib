@@ -24,7 +24,7 @@
 
 
   MathLib = {
-    version:          '0.3.4',
+    version:          '0.3.5',
     apery:            1.2020569031595942,
     e:                Math.E,
     // Number.EPSILON is probably coming in ES6
