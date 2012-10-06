@@ -1,12 +1,12 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2012-10-03  
+// v0.3.5 - 2012-10-06  
 // MathLib is currently in public beta testing.
 //
 // ## License
 // Copyright (c) 2012 Alexander Zeilmann  
-// MathLib.js is [dual licensed under the MIT and GPL licenses](<http://MathLib.de/en/license>)
+// MathLib.js is [licensed under the MIT license](<http://MathLib.de/en/license>)
 //
 // ## Documentation
 // The source code is annotated using [Docco](https://github.com/jashkenas/docco "View Docco on GitHub")

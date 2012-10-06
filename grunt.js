@@ -13,7 +13,7 @@ grunt.loadTasks('node_modules/grunt-docco/tasks');
               '//\n' +
               '// ## License\n' +
               '// Copyright (c) <%= grunt.template.today("yyyy") %> Alexander Zeilmann  \n' +
-              '// MathLib.js is [dual licensed under the MIT and GPL licenses](<http://MathLib.de/en/license>)\n' +
+              '// MathLib.js is [licensed under the MIT license](<http://MathLib.de/en/license>)\n' +
               '//\n' +
               '// ## Documentation\n' +
               '// The source code is annotated using [Docco](https://github.com/jashkenas/docco "View Docco on GitHub")\n' +

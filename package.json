@@ -17,10 +17,6 @@
     {
       "type": "MIT",
       "url": "https://github.com/alawatthe/MathLib/blob/master/LICENSE-MIT"
-    },
-    {
-      "type": "GPL",
-      "url": "https://github.com/alawatthe/MathLib/blob/master/LICENSE-GPL"
     }
   ],
   "dependencies": {},
