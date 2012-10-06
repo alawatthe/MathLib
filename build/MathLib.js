@@ -48,7 +48,7 @@
 (function (document) {
 
   var name = 'MathLib',
-      global = this,
+      global = window,
       oldMathLib = global.MathLib,
       oldN = global[name],
       MathLib,
@@ -201,7 +201,7 @@ MathLib.MathML = function (MathMLString) {
       var str = '', attr;
       for (attr in x.attributes) {
         if (x.attributes.hasOwnProperty(attr)){
-          str += ' ' + attr + '="' + x.attributes[attr] + '"'; 
+          str += ' ' + attr + '="' + x.attributes[attr] + '"';
         }
       }
       return str;
@@ -217,7 +217,7 @@ MathLib.MathML = function (MathMLString) {
     if (newToken.childNodes.length === 0) {
       if (newToken.nodeName === '#text') {
         // Restore &InvisibleTimes; etc.
-        newToken.outerMathML = t.textContent.replace(/#(\w*);/g, '&$1;')
+        newToken.outerMathML = t.textContent.replace(/#(\w*);/g, '&$1;');
       }
       else {
         newToken.outerMathML = '<' + newToken.nodeName + attributesString(newToken) + '/>';
@@ -263,7 +263,7 @@ MathLib.MathML = function (MathMLString) {
 };
 
 
-// Setting the .constructor property to MathLib.MathML  
+// Setting the .constructor property to MathLib.MathML
 MathLib.extendPrototype('MathML', 'constructor', MathLib.MathML);
 
 
@@ -305,10 +305,10 @@ var tokenPrototype = {
         return n.childNodes.reduce(function(old, cur) {
           return old + cur.toString();
         });
-      }, 
+      },
       '#text': function (n) {return n.innerMathML;}
     };
-    return handlers[this.nodeName](this); 
+    return handlers[this.nodeName](this);
   }
 
 };
@@ -677,7 +677,7 @@ MathLib.functn = function (f, options) {
   
   Object.defineProperties(functn, {
     id: { value: options.name},
-    contentMathML: { value: MathLib.MathML(contentMathML) },
+    contentMathML: { value: MathLib.MathML(contentMathML) }
   });
 
   return functn;
@@ -1209,8 +1209,10 @@ MathLib.is = function (obj, type) {
     if (MathLib.type(obj) === type) {
       return true;
     }
+    obj = Object.getPrototypeOf(Object(obj));
   }
-  while (obj = Object.getPrototypeOf(Object(obj)));
+  while (obj);
+
   return false;
 };
 
@@ -1605,6 +1607,7 @@ MathLib.screen = function (id, options) {
         fillLeft:           -5,
         fillRight:          5,
         fontSize:           10,
+        grid:               true,
         gridAngle:          Math.PI/6,
         gridColor:          '#cccccc',
         gridLineWidth:      0.05,
@@ -1829,9 +1832,9 @@ MathLib.extendPrototype('screen', 'axis', function (options) {
   }
 
   // If the argument is false, remove the axis
-  else if (type === false) {
+  //else if (type === false) {
     // TODO: remove the axis
-  }
+  //}
 
   // Else use the supplied options
   else {
@@ -1892,9 +1895,9 @@ MathLib.extendPrototype('screen', 'axis', function (options) {
         this.text(i + '', -2.5*lengthX, i - lengthY/2, labelOpt);
       }
     }
-    else if(type === 'out') {
+    //else if(type === 'out') {
       // TODO 
-    }
+    //}
   }
 
   return this;
@@ -2049,10 +2052,11 @@ MathLib.extendPrototype('screen', 'grid', function (options) {
   // If the argument is false, remove the grid
   else if (type === false) {
     // TODO: remove the grid
+    this.grid = false;
   }
   // Else use the supplied options
   else {
-    gridOpt= {
+    gridOpt = {
       lineColor: options.color || this.gridColor,
       fillColor: 'rgba(255, 255, 255, 0)',
       layer: 'back',
@@ -5373,7 +5377,7 @@ MathLib.extendPrototype('permutation', 'applyTo', function (n) {
 // *@returns {array}*
 MathLib.extend('permutation', 'cycleToList', function (cycle) {
   var index, res = [],
-      i, ii, j, jj, max;
+      cur, i, ii, j, jj, max;
 
   max = cycle.map(function (b) {
     return Math.max.apply(null, b);
@@ -6245,7 +6249,7 @@ MathLib.extendPrototype('polynomial', 'toContentMathMLString', function (math) {
   str += '</apply>';
 
   if (math) {
-    str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>'
+    str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>';
   }
 
   return str;
@@ -6337,7 +6341,7 @@ MathLib.extendPrototype('polynomial', 'toMathMLString', function (math) {
   str += '</mrow>';
 
   if (math) {
-    str = '<math xmlns="http://www.w3.org/1998/Math/MathML">' + str + '</math>'
+    str = '<math xmlns="http://www.w3.org/1998/Math/MathML">' + str + '</math>';
   }
 
   return str;

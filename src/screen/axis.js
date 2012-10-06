@@ -24,9 +24,9 @@ MathLib.extendPrototype('screen', 'axis', function (options) {
   }
 
   // If the argument is false, remove the axis
-  else if (type === false) {
+  //else if (type === false) {
     // TODO: remove the axis
-  }
+  //}
 
   // Else use the supplied options
   else {
@@ -87,9 +87,9 @@ MathLib.extendPrototype('screen', 'axis', function (options) {
         this.text(i + '', -2.5*lengthX, i - lengthY/2, labelOpt);
       }
     }
-    else if(type === 'out') {
+    //else if(type === 'out') {
       // TODO 
-    }
+    //}
   }
 
   return this;

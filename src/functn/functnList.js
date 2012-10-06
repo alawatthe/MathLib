@@ -492,8 +492,10 @@ MathLib.is = function (obj, type) {
     if (MathLib.type(obj) === type) {
       return true;
     }
+    obj = Object.getPrototypeOf(Object(obj));
   }
-  while (obj = Object.getPrototypeOf(Object(obj)));
+  while (obj);
+
   return false;
 };
 

@@ -61,7 +61,7 @@ MathLib.MathML = function (MathMLString) {
       var str = '', attr;
       for (attr in x.attributes) {
         if (x.attributes.hasOwnProperty(attr)){
-          str += ' ' + attr + '="' + x.attributes[attr] + '"'; 
+          str += ' ' + attr + '="' + x.attributes[attr] + '"';
         }
       }
       return str;
@@ -77,7 +77,7 @@ MathLib.MathML = function (MathMLString) {
     if (newToken.childNodes.length === 0) {
       if (newToken.nodeName === '#text') {
         // Restore &InvisibleTimes; etc.
-        newToken.outerMathML = t.textContent.replace(/#(\w*);/g, '&$1;')
+        newToken.outerMathML = t.textContent.replace(/#(\w*);/g, '&$1;');
       }
       else {
         newToken.outerMathML = '<' + newToken.nodeName + attributesString(newToken) + '/>';
@@ -123,7 +123,7 @@ MathLib.MathML = function (MathMLString) {
 };
 
 
-// Setting the .constructor property to MathLib.MathML  
+// Setting the .constructor property to MathLib.MathML
 MathLib.extendPrototype('MathML', 'constructor', MathLib.MathML);
 
 
@@ -165,10 +165,10 @@ var tokenPrototype = {
         return n.childNodes.reduce(function(old, cur) {
           return old + cur.toString();
         });
-      }, 
+      },
       '#text': function (n) {return n.innerMathML;}
     };
-    return handlers[this.nodeName](this); 
+    return handlers[this.nodeName](this);
   }
 
 };

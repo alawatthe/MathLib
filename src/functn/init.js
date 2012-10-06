@@ -38,7 +38,7 @@ MathLib.functn = function (f, options) {
   
   Object.defineProperties(functn, {
     id: { value: options.name},
-    contentMathML: { value: MathLib.MathML(contentMathML) },
+    contentMathML: { value: MathLib.MathML(contentMathML) }
   });
 
   return functn;

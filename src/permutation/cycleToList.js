@@ -5,7 +5,7 @@
 // *@returns {array}*
 MathLib.extend('permutation', 'cycleToList', function (cycle) {
   var index, res = [],
-      i, ii, j, jj, max;
+      cur, i, ii, j, jj, max;
 
   max = cycle.map(function (b) {
     return Math.max.apply(null, b);

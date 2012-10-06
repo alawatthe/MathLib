@@ -25,7 +25,7 @@ MathLib.extendPrototype('polynomial', 'toContentMathMLString', function (math) {
   str += '</apply>';
 
   if (math) {
-    str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>'
+    str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>';
   }
 
   return str;

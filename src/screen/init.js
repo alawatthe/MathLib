@@ -20,6 +20,7 @@ MathLib.screen = function (id, options) {
         fillLeft:           -5,
         fillRight:          5,
         fontSize:           10,
+        grid:               true,
         gridAngle:          Math.PI/6,
         gridColor:          '#cccccc',
         gridLineWidth:      0.05,

@@ -20,10 +20,11 @@ MathLib.extendPrototype('screen', 'grid', function (options) {
   // If the argument is false, remove the grid
   else if (type === false) {
     // TODO: remove the grid
+    this.grid = false;
   }
   // Else use the supplied options
   else {
-    gridOpt= {
+    gridOpt = {
       lineColor: options.color || this.gridColor,
       fillColor: 'rgba(255, 255, 255, 0)',
       layer: 'back',

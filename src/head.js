@@ -2,7 +2,7 @@
 (function (document) {
 
   var name = 'MathLib',
-      global = this,
+      global = window,
       oldMathLib = global.MathLib,
       oldN = global[name],
       MathLib,
