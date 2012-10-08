@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2012-10-06  
+// v0.3.5 - 2012-10-08  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -6403,25 +6403,17 @@ MathLib.extend('polynomial', 'zero', MathLib.polynomial([0]));
 // ```
 // MathLib.set([1, 2, 3, 4, 5])
 // ```
-// Multisets are also possible:
-// ```
-// MathLib.set([3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5], true)
-// ```
-// Creates the multiset {1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}
 
-MathLib.set =	function (elements, multiset) {
+MathLib.set =	function (elements) {
 
   if (!elements) {
     elements = [];
   }
   elements = elements.sort(MathLib.compare);
 
-  // eliminate the duplicates
-  if (!multiset) {
-    elements = elements.filter(function (x, i, a) {
-      return x !== a[i + 1];
-    });
-  }
+  elements = elements.filter(function (x, i, a) {
+    return x !== a[i + 1];
+  });
 
 
   elements[proto] = prototypes.set;
@@ -6430,9 +6422,6 @@ MathLib.set =	function (elements, multiset) {
       get: function () {
         return this.length;
       }
-    },
-    multiset: {
-      value: !!multiset
     }
   });
   return elements;
@@ -6508,7 +6497,7 @@ MathLib.extend('set', 'fromTo', function (f, t, s) {
 // *@returns {set}* Returns the current set
 MathLib.extendPrototype('set', 'insert', function (x) {
   var i = this.locate(x);
-  if (this[i] !== x || this.multiset) {
+  if (this[i] !== x) {
     this.splice(i, 0, x);
   }
   return this;
@@ -6771,24 +6760,6 @@ MathLib.extendPrototype('set', 'toMathMLString', function () {
       return old +  MathLib.toMathMLString(cur) + '<mo>,</mo>';
     }, '<mrow><mo>{</mo>').slice(0, -10) + '<mo>}</mo></mrow>';
   }
-});
-
-
-// ### Set.prototype.toMultiset()
-// Converts a set to a multiset
-//
-// *@returns {set}*
-MathLib.extendPrototype('set', 'toMultiset', function () {
-  return MathLib.set(this.toArray(), true);
-});
-
-
-// ### Set.prototype.toSet()
-// Converts a multiset to a set
-//
-// *@returns {set}*
-MathLib.extendPrototype('set', 'toSet', function () {
-  return MathLib.set(this.toArray());
 });
 
 

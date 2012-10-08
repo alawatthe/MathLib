@@ -2,7 +2,7 @@
 
 <h2>Version</h2>
 
-<p>v0.3.5 - 2012-10-06 <br />
+<p>v0.3.5 - 2012-10-08 <br />
 MathLib is currently in public beta testing.</p>
 
 <h2>License</h2>
@@ -5109,21 +5109,16 @@ else {</p>             </td>             <td class="code">               <div cl
 <p>To generate the set {1, 2, 3, 4, 5} you simply need to type
 <code>
 MathLib.set([1, 2, 3, 4, 5])
-</code>
-Multisets are also possible:
-<code>
-MathLib.set([3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5], true)
-</code>
-Creates the multiset {1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">set</span> <span class="o">=</span>	<span class="kd">function</span> <span class="p">(</span><span class="nx">elements</span><span class="p">,</span> <span class="nx">multiset</span><span class="p">)</span> <span class="p">{</span>
+</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">set</span> <span class="o">=</span>	<span class="kd">function</span> <span class="p">(</span><span class="nx">elements</span><span class="p">)</span> <span class="p">{</span>
 
   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">elements</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">elements</span> <span class="o">=</span> <span class="p">[];</span>
   <span class="p">}</span>
-  <span class="nx">elements</span> <span class="o">=</span> <span class="nx">elements</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="nx">MathLib</span><span class="p">.</span><span class="nx">compare</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-428">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-428">&#182;</a>               </div>               <p>eliminate the duplicates</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">multiset</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">elements</span> <span class="o">=</span> <span class="nx">elements</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">x</span> <span class="o">!==</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
-    <span class="p">});</span>
-  <span class="p">}</span>
+  <span class="nx">elements</span> <span class="o">=</span> <span class="nx">elements</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="nx">MathLib</span><span class="p">.</span><span class="nx">compare</span><span class="p">);</span>
+
+  <span class="nx">elements</span> <span class="o">=</span> <span class="nx">elements</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">x</span> <span class="o">!==</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+  <span class="p">});</span>
 
 
   <span class="nx">elements</span><span class="p">[</span><span class="nx">proto</span><span class="p">]</span> <span class="o">=</span> <span class="nx">prototypes</span><span class="p">.</span><span class="nx">set</span><span class="p">;</span>
@@ -5132,14 +5127,11 @@ Creates the multiset {1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}</p>             </td>    
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
       <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="nx">multiset</span><span class="o">:</span> <span class="p">{</span>
-      <span class="nx">value</span><span class="o">:</span> <span class="o">!!</span><span class="nx">multiset</span>
     <span class="p">}</span>
   <span class="p">});</span>
   <span class="k">return</span> <span class="nx">elements</span><span class="p">;</span>
 
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-429">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-429">&#182;</a>               </div>               <p>Setting the .constructor property to MathLib.set</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;constructor&#39;</span><span class="p">,</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">set</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-430">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-430">&#182;</a>               </div>               <p>Setting the .type property to 'set'</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;set&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-431">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-431">&#182;</a>               </div>               <h3>Set.prototype.compare()</h3>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-428">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-428">&#182;</a>               </div>               <p>Setting the .constructor property to MathLib.set</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;constructor&#39;</span><span class="p">,</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">set</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-429">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-429">&#182;</a>               </div>               <p>Setting the .type property to 'set'</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;set&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-430">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-430">&#182;</a>               </div>               <h3>Set.prototype.compare()</h3>
 
 <p>Compare function for sets</p>
 
@@ -5160,14 +5152,14 @@ Creates the multiset {1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}</p>             </td>    
     <span class="p">});</span>
     <span class="k">return</span> <span class="nx">res</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-432">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-432">&#182;</a>               </div>               <h3>Set.prototype.filter()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-431">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-431">&#182;</a>               </div>               <h3>Set.prototype.filter()</h3>
 
 <p>Works like the Array.prototype.filter function</p>
 
 <p><em>@param {function}</em> The filtering function <br />
 <em>@returns {set}</em></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;filter&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">filter</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">f</span><span class="p">));</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-433">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-433">&#182;</a>               </div>               <h3>Set.prototype.fromTo()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-432">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-432">&#182;</a>               </div>               <h3>Set.prototype.fromTo()</h3>
 
 <p>Creates a set containing the numbers from a start value to a end value.</p>
 
@@ -5183,23 +5175,23 @@ Creates the multiset {1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}</p>             </td>    
     <span class="p">}</span>
     <span class="k">return</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">arr</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-434">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-434">&#182;</a>               </div>               <h3>Set.prototype.insert()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-433">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-433">&#182;</a>               </div>               <h3>Set.prototype.insert()</h3>
 
 <p>Inserts an element into the set.</p>
 
 <p><em>@returns {set}</em> Returns the current set</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;insert&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">locate</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
-  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">!==</span> <span class="nx">x</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">multiset</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">!==</span> <span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">x</span><span class="p">);</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-435">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-435">&#182;</a>               </div>               <h3>Set.prototype.isEmpty()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-434">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-434">&#182;</a>               </div>               <h3>Set.prototype.isEmpty()</h3>
 
 <p>Determines if the set is empty.</p>
 
 <p><em>@returns {boolean}</em></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;isEmpty&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
   <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">card</span> <span class="o">===</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-436">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-436">&#182;</a>               </div>               <h3>Set.prototype.isEqual()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-435">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-435">&#182;</a>               </div>               <h3>Set.prototype.isEqual()</h3>
 
 <p>Determines if the set is equal to an other set.</p>
 
@@ -5213,7 +5205,7 @@ Creates the multiset {1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}</p>             </td>    
       <span class="k">return</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">isEqual</span><span class="p">(</span><span class="nx">y</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
     <span class="p">});</span>
   <span class="p">}</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-437">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-437">&#182;</a>               </div>               <h3>Set.prototype.isSubsetOf()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-436">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-436">&#182;</a>               </div>               <h3>Set.prototype.isSubsetOf()</h3>
 
 <p>Determines if the set is a subset of an other set.</p>
 
@@ -5222,7 +5214,7 @@ Creates the multiset {1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}</p>             </td>    
   <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">every</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
   <span class="p">});</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-438">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-438">&#182;</a>               </div>               <h3>Set.prototype.locate()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-437">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-437">&#182;</a>               </div>               <h3>Set.prototype.locate()</h3>
 
 <p>Array.prototype.indexOf() returns only the position of an element in the
 array and not the position where one should be inserted.</p>
@@ -5250,7 +5242,7 @@ array and not the position where one should be inserted.</p>
     <span class="p">}</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="nx">left</span><span class="p">;</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-439">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-439">&#182;</a>               </div>               <h3>Set.prototype.map()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-438">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-438">&#182;</a>               </div>               <h3>Set.prototype.map()</h3>
 
 <p>Works like the Array.prototype.map function</p>
 
@@ -5279,7 +5271,7 @@ array and not the position where one should be inserted.</p>
       <span class="k">return</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">n</span><span class="p">);</span>
     <span class="p">});</span>
   <span class="p">}</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-440">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-440">&#182;</a>               </div>               <h3>Set.prototype.powerset()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-439">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-439">&#182;</a>               </div>               <h3>Set.prototype.powerset()</h3>
 
 <p>Returns the powerset</p>
 
@@ -5296,7 +5288,7 @@ array and not the position where one should be inserted.</p>
     <span class="nx">res</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">MathLib</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">temp</span><span class="p">));</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">res</span><span class="p">);</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-441">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-441">&#182;</a>               </div>               <h3>Set.prototype.remove()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-440">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-440">&#182;</a>               </div>               <h3>Set.prototype.remove()</h3>
 
 <p>Removes a element from a set</p>
 
@@ -5356,7 +5348,7 @@ array and not the position where one should be inserted.</p>
   <span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;intersect&#39;</span><span class="p">,</span> <span class="nx">createSetOperation</span><span class="p">(</span><span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">));</span>
   <span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;without&#39;</span><span class="p">,</span> <span class="nx">createSetOperation</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">false</span><span class="p">));</span>
   <span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;xor&#39;</span><span class="p">,</span> <span class="nx">createSetOperation</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">));</span>
-<span class="p">}());</span></pre></div>             </td>           </tr>                               <tr id="section-442">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-442">&#182;</a>               </div>               <h3>Set.prototype.times()</h3>
+<span class="p">}());</span></pre></div>             </td>           </tr>                               <tr id="section-441">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-441">&#182;</a>               </div>               <h3>Set.prototype.times()</h3>
 
 <p>Multiplies all elements in the set if no argument is passed.
 Multiplies all elements by a argument if one is passed.</p>
@@ -5371,13 +5363,13 @@ Multiplies all elements by a argument if one is passed.</p>
       <span class="k">return</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">n</span><span class="p">);</span>
     <span class="p">});</span>
   <span class="p">}</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-443">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-443">&#182;</a>               </div>               <h3>Set.prototype.toArray()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-442">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-442">&#182;</a>               </div>               <h3>Set.prototype.toArray()</h3>
 
 <p>Converts the set to an array</p>
 
 <p><em>@returns {array}</em></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;toArray&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
   <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">slice</span><span class="p">();</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-444">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-444">&#182;</a>               </div>               <h3>Set.prototype.toContentMathMLString()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-443">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-443">&#182;</a>               </div>               <h3>Set.prototype.toContentMathMLString()</h3>
 
 <p>Returns the content MathML representation of the set</p>
 
@@ -5390,7 +5382,7 @@ Multiplies all elements by a argument if one is passed.</p>
       <span class="k">return</span> <span class="nx">old</span> <span class="o">+</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">toContentMathMLString</span><span class="p">(</span><span class="nx">cur</span><span class="p">);</span>
     <span class="p">},</span> <span class="s1">&#39;&lt;set&gt;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&lt;/set&gt;&#39;</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-445">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-445">&#182;</a>               </div>               <h3>Set.prototype.toLaTeX()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-444">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-444">&#182;</a>               </div>               <h3>Set.prototype.toLaTeX()</h3>
 
 <p>Returns the LaTeX representation of the set</p>
 
@@ -5403,7 +5395,7 @@ Multiplies all elements by a argument if one is passed.</p>
       <span class="k">return</span> <span class="nx">old</span> <span class="o">+</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">toLaTeX</span><span class="p">(</span><span class="nx">cur</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="p">;</span>
     <span class="p">},</span> <span class="s1">&#39;\\{&#39;</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;\\}&#39;</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-446">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-446">&#182;</a>               </div>               <h3>Set.prototype.toMathMLString()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-445">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-445">&#182;</a>               </div>               <h3>Set.prototype.toMathMLString()</h3>
 
 <p>Returns the (presentation) MathML representation of the set</p>
 
@@ -5416,19 +5408,7 @@ Multiplies all elements by a argument if one is passed.</p>
       <span class="k">return</span> <span class="nx">old</span> <span class="o">+</span>  <span class="nx">MathLib</span><span class="p">.</span><span class="nx">toMathMLString</span><span class="p">(</span><span class="nx">cur</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&lt;mo&gt;,&lt;/mo&gt;&#39;</span><span class="p">;</span>
     <span class="p">},</span> <span class="s1">&#39;&lt;mrow&gt;&lt;mo&gt;{&lt;/mo&gt;&#39;</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&lt;mo&gt;}&lt;/mo&gt;&lt;/mrow&gt;&#39;</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-447">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-447">&#182;</a>               </div>               <h3>Set.prototype.toMultiset()</h3>
-
-<p>Converts a set to a multiset</p>
-
-<p><em>@returns {set}</em></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;toMultiset&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">toArray</span><span class="p">(),</span> <span class="kc">true</span><span class="p">);</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-448">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-448">&#182;</a>               </div>               <h3>Set.prototype.toSet()</h3>
-
-<p>Converts a multiset to a set</p>
-
-<p><em>@returns {set}</em></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">MathLib</span><span class="p">.</span><span class="nx">extendPrototype</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;toSet&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="nx">MathLib</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">toArray</span><span class="p">());</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-449">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-449">&#182;</a>               </div>               <h3>Set.prototype.toString()</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-446">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-446">&#182;</a>               </div>               <h3>Set.prototype.toString()</h3>
 
 <p>Returns a string representation of the set</p>
 
@@ -5437,7 +5417,7 @@ Multiplies all elements by a argument if one is passed.</p>
     <span class="k">return</span> <span class="s1">&#39;∅&#39;</span><span class="p">;</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span> <span class="o">+</span>  <span class="s1">&#39;)&#39;</span><span class="p">;</span>
-<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-450">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-450">&#182;</a>               </div>               <h2>Epilog</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-451">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-451">&#182;</a>               </div>               <p>Add MathLib to the global namespace</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">global</span><span class="p">.</span><span class="nx">MathLib</span> <span class="o">=</span> <span class="nx">MathLib</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-452">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-452">&#182;</a>               </div>               <h3>MathLib.noConflict</h3>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-447">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-447">&#182;</a>               </div>               <h2>Epilog</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-448">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-448">&#182;</a>               </div>               <p>Add MathLib to the global namespace</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">global</span><span class="p">.</span><span class="nx">MathLib</span> <span class="o">=</span> <span class="nx">MathLib</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-449">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-449">&#182;</a>               </div>               <h3>MathLib.noConflict</h3>
 
 <p>Restores the original value of MathLib in the global namespace</p>
 

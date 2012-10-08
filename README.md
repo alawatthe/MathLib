@@ -58,4 +58,4 @@ You need to have [Node.js](nodejs.org) and [grunt](http://gruntjs.com/) installe
 
 ## License
 Copyright (c) 2012 Alexander Zeilmann  
-Licensed under the MIT, GPL licenses.
+Licensed under the MIT license.
