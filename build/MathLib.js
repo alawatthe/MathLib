@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2012-10-08  
+// v0.3.5 - 2012-10-09  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -1607,7 +1607,6 @@ MathLib.screen = function (id, options) {
         fillLeft:           -5,
         fillRight:          5,
         fontSize:           10,
-        grid:               true,
         gridAngle:          Math.PI/6,
         gridColor:          '#cccccc',
         gridLineWidth:      0.05,
@@ -2050,12 +2049,11 @@ MathLib.extendPrototype('screen', 'grid', function (options) {
     angle = this.gridAngle;
   }
   // If the argument is false, remove the grid
-  else if (type === false) {
+  //else if (type === false) {
     // TODO: remove the grid
-    this.grid = false;
-  }
+  //}
   // Else use the supplied options
-  else {
+  else if (type !== false) {
     gridOpt = {
       lineColor: options.color || this.gridColor,
       fillColor: 'rgba(255, 255, 255, 0)',
@@ -3521,23 +3519,33 @@ MathLib.extendPrototype('circle', 'draw', function (screen, options) {
 });
 
 
-// ### Circle.prototype.isContaining()
-// Determine if a circle is containing an other point.
-//
-// *@return {boolean}*
-MathLib.extendPrototype('circle', 'isContaining', function (a) {
-  if (a.type === "point" && a.dim === 2) {
-    return a.distanceTo(this.center) < this.radius;
-  }
-});
-
-
 // ### Circle.prototype.isEqual()
 // Checks if two circles are equal
 //
 // *@return {boolean}*
 MathLib.extendPrototype('circle', 'isEqual', function (c) {
   return MathLib.isEqual(this.radius, c.radius)  && this.center.isEqual(c.center);
+});
+
+
+// ### Circle.prototype.positionOf()
+// Determine if a point is in, on or outside a circle.
+//
+// *@return {string}*
+MathLib.extendPrototype('circle', 'positionOf', function (p) {
+	var diff;
+  if (p.type === 'point' && p.dim === 2) {
+    diff = p.distanceTo(this.center) - this.radius;
+		if (MathLib.isZero(diff)) {
+			return 'on';
+		}
+    else if (diff < 0) {
+			return 'in';
+    }
+    else {
+			return 'out';
+    }
+  }
 });
 
 
@@ -3564,8 +3572,8 @@ MathLib.extendPrototype('circle', 'toLaTeX', function () {
 //
 // *@return {matrix}* 
 MathLib.extendPrototype('circle', 'toMatrix', function () {
-  var x = this.center.get(0),
-      y = this.center.get(1),
+  var x = this.center[0] / this.center[2],
+      y = this.center[1] / this.center[2],
       r = this.radius;
   return MathLib.matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x*x + y*y - r*r]]);
 });

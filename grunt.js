@@ -108,7 +108,10 @@ module.exports = function(grunt) {
       tests: {
         src: ['<banner:meta.banner_min>',
               'test/general/general.js',
-              'test/circle/circle.js',
+
+              'test/circle/init.js',
+              'test/circle/!(init).js',
+
               'test/complex/complex.js',
               'test/functn/functn.js',
               'test/line/line.js',

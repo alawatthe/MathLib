@@ -895,15 +895,10 @@ test('.constructor', 1, function () {
   equal(c.constructor, MathLib.circle, 'Testing .constructor');
 });
 
-
 test('.type', 1, function () {
   var c = MathLib.circle(MathLib.point([2, 4, 2]), 2);
   equal(c.type, 'circle', 'Testing .type');
 });
-
-
-
-// Methods
 test('.area()', 5, function () {
   var p = MathLib.point(1, 2),
       c1 = MathLib.circle(p, NaN),
@@ -927,8 +922,6 @@ test('.area()', 5, function () {
   // Spec. 5: otherwise c.area() = &pi; r * r
   equal(c5.area(), 4 * MathLib.pi, 'Spec. 5: otherwise c.area() = &pi; * r * r');
 });
-
-
 test('.circumference()', 5, function () {
   var p = MathLib.point(1, 2),
       c1 = MathLib.circle(p, NaN),
@@ -952,31 +945,29 @@ test('.circumference()', 5, function () {
   // Spec. 5: otherwise c.circumference() = 2 &pi; r
   equal(c5.circumference(), 4 * MathLib.pi, 'Spec. 5: otherwise c.circumference() = 2 &pi; r');
 });
-
-
-test(".isContaining()", 3, function () {
-  var p = MathLib.point(1, 2),
-      inside = MathLib.point(2, 3),
-      on = MathLib.point(1, 4),
-      outside = MathLib.point(2, 4),
-      circle = MathLib.circle(p, 2);
-
-  ok(circle.isContaining(inside), "Point inside the circle");
-  ok(!circle.isContaining(on), "Point on the circle");
-  ok(!circle.isContaining(outside), "Point outside the circle");
-});
-
-
-test('.isEqual()', 2, function () {
+// test('.draw()', 1, function () {
+// });
+test('.isEqual()', 3, function () {
   var c1 = MathLib.circle(MathLib.point(1, 2), 2),
       c2 = MathLib.circle(MathLib.point(1, 2), 3),
-      c3 = MathLib.circle(MathLib.point([2, 4, 2]), 2);
+      c3 = MathLib.circle(MathLib.point([2, 4, 2]), 2),
+      c4 = MathLib.circle(MathLib.point(2,3), 2);
 
-  equal(c1.isEqual(c2), false, ".isEqual()");
   equal(c1.isEqual(c3), true, ".isEqual()");
+  equal(c1.isEqual(c2), false, ".isEqual() different radius");
+  equal(c1.isEqual(c4), false, ".isEqual() different center");
 });
+test(".positionOf()", 3, function () {
+  var center = MathLib.point(1, 2),
+      circle = MathLib.circle(center, 2),
+      on = MathLib.point(1, 4),
+      out = MathLib.point(2, 4),
+      inside = MathLib.point(2, 3);
 
-
+  equal(circle.positionOf(on), 'on', 'Point on the circle');
+  equal(circle.positionOf(out), 'out', 'Point outside the circle');
+  equal(circle.positionOf(inside), 'in', 'Point inside the circle');
+});
 test(".reflectAt()", 2, function () {
   var p = MathLib.point(1, 2),
       q = MathLib.point(3, 7),
@@ -986,12 +977,17 @@ test(".reflectAt()", 2, function () {
   equal(newcircle.radius, 2, "Checking the radius.");
   deepEqual(newcircle.center, MathLib.point(5, 12), "Checking the center.");
 });
-
 test('.toLaTeX()', 1, function () {
   var p = MathLib.point(1, 2),
       c = MathLib.circle(p, 2);
 
   equal(c.toLaTeX(), 'B_{2}\\left(\\begin{pmatrix}1\\\\2\\end{pmatrix}\\right)', 'Spec. 1: ');
+});
+test('.toMatrix()', 1, function () {
+  var p = MathLib.point(1, 2),
+      c = MathLib.circle(p, 2);
+
+   deepEqual(c.toMatrix(), MathLib.matrix([[1,0,-1],[0,1,-2],[-1,-2,1]]), '');
 });
 module('Complex');
 test('init (1 Array)', 3, function () {

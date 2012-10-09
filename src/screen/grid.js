@@ -18,12 +18,11 @@ MathLib.extendPrototype('screen', 'grid', function (options) {
     angle = this.gridAngle;
   }
   // If the argument is false, remove the grid
-  else if (type === false) {
+  //else if (type === false) {
     // TODO: remove the grid
-    this.grid = false;
-  }
+  //}
   // Else use the supplied options
-  else {
+  else if (type !== false) {
     gridOpt = {
       lineColor: options.color || this.gridColor,
       fillColor: 'rgba(255, 255, 255, 0)',
