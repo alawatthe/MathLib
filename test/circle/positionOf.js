@@ -1,9 +1,9 @@
 test(".positionOf()", 3, function () {
-  var center = MathLib.point(1, 2),
-      circle = MathLib.circle(center, 2),
-      on = MathLib.point(1, 4),
-      out = MathLib.point(2, 4),
-      inside = MathLib.point(2, 3);
+  var center = new MathLib.Point(1, 2),
+      circle = new MathLib.Circle(center, 2),
+      on = new MathLib.Point(1, 4),
+      out = new MathLib.Point(2, 4),
+      inside = new MathLib.Point(2, 3);
 
   equal(circle.positionOf(on), 'on', 'Point on the circle');
   equal(circle.positionOf(out), 'out', 'Point outside the circle');

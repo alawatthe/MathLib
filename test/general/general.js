@@ -230,6 +230,12 @@ test('.arctan2()', 24, function () {
 });
 
 
+test('.arithMean()', 1, function () {
+  var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
+  equal(MathLib.arithMean(s), 26/5, 'Testing .arithMean() (set)');
+});
+
+
 test('.arsech()', 3, function () {
   equal(MathLib.arsech(0), Infinity);
   equal(MathLib.arsech(1), 0);
@@ -258,7 +264,7 @@ test('.binomial()', 4, function () {
   equal(MathLib.binomial(-4, 3), -20);
 });
 
-
+/*
 test('.cbrt()', 7, function () {
   // Spec. 1: MathLib.cbrt(NaN) = NaN
   equal(MathLib.isNaN(MathLib.cbrt(NaN)), true, 'Spec. 1: MathLib.cbrt(NaN) = NaN');
@@ -278,7 +284,7 @@ test('.cbrt()', 7, function () {
   // Spec. 6: otherwise MathLib.cbrt(x) = cube root of x
   equal(MathLib.cbrt(8), 2, 'Spec. 6: otherwise MathLib.cbrt(x) = cube root of x');
   equal(MathLib.cbrt(-8), -2, 'Spec. 6: otherwise MathLib.cbrt(x) = cube root of x');
-});
+});*/
 
 
 test('.ceil()', 7, function () {
@@ -306,7 +312,7 @@ test('.ceil()', 7, function () {
 test('.compare()', 3, function () {
   equal(MathLib.compare(12, 12), 0);
   equal(MathLib.compare(1, 2), -1);
-  equal(MathLib.compare(23, MathLib.complex([3, 4])), 1);
+  equal(MathLib.compare(23, new MathLib.Complex([3, 4])), 1);
 });
 
 
@@ -411,8 +417,8 @@ test('.exp()', 6, function () {
 
 
 test('.factor()', 2, function () {
-  deepEqual(MathLib.factor(12), MathLib.set([2, 2, 3], true));
-  deepEqual(MathLib.factor(-15), MathLib.set([3, 5], true));
+  deepEqual(MathLib.factor(12), new MathLib.Set([2, 2, 3], true));
+  deepEqual(MathLib.factor(-15), new MathLib.Set([3, 5], true));
 });
 
 
@@ -453,6 +459,18 @@ test('.floor()', 7, function () {
   // Spec. 6: otherwise MathLib.floor(x) = ⎣x⎦
   equal(MathLib.floor(2.2), 2, 'Spec. 6: otherwise MathLib.floor(x) =  ⎣x⎦');
   equal(MathLib.floor(-2.2), -3, 'Spec. 6: otherwise MathLib.floor(x) = ⎣x⎦');
+});
+
+
+test('.geoMean()', 1, function () {
+  var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
+  equal(MathLib.geoMean(s), Math.pow(1728, 1 / 5), 'Testing .geoMean() (set)');
+});
+
+
+test('.harmonicMean()', 1, function () {
+  var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
+  equal(MathLib.harmonicMean(s), 3.7894736842105265, 'Testing .harmonicMean() (set)');
 });
 
 
@@ -500,13 +518,12 @@ test('.inverse()', 2, function () {
 });
 
 
-test('.is()', 13, function () {
-  var p = MathLib.point([1, 2, 3]),
-      v = MathLib.vector([1, 2, 3]);
+test('.is()', 12, function () {
+  var p = new MathLib.Point([1, 2, 3]),
+      v = new MathLib.Vector([1, 2, 3]);
   equal(MathLib.is(2, 'number'), true);
   equal(MathLib.is(p, 'point'), true);
   equal(MathLib.is(p, 'vector'), true);
-  equal(MathLib.is(p, 'array'), true);
   equal(MathLib.is(p, 'object'), true);
   equal(MathLib.is(p, 'line'), false);
   equal(MathLib.is(v, 'vector'), true);
@@ -581,15 +598,27 @@ test('.ln()', 8, function () {
 });
 
 
-test('.max()', 2, function () {
+test('.max()', 3, function () {
+  var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
   equal(MathLib.max([1, 42, 17, 4]), 42);
   equal(MathLib.max([1, 42, 17, 4], 2), 17);
+  equal(MathLib.max(s), 9, 'Testing .max() (set)');
 });
+
+
+test('.min()', 3, function () {
+  var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
+  equal(MathLib.min([1, 42, 17, 4]), 1);
+  equal(MathLib.min([1, 42, 17, 4], 2), 4);
+  equal(MathLib.min(s), 2, 'Testing .min() (set)');
+});
+
 
 test('.plus()', 2, function () {
   equal(MathLib.plus(1, 2), 3);
-  deepEqual(MathLib.plus(MathLib.matrix.identity(3), MathLib.matrix.identity(3)), MathLib.matrix([[2,0,0],[0,2,0],[0,0,2]]));
+  deepEqual(MathLib.plus(MathLib.Matrix.identity(3), MathLib.Matrix.identity(3)), new MathLib.Matrix([[2,0,0],[0,2,0],[0,0,2]]));
 });
+
 
 test('pow()', 65, function () {
   // Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)
@@ -864,7 +893,7 @@ test('.tan()', 7, function () {
 
 
 test('.type()', 11, function () {
-  equal(MathLib.type(MathLib.complex([2, 3])), 'complex', "MathLib.type(MathLib.complex([2, 3])) = 'complex'");
+  equal(MathLib.type(new MathLib.Complex([2, 3])), 'complex', "MathLib.type(MathLib.complex([2, 3])) = 'complex'");
   equal(MathLib.type(42), 'number', "MathLib.type(42) = 'number'");
   equal(MathLib.type(['ar', 'ray']), 'array', "MathLib.type(['ar', 'ray']) = 'array'");
   equal(MathLib.type({ob: 'ject'}), 'object', "MathLib.type({ob: 'ject'}) = 'object'");

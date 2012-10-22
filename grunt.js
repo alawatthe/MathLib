@@ -3,6 +3,8 @@ module.exports = function(grunt) {
   'use strict';
 
   grunt.loadTasks('node_modules/grunt-docco/tasks');
+  grunt.loadNpmTasks('grunt-typescript');
+
 
   grunt.initConfig({
     pkg: '<json:package.json>',
@@ -49,60 +51,71 @@ module.exports = function(grunt) {
               '// - [point](#Point "Jump to the point implementation")\n' +
               '// - [polynomial](#Polynomial "Jump to the polynomial implementation")\n' +
               '// - [set](#Set "Jump to the set implementation")\n',
-        banner_min: '/*! MathLib v<%= pkg.version %> MathLib.de | MathLib.de/en/license */'
+        banner_min: '/*! MathLib v<%= pkg.version %> MathLib.de | MathLib.de/en/license */',
+        bracket: '}'
       },
     
     concat: {
       MathLib: {
         src: ['<banner:meta.banner>',
 
-              'src/head.js',
+              'src/head.ts',
 
-              'src/MathML/init.js',
-              'src/MathML/!(init).js',
+              'src/MathML/init.ts',
+              'src/MathML/!(init).ts',
+              '<banner:meta.bracket>',
 
-              'src/functn/init.js',
-              'src/functn/!(init).js',
+              'src/functn/init.ts',
+              'src/functn/!(init).ts',
 
-              'src/screen/init.js',
-              'src/screen/!(init).js',
+              'src/screen/init.ts',
+              'src/screen/!(init).ts',
 
-              'src/canvas/init.js',
-              'src/canvas/!(init).js',
+              'src/canvas/init.ts',
+              'src/canvas/!(init).ts',
 
-              'src/svg/init.js',
-              'src/svg/!(init).js',
+              'src/svg/init.ts',
+              'src/svg/!(init).ts',
 
-              'src/vector/init.js',
-              'src/vector/!(init).js',
+              'src/vector/init.ts',
+              'src/vector/!(init).ts',
+              '<banner:meta.bracket>',
 
-              'src/circle/init.js',
-              'src/circle/!(init).js',
+              'src/circle/init.ts',
+              'src/circle/!(init).ts',
+              '<banner:meta.bracket>',
 
-              'src/complex/init.js',
-              'src/complex/!(init).js',
+              'src/complex/init.ts',
+              'src/complex/!(init).ts',
+              '<banner:meta.bracket>',
 
-              'src/line/init.js',
-              'src/line/!(init).js',
+              'src/line/init.ts',
+              'src/line/!(init).ts',
+              '<banner:meta.bracket>',
 
-              'src/matrix/init.js',
-              'src/matrix/!(init).js',
+              'src/matrix/init.ts',
+              'src/matrix/!(init).ts',
+              '<banner:meta.bracket>',
 
-              'src/permutation/init.js',
-              'src/permutation/!(init).js',
+              'src/permutation/init.ts',
+              'src/permutation/!(init).ts',
+              '<banner:meta.bracket>',
 
-              'src/point/init.js',
-              'src/point/!(init).js',
+              'src/point/init.ts',
+              'src/point/!(init).ts',
+              '<banner:meta.bracket>',
 
-              'src/polynomial/init.js',
-              'src/polynomial/!(init).js',
+              'src/polynomial/init.ts',
+              'src/polynomial/!(init).ts',
+              '<banner:meta.bracket>',
 
-              'src/set/init.js',
-              'src/set/!(init).js',
-              
-              'src/foot.js'
+              'src/set/init.ts',
+              'src/set/!(init).ts',
+              '<banner:meta.bracket>',
+
+              'src/foot.ts'
               ],
-        dest: 'build/<%= pkg.name %>.js',
+        dest: 'build/MathLib.ts',
         separator: '\n\n\n'
       },
       tests: {
@@ -129,7 +142,7 @@ module.exports = function(grunt) {
     
     min: {
       MathLib: {
-        src: ['<banner:meta.banner_min>', '<config:concat.MathLib.dest>'],
+        src: ['<banner:meta.banner_min>', 'build/MathLib.js'],
         dest: 'build/<%= pkg.name %>.min.js'
       },
       tests: {
@@ -184,10 +197,21 @@ module.exports = function(grunt) {
     // Documentation
     docco: {
 			app: {
-				src: ['build/MathLib.js']
+				src: ['build/MathLib.ts']
+      }
+    },
+
+    typescript: {
+      MathLib: {
+        src: ['build/MathLib.ts'],
+        dest: 'build',
+        options: {
+          module: 'amd', //or commonjs
+          base_path: 'build'
+        }
       }
     }
   });
 
-  grunt.registerTask('default', 'concat min lint qunit');
+  grunt.registerTask('default', 'concat typescript min qunit');
 };

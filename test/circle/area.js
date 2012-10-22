@@ -1,10 +1,10 @@
 test('.area()', 5, function () {
-  var p = MathLib.point(1, 2),
-      c1 = MathLib.circle(p, NaN),
-      c2 = MathLib.circle(p, +0),
-      c3 = MathLib.circle(p, -0),
-      c4 = MathLib.circle(p, Infinity),
-      c5 = MathLib.circle(p, 2);
+  var p = new MathLib.Point(1, 2),
+      c1 = new MathLib.Circle(p, NaN),
+      c2 = new MathLib.Circle(p, +0),
+      c3 = new MathLib.Circle(p, -0),
+      c4 = new MathLib.Circle(p, Infinity),
+      c5 = new MathLib.Circle(p, 2);
 
   // Spec. 1: c.area() = NaN if r = NaN
   equal(MathLib.isNaN(c1.area()), true, 'Spec. 1: c.area() = NaN if r = NaN');
