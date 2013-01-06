@@ -2,16 +2,16 @@
 // Exits the fullscreen
 //
 // *@returns {screen}* Returns the screen
-MathLib.extendPrototype('screen', 'exitFullscreen', function () {
-  if (document.cancelFullScreen) {  
-    document.cancelFullScreen();  
+exitFullscreen() {
+  if (document.exitFullscreen) {  
+    document.exitFullscreen();  
   }
   else if (document.mozCancelFullScreen) {  
     document.mozCancelFullScreen();  
   }
-  else if (document.webkitCancelFullScreen) {  
-    document.webkitCancelFullScreen();  
+  else if (document.webkitCancelFullscreen) {  
+    document.webkitCancelFullscreen();  
   } 
 
   return this;
-});
+}

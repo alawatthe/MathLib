@@ -1,7 +1,7 @@
 // ### Matrix.prototype.adjoint()
 // Calculates the adjoint matrix
 //
-// *@returns {matrix}*
-adjoint(n) {
+// *@returns {Matrix}*
+adjoint() : Matrix {
   return this.map(MathLib.conjugate).transpose();
 }

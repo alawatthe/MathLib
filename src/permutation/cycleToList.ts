@@ -3,7 +3,7 @@
 // 
 // *@param{array}* cycle The cycle to be converted  
 // *@returns {array}*
-static cycleToList(cycle) {
+static cycleToList(cycle : any) : number[] {
   var index, res = [],
       cur, i, ii, j, jj, max;
 

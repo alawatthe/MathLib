@@ -2,6 +2,6 @@
 // Works like Array.prototype.reduce.
 //
 // *@returns {any}*
-reduce() {
-  return Array.prototype.reduce.apply(this, arguments);
+reduce(...args : any[]) : any {
+  return Array.prototype.reduce.apply(this, args);
 }

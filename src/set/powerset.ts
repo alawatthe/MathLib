@@ -2,7 +2,7 @@
 // Returns the powerset
 //
 // *@returns {set}*
-powerset(a) {
+powerset() : Set {
   var res = [], arr, temp, i, ii, j, jj;
   for (i=0, ii=Math.pow(2, this.card); i<ii; i++) {
     arr = i.toString(2).split('').reverse();

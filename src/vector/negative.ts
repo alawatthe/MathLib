@@ -1,7 +1,7 @@
 // ### Vector.prototype.negative()
 // Returns the negative vector
 //
-// *@returns {vector}*
-negative() {
+// *@returns {Vector}*
+negative() : Vector {
   return this.map(MathLib.negative);
 }

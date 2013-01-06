@@ -2,7 +2,7 @@
 // Returns the LaTeX representation of the set
 //
 // *@returns {string}*
-toLaTeX() {
+toLaTeX() : string {
   if (this.isEmpty()) {
     return '\\emptyset';
   }

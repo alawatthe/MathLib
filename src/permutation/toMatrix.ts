@@ -3,7 +3,7 @@
 //
 // *@param{number}* [size] The size of the matrix  
 // *@returns {matrix}*
-toMatrix(n) {
+toMatrix(n : number) : Matrix {
   var arr = [],
       res = [],
       temp, i, ii;

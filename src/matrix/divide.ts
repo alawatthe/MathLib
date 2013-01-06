@@ -1,7 +1,7 @@
 // ### Matrix.prototype.divide()
 // Multiplies the matrix by the inverse of a number or a matrix
 //
-// *@returns {matrix}*
-divide(n) {
+// *@returns {Matrix}*
+divide(n : any) : Matrix {
   return this.times(MathLib.inverse(n));
 }

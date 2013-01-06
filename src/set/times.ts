@@ -4,7 +4,7 @@
 //
 // *@param {number|MathLib object}*  
 // *@returns {set}*
-times(n) {
+times(n : any) : any {
   if (!arguments.length) {
     return MathLib.times.apply(null, this);
   }

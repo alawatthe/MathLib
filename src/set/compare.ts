@@ -2,7 +2,7 @@
 // Compare function for sets
 //
 // *@returns {number}*
-compare(x) {
+compare(x : any) : number {
   if (this.card !== x.card) {
     return MathLib.sign(this.card - x.card);
   }

@@ -3,6 +3,6 @@
 //
 // *@param {function}* The mapping function  
 // *@returns {set}*
-map(f) {
-  return new MathLib.Set(Array.prototype.map.call(this, f));
+map(...args : any[]) : any {
+  return new MathLib.Set(Array.prototype.map.apply(this, args));
 }

@@ -15,6 +15,11 @@
 export class Matrix {
   type = 'matrix';
 
+  length: number;
+  cols: number;
+  rows: number;
+  LUpermutation: Permutation;
+
   constructor(matrix) {
     if (typeof matrix === 'string') {
       // If there is a < in the string we assume it's MathML

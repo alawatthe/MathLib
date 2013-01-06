@@ -2,7 +2,7 @@
 // Returns the (presentation) MathML representation of the set
 //
 // *@returns {string}*
-toMathMLString() {
+toMathMLString() : string {
   if (this.isEmpty()) {
     return '<mi>&#x2205;</mi>';
   }

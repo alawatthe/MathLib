@@ -3,6 +3,6 @@
 // Named size, as length is already used by JavaScript.
 //
 // *@returns {number}*
-size() {
-  return MathLib.hypot.apply(null, this);
+size() : number {
+  return MathLib.hypot.apply(null, this.toArray());
 }

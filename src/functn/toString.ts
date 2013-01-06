@@ -1,7 +1,7 @@
 // ### Functn.prototype.toString()
 // Returns a string representation of the function
 //
-// *@param {string}* Optional: custom name for the bound variable (default: x)
+// *@param {string}* Optional: custom name for the bound variable (default: x)  
 // *@returns {string}*
 MathLib.extendPrototype('functn', 'toString', function(bvar) {
 

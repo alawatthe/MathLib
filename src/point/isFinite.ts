@@ -2,6 +2,6 @@
 // Determines if the point is finite
 //
 // *@returns {boolean}*
-isFinite(q) {
+isFinite() : bool {
   return !MathLib.isZero(this[this.length - 1]);
 }

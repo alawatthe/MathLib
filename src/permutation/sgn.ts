@@ -2,7 +2,7 @@
 // Calculates the signum of the permutation
 //
 // *@returns {number}*
-sgn() {
+sgn() : number {
   var count = 0, i;
   for (i = 0; i < this.cycle.length; i++) {
     count += this.cycle[i].length;

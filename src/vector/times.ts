@@ -6,7 +6,7 @@
 //
 // *@param {number|complex|matrix}*  
 // *@returns {vector}*
-times(n) {
+times(n : any) : any {
   var res = [], i, ii;
   if (typeof n === "number" || n.type === "complex") {
     return this.map(function (x) {

@@ -4,7 +4,13 @@ export class Permutation {
 
   type = 'permutation';
 
+  length: number;
+  cycle: any[];
+
+
   constructor(p) {
+    var cycle, permutation;
+    
     if (Array.isArray(p[0])) {
       cycle = p;
       permutation = Permutation.cycleToList(cycle);

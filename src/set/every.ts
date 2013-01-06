@@ -2,6 +2,6 @@
 // Works like the Array.prototype.every function
 //  
 // *@returns {boolean}*
-every() {
-  return Array.prototype.every.apply(this, arguments);
+every(...args : any[]) : bool {
+  return Array.prototype.every.apply(this, args);
 }

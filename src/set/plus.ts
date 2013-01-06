@@ -1,4 +1,4 @@
-plus(n) {
+plus(n : any) : any {
   var res = [];
   if (!arguments.length) {
     return MathLib.plus.apply(null, this);

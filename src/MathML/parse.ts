@@ -2,7 +2,7 @@
 // Parses the MathML.
 //
 // *@return{number|a MathLib object}*  The result of the parsing
-parse() {
+parse() : any {
   var handlers, apply, ci, cn, math, matrixrow, matrix, parser, set, vector,
       construct = false,
       bvars = [];

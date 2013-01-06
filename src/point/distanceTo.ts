@@ -4,7 +4,7 @@
 //
 // *@param {point}* [point] The point to calculate the distance to  
 // *@returns {number}*
-distanceTo(point) {
+distanceTo(point : Point) : number {
   var res = 0,
       i;
 

@@ -601,7 +601,7 @@ test('.ln()', 8, function () {
 test('.max()', 3, function () {
   var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
   equal(MathLib.max([1, 42, 17, 4]), 42);
-  equal(MathLib.max([1, 42, 17, 4], 2), 17);
+  equal(MathLib.max(1, 42, 17, 4), 42);
   equal(MathLib.max(s), 9, 'Testing .max() (set)');
 });
 
@@ -609,13 +609,16 @@ test('.max()', 3, function () {
 test('.min()', 3, function () {
   var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
   equal(MathLib.min([1, 42, 17, 4]), 1);
-  equal(MathLib.min([1, 42, 17, 4], 2), 4);
+  equal(MathLib.min(1, 42, 17, 4), 1);
   equal(MathLib.min(s), 2, 'Testing .min() (set)');
 });
 
 
-test('.plus()', 2, function () {
+test('.plus()', 5, function () {
+  equal(MathLib.plus(), 0, 'The empty sum is zero.');
+  equal(MathLib.plus([]), 0, 'The empty sum is zero.');
   equal(MathLib.plus(1, 2), 3);
+  equal(MathLib.plus([1, 2]), 3);
   deepEqual(MathLib.plus(MathLib.Matrix.identity(3), MathLib.Matrix.identity(3)), new MathLib.Matrix([[2,0,0],[0,2,0],[0,0,2]]));
 });
 
@@ -889,6 +892,15 @@ test('.tan()', 7, function () {
   // Spec. 6: otherwise MathLib.tan(x) = tangent of x
   equal(MathLib.isZero(MathLib.tan(Math.PI)), true, 'Spec. 6: otherwise MathLib.tan(x) = tangent of x');
   equal(MathLib.isOne(MathLib.tan(Math.PI/4)), true, 'Spec. 6: otherwise MathLib.tan(x) = tangent of x');
+});
+
+
+test('.plus()', 5, function () {
+  equal(MathLib.times(), 1, 'The empty product is one.');
+  equal(MathLib.times([]), 1, 'The empty product is one.');
+  equal(MathLib.times(1, 2), 2);
+  equal(MathLib.times([1, 2]), 2);
+  deepEqual(MathLib.times(MathLib.Matrix.identity(3), MathLib.Matrix.identity(3)), new MathLib.Matrix([[1,0,0],[0,1,0],[0,0,1]]));
 });
 
 

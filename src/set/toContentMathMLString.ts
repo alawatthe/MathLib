@@ -2,7 +2,7 @@
 // Returns the content MathML representation of the set
 //
 // *@returns {string}*
-toContentMathMLString() {
+toContentMathMLString() : string {
   if (this.isEmpty()) {
     return '<emptyset/>';
   }

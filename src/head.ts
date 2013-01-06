@@ -1,5 +1,15 @@
 // The MathLib module which wraps everything
 module MathLib {
+
+
+  // Typescript is throwing the following error otherwise:
+  // The property 'methodname' does not exist on value of type 'MathLib'
+  // see http://typescript.codeplex.com/discussions/397908
+  declare var MathLib : any;
+  declare var MathJax : any;
+  declare var THREE : any;
+
+
   MathLib.version = '0.3.5';
   MathLib.apery = 1.2020569031595942;
   MathLib.e = Math.E;
@@ -15,11 +25,15 @@ module MathLib {
   MathLib.eulerMascheroni = 0.5772156649015329;
   MathLib.goldenRatio = 1.618033988749895;
   MathLib.pi = Math.PI;
+  MathLib.isArrayLike = function (x) {
+    return typeof x === 'object' && 'length' in x;
+  };
 
   var prototypes = {
         array: Object.getPrototypeOf([]),
         func: Object.getPrototypeOf(function (){}),
-        object: Object.getPrototypeOf({})
+        object: Object.getPrototypeOf({}),
+        functn: function(){}
       },
       proto = '__proto__',
       flatten = function (a) {
@@ -33,8 +47,28 @@ module MathLib {
           }
         });
         return res;
-      };
+      },
+      extendObject = function(dest, src) {
+        for (var prop in src) {
+          if (typeof dest[prop] === 'object' && typeof src[prop] === 'object') {
+            dest[prop] = extendObject(dest[prop], src[prop]);
+          }
+          else {
+            dest[prop] = src[prop];
+          }
+        }
+        return dest;
+      },
 
+      // A little function converting arrays to THREE.js vectors
+      to3js = function (x) {
+        if (x.length === 2) {
+          return new THREE.Vector2(x[0], x[1]);
+        }
+        else if (x.length === 3) {
+          return new THREE.Vector3(x[0], x[1], x[2]);
+        }
+      };
 
   MathLib.prototypes = prototypes;
  

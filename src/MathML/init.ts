@@ -5,7 +5,16 @@ export class MathML {
 
   type = 'MathML';
 
-  constructor(MathMLString: string) {
+  attributes: any;
+  childNodes: any;
+  innerMathML: any;
+  outerMathML: any;
+  nodeName: any;
+  nextNode: any;
+  parentNode: any;
+  prevNode: any;
+
+  constructor(MathMLString) {
     var tokenizer = new DOMParser(),
       MathMLdoc,
       MathML;

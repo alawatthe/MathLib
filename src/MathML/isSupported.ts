@@ -3,7 +3,7 @@
 // Code stolen from [Modernizr](http://www.modernizr.com/)
 //
 // *@return {boolean}*
-static isSupported = function () {
+static isSupported = function () : bool {
   var hasMathML = false,
       ns, div, mfrac;
   if ( document.createElementNS ) {

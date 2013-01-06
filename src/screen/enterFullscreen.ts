@@ -2,17 +2,17 @@
 // Displays the current plot in fullscreen mode.
 //
 // *@returns {screen}* Returns the screen
-MathLib.extendPrototype('screen', 'enterFullscreen', function () {
-  var elem = this.screenWrapper;  
-  if (elem.requestFullScreen) {  
-    elem.requestFullScreen();  
+enterFullscreen() {
+  var elem = this.wrapper;  
+  if (elem.requestFullscreen) {  
+    elem.requestFullscreen();  
   }
   else if (elem.mozRequestFullScreen) {  
     elem.mozRequestFullScreen();  
   }
-  else if (elem.webkitRequestFullScreen) {  
-    elem.webkitRequestFullScreen();  
+  else if (elem.webkitRequestFullscreen) {  
+    elem.webkitRequestFullscreen();  
   }
 
   return this;
-});
+}

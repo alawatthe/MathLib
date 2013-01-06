@@ -482,8 +482,8 @@ MathLib.type = function (x) {
   if (x === undefined) {
     return 'undefined';
   }
-  return x.type ? x.type : x.constructor.name.toLowerCase();
-  // return x.type ? x.type : Object.prototype.toString.call(x).slice(8, -1).toLowerCase();
+  // The name property for DOM objects is undefined in Firefox.
+  return x.type ? x.type : (x.constructor.name || Object.prototype.toString.call(x).slice(8, -1)).toLowerCase();
 };
 
 MathLib.is = function (obj, type) {
@@ -504,10 +504,10 @@ MathLib.is = function (obj, type) {
 };
 
 
-
+// Functions that act on set-like structures and return one single number/matrix...
 var functionList3 = {
-  arithMean: function () {
-        return MathLib.plus.apply(null, this) / this.length;
+  arithMean: function (n) {
+        return MathLib.plus(n) / n.length;
       },
   gcd: function () {
         var min,
@@ -534,26 +534,106 @@ var functionList3 = {
         }
         return a[0] || min;
       },
-  geoMean: function () {
-        return MathLib.root(MathLib.times.apply(null, this), this.length);
+  geoMean: function (n) {
+        return MathLib.root(MathLib.times(n), n.length);
       },
-  harmonicMean: function () {
-        return this.length / MathLib.plus.apply(null, Array.prototype.map.call(this, MathLib.inverse));
+  harmonicMean: function (n) {
+        return n.length / MathLib.plus(n.map(MathLib.inverse));
       },
-  lcm: function () {
-        return MathLib.times(this) / MathLib.gcd(this);
+  lcm: function (n) {
+        return MathLib.times(n) / MathLib.gcd(n);
       },
   max: function (n) {
-        if (n) {
+        /*if (n) {
           return this.sort(MathLib.compare)[this.length-n];
-        }
-        return Math.max.apply('Array', this);
+        }*/
+        return Math.max.apply(null, n);
       },
   min: function (n) {
-        if (n) {
+        /*if (n) {
           return this.sort(MathLib.compare)[n-1];
+        }*/
+        return Math.min.apply(null, n);
+      },
+  plus: function (n) {
+        if (n.length === 0) {
+          return 0;
         }
-        return Math.min.apply('Array', this);
+        return n.reduce(function (a, b) {
+          var f1, f2, astr, bstr;
+          if (typeof a === 'number' && typeof b === 'number') {
+            return a + b;
+          }
+          else if (a.type === 'functn' || b.type === 'functn') {
+            astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
+            bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
+            f1 = a;
+            f2 = b;
+            if (a.type !== 'functn') {
+              f1 = function () {
+                return a;
+              };
+            }
+            else if(b.type !== 'functn') {
+              f2 = function () {
+                return b;
+              };
+            }
+            var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
+            return MathLib.functn(function (x) {
+              return MathLib.plus(f1(x), f2(x));
+            }, {
+              contentMathMLString: MathML
+            });
+          }
+          else if (typeof a === 'object') {
+            return a.plus(b);
+          }
+          // We're assuming that the operations are commutative
+          else if (typeof b === 'object') {
+            return b.plus(a);
+          }
+        });
+      },
+  times: function (n) {
+        if (n.length === 0) {
+          return 1;
+        }
+        return n.reduce(function (a, b) {
+          var f1, f2, astr, bstr;
+          if (typeof a === 'number' && typeof b === 'number') {
+            return a * b;
+          }
+          else if (a.type === 'functn' || b.type === 'functn') {
+            astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
+            bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
+            f1 = a;
+            f2 = b;
+            if (a.type !== 'functn') {
+              f1 = function () {
+                return a;
+              };
+            }
+            else if(b.type !== 'functn') {
+              f2 = function () {
+                return b;
+              };
+            }
+            var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
+            return MathLib.functn(function (x) {
+              return MathLib.times(f1(x), f2(x));
+            }, {
+              contentMathMLString: MathML
+            });
+          }
+          else if (typeof a === 'object') {
+            return a.times(b);
+          }
+          // We're assuming that the operations are commutative
+          else if (typeof b === 'object') {
+            return b.times(a);
+          }
+        });
       }
 };
  
@@ -564,8 +644,8 @@ var functionList3 = {
 // 
 // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
 // *@returns {number, MathLib object}*
-MathLib.plus = function () {
-  return Array.prototype.slice.apply(arguments).reduce(function (a, b) {
+/*MathLib.plus = function (n) {
+  return n.reduce(function (a, b) {
     var f1, f2, astr, bstr;
     if (typeof a === 'number' && typeof b === 'number') {
       return a + b;
@@ -595,13 +675,13 @@ MathLib.plus = function () {
     else if (typeof a === 'object') {
       return a.plus(b);
     }
-    // We're assuming that the operations are commutative
+    / / We're assuming that the operations are commutative
     else if (typeof b === 'object') {
       return b.plus(a);
     }
   });
 };
-
+*/
 
 
 // ### MathLib.isEqual()
@@ -634,7 +714,7 @@ MathLib.isEqual = function () {
 // 
 // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
 // *@returns {boolean}*
-MathLib.times = function () {
+/*MathLib.times = function () {
   return Array.prototype.slice.apply(arguments).reduce(function (a, b) {
     var f1, f2, astr, bstr;
     if (typeof a === 'number' && typeof b === 'number') {
@@ -665,13 +745,13 @@ MathLib.times = function () {
     else if (typeof a === 'object') {
       return a.times(b);
     }
-    // We're assuming that the operations are commutative
+    / / We're assuming that the operations are commutative 
     else if (typeof b === 'object') {
       return b.times(a);
     }
   });
 };
-
+*/
 
 
 var createFunction1 = function (f, name) {
@@ -683,7 +763,7 @@ var createFunction1 = function (f, name) {
       return function (y) {return f(x(y));};
     }
     else if (x.type === 'set') {
-      return MathLib.set( x.map(f) );
+      return new MathLib.Set( x.map(f) );
     }
     else if(x.type === 'complex') {
       return x[name].apply(x, Array.prototype.slice.call(arguments, 1));
@@ -699,10 +779,12 @@ var createFunction1 = function (f, name) {
 
 
 var createFunction3 = function (f, name) {
-  return function () {
-    var arg = Array.prototype.slice.call(arguments),
-        set = arg.shift();
-    return f.apply(set, arg);
+  return function (n) {
+    //if(!MathLib.isArrayLike(n)) {
+    if(MathLib.type(n) !== 'array' && MathLib.type(n) !== 'set') {
+      n = Array.prototype.slice.apply(arguments);
+    }
+    return f(n);
   };
 };
  
@@ -720,7 +802,7 @@ for (func in functionList1) {
 }
 
 
-prototypes.set = [];
+
 for (func in functionList3) {
   if (functionList3.hasOwnProperty(func)) {
 
@@ -729,12 +811,5 @@ for (func in functionList3) {
       value: createFunction3(functionList3[func], func)
     });
 
-    MathLib.extendPrototype('set', func,
-      (function (name) {
-        return function (n) {
-          return MathLib[name](this, n);
-        };
-      }(func))
-    );
   }
 }

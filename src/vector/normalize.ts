@@ -2,6 +2,6 @@
 // Normalizes the vector to have length one
 //
 // *@returns {vector}*
-normalize() {
+normalize() : Vector {
   return this.times(1 / this.size());
 }

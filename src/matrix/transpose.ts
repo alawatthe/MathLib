@@ -2,9 +2,10 @@
 // Calculating the transpose of the matrix
 // The result is cached.
 //
-// *@returns {matrix}*
-transpose() {
-  var transpose = [],
+// *@returns {Matrix}*
+transpose() : Matrix {
+  var temp = [],
+      transpose,
       help,
       i, j, ii, jj;
 
@@ -13,10 +14,10 @@ transpose() {
     for (j = 0, jj = this.rows; j<jj; j++) {
       help.push(this[j][i]);
     }
-    transpose.push(help);
+    temp.push(help);
   }
 
-  transpose = new MathLib.Matrix(transpose);
+  transpose = new MathLib.Matrix(temp);
   this.transpose = function () {
     return transpose;
   };

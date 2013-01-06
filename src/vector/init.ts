@@ -13,6 +13,8 @@
 export class Vector {
   type = 'vector';
 
+  length: number;
+
   constructor(coords: number[]) {
   	coords.forEach((x,i)=>{this[i] = x;});
   	this.length = coords.length;

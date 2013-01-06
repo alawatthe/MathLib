@@ -8,6 +8,9 @@ export class Set {
 
   type = 'set';
 
+  length: number;
+  card: number;
+
   constructor(elements) {
 		if (!elements) {
 		  elements = [];

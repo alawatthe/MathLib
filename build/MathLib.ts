@@ -1,11 +1,11 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2012-10-22  
+// v0.3.5 - 2013-01-06  
 // MathLib is currently in public beta testing.
 //
 // ## License
-// Copyright (c) 2012 Alexander Zeilmann  
+// Copyright (c) 2013 Alexander Zeilmann  
 // MathLib.js is [licensed under the MIT license](<http://MathLib.de/en/license>)
 //
 // ## Documentation
@@ -46,6 +46,16 @@
 
 // The MathLib module which wraps everything
 module MathLib {
+
+
+  // Typescript is throwing the following error otherwise:
+  // The property 'methodname' does not exist on value of type 'MathLib'
+  // see http://typescript.codeplex.com/discussions/397908
+  declare var MathLib : any;
+  declare var MathJax : any;
+  declare var THREE : any;
+
+
   MathLib.version = '0.3.5';
   MathLib.apery = 1.2020569031595942;
   MathLib.e = Math.E;
@@ -61,11 +71,15 @@ module MathLib {
   MathLib.eulerMascheroni = 0.5772156649015329;
   MathLib.goldenRatio = 1.618033988749895;
   MathLib.pi = Math.PI;
+  MathLib.isArrayLike = function (x) {
+    return typeof x === 'object' && 'length' in x;
+  };
 
   var prototypes = {
         array: Object.getPrototypeOf([]),
         func: Object.getPrototypeOf(function (){}),
-        object: Object.getPrototypeOf({})
+        object: Object.getPrototypeOf({}),
+        functn: function(){}
       },
       proto = '__proto__',
       flatten = function (a) {
@@ -79,8 +93,28 @@ module MathLib {
           }
         });
         return res;
-      };
+      },
+      extendObject = function(dest, src) {
+        for (var prop in src) {
+          if (typeof dest[prop] === 'object' && typeof src[prop] === 'object') {
+            dest[prop] = extendObject(dest[prop], src[prop]);
+          }
+          else {
+            dest[prop] = src[prop];
+          }
+        }
+        return dest;
+      },
 
+      // A little function converting arrays to THREE.js vectors
+      to3js = function (x) {
+        if (x.length === 2) {
+          return new THREE.Vector2(x[0], x[1]);
+        }
+        else if (x.length === 3) {
+          return new THREE.Vector3(x[0], x[1], x[2]);
+        }
+      };
 
   MathLib.prototypes = prototypes;
  
@@ -134,7 +168,16 @@ export class MathML {
 
   type = 'MathML';
 
-  constructor(MathMLString: string) {
+  attributes: any;
+  childNodes: any;
+  innerMathML: any;
+  outerMathML: any;
+  nodeName: any;
+  nextNode: any;
+  parentNode: any;
+  prevNode: any;
+
+  constructor(MathMLString) {
     var tokenizer = new DOMParser(),
       MathMLdoc,
       MathML;
@@ -257,7 +300,7 @@ export class MathML {
 // Code stolen from [Modernizr](http://www.modernizr.com/)
 //
 // *@return {boolean}*
-static isSupported = function () {
+static isSupported = function () : bool {
   var hasMathML = false,
       ns, div, mfrac;
   if ( document.createElementNS ) {
@@ -282,8 +325,8 @@ static isSupported = function () {
 // Loads MathJax dynamically.
 //
 // *@param{string}* [config] Optional config options
-loadMathJax(config) {
-  var script = document.createElement('script');
+loadMathJax(config : string) {
+  var script = <HTMLScriptElement>document.createElement('script');
     script.type = 'text/javascript';
     script.src  = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js';
 
@@ -311,7 +354,7 @@ loadMathJax(config) {
 // Parses the MathML.
 //
 // *@return{number|a MathLib object}*  The result of the parsing
-parse() {
+parse() : any {
   var handlers, apply, ci, cn, math, matrixrow, matrix, parser, set, vector,
       construct = false,
       bvars = [];
@@ -503,7 +546,7 @@ parse() {
 // Converts the content MathMl to a presentation MathML string
 // 
 // *@return{string}*
-toMathMLString() {
+toMathMLString() : string {
   var handlers = {
     apply: function (n) {
       var f = n.childNodes[0],
@@ -547,7 +590,7 @@ toMathMLString() {
 // Custom toString method
 // 
 // *@return{string}*
-toString() {
+toString() : string {
   return this.outerMathML;
 }
 
@@ -560,9 +603,9 @@ static variables = {};
 // ### MathML.write()
 // Writes MathML to an element.
 //
-// *@param{id}* The id of the element in which the MathML should be inserted.  
-// *@param{math}* The MathML to be inserted.
-write(id, math) {
+// *@param{string}* The id of the element in which the MathML should be inserted.  
+// *@param{string}* The MathML to be inserted.
+write(id : string, math : string) : void {
   var formula;
   document.getElementById(id).innerHTML = '<math>' + math + '</math>';
   if (typeof MathJax !== 'undefined') {
@@ -1146,8 +1189,8 @@ MathLib.type = function (x) {
   if (x === undefined) {
     return 'undefined';
   }
-  return x.type ? x.type : x.constructor.name.toLowerCase();
-  // return x.type ? x.type : Object.prototype.toString.call(x).slice(8, -1).toLowerCase();
+  // The name property for DOM objects is undefined in Firefox.
+  return x.type ? x.type : (x.constructor.name || Object.prototype.toString.call(x).slice(8, -1)).toLowerCase();
 };
 
 MathLib.is = function (obj, type) {
@@ -1168,10 +1211,10 @@ MathLib.is = function (obj, type) {
 };
 
 
-
+// Functions that act on set-like structures and return one single number/matrix...
 var functionList3 = {
-  arithMean: function () {
-        return MathLib.plus.apply(null, this) / this.length;
+  arithMean: function (n) {
+        return MathLib.plus(n) / n.length;
       },
   gcd: function () {
         var min,
@@ -1198,26 +1241,106 @@ var functionList3 = {
         }
         return a[0] || min;
       },
-  geoMean: function () {
-        return MathLib.root(MathLib.times.apply(null, this), this.length);
+  geoMean: function (n) {
+        return MathLib.root(MathLib.times(n), n.length);
       },
-  harmonicMean: function () {
-        return this.length / MathLib.plus.apply(null, Array.prototype.map.call(this, MathLib.inverse));
+  harmonicMean: function (n) {
+        return n.length / MathLib.plus(n.map(MathLib.inverse));
       },
-  lcm: function () {
-        return MathLib.times(this) / MathLib.gcd(this);
+  lcm: function (n) {
+        return MathLib.times(n) / MathLib.gcd(n);
       },
   max: function (n) {
-        if (n) {
+        /*if (n) {
           return this.sort(MathLib.compare)[this.length-n];
-        }
-        return Math.max.apply('Array', this);
+        }*/
+        return Math.max.apply(null, n);
       },
   min: function (n) {
-        if (n) {
+        /*if (n) {
           return this.sort(MathLib.compare)[n-1];
+        }*/
+        return Math.min.apply(null, n);
+      },
+  plus: function (n) {
+        if (n.length === 0) {
+          return 0;
         }
-        return Math.min.apply('Array', this);
+        return n.reduce(function (a, b) {
+          var f1, f2, astr, bstr;
+          if (typeof a === 'number' && typeof b === 'number') {
+            return a + b;
+          }
+          else if (a.type === 'functn' || b.type === 'functn') {
+            astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
+            bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
+            f1 = a;
+            f2 = b;
+            if (a.type !== 'functn') {
+              f1 = function () {
+                return a;
+              };
+            }
+            else if(b.type !== 'functn') {
+              f2 = function () {
+                return b;
+              };
+            }
+            var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
+            return MathLib.functn(function (x) {
+              return MathLib.plus(f1(x), f2(x));
+            }, {
+              contentMathMLString: MathML
+            });
+          }
+          else if (typeof a === 'object') {
+            return a.plus(b);
+          }
+          // We're assuming that the operations are commutative
+          else if (typeof b === 'object') {
+            return b.plus(a);
+          }
+        });
+      },
+  times: function (n) {
+        if (n.length === 0) {
+          return 1;
+        }
+        return n.reduce(function (a, b) {
+          var f1, f2, astr, bstr;
+          if (typeof a === 'number' && typeof b === 'number') {
+            return a * b;
+          }
+          else if (a.type === 'functn' || b.type === 'functn') {
+            astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
+            bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
+            f1 = a;
+            f2 = b;
+            if (a.type !== 'functn') {
+              f1 = function () {
+                return a;
+              };
+            }
+            else if(b.type !== 'functn') {
+              f2 = function () {
+                return b;
+              };
+            }
+            var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
+            return MathLib.functn(function (x) {
+              return MathLib.times(f1(x), f2(x));
+            }, {
+              contentMathMLString: MathML
+            });
+          }
+          else if (typeof a === 'object') {
+            return a.times(b);
+          }
+          // We're assuming that the operations are commutative
+          else if (typeof b === 'object') {
+            return b.times(a);
+          }
+        });
       }
 };
  
@@ -1228,8 +1351,8 @@ var functionList3 = {
 // 
 // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
 // *@returns {number, MathLib object}*
-MathLib.plus = function () {
-  return Array.prototype.slice.apply(arguments).reduce(function (a, b) {
+/*MathLib.plus = function (n) {
+  return n.reduce(function (a, b) {
     var f1, f2, astr, bstr;
     if (typeof a === 'number' && typeof b === 'number') {
       return a + b;
@@ -1259,13 +1382,13 @@ MathLib.plus = function () {
     else if (typeof a === 'object') {
       return a.plus(b);
     }
-    // We're assuming that the operations are commutative
+    / / We're assuming that the operations are commutative
     else if (typeof b === 'object') {
       return b.plus(a);
     }
   });
 };
-
+*/
 
 
 // ### MathLib.isEqual()
@@ -1298,7 +1421,7 @@ MathLib.isEqual = function () {
 // 
 // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
 // *@returns {boolean}*
-MathLib.times = function () {
+/*MathLib.times = function () {
   return Array.prototype.slice.apply(arguments).reduce(function (a, b) {
     var f1, f2, astr, bstr;
     if (typeof a === 'number' && typeof b === 'number') {
@@ -1329,13 +1452,13 @@ MathLib.times = function () {
     else if (typeof a === 'object') {
       return a.times(b);
     }
-    // We're assuming that the operations are commutative
+    / / We're assuming that the operations are commutative 
     else if (typeof b === 'object') {
       return b.times(a);
     }
   });
 };
-
+*/
 
 
 var createFunction1 = function (f, name) {
@@ -1347,7 +1470,7 @@ var createFunction1 = function (f, name) {
       return function (y) {return f(x(y));};
     }
     else if (x.type === 'set') {
-      return MathLib.set( x.map(f) );
+      return new MathLib.Set( x.map(f) );
     }
     else if(x.type === 'complex') {
       return x[name].apply(x, Array.prototype.slice.call(arguments, 1));
@@ -1363,10 +1486,12 @@ var createFunction1 = function (f, name) {
 
 
 var createFunction3 = function (f, name) {
-  return function () {
-    var arg = Array.prototype.slice.call(arguments),
-        set = arg.shift();
-    return f.apply(set, arg);
+  return function (n) {
+    //if(!MathLib.isArrayLike(n)) {
+    if(MathLib.type(n) !== 'array' && MathLib.type(n) !== 'set') {
+      n = Array.prototype.slice.apply(arguments);
+    }
+    return f(n);
   };
 };
  
@@ -1384,7 +1509,7 @@ for (func in functionList1) {
 }
 
 
-prototypes.set = [];
+
 for (func in functionList3) {
   if (functionList3.hasOwnProperty(func)) {
 
@@ -1393,13 +1518,6 @@ for (func in functionList3) {
       value: createFunction3(functionList3[func], func)
     });
 
-    MathLib.extendPrototype('set', func,
-      (function (name) {
-        return function (n) {
-          return MathLib[name](this, n);
-        };
-      }(func))
-    );
   }
 }
 
@@ -1426,7 +1544,7 @@ MathLib.extendPrototype('functn', 'toContentMathMLString', function() {
 // ### Functn.prototype.toLaTeX()
 // Returns a LaTeX representation of the function
 //
-// *@param {string}* Optional: custom name for the bound variable (default: x)
+// *@param {string}* Optional: custom name for the bound variable (default: x)  
 // *@returns {string}*
 MathLib.extendPrototype('functn', 'toLaTeX', function(bvar) {
 
@@ -1494,7 +1612,7 @@ MathLib.extendPrototype('functn', 'toMathMLString', function () {
 // ### Functn.prototype.toString()
 // Returns a string representation of the function
 //
-// *@param {string}* Optional: custom name for the bound variable (default: x)
+// *@param {string}* Optional: custom name for the bound variable (default: x)  
 // *@returns {string}*
 MathLib.extendPrototype('functn', 'toString', function(bvar) {
 
@@ -1541,393 +1659,1625 @@ MathLib.extendPrototype('functn', 'toString', function(bvar) {
 
 // ## <a id="Screen"></a>Screen
 // This module contains the common methods of all drawing modules.
-prototypes.screen = {};
-MathLib.screen = function (id, options) {
-  if (arguments.length === 0) {
-    return Object.create(prototypes.screen, {});
-  }
-
-  var element = document.getElementById(id),
-      screen= Object.create(prototypes.screen),
-      contextmenu,
-      set = {
-        axisType:           'in',
-        axisColor:          'black',
-        axisLineWidth:      0.05,
-        background:         'white',
-        down:               -5,
-        drag:               false,
-        fillColor:          'rgba(0,255,0,0.1)',
-        fillLeft:           -5,
-        fillRight:          5,
-        fontSize:           10,
-        gridAngle:          Math.PI/6,
-        gridColor:          '#cccccc',
-        gridLineWidth:      0.05,
-        gridType:           'cartesian',
-        height:             parseInt(element.getAttribute('height'), 10),
-        label:              true,
-        labelColor:         'black',
-        labelFont:          'Helvetica',
-        labelFontSize:      '16px',
-        left:               -5,
-        pan:                true,
-        plotColor:          'blue',
-        plotLineWidth:      0.05,
-        right:              5,
-        stepSizeX:          1,
-        stepSizeY:          1,
-        state:              '',
-        up:                 5,
-        width:              parseInt(element.getAttribute('width'), 10),
-        zoom:               true,
-        zoomSpeed:          0.2
-      };
-
-  // set the options
-  for (var opt in options) {
-    if(options.hasOwnProperty(opt)) {
-      set[opt] = options[opt];
-    }
-  }
-
-  set.id             = id;
-  set.element        = element;
-  set.type           = element.localName;
 
 
-  for (var prop in set) {
-    if (set.hasOwnProperty(prop)) {
-      Object.defineProperty(screen, prop, {
-        value: set[prop],
-        enumerable: true,
-        writable: true
-      });
-    }
-  }
-
-  var curTransformation = MathLib.matrix([[screen.width/((screen.right-screen.left)*screen.stepSizeX), 0, screen.width/2],[0, -screen.height/((screen.up-screen.down)*screen.stepSizeY), screen.height/2],[0, 0, 1]]);
-  Object.defineProperty(screen, 'curTransformation', {
-    get: function (){return curTransformation;},
-    set: function (x){curTransformation = x; screen.applyTransformation();}
-  });
-  Object.defineProperty(screen, 'origTransformation', {
-    value: MathLib.matrix([[screen.width/((screen.right-screen.left)*screen.stepSizeX), 0, screen.width/2],[0, -screen.height/((screen.up-screen.down)*screen.stepSizeY), screen.height/2],[0, 0, 1]])
-  });
-
-  Object.defineProperty(screen, 'curTranslateX', {
-    get: function (){return screen.curTransformation[0][2];},
-    set: function (x){screen.curTransformation[0][2] = x; screen.applyTransformation();}
-  });
-  Object.defineProperty(screen, 'curTranslateY', {
-    get: function (){return screen.curTransformation[1][2];},
-    set: function (y){screen.curTransformation[1][2] = y; screen.applyTransformation();}
-  });
-  Object.defineProperty(screen, 'origTranslateX', {
-    get: function (){return screen.origTransformation[0][2];},
-    set: function (x){screen.origTransformation[0][2] = x;}
-  });
-  Object.defineProperty(screen, 'origTranslateY', {
-    get: function (){return screen.origTransformation[1][2];},
-    set: function (y){screen.origTransformation[1][2] = y;}
-  });
-
-  Object.defineProperty(screen, 'curZoomX', {
-    get: function (){return screen.curTransformation[0][0];},
-    set: function (x){screen.curTransformation[0][0] = x; screen.applyTransformation();}
-  });
-  Object.defineProperty(screen, 'curZoomY', {
-    get: function (){return screen.curTransformation[1][1];},
-    set: function (y){screen.curTransformation[1][1] = y; screen.applyTransformation();}
-  });
-  Object.defineProperty(screen, 'origZoomX', {
-    get: function (){return screen.origTransformation[0][0];},
-    set: function (x){screen.origTransformation[0][0] = x;}
-  });
-  Object.defineProperty(screen, 'origZoomY', {
-    get: function (){return screen.origTransformation[1][1];},
-    set: function (y){set.origTransformation[1][1] = y;}
-  });
+export class Screen {
 
 
-  // Create a div which contains the svg/canvas element and the contextmenu
-  screen.screenWrapper = document.createElement('div');
-  screen.screenWrapper.className = 'MathLib screenWrapper';
-  element.parentNode.insertBefore(screen.screenWrapper, element);
-  screen.screenWrapper.appendChild(element);
-
-
-  // The context menu
-  screen.contextmenuWrapper = document.createElement('div');
-  screen.contextmenuWrapper.className = 'MathLib contextmenuWrapper';
-  screen.screenWrapper.appendChild(screen.contextmenuWrapper);
-
-
-  contextmenu = document.createElement('ul');
-  contextmenu.className = 'MathLib contextmenu';
-  screen.contextmenuWrapper.appendChild(contextmenu);
-
-  // The coordinates menu item
-  var coordinates = document.createElement('li');
-  coordinates.className = 'MathLib menuitem';
-  coordinates.innerHTML = '<span>Position</span><span style="float: right; padding-right: 10px">❯</span>';
-  coordinates.onclick = function () {
-    screen.contextmenuWrapper.style.setProperty('display', 'none');
-  };
-  contextmenu.appendChild(coordinates);
-
-  var coordinatesSubmenu = document.createElement('ul');
-  coordinatesSubmenu.className = 'MathLib contextmenu submenu';
-  coordinates.appendChild(coordinatesSubmenu);
-
-  var cartesian = document.createElement('li');
-  cartesian.className = 'MathLib menuitem';
-  cartesian.onclick = function () {
-    screen.contextmenuWrapper.style.setProperty('display', 'none');
-  };
-  coordinatesSubmenu.appendChild(cartesian);
-
-  var polar = document.createElement('li');
-  polar.className = 'MathLib menuitem';
-  polar.onclick = function () {
-    screen.contextmenuWrapper.style.setProperty('display', 'none');
-  };
-  coordinatesSubmenu.appendChild(polar);
-  
+	container: any;
+	figure: any;
+	wrapper: any;
+	contextMenu: any;
+	contextMenuOverlay: any;
+	height: number;
+	width: number;
+	uuid: string;
 
 
 
-  // The reset view menu item
-  var reset = document.createElement('li');
-  reset.className = 'MathLib menuitem';
-  reset.innerHTML = 'Reset View';
-  reset.onclick = function () {
-    screen.resetView();
-    screen.contextmenuWrapper.style.setProperty('display', 'none');
-  };
-  contextmenu.appendChild(reset);
+	constructor (id: string, options) {
+		// Remove the uuid when the scoped attribute has enough support.
+		this.uuid = Date.now()+'';
 
 
-  // Firefox support will be enabled when FF is supporting the fullscreenchange event
-  // see https://bugzilla.mozilla.org/show_bug.cgi?id=724816
-  if (document.webkitCancelFullScreen /*|| document.mozCancelFullScreen*/) {
-    // The fullscreen menuitem
-    // (Only enabled if the browser supports fullscreen mode)
-    var fullscreen = document.createElement('li');
-    fullscreen.className = 'MathLib menuitem';
-    fullscreen.innerHTML = 'View full screen';
-    fullscreen.onclick = function (evt) {
-      if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
-        screen.enterFullscreen();
-      }
-      else {
-        screen.exitFullscreen();
-      }
+		this.height = options.height || 500;
+		this.width = options.width || 500;
 
-      screen.contextmenuWrapper.style.setProperty('display', 'none');
-    };
-    contextmenu.appendChild(fullscreen);
+		var container = document.getElementById(id),
+				screen, // The object to be returned
+				innerHTML = [
+
+					// Construct the Mark-Up
+					// Scoped styles
+					'<style scoped>',
+						'.MathLib_figure_'+this.uuid+'{border: 1px solid black; margin: 1em auto; display: -webkit-flex; -webkit-flex-direction: column; -webkit-flex-wrap: nowrap; -webkit-justify-content: center; -webkit-align-content: center; -webkit-align-items: center;}',
+						'.MathLib_figcaption_'+this.uuid+' {font-family: Helvetica, sans-serif; font-size: 1em; color: #444; text-align: center; margin: 1em}',
+						'.MathLib_wrapper_'+this.uuid+' {border: 1px solid black; width: '+this.width+'px; height: '+this.height+'px; position: relative;}',
+						'.MathLib_screen_'+this.uuid+' {width: '+this.width+'px; height: '+this.height+'px; position: absolute;}',
+						'.MathLib_contextMenuOverlay_'+this.uuid+' {display: none; position: fixed; top: 0; left: 0; z-index:100; width: 100vw; height: 100vh}',
+						'.MathLib_contextMenu_'+this.uuid+' {',
+							'position: relative;',
+							'top: 200px;',
+							'left: 200px;',
+							'z-index:1001;',
+							'padding: 5px 0 5px 0;',
+							'width: 200px;',
+							'border: 1px solid #ccc;',
+							'border-radius: 5px;',
+							'background: #FFFFFF;',
+							'box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);',
+							'font-family: Helvetica;',
+							'list-style-type: none;',
+						'}',
+						'.MathLib_contextMenu_item_'+this.uuid+' {',
+							'padding-left: 20px;',
+							'border-top: 1px solid transparent;',
+							'border-bottom: 1px solid transparent;',
+							'-webkit-user-select: none;',
+						'}',
+						'.MathLib_contextMenu_item_'+this.uuid+':hover {',
+							'border-top: 1px solid #5b82e8;',
+							'border-bottom: 1px solid #4060a7;',
+							'background-color: #658bf1;',
+							// 'background-image: -webkit-gradient(linear, left top, left bottom, from(#658bf1), to(#2a63ee));',
+							// 'background-image: -webkit-linear-gradient(top, #658bf1, #2a63ee);',
+							// 'background-image:    -moz-linear-gradient(top, #658bf1, #2a63ee);',
+							// 'background-image:     -ms-linear-gradient(top, #658bf1, #2a63ee);',
+							// 'background-image:      -o-linear-gradient(top, #658bf1, #2a63ee);',
+							'background-image:         linear-gradient(to bottom, #658bf1, #2a63ee);',
+
+							'color: white;',
+						'}',
+						'.MathLib_contextMenu_item_'+this.uuid+' > .MathLib_contextMenu_'+this.uuid+' {',
+							'display: none;',
+							'position: absolute;',
+							'left: 200px;',
+							'top: 19px;',
+						'}',
+						'.MathLib_contextMenu_item_'+this.uuid+':hover > .MathLib_contextMenu_'+this.uuid+' {',
+							'display: block;',
+							'color: #000000;',
+						'}',
+					'</style>',
+
+					// The figure
+					'<figure class="MathLib_figure_'+this.uuid+'">',
+
+					// The canvas or SVG element will be inserted here
+					'<div class="MathLib_wrapper_'+this.uuid+'"></div>',
+
+					// Add the optional figcaption
+					options.figcaption ? '<figcaption class="MathLib_figcaption_'+this.uuid+'">'+options.figcaption+'</figcaption>' : '',
+
+					'</figure>',
+
+					// The context menu
+					'<div class="MathLib_contextMenuOverlay_'+this.uuid+'">',
+						'<ul class="MathLib_contextMenu_'+this.uuid+'">',
+							'<li class="MathLib_contextMenu_ite_'+this.uuid+'m" id="MathLib_screenshot_item">Save screenshot</li>',
+							'<li class="MathLib_contextMenu_item_'+this.uuid+'">Options',
+								'<ul class="MathLib_contextMenu_'+this.uuid+'">',
+									'<li class="MathLib_contextMenu_item_'+this.uuid+'">Axis',
+									'<ul class="MathLib_contextMenu_'+this.uuid+'">',
+										'<li class="MathLib_contextMenu_item">Axis1</li>',
+										'<li class="MathLib_contextMenu_item">Axis2</li>',
+									'</ul>',
+									'</li>',
+									'<li class="MathLib_contextMenu_item">Grid',
+										'<ul class="MathLib_contextMenu">',
+											'<li class="MathLib_contextMenu_item">Grid1</li>',
+											'<li class="MathLib_contextMenu_item">Grid2</li>',
+										'</ul>',
+									'</li>',
+									'</li>',
+								'</ul>',
+							'</li>',
+							'<li class="MathLib_contextMenu_item" id="MathLib_fullscreen_item">Enter Fullscreen</li>',
+						'</ul>',
+					'</div>'
+				].join('');
+
+		// Put the HTMl in the container
+		container.innerHTML = innerHTML;
 
 
-    // Handle the fullscreenchange event
-    var fullscreenchange = function (evt) {
-      if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
-        fullscreen.innerHTML = 'View Fullscreen';
-        screen.resize(screen.width, screen.height);
-        screen.curTranslateX = screen.origTranslateX;
-        screen.curTranslateY = screen.origTranslateY;
-        screen.redraw();
-      }
-      else {
-        fullscreen.innerHTML = 'Exit Fullscreen';
-        screen.resize(window.outerWidth, window.outerHeight);
-        screen.curTranslateX = window.outerWidth/2;
-        screen.curTranslateY = window.outerHeight/2;
-        screen.redraw();
-      }
-    };
 
-    if (document.webkitCancelFullScreen) {
-      screen.screenWrapper.addEventListener('webkitfullscreenchange', fullscreenchange, false);
-    }
-    else if (document.mozCancelFullScreen) {
-      screen.screenWrapper.addEventListener('mozfullscreenchange', fullscreenchange, false);
-    }
-  }
-
-  return screen;
-};
+		this.container = container;
+		this.figure = container.getElementsByClassName('MathLib_figure_'+this.uuid)[0];
+		this.wrapper = container.getElementsByClassName('MathLib_wrapper_'+this.uuid)[0];
+		this.contextMenu = container.getElementsByClassName('MathLib_contextMenu_'+this.uuid)[0];
+		this.contextMenuOverlay = container.getElementsByClassName('MathLib_contextMenuOverlay_'+this.uuid)[0];
 
 
-// ### Screen.prototype.axis()
-// Draws axis on the screen
+
+		/* The context menu will be reenabled soon.
+		var _this = this;
+		this.wrapper.oncontextmenu = function (evt) {
+			_that.oncontextmenu(evt);
+		}
+
+		document.getElementById('MathLib_fullscreen_item'+this.uuid).onclick = function (){
+			_that.enterFullscreen();
+		}*/
+	}
+
+
+/*  The fullscreen methods will also be reenabled soon
+	/ / Firefox support will be enabled when FF is supporting the fullscreenchange event
+	/ / see https:/ /bugzilla.mozilla.org/show_bug.cgi?id=724816
+
+	if (document.webkitCancelFullScreen || document.mozCancelFullScreen) {
+		/ / The fullscreen menuitem
+		/ / (Only enabled if the browser supports fullscreen mode)
+		var fullscreen = document.createElement('li');
+		fullscreen.className = 'MathLib menuitem';
+		fullscreen.innerHTML = 'View full screen';
+		fullscreen.onclick = function (evt) {
+			if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+				screen.enterFullscreen();
+			}
+			else {
+				screen.exitFullscreen();
+			}
+
+			screen.contextmenuWrapper.style.setProperty('display', 'none');
+		};
+		contextmenu.appendChild(fullscreen);
+
+
+		/ / Handle the fullscreenchange event
+		var fullscreenchange = function (evt) {
+			if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+				fullscreen.innerHTML = 'View Fullscreen';
+				screen.resize(screen.width, screen.height);
+				screen.curTranslateX = screen.origTranslateX;
+				screen.curTranslateY = screen.origTranslateY;
+				screen.redraw();
+			}
+			else {
+				fullscreen.innerHTML = 'Exit Fullscreen';
+				screen.resize(window.outerWidth, window.outerHeight);
+				screen.curTranslateX = window.outerWidth/2;
+				screen.curTranslateY = window.outerHeight/2;
+				screen.redraw();
+			}
+		};
+
+		if (document.webkitCancelFullScreen) {
+			screen.screenWrapper.addEventListener('webkitfullscreenchange', fullscreenchange, false);
+		}
+		else if (document.mozCancelFullScreen) {
+			screen.screenWrapper.addEventListener('mozfullscreenchange', fullscreenchange, false);
+		}
+	}
+*/
+
+
+}
+
+
+
+// ## <a id="Layers"></a>Layers
+// Layers for two dimensional plotting
+
+export class Layer {
+
+
+	ctx: any;
+	element: any;
+	id: string;
+	screen: any;
+	zIndex: number;
+	stack: any;
+	transformation: any;
+	applyTransformation: any;
+
+
+	// Drawing functions
+	draw: any;
+	circle: any;
+	line: any;
+	pixel: any;
+	path: any;
+	text: any;
+
+
+	constructor (screen, id: string, zIndex) {
+		var _this = this;
+		this.screen = screen;
+		this.id = id;
+		this.zIndex = zIndex;
+
+		this.stack = [];
+		this.transformation = screen.transformation;
+
+		var element;
+
+
+		if (screen.renderer === 'Canvas') {
+
+			// Create the canvas
+			element = document.createElement('canvas');
+			element.classList.add('MathLib_screen_'+screen.uuid);
+			element.width = screen.width;
+			element.height = screen.height;
+			screen.wrapper.appendChild(element);
+			this.element = element;
+
+
+			// Get the context and apply the transformations
+			this.ctx = element.getContext('2d');
+			this.applyTransformation =  function () {
+				var m = _this.transformation;
+				_this.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+			};
+			this.applyTransformation();
+
+
+			// Set the drawing functions      
+			if (id === 'back') {
+				this.draw = function () {
+					var top     = (              - screen.translation.y) / screen.scale.y,
+							bottom  = (screen.height - screen.translation.y) / screen.scale.y,
+							left    = (              - screen.translation.x) / screen.scale.x,
+							right   = (screen.width  - screen.translation.x) / screen.scale.x;
+
+					// Draw the background
+					this.ctx.fillStyle = colorConvert(screen.background);
+					this.ctx.fillRect(left, bottom, right-left, top-bottom);
+
+					canvas.draw.call(_this);
+				}
+			}
+			else if (id === 'grid') {
+				this.ctx.strokeStyle = colorConvert(screen.grid.color) || '#cccccc';
+				this.ctx.fillStyle = 'rgba(255,255,255,0)';
+
+				
+				this.draw = function (){
+					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
+					drawGrid.call(_this);
+				}
+			}
+			else if (id === 'axis') {
+				this.ctx.strokeStyle = colorConvert(screen.axis.color) || '#000000';
+				
+				this.draw = function (){
+					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
+					drawAxis.call(_this);
+				}
+			}
+			else {
+				this.ctx.strokeStyle = '#000000';
+				this.ctx.fillStyle = 'rgba(255,255,255,0)';
+
+				this.draw = function (){
+					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
+					canvas.draw.call(_this);
+				}
+			}
+
+
+			this.circle = canvas.circle;
+			this.line = canvas.line;
+			this.path = canvas.path;
+			this.pixel = canvas.pixel;
+			this.text = canvas.text;
+
+		}
+		else if (screen.renderer === 'SVG') {
+			var ctx = document.createElementNS('http://www.w3.org/2000/svg','g'),
+					m = screen.transformation;
+			ctx.setAttribute('transform',
+				'matrix(' + m[0][0]+ ',' + m[1][0]+ ',' + m[0][1]+ ',' + m[1][1]+ ',' + m[0][2]+ ',' + m[1][2] + ')' );
+			screen.element.appendChild(ctx);
+			this.ctx = ctx;
+
+
+
+
+
+			// Set the drawing functions      
+			if (id === 'back') {
+				this.draw = function () {
+					var top     = (              - screen.translation.y) / screen.scale.y,
+							bottom  = (screen.height - screen.translation.y) / screen.scale.y,
+							left    = (              - screen.translation.x) / screen.scale.x,
+							right   = (screen.width  - screen.translation.x) / screen.scale.x;
+
+					svg.draw.call(_this);
+				}
+			}
+			else if (id === 'grid') {
+				ctx.setAttribute('stroke', colorConvert(screen.grid.color) || '#cccccc');
+
+				this.draw = function (){
+					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
+					drawGrid.call(_this);
+				};
+
+			}
+			else if (id === 'axis') {
+				ctx.setAttribute('stroke', colorConvert(screen.axis.color) || '#000000');
+				
+				this.draw = function (){
+					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
+					drawAxis.call(_this);
+				}
+			}
+			else {
+				this.draw = svg.draw;
+			}
+
+
+			this.circle = svg.circle;
+			this.line = svg.line;
+			this.path = svg.path;
+			this.pixel = svg.pixel;
+			this.text = svg.text;
+		}
+
+
+
+
+		// Insert the layer into the layer array of the screen object.
+		screen.layer.splice(zIndex, 0, this);
+	}
+
+
+}
+
+
+
+// ### Screen.prototype.drawAxis
+// Draws the axis.
 //
+// *@returns {screen}*
+var drawAxis = function () {
+	var screen = this.screen,
+			options = {
+				stroke: colorConvert(this.screen.axis.color),
+				'stroke-width': -1/screen.transformation[1][1]
+			},
+			textOptions = {
+				strokeStyle: colorConvert(this.screen.axis.textColor),
+				fillStyle: colorConvert(this.screen.axis.textColor)
+			},
+			top     = (              - screen.translation.y) / screen.scale.y,
+			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
+			left    = (              - screen.translation.x) / screen.scale.x,
+			right   = (screen.width  - screen.translation.x) / screen.scale.x,
+			lengthX = +10/screen.transformation[0][0],
+			lengthY = -10/screen.transformation[1][1],
+
+			yExp = 1-Math.floor(Math.log(-screen.transformation[1][1])/Math.LN10-0.3),
+			xExp = 1-Math.floor(Math.log(+screen.transformation[0][0])/Math.LN10-0.3),
+			yTick = Math.pow(10, yExp),
+			xTick = Math.pow(10, xExp),
+			i;
+
+	// The axes
+	this.line([[left, 0], [right, 0]], false, true);
+	this.line([[0, bottom], [0, top]], false, true);
+
+
+
+	// The ticks on the axes
+	// The x axis
+	if(screen.grid.tick) {
+		for (i = -yTick; i >= left; i -= yTick) {
+			this.line([[i, -lengthY], [i, lengthY]], false, true);
+		}
+		for (i = yTick; i <= right; i += yTick) {
+			this.line([[i, -lengthY], [i, lengthY]], false, true);
+		}
+
+		// The y axis
+		for (i = -xTick; i >= bottom; i -= xTick) {
+			this.line([[-lengthX, i], [lengthX, i]], false, true);
+		}
+		for (i = xTick; i <= top; i += xTick) {
+			this.line([[-lengthX, i], [lengthX, i]], false, true);
+		}
+	}
+
+
+	// The labels
+	// The x axis
+	// .toFixed() is necessary to display 0.3 as "0.3" and not as "0.30000000000000004".
+	// .toFixed expects arguments between 0 and 20.
+	var xLen = Math.max(0, Math.min(20, -xExp)),
+			yLen = Math.max(0, Math.min(20, -yExp));
+
+	for (i = -yTick; i >= left; i -= yTick) {
+		this.text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
+	}
+	for (i = yTick; i <= right; i += yTick) {
+		this.text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
+	}
+
+
+	// The y axis
+	for (i = -xTick; i >= bottom; i -= xTick) {
+		this.text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
+	}
+	for (i = xTick; i <= top; i += xTick) {
+		this.text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
+	}
+
+	return this;
+}
+
+
+
+// ### Screen.prototype.drawGrid
+// Draws the grid.
+//
+// *@returns {screen}*
+var drawGrid = function () {
+	if (!this.screen.grid) {
+		return this;
+	}
+
+	var screen = this.screen,
+			top     = (              - screen.translation.y) / screen.scale.y,
+			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
+			left    = (              - screen.translation.x) / screen.scale.x,
+			right   = (screen.width  - screen.translation.x) / screen.scale.x,
+			yTick = Math.pow(10, 1-Math.floor(Math.log(-screen.transformation[1][1])/Math.LN10-0.3)),
+			xTick = Math.pow(10, 1-Math.floor(Math.log(+screen.transformation[0][0])/Math.LN10-0.3)),
+			i;
+
+
+	if (screen.grid.type === 'cartesian') {
+
+
+		// The horizontal lines
+		for (i = bottom-(bottom%yTick); i <= top; i += yTick) {
+			this.line([[left, i], [right, i]], false, true);
+		}
+
+
+		// The vertical lines
+		for (i = left-(left%xTick); i <= right; i += xTick) {
+			this.line([[i, bottom], [i, top]], false, true);
+		}
+
+
+		// Test for logarithmic plots
+		/*for (i = left-(left%this.axis.tick.x); i <= right; i += this.axis.tick.x) {
+			for (var j = 1 ; j <=10; j++ ) {
+				this.line([[i*Math.log(10)+ Math.log(j), bottom], [i*Math.log(10)+Math.log(j), top]], options);
+			}
+		}*/
+
+
+	}
+	else if (screen.grid.type === 'polar') {
+		for (i = 0; i < 2*Math.PI; i += screen.grid.angle) {
+			this.line([[0, 0], [50*Math.cos(i), 50*Math.sin(i)]], false, true);
+		}
+
+
+		var max = Math.sqrt(Math.max(top*top, bottom*bottom) + Math.max(left*left, right*right)),
+				min = 0; // improve this estimate
+
+		for (i = min; i <= max; i += Math.min(xTick, yTick)) {
+			this.circle(new MathLib.Circle([0, 0, 1], i), false, true);
+		}
+	}
+
+	return this;
+}
+
+
+var	colorConvert = function (n) {
+			if (n === undefined){
+				return undefined;
+			}
+			else if (typeof n === 'string'){
+				return n;
+			}
+			return '#' + ('00000'+n.toString(16)).slice(-6); 
+		};
+
+
+
+
+var canvas = {
+	normalizeOptions: function (opt) {
+		var res = {};
+		if ('fillColor' in opt) {
+			res['fillStyle'] = opt.fillColor
+		}
+		else if ('color' in opt) {
+			res['fillStyle'] = opt.color
+		}
+
+
+		if ('font' in opt) {
+			res['font-family'] = opt.font
+		}
+
+		if ('fontSize' in opt) {
+			res['font-size'] = opt.fontSize
+		}
+
+
+		if ('lineColor' in opt) {
+			res['strokeStyle'] = opt.lineColor
+		}
+		else if ('color' in opt) {
+			res['strokeStyle'] = opt.color
+		}
+
+		return res;
+	},
+
+
+	applyTransformation: function () {
+		var m = this.transformation;
+		this.layer.forEach(function(l){l.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2])});;
+	},
+
+
+
+
+	draw: function (x?, options = {}) {
+		if (arguments.length === 0) {
+		var _this = this;
+
+			this.stack.forEach(function(x,i){
+				if (x.type === 'text' ) {
+					_this.text(x.object, x.x, x.y, x.options, true);
+				}
+				if (x.type === 'pixel' ) {
+					_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+				}
+				else {
+					_this[x.type](x.object, x.options, true);
+				}
+			});
+		}
+
+
+		else if (x.type === 'circle') {
+			this.circle(x, options);
+		}
+		else if (x.type === 'line') {
+			this.line(x, options);
+		}
+		else if (Array.isArray(x)) {
+			var _this = this;
+			x.forEach(function (y) {_this[y.type](y, options);});
+		}
+	},
+
+
+
+	// ### Canvas circle
+	// Draws a circle on the screen.
+	//
+	// *@param {circle}* The circle to be drawn  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {screen}* Returns the screen
+	circle: function (circle, options, redraw = false) {
+		var screen = this.screen,
+				ctx = this.ctx,
+				prop, opts;
+
+		ctx.save();
+		ctx.lineWidth = (options.lineWidth || 4)/(screen.scale.x - screen.scale.y);
+
+		// Set the drawing options
+		if (options) {
+			opts = canvas.normalizeOptions(options);
+			for (prop in opts) {
+				if (opts.hasOwnProperty(prop)) {
+					ctx[prop] = opts[prop];
+				}
+			}
+
+			if('setLineDash' in ctx) {
+				ctx.setLineDash(('dash' in options ? options.dash : []));
+			}
+			if ('lineDashOffset' in ctx) {
+				ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
+			}
+		}
+
+
+
+		// Draw the line
+		ctx.beginPath();
+		ctx.arc(circle.center[0], circle.center[1], circle.radius, 0, 2*Math.PI);
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
+		ctx.restore();
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'circle',
+				object: circle,
+				options: options
+			});
+		}
+
+		return this;
+
+		},
+
+
+	// ### Canvas line
+	// Draws a line on the screen.
+	//
+	// *@param {line}* The line to be drawn  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {screen}* Returns the screen
+	line: function (line, options, redraw = false) {
+		var screen = this.screen,
+				points = this.screen.getLineEndPoints(line),
+				ctx = this.ctx,
+				prop, opts;
+
+		ctx.save()
+		ctx.lineWidth = (options.lineWidth || 4)/(screen.scale.x - screen.scale.y);
+
+
+		// Set the drawing options
+		if (options) {
+			opts = canvas.normalizeOptions(options);
+			for (prop in opts) {
+				if (opts.hasOwnProperty(prop)) {
+					ctx[prop] = opts[prop];
+				}
+			}
+
+			if('setLineDash' in ctx) {
+				ctx.setLineDash(('dash' in options ? options.dash : []));
+			}
+			if ('lineDashOffset' in ctx) {
+				ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
+			}
+		}
+
+
+
+
+		// Draw the line
+		ctx.beginPath();
+		ctx.moveTo(points[0][0], points[0][1]);
+		ctx.lineTo(points[1][0], points[1][1]);
+		ctx.stroke();
+		ctx.closePath();
+		ctx.restore();
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'line',
+				object: line,
+				options: options
+			});
+		}
+
+		return this;
+	},
+
+
+
+
+// ### Canvas path
+// Draws a path on the screen.
+//
+// *@param {path}* The path to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
-MathLib.extendPrototype('screen', 'axis', function (options) {
-  var type, i, axisOpt, labelOpt;
-
-  // If no options are supplied, use the default options
-  if (arguments.length === 0 || type === true) {
-    axisOpt = {
-      lineColor: this.axisColor,
-      fillColor: 'rgba(255, 255, 255, 0)',
-      layer: 'back',
-      lineWidth: this.axisLineWidth
-    };
-    labelOpt = {
-      color: this.labelColor,
-      layer: 'back',
-      font:     this.labelFont,
-      fontSize: this.labelFontSize
-    };
-    type = this.axisType;
-  }
-
-  // If the argument is false, remove the axis
-  //else if (type === false) {
-    // TODO: remove the axis
-  //}
-
-  // Else use the supplied options
-  else {
-    axisOpt = {
-      lineColor: options.color || this.axisColor,
-      fillColor: 'rgba(255, 255, 255, 0)',
-      layer: 'back',
-      lineWidth: options.lineWidth ||this.axisLineWidth
-    };
-    labelOpt = {
-      color: options.textColor || this.labelColor,
-      layer: 'back',
-      font:     options.font || this.labelFont,
-      fontSize: options.font || this.labelFontSize
-    };
-    type = options.type || this.axisType;
-
-    // Remember the options
-    this.axisColor     = axisOpt.lineColor;
-    this.axisLineWidth = axisOpt.lineWidth;
-    this.axisType      = type;
-    this.labelColor    = labelOpt.color;
-    this.labelFont     = labelOpt.font;
-    this.labelFontSize = labelOpt.fontSize;
-  }
+// *@returns {screen}* Returns the scren
+	path: function (curve, options, redraw = false) {
+		var screen = this.screen,
+				ctx = this.ctx,
+				prop, opts, path, x, y, i,
+				step = 2/(screen.scale.x - screen.scale.y),
+				from, to;
 
 
-  if (type === 'in') {
-    var lengthX = 10 / this.origZoomX,
-        lengthY = 10 / this.origZoomY;
+		from = ('from' in options ? options.from : ( - screen.translation.x) / screen.scale.x)-step;
+		to = ('to' in options ? options.to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
+		
 
-    this.line([[-50, 0], [50, 0]], axisOpt);
-    this.line([[0, -50], [0, 50]], axisOpt);
-    for (i = this.stepSizeX; i <= 50 * this.stepSizeX; i += this.stepSizeX) {
-      this.line([[i, -lengthY], [i, lengthY]], axisOpt);
-    }
-    for (i = -this.stepSizeX; i >= -50 * this.stepSizeX; i -= this.stepSizeX) {
-      this.line([[i, -lengthY], [i, lengthY]], axisOpt);
-    }
-    for (i = this.stepSizeY; i <= 50 * this.stepSizeY; i += this.stepSizeY) {
-      this.line([[-lengthX, i], [lengthX, i]], axisOpt);
-    }
-    for (i = -this.stepSizeY; i >= -50 * this.stepSizeY; i -= this.stepSizeY) {
-      this.line([[-lengthX, i], [lengthX, i]], axisOpt);
-    }
-
-    if (this.label) {
-      for (i = this.stepSizeX; i <= 50 * this.stepSizeX; i += this.stepSizeX) {
-        this.text(i + '', i - lengthX/2, -2.5*lengthY, labelOpt);
-      }
-      for (i = -this.stepSizeX; i >= -50 * this.stepSizeX; i -= this.stepSizeX) {
-        this.text(i + '', i - lengthX/2, -2.5*lengthY, labelOpt);
-      }
-      for (i = this.stepSizeY; i <= 50 * this.stepSizeY; i += this.stepSizeY) {
-        this.text(i + '', -2.5*lengthX, i - lengthY/2, labelOpt);
-      }
-      for (i = -this.stepSizeY; i >= -50 * this.stepSizeY; i -= this.stepSizeY) {
-        this.text(i + '', -2.5*lengthX, i - lengthY/2, labelOpt);
-      }
-    }
-    //else if(type === 'out') {
-      // TODO 
-    //}
-  }
-
-  return this;
-});
+		ctx.save()
+		ctx.lineWidth = (options.lineWidth || 4)/(screen.scale.x - screen.scale.y);
 
 
-// ### Screen.prototype.contextmenu()
-// Handles the contextmenu event
-//
-// *@param {event}*
-MathLib.extendPrototype('screen', 'contextmenu', function (evt) {
-  if (evt.preventDefault) {
-   evt.preventDefault();
-  }
-  evt.returnValue = false;
-  var x = this.getX(evt),
-      y = this.getY(evt);
+		// Set the drawing options
+		if (options) {
+			opts = canvas.normalizeOptions(options);
+			for (prop in opts) {
+				if (opts.hasOwnProperty(prop)) {
+					ctx[prop] = opts[prop];
+				}
+			}
 
-  var menu = this.contextmenuWrapper.childNodes[0];
-  menu.style.setProperty('top', (evt.clientY-20) + 'px');
-  menu.style.setProperty('left', evt.clientX + 'px');
-  var wrapper = this.contextmenuWrapper;
-  wrapper.style.setProperty('display', 'block');
-  wrapper.style.setProperty('width', '100%');
-  wrapper.style.setProperty('height', '100%');
-  
-  menu.childNodes[0].childNodes[2].childNodes[0].innerHTML = 'cartesian: (' + MathLib.round(x, 2) + ', ' + MathLib.round(y, 2) + ')';
-  menu.childNodes[0].childNodes[2].childNodes[1].innerHTML = 'polar: (' + MathLib.round(MathLib.hypot(x, y), 2) + ', ' + MathLib.round(Math.atan2(y, x), 2) + ')';
-
-  var screen = this,
-      listener = function () {
-        screen.contextmenuWrapper.style.setProperty('display', 'none');
-        wrapper.style.setProperty('width', '0px');
-        wrapper.style.setProperty('height', '0px');
-        screen.contextmenuWrapper.removeEventListener('click', listener);
-      };
-  this.contextmenuWrapper.addEventListener('click', listener);
-});
+			if('setLineDash' in ctx) {
+				ctx.setLineDash(('dash' in options ? options.dash : []));
+			}
+			if ('lineDashOffset' in ctx) {
+				ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
+			}
+		}
 
 
-// ### Screen.prototype.enterFullscreen()
-// Displays the current plot in fullscreen mode.
-//
-// *@returns {screen}* Returns the screen
-MathLib.extendPrototype('screen', 'enterFullscreen', function () {
-  var elem = this.screenWrapper;  
-  if (elem.requestFullScreen) {  
-    elem.requestFullScreen();  
-  }
-  else if (elem.mozRequestFullScreen) {  
-    elem.mozRequestFullScreen();  
-  }
-  else if (elem.webkitRequestFullScreen) {  
-    elem.webkitRequestFullScreen();  
-  }
-
-  return this;
-});
+		// If curve is a function f, the path will be (x, f(x))
+		if (typeof curve === 'function') {
+			path = [];
+			for (i = from; i <= to; i+=step) {
+				path.push([i, curve(i)]);
+			}
+		}
 
 
-// ### Screen.prototype.exitFullscreen()
-// Exits the fullscreen
-//
-// *@returns {screen}* Returns the screen
-MathLib.extendPrototype('screen', 'exitFullscreen', function () {
-  if (document.cancelFullScreen) {  
-    document.cancelFullScreen();  
-  }
-  else if (document.mozCancelFullScreen) {  
-    document.mozCancelFullScreen();  
-  }
-  else if (document.webkitCancelFullScreen) {  
-    document.webkitCancelFullScreen();  
-  } 
+		// If curve is an array of two functions [f, g], the path will be (f(x), g(x))
+		else if (typeof curve[0] === 'function') {
+			path = [];
+			x = curve[0];
+			y = curve[1];
+			for (i = from; i <= to; i+=step) {
+				path.push([x(i), y(i)]);
+			}
+		}
+		else {
+			path = curve;
+		}
 
-  return this;
-});
+
+
+		// Draw the path
+		ctx.beginPath();
+		ctx.moveTo(path[0][0], path[0][1]);
+		path.forEach(function (x) {
+			ctx.lineTo(x[0], x[1]);
+		});
+		ctx.stroke();
+		ctx.closePath();
+		ctx.restore();
+
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'path',
+				object: curve,
+				options: options
+			});
+		}
+
+		return this;
+	},
+
+
+
+
+
+	// ### Canvas pixel
+	// Draws pixel on the screen.
+	//
+	// *@param {path}* The path to be drawn  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {screen}* Returns the screen
+	pixel: function (f, t, r, b, l, options, redraw = false) {
+		var screen = this.screen,
+				top     = (              - screen.translation.y) / screen.scale.y,
+				bottom  = (screen.height - screen.translation.y) / screen.scale.y,
+				left    = (              - screen.translation.x) / screen.scale.x,
+				right   = (screen.width  - screen.translation.x) / screen.scale.x,
+				ctx = this.ctx,
+				prop, opts, path, x, y;
+
+		t = Math.min(top, t);
+		r = Math.min(right, r);
+		b = Math.max(bottom, b);
+		l = Math.max(left, l);
+
+
+		var tPxl = Math.floor(-t*screen.scale.y),
+				rPxl = Math.floor(r*screen.scale.x),
+				bPxl = Math.floor(-b*screen.scale.y),
+				lPxl = Math.floor(l*screen.scale.x),
+				w = (rPxl-lPxl),
+				h = (bPxl-tPxl),
+				imgData = ctx.createImageData(w, h),
+				pxl;
+
+
+		for (var y = tPxl, i = 0; y > bPxl; y--) {
+			for (var x = lPxl; x < rPxl; x++, i++) {
+				pxl = f(x/screen.scale.x, y/screen.scale.y);
+				imgData.data[4*i]   = pxl[0];
+				imgData.data[4*i+1] = pxl[1];
+				imgData.data[4*i+2] = pxl[2];
+				imgData.data[4*i+3] = pxl[3];
+			}
+		}
+
+		ctx.putImageData(imgData, (left-l)*screen.scale.x, (t-top)*screen.scale.y);
+
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'pixel',
+				object: f,
+				t: t,
+				r: r,
+				b: b,
+				l: l,
+				options: options
+			});
+		}
+
+		return this;
+	},
+
+
+
+
+	// ### Canvas text
+	// Writes text on the screen.
+	//
+	// *@param {str}* The string to be drawn  
+	// *@param {x}* The x coordinate  
+	// *@param {y}* The y coordinate  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {screen}* Returns the screen
+	text: function (str, x, y, options, redraw = false) {
+		var defaults = {
+					font:       'Helvetica',
+					fontSize:   10,
+					fillColor:  'rgba(0, 0, 0, 1)',
+					lineColor:  'rgba(0, 0, 0, 1)',
+					lineWidth:  0.05
+					//size:       0.4
+				},
+				ctx, prop, opts;
+
+		// Determine the layer to draw onto
+		ctx = this.ctx;
+
+		if (!redraw){
+			opts = extendObject(defaults, options);
+		}
+		else {
+			opts = options;
+		}
+
+
+		// Set the drawing options
+		for (prop in opts) {
+			if (opts.hasOwnProperty(prop)) {
+				ctx[prop] = opts[prop];
+			}
+		}
+
+		ctx.font = (opts.fontSize*this.screen.range.x) + 'px ' + opts.font;
+		ctx.font = '10px Helvetica';
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+
+		// Draw the text
+		var tf = this.screen.transformation;
+
+		ctx.save();
+			ctx.transform(1/tf[0][0],0,0,1/tf[1][1],0,0);
+			ctx.fillText(str, tf[0][0]*x, tf[1][1]*y);
+		ctx.restore();
+
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'text',
+				object: str,
+				x: x,
+				y: y,
+				options: opts
+			});
+		}
+
+		return this;
+	}
+}
+
+
+var svg = {
+
+	normalizeOptions: function (opt) {
+		var res = {};
+		if ('fillColor' in opt) {
+			res['fill'] = opt.fillColor
+		}
+		else if ('color' in opt) {
+			res['fill'] = opt.color
+		}
+
+
+		if ('font' in opt) {
+			res['font-family'] = opt.font
+		}
+
+		if ('fontSize' in opt) {
+			res['font-size'] = opt.fontSize
+		}
+
+		if ('size' in opt) {
+			res['size'] = opt.size
+		}
+
+
+		if ('lineColor' in opt) {
+			res['stroke'] = opt.lineColor
+		}
+		else if ('color' in opt) {
+			res['stroke'] = opt.color
+		}
+
+
+		if ('dash' in opt && opt.dash.length !== 0) {
+			res['stroke-dasharray'] = opt.dash
+		}
+
+		if ('dashOffset' in opt && opt.dashOffset !== 0) {
+			res['stroke-dashoffset'] = opt.dashOffset
+		}
+
+
+		return res;
+	},
+
+
+	applyTransformation: function () {
+		var m = this.transformation;
+		this.layer.forEach(function(l){
+			l.ctx.setAttribute('transform',
+				'matrix(' + m[0][0]+ ',' + m[1][0]+ ',' + m[0][1]+ ',' + m[1][1]+ ',' + m[0][2]+ ',' + m[1][2] + ')' )});
+	},
+
+
+
+
+	draw: function (x?, options = {}) {
+		if (arguments.length === 0) {
+		var _this = this;
+
+			this.stack.forEach(function(x,i){
+				if (x.type === 'text' ) {
+					_this.text(x.object, x.x, x.y, x.options, true);
+				}
+				if (x.type === 'pixel' ) {
+					_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+				}
+				else {
+					_this[x.type](x.object, x.options, true);
+				}
+			});
+		}
+
+
+		else if (x.type === 'circle') {
+			this.circle(x, options);
+		}
+		else if (x.type === 'line') {
+			this.line(x, options);
+		}
+		else if (Array.isArray(x)) {
+			var _this = this;
+			x.forEach(function (y) {_this[y.type](y, options);});
+		}
+	},
+
+
+
+
+
+	// ### SVG circle
+	// Draws a circle on the screen.
+	//
+	// *@param {circle}* The circle to be drawn  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {canvas}* Returns the screen
+	circle: function (circle, options, redraw) {
+		var screen = this.screen,
+				prop, opts,
+				svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+		svgCircle.setAttribute('cx', circle.center[0]);
+		svgCircle.setAttribute('cy', circle.center[1]);
+		svgCircle.setAttribute('r', circle.radius);
+
+		if (options) {
+			svgCircle.setAttribute('stroke-width', (options.lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+			opts = svg.normalizeOptions(options);
+			for (prop in opts) {
+				if (opts.hasOwnProperty(prop)) {
+					svgCircle.setAttribute(prop, opts[prop]);
+				}
+			}
+		}
+
+		this.ctx.appendChild(svgCircle)
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'circle',
+				object: circle,
+				options: options
+			});
+		}
+
+		return this;
+	},
+
+
+
+
+
+
+
+	// ### SVG line
+	// Draws a line on the screen.
+	//
+	// *@param {line}* The line to be drawn  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {canvas}* Returns the screen
+	line: function (line, options, redraw) {
+		var screen = this.screen,
+				points = this.screen.getLineEndPoints(line),
+				prop, opts,
+				svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+
+		svgLine.setAttribute('x1', points[0][0]);
+		svgLine.setAttribute('y1', points[0][1]);
+		svgLine.setAttribute('x2', points[1][0]);
+		svgLine.setAttribute('y2', points[1][1]);
+
+		if (options) {
+			svgLine.setAttribute('stroke-width', (options.lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+			opts = svg.normalizeOptions(options);
+			for (prop in opts) {
+				if (opts.hasOwnProperty(prop)) {
+					svgLine.setAttribute(prop, opts[prop]);
+				}
+			}
+		}
+
+		this.ctx.appendChild(svgLine);
+		
+		if (!redraw) {
+			this.stack.push({
+				type: 'line',
+				object: line,
+				options: options
+			});
+		}
+
+		return this;
+	},
+
+
+
+
+
+	// ### SVG path
+	// Draws a path on the screen.
+	//
+	// *@param {curve}* The path to be drawn  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {screen}* Returns the screen
+	path: function (curve, options, redraw) {
+		var screen = this.screen,
+				svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
+				step = 2/(screen.scale.x - screen.scale.y),
+				pathString, from, to, prop, opts, x, y, i, path;
+
+		from = ('from' in options ? options.from : ( - screen.translation.x) / screen.scale.x)-step;
+		to = ('to' in options ? options.to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
+
+
+		// If curve is a function f, the path will be (x, f(x))
+		if (typeof curve === 'function') {
+			path = [];
+			for (i = from; i <= to; i+=step) {
+				path.push([i, curve(i)]);
+			}
+		}
+
+
+		// If curve is an array of two functions [f, g], the path will be (f(x), g(x))
+		else if (typeof curve[0] === 'function') {
+			path = [];
+			x = curve[0];
+			y = curve[1];
+			for (i = from; i <= to; i+=step) {
+				path.push([x(i), y(i)]);
+			}
+		}
+		else {
+			path = curve;
+		}
+
+		pathString = 'M' + path.reduce(function(prev, cur) {
+			return prev + ' L' + cur.join(' ');
+		});
+		svgPath.setAttribute('d', pathString);
+
+		svgPath.setAttribute('stroke-width', (options.lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+
+
+		if (options) {
+			opts = svg.normalizeOptions(options);
+			for (prop in opts) {
+				if (opts.hasOwnProperty(prop)) {
+					svgPath.setAttribute(prop, opts[prop]);
+				}
+			}
+		}
+
+		this.ctx.appendChild(svgPath);
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'path',
+				object: curve,
+				options: options
+			});
+		}
+
+		return this;
+	},
+
+
+
+
+	// ### SVG pixel
+	// Draws pixel on the screen.
+	//
+	// *@param {path}* The path to be drawn  
+	// *@param {top}* The top coordinate of the draw rectangle  
+	// *@param {right}* The right coordinate of the draw rectangle  
+	// *@param {bottom}* The bottom coordinate of the draw rectangle  
+	// *@param {left}* The left coordinate of the draw rectangle  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {screen}* Returns the screen
+	pixel: function (f, t, r, b, l, options, redraw = false) {
+		var screen = this.screen,
+				top     = (              - screen.translation.y) / screen.scale.y,
+				bottom  = (screen.height - screen.translation.y) / screen.scale.y,
+				left    = (              - screen.translation.x) / screen.scale.x,
+				right   = (screen.width  - screen.translation.x) / screen.scale.x,
+				ctx = this.ctx,
+				canvas = <any>document.createElement('canvas'),
+				canvasCtx = canvas.getContext('2d'),
+				svgImage = document.createElementNS('http://www.w3.org/2000/svg', 'image'),
+				svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'g'),
+				dataURL, prop, opts, x, y, i, pxl,
+				m = screen.transformation;
+
+		canvas.width = screen.width;
+		canvas.height = screen.height;
+		canvasCtx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2])
+
+
+
+		svgContainer.setAttribute('transform', 'matrix('+1/m[0][0]+',0,0,'+1/m[1][1]+',-'+m[0][2]/m[0][0]+','+-m[1][2]/m[1][1]+')');
+		svgImage.setAttribute('width', screen.width+'px');
+		svgImage.setAttribute('height', screen.height+'px');
+		svgImage.setAttribute('x', '0');
+		svgImage.setAttribute('y', '0');
+
+
+
+		t = Math.min(top, t);
+		r = Math.min(right, r);
+		b = Math.max(bottom, b);
+		l = Math.max(left, l);
+
+
+		var tPxl = Math.floor(-t*screen.scale.y),
+				rPxl = Math.floor(r*screen.scale.x),
+				bPxl = Math.floor(-b*screen.scale.y),
+				lPxl = Math.floor(l*screen.scale.x),
+				w = (rPxl-lPxl),
+				h = (tPxl-bPxl),
+				imgData = canvasCtx.createImageData(w, h);
+
+
+
+		for (y = tPxl, i = 0; y > bPxl; y--) {
+			for (x = lPxl; x < rPxl; x++, i++) {
+				pxl = f(x/screen.scale.x, y/screen.scale.y);
+				imgData.data[4*i]   = pxl[0];
+				imgData.data[4*i+1] = pxl[1];
+				imgData.data[4*i+2] = pxl[2];
+				imgData.data[4*i+3] = pxl[3];
+			}
+		}
+
+		canvasCtx.putImageData(imgData, 0,0);
+
+		svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', canvas.toDataURL());
+
+		svgContainer.appendChild(svgImage);
+		this.ctx.appendChild(svgContainer);
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'pixel',
+				object: f,
+				t: t,
+				r: r,
+				b: b,
+				l: l,
+				options: options
+			});
+		}
+
+		return this;
+	},
+
+
+
+	// ### SVG text
+	// Writes text on the screen.
+	//
+	// *@param {str}* The string to be drawn  
+	// *@param {x}* The x coordinate  
+	// *@param {y}* The y coordinate  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {canvas}* Returns the canvas
+	text: function (str, x, y, options, redraw) {
+	  var screen = this.screen,
+	      svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
+		    ctx = this.ctx,
+	      prop, opts;
+
+		svgText.textContent = str;
+		svgText.setAttribute('x', x*screen.scale.x + '');
+		svgText.setAttribute('y', y*screen.scale.y + '');
+		svgText.setAttribute('transform', 'matrix(' + 1/screen.scale.x + ' , 0, 0, ' + 1/screen.scale.y + ', 0, 0)');
+		svgText.setAttribute('fill', colorConvert(options.color) || '#000000');
+		svgText.setAttribute('fill-opacity', '1');
+		svgText.setAttribute('stroke', colorConvert(options.color) || '#000000');
+		svgText.setAttribute('text-anchor', 'middle');
+
+		// alignment-baseline isn't defined for text elements, 
+		// only for ‘tspan’, ‘tref’, ‘altGlyph’, ‘textPath’ elements.  
+		// see the [Specification](http://www.w3.org/TR/SVG/text.html#AlignmentBaselineProperty)  
+		// But it works for text elements, so we don't need an additional tspan element.
+		svgText.setAttribute('alignment-baseline', 'middle');
+
+
+		this.ctx.appendChild(svgText);
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'text',
+				object: str,
+				x: x,
+				y: y,
+				options: options
+			});
+		}
+
+	  return this;
+	}
+}
+
+
+// ## <a id="Screen2D"></a>Screen2D
+// Two dimensional plotting
+
+
+export class Screen2D extends Screen {
+
+	applyTransformation: any;
+	background: any;
+	renderer: any;
+	axis: any;
+	grid: any;
+	layer: any;
+	element: any;
+
+	init: any;
+	redraw: any;
+	drawAxis:any;
+	drawGrid:any;
+
+
+
+	// Drawing functions
+	draw: any;
+	circle: any;
+	line: any;
+	path: any;
+	pixel: any;
+	text: any;
+
+
+	// Transformation
+	transformation: any;
+	translation: any;
+	scale: any;
+	lookAt: any;
+	range: any;
+
+
+	// Interaction TODO
+	interaction: any;
+	zoomSpeed: any;
+
+
+	constructor (id: string, options) {
+		super(id, options)
+		var _this = this;
+		var defaults = {
+					axis: {
+						color: 0x000000,
+						textColor: 0x000000,
+						tick: {x: 1, y: 1}
+					},
+					grid: {
+						angle: Math.PI/8,
+						color: 0xcccccc,
+						type: 'cartesian',
+						tick: {x: 1, y: 1, r: 1}
+					},
+					interaction: {
+						allowPan: true,
+						allowZoom: true,
+						zoomSpeed: 1
+					},
+					background: 0xffffff,
+					lookAt: {x: 0, y: 0},
+					range: {x: 1, y: 1},
+					figcaption: '',
+					renderer: 'Canvas',
+					transformation: new MathLib.Matrix([[Math.min(this.height, this.width)/2,0,this.width/2],
+																							[0,-Math.min(this.height, this.width)/2,this.height/2],
+																							[0,0,1]])
+				},
+				opts = extendObject(defaults, options),
+				element,
+				transformation = opts.transformation;
+
+
+		this.background = opts.background;
+		this.renderer = opts.renderer;
+		this.interaction = opts.interaction;
+		this.axis = opts.axis;
+		this.grid = opts.grid;
+
+
+
+	
+		this.applyTransformation = function () {};
+
+		// The interaction methods
+		this.translation = {};
+		this.scale = {};
+		this.transformation = transformation;
+
+		Object.defineProperty(this.translation, 'x', {
+			get: function (){return _this.transformation[0][2];},
+			set: function (x){_this.transformation[0][2] = x; _this.applyTransformation();}
+		});
+
+		Object.defineProperty(this.translation, 'y', {
+			get: function (){return _this.transformation[1][2];},
+			set: function (y){_this.transformation[1][2] = y; _this.applyTransformation();}
+		});
+
+		Object.defineProperty(this.scale, 'x', {
+			get: function (){return _this.transformation[0][0];},
+			set: function (x){_this.transformation[0][0] = x; _this.applyTransformation();}
+		});
+
+		Object.defineProperty(this.scale, 'y', {
+			get: function (){return _this.transformation[1][1];},
+			set: function (y){_this.transformation[1][1] = y; _this.applyTransformation();}
+		});
+
+
+
+
+
+		this.lookAt= {};
+		this.range = {};
+		Object.defineProperty(this.lookAt, 'x', {
+			get: function (){return (_this.width/2 - _this.transformation[0][2])/_this.transformation[0][0];},
+			set: function (x){_this.transformation[0][2] = _this.width/2 - x*_this.transformation[0][0]; _this.applyTransformation();}
+		});
+
+		Object.defineProperty(this.lookAt, 'y', {
+			get: function (){return (_this.height/2 - _this.transformation[1][2])/_this.transformation[1][1];},
+			set: function (y){_this.transformation[1][2] = _this.height/2 - y*_this.transformation[1][1]; _this.applyTransformation();}
+		});
+
+		Object.defineProperty(this.range, 'x', {
+			get: function (){return _this.width/(2*_this.transformation[0][0]);},
+			set: function (x){_this.transformation[0][0] = 0.5*_this.width/x; _this.applyTransformation();}
+		});
+
+		Object.defineProperty(this.range, 'y', {
+			get: function (){return -_this.height/(2*_this.transformation[1][1]);},
+			set: function (y){_this.transformation[1][1] = -0.5*_this.height/y; _this.applyTransformation();}
+		});
+
+
+
+		this.range.x = opts.range.x
+		this.range.y = opts.range.y
+		this.lookAt.x = opts.lookAt.x
+		this.lookAt.y = opts.lookAt.y
+
+
+
+
+
+
+		// Create the SVG element which contains the layers
+		if (opts.renderer === 'SVG') {
+			// Create the canvas
+			element = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+			element.classList.add('MathLib_screen_'+this.uuid);
+			element.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+			element.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+			element.setAttribute('height', this.height + 'px');
+			element.setAttribute('width', this.width + 'px');
+			element.setAttribute('version', '1.1');
+
+			element.setAttribute('stroke', '#000000');
+			element.setAttribute('stroke-opacity', '1');
+			element.setAttribute('fill', '#ffffff');
+			element.setAttribute('fill-opacity', '0');
+
+			this.element = element;
+			this.wrapper.appendChild(element);
+
+			if ('background' in options) {
+				var background = document.createElementNS('http://www.w3.org/2000/svg','rect');
+
+				background.setAttribute('x', '0px');
+				background.setAttribute('y', '0px');
+				background.setAttribute('width', this.width + 'px');
+				background.setAttribute('height', this.height + 'px');
+				background.setAttribute('fill', colorConvert(options.background));
+				background.setAttribute('fill-opacity', '1');
+				this.element.appendChild(background);
+			}
+		}
+
+
+
+
+
+
+
+		// Create the Layers
+		// =================
+		this.layer = []
+		this.layer.back = new MathLib.Layer(this, 'back', 0);
+		this.layer.grid = new MathLib.Layer(this, 'grid', 1);
+		this.layer.axis = new MathLib.Layer(this, 'axis', 2);
+		this.layer.main = new MathLib.Layer(this, 'main', 3);
+
+
+		if (opts.renderer === 'Canvas') {
+			this.layer.main.element.onmouseup      = (evt) => this.onmouseup(evt);
+			this.layer.main.element.onmousedown    = (evt) => this.onmousedown(evt);
+			this.layer.main.element.onmousemove    = (evt) => this.onmousemove(evt);
+			this.layer.main.element.onmousewheel   = (evt) => this.onmousewheel(evt);
+			// For Firefox: [Bug report for the missing onmousewheel method](https://bugzilla.mozilla.org/show_bug.cgi?id=111647)
+			this.layer.main.element.DOMMouseScroll = (evt) => this.onmousewheel(evt); 
+		}
+		else if (opts.renderer === 'SVG') {
+			this.wrapper.onmouseup      = (evt) => this.onmouseup(evt);
+			this.wrapper.onmousedown    = (evt) => this.onmousedown(evt);
+			this.wrapper.onmousemove    = (evt) => this.onmousemove(evt);
+			this.wrapper.onmousewheel   = (evt) => this.onmousewheel(evt);
+			this.wrapper.DOMMouseScroll = (evt) => this.onmousewheel(evt);
+		}
+
+
+
+
+
+
+
+
+		// The canvas renderer
+		// ===================
+		if (opts.renderer === 'Canvas') {
+			this.applyTransformation = canvas.applyTransformation;
+
+			
+			this.draw = function (x, options = {}){
+				var _this = this;
+				if (arguments.length === 0) {
+					var top     = (            - this.translation.y) / this.scale.y,
+							bottom  = (this.height - this.translation.y) / this.scale.y,
+							left    = (            - this.translation.x) / this.scale.x,
+							right   = (this.width  - this.translation.x) / this.scale.x;
+			
+
+					// Clear the canvas
+					this.layer.forEach(function(l){l.ctx.clearRect(left, top, right-left, bottom-top)})
+
+					_this.layer.forEach(function (x){x.draw();})
+				}
+
+
+				else if (x.type === 'circle') {
+					this.circle(x, options);
+				}
+				else if (x.type === 'line') {
+					this.line(x, options);
+				}
+				else if (Array.isArray(x)) {
+					x.forEach(function (y) {_this[y.type](y, options);});
+				}
+			}
+
+
+			this.circle = function (){ canvas.circle.apply(_this.layer.main, arguments);};
+			this.line = function (){ canvas.line.apply(_this.layer.main, arguments);};
+			this.path = function (){ canvas.path.apply(_this.layer.main, arguments);};
+			// Should the pixel method default to the main layer or to the back layer?
+			this.pixel = function (){ canvas.pixel.apply(_this.layer.main, arguments);};
+			this.text = function (){ canvas.text.apply(_this.layer.main, arguments);};
+		}
+
+
+
+		// The SVG renderer
+		// ================
+		else if (opts.renderer === 'SVG') {
+			this.applyTransformation = svg.applyTransformation;
+	 
+			this.draw = function (x, options = {}){
+				var _this = this;
+				if (arguments.length === 0) {
+
+					// Clear the layer
+					this.layer.forEach(function(l){
+						l.ctx.textContent = '';
+					});
+
+					_this.layer.forEach(function (x){x.draw();})
+				}
+
+
+				else if (x.type === 'circle') {
+					this.circle(x, options);
+				}
+				else if (x.type === 'line') {
+					this.line(x, options);
+				}
+				else if (Array.isArray(x)) {
+					x.forEach(function (y) {_this[y.type](y, options);});
+				}
+			}
+
+			this.circle = function (){ svg.circle.apply(_this.layer.main, arguments);};
+			this.line = function (){ svg.line.apply(_this.layer.main, arguments);};
+			this.path = function (){ svg.path.apply(_this.layer.main, arguments);};
+			// Should the pixel method default to the main layer or to the back layer?
+			this.pixel = function (){ svg.pixel.apply(_this.layer.main, arguments);};
+			this.text = function (){ svg.text.apply(_this.layer.main, arguments);};
+
+		}
+
+
+	
+
+
+		this.draw();
+	}
 
 
 // ### Screen.prototype.getEventPoint
@@ -1935,7 +3285,7 @@ MathLib.extendPrototype('screen', 'exitFullscreen', function () {
 //
 // *@param {event}*  
 // *@returns {point}*
-MathLib.extendPrototype('screen', 'getEventPoint', function (evt) {
+getEventPoint(evt) {
   var x, y;
   if (evt.offsetX) {
     x = evt.offsetX;
@@ -1945,149 +3295,59 @@ MathLib.extendPrototype('screen', 'getEventPoint', function (evt) {
     x = evt.layerX;
     y = evt.layerY;
   }
-  return MathLib.point([x, y, 1]);
-});
+  return new MathLib.Point([x, y, 1]);
+}
 
 
-// ### Screen.prototype.getX()
-// Returns the x coordinate of the event.
-//
-// *@param {event}*  
-// *@returns {number}*
-MathLib.extendPrototype('screen', 'getX', function (evt) {
-  var osX;
-  if (evt.offsetX) {
-    osX = evt.offsetX;
-  }
-  else {
-    osX = evt.layerX;
-  }
-  return (osX - this.curTranslateX) / this.curZoomX; 
-});
-
-
-// ### Screen.prototype.getY()
-// Returns the y coordinate of the event.
-//
-// *@param {event}*  
-// *@returns {number}*
-MathLib.extendPrototype('screen', 'getY', function (evt) {
-  var osY;
-  if (evt.offsetY) {
-    osY = evt.offsetY;
-  }
-  else {
-    osY = evt.layerY;
-  }
-  return (osY - this.curTranslateY) / this.curZoomY;
-});
-
-
-// ### Screen.prototype.grid()
-// Draws the grid on the screen
-//
-// *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
-MathLib.extendPrototype('screen', 'grid', function (options) {
-  var angle, type, i, gridOpt;
-
-  // If no options are supplied, use the default options
-  if (arguments.length === 0 || type === true) {
-    gridOpt= {
-      lineColor: this.gridColor,
-      fillColor: 'rgba(255, 255, 255, 0)',
-      layer: 'back',
-      lineWidth: this.gridLineWidth
-    };
-    type = this.gridType;
-    angle = this.gridAngle;
-  }
-  // If the argument is false, remove the grid
-  //else if (type === false) {
-    // TODO: remove the grid
-  //}
-  // Else use the supplied options
-  else if (type !== false) {
-    gridOpt = {
-      lineColor: options.color || this.gridColor,
-      fillColor: 'rgba(255, 255, 255, 0)',
-      layer: 'back',
-      lineWidth: options.lineWidth || this.gridLineWidth
-    };
-    type = options.type || this.gridType;
-    angle = options.angle || this.gridAngle;
-
-    // Remember the options
-    this.girdColor     = gridOpt.lineColor;
-    this.gridLineWidth = gridOpt.lineWidth;
-    this.gridType      = type;
-    this.gridAngle     = angle;
-  }
-
-  if (type === 'cartesian') {
-    for (i = -50; i <= 50; i += this.stepSizeX) {
-      this.line([[i, -50], [i, 50]], gridOpt);
-    }
-    for (i = -50; i <= 50; i += this.stepSizeY) {
-      this.line([[-50, i], [50, i]], gridOpt);
-    }
-  }
-  else if (type === 'polar') {
-    for (i = 0; i < 2*Math.PI; i += angle) {
-      this.line([[0, 0], [50*Math.cos(i), 50*Math.sin(i)]], gridOpt);
-    }
-    for (i = 1; i < 60; i += 1) {
-      this.circle(MathLib.circle([0, 0, 1], i), gridOpt);
-    }
-  }
-
-  return this;
-});
-
-
-// ### Screen.prototype.lineEndPoint()
+// ### Screen2D.prototype.getineEndPoint()
 // Calculates the both endpoints for the line
 // for drawing purposes
 //
 // *@param {line|array}*  
 // *@returns {array}* The array has the format [[x1, y1], [x2, y2]]
-MathLib.extendPrototype('screen', 'lineEndPoints', function (l) {
+getLineEndPoints (l) {
   if (l.type === 'line') {
-    var right = -(l[2] + l[0]* 50) / l[1],
-        up    = -(l[2] + l[1]* 50) / l[0],
-        left  = -(l[2] + l[0]*-50) / l[1],
-        down  = -(l[2] + l[1]*-50) / l[0],
+    var 
+        top    = (            - this.translation.y) / this.scale.y,
+        bottom = (this.height - this.translation.y) / this.scale.y,
+        left   = (            - this.translation.x) / this.scale.x,
+        right  = (this.width  - this.translation.x) / this.scale.x,
+        lineRight  = -(l[2] + l[0]* right)  / l[1],
+        lineTop    = -(l[2] + l[1]* top)    / l[0],
+        lineLeft   = -(l[2] + l[0]* left)   / l[1],
+        lineBottom = -(l[2] + l[1]* bottom) / l[0],
         res = [];
 
-    if (right<50 && right>-50) {
-      res.push([50, right]);
+    if (lineRight<top && lineRight>bottom) {
+      res.push([right, lineRight]);
     }
-    if (left<50 && left>-50) {
-      res.push([-50, left]);
+    if (lineLeft<top && lineLeft>bottom) {
+      res.push([left, lineLeft]);
     }
-    if (up<50 && up>-50) {
-      res.push([up, 50]);
+    if (lineTop<right && lineTop>left) {
+      res.push([lineTop, top]);
     }
-    if (down<50 && down>-50) {
-      res.push([down, -50]);
+    if (lineBottom<right && lineBottom>left) {
+      res.push([lineBottom, bottom]);
     }
     return res;
   }
   else {
     return l;
   }
-});
+}
 
 
 // ### Screen.prototype.onmousedown()
 // Handles the mousedown event
 //
 // *@param {event}*
-MathLib.extendPrototype('screen', 'onmousedown', function (evt) {
+onmousedown(evt) {
   // Only start the action if the left mouse button was clicked
   if (evt.button !== 0) {
     return;
   }
+
 
   if (evt.preventDefault) {
     evt.preventDefault();
@@ -2096,28 +3356,19 @@ MathLib.extendPrototype('screen', 'onmousedown', function (evt) {
   evt.returnValue = false;
 
   // Pan mode
-  // Pan anyway when drag is disabled and the user clicked on an element 
-  if(evt.target.tagName === 'canvas' || evt.target.tagName === 'svg' || !this.drag) {
-    this.interaction = 'pan';
-    this.startPoint = this.getEventPoint(evt);
-    this.startTransformation = this.curTransformation.copy();
+  if(this.interaction.allowPan) {
+    this.interaction.type = 'pan'
+    this.interaction.startPoint = this.getEventPoint(evt);
+    this.interaction.startTransformation = this.transformation.copy();
   }
-
-  // Drag mode
-  // else {
-  //   this.interaction = 'drag';
-  //   this.stateTarget = evt.target;
-  //   this.stateTf = g.getCTM().inverse();
-  //   this.stateOrigin = this.getEventPoint(evt).matrixTransform(this.stateTf);
-  // }
-});
+}
 
 
 // ### Screen.prototype.onmousemove()
 // Handles the mousemove event
 //
 // *@param {event}*
-MathLib.extendPrototype('screen', 'onmousemove', function (evt) {
+onmousemove(evt) {
   var p;
 
   if (evt.preventDefault) {
@@ -2128,27 +3379,20 @@ MathLib.extendPrototype('screen', 'onmousemove', function (evt) {
   
 
   // Pan mode
-  if(this.interaction === 'pan' && this.pan) {
-    p = this.getEventPoint(evt).minus(this.startPoint);
-    this.curTranslateX = this.startTransformation[0][2] + p[0];
-    this.curTranslateY = this.startTransformation[1][2] + p[1];
-    this.redraw();
+  if(this.interaction.type === 'pan') {
+    p = this.getEventPoint(evt).minus(this.interaction.startPoint);
+    this.translation.x = this.interaction.startTransformation[0][2] + p[0];
+    this.translation.y = this.interaction.startTransformation[1][2] + p[1];
+    this.draw();
   }
-
-  // Drag mode
-  // else if(this.state === 'drag' && this.drag) {
-  //   p = this.getEventPoint(evt).matrixTransform(g.getCTM().inverse());
-  //   this.setCTM(this.stateTarget, this.element.createSVGMatrix().translate(p.x - this.stateOrigin.x, p.y - this.stateOrigin.y).multiply(g.getCTM().inverse()).multiply(this.stateTarget.getCTM()));
-  //   this.stateOrigin = p;
-  // }
-});
+}
 
 
 // ### Screen.prototype.onmouseup()
 // Handles the mouseup event
 //
 // *@param {event}*
-MathLib.extendPrototype('screen', 'onmouseup', function (evt) {
+onmouseup(evt) {
   if (evt.preventDefault) {
     evt.preventDefault();
   }
@@ -2156,973 +3400,363 @@ MathLib.extendPrototype('screen', 'onmouseup', function (evt) {
   evt.returnValue = false;
 
   // Go back to normal mode
-  if(this.interaction === 'pan' || this.interaction === 'drag') {
-    this.interaction = '';
+  if(this.interaction.type === 'pan') {
+    delete this.interaction.type;
+    delete this.interaction.startPoint;
+    delete this.interaction.startTransformation;
   }
 
-});
+}
 
 
 // ### Screen.prototype.onmousewheel()
 // Handles the mousewheel event
 //
 // *@param {event}*
-MathLib.extendPrototype('screen', 'onmousewheel', function (evt) {
-  var delta, k, p, z;
+onmousewheel(evt) {
+	var delta, s, p, z;
 
-  if (!this.zoom) {
-    return;
+	if (this.interaction.allowZoom) {
+
+		if (evt.preventDefault) {
+			evt.preventDefault();
+		}
+		evt.returnValue = false;
+
+
+		// Chrome/Safari
+		if (evt.wheelDelta) {
+			delta = evt.wheelDelta / 360;
+		}
+		// Firefox
+		else {
+			delta = evt.detail / -9;
+		}
+
+		// The amount of zoom is determined by the zoom speed
+		// and the amount how much the scrollwheel has been moved
+		z = Math.pow(1 + this.interaction.zoomSpeed, delta);
+
+
+
+		// Transform the (computer-)screen coordinates of the mouse to the internal coordinates
+		p = this.transformation.inverse().times(this.getEventPoint(evt));
+
+
+		// Compute new scale matrix in current mouse position
+		s = new MathLib.Matrix([[z, 0, p[0] - p[0]*z], [0, z, p[1] - p[1]*z ], [0, 0, 1]]);
+
+		this.transformation = this.transformation.times(s);
+
+
+		this.applyTransformation();
+		this.draw();
+
+	}
+}
+
+
+}
+
+
+
+// ## <a id="Screen3D"></a>Screen3D
+// Two dimensional plotting
+
+export class Screen3D extends Screen {
+ 
+  scene: any;
+
+  constructor (id: string, options) {
+    super(id, options)
+    var defaults = {
+          anaglyphMode: false,
+          axis: true,
+          background: 0xffffff,
+          camera: {
+            lookAt: [0, 0, 0],
+            position: [10, 10, 10]
+          },
+          controls: 'Trackball',
+          height: 500,
+          renderer: 'WebGL',
+          width: 500
+        },
+        opts = extendObject(defaults, options),
+        scene = new THREE.Scene(),
+        camera, renderer, controls,
+        // keyboard = new THREEx.KeyboardState(),
+        clock = new THREE.Clock();
+        
+
+
+    // Camera
+    // ======
+    var viewAngle = 45,
+        aspect = opts.width / opts.height,
+        near = 0.1,
+        far = 20000;
+
+    camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
+    camera.position = to3js(opts.camera.position);
+    camera.lookAt(to3js(opts.camera.lookAt));
+    camera.up = new THREE.Vector3(0, 0, 1);
+    scene.add(camera);
+
+    
+
+    // Renderer
+    // ========
+    renderer = new THREE[opts.renderer + 'Renderer']( {antialias:true, preserveDrawingBuffer: true} );
+    this.wrapper.appendChild(renderer.domElement);
+
+
+    // Storing the the original renderer to recover it easily when leaving anaglyph mode
+    var origRenderer = renderer;
+
+    // Overwrite the renderer with the anaglyph mode renderer
+    if (opts.anaglyphMode) {
+      renderer = new THREE.AnaglyphEffect(renderer);
+    }
+
+    renderer.setSize(opts.width, opts.height);
+
+
+
+    // Controls
+    // ========
+
+    // Other possible values are: 'FirstPerson', 'Fly', 'Orbit', 'Path', 'Roll', 'Trackback' or false
+    // MathLib defaults to the TrackballControls
+    // move mouse and left   click (or hold 'A') to rotate
+    //                middle click (or hold 'S') to zoom
+    //                right  click (or hold 'D') to pan
+    if(opts.controls) {
+      controls = new THREE[opts.controls+'Controls'](camera, renderer.domElement);
+    }
+    // A update function for the controls doing nothing.
+    // The function is called in the update function.
+    else {
+      controls = {
+        update: function (){}
+      };
+    }
+    
+
+
+
+
+    // Light
+    // =====
+    var light1 = new THREE.PointLight(0xffffff);
+    light1.position.set(0,0,200);
+    scene.add(light1);
+    var light2 = new THREE.PointLight(0xffffff);
+    light2.position.set(0,0,-200);
+    scene.add(light2);
+
+
+
+    // Background
+    // ==========
+    renderer.setClearColorHex(opts.background, 1);
+    renderer.clear();
+
+
+
+
+
+    // Axis
+    // ====
+    if (opts.axis) {
+      var axis = new THREE.AxisHelper();
+      scene.add(axis);
+    }
+
+
+
+    // Animate the scene
+    // =================
+    function animate() {
+      requestAnimationFrame(animate);
+      render();
+      update();
+    }
+
+    function update() {
+      var delta = clock.getDelta();
+      controls.update();
+
+//      if (opts.autoRotation) {
+//        phi += 0.003;
+//        camera.position.x = 20*Math.cos(phi);
+//        camera.position.y = 20*Math.sin(phi);
+//      }
+
+    }
+
+    // Render the scene
+    function render() {
+      renderer.render(scene, camera);
+    }
+
+
+    // kick of the animation loop
+    animate();
+
+
+
+    // screen3D = Object.create(screen3DProto, {
+    //   container: {writable:false, configurable:false, value: screen.container},
+    //   figure: {writable:false, configurable:false, value: screen.figure},
+    //   scene: {writable:false, configurable:false, value: scene}
+    // });
+
+
+
+    this.scene = scene;
+
+
   }
 
-  if (evt.preventDefault) {
-    evt.preventDefault();
-  }
 
-  evt.returnValue = false;
-
-  // Chrome/Safari
-  if (evt.wheelDelta) {
-    delta = evt.wheelDelta / 360;
-  }
-  // Firefox
-  else {
-    delta = evt.detail / -9;
-  }
-
-  z = Math.pow(1 + this.zoomSpeed, delta);
-  p = this.curTransformation.inverse().times(this.getEventPoint(evt));
-
-  // Compute new scale matrix in current mouse position
-  k = MathLib.matrix([[z, 0, p[0] - p[0]*z], [0, z, p[1] - p[1]*z ], [0, 0, 1]]);
-
-  this.curTransformation = this.curTransformation.times(k);
-  this.redraw();
-
-  if (typeof this.startTransformation === "undefined") {
-    this.startTransformation = this.curTransformation.inverse();
-  }
-
-  this.startTransformation = this.startTransformation.times(k.inverse());
-});
-
-
-
-// ## <a id="Canvas"></a>Canvas
-// The module for drawing plots on a canvas.
-// A new canvas can be initialised by the following code:
-// ```
-// MathLib.canvas('canvasId')
-// ```
-prototypes.canvas = MathLib.screen();
-MathLib.canvas = function (canvasId) {
-  var canvas = MathLib.screen(canvasId);
-  canvas[proto] = prototypes.canvas;
-  Object.defineProperty(canvas, 'drawingStack', {value: []});
-
-  // Wrapper
-  var wrapperDiv = document.createElement('div');
-  wrapperDiv.style.setProperty('width', '100%');
-  wrapperDiv.style.setProperty('height', '100%');
-  wrapperDiv.style.setProperty('position', 'relative');
-  canvas.element.parentNode.insertBefore(wrapperDiv, canvas.element.wrapperDiv);
-  
-  // The back layer
-  var backLayer = document.createElement('canvas');
-  backLayer.setAttribute('width', canvas.width + 'px');
-  backLayer.setAttribute('height', canvas.height + 'px');
-  backLayer.classList.add('MathLib-backLayer');
-  backLayer.classList.add('MathLib-canvas');
-  canvas.backLayer = {
-    ctx: backLayer.getContext('2d'),
-    element: backLayer
-  };
-  wrapperDiv.appendChild(backLayer);
-
-  // The main layer
-  canvas.mainLayer = {
-    ctx: document.getElementById(canvasId).getContext('2d'),
-    element: document.getElementById(canvasId)
-  };
-  wrapperDiv.appendChild(canvas.mainLayer.element);
-
-  // The front layer
-  var frontLayer = document.createElement('canvas');
-  frontLayer.setAttribute('width', canvas.width + 'px');
-  frontLayer.setAttribute('height', canvas.height + 'px');
-  frontLayer.classList.add('MathLib-frontLayer');
-  frontLayer.classList.add('MathLib-canvas');
-  canvas.frontLayer = {
-    ctx: frontLayer.getContext('2d'),
-    element: frontLayer
-  };
-  wrapperDiv.appendChild(frontLayer);
-
-
-  var layers = [canvas.mainLayer, canvas.backLayer, canvas.frontLayer];
-  
-
-  layers.forEach(function (l) {
-    // Transform the canvases
-    l.ctx.save();
-    l.ctx.transform(canvas.curZoomX, 0, 0, canvas.curZoomY, canvas.curTranslateX, canvas.curTranslateY);
-
-    // Placing the layers on top of each other
-    l.element.style.setProperty('position', 'absolute');
-    l.element.style.setProperty('left', '0px');
-    l.element.style.setProperty('top', '0px');
-  });
-
-
-
-  // Chrome tries desperately to select some text
-  canvas.frontLayer.element.onselectstart = function(){ return false; };
-  canvas.frontLayer.element.onmousedown = function (evt) {
-    canvas.onmousedown(evt);
-  };
-  canvas.frontLayer.element.oncontextmenu = function (evt) {
-    canvas.oncontextmenu(evt);
-  };
-  canvas.frontLayer.element.onmousemove = function (evt) {
-    canvas.onmousemove(evt);
-  };
-  canvas.frontLayer.element.onmouseup = function (evt) {
-    canvas.onmouseup(evt);
-  };
-  if('onmousewheel' in canvas.frontLayer.element) {
-    canvas.frontLayer.element.onmousewheel = function (evt) {
-       canvas.onmousewheel(evt);
-    };
-  }
-  else {  // Firefox names it a bit different
-    canvas.frontLayer.element.DOMMouseScroll = function (evt) {
-       canvas.onmousewheel(evt);
-    };
-  }
-
-
-  return canvas;
-};
-
-
-// ### Canvas.prototype.applyTransformation
-// Applies the current transformation
+// ### Matrix.parametricPlot3D()
+// 
 //
-// *@returns {canvas}* Returns the canvas
-MathLib.extendPrototype('canvas', 'applyTransformation', function () {
-  this.clearLayer('back', 'main', 'front');
-  var m = this.curTransformation;
-  this.backLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
-  this.mainLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
-  this.frontLayer.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+// *@param {function}* The function which is called on every argument  
+// *@returns {screen3D}*
+parametricPlot3D(f, options) {
 
-  return this;
-});
-
-
-// ### Canvas.prototype.circle
-// Draws a circle on the screen.
-//
-// *@param {canvas}* The canvas to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@returns {canvas}* Returns the canvas
-MathLib.extendPrototype('canvas', 'circle', function (circle, userOpt) {
-  var defaultOpt = {
-        fillColor:  'rgba(0, 0, 255, 0.05)',
-        lineColor:  'rgba(0, 0, 255, 1)',
-        lineWidth:  0.05,
-        dash:       [],
-        dashOffset: 0
+  var defaults = {
+        closed: false,
+        debug: false,
+        min: 0,
+        max: 1,
+        pointNum: 1000,
+        radius: 0.05,
+        segmentsRadius: 6,
+        material: {
+          type: 'MeshLambert'
+        }
       },
-      ctx, prop, opt;
-      userOpt = userOpt || {};
-
-  // Determine the layer to draw onto
-  if('layer' in userOpt) {
-    ctx = this[userOpt.layer + 'Layer'].ctx;
-  }
-  else {
-    ctx = this.mainLayer.ctx;
-  }
-
-  // Determine the drawing options
-  if (userOpt.redraw) {
-    opt = userOpt;
-  }
-  else {
-    opt = this.normalizeOptions(defaultOpt, userOpt);
-  }
-
-  // Set the drawing options
-  for (prop in opt) {
-    if (opt.hasOwnProperty(prop)) {
-      ctx[prop] = opt[prop];
-    }
-  }
-
-  // Draw the line
-  ctx.beginPath();
-  ctx.arc(circle.center[0], circle.center[1], circle.radius, 0, 2*Math.PI);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-
-  // Push the circle onto the drawing Stack
-  if (ctx === this.mainLayer.ctx && !opt.redraw) {
-    opt.redraw = true;
-    this.drawingStack.push({
-      object: circle,
-      options: opt,
-      type: 'circle'
-    });
-  }
-
-  return this;
-});
+      opts = extendObject(defaults, options),
 
 
-// ### Canvas.prototype.clearLayer
-// Clears the specified layer completely
-//
-// *@param {string}* The layer to be cleared ('back', 'main', 'front')  
-// *@returns {canvas}* Returns the canvas
-MathLib.extendPrototype('canvas', 'clearLayer', function () {
-  var canvas = this,
-      p1 = this.curTransformation.inverse().times(MathLib.point(this.element.width, 0)),
-      p2 = this.curTransformation.inverse().times(MathLib.point(0, this.element.height));
-  Array.prototype.forEach.call(arguments, function (layer) {
-    canvas[layer + 'Layer'].ctx.clearRect(p1[0], p1[1], p2[0]-p1[0], p2[1]-p1[1]);
-  });
-  return this;
-});
+      curve = THREE.Curve.create(
+        function() {},
+        function(t) {
+          t = (opts.max - opts.min) * t + opts.min;
+          var res = f(t);
+          return new THREE.Vector3(res[0], res[1], res[2]);
+        }
+      ),
+    
+
+      mesh = new THREE.Mesh(
+        new THREE.TubeGeometry(new curve(), opts.pointNum, opts.radius, opts.segmentsRadius, opts.closed, opts.debug),
+        new THREE[opts.material.type + 'Material'](opts.material)
+      );
 
 
-// ### Canvas.prototype.line
-// Draws a line on the screen.
-//
-// *@param {line}* The line to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@returns {canvas}* Returns the canvas
-MathLib.extendPrototype('canvas', 'line', function (line, userOpt) {
-  var defaultOpt = {
-        fillColor:  'rgba(0, 0, 0, 0)',
-        lineColor:  'rgba(0, 0, 0, 1)',
-        lineWidth:  0.05,
-        dash:       [],
-        dashOffset: 0
-      },
-      points  = this.lineEndPoints(line),
-      ctx, prop, opt;
-      userOpt = userOpt || {};
-
-  // Determine the layer to draw onto
-  if('layer' in userOpt) {
-    ctx = this[userOpt.layer + 'Layer'].ctx;
-  }
-  else {
-    ctx = this.mainLayer.ctx;
-  }
-
-  // Determine the drawing options
-  if (userOpt.redraw) {
-    opt = userOpt;
-  }
-  else {
-    opt = this.normalizeOptions(defaultOpt, userOpt);
-  }
-
-  // Set the drawing options
-  for (prop in opt) {
-    if (opt.hasOwnProperty(prop)) {
-      ctx[prop] = opt[prop];
-    }
-  }
-
-  // Draw the line
-  ctx.beginPath();
-  ctx.moveTo(points[0][0], points[0][1]);
-  ctx.lineTo(points[1][0], points[1][1]);
-  ctx.stroke();
-  ctx.closePath();
-
-  // Push the line onto the drawing Stack
-  if (ctx === this.mainLayer.ctx && !opt.redraw) {
-    opt.redraw = true;
-    this.drawingStack.push({
-      object: line,
-      options: opt,
-      type: 'line'
-    });
-  }
-
-  return this;
-});
+  this.scene.add(mesh);
 
 
-// ### Canvas.prototype.normalizeOptions
-// Converts the options to the internal format
-//
-// *@param {object}* default options  
-// *@param {object}* user options  
-// *@returns {object}* the normalized options
-MathLib.extendPrototype('canvas', 'normalizeOptions', function (defaultOpt, userOpt) {
-  return {
-    fillStyle:            userOpt.fillColor  || userOpt.color          || defaultOpt.fillColor || defaultOpt.color,
-    lineWidth:            userOpt.lineWidth  || defaultOpt.lineWidth, 
-    font:                 userOpt.font       || defaultOpt.font,
-    fontSize:             userOpt.fontSize   || defaultOpt.fontSize,
-    size:                 userOpt.size       || defaultOpt.size,
-    mozDash:              userOpt.dash       || defaultOpt.dash,   
-    mozDashOffset:        userOpt.dashOffset || defaultOpt.dashOffset, 
-    strokeStyle:          userOpt.lineColor  || userOpt.color          || defaultOpt.lineColor || defaultOpt.color,
-    webkitLineDash:       userOpt.dash       || defaultOpt.dash,   
-    webkitLineDashOffset: userOpt.dashOffset || defaultOpt.dashOffset
-  };
-});
-
-
-// ### Canvas.prototype.oncontextmenu()
-// Handles the contextmenu event
-//
-// *@param {event}*
-MathLib.extendPrototype('canvas', 'oncontextmenu', function (evt) {
-  this.contextmenu(evt);
-});
-
-
-// ### Canvas.prototype.path
-// Draws a path on the screen.
-//
-// *@param {path}* The path to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@returns {canvas}* Returns the canvas
-MathLib.extendPrototype('canvas', 'path', function (path, userOpt) {
-  var defaultOpt = {
-        fillColor:  'rgba(0, 0, 0, 0)',
-        lineColor:  'rgba(0, 0, 255, 1)',
-        lineWidth:  0.05,
-        dash:       [],
-        dashOffset: 0
-      },
-      ctx, prop, opt;
-      userOpt = userOpt || {};
-
-  // Determine the layer to draw onto
-  if('layer' in userOpt) {
-    ctx = this[userOpt.layer + 'Layer'].ctx;
-  }
-  else {
-    ctx = this.mainLayer.ctx;
-  }
-
-  // Determine the drawing options
-  if (userOpt.redraw) {
-    opt = userOpt;
-  }
-  else {
-    opt = this.normalizeOptions(defaultOpt, userOpt);
-  }
-
-  // Set the drawing options
-  for (prop in opt) {
-    if (opt.hasOwnProperty(prop)) {
-      ctx[prop] = opt[prop];
-    }
-  }
-
-  // Draw the path
-  ctx.beginPath();
-  ctx.moveTo(path[0][0], path[0][1]);
-  path.forEach(function (x) {
-    ctx.lineTo(x[0], x[1]);
-  });
-  ctx.stroke();
-  ctx.closePath();
-
-  // Push the path onto the drawing Stack
-  if (ctx === this.mainLayer.ctx && !opt.redraw) {
-    opt.redraw = true;
-    this.drawingStack.push({
-      object: path,
-      options: opt,
-      type: 'path'
-    });
-  }
-
-  return this;
-});
-
-
-// ### Canvas.prototype.point
-// Draws a point on the screen.
-//
-// *@param {point}* The point to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@returns {canvas}* Returns the canvas
-MathLib.extendPrototype('canvas', 'point', function (point, userOpt) {
-  var defaultOpt = {
-        fillColor:  'rgba(0, 0, 0, 1)',
-        lineColor:  'rgba(0, 0, 0, 1)',
-        lineWidth:  0.05,
-        dash:       [],
-        dashOffset: 0
-      },
-      ctx, prop, opt;
-      userOpt = userOpt || {};
-
-  // Determine the layer to draw onto
-  if('layer' in userOpt) {
-    ctx = this[userOpt.layer + 'Layer'].ctx;
-  }
-  else {
-    ctx = this.mainLayer.ctx;
-  }
-
-  // Determine the drawing options
-  if (userOpt.redraw) {
-    opt = userOpt;
-  }
-  else {
-    opt = this.normalizeOptions(defaultOpt, userOpt);
-  }
-
-  // Set the drawing options
-  for (prop in opt) {
-    if (opt.hasOwnProperty(prop)) {
-      ctx[prop] = opt[prop];
-    }
-  }
-
-  // Draw the path
-  ctx.beginPath();
-  ctx.arc(point[0]/point[2], point[1]/point[2], 0.05, 0, 2*Math.PI);
-  ctx.closePath();
-  ctx.stroke();
-  ctx.fill();
-
-  // Push the point onto the drawing Stack
-  if (ctx === this.mainLayer.ctx && !opt.redraw) {
-    opt.redraw = true;
-    this.drawingStack.push({
-      object: point,
-      options: opt,
-      type: 'point'
-    });
-  }
-
-  return this;
-});
-
-
-// ### Canvas.prototype.redraw()
-// Redraws the canvas
-//
-// *@returns {canvas}* Returns the canvas
-MathLib.extendPrototype('canvas', 'redraw', function () {
-  var canvas = this;
-
-  this.clearLayer('back', 'main', 'front');
-
-  // redraw the background
-  this.grid();
-  this.axis();
-
-  // redraw the main layer
-  this.drawingStack.forEach(function(x, i) {
-    canvas[x.type](x.object, x.options); 
-  });
-
-  return this;
-});
-
-
-// ### Canvas.prototype.resetView
-// Resets the view to the default values.
-//
-// *@returns {canvas}* Returns the canvas
-MathLib.extendPrototype('canvas', 'resetView', function () {
-  this.curTransformation = this.origTransformation;
-  this.redraw();
-  return this;
-});
-
-
-// ### Canvas.prototype.resize()
-// Resizes the canvas
-//
-// *@param {number}* The new width in px.  
-// *@param {number}* The new height in px.  
-// *@returns {canvas}* Returns the canvas
-MathLib.extendPrototype('canvas', 'resize', function (x, y) {
-  [this.backLayer, this.mainLayer, this.frontLayer].forEach(function (l) {
-    l.element.setAttribute('width',   x + 'px');
-    l.element.setAttribute('height',  y + 'px');
-  });
-  return this;
-});
-
-
-// ### Canvas.prototype.text
-// Writes text on the screen.
-//
-// *@param {str}* The string to be drawn  
-// *@param {x}* The x coordinate  
-// *@param {y}* The y coordinate  
-// *@param {object}* [options] Optional drawing options  
-// *@returns {canvas}* Returns the canvas
-MathLib.extendPrototype('canvas', 'text', function (str, x, y, userOpt) {
-  var defaultOpt = {
-        font:       'Helvetica',
-        fontSize:   '16px',
-        fillColor:  'rgba(0, 0, 0, 1)',
-        lineColor:  'rgba(0, 0, 0, 1)',
-        lineWidth:  0.05,
-        dash:       [],
-        dashOffset: 0,
-        size:       0.4
-      },
-      ctx, prop, opt;
-      userOpt = userOpt || {};
-
-  // Determine the layer to draw onto
-  if('layer' in userOpt) {
-    ctx = this[userOpt.layer + 'Layer'].ctx;
-  }
-  else {
-    ctx = this.mainLayer.ctx;
-  }
-
-  // Determine the drawing options
-  if (userOpt.redraw) {
-    opt = userOpt;
-  }
-  else {
-    opt = this.normalizeOptions(defaultOpt, userOpt);
-  }
-
-  // Set the drawing options
-  for (prop in opt) {
-    if (opt.hasOwnProperty(prop)) {
-      ctx[prop] = opt[prop];
-    }
-  }
-
-  ctx.font = opt.fontSize + ' ' + opt.font;
-
-  // Draw the text
-  ctx.save();
-  ctx.transform(1 / this.origZoomX,  0, 0, 1 / this.origZoomY, 0, 0);
-  ctx.fillText(str, x * this.origZoomX, -y * this.origZoomY);
-  ctx.restore();
-
-  // Push the text onto the drawing Stack
-  if (ctx === this.mainLayer.ctx && !opt.redraw) {
-    opt.redraw = true;
-    this.drawingStack.push({
-      object: str,
-      options: opt,
-      type: 'text'
-    });
-  }
-
-  return this;
-});
-
-
-// ## <a id="SVG"></a>SVG
-// The module for drawing plots on SVG elements.
-// A new MathLib svg element can be initialised by the following code:
-// ```
-// MathLib.svg('svgId')
-// ```
-
-prototypes.svg = MathLib.screen();
-MathLib.svg = function (svgId) {
-  var svgElement = document.getElementById(svgId),
-      svg = MathLib.screen(svgId);
-
-  svg[proto] = prototypes.svg;
-
-  var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  ctx.setAttributeNS(null, 'transform', 'matrix(' + svg.curZoomX + ',0, 0,' + svg.curZoomY + ', ' + svg.width/2 + ', ' + svg.height/2 + ')');
-  svgElement.appendChild(ctx);
-  svg.ctx = ctx;
-
-  var backLayer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  backLayer.className.baseVal += ' MathLib-backLayer ';
-  ctx.appendChild(backLayer);
-  svg.backLayer = {
-    element: backLayer
-  };
-
-  var mainLayer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  mainLayer.className.baseVal += ' MathLib-mainLayer ';
-  ctx.appendChild(mainLayer);
-  svg.mainLayer = {
-    element: mainLayer
-  };
-
-  var frontLayer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  frontLayer.className.baseVal += ' MathLib-frontLayer ';
-  ctx.appendChild(frontLayer);
-  svg.frontLayer = {
-    element: frontLayer
+  /*
+  guiObj = {
+    color: [mesh.material.color.r, mesh.material.color.g, mesh.material.color.b]
   };
 
 
-  // Chrome tries desperately to select some text
-  svgElement.onselectstart = function(){ return false; };
-  svgElement.onmousedown = function (evt) {
-    svg.onmousedown(evt);
-  };
-  svgElement.oncontextmenu = function (evt) {
-    svg.oncontextmenu(evt);
-  };
-  svgElement.onmousemove = function (evt) {
-    svg.onmousemove(evt);
-  };
-  svgElement.onmouseup = function (evt) {
-    svg.onmouseup(evt);
-  };
-  if('onmousewheel' in svgElement) {
-    svgElement.onmousewheel = function (evt) {
-       svg.onmousewheel(evt);
-    };
-  }
-  else {  // Firefox names it a bit different
-    svgElement.DOMMouseScroll = function (evt) {
-       svg.onmousewheel(evt);
-    };
-  }
+  var folder = _3D.datGUI.addFolder(options.name);
+  folder.add(mesh, 'visible');
+  folder.addColor(guiObj, 'color')
+    .onChange(function(value){mesh.material.color.setRGB(value[0]/255, value[1]/255, value[2]/255);});
+  */
 
-  return svg;
-};
-
-
-// ### SVG.prototype.applyTransformation
-// Applies the current transformation
-//
-// *@returns {svg}* Returns the svg element
-MathLib.extendPrototype('svg', 'applyTransformation', function () {
-  var m = this.curTransformation;
-  this.ctx.setAttribute('transform', 'matrix(' + m[0][0] + ',' + m[1][0] + ',' + m[0][1] + ',' + m[1][1] + ',' + m[0][2] + ',' + m[1][2] + ')');
   return this;
-});
+}
 
 
-// ### SVG.prototype.circle
-// Draws a circle on the screen.
+// ### Screen3D.prototype.plot3D()
 //
-// *@param {circle}* The circle to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@returns {svg}* Returns the svg element
-MathLib.extendPrototype('svg', 'circle', function (circle, userOpt) {
-  var svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle'),
-      defaultOpt = {
-        fillColor: 'rgba(0, 0, 255, 0.05)',
-        lineColor: 'rgba(0, 0, 255, 1)',
-        lineWidth: '0.05'
+//
+// *@param {function}* The map for the height  
+// *@param {object}* Options  
+// *@returns {screen3D}*
+plot3D(f, options) {
+  return this.surfacePlot3D(function (u, v){
+    return [u,v,f(u,v)];
+  },
+  options);
+}
+
+
+// ### screen3D.prototype.surfacePlot()
+//
+//
+// *@param {function}* The map for the surface    
+// *@param {object}* Options  
+// *@returns {screen3D}*
+surfacePlot3D(f, options) {
+  var defaults = {
+        material: {
+          type: 'MeshLambert'
+        },
+        pointNumX: 100,
+        pointNumY: 100,
+        xmin: 0,
+        xmax: 1,
+        ymin: 0,
+        ymax: 1
       },
-      layer, prop, opt;
-      userOpt = userOpt || {};
-
-  // Determine the layer to draw onto
-  if('layer' in userOpt) {
-    layer = this[userOpt.layer + 'Layer'];
-  }
-  else {
-    layer = this.mainLayer;
-  }
-
-  opt = this.normalizeOptions(defaultOpt, userOpt);
-
-  // Set the drawing options
-  for (prop in opt) {
-    if (opt.hasOwnProperty(prop)) {
-      svgCircle.setAttributeNS(null, prop, opt[prop]);
-    }
-  }
-
-  // Set the geometry
-  svgCircle.setAttributeNS(null, 'cx', circle.center[0] / circle.center[2]);
-  svgCircle.setAttributeNS(null, 'cy', circle.center[1] / circle.center[2]);
-  svgCircle.setAttributeNS(null, 'r',  circle.radius);
-
-  // Draw the circle
-  layer.element.appendChild(svgCircle);
-
-  return this;
-});
-
-
-// ### SVG.prototype.clearLayer
-// Clears the specified layer completely
-//
-// *@param {string}* The layer to be cleared ('back', 'main', 'front')  
-// *@returns {svg}* Returns the svg element
-MathLib.extendPrototype('svg', 'clearLayer', function () {
-  var svg = this;
-  Array.prototype.forEach.call(arguments, function (layer) {
-    layer = svg[layer + 'Layer'].element;
-    while (layer.hasChildNodes()) {
-      layer.removeChild(layer.firstChild);
-    }
-  });
-  return this;
-});
-
-
-// ### SVG.prototype.line
-// Draws a line on the screen.
-//
-// *@param {line}* The line to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@returns {svg}* Returns the svg element
-MathLib.extendPrototype('svg', 'line', function (line, userOpt) {
-  var svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line'),
-      points  = this.lineEndPoints(line),
-      defaultOpt = {
-        lineColor: 'rgba(0, 0, 0, 1)',
-        lineWidth: '0.05'
+      opts = extendObject(defaults, options),
+      map = function (u, v) {
+        u = (opts.xmax - opts.xmin) * u + opts.xmin;
+        v = (opts.ymax - opts.ymin) * v + opts.ymin;
+        var res = f(u, v);
+        return new THREE.Vector3(res[0], res[1], res[2]);
       },
-      layer, prop, opt;
-      userOpt = userOpt || {};
+      mesh = new THREE.Mesh(
+        new THREE.ParametricGeometry(map, opts.pointNumX, opts.pointNumY, false),
+        new THREE[opts.material.type + 'Material'](opts.material)
+      );
 
-  // Determine the layer to draw onto
-  if('layer' in userOpt) {
-    layer = this[userOpt.layer + 'Layer'];
-  }
-  else {
-    layer = this.mainLayer;
-  }
-
-  // Determine the drawing options
-  opt = this.normalizeOptions(defaultOpt, userOpt);
-
-  // Set the drawing options
-  for (prop in opt) {
-    if (opt.hasOwnProperty(prop)) {
-      svgLine.setAttributeNS(null, prop, opt[prop]);
-    }
-  }
-
-  // Set the geometry
-  svgLine.setAttributeNS(null, 'x1', points[0][0]);
-  svgLine.setAttributeNS(null, 'y1', points[0][1]);
-  svgLine.setAttributeNS(null, 'x2', points[1][0]);
-  svgLine.setAttributeNS(null, 'y2', points[1][1]);
-
-  // Draw the line
-  layer.element.appendChild(svgLine);
-
-  return this;
-});
+  mesh.doubleSided = true;
+  this.scene.add(mesh);
 
 
-// ### SVG.prototype.normalizeOptions
-// Converts the options to the internal format
-//
-// *@param {object}* default options  
-// *@param {object}* user options  
-// *@returns {object}* the normalized options
-MathLib.extendPrototype('svg', 'normalizeOptions', function (defaultOpt, userOpt) {
-  return {
-    fill:                userOpt.fillColor  || userOpt.color          || defaultOpt.fillColor || defaultOpt.color,
-    'font-family':       userOpt.font       || defaultOpt.font,
-    'font-size':         userOpt.fontSize   || defaultOpt.fontSize,
-    size:                userOpt.size       || defaultOpt.size,
-    stroke:              userOpt.lineColor  || userOpt.color          || defaultOpt.lineColor || defaultOpt.color,
-    'stroke-dasharray':  userOpt.dash       || defaultOpt.dash,
-    'stroke-dashoffset': userOpt.dashOffset || defaultOpt.dashOffset,
-    'stroke-width':      userOpt.lineWidth  || defaultOpt.lineWidth
-  };
-});
+
+  // if (options.datGUI) {
+  //   guiObj = {
+  //     color: [mesh.material.color.r, mesh.material.color.g, mesh.material.color.b]
+  //   };
+
+  //   var folder = _3D.datGUI.addFolder(options.datGUI.name);
+  //   if (options.datGUI.visible) {
+  //     folder.add(mesh, 'visible');
+  //   }
+
+  //   if (options.datGUI.wireframe) {
+  //     folder.add(mesh.material, 'wireframe');
+  //   }
 
 
-// ### SVG.prototype.oncontextmenu()
-// Handles the contextmenu event
-//
-// *@param {event}*
-MathLib.extendPrototype('svg', 'oncontextmenu', function (evt) {
-  this.contextmenu(evt);
-});
+  //   if (options.datGUI.color) {
+  //     color = mesh.material.color.getHex();
+  //     var guiObj = {
+  //       color: color
+  //     };
 
-
-// ### SVG.prototype.path
-// Draws a path on the screen.
-//
-// *@param {path}* The path to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@returns {svg}* Returns the svg element
-MathLib.extendPrototype('svg', 'path', function (path, userOpt) {
-  var svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
-      pathString = 'M' + path.reduce(function(prev, cur) {
-        return prev + ' L' + cur.join(' ');
-      }),
-      defaultOpt = {
-        fillColor: 'rgba(255, 255, 255, 0)',
-        lineColor: 'rgba(0, 0, 255, 1)',
-        lineWidth: '0.05'
-      },
-      layer, prop, opt;
-      userOpt = userOpt || {};
-
-  // Determine the layer to draw onto
-  if('layer' in userOpt) {
-    layer = this[userOpt.layer + 'Layer'];
-  }
-  else {
-    layer = this.mainLayer;
-  }
-
-  // Determine the drawing options
-  opt = this.normalizeOptions(defaultOpt, userOpt);
-
-  // Set the drawing options
-  for (prop in opt) {
-    if (opt.hasOwnProperty(prop)) {
-      svgPath.setAttributeNS(null, prop, opt[prop]);
-    }
-  }
-
-  // Set the geometry
-  svgPath.setAttributeNS(null, 'd', pathString);
-
-  // Draw the path
-  layer.element.appendChild(svgPath);
+  //     folder.addColor(guiObj, 'color').name('color')
+  //       .onChange(function(value){mesh.material.color = new THREE.Color(value);});
+  //   }
+  // }
 
   return this;
-});
+}
 
 
-// ### SVG.prototype.point
-// Draws a point on the screen.
-//
-// *@param {point}* The point to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@returns {svg}* Returns the svg element
-MathLib.extendPrototype('svg', 'point', function (point, userOpt) {
-  var svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle'),
-      defaultOpt = {
-        fillColor: 'rgba(0, 0, 0, 1)',
-        lineColor: 'rgba(0, 0, 0, 1)',
-        lineWidth: '0.05'
-      },
-      layer, prop, opt;
-      userOpt = userOpt || {};
-
-  // Determine the layer to draw onto
-  if('layer' in userOpt) {
-    layer = this[userOpt.layer + 'Layer'];
-  }
-  else {
-    layer = this.mainLayer;
-  }
-
-  // Determine the drawing options
-  opt = this.normalizeOptions(defaultOpt, userOpt);
-
-  // Set the drawing options
-  for (prop in opt) {
-    if (opt.hasOwnProperty(prop)) {
-      svgPoint.setAttributeNS(null, prop, opt[prop]);
-    }
-  }
-
-  // Set the geometry
-  svgPoint.setAttributeNS(null, 'cx', point[0]/point[2]);
-  svgPoint.setAttributeNS(null, 'cy', point[1]/point[2]);
-  svgPoint.setAttributeNS(null, 'r',  0.1);
-
-  // Draw the path
-  layer.element.appendChild(svgPoint);
-
-  return this;
-});
-
-
-// ### SVG.prototype.redraw
-// This method is necessary because we want to generalize
-// some methods and canvas needs the redraw method.
-//
-// *@returns {svg}* Returns the svg element
-MathLib.extendPrototype('svg', 'redraw', function () {
-  return this;
-});
-
-
-// ### SVG.prototype.resetView
-// Resets the view to the default values.
-//
-// *@returns {svg}* Returns the svg element
-MathLib.extendPrototype('svg', 'resetView', function () {
-  this.ctx.setAttribute('transform', 'matrix(' + this.origZoomX + ', 0, 0, ' + this.origZoomY + ', ' + this.origTranslateX + ', ' + this.origTranslateY + ')');
-  return this;
-});
-
-
-// ### SVG.prototype.resize()
-// Resizes the SVG element
-//
-// *@param {number}* The new width in px.  
-// *@param {number}* The new height in px.  
-// *@returns {svg}* Returns the svg element
-MathLib.extendPrototype('svg', 'resize', function (x, y) {
-  this.element.setAttribute('width', x + 'px');
-  this.element.setAttribute('height', y + 'px');
-  return this;
-});
-
-
-// ### SVG.prototype.text
-// Writes text on the screen.
-//
-// *@param {str}* The string to be drawn  
-// *@param {x}* The x coordinate  
-// *@param {y}* The y coordinate  
-// *@param {object}* [options] Optional drawing options  
-// *@returns {svg}* Returns the svg element
-MathLib.extendPrototype('svg', 'text', function (str, x, y, userOpt) {
-  var svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
-      defaultOpt = {
-        font:      'Helvetica',
-        fontSize:  '16px',
-        lineColor: 'rgba(0, 0, 0, 1)',
-        lineWidth: 0.05
-      },
-      layer, prop, opt, size;
-      userOpt = userOpt || {};
-
-  // Determine the layer to draw onto
-  if('layer' in userOpt) {
-    layer = this[userOpt.layer + 'Layer'];
-  }
-  else {
-    layer = this.mainLayer;
-  }
-
-  // Determine the drawing options
-  opt = this.normalizeOptions(defaultOpt, userOpt);
-
-  size = 1 / (3*parseFloat(opt['font-size']));
-
-  // Set the drawing options
-  for (prop in opt) {
-    if (opt.hasOwnProperty(prop) && prop !== 'size') {
-      svgText.setAttributeNS(null, prop, opt[prop]);
-    }
-  }
-  svgText.setAttributeNS(null, 'transform',  'scale(' + size + ', -' + size + ')');
-
-  // Set the geometry
-  svgText.textContent = str;
-  svgText.setAttributeNS(null, 'x', 1 / size * x);
-  svgText.setAttributeNS(null, 'y', 1 / size * y);
-
-  // Draw the line
-  layer.element.appendChild(svgText);
-
-  return this;
-});
+}
 
 
 
@@ -3141,6 +3775,8 @@ MathLib.extendPrototype('svg', 'text', function (str, x, y, userOpt) {
 export class Vector {
   type = 'vector';
 
+  length: number;
+
   constructor(coords: number[]) {
   	coords.forEach((x,i)=>{this[i] = x;});
   	this.length = coords.length;
@@ -3150,8 +3786,8 @@ export class Vector {
 // ### Vector.prototype.conjugate()
 // Calculates the conjugate of a vector
 //
-// *@returns {vector}*
-conjugate() {
+// *@returns {Vector}*
+conjugate() : Vector {
   return new MathLib.Vector(this.map(MathLib.conjugate));
 }
 
@@ -3160,16 +3796,15 @@ conjugate() {
 // Works like Array.prototype.every.
 //
 // *@returns {boolean}*
-every(f) {
+every(f : (value : any, index : number, vector : Vector ) => bool) : bool {
   return Array.prototype.every.call(this, f);
 }
 
 
-// ### Vector.prototype.map()
-// Works like Array.prototype.map.
+// ### Vector.prototype.forEach()
+// Works like Array.prototype.forEach.
 //
-// *@returns {vector}*
-forEach(f) {
+forEach(f : (value : any, index : number, vector : Vector ) => void) : void {
   Array.prototype.forEach.call(this, f);
 }
 
@@ -3177,9 +3812,9 @@ forEach(f) {
 // ### Vector.prototype.isEqual()
 // Determines if two vectors are equal
 //
-// *@param {vector}* v The vector to compare  
+// *@param {Vector}* v The vector to compare  
 // *@returns {boolean}*
-isEqual(v) {
+isEqual(v : Vector) : bool {
   if(this.length !== v.length) {
     return false;
   }
@@ -3194,16 +3829,17 @@ isEqual(v) {
 // Determines if the vector is the zero vector.
 //
 // *@returns {boolean}*
-isZero(v) {
+isZero() : bool {
   return this.every(MathLib.isZero);
 }
 
 
-// ### Vector.prototype.map()
+	// ### Vector.prototype.map()
 // Works like Array.prototype.map.
 //
-// *@returns {vector}*
-map(f) {
+// *@param {function}*
+// *@returns {Vector}*
+map(f : (value : any, index : number, vector : Vector ) => any) : any {
   return new this.constructor(Array.prototype.map.call(this, f));
 }
 
@@ -3211,18 +3847,18 @@ map(f) {
 // ### Vector.prototype.minus()
 // Calculates the difference of two vectors
 //
-// *@param {vector}* The vector to be subtracted.  
-// *@returns {vector}*
-minus(m) {
-  return this.plus(m.negative());
+// *@param {Vector}* The vector to be subtracted.  
+// *@returns {Vector}*
+minus(v : Vector) {
+  return this.plus(v.negative());
 }
 
 
 // ### Vector.prototype.negative()
 // Returns the negative vector
 //
-// *@returns {vector}*
-negative() {
+// *@returns {Vector}*
+negative() : Vector {
   return this.map(MathLib.negative);
 }
 
@@ -3231,7 +3867,7 @@ negative() {
 // Normalizes the vector to have length one
 //
 // *@returns {vector}*
-normalize() {
+normalize() : Vector {
   return this.times(1 / this.size());
 }
 
@@ -3239,9 +3875,9 @@ normalize() {
 // ### Vector.prototype.outerProduct()
 // Calculates the outer product of two vectors.
 //
-// *@param {vector}*  
-// *@returns {matrix}*
-outerProduct(v) {
+// *@param {Vector}*  
+// *@returns {Matrix}*
+outerProduct(v : Vector) : Matrix {
   return new MathLib.Matrix(this.map(function (x) {
     return v.map(function (y) {
       return MathLib.times(x, y);
@@ -3253,9 +3889,9 @@ outerProduct(v) {
 // ### Vector.prototype.plus()
 // Calculates the sum of two vectors
 //
-// *@param {vector}*  
-// *@returns {vector}*
-plus(v) {
+// *@param {Vector}*  
+// *@returns {Vector}*
+plus(v : Vector) : Vector {
   if (this.length === v.length) {
     return new MathLib.Vector(this.map(function (x, i) {
       return MathLib.plus(x, v[i]);
@@ -3268,8 +3904,8 @@ plus(v) {
 // Works like Array.prototype.reduce.
 //
 // *@returns {any}*
-reduce() {
-  return Array.prototype.reduce.apply(this, arguments);
+reduce(...args : any[]) : any {
+  return Array.prototype.reduce.apply(this, args);
 }
 
 
@@ -3278,7 +3914,7 @@ reduce() {
 //
 // *@param {vector}*  
 // *@returns {number|complex}*
-scalarProduct(v) {
+scalarProduct(v : Vector) : any {
   return this.reduce(function (old, cur, i, w) {
     return MathLib.plus(old, MathLib.times(w[i], v[i]));
   }, 0);
@@ -3290,8 +3926,17 @@ scalarProduct(v) {
 // Named size, as length is already used by JavaScript.
 //
 // *@returns {number}*
-size() {
-  return MathLib.hypot.apply(null, this);
+size() : number {
+  return MathLib.hypot.apply(null, this.toArray());
+}
+
+
+// ### Vector.prototype.slice()
+// Works like the Array.prototype.slice function
+//
+// *@returns {array}*
+slice(...args : any[]) : any[] {
+  return Array.prototype.slice.apply(this, args);
 }
 
 
@@ -3303,7 +3948,7 @@ size() {
 //
 // *@param {number|complex|matrix}*  
 // *@returns {vector}*
-times(n) {
+times(n : any) : any {
   var res = [], i, ii;
   if (typeof n === "number" || n.type === "complex") {
     return this.map(function (x) {
@@ -3324,7 +3969,7 @@ times(n) {
 // Converts the vector to an Array
 //
 // *@returns {array}*
-toArray() {
+toArray() : any[] {
   return Array.prototype.slice.call(this);
 }
 
@@ -3333,7 +3978,7 @@ toArray() {
 // Returns the content MathML representation of the vector
 //
 // *@returns {string}*
-toContentMathMLString() {
+toContentMathMLString() : string {
   return this.reduce(function (old, cur) {
     return old + MathLib.toContentMathMLString(cur);
   }, '<vector>') + '</vector>';
@@ -3344,7 +3989,7 @@ toContentMathMLString() {
 // Returns a LaTeX representation of the vector
 //
 // *@returns {string}*
-toLaTeX() {
+toLaTeX() : string {
   return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
     return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
   }) + '\n\\end{pmatrix}';
@@ -3355,7 +4000,7 @@ toLaTeX() {
 // Returns the (presentation) MathML representation of the vector
 //
 // *@returns {string}*
-toMathMLString() {
+toMathMLString() : string {
   return this.reduce(function (old, cur) {
     return old + '<mtr><mtd>' + MathLib.toMathMLString(cur) + '</mtd></mtr>';
   }, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
@@ -3366,7 +4011,7 @@ toMathMLString() {
 // Returns a string representation of the vector
 //
 // *@returns {string}*
-toString() {
+toString() : string {
   return '(' + this.reduce(function (old, cur) {
     return old + ', ' + MathLib.toString(cur);
   }) + ')';
@@ -3376,9 +4021,9 @@ toString() {
 // ### Vector.prototype.vectorproduct()
 // Calculates the vectorproduct of two vectors
 //
-// *@param {vector}*  
-// *@returns {vector}*
-vectorproduct(v) {
+// *@param {Vector}*  
+// *@returns {Vector}*
+vectorproduct(v : Vector) : Vector {
   var res = [];
   /* TODO: Extend vectorproduct for non three-dimensional vectors */
   if (this.length === 3 && v.length === 3) {
@@ -3394,8 +4039,8 @@ vectorproduct(v) {
 // Returns a zero vector of given size
 //
 // *@param {number}* The number of entries in the vector.  
-// *@returns {vector}*
-static zero = function(n) {
+// *@returns {Vector}*
+static zero = function (n : number) : Vector {
   var res = [], i;
   for (i=0; i<n; i++) {
     res.push(0); 
@@ -3425,7 +4070,10 @@ export class Circle {
     
   type = 'circle';
 
-  constructor(center: Point, radius: number) {
+  center: Point;
+  radius: number;
+
+  constructor(center: any, radius: number) {
 
   	if (center.type === undefined) {
     	center = new MathLib.Point(center.concat(1));
@@ -3441,7 +4089,7 @@ export class Circle {
 // Calculates the area of the circle.
 //
 // *@param {number}* The area of the circle
-	area() {
+	area() : number {
   	return this.radius * this.radius * Math.PI;
 	}
 
@@ -3450,7 +4098,7 @@ export class Circle {
 // Calculates the circumference of the circle.
 //
 // *@param {number}* The circumference of the circle
-circumference() {
+circumference() : number {
   return 2 * this.radius * Math.PI;
 }
 
@@ -3479,7 +4127,7 @@ draw(screen, options) {
 // Checks if two circles are equal
 //
 // *@return {boolean}*
-isEqual(c: Circle) {
+isEqual(c: Circle) : bool {
   return MathLib.isEqual(this.radius, c.radius)  && this.center.isEqual(c.center);
 }
 
@@ -3488,7 +4136,7 @@ isEqual(c: Circle) {
 // Determine if a point is in, on or outside a circle.
 //
 // *@return {string}*
-positionOf(p) {
+positionOf(p) : string {
 	var diff;
   if (p.type === 'point' && p.dim === 2) {
     diff = p.distanceTo(this.center) - this.radius;
@@ -3508,8 +4156,8 @@ positionOf(p) {
 // ### Circle.prototype.reflectAt()
 // Reflect the circle at a point or line
 //
-// *@return {circle}*
-reflectAt(a) {
+// *@return {Circle}*
+reflectAt(a) : Circle {
   return new MathLib.Circle(this.center.reflectAt(a), this.radius);
 }
 
@@ -3518,7 +4166,7 @@ reflectAt(a) {
 // Returns a LaTeX expression of the circle
 //
 // *@return {string}* 
-toLaTeX() {
+toLaTeX() : string {
   return 'B_{' + MathLib.toLaTeX(this.radius) + '}\\left(' + this.center.toLaTeX() + '\\right)';
 }
 
@@ -3526,8 +4174,8 @@ toLaTeX() {
 // ### Circle.prototype.toMatrix()
 // Converts the circle to the corresponding matrix.
 //
-// *@return {matrix}* 
-toMatrix() {
+// *@return {Matrix}* 
+toMatrix() : Matrix {
   var x = this.center[0] / this.center[2],
       y = this.center[1] / this.center[2],
       r = this.radius;
@@ -3557,7 +4205,13 @@ export class Complex {
 
   type = 'complex';
 
-  constructor(public re: number, public im: number) {}
+  re: number;
+  im: number;
+
+  constructor(re: number, im: number) {
+  	this.re = re;
+  	this.im = im;
+  }
 
 
 // Returns the absolute value of the number
@@ -3950,6 +4604,8 @@ static zero = new Complex(0, 0);
 export class Line extends Vector {
   type = 'line';
 
+  dim: number;
+
   constructor(coords: number[]) {
 		super(coords);
 		this.dim = 2;
@@ -3981,7 +4637,7 @@ draw(screen, options) {
 //
 // *@param {line}*  
 // *@returns {boolean}*
-isEqual(q) {
+isEqual(q : Line) : bool {
   var p = this.normalize();
       q = q.normalize();
 
@@ -3999,7 +4655,7 @@ isEqual(q) {
 // Determines if the line is finite
 //
 // *@returns {boolean}*
-isFinite(q) {
+isFinite() : bool {
   return !MathLib.isZero(this[this.length - 1]);
 }
 
@@ -4009,7 +4665,7 @@ isFinite(q) {
 //
 // *@param {line}*  
 // *@returns {boolean}*
-isOrthogonalTo(l) {
+isOrthogonalTo(l : Line) : Line {
   return MathLib.isEqual(
     new MathLib.Point([0,0,1]).crossRatio(
       this.meet(new MathLib.Line([0,0,1])),
@@ -4025,7 +4681,7 @@ isOrthogonalTo(l) {
 //
 // *@param {line}*  
 // *@returns {boolean}*
-isParallelTo(l) {
+isParallelTo(l : Line) : bool {
   return this.every(function (x, i) {
     return MathLib.isEqual(x, l[i]) || i === l.length - 1;
   });
@@ -4037,7 +4693,7 @@ isParallelTo(l) {
 //
 // *@param {line}*  
 // *@returns {point}*
-meet(l) {
+meet(l : Line) : Point{
   return new MathLib.Point([this[1]*l[2]-this[2]*l[1], l[0]*this[2]-this[0]*l[2], this[0]*l[1]-this[1]*l[0]]);
 }
 
@@ -4047,7 +4703,7 @@ meet(l) {
 // (Making the last component 1)
 //
 // *@returns {line}*
-normalize(q) {
+normalize() : Line {
   var last = this[this.dim];
   return this.map(function (x) {
     return x / last;
@@ -4076,6 +4732,11 @@ normalize(q) {
 export class Matrix {
   type = 'matrix';
 
+  length: number;
+  cols: number;
+  rows: number;
+  LUpermutation: Permutation;
+
   constructor(matrix) {
     if (typeof matrix === 'string') {
       // If there is a < in the string we assume it's MathML
@@ -4100,8 +4761,8 @@ export class Matrix {
 // ### Matrix.prototype.adjoint()
 // Calculates the adjoint matrix
 //
-// *@returns {matrix}*
-adjoint(n) {
+// *@returns {Matrix}*
+adjoint() : Matrix {
   return this.map(MathLib.conjugate).transpose();
 }
 
@@ -4109,8 +4770,8 @@ adjoint(n) {
 // ### Matrix.prototype.adjugate()
 // Calculates the adjugate matrix
 //
-// *@returns {matrix}*
-adjugate(n) {
+// *@returns {Matrix}*
+adjugate() : Matrix {
   return this.map(function (x, r, c, m) {
     return MathLib.times(m.remove(c, r).determinant(), 1 - ((r+c)%2) * 2);
   });
@@ -4123,35 +4784,35 @@ adjugate(n) {
 // Does not change the current matrix, but returns a new one.
 // The result is cached.
 //
-// *@returns {matrix}*
-cholesky() {
-  var r, rr, cholesky = [], k, kk, sum, c;
+// *@returns {Matrix}*
+cholesky() : Matrix {
+  var r, rr, temp = [], k, kk, sum, c, cholesky;
 
   for (r = 0, rr = this.rows; r < rr; r++) {
-    cholesky.push([]);
+    temp.push([]);
   }
 
   for (r = 0, rr = this.rows; r < rr; r++) {
     for (c=0; c<r; c++) {
       sum = 0;
       for (k = 0, kk = c; k < kk; k++) {
-        sum = MathLib.plus(sum, MathLib.times(cholesky[r][k], cholesky[c][k]));
+        sum = MathLib.plus(sum, MathLib.times(temp[r][k], temp[c][k]));
       }
-      cholesky[r][c] = (this[r][c] - sum)/cholesky[c][c];
+      temp[r][c] = (this[r][c] - sum)/temp[c][c];
     }
 
     sum = 0;
     for (k = 0, kk = c; k < kk; k++) {
-      sum = MathLib.plus(sum, MathLib.times(cholesky[r][k], cholesky[r][k]));
+      sum = MathLib.plus(sum, MathLib.times(temp[r][k], temp[r][k]));
     }
-    cholesky[r][c] = Math.sqrt(this[c][c] - sum);
+    temp[r][c] = Math.sqrt(this[c][c] - sum);
 
     for (c++; c < this.cols; c++) {
-      cholesky[r][c] = 0;
+      temp[r][c] = 0;
     }
 
   }
-  cholesky = new MathLib.Matrix(cholesky);
+  cholesky = new MathLib.Matrix(temp);
 
   this.cholesky = function () {
     return cholesky;
@@ -4163,8 +4824,8 @@ cholesky() {
 // ### Matrix.prototype.copy()
 // Copies the matrix
 //
-// *@returns {matrix}*
-copy() {
+// *@returns {Matrix}*
+copy() : Matrix {
   return this.map(MathLib.copy);
 }
 
@@ -4174,7 +4835,7 @@ copy() {
 // The result is cached.
 //
 // *@returns {number|complex}*
-determinant() {
+determinant() : any {
   if (this.isSquare()) {
     var arr, determinant;
     if(this.rank() < this.rows) {
@@ -4197,7 +4858,7 @@ determinant() {
 // Returns the entries on the diagonal in an array
 //
 // *@returns {array}*
-diag() {
+diag() : any[] {
   var arr = [], i, ii;
   for (i = 0, ii = Math.min(this.rows, this.cols); i<ii; i++) {
     arr.push(this[i][i]);
@@ -4209,8 +4870,8 @@ diag() {
 // ### Matrix.prototype.divide()
 // Multiplies the matrix by the inverse of a number or a matrix
 //
-// *@returns {matrix}*
-divide(n) {
+// *@returns {Matrix}*
+divide(n : any) : Matrix {
   return this.times(MathLib.inverse(n));
 }
 
@@ -4699,7 +5360,7 @@ isZero() {
 // The result is cached.
 //
 // *@returns {matrix}*
-LU(dontSwapPivot) {
+LU(dontSwapPivot? : bool) {
   var i, j, k, t, p,
       LU = this.toArray(),
       m = this.rows,
@@ -4812,7 +5473,7 @@ static numbers = function(n, r, c) {
     help.push(n);
   }
   for (i = 0, ii = r || 1; i < ii ; i++) {
-    res.push(help.slice());
+    res.push(help.slice(0));
   }
   return new MathLib.Matrix(res);
 };
@@ -4901,8 +5562,8 @@ rank() {
 // This function works like the Array.prototype.reduce function.
 //
 // *@returns {any}*
-reduce() {
-	return Array.prototype.reduce.apply(this, arguments);
+reduce(...args : any[]) {
+	return Array.prototype.reduce.apply(this, args);
 }
 
 
@@ -4993,16 +5654,8 @@ rref() {
 // This function works like the Array.prototype.slice function.
 //
 // *@returns {array}*
-slice(f) {
-	return Array.prototype.slice.apply(this, arguments);
-//  var m = this;
-//  return new MathLib.Matrix(
-//    Array.prototype.map.call(this, function (x, i) {
-//      return Array.prototype.map.call(x, function (y, j) {
-//        return f(y, i, j, m);
-//      });
-//    })
-//  );
+slice(...args : any[]) {
+	return Array.prototype.slice.apply(this, args);
 }
 
 
@@ -5222,9 +5875,10 @@ trace() {
 // Calculating the transpose of the matrix
 // The result is cached.
 //
-// *@returns {matrix}*
-transpose() {
-  var transpose = [],
+// *@returns {Matrix}*
+transpose() : Matrix {
+  var temp = [],
+      transpose,
       help,
       i, j, ii, jj;
 
@@ -5233,10 +5887,10 @@ transpose() {
     for (j = 0, jj = this.rows; j<jj; j++) {
       help.push(this[j][i]);
     }
-    transpose.push(help);
+    temp.push(help);
   }
 
-  transpose = new MathLib.Matrix(transpose);
+  transpose = new MathLib.Matrix(temp);
   this.transpose = function () {
     return transpose;
   };
@@ -5267,7 +5921,13 @@ export class Permutation {
 
   type = 'permutation';
 
+  length: number;
+  cycle: any[];
+
+
   constructor(p) {
+    var cycle, permutation;
+    
     if (Array.isArray(p[0])) {
       cycle = p;
       permutation = Permutation.cycleToList(cycle);
@@ -5289,7 +5949,7 @@ export class Permutation {
 //
 // *@param {number|array|matrix|point|vector}*  
 // *@returns {number|array|matrix|point|vector}*
-applyTo(n) {
+applyTo(n : any) : any {
   var p, res;
   if (typeof n === 'number') {
     if (n >= this.length) {
@@ -5313,7 +5973,7 @@ applyTo(n) {
 // 
 // *@param{array}* cycle The cycle to be converted  
 // *@returns {array}*
-static cycleToList(cycle) {
+static cycleToList(cycle : any) : number[] {
   var index, res = [],
       cur, i, ii, j, jj, max;
 
@@ -5347,8 +6007,8 @@ static id = new Permutation([[]]);
 // Calculates the inverse of the permutation
 //
 // *@returns {permutation}*
-inverse() {
-  var cycle = this.cycle.slice();
+inverse() : Permutation {
+  var cycle = this.cycle.slice(0);
   cycle.reverse().forEach(function (e) {
     e.reverse();
   });
@@ -5361,7 +6021,7 @@ inverse() {
 // 
 // *@param{array}* list The list to be converted  
 // *@returns {array}*
-static listToCycle(list) {
+static listToCycle(list : number[]) : any {
   var finished = [],
       cur, i, ii, temp, res = [];
 
@@ -5385,8 +6045,8 @@ static listToCycle(list) {
 // Works like Array.prototype.map.
 //
 // *@returns {permutation}*
-map() {
-  return new this.constructor(Array.prototype.map.apply(this, arguments));
+map(...args: any[]) {
+  return new this.constructor(Array.prototype.map.apply(this, args));
 }
 
 
@@ -5394,7 +6054,7 @@ map() {
 // Calculates the signum of the permutation
 //
 // *@returns {number}*
-sgn() {
+sgn() : number {
   var count = 0, i;
   for (i = 0; i < this.cycle.length; i++) {
     count += this.cycle[i].length;
@@ -5408,7 +6068,7 @@ sgn() {
 // Multiplies two permutations
 //
 // *@returns {permutation}*
-times(p) {
+times(p : Permutation) : Permutation {
   var a = this;
   return p.map(function (x) {
     return a[x];
@@ -5421,7 +6081,7 @@ times(p) {
 //
 // *@param{number}* [size] The size of the matrix  
 // *@returns {matrix}*
-toMatrix(n) {
+toMatrix(n : number) : Matrix {
   var arr = [],
       res = [],
       temp, i, ii;
@@ -5443,7 +6103,7 @@ toMatrix(n) {
 // String representation of the permutation. 
 //
 // *@returns {string}*
-toString() {
+toString() : string {
   var str = '';
   this.cycle.forEach(function (elem) {
     str += '(' + elem.toString() + ')';
@@ -5471,15 +6131,11 @@ toString() {
 
 export class Point extends Vector {
 
-
+	dim: number;
  
   constructor(coords: number[]) {
-    if (arguments.length > 1) {
-      coords = Array.prototype.slice.call(arguments);
-      coords.push(1);
-    }
+    super(arguments.length > 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
 
-    super(coords);
     this.dim = 2;
     this.type = 'point';
 
@@ -5495,12 +6151,16 @@ export class Point extends Vector {
 // *@param {point}* c The point C  
 // *@param {point}* d The point D  
 // *@returns {number}*
-crossRatio(a, b, c, d) {
+crossRatio(m : Point, n : Point, o : Point, p : Point) : number {
   var x  = this.toArray(),
-      m1 = new MathLib.Matrix([x,a,c]),
-      m2 = new MathLib.Matrix([x,b,d]),
-      m3 = new MathLib.Matrix([x,a,d]),
-      m4 = new MathLib.Matrix([x,b,c]);
+		  a = m.toArray(),
+		  b = n.toArray(),
+		  c = o.toArray(),
+		  d = p.toArray(),
+		  m1 = new MathLib.Matrix([x, a, c]),
+		  m2 = new MathLib.Matrix([x, b, d]),
+		  m3 = new MathLib.Matrix([x, a, d]),
+		  m4 = new MathLib.Matrix([x, b, c]);
 
   return (m1.det() * m2.det()) / (m3.det() * m4.det());
 }
@@ -5512,7 +6172,7 @@ crossRatio(a, b, c, d) {
 //
 // *@param {point}* [point] The point to calculate the distance to  
 // *@returns {number}*
-distanceTo(point) {
+distanceTo(point : Point) : number {
   var res = 0,
       i;
 
@@ -5566,9 +6226,9 @@ static I = new Point([new MathLib.Complex(0, -1), 0, 1]);
 //
 // *@param {point}* The point to compare
 // *@returns {boolean}*
-isEqual(q) {
+isEqual(q : Point) : bool {
   var p = this.normalize();
-      q = q.normalize();
+  q = q.normalize();
 
   if(this.length !== q.length) {
     return false;
@@ -5584,7 +6244,7 @@ isEqual(q) {
 // Determines if the point is finite
 //
 // *@returns {boolean}*
-isFinite(q) {
+isFinite() : bool {
   return !MathLib.isZero(this[this.length - 1]);
 }
 
@@ -5594,7 +6254,7 @@ isFinite(q) {
 //
 // *@param {circle}*
 // *@returns {boolean}*
-isInside(a) {
+isInside(a : Circle) : bool {
   if (a.type === 'circle') {
     return this.distanceTo(a.center) < a.radius;
   }
@@ -5606,7 +6266,7 @@ isInside(a) {
 //
 // *@param {line|point}*
 // *@returns {boolean}*
-isOn(a) {
+isOn(a : Circle) : bool {
   if (a.type === 'line') {
     return this.distanceTo(a.center) === a.radius;
   }
@@ -5621,7 +6281,7 @@ isOn(a) {
 //
 // *@param {circle}*
 // *@returns {boolean}*
-isOutside(a) {
+isOutside(a : Circle) : bool {
   if (a.type === 'circle') {
     return this.distanceTo(a.center) > a.radius;
   }
@@ -5640,7 +6300,7 @@ static J = new Point([new MathLib.Complex(0, 1), 0, 1]);
 //
 // *@param {point}* The point to calculate the line to
 // *@returns {line}*
-lineTo(q) {
+lineTo(q : Point) : Line {
   if (this.dim === 2 && q.dim === 2) {
     return new MathLib.Line(this, q);
   }
@@ -5652,7 +6312,7 @@ lineTo(q) {
 // (Making the last component 1)
 //
 // *@returns {point}*
-normalize(q) {
+normalize() : Point {
   var last = this[this.dim];
   return this.map(function (x) {
     return x / last;
@@ -5664,7 +6324,7 @@ normalize(q) {
 // Reflects the point at an other point
 //
 // *@returns {point}*
-reflectAt(a) {
+reflectAt(a : Point) : Point {
   if (a.type === 'point') {
     if (this.dim === a.dim) {
       var arr = [], i,
@@ -5680,20 +6340,11 @@ reflectAt(a) {
 }
 
 
-// ### Point.prototype.slice()
-// Works like the Array.prototype.slice function
-//
-// *@returns {array}*
-slice() {
-  return Array.prototype.slice.apply(this, arguments);
-}
-
-
 // ### Point.prototype.toArray()
 // Converts he Point to a real array
 //
 // *@returns {array}*
-toArray() {
+toArray() : any[] {
   var res = [], i, ii;
   for (i = 0, ii=this.dim; i <= ii; i++) {
     res.push(this[i]);
@@ -5706,7 +6357,7 @@ toArray() {
 // Converts a two dimensional point to the corresponding complex number.
 //
 // *@returns {complex}*
-toComplex() {
+toComplex() : Complex {
   if (this.dim === 2) {
     return new MathLib.Complex(this[0]/this[2], this[1]/this[2]);
   }
@@ -5726,8 +6377,8 @@ toComplex() {
 //
 // *@returns {boolean}* Optional parameter to indicate if the output should be projective.
 // *@returns {string}*
-toLaTeX(opt) {
-  var p = opt ? this : this.normalize().slice(0, -1);
+toLaTeX(opt = false) : string {
+  var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
   return '\\begin{pmatrix}' + p.reduce(function (old, cur) {
     return old + '\\\\' + MathLib.toLaTeX(cur);
@@ -5740,8 +6391,8 @@ toLaTeX(opt) {
 //
 // *@returns {boolean}* Optional parameter to indicate if the output should be projective.
 // *@returns {string}*
-toMathMLString(opt) {
-  var p = opt ? this : this.normalize().slice(0, -1);
+toMathMLString(opt = false) : string {
+  var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
   return p.reduce(function (old, cur) {
     return old + '<mtr><mtd>' + MathLib.toMathMLString(cur) + '</mtd></mtr>';
@@ -5754,8 +6405,8 @@ toMathMLString(opt) {
 //
 // *@returns {boolean}* Optional parameter to indicate if the output should be projective.
 // *@returns {string}*
-toString(opt) {
-  var p = opt ? this : this.normalize().slice(0, -1);
+toString(opt = false) : string {
+  var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
   return '(' + p.reduce(function (old, cur) {
     return old + ', ' + MathLib.toString(cur);
@@ -5783,10 +6434,15 @@ toString(opt) {
 // ```
 
 
+//declare var Polynomial : any;
 
 export class Polynomial {
 
   type = 'polynomial';
+
+  deg: number;
+  length: number;
+  subdeg: number;
 
   constructor(polynomial) {
     var temp = [];
@@ -5833,16 +6489,17 @@ content() {
 //
 // *@param {number}* [n] the number of times to differentiate the polynomial.  
 // *@returns {polynomial}*
-differentiate(n) {
+differentiate(n = 1) : Polynomial {
+  var temparr = [],
+    i;
+
   if (n === 0) {
     return this;
   }
   if (n < 0) {
     return this.integrate(-n);
   }
-  var temparr = [],
-      i;
-  n = n || 1;
+
   for (i = 0; i <= this.deg - n; i++) {
     temparr[i] = MathLib.times(this[i + n], MathLib.fallingFactorial(i + n, n));
   }
@@ -5889,6 +6546,15 @@ draw(screen, options) {
 }
 
 
+// ### Polynomial.prototype.every()
+// Works like Array.prototype.every.
+//
+// *@returns {boolean}*
+every(f : (value : any, index : number, vector : Vector ) => bool) : bool {
+  return Array.prototype.every.call(this, f);
+}
+
+
 // ### Polynomial.prototype.forEach()
 // Works like the Array.prototype.forEach function
 //
@@ -5903,10 +6569,9 @@ forEach() {
 //
 // *@param {number}* [n] the number of times to integrate the polynomial.  
 // *@returns {polynomial}*
-integrate(n) {
+integrate(n = 1) : Polynomial {
   var temparr = [],
       i;
-  n = n || 1;
 
   if (MathLib.isZero(n)) {
     return this;
@@ -6361,6 +7026,9 @@ export class Set {
 
   type = 'set';
 
+  length: number;
+  card: number;
+
   constructor(elements) {
 		if (!elements) {
 		  elements = [];
@@ -6381,7 +7049,7 @@ export class Set {
 // Compare function for sets
 //
 // *@returns {number}*
-compare(x) {
+compare(x : any) : number {
   if (this.card !== x.card) {
     return MathLib.sign(this.card - x.card);
   }
@@ -6405,8 +7073,8 @@ compare(x) {
 // Works like the Array.prototype.every function
 //  
 // *@returns {boolean}*
-every() {
-  return Array.prototype.every.apply(this, arguments);
+every(...args : any[]) : bool {
+  return Array.prototype.every.apply(this, args);
 }
 
 
@@ -6414,15 +7082,15 @@ every() {
 // Works like the Array.prototype.filter function
 //
 // *@returns {set}*
-filter() {
-  return new MathLib.Set(Array.prototype.filter.apply(this, arguments));
+filter(...args : any[]) : Set {
+  return new MathLib.Set(Array.prototype.filter.apply(this, args));
 }
 
 
 // ### Set.prototype.forEach()
 // Works like the Array.prototype.forEach function
-forEach() {
-  Array.prototype.forEach.apply(this, arguments);
+forEach(...args : any[]) {
+  Array.prototype.forEach.apply(this, args);
 }
 
 
@@ -6433,9 +7101,8 @@ forEach() {
 // *@param {number}* The number to end with  
 // *@param {number}* The stepsize (default = 1)  
 // *@returns {set}*
-static fromTo = function(f, t, s) {
+static fromTo = function(f : number, t : number, s : number = 1) : Set {
   var i, arr = [];
-  s = s || 1;
   if (f <= t) {
     for (i = f; i <= t; i += s) {
       arr.push(i);
@@ -6449,8 +7116,8 @@ static fromTo = function(f, t, s) {
 // Works like the Array.prototype.indexOf function
 //  
 // *@returns {number}*
-indexOf() {
-  return Array.prototype.indexOf.apply(this, arguments);
+indexOf(...args : any[]) : number {
+  return Array.prototype.indexOf.apply(this, args);
 }
 
 
@@ -6458,7 +7125,7 @@ indexOf() {
 // Inserts an element into the set.
 //
 // *@returns {set}* Returns the current set
-insert(x) {
+insert(x : any) : Set {
   var i = this.locate(x);
   if (this[i] !== x) {
     this.splice(i, 0, x);
@@ -6472,7 +7139,7 @@ insert(x) {
 // Determines if the set is empty.
 //
 // *@returns {boolean}*
-isEmpty() {
+isEmpty() : bool {
   return this.card === 0;
 }
 
@@ -6482,7 +7149,7 @@ isEmpty() {
 //
 // *@param {set}* The set to compare  
 // *@returns {boolean}*
-isEqual(x) {
+isEqual(x : Set) : bool {
   if (this.card !== x.card) {
     return false;
   }
@@ -6499,7 +7166,7 @@ isEqual(x) {
 //
 // *@param {set}* The potential superset  
 // *@returns {boolean}*
-isSubsetOf(a) {
+isSubsetOf(a : Set) : bool {
   return this.every(function (x) {
     return a.indexOf(x) !== -1;
   });
@@ -6511,8 +7178,8 @@ isSubsetOf(a) {
 // array and not the position where one should be inserted.
 //
 // *@param {set}* The element to locate  
-// *@returns {boolean}*
-locate(x) {
+// *@returns {number}*
+locate(x : any) : number {
 
   var left = 0,
       right = this.card - 1,
@@ -6542,12 +7209,12 @@ locate(x) {
 //
 // *@param {function}* The mapping function  
 // *@returns {set}*
-map(f) {
-  return new MathLib.Set(Array.prototype.map.call(this, f));
+map(...args : any[]) : any {
+  return new MathLib.Set(Array.prototype.map.apply(this, args));
 }
 
 
-plus(n) {
+plus(n : any) : any {
   var res = [];
   if (!arguments.length) {
     return MathLib.plus.apply(null, this);
@@ -6573,7 +7240,7 @@ plus(n) {
 // Returns the powerset
 //
 // *@returns {set}*
-powerset(a) {
+powerset() : Set {
   var res = [], arr, temp, i, ii, j, jj;
   for (i=0, ii=Math.pow(2, this.card); i<ii; i++) {
     arr = i.toString(2).split('').reverse();
@@ -6593,7 +7260,7 @@ powerset(a) {
 // Works like the Array.prototype.reduce function
 //  
 // *@returns {any}*
-reduce() {
+reduce(...args : any[]) : any {
   return Array.prototype.reduce.apply(this, arguments);
 }
 
@@ -6602,7 +7269,7 @@ reduce() {
 // Removes a element from a set
 //
 // *@returns {set}*
-remove(a) {
+remove(a : any) : Set {
   var i = this.indexOf(a);
   if (i !== -1) {
     this.splice(i, 1);
@@ -6664,8 +7331,8 @@ xor = Set.createSetOperation(true, false, true);
 // Works like the Array.prototype.slice function
 //
 // *@returns {array}*
-slice() {
-  return Array.prototype.slice.apply(this, arguments);
+slice(...args : any[]) : any {
+  return Array.prototype.slice.apply(this, args);
 }
 
 
@@ -6673,8 +7340,8 @@ slice() {
 // Works like the Array.prototype.splice function
 //
 // *@returns {set}*
-splice() {
-  return Array.prototype.splice.apply(this, arguments);
+splice(...args : any[]) : any {
+  return Array.prototype.splice.apply(this, args);
 }
 
 
@@ -6684,7 +7351,7 @@ splice() {
 //
 // *@param {number|MathLib object}*  
 // *@returns {set}*
-times(n) {
+times(n : any) : any {
   if (!arguments.length) {
     return MathLib.times.apply(null, this);
   }
@@ -6700,7 +7367,7 @@ times(n) {
 // Converts the set to an array
 //
 // *@returns {array}*
-toArray() {
+toArray() : any[] {
   return Array.prototype.slice.call(this);
 }
 
@@ -6709,7 +7376,7 @@ toArray() {
 // Returns the content MathML representation of the set
 //
 // *@returns {string}*
-toContentMathMLString() {
+toContentMathMLString() : string {
   if (this.isEmpty()) {
     return '<emptyset/>';
   }
@@ -6725,7 +7392,7 @@ toContentMathMLString() {
 // Returns the LaTeX representation of the set
 //
 // *@returns {string}*
-toLaTeX() {
+toLaTeX() : string {
   if (this.isEmpty()) {
     return '\\emptyset';
   }
@@ -6741,7 +7408,7 @@ toLaTeX() {
 // Returns the (presentation) MathML representation of the set
 //
 // *@returns {string}*
-toMathMLString() {
+toMathMLString() : string {
   if (this.isEmpty()) {
     return '<mi>&#x2205;</mi>';
   }
@@ -6757,7 +7424,7 @@ toMathMLString() {
 // Returns a string representation of the set
 //
 // *@returns {string}*
-toString() {
+toString() : string {
   if (this.isEmpty()) {
     return '∅';
   }

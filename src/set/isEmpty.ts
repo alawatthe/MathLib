@@ -2,6 +2,6 @@
 // Determines if the set is empty.
 //
 // *@returns {boolean}*
-isEmpty() {
+isEmpty() : bool {
   return this.card === 0;
 }

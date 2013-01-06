@@ -2,7 +2,7 @@
 // Reflects the point at an other point
 //
 // *@returns {point}*
-reflectAt(a) {
+reflectAt(a : Point) : Point {
   if (a.type === 'point') {
     if (this.dim === a.dim) {
       var arr = [], i,

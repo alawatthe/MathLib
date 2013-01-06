@@ -3,10 +3,9 @@
 //
 // *@param {number}* [n] the number of times to integrate the polynomial.  
 // *@returns {polynomial}*
-integrate(n) {
+integrate(n = 1) : Polynomial {
   var temparr = [],
       i;
-  n = n || 1;
 
   if (MathLib.isZero(n)) {
     return this;

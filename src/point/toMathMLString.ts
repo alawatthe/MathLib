@@ -3,8 +3,8 @@
 //
 // *@returns {boolean}* Optional parameter to indicate if the output should be projective.
 // *@returns {string}*
-toMathMLString(opt) {
-  var p = opt ? this : this.normalize().slice(0, -1);
+toMathMLString(opt = false) : string {
+  var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
   return p.reduce(function (old, cur) {
     return old + '<mtr><mtd>' + MathLib.toMathMLString(cur) + '</mtd></mtr>';

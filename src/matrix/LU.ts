@@ -3,7 +3,7 @@
 // The result is cached.
 //
 // *@returns {matrix}*
-LU(dontSwapPivot) {
+LU(dontSwapPivot? : bool) {
   var i, j, k, t, p,
       LU = this.toArray(),
       m = this.rows,

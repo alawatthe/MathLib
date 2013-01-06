@@ -3,7 +3,7 @@
 // (Making the last component 1)
 //
 // *@returns {line}*
-normalize(q) {
+normalize() : Line {
   var last = this[this.dim];
   return this.map(function (x) {
     return x / last;

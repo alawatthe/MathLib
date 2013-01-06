@@ -14,10 +14,15 @@
 // ```
 
 
+//declare var Polynomial : any;
 
 export class Polynomial {
 
   type = 'polynomial';
+
+  deg: number;
+  length: number;
+  subdeg: number;
 
   constructor(polynomial) {
     var temp = [];

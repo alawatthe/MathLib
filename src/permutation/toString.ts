@@ -2,7 +2,7 @@
 // String representation of the permutation. 
 //
 // *@returns {string}*
-toString() {
+toString() : string {
   var str = '';
   this.cycle.forEach(function (elem) {
     str += '(' + elem.toString() + ')';

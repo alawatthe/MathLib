@@ -3,7 +3,7 @@
 //
 // *@param {line|point}*
 // *@returns {boolean}*
-isOn(a) {
+isOn(a : Circle) : bool {
   if (a.type === 'line') {
     return this.distanceTo(a.center) === a.radius;
   }

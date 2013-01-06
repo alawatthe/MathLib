@@ -1,7 +1,6 @@
-// ### Vector.prototype.map()
-// Works like Array.prototype.map.
+// ### Vector.prototype.forEach()
+// Works like Array.prototype.forEach.
 //
-// *@returns {vector}*
-forEach(f) {
+forEach(f : (value : any, index : number, vector : Vector ) => void) : void {
   Array.prototype.forEach.call(this, f);
 }

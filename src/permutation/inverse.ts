@@ -2,8 +2,8 @@
 // Calculates the inverse of the permutation
 //
 // *@returns {permutation}*
-inverse() {
-  var cycle = this.cycle.slice();
+inverse() : Permutation {
+  var cycle = this.cycle.slice(0);
   cycle.reverse().forEach(function (e) {
     e.reverse();
   });

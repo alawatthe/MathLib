@@ -2,7 +2,7 @@
 // Converts the content MathMl to a presentation MathML string
 // 
 // *@return{string}*
-toMathMLString() {
+toMathMLString() : string {
   var handlers = {
     apply: function (n) {
       var f = n.childNodes[0],

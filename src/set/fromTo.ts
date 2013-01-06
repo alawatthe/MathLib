@@ -5,9 +5,8 @@
 // *@param {number}* The number to end with  
 // *@param {number}* The stepsize (default = 1)  
 // *@returns {set}*
-static fromTo = function(f, t, s) {
+static fromTo = function(f : number, t : number, s : number = 1) : Set {
   var i, arr = [];
-  s = s || 1;
   if (f <= t) {
     for (i = f; i <= t; i += s) {
       arr.push(i);

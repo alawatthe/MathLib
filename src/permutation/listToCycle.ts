@@ -3,7 +3,7 @@
 // 
 // *@param{array}* list The list to be converted  
 // *@returns {array}*
-static listToCycle(list) {
+static listToCycle(list : number[]) : any {
   var finished = [],
       cur, i, ii, temp, res = [];
 

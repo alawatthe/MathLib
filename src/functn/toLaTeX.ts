@@ -1,7 +1,7 @@
 // ### Functn.prototype.toLaTeX()
 // Returns a LaTeX representation of the function
 //
-// *@param {string}* Optional: custom name for the bound variable (default: x)
+// *@param {string}* Optional: custom name for the bound variable (default: x)  
 // *@returns {string}*
 MathLib.extendPrototype('functn', 'toLaTeX', function(bvar) {
 

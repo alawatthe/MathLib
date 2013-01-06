@@ -3,8 +3,8 @@
 // array and not the position where one should be inserted.
 //
 // *@param {set}* The element to locate  
-// *@returns {boolean}*
-locate(x) {
+// *@returns {number}*
+locate(x : any) : number {
 
   var left = 0,
       right = this.card - 1,

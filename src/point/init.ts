@@ -13,15 +13,11 @@
 
 export class Point extends Vector {
 
-
+	dim: number;
  
   constructor(coords: number[]) {
-    if (arguments.length > 1) {
-      coords = Array.prototype.slice.call(arguments);
-      coords.push(1);
-    }
+    super(arguments.length > 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
 
-    super(coords);
     this.dim = 2;
     this.type = 'point';
 

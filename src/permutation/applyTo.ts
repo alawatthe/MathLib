@@ -3,7 +3,7 @@
 //
 // *@param {number|array|matrix|point|vector}*  
 // *@returns {number|array|matrix|point|vector}*
-applyTo(n) {
+applyTo(n : any) : any {
   var p, res;
   if (typeof n === 'number') {
     if (n >= this.length) {

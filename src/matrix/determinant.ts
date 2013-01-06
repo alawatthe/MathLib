@@ -3,7 +3,7 @@
 // The result is cached.
 //
 // *@returns {number|complex}*
-determinant() {
+determinant() : any {
   if (this.isSquare()) {
     var arr, determinant;
     if(this.rank() < this.rows) {

@@ -1,9 +1,9 @@
 // ### Vector.prototype.vectorproduct()
 // Calculates the vectorproduct of two vectors
 //
-// *@param {vector}*  
-// *@returns {vector}*
-vectorproduct(v) {
+// *@param {Vector}*  
+// *@returns {Vector}*
+vectorproduct(v : Vector) : Vector {
   var res = [];
   /* TODO: Extend vectorproduct for non three-dimensional vectors */
   if (this.length === 3 && v.length === 3) {

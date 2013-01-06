@@ -2,6 +2,6 @@
 // Custom toString method
 // 
 // *@return{string}*
-toString() {
+toString() : string {
   return this.outerMathML;
 }

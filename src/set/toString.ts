@@ -2,7 +2,7 @@
 // Returns a string representation of the set
 //
 // *@returns {string}*
-toString() {
+toString() : string {
   if (this.isEmpty()) {
     return '∅';
   }

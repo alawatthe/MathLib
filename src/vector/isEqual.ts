@@ -1,9 +1,9 @@
 // ### Vector.prototype.isEqual()
 // Determines if two vectors are equal
 //
-// *@param {vector}* v The vector to compare  
+// *@param {Vector}* v The vector to compare  
 // *@returns {boolean}*
-isEqual(v) {
+isEqual(v : Vector) : bool {
   if(this.length !== v.length) {
     return false;
   }
