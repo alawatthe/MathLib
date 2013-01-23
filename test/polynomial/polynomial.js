@@ -1,7 +1,7 @@
 module("Polynomial");
 test("init", 3, function () {
   var p = new MathLib.Polynomial([1, 2, 3, 4]),
-      q = new MathLib.Polynomial(3);
+      q = new MathLib.Polynomial(3),
       p1 = new MathLib.Polynomial([1, -4, new MathLib.Complex(2, 3)]);
   equal(p[0], 1, "coefficients");
   deepEqual(q[2], 0, "coefficients");

@@ -151,7 +151,9 @@ module.exports = function(grunt) {
 							'test/point/point.js',
 							'test/polynomial/polynomial.js',
 							'test/set/set.js',
-							'test/vector/vector.js'
+							
+							'test/vector/init.js',
+							'test/vector/!(init).js'
 							],
 				dest: 'build/<%= pkg.name %>.test.js'
 			}

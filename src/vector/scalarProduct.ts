@@ -1,10 +1,12 @@
-// ### Vector.prototype.scalarProduct()
-// Calculates the scalar product of two vectors
+// ### [Vector.prototype.scalarProduct()](http://mathlib.de/en/docs/vector/scalarProduct)
+// Calculates the scalar product of two vectors.
 //
 // *@param {vector}*  
 // *@returns {number|complex}*
 scalarProduct(v : Vector) : any {
-  return this.reduce(function (old, cur, i, w) {
-    return MathLib.plus(old, MathLib.times(w[i], v[i]));
-  }, 0);
+  if (this.length === v.length) {
+  	return this.reduce(function (old, cur, i, w) {
+    	return MathLib.plus(old, MathLib.times(w[i], v[i]));
+  	}, 0);
+  }
 }

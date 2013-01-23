@@ -1,4 +1,4 @@
-// ### Vector.prototype.isEqual()
+// ### [Vector.prototype.isEqual()](http://mathlib.de/en/docs/vector/isEqual)
 // Determines if two vectors are equal
 //
 // *@param {Vector}* v The vector to compare  

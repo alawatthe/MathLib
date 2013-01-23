@@ -6,7 +6,7 @@ var __extends = this.__extends || function (d, b) {
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2013-01-06
+// v0.3.5 - 2013-01-23
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -3554,26 +3554,19 @@ function update() {
             });
             this.length = coords.length;
         }
-        // ### Vector.prototype.conjugate()
-        // Calculates the conjugate of a vector
-        //
-        // *@returns {Vector}*
-                Vector.prototype.conjugate = function () {
-            return new MathLib.Vector(this.map(MathLib.conjugate));
-        }// ### Vector.prototype.every()
+        // ### [Vector.prototype.every()](http://mathlib.de/en/docs/vector/every)
         // Works like Array.prototype.every.
         //
         // *@returns {boolean}*
-        ;
-        Vector.prototype.every = function (f) {
+                Vector.prototype.every = function (f) {
             return Array.prototype.every.call(this, f);
-        }// ### Vector.prototype.forEach()
+        }// ### [Vector.prototype.forEach()](http://mathlib.de/en/docs/vector/forEach)
         // Works like Array.prototype.forEach.
         //
         ;
         Vector.prototype.forEach = function (f) {
             Array.prototype.forEach.call(this, f);
-        }// ### Vector.prototype.isEqual()
+        }// ### [Vector.prototype.isEqual()](http://mathlib.de/en/docs/vector/isEqual)
         // Determines if two vectors are equal
         //
         // *@param {Vector}* v The vector to compare
@@ -3586,14 +3579,14 @@ function update() {
             return this.every(function (x, i) {
                 return MathLib.isEqual(x, v[i]);
             });
-        }// ### Vector.prototype.isZero()
+        }// ### [Vector.prototype.isZero()](http://mathlib.de/en/docs/vector/isZero)
         // Determines if the vector is the zero vector.
         //
         // *@returns {boolean}*
         ;
         Vector.prototype.isZero = function () {
             return this.every(MathLib.isZero);
-        }// ### Vector.prototype.map()
+        }// ### [Vector.prototype.map()](http://mathlib.de/en/docs/vector/map)
         // Works like Array.prototype.map.
         //
         // *@param {function}*
@@ -3601,29 +3594,43 @@ function update() {
         ;
         Vector.prototype.map = function (f) {
             return new this.constructor(Array.prototype.map.call(this, f));
-        }// ### Vector.prototype.minus()
-        // Calculates the difference of two vectors
+        }// ### [Vector.prototype.minus()](http://mathlib.de/en/docs/vector/minus)
+        // Calculates the difference of two vectors.
         //
         // *@param {Vector}* The vector to be subtracted.
         // *@returns {Vector}*
         ;
         Vector.prototype.minus = function (v) {
-            return this.plus(v.negative());
-        }// ### Vector.prototype.negative()
-        // Returns the negative vector
+            if(this.length === v.length) {
+                return this.plus(v.negative());
+            }
+        }// ### [Vector.prototype.negative()](http://mathlib.de/en/docs/vector/negative)
+        // Returns the negative vector.
         //
         // *@returns {Vector}*
         ;
         Vector.prototype.negative = function () {
             return this.map(MathLib.negative);
-        }// ### Vector.prototype.normalize()
-        // Normalizes the vector to have length one
+        }// ### [Vector.prototype.norm()](http://mathlib.de/en/docs/vector/norm)
+        // Calcultes the norm of the vector.
         //
-        // *@returns {vector}*
+        // *@param {number}* [default=2] The p for the p-norm
+        // *@returns {number}*
         ;
-        Vector.prototype.normalize = function () {
-            return this.times(1 / this.size());
-        }// ### Vector.prototype.outerProduct()
+        Vector.prototype.norm = function (p) {
+            if (typeof p === "undefined") { p = 2; }
+            if(p === 2) {
+                return MathLib.hypot.apply(null, this.toArray());
+            } else {
+                if(p === Infinity) {
+                    return Math.max.apply(null, this.map(Math.abs));
+                } else {
+                    return MathLib.root(this.reduce(function (prev, curr) {
+                        return prev + Math.pow(Math.abs(curr), p);
+                    }, 0), p);
+                }
+            }
+        }// ### [Vector.prototype.outerProduct()](http://mathlib.de/en/docs/vector/outerProduct)
         // Calculates the outer product of two vectors.
         //
         // *@param {Vector}*
@@ -3635,8 +3642,8 @@ function update() {
                     return MathLib.times(x, y);
                 });
             }));
-        }// ### Vector.prototype.plus()
-        // Calculates the sum of two vectors
+        }// ### [Vector.prototype.plus()](http://mathlib.de/en/docs/vector/plus)
+        // Calculates the sum of two vectors.
         //
         // *@param {Vector}*
         // *@returns {Vector}*
@@ -3647,7 +3654,7 @@ function update() {
                     return MathLib.plus(x, v[i]);
                 }));
             }
-        }// ### Vector.prototype.reduce()
+        }// ### [Vector.prototype.reduce()](http://mathlib.de/en/docs/vector/reduce)
         // Works like Array.prototype.reduce.
         //
         // *@returns {any}*
@@ -3658,25 +3665,19 @@ function update() {
                 args[_i] = arguments[_i + 0];
             }
             return Array.prototype.reduce.apply(this, args);
-        }// ### Vector.prototype.scalarProduct()
-        // Calculates the scalar product of two vectors
+        }// ### [Vector.prototype.scalarProduct()](http://mathlib.de/en/docs/vector/scalarProduct)
+        // Calculates the scalar product of two vectors.
         //
         // *@param {vector}*
         // *@returns {number|complex}*
         ;
         Vector.prototype.scalarProduct = function (v) {
-            return this.reduce(function (old, cur, i, w) {
-                return MathLib.plus(old, MathLib.times(w[i], v[i]));
-            }, 0);
-        }// ### Vector.prototype.size()
-        // Determines the length of the vector.
-        // Named size, as length is already used by JavaScript.
-        //
-        // *@returns {number}*
-        ;
-        Vector.prototype.size = function () {
-            return MathLib.hypot.apply(null, this.toArray());
-        }// ### Vector.prototype.slice()
+            if(this.length === v.length) {
+                return this.reduce(function (old, cur, i, w) {
+                    return MathLib.plus(old, MathLib.times(w[i], v[i]));
+                }, 0);
+            }
+        }// ### [Vector.prototype.slice()](http://mathlib.de/en/docs/vector/slice)
         // Works like the Array.prototype.slice function
         //
         // *@returns {array}*
@@ -3687,7 +3688,7 @@ function update() {
                 args[_i] = arguments[_i + 0];
             }
             return Array.prototype.slice.apply(this, args);
-        }// ### Vector.prototype.times()
+        }// ### [Vector.prototype.times()](http://mathlib.de/en/docs/vector/times)
         // Multiplies the vector by a (complex) number or a matrix.
         // The vector is multiplied from left to the matrix.
         // If you want to multiply it from the right use
@@ -3713,15 +3714,15 @@ function update() {
                 }
                 return new MathLib.Vector(res);
             }
-        }// ### Vector.prototype.toArray()
-        // Converts the vector to an Array
+        }// ### [Vector.prototype.toArray()](http://mathlib.de/en/docs/vector/toArray)
+        // Converts the vector to an array.
         //
         // *@returns {array}*
         ;
         Vector.prototype.toArray = function () {
             return Array.prototype.slice.call(this);
-        }// ### Vector.prototype.toContentMathMLString()
-        // Returns the content MathML representation of the vector
+        }// ### [Vector.prototype.toContentMathMLString()](http://mathlib.de/en/docs/vector/toContentMathMLString)
+        // Returns the content MathML representation of the vector.
         //
         // *@returns {string}*
         ;
@@ -3729,8 +3730,8 @@ function update() {
             return this.reduce(function (old, cur) {
                 return old + MathLib.toContentMathMLString(cur);
             }, '<vector>') + '</vector>';
-        }// ### Vector.prototype.toLaTeX()
-        // Returns a LaTeX representation of the vector
+        }// ### [Vector.prototype.toLaTeX()](http://mathlib.de/en/docs/vector/toLaTeX)
+        // Returns a LaTeX representation of the vector.
         //
         // *@returns {string}*
         ;
@@ -3738,8 +3739,8 @@ function update() {
             return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
                 return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
             }) + '\n\\end{pmatrix}';
-        }// ### Vector.prototype.toMathMLString()
-        // Returns the (presentation) MathML representation of the vector
+        }// ### [Vector.prototype.toMathMLString()](http://mathlib.de/en/docs/vector/toMathMLString)
+        // Returns the (presentation) MathML representation of the vector.
         //
         // *@returns {string}*
         ;
@@ -3747,8 +3748,8 @@ function update() {
             return this.reduce(function (old, cur) {
                 return old + '<mtr><mtd>' + MathLib.toMathMLString(cur) + '</mtd></mtr>';
             }, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
-        }// ### Vector.prototype.toString()
-        // Returns a string representation of the vector
+        }// ### [Vector.prototype.toString()](http://mathlib.de/en/docs/vector/toString)
+        // Returns a string representation of the vector.
         //
         // *@returns {string}*
         ;
@@ -3756,23 +3757,23 @@ function update() {
             return '(' + this.reduce(function (old, cur) {
                 return old + ', ' + MathLib.toString(cur);
             }) + ')';
-        }// ### Vector.prototype.vectorproduct()
-        // Calculates the vectorproduct of two vectors
+        }// ### [Vector.prototype.vectorProduct()](http://mathlib.de/en/docs/vector/vectorProduct)
+        // Calculates the vector product of two vectors.
         //
         // *@param {Vector}*
         // *@returns {Vector}*
         ;
-        Vector.prototype.vectorproduct = function (v) {
-            var res = [];
-            /* TODO: Extend vectorproduct for non three-dimensional vectors */
+        Vector.prototype.vectorProduct = function (v) {
+            /* TODO: Implement vectorproduct for non three-dimensional vectors */
             if(this.length === 3 && v.length === 3) {
-                res.push(MathLib.minus(MathLib.times(this[1], v[2]), MathLib.times(this[2], v[1])));
-                res.push(MathLib.minus(MathLib.times(this[2], v[0]), MathLib.times(this[0], v[2])));
-                res.push(MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0])));
+                return new MathLib.Vector([
+                    MathLib.minus(MathLib.times(this[1], v[2]), MathLib.times(this[2], v[1])), 
+                    MathLib.minus(MathLib.times(this[2], v[0]), MathLib.times(this[0], v[2])), 
+                    MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0]))
+                ]);
             }
-            return new MathLib.Vector(res);
         }// ### Vector.zero()
-        // Returns a zero vector of given size
+        // Returns a zero vector of given size.
         //
         // *@param {number}* The number of entries in the vector.
         // *@returns {Vector}*

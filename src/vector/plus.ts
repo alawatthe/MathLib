@@ -1,5 +1,5 @@
-// ### Vector.prototype.plus()
-// Calculates the sum of two vectors
+// ### [Vector.prototype.plus()](http://mathlib.de/en/docs/vector/plus)
+// Calculates the sum of two vectors.
 //
 // *@param {Vector}*  
 // *@returns {Vector}*

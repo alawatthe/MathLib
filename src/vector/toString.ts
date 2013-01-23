@@ -1,5 +1,5 @@
-// ### Vector.prototype.toString()
-// Returns a string representation of the vector
+// ### [Vector.prototype.toString()](http://mathlib.de/en/docs/vector/toString)
+// Returns a string representation of the vector.
 //
 // *@returns {string}*
 toString() : string {

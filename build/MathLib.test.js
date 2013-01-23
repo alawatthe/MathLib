@@ -2251,7 +2251,7 @@ test('.toString()', 2, function () {
 module("Polynomial");
 test("init", 3, function () {
   var p = new MathLib.Polynomial([1, 2, 3, 4]),
-      q = new MathLib.Polynomial(3);
+      q = new MathLib.Polynomial(3),
       p1 = new MathLib.Polynomial([1, -4, new MathLib.Complex(2, 3)]);
   equal(p[0], 1, "coefficients");
   deepEqual(q[2], 0, "coefficients");
@@ -2638,10 +2638,22 @@ test('.type', 1, function () {
   var v = new MathLib.Vector([1, 2, 3]);
   equal(v.type, 'vector', 'Testing .type');
 });
+test('.every()', 2, function () {
+  var p = new MathLib.Vector([1, 2, 3]);
 
+  equal(p.every(function (x) {return x > 0;}), true, '.every()');
+  equal(p.every(function (x) {return x < 0;}), false, '.every()');
+});
+test('.forEach()', 1, function () {
+  var p = new MathLib.Vector([1, 2, 3]),
+      str = '',
+      f = function (x) {
+        str += x;
+      },
+      res = p.forEach(f);
 
-
-// Methods
+  deepEqual(str, '123', '.forEach()');
+});
 test('.isEqual()', 3, function () {
   var v = new MathLib.Vector([0, 1, 2]),
       w = new MathLib.Vector([0, 1, 2]),
@@ -2651,16 +2663,12 @@ test('.isEqual()', 3, function () {
   equal(v.isEqual(u), false, '.isEqual()');
   equal(u.isEqual(x), false, '.isEqual()');
 });
-
-
 test('.isZero()', 2, function () {
   var v = new MathLib.Vector([0, 0, 0]),
       w = new MathLib.Vector([0, 0, 1]);
   equal(v.isZero(), true, '.isZero()');
   equal(w.isZero(), false, '.isZero()');
 });
-
-
 test('.map()', 2, function () {
   var p = new MathLib.Vector([1, 2, 3]),
       q = new MathLib.Vector([2, 4, 6]),
@@ -2672,102 +2680,96 @@ test('.map()', 2, function () {
   deepEqual(res, q, '.map()');
   equal(res.type, 'vector', '.type should be vector');
 });
-
-
-test('.minus()', 1, function () {
+test('.minus()', 2, function () {
   var v = new MathLib.Vector([3, 1, 4]),
-      w = new MathLib.Vector([1, 5, 9]);
+      w = new MathLib.Vector([1, 5, 9]),
+      u = new MathLib.Vector([1, 2]);
   equal(v.minus(w).isEqual(new MathLib.Vector([2, -4, -5])), true, '.minus()');
+  equal(v.minus(u), undefined, '.minus()');
 });
-
-
 test('.neagtive()', 1, function () {
   var v = new MathLib.Vector([3, 1, 4]);
   equal(v.negative().isEqual(new MathLib.Vector([-3, -1, -4])), true, '.negative()');
 });
-
-
-test('.normalize()', 1, function () {
-  var v = new MathLib.Vector([2, 3, 6]);
-  equal(v.normalize().isEqual(new MathLib.Vector([2/7, 3/7, 6/7])), true, '.normalize()');
+test('.norm()', 5, function () {
+  var v = new MathLib.Vector([1, 2, -2]);
+  equal(v.norm(), 3, '.norm()');
+  equal(v.norm(2), 3, '.norm(2)');
+  equal(v.norm(1), 5, '.norm(1)');
+  equal(v.norm(3), 2.571281590658235, '.norm(3)');
+  equal(v.norm(Infinity), 2, '.norm(Infinity)');
 });
-
-
 test('.outerProduct()', 1, function () {
   var v = new MathLib.Vector([3, 1, 4]),
       w = new MathLib.Vector([1, 5, 9]);
   equal(v.outerProduct(w).isEqual(new MathLib.Matrix([[3, 15, 27], [1, 5, 9], [4, 20, 36]])), true, '.outerProduct()');
 });
-
-
-test('.plus()', 1, function () {
+test('.plus()', 2, function () {
   var v = new MathLib.Vector([3, 1, 4]),
-      w = new MathLib.Vector([1, 5, 9]);
+      w = new MathLib.Vector([1, 5, 9]),
+      u = new MathLib.Vector([1, 2]);
   equal(v.plus(w).isEqual(new MathLib.Vector([4, 6, 13])), true, '.plus()');
+  equal(v.plus(u), undefined, '.plus()');
 });
+test('.reduce()', 1, function () {
+  var v = new MathLib.Vector([1, 2, 3]),
+      f = function(prev, cur){
+            return prev+cur;
+          },
+      res = v.reduce(f, 0);
 
-
-test('.scalarProduct()', 1, function () {
+  deepEqual(res, 6, '.reduce()');
+});
+test('.scalarProduct()', 3, function () {
   var v = new MathLib.Vector([3, 1, 4]),
-      w = new MathLib.Vector([1, 5, 9]);
+      w = new MathLib.Vector([1, 5, 9]),
+      u = new MathLib.Vector([1, 2]);
+
   equal(v.scalarProduct(w), 44, '.scalarProduct()');
+  equal(u.scalarProduct(w), undefined, '.scalarProduct()');
+  equal(v.scalarProduct(u), undefined, '.scalarProduct()');
 });
-
-
-test('.size()', 1, function () {
-  var v = new MathLib.Vector([1, 2, 2]);
-  equal(v.size(), 3, '.size()');
+test('.slice()', 2, function () {
+  var v = new MathLib.Vector([1,2,3,4,5]);
+  deepEqual(v.slice(1,3), [2,3], '.slice()');
+  equal(MathLib.type(v.slice(1,3)), 'array', '.slice()');
 });
-
-
 test('.times()', 2, function () {
   var v = new MathLib.Vector([1, 2, 3]),
       m = new MathLib.Matrix([[1,2,3],[4,5,6],[7,8,9]]);
   deepEqual(v.times(3), new MathLib.Vector([3, 6, 9]), '.times(number)');
   deepEqual(v.times(m), new MathLib.Vector([30, 36, 42]), '.times(matrix)');
 });
-
-
-test('.toArray()', 1, function () {
+test('.toArray()', 2, function () {
   var v = new MathLib.Vector([1, 2, 3]);
+  deepEqual(v.toArray(), [1,2,3], '.toArray()');
   equal(MathLib.type(v.toArray()), 'array', '.toArray()');
 });
-
-
 test('.toContentMathMLString()', 1, function () {
   var v = new MathLib.Vector([1, 2, 3]);
   equal(v.toContentMathMLString(), '<vector><cn>1</cn><cn>2</cn><cn>3</cn></vector>', '.toContentMathML()String');
 });
-
-
 test('.toLaTeX()', 1, function () {
   var v = new MathLib.Vector([1, 2, 3]);
   equal(v.toLaTeX(), '\\begin{pmatrix}\n\t1\\\\\n\t2\\\\\n\t3\n\\end{pmatrix}');
 });
-
-
 test('.toMathMLString()', 1, function () {
   var v = new MathLib.Vector([1, 2, 3]);
   equal(v.toMathMLString(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>)</mo></mrow>', '.toMathMLString()');
 });
-
-
 test('.toString()', 1, function () {
   var v = new MathLib.Vector([1, 2, 3]);
   equal(v.toString(), '(1, 2, 3)', '.toString()');
 });
-
-
-test('.vectorproduct()', 1, function () {
+test('.vectorProduct()', 3, function () {
   var v = new MathLib.Vector([1, 2, 3]),
       w = new MathLib.Vector([-7, 8, 9]),
+      u = new MathLib.Vector([1, 2]),
       res = new MathLib.Vector([-6, -30, 22]);
-  equal(v.vectorproduct(w).isEqual(res), true, '.vectorProduct()');
+  equal(v.vectorProduct(w).isEqual(res), true, '.vectorProduct()');
+  equal(u.vectorProduct(w), undefined, '.vectorProduct()');
+  equal(v.vectorProduct(u), undefined, '.vectorProduct()');
 });
-
-
-
-// Static methods
 test('zero()', 1, function () {
   var v = new MathLib.Vector.zero(3);
   equal(v.isZero(), true, 'testing zero vector');

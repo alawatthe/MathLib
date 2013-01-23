@@ -1,5 +1,5 @@
-// ### Vector.prototype.toLaTeX()
-// Returns a LaTeX representation of the vector
+// ### [Vector.prototype.toLaTeX()](http://mathlib.de/en/docs/vector/toLaTeX)
+// Returns a LaTeX representation of the vector.
 //
 // *@returns {string}*
 toLaTeX() : string {

@@ -1,4 +1,4 @@
-// ### Vector.prototype.times()
+// ### [Vector.prototype.times()](http://mathlib.de/en/docs/vector/times)
 // Multiplies the vector by a (complex) number or a matrix.
 // The vector is multiplied from left to the matrix. 
 // If you want to multiply it from the right use

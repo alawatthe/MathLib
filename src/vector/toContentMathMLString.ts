@@ -1,5 +1,5 @@
-// ### Vector.prototype.toContentMathMLString()
-// Returns the content MathML representation of the vector
+// ### [Vector.prototype.toContentMathMLString()](http://mathlib.de/en/docs/vector/toContentMathMLString)
+// Returns the content MathML representation of the vector.
 //
 // *@returns {string}*
 toContentMathMLString() : string {
