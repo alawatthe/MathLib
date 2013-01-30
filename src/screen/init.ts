@@ -31,9 +31,9 @@ export class Screen {
 					// Construct the Mark-Up
 					// Scoped styles
 					'<style scoped>',
-						'.MathLib_figure_'+this.uuid+'{border: 1px solid black; margin: 1em auto; display: -webkit-flex; -webkit-flex-direction: column; -webkit-flex-wrap: nowrap; -webkit-justify-content: center; -webkit-align-content: center; -webkit-align-items: center;}',
+						'.MathLib_figure_'+this.uuid+'{margin: 1em auto; display: -webkit-flex; -webkit-flex-direction: column; -webkit-flex-wrap: nowrap; -webkit-justify-content: center; -webkit-align-content: center; -webkit-align-items: center;}',
 						'.MathLib_figcaption_'+this.uuid+' {font-family: Helvetica, sans-serif; font-size: 1em; color: #444; text-align: center; margin: 1em}',
-						'.MathLib_wrapper_'+this.uuid+' {border: 1px solid black; width: '+this.width+'px; height: '+this.height+'px; position: relative;}',
+						'.MathLib_wrapper_'+this.uuid+' {width: '+this.width+'px; height: '+this.height+'px; position: relative;}',
 						'.MathLib_screen_'+this.uuid+' {width: '+this.width+'px; height: '+this.height+'px; position: absolute;}',
 						'.MathLib_contextMenuOverlay_'+this.uuid+' {display: none; position: fixed; top: 0; left: 0; z-index:100; width: 100vw; height: 100vh}',
 						'.MathLib_contextMenu_'+this.uuid+' {',

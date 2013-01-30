@@ -2,6 +2,6 @@
 // Works like the Array.prototype.slice function
 //
 // *@returns {array}*
-slice() {
-  return Array.prototype.slice.apply(this, arguments);
+slice(...args : any[]) : any[] {
+  return Array.prototype.slice.apply(this, args);
 }

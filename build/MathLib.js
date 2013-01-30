@@ -6,7 +6,7 @@ var __extends = this.__extends || function (d, b) {
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2013-01-23
+// v0.3.5 - 2013-01-30
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -557,12 +557,12 @@ var MathLib;
         ;
         MathML.variables = {
         };
-        MathML.prototype.write = // ### MathML.write()
+        MathML.write = // ### MathML.write()
         // Writes MathML to an element.
         //
         // *@param{string}* The id of the element in which the MathML should be inserted.
         // *@param{string}* The MathML to be inserted.
-        function (id, math) {
+        function write(id, math) {
             var formula;
             document.getElementById(id).innerHTML = '<math>' + math + '</math>';
             if(typeof MathJax !== 'undefined') {
@@ -573,7 +573,7 @@ var MathLib;
                     id
                 ]);
             }
-        };
+        }
         return MathML;
     })();
     MathLib.MathML = MathML;    
@@ -1625,9 +1625,9 @@ var MathLib;
                 // Construct the Mark-Up
                 // Scoped styles
                 '<style scoped>', 
-                '.MathLib_figure_' + this.uuid + '{border: 1px solid black; margin: 1em auto; display: -webkit-flex; -webkit-flex-direction: column; -webkit-flex-wrap: nowrap; -webkit-justify-content: center; -webkit-align-content: center; -webkit-align-items: center;}', 
+                '.MathLib_figure_' + this.uuid + '{margin: 1em auto; display: -webkit-flex; -webkit-flex-direction: column; -webkit-flex-wrap: nowrap; -webkit-justify-content: center; -webkit-align-content: center; -webkit-align-items: center;}', 
                 '.MathLib_figcaption_' + this.uuid + ' {font-family: Helvetica, sans-serif; font-size: 1em; color: #444; text-align: center; margin: 1em}', 
-                '.MathLib_wrapper_' + this.uuid + ' {border: 1px solid black; width: ' + this.width + 'px; height: ' + this.height + 'px; position: relative;}', 
+                '.MathLib_wrapper_' + this.uuid + ' {width: ' + this.width + 'px; height: ' + this.height + 'px; position: relative;}', 
                 '.MathLib_screen_' + this.uuid + ' {width: ' + this.width + 'px; height: ' + this.height + 'px; position: absolute;}', 
                 '.MathLib_contextMenuOverlay_' + this.uuid + ' {display: none; position: fixed; top: 0; left: 0; z-index:100; width: 100vw; height: 100vh}', 
                 '.MathLib_contextMenu_' + this.uuid + ' {', 
@@ -3554,11 +3554,30 @@ function update() {
             });
             this.length = coords.length;
         }
-        // ### [Vector.prototype.every()](http://mathlib.de/en/docs/vector/every)
+        // ### Vector.areLinearIndependent()
+        // Checks if the vectors are linear independent.
+        //
+        // *@param {array}* An array containing the vectors.
+        // *@returns {boolean}*
+                Vector.areLinearIndependent = function (v) {
+            var n = v.length;
+            var m = v[0].length;
+
+            if(n > m) {
+                return false;
+            }
+            if(!v.every(function (x) {
+                return x.length == m;
+            })) {
+                return undefined;
+            }
+            return (new MathLib.Matrix(v)).rank() === n;
+        };
+        Vector.prototype.every = // ### [Vector.prototype.every()](http://mathlib.de/en/docs/vector/every)
         // Works like Array.prototype.every.
         //
         // *@returns {boolean}*
-                Vector.prototype.every = function (f) {
+        function (f) {
             return Array.prototype.every.call(this, f);
         }// ### [Vector.prototype.forEach()](http://mathlib.de/en/docs/vector/forEach)
         // Works like Array.prototype.forEach.
@@ -4241,6 +4260,289 @@ function update() {
         return Complex;
     })();
     MathLib.Complex = Complex;    
+    // ## <a id="Expression"></a>Expression
+    // MathLib.Expression is the MathLib implementation of symbolic expressions
+    var Expression = (function () {
+        function Expression(o) {
+            this.type = 'expression';
+            this.subtype = o.subtype;
+            this.name = o.name;
+            if('children' in o) {
+                this.$ = o.children;
+            }
+        }
+        /*
+        boolean
+        number
+        matrix
+        vector
+        
+        
+        operator
+        boolean
+        and, or, not, xor
+        
+        */
+        // ### [Expression.prototype.concat()](http://mathlib.de/en/docs/expression/concat)
+        // Works like Array.prototype.concat.
+        //
+        // *@param {array}*
+        // *@returns {Expression}*
+                Expression.prototype.concat = function (a) {
+            return Array.prototype.concat.call(this, arguments);
+        }// ### Expression.prototype.evaluate()
+        // Evaluates the symbolic expression
+        //
+        // *@returns {any}*
+        ;
+        Expression.prototype.evaluate = function () {
+            return this.simplify().value;
+        }// ### Expression.prototype.every()
+        // Works like Array.prototype.every.
+        //
+        // *@returns {boolean}*
+        ;
+        Expression.prototype.every = function (f) {
+            return Array.prototype.every.call(this, f);
+        }// ### Expression.False
+        //
+        // *@returns {polynomial}*
+        ;
+        Expression.False = {
+            subtype: 'boolean',
+            name: 'false',
+            value: false
+        };
+        Expression.prototype.forEach = // ### [Expression.prototype.forEach()](http://mathlib.de/en/docs/expression/forEach)
+        // Works like Array.prototype.forEach.
+        //
+        function (f) {
+            Array.prototype.forEach.call(this, f);
+        }// ### [Expression.prototype.map()](http://mathlib.de/en/docs/expression/map)
+        // Works like Array.prototype.map.
+        //
+        // *@param {function}*
+        // *@returns {Expression}*
+        ;
+        Expression.prototype.map = function (f) {
+            return Array.prototype.map.call(this, f);
+        }// ### Expression.prototype.simplify()
+        // Simplifies the symbolic expression
+        //
+        // *@returns {Expression}*
+        ;
+        Expression.prototype.simplify = function () {
+            var FALSE = MathLib.Expression.False;
+            var TRUE = MathLib.Expression.True;
+
+            if(this.subtype === 'booleanOperator') {
+                // AND
+                // ===
+                if(this.name === 'and') {
+                    for(var i = 0, ii = this.$.length; i < ii; i++) {
+                        if(this.$[i].subtype !== 'boolean') {
+                            this.$[i] = this.$[i].simplify();
+                        }
+                        if(this.$[i] === FALSE) {
+                            return FALSE;
+                        } else {
+                            if(this.$[i] === TRUE) {
+                                this.$.splice(i, 1);
+                                ii--;
+                                i--;
+                            } else {
+                                if(this.$[i].name === 'and') {
+                                    this.$.splice(i, 1, this.$[i].$);
+                                    ii = this.$.length;
+                                }
+                            }
+                        }
+                    }
+                    if(ii === 0) {
+                        return TRUE;
+                    }
+                } else {
+                    // OR
+                    // ==
+                    if(this.name === 'or') {
+                        for(var i = 0, ii = this.$.length; i < ii; i++) {
+                            if(this.$[i].subtype !== 'boolean') {
+                                this.$[i] = this.$[i].simplify();
+                            }
+                            if(this.$[i] === FALSE) {
+                                this.$.splice(i, 1);
+                                ii--;
+                                i--;
+                            } else {
+                                if(this.$[i] === TRUE) {
+                                    return TRUE;
+                                } else {
+                                    if(this.$[i].name === 'or') {
+                                        this.$.splice(i, 1, this.$[i].$);
+                                        //i-- ?
+                                        ii = this.$.length;
+                                    } else {
+                                        if(this.$[i].name === 'and') {
+                                            var and = this.$.splice(i, 1);
+                                            var res = [];
+
+                                            for(j = 0; j < jj; j++) {
+                                                res[j] = and.slice().splice(i, 0, and[j]);
+                                            }
+                                            this.name = 'and';
+                                            this.$ = res;
+                                            this.simplify();
+                                            // a || (c && d && e) || b      ->     (a || c || b) && (a || d || b) && (a || e || b)
+                                                                                    }
+                                    }
+                                }
+                            }
+                        }
+                        if(ii === 0) {
+                            return FALSE;
+                        }
+                    } else {
+                        // NOT
+                        // ===
+                        if(this.name === 'not') {
+                            // not true -> false
+                            if(this.$[0] === TRUE) {
+                                return FALSE;
+                            }
+                            // not false -> true
+                            if(this.$[0] === FALSE) {
+                                return TRUE;
+                            } else {
+                                // Distribute the not over the and
+                                if(this.$[0].name === 'and') {
+                                    var children = this.$[0].map(function (x, i) {
+                                        return new MathLib.Expression({
+                                            subtype: 'booleanOperator',
+                                            name: 'not',
+                                            children: [
+                                                x
+                                            ]
+                                        });
+                                    });
+                                    var or = new MathLib.Expression({
+                                        subtype: 'booleanOperator',
+                                        name: 'or',
+                                        children: children
+                                    });
+
+                                    return or.simplify();
+                                } else {
+                                    // Distribute the not over the or
+                                    if(this[0].name === 'or') {
+                                        var children = this.$[0].map(function (x, i) {
+                                            return new MathLib.Expression({
+                                                subtype: 'booleanOperator',
+                                                name: 'not',
+                                                children: [
+                                                    x
+                                                ]
+                                            });
+                                        });
+                                        var and = new MathLib.Expression({
+                                            subtype: 'booleanOperator',
+                                            name: 'and',
+                                            children: children
+                                        });
+
+                                        return and.simplify();
+                                    } else {
+                                        // Remove double not
+                                        if(this.$[0].name === 'not') {
+                                            return this.$[0].$[0].simplify();
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            // XOR
+                            // ===
+                            if(this.name === 'xor') {
+                                var numTrue = 0;
+                                for(var i = 0, ii = this.$.length; i < ii; i++) {
+                                    // TODO: Convert the xor expression to CNF
+                                    if(this.$[i].subtype !== 'boolean') {
+                                        this.$[i] = this.$[i].simplify();
+                                    }
+                                    // Because of A XOR TRUE = TRUE XOR A = NOT A we can remove two TRUEs together.
+                                    // We remove every true and keep track how many we removed.
+                                    if(this.$[i] === TRUE) {
+                                        this.$.splice(i, 1);
+                                        ii--;
+                                        i--;
+                                        numTrue++;
+                                    } else {
+                                        // Because of A XOR FALSE = FALSE XOR A = A we can remove every FALSE.
+                                        if(this.$[i] === FALSE) {
+                                            this.$.splice(i, 1);
+                                            ii--;
+                                            i--;
+                                        }
+                                    }
+                                }
+                                // There might be the case, that we removed everything
+                                if(ii === 0) {
+                                    this.$ = [
+                                        FALSE
+                                    ];
+                                }
+                                // If we removed an odd number of TRUEs, we have to negate one argument
+                                if(numTrue % 2 === 1) {
+                                    var x = this.$.splice(0, 1);
+                                    this.$.splice(0, 0, (new MathLib.Expression({
+                                        subtype: 'booleanOperator',
+                                        name: 'not',
+                                        children: [
+                                            x
+                                        ]
+                                    })).simplify());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return this;
+        }// ### Expression.prototype.some()
+        // Works like Array.prototype.some.
+        //
+        // *@returns {boolean}*
+        ;
+        Expression.prototype.some = function (f) {
+            return Array.prototype.some.call(this, f);
+        }// ### [Expression.prototype.splice()](http://mathlib.de/en/docs/expression/splice)
+        // Works like the Array.prototype.splice function
+        //
+        // *@returns {array}*
+        ;
+        Expression.prototype.splice = function () {
+            var args = [];
+            for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                args[_i] = arguments[_i + 0];
+            }
+            return Array.prototype.splice.apply(this, args);
+        }// ### Expression.False
+        //
+        // *@returns {polynomial}*
+        ;
+        Expression.True = {
+            subtype: 'boolean',
+            name: 'true',
+            value: true
+        };
+        Expression.Variable = function (name) {
+            return {
+                subtype: 'variable',
+                name: name
+            };
+        };
+        return Expression;
+    })();
+    MathLib.Expression = Expression;    
     // ## <a id="Line"></a>Line
     // The vector implementation of MathLib makes calculations with lines in the
     // real plane possible. (Higher dimensions will be supported later)
@@ -6306,7 +6608,11 @@ for(i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
         //
         // *@returns {array}*
                 Polynomial.prototype.slice = function () {
-            return Array.prototype.slice.apply(this, arguments);
+            var args = [];
+            for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                args[_i] = arguments[_i + 0];
+            }
+            return Array.prototype.slice.apply(this, args);
         }// ### Polynomial.prototype.tangent()
         // Returns the tangent to the polynomial at a given point
         //
@@ -6488,7 +6794,7 @@ for(i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
         // Evaluates the polynomial at a given point
         //
         // *@param {number|complex|matrix}*
-        // *@returns {number|complex]matrix}*
+        // *@returns {number|complex|matrix}*
         ;
         Polynomial.prototype.valueAt = function (x) {
             var pot = MathLib.is(x, 'matrix') ? MathLib.Matrix.identity(x.rows, x.cols) : 1;

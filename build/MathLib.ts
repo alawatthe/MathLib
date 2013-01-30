@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2013-01-23  
+// v0.3.5 - 2013-01-30  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -605,7 +605,7 @@ static variables = {};
 //
 // *@param{string}* The id of the element in which the MathML should be inserted.  
 // *@param{string}* The MathML to be inserted.
-write(id : string, math : string) : void {
+static write(id : string, math : string) : void {
   var formula;
   document.getElementById(id).innerHTML = '<math>' + math + '</math>';
   if (typeof MathJax !== 'undefined') {
@@ -1690,9 +1690,9 @@ export class Screen {
 					// Construct the Mark-Up
 					// Scoped styles
 					'<style scoped>',
-						'.MathLib_figure_'+this.uuid+'{border: 1px solid black; margin: 1em auto; display: -webkit-flex; -webkit-flex-direction: column; -webkit-flex-wrap: nowrap; -webkit-justify-content: center; -webkit-align-content: center; -webkit-align-items: center;}',
+						'.MathLib_figure_'+this.uuid+'{margin: 1em auto; display: -webkit-flex; -webkit-flex-direction: column; -webkit-flex-wrap: nowrap; -webkit-justify-content: center; -webkit-align-content: center; -webkit-align-items: center;}',
 						'.MathLib_figcaption_'+this.uuid+' {font-family: Helvetica, sans-serif; font-size: 1em; color: #444; text-align: center; margin: 1em}',
-						'.MathLib_wrapper_'+this.uuid+' {border: 1px solid black; width: '+this.width+'px; height: '+this.height+'px; position: relative;}',
+						'.MathLib_wrapper_'+this.uuid+' {width: '+this.width+'px; height: '+this.height+'px; position: relative;}',
 						'.MathLib_screen_'+this.uuid+' {width: '+this.width+'px; height: '+this.height+'px; position: absolute;}',
 						'.MathLib_contextMenuOverlay_'+this.uuid+' {display: none; position: fixed; top: 0; left: 0; z-index:100; width: 100vw; height: 100vh}',
 						'.MathLib_contextMenu_'+this.uuid+' {',
@@ -3783,6 +3783,29 @@ export class Vector {
   }
 
 
+// ### Vector.areLinearIndependent()
+// Checks if the vectors are linear independent.
+//
+// *@param {array}* An array containing the vectors.  
+// *@returns {boolean}*
+static areLinearIndependent = function (v : Vector[]) : bool {
+	var n = v.length,
+			m = v[0].length;
+
+	if (n > m) {
+		return false;
+	}
+
+	if (! v.every(function (x){
+		return x.length == m;
+		}) ) {
+		return undefined;
+	}
+
+	return (new MathLib.Matrix(v)).rank() === n;
+};
+
+
 // ### [Vector.prototype.every()](http://mathlib.de/en/docs/vector/every)
 // Works like Array.prototype.every.
 //
@@ -4587,6 +4610,311 @@ toString() {
 //
 // *@returns {complex}*
 static zero = new Complex(0, 0);
+
+
+}
+
+
+
+// ## <a id="Expression"></a>Expression
+// MathLib.Expression is the MathLib implementation of symbolic expressions
+
+export class Expression {
+
+  type = 'expression';
+
+  subtype: string;
+  name: string;
+  length: number;
+  value: any;
+  $: any;
+
+
+  constructor(o) {
+  	this.subtype = o.subtype;
+  	this.name = o.name;
+    if ('children' in o) {
+      this.$ = o.children;
+    }
+
+  }
+
+
+/*
+  boolean
+  number
+  matrix
+  vector
+
+
+  operator
+    boolean
+    	and, or, not, xor
+
+  */
+
+
+// ### [Expression.prototype.concat()](http://mathlib.de/en/docs/expression/concat)
+// Works like Array.prototype.concat.
+//
+// *@param {array}*  
+// *@returns {Expression}*
+concat(a) : any {
+  return Array.prototype.concat.call(this, arguments);
+}
+
+
+// ### Expression.prototype.evaluate()
+// Evaluates the symbolic expression
+//
+// *@returns {any}*
+evaluate() : any {
+	return this.simplify().value;
+}
+
+
+// ### Expression.prototype.every()
+// Works like Array.prototype.every.
+//
+// *@returns {boolean}*
+every(f : (value : any, index : number, expression : Expression ) => bool) : bool {
+  return Array.prototype.every.call(this, f);
+}
+
+
+// ### Expression.False
+//
+// *@returns {polynomial}*
+static False = {
+	subtype: 'boolean',
+	name: 'false',
+	value: false
+};
+
+
+// ### [Expression.prototype.forEach()](http://mathlib.de/en/docs/expression/forEach)
+// Works like Array.prototype.forEach.
+//
+forEach(f : (value : any, index : number, expression : Expression ) => void) : void {
+  Array.prototype.forEach.call(this, f);
+}
+
+
+// ### [Expression.prototype.map()](http://mathlib.de/en/docs/expression/map)
+// Works like Array.prototype.map.
+//
+// *@param {function}*  
+// *@returns {Expression}*
+map(f : (value : any, index : number, expression : Expression ) => any) : any {
+  return Array.prototype.map.call(this, f);
+}
+
+
+// ### Expression.prototype.simplify()
+// Simplifies the symbolic expression
+//
+// *@returns {Expression}*
+simplify() : Expression {
+
+	var FALSE = MathLib.Expression.False,
+			TRUE = MathLib.Expression.True;
+
+	if (this.subtype === 'booleanOperator') {
+
+
+		// AND
+		// ===
+		if (this.name === 'and') {
+			for (var i = 0, ii = this.$.length; i<ii; i++) {
+				if(this.$[i].subtype !== 'boolean') {
+					this.$[i] = this.$[i].simplify();
+				}
+				if (this.$[i] === FALSE) {
+					return FALSE;
+				}
+				else if (this.$[i] === TRUE) {
+					this.$.splice(i, 1);
+					ii--;
+					i--;
+				}
+				else if (this.$[i].name === 'and') {
+					this.$.splice(i, 1, this.$[i].$);
+					ii = this.$.length;
+				}
+			}
+			if (ii === 0){
+				return TRUE;
+			}
+		}
+
+
+		// OR
+		// ==
+		else if (this.name === 'or') {
+			for (var i = 0, ii = this.$.length; i<ii; i++) {
+				if(this.$[i].subtype !== 'boolean') {
+					this.$[i] = this.$[i].simplify();
+				}
+
+				if (this.$[i] === FALSE) {
+					this.$.splice(i, 1);
+					ii--;
+					i--;
+				}
+				else if (this.$[i] === TRUE) {
+					return TRUE;
+				}
+				else if (this.$[i].name === 'or') {
+					this.$.splice(i, 1, this.$[i].$);
+					//i-- ?
+					ii = this.$.length;
+				}
+				else if (this.$[i].name === 'and') {
+					var and = this.$.splice(i, 1),
+							res = [];
+
+					for (j = 0; j < jj; j++) {
+						res[j] = and.slice().splice(i, 0, and[j])
+					}
+
+					this.name = 'and';
+					this.$ = res;
+					this.simplify();
+
+					// a || (c && d && e) || b      ->     (a || c || b) && (a || d || b) && (a || e || b)
+				}
+
+			}
+			if (ii === 0){
+				return FALSE;
+			}
+		}
+
+
+		// NOT
+		// ===
+		else if (this.name === 'not') {
+			// not true -> false
+			if (this.$[0] === TRUE) {
+				return FALSE;
+			}
+			// not false -> true
+			if (this.$[0] === FALSE) {
+				return TRUE;
+			}
+			// Distribute the not over the and
+			else if (this.$[0].name === 'and') {
+				var children = this.$[0].map(function(x, i) {
+							return new MathLib.Expression({subtype: 'booleanOperator', name: 'not', children: [x]})
+						}),
+						or = new MathLib.Expression({subtype: 'booleanOperator', name: 'or', children: children});
+				return or.simplify();
+			}
+			// Distribute the not over the or
+			else if (this[0].name === 'or') {
+				var children = this.$[0].map(function(x, i) {
+							return new MathLib.Expression({subtype: 'booleanOperator', name: 'not', children: [x]})
+						}),
+						and = new MathLib.Expression({subtype: 'booleanOperator', name: 'and', children: children});
+				return and.simplify();
+			}
+	  	// Remove double not
+			else if (this.$[0].name === 'not') {
+				return this.$[0].$[0].simplify();
+			}
+		}
+
+
+
+		// XOR
+		// ===
+		else if (this.name === 'xor') {
+			var numTrue = 0;
+
+			for (var i = 0, ii = this.$.length; i<ii; i++) {
+
+				// TODO: Convert the xor expression to CNF
+
+				if(this.$[i].subtype !== 'boolean') {
+					this.$[i] = this.$[i].simplify();
+				}
+
+				// Because of A XOR TRUE = TRUE XOR A = NOT A we can remove two TRUEs together.
+				// We remove every true and keep track how many we removed.
+				if (this.$[i] === TRUE) {
+					this.$.splice(i, 1);
+					ii--;
+					i--;
+					numTrue++;
+				}
+				// Because of A XOR FALSE = FALSE XOR A = A we can remove every FALSE.
+				else if (this.$[i] === FALSE) {
+					this.$.splice(i, 1);
+					ii--;
+					i--;
+				}
+			}
+
+			// There might be the case, that we removed everything
+			if (ii === 0){
+				this.$ = [FALSE];
+			}
+
+			// If we removed an odd number of TRUEs, we have to negate one argument
+			if (numTrue%2 === 1) {
+				var x = this.$.splice(0, 1);
+				this.$.splice(0,0, (new MathLib.Expression({subtype: 'booleanOperator', name: 'not', children: [x]})).simplify())
+			}
+		}
+	}
+	
+	return this;
+}
+
+
+// ### Expression.prototype.some()
+// Works like Array.prototype.some.
+//
+// *@returns {boolean}*
+some(f : (value : any, index : number, expression : Expression ) => bool) : bool {
+  return Array.prototype.some.call(this, f);
+}
+
+
+// ### [Expression.prototype.splice()](http://mathlib.de/en/docs/expression/splice)
+// Works like the Array.prototype.splice function
+//
+// *@returns {array}*
+splice(...args : any[]) : any[] {
+	return Array.prototype.splice.apply(this, args);
+}
+
+
+
+
+
+
+
+
+// ### Expression.False
+//
+// *@returns {polynomial}*
+static True = {
+	subtype: 'boolean',
+	name: 'true',
+	value: true
+};
+
+
+// ### Expression.Variable
+//
+// *@returns {Expression}*
+static Variable = function (name) {
+	return {
+		subtype: 'variable',
+		name: name
+	}
+};
 
 
 }
@@ -6791,8 +7119,8 @@ static roots(roots) {
 // Works like the Array.prototype.slice function
 //
 // *@returns {array}*
-slice() {
-  return Array.prototype.slice.apply(this, arguments);
+slice(...args : any[]) : any[] {
+  return Array.prototype.slice.apply(this, args);
 }
 
 
@@ -6987,7 +7315,7 @@ toString(opt) {
 // Evaluates the polynomial at a given point 
 //
 // *@param {number|complex|matrix}*  
-// *@returns {number|complex]matrix}*
+// *@returns {number|complex|matrix}*
 valueAt(x) {
   var pot = MathLib.is(x, 'matrix') ? MathLib.Matrix.identity(x.rows, x.cols) : 1,
       res = MathLib.is(x, 'matrix') ? MathLib.Matrix.zero(x.rows, x.cols) : 0,

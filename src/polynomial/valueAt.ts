@@ -2,7 +2,7 @@
 // Evaluates the polynomial at a given point 
 //
 // *@param {number|complex|matrix}*  
-// *@returns {number|complex]matrix}*
+// *@returns {number|complex|matrix}*
 valueAt(x) {
   var pot = MathLib.is(x, 'matrix') ? MathLib.Matrix.identity(x.rows, x.cols) : 1,
       res = MathLib.is(x, 'matrix') ? MathLib.Matrix.zero(x.rows, x.cols) : 0,
