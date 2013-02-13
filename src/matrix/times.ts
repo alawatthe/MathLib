@@ -1,10 +1,13 @@
 // ### Matrix.prototype.times()
 // Multiplies the current matrix with a number, a matrix, a point or a vector.
 //
-// *@param {number|matrix|point|vector}*  
+// *@param {number|matrix|point|rational|vector}*  
 // *@returns {matrix|point|vector}*
 times(a) {
   var res = [], temp, i, j, k;
+  if(a.type === 'rational') {
+    a = a.toNumber(); 
+  }
   if (typeof a === 'number' || a.type === 'complex') {
     return this.map(function(x) {
       return MathLib.times(x, a);

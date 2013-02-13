@@ -8,9 +8,12 @@
 // *@returns {vector}*
 times(n : any) : any {
   var res = [], i, ii;
+  if(n.type === 'rational') {
+    n = n.toNumber(); 
+  }
   if (typeof n === "number" || n.type === "complex") {
     return this.map(function (x) {
-      return MathLib.times(x, n);
+      return MathLib.times(n, x);
     });
   }
   if (n.type === "matrix") {

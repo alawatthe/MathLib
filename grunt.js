@@ -36,8 +36,8 @@ module.exports = function(grunt) {
 							'// Then drawing modules:\n' +
 							'//\n' +
 							'// - [screen](#Screen "Jump to the screen implementation")\n' +
-							'// - [canvas](#Canvas "Jump to the canvas implementation")\n' +
-							'// - [svg](#SVG "Jump to the svg implementation")\n' +
+							'// - [screen2D](#Screen2D "Jump to the implementation for 2D plotting")\n' +
+							'// - [screen3D](#Screen3D "Jump to the implementation for 3D plotting")\n' +
 							'//\n' +
 							'// The next module is the [vector](#Vector "Jump to the vector implementation") module, because the Point and the Line module depend on it.\n' +
 							'//\n' +
@@ -50,6 +50,7 @@ module.exports = function(grunt) {
 							'// - [permutation](#Permutation "Jump to the permutation implementation")\n' +
 							'// - [point](#Point "Jump to the point implementation")\n' +
 							'// - [polynomial](#Polynomial "Jump to the polynomial implementation")\n' +
+							'// - [rational](#Rational "Jump to the rational number implementation")\n' +
 							'// - [set](#Set "Jump to the set implementation")\n',
 				banner_min: '/*! MathLib v<%= pkg.version %> MathLib.de | MathLib.de/en/license */',
 				bracket: '}'
@@ -126,6 +127,10 @@ module.exports = function(grunt) {
 							'src/polynomial/!(init).ts',
 							'<banner:meta.bracket>',
 
+							'src/rational/init.ts',
+							'src/rational/!(init).ts',
+							'<banner:meta.bracket>',
+
 							'src/set/init.ts',
 							'src/set/!(init).ts',
 							'<banner:meta.bracket>',
@@ -150,6 +155,10 @@ module.exports = function(grunt) {
 							'test/permutation/permutation.js',
 							'test/point/point.js',
 							'test/polynomial/polynomial.js',
+
+							'test/rational/init.js',
+							'test/rational/!(init).js',
+
 							'test/set/set.js',
 							
 							'test/vector/init.js',

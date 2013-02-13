@@ -1173,10 +1173,10 @@ test('.ln()', 1, function () {
 });
 
 
-test(".mod()", 1, function () {
+test('.mod()', 1, function () {
   var c = new MathLib.Complex(5, 6),
       d = new MathLib.Complex(2, 0);
-  equal(c.mod(3).isEqual(d), true, ".mod()");
+  equal(c.mod(3).isEqual(d), true, '.mod()');
 });
 
 
@@ -1203,10 +1203,10 @@ test('.plus()', 2, function () {
 });
 
 
-test(".sign()", 1, function () {
+test('.sign()', 1, function () {
   var c = new MathLib.Complex(5, 6),
       d = MathLib.Complex.polar(1, Math.atan2(6, 5));
-  equal(c.sign().isEqual(d), true, ".sign()");
+  equal(c.sign().isEqual(d), true, '.sign()');
 });
 
 
@@ -1215,11 +1215,13 @@ test('.sin()', 1, function () {
 });
 
 
-test('.times()', 2, function () {
-  var c = new MathLib.Complex(2, 5);
-  var d = new MathLib.Complex(3, 7);
-  deepEqual(c.times(3), new MathLib.Complex(6, 15), 'Multiplying by a normal number.');
-  deepEqual(c.times(d), new MathLib.Complex(-29, 29), 'Multiplying by a complex number.');
+test('.times()', 3, function () {
+  var c = new MathLib.Complex(2, 5),
+      d = new MathLib.Complex(3, 7),
+      r = new MathLib.Rational(2, 3);
+  equal(c.times(3).isEqual(new MathLib.Complex(6, 15)), true, 'Multiplying by a normal number.');
+  equal(c.times(d).isEqual(new MathLib.Complex(-29, 29)), true, 'Multiplying by a complex number.');
+  equal(c.times(r).isEqual(new MathLib.Complex(4/3, 10/3)), true, 'Multiplying by a rational number.');
 });
 
 
@@ -1920,7 +1922,7 @@ test('.solve()', 4, function () {
 });
 
 
-test('.times()', 4, function () {
+test('.times()', 5, function () {
   var m = new MathLib.Matrix([[1, 2], [3, 4]]),
       n = new MathLib.Matrix([[0, 1], [0, 0]]),
       res = new MathLib.Matrix([[0, 1], [0, 3]]),
@@ -1928,12 +1930,14 @@ test('.times()', 4, function () {
       c  = MathLib.Complex,
       mc = new MathLib.Matrix([[new c(2, 3), 0, 3], [2, new c(-1, 5), 0], [new c(3, -4), new c(0, 1), 1]]),
       bc = new MathLib.Vector([new c(4, 2), 3, new c(1, 7)]),
-      resc = new MathLib.Vector([new c(5, 37), new c(5, 19), new c(21, 0)]);
+      resc = new MathLib.Vector([new c(5, 37), new c(5, 19), new c(21, 0)]),
+      r = new MathLib.Rational(2, 3);
 
   deepEqual(m.times(3), new MathLib.Matrix([[3, 6], [9, 12]]), 'matrix scalar multiplication');
   deepEqual(m.times(new c(0, 1)), new MathLib.Matrix([[new c(0, 1), new c(0, 2)], [new c(0, 3), new c(0, 4)]]), 'matrix scalar multiplication');
   deepEqual(m.times(n), res, 'multiplying two simple matrices');
   deepEqual(mc.times(bc), resc, 'complex matrix times complex vector');
+  equal(m.times(r).isEqual(new MathLib.Matrix([[2/3, 4/3], [6/3, 8/3]])), true, 'complex matrix times rational number');
 });
 
 
@@ -2336,13 +2340,16 @@ test(".plus()", 4, function () {
 });
 
 
-test(".times()", 3, function () {
+test(".times()", 4, function () {
   var p = new MathLib.Polynomial(3),
-      p1 = new MathLib.Polynomial([1, 2, 3]);
+      p1 = new MathLib.Polynomial([1, 2, 3]),
+      r = new MathLib.Rational(2, 3);
   deepEqual(p1.times(5), new MathLib.Polynomial([5, 10, 15]), ".times(integer)");
   deepEqual(p.times(p1), new MathLib.Polynomial([0, 0, 0, 1, 2, 3]), ".times(polynomial)");
   deepEqual(p1.times(p), new MathLib.Polynomial([0, 0, 0, 1, 2, 3]), ".times(polynomial)");
+  deepEqual(p1.times(r), new MathLib.Polynomial([2/3, 4/3, 6/3]), ".times(rational)");
 });
+
 
 test(".toContentMathMLString()", 2, function () {
   var p = new MathLib.Polynomial([1, 2, 3]),
@@ -2418,6 +2425,111 @@ test('zero()', 1, function () {
   deepEqual(p, new MathLib.Polynomial([0]), 'Testing .zero');
 });
 
+module('Rational');
+test('init', 5, function () {
+  var r = new MathLib.Rational(2, 3),
+      p = new	MathLib.Rational(4);
+  equal(r.numerator, 2, 'Testing the numerator');
+  equal(r.denominator, 3, 'Testing the denominator');
+  equal(p.numerator, 4, 'Testing the numerator');
+  equal(p.denominator, 1, 'Testing the denominator');
+  throws(function(){new MathLib.Rational(2,0);}, 'Setting the denominator to zero should throw an error.');
+});
+
+
+
+// Properties
+test('.constructor', 1, function () {
+  var r = new MathLib.Rational(2, 3);
+  equal(r.constructor, MathLib.Rational, 'Testing .constructor');
+});
+
+test('.type', 1, function () {
+  var r = new MathLib.Rational(2, 3);
+  equal(r.type, 'rational', 'Testing .type');
+});
+test('.divide()', 2, function () {
+  var r = new MathLib.Rational(1, 2),
+			p = new MathLib.Rational(2, 3);
+
+  equal(r.divide(p).isEqual(new MathLib.Rational(3,4)), true, '.divide()');
+  equal(r.divide(2).isEqual(new MathLib.Rational(1,4)), true, '.divide()');
+});
+test('.inverse()', 2, function () {
+  var r = (new MathLib.Rational(1, 2)).inverse(),
+  		p = (new MathLib.Rational(0, 2)).inverse();
+  equal(r.isEqual(new MathLib.Rational(2, 1)), true, '.inverse()');
+  equal(p, undefined, '.inverse()');
+});
+test('.isEqual()', 2, function () {
+  var r = new MathLib.Rational(1, 2),
+			p = new MathLib.Rational(4, 8),
+			q = new MathLib.Rational(2, 3);
+
+  equal(r.isEqual(p), true, '.isEqual()');
+  equal(r.isEqual(q), false, '.isEqual()');
+});
+test('.isZero()', 2, function () {
+  var r = new MathLib.Rational(0, 2),
+			p = new MathLib.Rational(1, 3);
+
+  equal(r.isZero(), true, '.isZero()');
+  equal(p.isZero(), false, '.isZero()');
+});
+test('.minus()', 2, function () {
+  var r = new MathLib.Rational(1, 2),
+			p = new MathLib.Rational(2, 3);
+
+  equal(r.minus(p).isEqual(new MathLib.Rational(-1,6)), true, '.minus()');
+  equal(r.minus(2).isEqual(new MathLib.Rational(-3,2)), true, '.minus()');
+});
+test('.negative()', 1, function () {
+  var r = (new MathLib.Rational(1, 2)).negative();
+  equal(r.isEqual(new MathLib.Rational(-1, 2)), true, '.isEqual()');
+});
+test('.plus()', 2, function () {
+  var r = new MathLib.Rational(1, 2),
+			p = new MathLib.Rational(2, 3);
+
+  equal(r.plus(p).isEqual(new MathLib.Rational(7,6)), true, '.plus()');
+  equal(r.plus(2).isEqual(new MathLib.Rational(5,2)), true, '.plus()');
+});
+test('.reduce()', 4, function () {
+  var r = (new MathLib.Rational(-4, -6)).reduce(),
+  		p = (new MathLib.Rational(3, -6)).reduce();
+  equal(r.numerator, 2, '.reduce()');
+  equal(r.denominator, 3, '.reduce()');
+  equal(p.numerator, -1, '.reduce()');
+  equal(p.denominator, 2, '.reduce()');
+});
+test('.times()', 2, function () {
+  var r = new MathLib.Rational(1, 2),
+			p = new MathLib.Rational(2, 3);
+
+  equal(r.times(p).isEqual(new MathLib.Rational(2,6)), true, '.times()');
+  equal(r.times(2).isEqual(new MathLib.Rational(1,1)), true, '.times()');
+});
+test('.toContentMathMLString()', 1, function () {
+  var r = new MathLib.Rational(2, 3);
+  equal(r.toContentMathMLString(), '<cn type="rational">2<sep/>3</cn>', '.toContentMathMLString()');
+});
+test('.toLaTeX()', 1, function () {
+  var r = new MathLib.Rational(2, 3);
+  equal(r.toLaTeX(), '\\frac{2}{3}', '.toLaTeX()');
+});
+test('.toMathMLString()', 1, function () {
+  var r = new MathLib.Rational(2, 3);
+  equal(r.toMathMLString(), '<mfrac><mn>2</mn><mn>3</mn></mfrac>', '.toMathMLString()');
+});
+test('.toNumber()', 1, function () {
+  var r = new MathLib.Rational(1, 2);
+
+  equal(r.toNumber(), 1/2, '.toNumber()');
+});
+test('.toString()', 1, function () {
+  var r = new MathLib.Rational(2, 3);
+  equal(r.toString(), '2/3', '.toString()');
+});
 module('Set');
 test('init', 1, function () {
   var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
@@ -2746,11 +2858,14 @@ test('.slice()', 2, function () {
   deepEqual(v.slice(1,3), [2,3], '.slice()');
   equal(MathLib.type(v.slice(1,3)), 'array', '.slice()');
 });
-test('.times()', 2, function () {
+test('.times()', 3, function () {
   var v = new MathLib.Vector([1, 2, 3]),
-      m = new MathLib.Matrix([[1,2,3],[4,5,6],[7,8,9]]);
+      m = new MathLib.Matrix([[1,2,3],[4,5,6],[7,8,9]]),
+      r = new MathLib.Rational(2, 3);
+
   deepEqual(v.times(3), new MathLib.Vector([3, 6, 9]), '.times(number)');
   deepEqual(v.times(m), new MathLib.Vector([30, 36, 42]), '.times(matrix)');
+  deepEqual(v.times(r), new MathLib.Vector([2/3, 4/3, 6/3]), '.times(rational)');
 });
 test('.toArray()', 2, function () {
   var v = new MathLib.Vector([1, 2, 3]);
