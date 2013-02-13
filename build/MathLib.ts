@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2013-01-30  
+// v0.3.5 - 2013-02-10  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -25,8 +25,8 @@
 // Then drawing modules:
 //
 // - [screen](#Screen "Jump to the screen implementation")
-// - [canvas](#Canvas "Jump to the canvas implementation")
-// - [svg](#SVG "Jump to the svg implementation")
+// - [screen2D](#Screen2D "Jump to the implementation for 2D plotting")
+// - [screen3D](#Screen3D "Jump to the implementation for 3D plotting")
 //
 // The next module is the [vector](#Vector "Jump to the vector implementation") module, because the Point and the Line module depend on it.
 //
@@ -39,6 +39,7 @@
 // - [permutation](#Permutation "Jump to the permutation implementation")
 // - [point](#Point "Jump to the point implementation")
 // - [polynomial](#Polynomial "Jump to the polynomial implementation")
+// - [rational](#Rational "Jump to the rational number implementation")
 // - [set](#Set "Jump to the set implementation")
 
 
@@ -1216,10 +1217,9 @@ var functionList3 = {
   arithMean: function (n) {
         return MathLib.plus(n) / n.length;
       },
-  gcd: function () {
+  gcd: function (a) {
         var min,
-            a = this,
-            magic = function (x) {
+            reduction = function (x) {
               return x !== min ? x%min : x;
             },
             isntZero = function (x) {
@@ -1227,17 +1227,15 @@ var functionList3 = {
             };
 
         // remove zeros and make negative values positive
-        a = a.filter(function (x) {
-          if (x<0) {
-            a.push(-x);
-            return false;
-          }
-          return x !== 0;
-        });
+        a = a.filter(isntZero).map(Math.abs);
+
+        if (a.length === 0) {
+          return 0;
+        }
 
         while(a.length > 1) {
           min = MathLib.min(a);
-          a = a.map(magic).filter(isntZero);
+          a = a.map(reduction).filter(isntZero);
         }
         return a[0] || min;
       },
@@ -3760,7 +3758,7 @@ surfacePlot3D(f, options) {
 
 
 
-// ## <a id="Vector"></a>Vector
+// ## <a id="Vector" href="http://mathlib.de/en/docs/vector">Vector</a>
 // The vector implementation of MathLib makes calculations with vectors of
 // arbitrary size possible. The entries of the vector can be numbers and complex
 // numbers.
@@ -3969,9 +3967,12 @@ slice(...args : any[]) : any[] {
 // *@returns {vector}*
 times(n : any) : any {
   var res = [], i, ii;
+  if(n.type === 'rational') {
+    n = n.toNumber(); 
+  }
   if (typeof n === "number" || n.type === "complex") {
     return this.map(function (x) {
-      return MathLib.times(x, n);
+      return MathLib.times(n, x);
     });
   }
   if (n.type === "matrix") {
@@ -4448,12 +4449,15 @@ static one = new Complex(1, 0);
 // *@param {complex}* The number to be added  
 // *@returns {complex}*
 plus(c) {
-  if (c.type === "complex") {
-    return new MathLib.Complex(MathLib.plus(this.re, c.re), MathLib.plus(this.im, c.im));
-  }
-  else if (typeof c === "number") {
-    return new MathLib.Complex(MathLib.plus(this.re, c), this.im);
-  }
+	if (c.type === "complex") {
+		return new MathLib.Complex(MathLib.plus(this.re, c.re), MathLib.plus(this.im, c.im));
+	}
+	else if (c.type === "rational") {
+		c = c.toNumber();
+	}
+	if (typeof c === "number") {
+		return new MathLib.Complex(MathLib.plus(this.re, c), this.im);
+	}
 }
 
 
@@ -4502,14 +4506,17 @@ sinh() {
 // ### Complex.prototype.times()
 // Multiplies complex numbers
 //
-// *@param {complex}* The number to be added  
+// *@param {complex}* The number to be multiplied  
 // *@returns {complex}*
 times(c) {
   if (c.type === "complex") {
     return new MathLib.Complex(MathLib.minus(MathLib.times(this.re, c.re), MathLib.times(this.im, c.im)),
         MathLib.plus(MathLib.times(this.re, c.im), MathLib.times(this.im, c.re)));
   }
-  else if (typeof c === "number") {
+  else if (c.type === "rational") {
+		c = c.toNumber();
+	}
+  if (typeof c === "number") {
     return new MathLib.Complex(MathLib.times(this.re, c), MathLib.times(this.im, c));
   }
 }
@@ -4610,311 +4617,6 @@ toString() {
 //
 // *@returns {complex}*
 static zero = new Complex(0, 0);
-
-
-}
-
-
-
-// ## <a id="Expression"></a>Expression
-// MathLib.Expression is the MathLib implementation of symbolic expressions
-
-export class Expression {
-
-  type = 'expression';
-
-  subtype: string;
-  name: string;
-  length: number;
-  value: any;
-  $: any;
-
-
-  constructor(o) {
-  	this.subtype = o.subtype;
-  	this.name = o.name;
-    if ('children' in o) {
-      this.$ = o.children;
-    }
-
-  }
-
-
-/*
-  boolean
-  number
-  matrix
-  vector
-
-
-  operator
-    boolean
-    	and, or, not, xor
-
-  */
-
-
-// ### [Expression.prototype.concat()](http://mathlib.de/en/docs/expression/concat)
-// Works like Array.prototype.concat.
-//
-// *@param {array}*  
-// *@returns {Expression}*
-concat(a) : any {
-  return Array.prototype.concat.call(this, arguments);
-}
-
-
-// ### Expression.prototype.evaluate()
-// Evaluates the symbolic expression
-//
-// *@returns {any}*
-evaluate() : any {
-	return this.simplify().value;
-}
-
-
-// ### Expression.prototype.every()
-// Works like Array.prototype.every.
-//
-// *@returns {boolean}*
-every(f : (value : any, index : number, expression : Expression ) => bool) : bool {
-  return Array.prototype.every.call(this, f);
-}
-
-
-// ### Expression.False
-//
-// *@returns {polynomial}*
-static False = {
-	subtype: 'boolean',
-	name: 'false',
-	value: false
-};
-
-
-// ### [Expression.prototype.forEach()](http://mathlib.de/en/docs/expression/forEach)
-// Works like Array.prototype.forEach.
-//
-forEach(f : (value : any, index : number, expression : Expression ) => void) : void {
-  Array.prototype.forEach.call(this, f);
-}
-
-
-// ### [Expression.prototype.map()](http://mathlib.de/en/docs/expression/map)
-// Works like Array.prototype.map.
-//
-// *@param {function}*  
-// *@returns {Expression}*
-map(f : (value : any, index : number, expression : Expression ) => any) : any {
-  return Array.prototype.map.call(this, f);
-}
-
-
-// ### Expression.prototype.simplify()
-// Simplifies the symbolic expression
-//
-// *@returns {Expression}*
-simplify() : Expression {
-
-	var FALSE = MathLib.Expression.False,
-			TRUE = MathLib.Expression.True;
-
-	if (this.subtype === 'booleanOperator') {
-
-
-		// AND
-		// ===
-		if (this.name === 'and') {
-			for (var i = 0, ii = this.$.length; i<ii; i++) {
-				if(this.$[i].subtype !== 'boolean') {
-					this.$[i] = this.$[i].simplify();
-				}
-				if (this.$[i] === FALSE) {
-					return FALSE;
-				}
-				else if (this.$[i] === TRUE) {
-					this.$.splice(i, 1);
-					ii--;
-					i--;
-				}
-				else if (this.$[i].name === 'and') {
-					this.$.splice(i, 1, this.$[i].$);
-					ii = this.$.length;
-				}
-			}
-			if (ii === 0){
-				return TRUE;
-			}
-		}
-
-
-		// OR
-		// ==
-		else if (this.name === 'or') {
-			for (var i = 0, ii = this.$.length; i<ii; i++) {
-				if(this.$[i].subtype !== 'boolean') {
-					this.$[i] = this.$[i].simplify();
-				}
-
-				if (this.$[i] === FALSE) {
-					this.$.splice(i, 1);
-					ii--;
-					i--;
-				}
-				else if (this.$[i] === TRUE) {
-					return TRUE;
-				}
-				else if (this.$[i].name === 'or') {
-					this.$.splice(i, 1, this.$[i].$);
-					//i-- ?
-					ii = this.$.length;
-				}
-				else if (this.$[i].name === 'and') {
-					var and = this.$.splice(i, 1),
-							res = [];
-
-					for (j = 0; j < jj; j++) {
-						res[j] = and.slice().splice(i, 0, and[j])
-					}
-
-					this.name = 'and';
-					this.$ = res;
-					this.simplify();
-
-					// a || (c && d && e) || b      ->     (a || c || b) && (a || d || b) && (a || e || b)
-				}
-
-			}
-			if (ii === 0){
-				return FALSE;
-			}
-		}
-
-
-		// NOT
-		// ===
-		else if (this.name === 'not') {
-			// not true -> false
-			if (this.$[0] === TRUE) {
-				return FALSE;
-			}
-			// not false -> true
-			if (this.$[0] === FALSE) {
-				return TRUE;
-			}
-			// Distribute the not over the and
-			else if (this.$[0].name === 'and') {
-				var children = this.$[0].map(function(x, i) {
-							return new MathLib.Expression({subtype: 'booleanOperator', name: 'not', children: [x]})
-						}),
-						or = new MathLib.Expression({subtype: 'booleanOperator', name: 'or', children: children});
-				return or.simplify();
-			}
-			// Distribute the not over the or
-			else if (this[0].name === 'or') {
-				var children = this.$[0].map(function(x, i) {
-							return new MathLib.Expression({subtype: 'booleanOperator', name: 'not', children: [x]})
-						}),
-						and = new MathLib.Expression({subtype: 'booleanOperator', name: 'and', children: children});
-				return and.simplify();
-			}
-	  	// Remove double not
-			else if (this.$[0].name === 'not') {
-				return this.$[0].$[0].simplify();
-			}
-		}
-
-
-
-		// XOR
-		// ===
-		else if (this.name === 'xor') {
-			var numTrue = 0;
-
-			for (var i = 0, ii = this.$.length; i<ii; i++) {
-
-				// TODO: Convert the xor expression to CNF
-
-				if(this.$[i].subtype !== 'boolean') {
-					this.$[i] = this.$[i].simplify();
-				}
-
-				// Because of A XOR TRUE = TRUE XOR A = NOT A we can remove two TRUEs together.
-				// We remove every true and keep track how many we removed.
-				if (this.$[i] === TRUE) {
-					this.$.splice(i, 1);
-					ii--;
-					i--;
-					numTrue++;
-				}
-				// Because of A XOR FALSE = FALSE XOR A = A we can remove every FALSE.
-				else if (this.$[i] === FALSE) {
-					this.$.splice(i, 1);
-					ii--;
-					i--;
-				}
-			}
-
-			// There might be the case, that we removed everything
-			if (ii === 0){
-				this.$ = [FALSE];
-			}
-
-			// If we removed an odd number of TRUEs, we have to negate one argument
-			if (numTrue%2 === 1) {
-				var x = this.$.splice(0, 1);
-				this.$.splice(0,0, (new MathLib.Expression({subtype: 'booleanOperator', name: 'not', children: [x]})).simplify())
-			}
-		}
-	}
-	
-	return this;
-}
-
-
-// ### Expression.prototype.some()
-// Works like Array.prototype.some.
-//
-// *@returns {boolean}*
-some(f : (value : any, index : number, expression : Expression ) => bool) : bool {
-  return Array.prototype.some.call(this, f);
-}
-
-
-// ### [Expression.prototype.splice()](http://mathlib.de/en/docs/expression/splice)
-// Works like the Array.prototype.splice function
-//
-// *@returns {array}*
-splice(...args : any[]) : any[] {
-	return Array.prototype.splice.apply(this, args);
-}
-
-
-
-
-
-
-
-
-// ### Expression.False
-//
-// *@returns {polynomial}*
-static True = {
-	subtype: 'boolean',
-	name: 'true',
-	value: true
-};
-
-
-// ### Expression.Variable
-//
-// *@returns {Expression}*
-static Variable = function (name) {
-	return {
-		subtype: 'variable',
-		name: name
-	}
-};
 
 
 }
@@ -6043,10 +5745,13 @@ some(f) {
 // ### Matrix.prototype.times()
 // Multiplies the current matrix with a number, a matrix, a point or a vector.
 //
-// *@param {number|matrix|point|vector}*  
+// *@param {number|matrix|point|rational|vector}*  
 // *@returns {matrix|point|vector}*
 times(a) {
   var res = [], temp, i, j, k;
+  if(a.type === 'rational') {
+    a = a.toNumber(); 
+  }
   if (typeof a === 'number' || a.type === 'complex') {
     return this.map(function(x) {
       return MathLib.times(x, a);
@@ -7136,15 +6841,18 @@ tangent(p) {
 }
 
 
-// ### Polynomial.prototype.tangent()
-// Returns the tangent to the polynomial at a given point
+// ### Polynomial.prototype.times()
+// Multiplies the polynomial by a number or an other polynomial  
 //
-// *@param{number}* The x-value of the point.  
-// *@returns {polynomial}*
+// *@param{number|Polynomial}* The multiplicator  
+// *@returns {Polynomial}*
 times(a) {
   var temparr = [],
-      i,
-      j;
+      i, j;
+      
+  if(a.type === 'rational') {
+    a = a.toNumber(); 
+  }
   if (a.type === 'polynomial') {
     for (i = 0; i <= this.deg; i++) {
       for (j = 0; j <= a.deg; j++) {
@@ -7334,6 +7042,213 @@ valueAt(x) {
 //
 // *@returns {polynomial}*
 static zero = new Polynomial([0]);
+
+
+}
+
+
+
+// ## <a id="Rational" href="http://mathlib.de/en/docs/rational">Rational</a>
+// MathLib.Rational is the MathLib implementation of rational numbers.
+//
+//
+// #### Simple use case:
+// ```
+// // Create the rational number 2/3  
+// var r = new MathLib.Rational(2, 3);  
+// ```
+
+export class Rational {
+
+  type = 'rational';
+
+  numerator: number;
+  denominator: number;
+
+  constructor(numerator: number, denominator = 1) {
+  	if (MathLib.isZero(denominator)) {
+  		throw 'The denominator cannot be zero.';
+  	}
+  	this.numerator = numerator;
+  	this.denominator = denominator;
+  }
+
+
+// ### [Rational.prototype.divide()](http://mathlib.de/en/docs/rational/divide)
+// Divides rational numbers
+//
+// *@param {Rational, number}* The divisor  
+// *@returns {Rational}*
+divide(r) {
+	if (r.type === "rational") {
+    return new MathLib.Rational(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));
+  }
+  else if (typeof r === "number") {
+    return new MathLib.Rational(this.numerator, MathLib.times(this.denominator, r));
+  }
+  // For complex numbers
+  else {
+    return r.inverse().times(this);
+  }
+}
+
+
+// ### [Rational.prototype.inverse()](http://mathlib.de/en/docs/rational/inverse)
+// Calculates the inverse of a rational number
+//
+// *@returns {Rational}*
+inverse() : Rational {
+	if (!MathLib.isZero(this.numerator)) {
+	  return new MathLib.Rational(this.denominator, this.numerator);
+	}
+}
+
+
+// ### [Rational.prototype.isEqual()](http://mathlib.de/en/docs/rational/isEqual)
+// Checks if the rational number is equal to an other number
+//
+// *@returns {bool}*
+isEqual(r) : bool {
+	return MathLib.isEqual(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));
+}
+
+
+// ### [Rational.prototype.isZero()](http://mathlib.de/en/docs/rational/isZero)
+// Checks if the rational number is zero
+//
+// *@returns {bool}*
+isZero() : bool {
+	return MathLib.isZero(this.numerator);
+}
+
+
+// ### [Rational.prototype.minus()](http://mathlib.de/en/docs/rational/minus)
+// Subtracts rational numbers
+//
+// *@param {Rational|number}* The number to be subtracted  
+// *@returns {Rational}*
+minus(r) {
+	var n = this.numerator,
+			d = this.denominator;
+
+	if (r.type === "rational") {
+    return new MathLib.Rational(MathLib.minus(MathLib.times(n, r.denominator), MathLib.times(d, r.numerator)),
+    	MathLib.times(d, r.denominator));
+  }
+  else if (typeof r === "number") {
+    return new MathLib.Rational(MathLib.minus(n, MathLib.times(r, d)), d);
+  }
+  // For complex numbers
+  else {
+  	return r.minus(this).negative();
+  }
+}
+
+
+// ### [Rational.prototype.negative()](http://mathlib.de/en/docs/rational/negative)
+// Calculates the negative of a rational number
+//
+// *@returns {Rational}*
+negative() : Rational {
+	return new MathLib.Rational(-this.numerator, this.denominator);
+}
+
+
+// ### [Rational.prototype.plus()](http://mathlib.de/en/docs/rational/plus)
+// Adds rational numbers
+//
+// *@param {Rational, number}* The number to be added  
+// *@returns {Rational}*
+plus(r) {
+	var n = this.numerator,
+			d = this.denominator;
+
+	if (r.type === "rational") {
+    return new MathLib.Rational(MathLib.plus(MathLib.times(d, r.numerator), MathLib.times(n, r.denominator)),
+    	MathLib.times(d, r.denominator));
+  }
+  else if (typeof r === "number") {
+    return new MathLib.Rational(MathLib.plus(n, MathLib.times(r, d)), d);
+  }
+  // For complex numbers
+  else {
+  	return r.plus(this);
+  }
+}
+
+
+// ### [Rational.prototype.reduce()](http://mathlib.de/en/docs/rational/reduce)
+// Reduces the rational number
+//
+// *@returns {Rational}*
+reduce() : Rational {
+  var gcd = MathLib.sign(this.denominator) * MathLib.gcd([this.numerator, this.denominator]);
+  return new MathLib.Rational(this.numerator/gcd, this.denominator/gcd);
+}
+
+
+// ### [Rational.prototype.times()](http://mathlib.de/en/docs/rational/times)
+// Multiplies rational numbers
+//
+// *@param {Rational, number}* The number to be multiplied  
+// *@returns {Rational}*
+times(r) {
+	if (r.type === "rational") {
+    return new MathLib.Rational(MathLib.times(this.numerator, r.numerator), MathLib.times(this.denominator, r.denominator));
+  }
+  else if (typeof r === "number") {
+    return new MathLib.Rational(MathLib.times(this.numerator, r), this.denominator);
+  }
+  // For complex numbers, matrices, vectors, polynomials
+  else {
+  	return r.times(this);
+  }
+}
+
+
+// ### [Rational.prototype.toContentMathMLString()](http://mathlib.de/en/docs/rational/toContentMathMLString)
+// Returns the Content MathML representation of the rational number
+//
+// *@returns {string}*
+toContentMathMLString() : String {
+	return '<cn type="rational">' + this.numerator + '<sep/>' + this.denominator + '</cn>';
+}
+
+
+// ### [Rational.prototype.toLaTeX()](http://mathlib.de/en/docs/rational/toLaTeX)
+// Returns the LaTeX representation of the rational number
+//
+// *@returns {string}*
+toLaTeX() : String {
+	return '\\frac{' + MathLib.toLaTeX(this.numerator) + '}{' + MathLib.toLaTeX(this.denominator) + '}';
+}
+
+
+// ### [Rational.prototype.toMathMLString()](http://mathlib.de/en/docs/rational/toMathMLString)
+// Returns the MathML representation of the rational number
+//
+// *@returns {string}*
+toMathMLString() : String {
+	return '<mfrac>' + MathLib.toMathMLString(this.numerator) + MathLib.toMathMLString(this.denominator) + '</mfrac>';
+}
+
+
+// ### [Rational.prototype.toNumber()](http://mathlib.de/en/docs/rational/toNumber)
+// Returns the number represented by the rational number
+//
+// *@returns {number}*
+toNumber() : number {
+	return this.numerator / this.denominator;
+}
+
+
+// ### [Rational.prototype.toString()](http://mathlib.de/en/docs/rational/toString)
+// Custom toString function
+//
+// *@returns {string}*
+toString() : String {
+	return MathLib.toString(this.numerator) + '/' + MathLib.toString(this.denominator);
+}
 
 
 }

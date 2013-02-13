@@ -509,10 +509,9 @@ var functionList3 = {
   arithMean: function (n) {
         return MathLib.plus(n) / n.length;
       },
-  gcd: function () {
+  gcd: function (a) {
         var min,
-            a = this,
-            magic = function (x) {
+            reduction = function (x) {
               return x !== min ? x%min : x;
             },
             isntZero = function (x) {
@@ -520,17 +519,15 @@ var functionList3 = {
             };
 
         // remove zeros and make negative values positive
-        a = a.filter(function (x) {
-          if (x<0) {
-            a.push(-x);
-            return false;
-          }
-          return x !== 0;
-        });
+        a = a.filter(isntZero).map(Math.abs);
+
+        if (a.length === 0) {
+          return 0;
+        }
 
         while(a.length > 1) {
           min = MathLib.min(a);
-          a = a.map(magic).filter(isntZero);
+          a = a.map(reduction).filter(isntZero);
         }
         return a[0] || min;
       },
