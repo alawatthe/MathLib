@@ -1,12 +1,15 @@
-// ### Polynomial.prototype.tangent()
-// Returns the tangent to the polynomial at a given point
+// ### Polynomial.prototype.times()
+// Multiplies the polynomial by a number or an other polynomial  
 //
-// *@param{number}* The x-value of the point.  
-// *@returns {polynomial}*
+// *@param{number|Polynomial}* The multiplicator  
+// *@returns {Polynomial}*
 times(a) {
   var temparr = [],
-      i,
-      j;
+      i, j;
+      
+  if(a.type === 'rational') {
+    a = a.toNumber(); 
+  }
   if (a.type === 'polynomial') {
     for (i = 0; i <= this.deg; i++) {
       for (j = 0; j <= a.deg; j++) {

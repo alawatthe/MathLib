@@ -141,10 +141,10 @@ test('.ln()', 1, function () {
 });
 
 
-test(".mod()", 1, function () {
+test('.mod()', 1, function () {
   var c = new MathLib.Complex(5, 6),
       d = new MathLib.Complex(2, 0);
-  equal(c.mod(3).isEqual(d), true, ".mod()");
+  equal(c.mod(3).isEqual(d), true, '.mod()');
 });
 
 
@@ -171,10 +171,10 @@ test('.plus()', 2, function () {
 });
 
 
-test(".sign()", 1, function () {
+test('.sign()', 1, function () {
   var c = new MathLib.Complex(5, 6),
       d = MathLib.Complex.polar(1, Math.atan2(6, 5));
-  equal(c.sign().isEqual(d), true, ".sign()");
+  equal(c.sign().isEqual(d), true, '.sign()');
 });
 
 
@@ -183,11 +183,13 @@ test('.sin()', 1, function () {
 });
 
 
-test('.times()', 2, function () {
-  var c = new MathLib.Complex(2, 5);
-  var d = new MathLib.Complex(3, 7);
-  deepEqual(c.times(3), new MathLib.Complex(6, 15), 'Multiplying by a normal number.');
-  deepEqual(c.times(d), new MathLib.Complex(-29, 29), 'Multiplying by a complex number.');
+test('.times()', 3, function () {
+  var c = new MathLib.Complex(2, 5),
+      d = new MathLib.Complex(3, 7),
+      r = new MathLib.Rational(2, 3);
+  equal(c.times(3).isEqual(new MathLib.Complex(6, 15)), true, 'Multiplying by a normal number.');
+  equal(c.times(d).isEqual(new MathLib.Complex(-29, 29)), true, 'Multiplying by a complex number.');
+  equal(c.times(r).isEqual(new MathLib.Complex(4/3, 10/3)), true, 'Multiplying by a rational number.');
 });
 
 
