@@ -67,7 +67,15 @@ module.exports = function(grunt) {
 							'<banner:meta.bracket>',
 
 							'src/functn/init.ts',
-							'src/functn/!(init).ts',
+							'src/functn/diff.ts',
+							'src/functn/quad.ts',
+							'src/functn/toContentMathML.ts',
+							'src/functn/toContentMathMLString.ts',
+							'src/functn/toLaTeX.ts',
+							'src/functn/toMathML.ts',
+							'src/functn/toMathMLString.ts',
+							'src/functn/toString.ts',
+							'src/functn/functnList.ts',
 
 							'src/screen/init.ts',
 							//'src/screen/enterFullscreen.ts',
@@ -148,7 +156,10 @@ module.exports = function(grunt) {
 							'test/circle/!(init).js',
 
 							'test/complex/complex.js',
-							'test/functn/functn.js',
+							
+							'test/functn/init.js',
+							'test/functn/!(init).js',
+
 							'test/line/line.js',
 							'test/MathML/MathML.js',
 							'test/matrix/matrix.js',

@@ -2,6 +2,6 @@
 // Returns a content MathML representation of the function
 //
 // *@returns {string}*
-MathLib.extendPrototype('functn', 'toContentMathMLString', function() {
+functnPrototype.toContentMathMLString = function(bvar = '') {
   return this.contentMathML.outerMathML;
-});
+};

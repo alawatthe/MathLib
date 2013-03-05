@@ -96,12 +96,12 @@ for (var elemfn in functionList) {
 
     // MathLib[elemfn] = functionList[elemfn];
     // MathLib[elemfn] = MathLib.functn(functionList[elemfn], {name: elemfn, contentMathMLString: mathStart + elemfn + mathEnd});
-    MathLib.extend('', elemfn, MathLib.functn(functionList[elemfn], {name: elemfn, contentMathMLString: mathStart + elemfn + mathEnd}));
+    MathLib.extend('', elemfn, new MathLib.Functn(functionList[elemfn], {name: elemfn, contentMathMLString: mathStart + elemfn + mathEnd}));
   }
 }
 
 
-MathLib.identity = MathLib.functn(function identity(x){
+MathLib.identity = new MathLib.Functn(function identity(x){
     return x;
   }, {contentMathMLString: mathStart + 'ident' + mathEnd}
 );
@@ -577,7 +577,7 @@ var functionList3 = {
               };
             }
             var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
-            return MathLib.functn(function (x) {
+            return new MathLib.Functn(function (x) {
               return MathLib.plus(f1(x), f2(x));
             }, {
               contentMathMLString: MathML
@@ -617,7 +617,7 @@ var functionList3 = {
               };
             }
             var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
-            return MathLib.functn(function (x) {
+            return new MathLib.Functn(function (x) {
               return MathLib.times(f1(x), f2(x));
             }, {
               contentMathMLString: MathML
@@ -777,8 +777,10 @@ var createFunction1 = function (f, name) {
 
 var createFunction3 = function (f, name) {
   return function (n) {
-    //if(!MathLib.isArrayLike(n)) {
-    if(MathLib.type(n) !== 'array' && MathLib.type(n) !== 'set') {
+    if(MathLib.type(n) === 'set') {
+      return f(n.slice());
+    }
+    else if(MathLib.type(n) !== 'array') {
       n = Array.prototype.slice.apply(arguments);
     }
     return f(n);

@@ -32,12 +32,12 @@ parse() : any {
 
         
         if (innerFunc === undefined) {
-          return MathLib.functn(function (x) {return MathLib[funcName](x);}, {
+          return new MathLib.Functn(function (x) {return MathLib[funcName](x);}, {
             contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + node.outerMathML + '</lambda></math>'
           });
         }
         else {
-          return MathLib.functn(function (x) {return MathLib[funcName](innerFunc(x));}, {
+          return new MathLib.Functn(function (x) {return MathLib[funcName](innerFunc(x));}, {
             contentMathMLString: node.outerMathML
           });
         }
@@ -69,7 +69,7 @@ parse() : any {
         return MathLib.MathML.variables[node.innerMathML];
       }
       else {
-        return MathLib.functn(function (x) {return x;}, {contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><ident/><ci>x</ci></apply></lambda></math>'});
+        return new MathLib.Functn(function (x) {return x;}, {contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><ident/><ci>x</ci></apply></lambda></math>'});
       }
     },
 
@@ -116,13 +116,13 @@ parse() : any {
       innerFunc = parser(apply.childNodes.slice(1));
 
       if (innerFunc[0] === undefined) {
-        return MathLib.functn(function (x) {return MathLib[funcName](x);}, {
+        return new MathLib.Functn(function (x) {return MathLib[funcName](x);}, {
           contentMathMLString: node.outerMathML,
           domain: domain
         });
       }
       else {
-        return MathLib.functn(function (x) {return MathLib[funcName].apply(null, innerFunc.map(function (f){
+        return new MathLib.Functn(function (x) {return MathLib[funcName].apply(null, innerFunc.map(function (f){
           return typeof f === 'function' ? f(x) : f;
         }));}, {
           contentMathMLString: node.outerMathML,

@@ -1,7 +1,7 @@
 plus(n : any) : any {
   var res = [];
   if (!arguments.length) {
-    return MathLib.plus.apply(null, this);
+    return MathLib.plus.apply(null, this.toArray());
   }
   else if (n.type === 'set') {
     this.forEach(function (x) {

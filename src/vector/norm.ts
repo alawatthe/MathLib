@@ -8,7 +8,7 @@ norm(p = 2) : number {
 	  return MathLib.hypot.apply(null, this.toArray());
 	}
 	else if (p === Infinity) {
-		return Math.max.apply(null, this.map(Math.abs));
+		return Math.max.apply(null, this.map(Math.abs).toArray());
 	}
 	else {
 		return MathLib.root(this.reduce(function(prev, curr){
