@@ -3,7 +3,7 @@
 //
 // *@param {string}* Optional: custom name for the bound variable (default: x)  
 // *@returns {string}*
-MathLib.extendPrototype('functn', 'toLaTeX', function(bvar) {
+functnPrototype.toLaTeX = function(bvar = '') {
 
   // List of functions to be executed on the specified node type
   var handlers = {
@@ -44,4 +44,4 @@ MathLib.extendPrototype('functn', 'toLaTeX', function(bvar) {
 
   // Start the node handling with the first real element (not the <math> element)
   return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
-});
+};

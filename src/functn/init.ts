@@ -1,19 +1,12 @@
 // ## <a id="Functions"></a>Functions
 //
-// Because 'function' is a reserved word in JavaScript the module is called 
-// 'functn'.  
+// Because 'Function' is a reserved word in JavaScript the module is called 
+// 'Functn'.  
 // More improvements to the module coming soon.
 
-/*
-export class Functn {
+var functnPrototype:any = {};
 
-  type = 'functn';
-
-  constructor() {}
-*/
-
-prototypes.functn = function(){}; //Object.getPrototypeOf(function(){});
-MathLib.functn = function (f, options) {
+MathLib.Functn = function (f, options) {
   options = options || {};
 
   var functn = function (x) {
@@ -26,7 +19,7 @@ MathLib.functn = function (f, options) {
           innerStr = x.contentMathML.childNodes[0].childNodes[2].outerMathML.replace('<bvar>' + innerVar + '</bvar>', ''), 
           outerStr = functn.contentMathML.childNodes[0].childNodes[2].outerMathML.replace(outerVar, innerStr),
           res = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><complexes/></domainofapplication>' + outerStr + '</lambda></math>';
-      return MathLib.functn(function (y) {return f(x(y));}, {contentMathMLString: res});
+      return new MathLib.Functn(function (y) {return f(x(y));}, {contentMathMLString: res});
     }
     else if (typeof x === 'function') {
       return function (y) {return f(x(y));};
@@ -39,7 +32,13 @@ MathLib.functn = function (f, options) {
     }
   };
 
-  functn[proto] = prototypes.functn;
+  //functn[proto] = prototypes.functn;
+  for (var name in functnPrototype) {
+    functn[name] = functnPrototype[name];
+  }
+  functn.type = 'functn';
+  functn.constructor = MathLib.Functn;
+
 
   var contentMathML = options.contentMathMLString || '';
   
@@ -50,9 +49,3 @@ MathLib.functn = function (f, options) {
 
   return functn;
 };
-
-// Setting the .constructor property to MathLib.functn
-MathLib.extendPrototype('functn', 'constructor', MathLib.functn);
-
-// Setting the .type property to 'functn'
-MathLib.extendPrototype('functn', 'type', 'functn');

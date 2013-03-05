@@ -1,7 +1,7 @@
 // ### Polynomial.prototype.toFunctn()
 // Converts the polynomial to a functn
 //
-// *@returns {functn}*
+// *@returns {Functn}*
 toFunctn() {
   var str = '', i, ii;
   for (i=0, ii=this.deg; i<=ii; i++) {
@@ -22,5 +22,5 @@ toFunctn() {
     }
   }
 
-  return MathLib.functn(new Function('x', 'return ' + str), {contentMathMLString: this.toContentMathMLString(true)});
+  return new MathLib.Functn(new Function('x', 'return ' + str), {contentMathMLString: this.toContentMathMLString(true)});
 }

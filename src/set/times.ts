@@ -6,7 +6,7 @@
 // *@returns {set}*
 times(n : any) : any {
   if (!arguments.length) {
-    return MathLib.times.apply(null, this);
+    return MathLib.times.apply(null, this.toArray());
   }
   else {
     return this.map(function (x) {

@@ -1310,6 +1310,12 @@ test('zero', 1, function () {
   deepEqual(c, new MathLib.Complex(0, 0), '.zero');
 });
 
+test('.diff()', 4, function () {
+  ok(Math.abs(MathLib.cos.diff(0) - 0) < 1e-10, 'cos’(0) = 0');
+  ok(Math.abs(MathLib.sin.diff(0) - 1) < 1e-10, 'sin’(0) = 1');
+  ok(Math.abs(MathLib.exp.diff(0) - 1) < 1e-10, 'exp’(0) = 1');
+  ok(Math.abs(MathLib.exp.diff(1) - Math.E) < 1e-10, 'exp’(1) = e');
+});
 module("Functn");
 test('execution', 4, function () {
   equal(MathLib.sin(0), 0, 'MathLib.sin(0) should be 0');
@@ -1378,6 +1384,10 @@ test('.toString()', 7, function () {
   equal(MathLib.plus(MathLib.sin, MathLib.cos).toString(), 'sin(x)+cos(x)', 'MathLib.plus(MathLib.sin, MathLib.cos).toString() = sin(x)+cos(x)');
 });
 
+test('.quad()', 2, function () {
+  ok(Math.abs(MathLib.sin.quad(0, 2*Math.PI)) < 1e-15, 'integrate sin from 0 to 2*pi');
+  ok(Math.abs(MathLib.exp.quad(0, 1) - Math.E + 1) < 1e-7, 'integrate exp from 0 to 1');
+});
 module('Line');
 test('init', 4, function () {
   var line = new MathLib.Line([3, 2, 1]);

@@ -296,13 +296,13 @@ var MathLib;
                         // funcName = func.childNodes[0].nodeName;
                         innerFunc = parser(children[0]);
                         if(innerFunc === undefined) {
-                            return MathLib.functn(function (x) {
+                            return new MathLib.Functn(function (x) {
                                 return MathLib[funcName](x);
                             }, {
                                 contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + node.outerMathML + '</lambda></math>'
                             });
                         } else {
-                            return MathLib.functn(function (x) {
+                            return new MathLib.Functn(function (x) {
                                 return MathLib[funcName](innerFunc(x));
                             }, {
                                 contentMathMLString: node.outerMathML
@@ -329,7 +329,7 @@ var MathLib;
                     if(bvars.indexOf(node.innerMathML) === -1) {
                         return MathLib.MathML.variables[node.innerMathML];
                     } else {
-                        return MathLib.functn(function (x) {
+                        return new MathLib.Functn(function (x) {
                             return x;
                         }, {
                             contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><ident/><ci>x</ci></apply></lambda></math>'
@@ -369,14 +369,14 @@ var MathLib;
                     }
                     innerFunc = parser(apply.childNodes.slice(1));
                     if(innerFunc[0] === undefined) {
-                        return MathLib.functn(function (x) {
+                        return new MathLib.Functn(function (x) {
                             return MathLib[funcName](x);
                         }, {
                             contentMathMLString: node.outerMathML,
                             domain: domain
                         });
                     } else {
-                        return MathLib.functn(function (x) {
+                        return new MathLib.Functn(function (x) {
                             return MathLib[funcName].apply(null, innerFunc.map(function (f) {
                                 return typeof f === 'function' ? f(x) : f;
                             }));
@@ -513,20 +513,12 @@ var MathLib;
     MathLib.MathML = MathML;    
     // ## <a id="Functions"></a>Functions
     //
-    // Because 'function' is a reserved word in JavaScript the module is called
-    // 'functn'.
+    // Because 'Function' is a reserved word in JavaScript the module is called
+    // 'Functn'.
     // More improvements to the module coming soon.
-    /*
-    export class Functn {
-    
-    type = 'functn';
-    
-    constructor() {}
-    */
-    prototypes.functn = function () {
-    }//Object.getPrototypeOf(function(){});
-    ;
-    MathLib.functn = function (f, options) {
+    var functnPrototype = {
+    };
+    MathLib.Functn = function (f, options) {
         options = options || {
         };
         var functn = function (x) {
@@ -546,10 +538,43 @@ var MathLib;
             } else if(x.type === 'complex') {
                 return x[options.name].apply(x, Array.prototype.slice.call(arguments, 1));
             } else {
+<<<<<<< HEAD
                 return x[options.name]();
+=======
+                if(x.type === 'functn') {
+                    var outerVar = functn.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML;
+                    var innerVar = x.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML;
+                    var innerStr = x.contentMathML.childNodes[0].childNodes[2].outerMathML.replace('<bvar>' + innerVar + '</bvar>', '');
+                    var outerStr = functn.contentMathML.childNodes[0].childNodes[2].outerMathML.replace(outerVar, innerStr);
+                    var res = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><complexes/></domainofapplication>' + outerStr + '</lambda></math>';
+
+                    return new MathLib.Functn(function (y) {
+                        return f(x(y));
+                    }, {
+                        contentMathMLString: res
+                    });
+                } else {
+                    if(typeof x === 'function') {
+                        return function (y) {
+                            return f(x(y));
+                        }
+                    } else {
+                        if(x.type === 'complex') {
+                            return x[options.name].apply(x, Array.prototype.slice.call(arguments, 1));
+                        } else {
+                            return x[options.name]();
+                        }
+                    }
+                }
+>>>>>>> Functn
             }
         };
-        functn[proto] = prototypes.functn;
+        //functn[proto] = prototypes.functn;
+        for(var name in functnPrototype) {
+            functn[name] = functnPrototype[name];
+        }
+        functn.type = 'functn';
+        functn.constructor = MathLib.Functn;
         var contentMathML = options.contentMathMLString || '';
         Object.defineProperties(functn, {
             id: {
@@ -561,13 +586,10 @@ var MathLib;
         });
         return functn;
     };
-    // Setting the .constructor property to MathLib.functn
-    MathLib.extendPrototype('functn', 'constructor', MathLib.functn);
-    // Setting the .type property to 'functn'
-    MathLib.extendPrototype('functn', 'type', 'functn');
-    // ### Functn.prototype.draw()
-    // Draws the function on the screen
+    // ### [Functn.prototype.diff()](http://mathlib.de/en/docs/functn/diff)
+    // Numeric derivative at a given point
     //
+<<<<<<< HEAD
     // *@param {screen}* The screen to draw the function onto.
     // *@param {object}* [options] Optional drawing options.
     // *@returns {functn}*
@@ -578,17 +600,250 @@ var MathLib;
                 i, 
                 this(i)
             ]);
+=======
+    // *@param {number}* The point
+    // *@param {number}* Optional step size
+    // *@returns {number}*
+    functnPrototype.diff = function (x, h) {
+        if (typeof h === "undefined") { h = 0.00001; }
+        return (this(x + h) - this(x - h)) / (2 * h);
+    };
+    // ### [Functn.prototype.quad()](http://mathlib.de/en/docs/functn/quad)
+    // Numeric evaluation of an integral using an adative simpson approach.
+    //
+    // Inspired by "adaptsim.m" by Walter Gander
+    // and MatLab's "quad.m"
+    //
+    // *@param {number}* The starting point
+    // *@param {number}* The end point
+    // *@param {number}* The tolerance
+    // *@returns {number}*
+    functnPrototype.quad = function (a, b, options) {
+        if (typeof options === "undefined") { options = {
+        }; }
+        var f = this;
+        var warnMessage = [
+            'Calculation succeded', 
+            'Minimum step size reached', 
+            'Maximum function count exceeded', 
+            'Infinite or NaN function value encountered'
+        ];
+        var Q;
+
+        options.calls = 3;
+        options.warn = 0;
+        if(a === -Infinity) {
+            a = -Number.MAX_VALUE;
+>>>>>>> Functn
         }
-        if(Array.isArray(screen)) {
-            screen.forEach(function (x) {
-                x.path(path, options);
-            });
-        } else {
-            screen.path(path, options);
+        if(b === Infinity) {
+            b = Number.MAX_VALUE;
         }
+<<<<<<< HEAD
         return this;
     });
     var mathStart = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><', mathEnd = '/><ci>x</ci></apply></lambda></math>';
+=======
+        if(!('minStep' in options)) {
+            options.minStep = 1e-15;
+        }
+        if(!('maxCalls' in options)) {
+            options.maxCalls = 10000;
+        }
+        if(!('tolerance' in options)) {
+            options.tolerance = 0.00001;
+        }
+        Q = quadstep(f, a, b, f(a), f((a + b) / 2), f(b), options);
+        options.warnMessage = warnMessage[options.warn];
+        return Q;
+    };
+    // Recursive function for the quad method
+    var quadstep = function (f, a, b, fa, fc, fb, options) {
+        var h = b - a;
+        var c = (a + b) / 2;
+        var fd = f((a + c) / 2);
+        var fe = f((c + b) / 2);
+        var Q1 = // Three point Simpson's rule
+        (h / 6) * (fa + 4 * fc + fb);
+        var Q2 = // Five point double Simpson's rule
+        (h / 12) * (fa + 4 * fd + 2 * fc + 4 * fe + fb);
+        var Q = // Romberg extrapolation
+        Q2 + (Q2 - Q1) / 15;
+
+        options.calls = options.calls + 2;
+        // Infinite or Not-a-Number function value encountered
+        if(!MathLib.isFinite(Q)) {
+            options.warn = Math.max(options.warn, 3);
+            return Q;
+        }
+        // Maximum function count exceeded; singularity likely
+        if(options.calls > options.maxCalls) {
+            options.warn = Math.max(options.warn, 2);
+            return Q;
+        }
+        // Accuracy over this subinterval is acceptable
+        if(Math.abs(Q2 - Q) <= options.tolerance) {
+            return Q;
+        }
+        // Minimum step size reached; singularity possible
+        if(Math.abs(h) < options.minStep || c == a || c == b) {
+            options.warn = Math.max(options.warn, 1);
+            return Q;
+        }
+        // Otherwise, divide the interval into two subintervals
+        return quadstep(f, a, c, fa, fd, fc, options) + quadstep(f, c, b, fc, fe, fb, options);
+    };
+    // ### Functn.prototype.toContentMathML()
+    // Returns a content MathML representation of the function
+    //
+    // *@returns {MathML}*
+    functnPrototype.toContentMathML = function () {
+        return this.contentMathML;
+    };
+    // ### Functn.prototype.toContentMathMLString()
+    // Returns a content MathML representation of the function
+    //
+    // *@returns {string}*
+    functnPrototype.toContentMathMLString = function (bvar) {
+        if (typeof bvar === "undefined") { bvar = ''; }
+        return this.contentMathML.outerMathML;
+    };
+    // ### Functn.prototype.toLaTeX()
+    // Returns a LaTeX representation of the function
+    //
+    // *@param {string}* Optional: custom name for the bound variable (default: x)
+    // *@returns {string}*
+    functnPrototype.toLaTeX = function (bvar) {
+        if (typeof bvar === "undefined") { bvar = ''; }
+        // List of functions to be executed on the specified node type
+        var handlers = {
+            apply: function (n) {
+                var f = n.childNodes[0];
+                var args = n.childNodes.slice(1).map(function (x) {
+                    return handlers[x.nodeName](x);
+                });
+                var str = '';
+
+                if(f.nodeName === 'plus') {
+                    str = args.join('+');
+                } else {
+                    if(f.nodeName === 'times') {
+                        str = args.join('*');
+                    } else {
+                        if(f.nodeName === 'power') {
+                            str = args[0] + '^{' + args[1] + '}';
+                        } else {
+                            // TODO: not all functions can be written like \sin some have to be written like \operatorname{argmax}
+                            str = '\\' + f.nodeName + '(' + args.join(', ') + ')';
+                        }
+                    }
+                }
+                return str;
+            },
+            bvar: function () {
+                return '';
+            },
+            ci: function (n) {
+                return bvar || n.innerMathML;
+            },
+            cn: function (n) {
+                return n.innerMathML;
+            },
+            cs: function (n) {
+                return n.innerMathML;
+            },
+            domainofapplication: function () {
+                return '';
+            },
+            lambda: function (n) {
+                return n.childNodes.reduce(function (old, cur) {
+                    return old + handlers[cur.nodeName](cur);
+                }, '');
+            },
+            '#text': function (n) {
+                return n.innerMathML;
+            }
+        };
+        // Start the node handling with the first real element (not the <math> element)
+        return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
+    };
+    // ### Functn.prototype.toMathML()
+    // Returns a MathML representation of the function
+    //
+    // *@returns {string}*
+    functnPrototype.toMathML = function () {
+        // Get the content MathML and convert it to presentation MathML
+        return this.contentMathML.toMathML();
+    };
+    // ### Functn.prototype.toMathMLString()
+    // Returns a MathML representation of the function
+    //
+    // *@returns {string}*
+    functnPrototype.toMathMLString = function () {
+        return this.contentMathML.toMathMLString();
+    };
+    // ### Functn.prototype.toString()
+    // Returns a string representation of the function
+    //
+    // *@param {string}* Optional: custom name for the bound variable (default: x)
+    // *@returns {string}*
+    functnPrototype.toString = function (bvar) {
+        if (typeof bvar === "undefined") { bvar = ''; }
+        // List of functions to be executed on the specified node type
+        var handlers = {
+            apply: function (n) {
+                var f = n.childNodes[0];
+                var args = n.childNodes.slice(1).map(function (x) {
+                    return handlers[x.nodeName](x);
+                });
+                var str = '';
+
+                if(f.nodeName === 'plus') {
+                    str = args.join('+');
+                } else {
+                    if(f.nodeName === 'times') {
+                        str = args.join('*');
+                    } else {
+                        if(f.nodeName === 'power') {
+                            str = args[0] + '^' + args[1];
+                        } else {
+                            str = f.nodeName + '(' + args.join(', ') + ')';
+                        }
+                    }
+                }
+                return str;
+            },
+            bvar: function () {
+                return '';
+            },
+            ci: function (n) {
+                return bvar || n.innerMathML;
+            },
+            cn: function (n) {
+                return n.innerMathML;
+            },
+            cs: function (n) {
+                return n.innerMathML;
+            },
+            domainofapplication: function () {
+                return '';
+            },
+            lambda: function (n) {
+                return n.childNodes.reduce(function (old, cur) {
+                    return old + handlers[cur.nodeName](cur);
+                }, '');
+            },
+            '#text': function (n) {
+                return n.innerMathML;
+            }
+        };
+        // Start the node handling with the first real element (not the <math> element)
+        return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
+    };
+    var mathStart = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><';
+    var mathEnd = '/><ci>x</ci></apply></lambda></math>';
+
+>>>>>>> Functn
     // ## Elementary functions
     // Some functions for the functn prototype
     var functionList = {
@@ -678,13 +933,13 @@ var MathLib;
         if(functionList.hasOwnProperty(elemfn)) {
             // MathLib[elemfn] = functionList[elemfn];
             // MathLib[elemfn] = MathLib.functn(functionList[elemfn], {name: elemfn, contentMathMLString: mathStart + elemfn + mathEnd});
-            MathLib.extend('', elemfn, MathLib.functn(functionList[elemfn], {
+            MathLib.extend('', elemfn, new MathLib.Functn(functionList[elemfn], {
                 name: elemfn,
                 contentMathMLString: mathStart + elemfn + mathEnd
             }));
         }
     }
-    MathLib.identity = MathLib.functn(function identity(x) {
+    MathLib.identity = new MathLib.Functn(function identity(x) {
         return x;
     }, {
         contentMathMLString: mathStart + 'ident' + mathEnd
@@ -1096,6 +1351,7 @@ var MathLib;
                 var f1, f2, astr, bstr;
                 if(typeof a === 'number' && typeof b === 'number') {
                     return a + b;
+<<<<<<< HEAD
                 } else if(a.type === 'functn' || b.type === 'functn') {
                     astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
                     bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
@@ -1109,6 +1365,40 @@ var MathLib;
                         f2 = function () {
                             return b;
                         };
+=======
+                } else {
+                    if(a.type === 'functn' || b.type === 'functn') {
+                        astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
+                        bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
+                        f1 = a;
+                        f2 = b;
+                        if(a.type !== 'functn') {
+                            f1 = function () {
+                                return a;
+                            };
+                        } else {
+                            if(b.type !== 'functn') {
+                                f2 = function () {
+                                    return b;
+                                };
+                            }
+                        }
+                        var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
+                        return new MathLib.Functn(function (x) {
+                            return MathLib.plus(f1(x), f2(x));
+                        }, {
+                            contentMathMLString: MathML
+                        });
+                    } else {
+                        if(typeof a === 'object') {
+                            return a.plus(b);
+                        } else {
+                            // We're assuming that the operations are commutative
+                            if(typeof b === 'object') {
+                                return b.plus(a);
+                            }
+                        }
+>>>>>>> Functn
                     }
                     var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
                     return MathLib.functn(function (x) {
@@ -1132,6 +1422,7 @@ var MathLib;
                 var f1, f2, astr, bstr;
                 if(typeof a === 'number' && typeof b === 'number') {
                     return a * b;
+<<<<<<< HEAD
                 } else if(a.type === 'functn' || b.type === 'functn') {
                     astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
                     bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
@@ -1145,6 +1436,40 @@ var MathLib;
                         f2 = function () {
                             return b;
                         };
+=======
+                } else {
+                    if(a.type === 'functn' || b.type === 'functn') {
+                        astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
+                        bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
+                        f1 = a;
+                        f2 = b;
+                        if(a.type !== 'functn') {
+                            f1 = function () {
+                                return a;
+                            };
+                        } else {
+                            if(b.type !== 'functn') {
+                                f2 = function () {
+                                    return b;
+                                };
+                            }
+                        }
+                        var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
+                        return new MathLib.Functn(function (x) {
+                            return MathLib.times(f1(x), f2(x));
+                        }, {
+                            contentMathMLString: MathML
+                        });
+                    } else {
+                        if(typeof a === 'object') {
+                            return a.times(b);
+                        } else {
+                            // We're assuming that the operations are commutative
+                            if(typeof b === 'object') {
+                                return b.times(a);
+                            }
+                        }
+>>>>>>> Functn
                     }
                     var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
                     return MathLib.functn(function (x) {
@@ -1287,9 +1612,12 @@ var MathLib;
     };
     var createFunction3 = function (f, name) {
         return function (n) {
-            //if(!MathLib.isArrayLike(n)) {
-            if(MathLib.type(n) !== 'array' && MathLib.type(n) !== 'set') {
-                n = Array.prototype.slice.apply(arguments);
+            if(MathLib.type(n) === 'set') {
+                return f(n.slice());
+            } else {
+                if(MathLib.type(n) !== 'array') {
+                    n = Array.prototype.slice.apply(arguments);
+                }
             }
             return f(n);
         };
@@ -1312,6 +1640,7 @@ var MathLib;
             });
         }
     }
+<<<<<<< HEAD
     // ### Functn.prototype.toContentMathML()
     // Returns a content MathML representation of the function
     //
@@ -1442,6 +1771,8 @@ var MathLib;
         // Start the node handling with the first real element (not the <math> element)
         return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
     });
+=======
+>>>>>>> Functn
     // ## <a id="Screen"></a>Screen
     // This module contains the common methods of all drawing modules.
     var Screen = (function () {
@@ -3239,9 +3570,19 @@ function update() {
             } else if(p === Infinity) {
                 return Math.max.apply(null, this.map(Math.abs));
             } else {
+<<<<<<< HEAD
                 return MathLib.root(this.reduce(function (prev, curr) {
                     return prev + Math.pow(Math.abs(curr), p);
                 }, 0), p);
+=======
+                if(p === Infinity) {
+                    return Math.max.apply(null, this.map(Math.abs).toArray());
+                } else {
+                    return MathLib.root(this.reduce(function (prev, curr) {
+                        return prev + Math.pow(Math.abs(curr), p);
+                    }, 0), p);
+                }
+>>>>>>> Functn
             }
         };
         Vector.prototype.outerProduct = // ### [Vector.prototype.outerProduct()](http://mathlib.de/en/docs/vector/outerProduct)
@@ -5727,9 +6068,19 @@ for(i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
         Polynomial.prototype.toFunctn = // ### Polynomial.prototype.toFunctn()
         // Converts the polynomial to a functn
         //
+<<<<<<< HEAD
         // *@returns {functn}*
         function () {
             var str = '', i, ii;
+=======
+        // *@returns {Functn}*
+        ;
+        Polynomial.prototype.toFunctn = function () {
+            var str = '';
+            var i;
+            var ii;
+
+>>>>>>> Functn
             for(i = 0 , ii = this.deg; i <= ii; i++) {
                 if(!MathLib.isZero(this[i])) {
                     if(i === 0) {
@@ -5744,7 +6095,7 @@ for(i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
                     }
                 }
             }
-            return MathLib.functn(new Function('x', 'return ' + str), {
+            return new MathLib.Functn(new Function('x', 'return ' + str), {
                 contentMathMLString: this.toContentMathMLString(true)
             });
         };
@@ -6176,11 +6527,26 @@ for(i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
         Set.prototype.plus = function (n) {
             var res = [];
             if(!arguments.length) {
+<<<<<<< HEAD
                 return MathLib.plus.apply(null, this);
             } else if(n.type === 'set') {
                 this.forEach(function (x) {
                     n.forEach(function (y) {
                         res.push(MathLib.plus(x, y));
+=======
+                return MathLib.plus.apply(null, this.toArray());
+            } else {
+                if(n.type === 'set') {
+                    this.forEach(function (x) {
+                        n.forEach(function (y) {
+                            res.push(MathLib.plus(x, y));
+                        });
+                    });
+                    return new MathLib.Set(res);
+                } else {
+                    return this.map(function (x) {
+                        return MathLib.plus(x, n);
+>>>>>>> Functn
                     });
                 });
                 return new MathLib.Set(res);
@@ -6296,7 +6662,7 @@ for(i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
         // *@returns {set}*
         function (n) {
             if(!arguments.length) {
-                return MathLib.times.apply(null, this);
+                return MathLib.times.apply(null, this.toArray());
             } else {
                 return this.map(function (x) {
                     return MathLib.times(x, n);
