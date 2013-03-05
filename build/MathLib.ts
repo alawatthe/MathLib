@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2013-02-10  
+// v0.3.5 - 2013-03-05  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -41,10 +41,6 @@
 // - [polynomial](#Polynomial "Jump to the polynomial implementation")
 // - [rational](#Rational "Jump to the rational number implementation")
 // - [set](#Set "Jump to the set implementation")
-
-
-
-
 // The MathLib module which wraps everything
 module MathLib {
 
@@ -617,7 +613,6 @@ static write(id : string, math : string) : void {
 
 
 }
-
 
 
 // ## <a id="Functions"></a>Functions
@@ -1854,7 +1849,6 @@ export class Screen {
 }
 
 
-
 // ## <a id="Layers"></a>Layers
 // Layers for two dimensional plotting
 
@@ -2024,7 +2018,6 @@ export class Layer {
 
 
 }
-
 
 
 // ### Screen.prototype.drawAxis
@@ -3457,7 +3450,6 @@ onmousewheel(evt) {
 }
 
 
-
 // ## <a id="Screen3D"></a>Screen3D
 // Two dimensional plotting
 
@@ -3755,7 +3747,6 @@ surfacePlot3D(f, options) {
 
 
 }
-
 
 
 // ## <a id="Vector" href="http://mathlib.de/en/docs/vector">Vector</a>
@@ -4072,7 +4063,6 @@ static zero = function (n : number) : Vector {
 }
 
 
-
 // ## <a id="Circle"></a>Circle
 // MathLib.circle expects two arguments.
 // First the center in the form of an Array or a MathLib.point.
@@ -4204,7 +4194,6 @@ toMatrix() : Matrix {
 
 
 }
-
 
 
 // ## <a id="Complex"></a>Complex
@@ -4622,7 +4611,6 @@ static zero = new Complex(0, 0);
 }
 
 
-
 // ## <a id="Line"></a>Line
 // The vector implementation of MathLib makes calculations with lines in the 
 // real plane possible. (Higher dimensions will be supported later)
@@ -4740,7 +4728,6 @@ normalize() : Line {
 }
 
 
-
 // ## <a id="Matrix"></a>Matrix
 // The matrix implementation of MathLib makes calculations with matrices of
 // arbitrary size possible. The entries of a matrix can be numbers and complex
@@ -4782,6 +4769,53 @@ export class Matrix {
 
 
   }
+
+
+// ### Matrix.prototype.LU()
+// Calculates the LU decomposition of a matrix
+// The result is cached.
+//
+// *@returns {matrix}*
+LU(dontSwapPivot? : bool) {
+  var i, j, k, t, p,
+      LU = this.toArray(),
+      m = this.rows,
+      n = this.cols,
+      permutation = [];
+
+  for (k = 0; k < n; k++) {
+    // Find the pivot
+    if (!dontSwapPivot) {
+      p = k;
+      for (i = k+1; i < m; i++) {
+        if (Math.abs(LU[i][k]) > Math.abs(LU[p][k])) {
+          p = i;
+        }
+      }
+      // Exchange if necessary
+      if (p !== k) {
+        permutation.unshift([p, k]);
+        t = LU[p]; LU[p] = LU[k]; LU[k] = t;
+      }
+    }
+
+    // The elimination
+    if (LU[k][k] !== 0) {
+      for (i = k+1; i < m; i++) {
+        LU[i][k] = MathLib.divide(LU[i][k], LU[k][k]);
+        for (j = k+1; j < n; j++) {
+          LU[i][j] = MathLib.minus(LU[i][j], MathLib.times(LU[i][k], LU[k][j]));
+        }
+      }
+    }
+  }
+  LU = new MathLib.Matrix(LU);
+  this.LU = function () {
+    return LU;
+  };
+  this.LUpermutation = new MathLib.Permutation(permutation);
+  return LU;
+}
 
 
 // ### Matrix.prototype.adjoint()
@@ -5381,53 +5415,6 @@ isZero() {
 }
 
 
-// ### Matrix.prototype.LU()
-// Calculates the LU decomposition of a matrix
-// The result is cached.
-//
-// *@returns {matrix}*
-LU(dontSwapPivot? : bool) {
-  var i, j, k, t, p,
-      LU = this.toArray(),
-      m = this.rows,
-      n = this.cols,
-      permutation = [];
-
-  for (k = 0; k < n; k++) {
-    // Find the pivot
-    if (!dontSwapPivot) {
-      p = k;
-      for (i = k+1; i < m; i++) {
-        if (Math.abs(LU[i][k]) > Math.abs(LU[p][k])) {
-          p = i;
-        }
-      }
-      // Exchange if necessary
-      if (p !== k) {
-        permutation.unshift([p, k]);
-        t = LU[p]; LU[p] = LU[k]; LU[k] = t;
-      }
-    }
-
-    // The elimination
-    if (LU[k][k] !== 0) {
-      for (i = k+1; i < m; i++) {
-        LU[i][k] = MathLib.divide(LU[i][k], LU[k][k]);
-        for (j = k+1; j < n; j++) {
-          LU[i][j] = MathLib.minus(LU[i][j], MathLib.times(LU[i][k], LU[k][j]));
-        }
-      }
-    }
-  }
-  LU = new MathLib.Matrix(LU);
-  this.LU = function () {
-    return LU;
-  };
-  this.LUpermutation = new MathLib.Permutation(permutation);
-  return LU;
-}
-
-
 // ### Matrix.prototype.map()
 // This function works like the Array.prototype.map function.
 // The matrix is processed row by row.
@@ -5943,7 +5930,6 @@ static zero = function (r, c) {
 }
 
 
-
 // ## <a id="Permutation"></a>Permutation
 
 export class Permutation {
@@ -6144,7 +6130,6 @@ toString() : string {
 }
 
 
-
 // ## <a id="Point"></a>Point
 // The point implementation of MathLib makes calculations with point in
 // arbitrary dimensions possible.
@@ -6169,6 +6154,21 @@ export class Point extends Vector {
     this.type = 'point';
 
   }
+
+
+// ### Point.I
+// The Point I = (-i, 0, 1).
+// This is NOT the complex number i.
+//
+// *@returns {point}*
+static I = new Point([new MathLib.Complex(0, -1), 0, 1]);
+
+
+// ### Point.J
+// The Point J = (i, 0, 1).
+//
+// *@returns {point}*
+static J = new Point([new MathLib.Complex(0, 1), 0, 1]);
 
 
 // ### Point.prototype.crossRatio()
@@ -6242,14 +6242,6 @@ draw(screen, options) {
 }
 
 
-// ### Point.I
-// The Point I = (-i, 0, 1).
-// This is NOT the complex number i.
-//
-// *@returns {point}*
-static I = new Point([new MathLib.Complex(0, -1), 0, 1]);
-
-
 // ### Point.prototype.isEqual()
 // Determines if the point has the same coordinates as an other point
 //
@@ -6315,13 +6307,6 @@ isOutside(a : Circle) : bool {
     return this.distanceTo(a.center) > a.radius;
   }
 }
-
-
-// ### Point.J
-// The Point J = (i, 0, 1).
-//
-// *@returns {point}*
-static J = new Point([new MathLib.Complex(0, 1), 0, 1]);
 
 
 // ### Point.prototype.lineTo()
@@ -6444,7 +6429,6 @@ toString(opt = false) : string {
 
 
 }
-
 
 
 // ## <a id="Polynomial"></a>Polynomial
@@ -7047,7 +7031,6 @@ static zero = new Polynomial([0]);
 }
 
 
-
 // ## <a id="Rational" href="http://mathlib.de/en/docs/rational">Rational</a>
 // MathLib.Rational is the MathLib implementation of rational numbers.
 //
@@ -7252,7 +7235,6 @@ toString() : String {
 
 
 }
-
 
 
 // ## <a id="Set"></a>Set
@@ -7672,7 +7654,6 @@ toString() : string {
 
 
 }
-
 
 
   // ### MathLib.noConflict
