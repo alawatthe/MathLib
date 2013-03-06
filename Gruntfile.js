@@ -184,7 +184,7 @@ module.exports = function (grunt) {
 							],
 				dest: 'build/MathLib.test.js',
 				options: {
-					banner: '/*! MathLib v<%= pkg.version %> MathLib.de | MathLib.de/en/license */\n\n'
+					banner: banner + '\n'
 				}
 			}
 		},
@@ -227,7 +227,7 @@ module.exports = function (grunt) {
 			testing: {
 				options: {
 					mangle: false,
-					banner: '/*! MathLib v<%= pkg.version %> MathLib.de | MathLib.de/en/license */'
+					banner: banner
 				},
 				files: {
 					'build/MathLib.test.min.js': ['<%= concat.tests.dest %>']
@@ -251,13 +251,15 @@ module.exports = function (grunt) {
 				src: ['build/MathLib.ts'],
 				dest: 'build',
 				options: {
-					comments: true,
+					comments: false,
 					module: 'amd', //or commonjs
-					base_path: 'build'
+					base_path: 'build',
+					sourcemap: true,
+					declaration: true
 				}
 			}
 		}
 	});
 
-	grunt.registerTask('default', ['concat', 'typescript', 'qunit']);
+	grunt.registerTask('default', ['concat', 'typescript', 'uglify', 'qunit']);
 };
