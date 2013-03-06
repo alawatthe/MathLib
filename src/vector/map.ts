@@ -4,5 +4,5 @@
 // *@param {function}*  
 // *@returns {Vector}*
 map(f : (value : any, index : number, vector : Vector ) => any) : any {
-  return new this.constructor(Array.prototype.map.call(this, f));
+	return new this['constructor'](Array.prototype.map.call(this, f));
 }

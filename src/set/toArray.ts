@@ -3,5 +3,5 @@
 //
 // *@returns {array}*
 toArray() : any[] {
-  return Array.prototype.slice.call(this);
+	return Array.prototype.slice.call(this);
 }

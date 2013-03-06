@@ -4,10 +4,10 @@
 // *@param {line|point}*
 // *@returns {boolean}*
 isOn(a : Circle) : bool {
-  if (a.type === 'line') {
-    return this.distanceTo(a.center) === a.radius;
-  }
-  else if (a.type === 'circle') {
-    return this.distanceTo(a.center) === a.radius;
-  }
+	if (a.type === 'line') {
+		return this.distanceTo(a.center) === a.radius;
+	}
+	else if (a.type === 'circle') {
+		return this.distanceTo(a.center) === a.radius;
+	}
 }

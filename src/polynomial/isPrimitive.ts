@@ -3,5 +3,5 @@
 //
 // *@returns {boolean}*
 isPrimitive() {
-  return MathLib.gcd(this) === 1;
+	return MathLib.gcd(this) === 1;
 }

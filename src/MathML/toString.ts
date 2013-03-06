@@ -3,5 +3,5 @@
 // 
 // *@return{string}*
 toString() : string {
-  return this.outerMathML;
+	return this.outerMathML;
 }

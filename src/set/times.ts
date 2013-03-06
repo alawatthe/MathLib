@@ -5,12 +5,12 @@
 // *@param {number|MathLib object}*  
 // *@returns {set}*
 times(n : any) : any {
-  if (!arguments.length) {
-    return MathLib.times.apply(null, this.toArray());
-  }
-  else {
-    return this.map(function (x) {
-      return MathLib.times(x, n);
-    });
-  }
+	if (!arguments.length) {
+		return MathLib.times.apply(null, this.toArray());
+	}
+	else {
+		return this.map(function (x) {
+			return MathLib.times(x, n);
+		});
+	}
 }

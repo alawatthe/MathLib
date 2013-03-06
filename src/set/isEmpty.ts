@@ -3,5 +3,5 @@
 //
 // *@returns {boolean}*
 isEmpty() : bool {
-  return this.card === 0;
+	return this.card === 0;
 }

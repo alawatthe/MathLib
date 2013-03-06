@@ -3,5 +3,5 @@
 //
 // *@returns {complex}*
 negative() {
-  return new MathLib.Complex(MathLib.negative(this.re), MathLib.negative(this.im));
+	return new MathLib.Complex(MathLib.negative(this.re), MathLib.negative(this.im));
 }

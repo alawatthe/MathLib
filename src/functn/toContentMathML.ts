@@ -3,5 +3,5 @@
 //
 // *@returns {MathML}*
 functnPrototype.toContentMathML = function() {
-  return this.contentMathML;
+	return this.contentMathML;
 };

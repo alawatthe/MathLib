@@ -3,7 +3,7 @@
 //
 // *@returns {complex}*
 toComplex() : Complex {
-  if (this.dim === 2) {
-    return new MathLib.Complex(this[0]/this[2], this[1]/this[2]);
-  }
+	if (this.dim === 2) {
+		return new MathLib.Complex(this[0]/this[2], this[1]/this[2]);
+	}
 }

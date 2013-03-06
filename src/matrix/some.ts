@@ -8,9 +8,9 @@
 // *@param {function}* The function which is called on every argument  
 // *@returns {boolean}*
 some(f) {
-  return Array.prototype.some.call(this, function (x, i) {
-    return Array.prototype.some.call(x, function (y, j) {
-      return f(y, i, j, this);
-    });
-  });
+	return Array.prototype.some.call(this, function (x, i) {
+		return Array.prototype.some.call(x, function (y, j) {
+			return f(y, i, j, this);
+		});
+	});
 }

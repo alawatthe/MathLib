@@ -4,8 +4,8 @@
 //
 // *@returns {point}*
 normalize() : Point {
-  var last = this[this.dim];
-  return this.map(function (x) {
-    return x / last;
-  });
+	var last = this[this.dim];
+	return this.map(function (x) {
+		return x / last;
+	});
 }

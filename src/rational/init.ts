@@ -10,15 +10,15 @@
 
 export class Rational {
 
-  type = 'rational';
+	type = 'rational';
 
-  numerator: number;
-  denominator: number;
+	numerator: number;
+	denominator: number;
 
-  constructor(numerator: number, denominator = 1) {
-  	if (MathLib.isZero(denominator)) {
-  		throw 'The denominator cannot be zero.';
-  	}
-  	this.numerator = numerator;
-  	this.denominator = denominator;
-  }
+	constructor(numerator: number, denominator = 1) {
+		if (MathLib.isZero(denominator)) {
+			throw 'The denominator cannot be zero.';
+		}
+		this.numerator = numerator;
+		this.denominator = denominator;
+	}

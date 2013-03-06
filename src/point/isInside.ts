@@ -4,7 +4,7 @@
 // *@param {circle}*
 // *@returns {boolean}*
 isInside(a : Circle) : bool {
-  if (a.type === 'circle') {
-    return this.distanceTo(a.center) < a.radius;
-  }
+	if (a.type === 'circle') {
+		return this.distanceTo(a.center) < a.radius;
+	}
 }

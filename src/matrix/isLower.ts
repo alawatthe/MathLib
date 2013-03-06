@@ -3,7 +3,7 @@
 //
 // *@returns {boolean}*
 isLower() {
-  return this.slice(0, -1).every(function (x, i) {
-    return x.slice(i+1).every(MathLib.isZero);
-  });
+	return this.slice(0, -1).every(function (x, i) {
+		return x.slice(i+1).every(MathLib.isZero);
+	});
 }

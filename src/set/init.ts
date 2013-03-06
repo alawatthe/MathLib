@@ -6,22 +6,22 @@
 // ```
 export class Set {
 
-  type = 'set';
+	type = 'set';
 
-  length: number;
-  card: number;
+	length: number;
+	card: number;
 
-  constructor(elements) {
+	constructor(elements) {
 		if (!elements) {
-		  elements = [];
+			elements = [];
 		}
 		elements = elements.sort(MathLib.compare);
 		
 		elements = elements.filter(function (x, i, a) {
-		  return x !== a[i + 1];
+			return x !== a[i + 1];
 		});
 
-  	elements.forEach((x,i)=>{this[i] = x;});
-  	this.length = elements.length;
-  	this.card = elements.length;
-  }
+		elements.forEach((x,i)=>{this[i] = x;});
+		this.length = elements.length;
+		this.card = elements.length;
+	}

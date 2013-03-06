@@ -3,10 +3,10 @@
 //
 // *@returns {set}*
 remove(a : any) : Set {
-  var i = this.indexOf(a);
-  if (i !== -1) {
-    this.splice(i, 1);
-    this.card--;
-  }
-  return this;
+	var i = this.indexOf(a);
+	if (i !== -1) {
+		this.splice(i, 1);
+		this.card--;
+	}
+	return this;
 }

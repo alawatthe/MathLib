@@ -14,12 +14,12 @@
 
 export class Complex {
 
-  type = 'complex';
+	type = 'complex';
 
-  re: number;
-  im: number;
+	re: number;
+	im: number;
 
-  constructor(re: number, im: number) {
-  	this.re = re;
-  	this.im = im;
-  }
+	constructor(re: number, im: number) {
+		this.re = re;
+		this.im = im;
+	}

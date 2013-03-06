@@ -4,5 +4,5 @@
 // *@param {number|complex}* The subtrahend  
 // *@returns {complex}*
 minus(c) {
-  return this.plus(MathLib.negative(c));
+	return this.plus(MathLib.negative(c));
 }

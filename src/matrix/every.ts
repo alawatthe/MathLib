@@ -8,9 +8,9 @@
 // *@param {function}* The function which is called on every argument  
 // *@returns {boolean}*
 every(f) {
-  return Array.prototype.every.call(this, function (x, i) {
-    return Array.prototype.every.call(x, function (y, j) {
-      return f(y, i, j, this);
-    });
-  });
+	return Array.prototype.every.call(this, function (x, i) {
+		return Array.prototype.every.call(x, function (y, j) {
+			return f(y, i, j, this);
+		});
+	});
 }

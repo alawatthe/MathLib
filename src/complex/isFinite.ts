@@ -3,5 +3,5 @@
 //
 // *@returns {boolean}*
 isFinite() {
-  return MathLib.isFinite(this.re) && MathLib.isFinite(this.im);
+	return MathLib.isFinite(this.re) && MathLib.isFinite(this.im);
 }

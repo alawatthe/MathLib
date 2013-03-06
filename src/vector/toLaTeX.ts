@@ -3,7 +3,7 @@
 //
 // *@returns {string}*
 toLaTeX() : string {
-  return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
-    return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
-  }) + '\n\\end{pmatrix}';
+	return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
+		return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
+	}) + '\n\\end{pmatrix}';
 }

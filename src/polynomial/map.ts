@@ -3,5 +3,5 @@
 //
 // *@returns {polynomial}*
 map(f) {
-  return new MathLib.Polynomial(Array.prototype.map.call(this, f));
+	return new MathLib.Polynomial(Array.prototype.map.call(this, f));
 }

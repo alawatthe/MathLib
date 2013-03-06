@@ -3,5 +3,5 @@
 //
 // *@returns {boolean}*
 isReal() {
-  return this.every(MathLib.isReal);
+	return this.every(MathLib.isReal);
 }

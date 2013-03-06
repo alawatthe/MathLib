@@ -3,5 +3,5 @@
 //
 // *@returns {boolean}*
 isReal() {
-  return MathLib.isZero(this.im);
+	return MathLib.isZero(this.im);
 }

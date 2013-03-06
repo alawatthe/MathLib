@@ -3,5 +3,5 @@
 //
 // *@returns {Matrix}*
 divide(n : any) : Matrix {
-  return this.times(MathLib.inverse(n));
+	return this.times(MathLib.inverse(n));
 }

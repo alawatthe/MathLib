@@ -7,9 +7,9 @@
 //
 // *@param {function}* The function which is called on every argument
 forEach(f) {
-  Array.prototype.forEach.call(this, function (x, i) {
-    return Array.prototype.forEach.call(x, function (y, j) {
-      return f(y, i, j, this);
-    });
-  });
+	Array.prototype.forEach.call(this, function (x, i) {
+		return Array.prototype.forEach.call(x, function (y, j) {
+			return f(y, i, j, this);
+		});
+	});
 }

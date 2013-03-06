@@ -3,5 +3,5 @@
 //
 // *@returns {boolean}*
 isZero() {
-  return MathLib.isZero(this.re) && MathLib.isZero(this.im);
+	return MathLib.isZero(this.re) && MathLib.isZero(this.im);
 }

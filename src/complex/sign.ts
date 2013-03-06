@@ -3,5 +3,5 @@
 //
 // *@returns {complex}*
 sign() {
-  return MathLib.Complex.polar(1, this.arg());
+	return MathLib.Complex.polar(1, this.arg());
 }

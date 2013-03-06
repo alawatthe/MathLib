@@ -5,5 +5,5 @@
 // *@param {number}* The column to be removed.  
 // *@returns {matrix}*
 minor(r, c) {
-  return this.remove(r, c).determinant();
+	return this.remove(r, c).determinant();
 }

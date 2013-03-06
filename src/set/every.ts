@@ -3,5 +3,5 @@
 //  
 // *@returns {boolean}*
 every(...args : any[]) : bool {
-  return Array.prototype.every.apply(this, args);
+	return Array.prototype.every.apply(this, args);
 }

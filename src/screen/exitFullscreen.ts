@@ -3,15 +3,15 @@
 //
 // *@returns {screen}* Returns the screen
 exitFullscreen() {
-  if (document.exitFullscreen) {  
-    document.exitFullscreen();  
-  }
-  else if (document.mozCancelFullScreen) {  
-    document.mozCancelFullScreen();  
-  }
-  else if (document.webkitCancelFullscreen) {  
-    document.webkitCancelFullscreen();  
-  } 
+	if (document.exitFullscreen) {  
+		document.exitFullscreen();  
+	}
+	else if (document.mozCancelFullScreen) {  
+		document.mozCancelFullScreen();  
+	}
+	else if (document.webkitCancelFullscreen) {  
+		document.webkitCancelFullscreen();  
+	} 
 
-  return this;
+	return this;
 }

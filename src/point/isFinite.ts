@@ -3,5 +3,5 @@
 //
 // *@returns {boolean}*
 isFinite() : bool {
-  return !MathLib.isZero(this[this.length - 1]);
+	return !MathLib.isZero(this[this.length - 1]);
 }

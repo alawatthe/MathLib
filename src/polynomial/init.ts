@@ -18,38 +18,38 @@
 
 export class Polynomial {
 
-  type = 'polynomial';
+	type = 'polynomial';
 
-  deg: number;
-  length: number;
-  subdeg: number;
+	deg: number;
+	length: number;
+	subdeg: number;
 
-  constructor(polynomial) {
-    var temp = [];
+	constructor(polynomial) {
+		var temp = [];
 
-    if (polynomial === undefined || polynomial.length === 0) {
-      polynomial = [0];
-    }
-    else if (typeof polynomial === 'number') {
-      while (polynomial--) {
-        temp.push(0);
-      }
-      temp.push(1);
-      polynomial = temp;
-    }
+		if (polynomial === undefined || polynomial.length === 0) {
+			polynomial = [0];
+		}
+		else if (typeof polynomial === 'number') {
+			while (polynomial--) {
+				temp.push(0);
+			}
+			temp.push(1);
+			polynomial = temp;
+		}
 
-    polynomial.forEach((x,i)=>{this[i] = x});
-    this.length = polynomial.length;
-    this.deg = polynomial.length - 1;
-    this.subdeg = (function (a) {
-        var i = 0;
-        if (a.length > 1 || a[0]) {
-          while(i < a.length && MathLib.isZero(a[i])) {
-            i++;
-          }
-          return i;
-        }
-        return Infinity;
-      }(polynomial));
+		polynomial.forEach((x,i)=>{this[i] = x});
+		this.length = polynomial.length;
+		this.deg = polynomial.length - 1;
+		this.subdeg = (function (a) {
+				var i = 0;
+				if (a.length > 1 || a[0]) {
+					while(i < a.length && MathLib.isZero(a[i])) {
+						i++;
+					}
+					return i;
+				}
+				return Infinity;
+			}(polynomial));
 
-  }
+	}

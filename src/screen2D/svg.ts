@@ -1,12 +1,12 @@
 var svg = {
 
 	normalizeOptions: function (opt) {
-		var res = {};
+		var res:any = {};
 		if ('fillColor' in opt) {
-			res['fill'] = opt.fillColor
+			res.fill = opt.fillColor
 		}
 		else if ('color' in opt) {
-			res['fill'] = opt.color
+			res.fill = opt.color
 		}
 
 
@@ -19,15 +19,15 @@ var svg = {
 		}
 
 		if ('size' in opt) {
-			res['size'] = opt.size
+			res.size = opt.size
 		}
 
 
 		if ('lineColor' in opt) {
-			res['stroke'] = opt.lineColor
+			res.stroke = opt.lineColor
 		}
 		else if ('color' in opt) {
-			res['stroke'] = opt.color
+			res.stroke = opt.color
 		}
 
 
@@ -55,9 +55,9 @@ var svg = {
 
 
 	draw: function (x?, options = {}) {
-		if (arguments.length === 0) {
 		var _this = this;
-
+		
+		if (arguments.length === 0) {
 			this.stack.forEach(function(x,i){
 				if (x.type === 'text' ) {
 					_this.text(x.object, x.x, x.y, x.options, true);
@@ -79,7 +79,6 @@ var svg = {
 			this.line(x, options);
 		}
 		else if (Array.isArray(x)) {
-			var _this = this;
 			x.forEach(function (y) {_this[y.type](y, options);});
 		}
 	},

@@ -3,5 +3,5 @@
 //
 // *@returns {string}*
 toContentMathMLString() {
-  return '<cn type="complex-cartesian">' + this.re + '<sep/>' + this.im + '</cn>';
+	return '<cn type="complex-cartesian">' + this.re + '<sep/>' + this.im + '</cn>';
 }

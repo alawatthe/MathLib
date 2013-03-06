@@ -3,5 +3,5 @@
 //
 // *@returns {array}*
 toRowVectors() {
-  return this.toArray().map(function (v) {return new MathLib.Vector(v);});
+	return this.toArray().map(function (v) {return new MathLib.Vector(v);});
 }

@@ -4,7 +4,7 @@
 // *@param {set}* The potential superset  
 // *@returns {boolean}*
 isSubsetOf(a : Set) : bool {
-  return this.every(function (x) {
-    return a.indexOf(x) !== -1;
-  });
+	return this.every(function (x) {
+		return a.indexOf(x) !== -1;
+	});
 }

@@ -11,11 +11,11 @@
 //    ⎝ 3 ⎠
 
 export class Vector {
-  type = 'vector';
+	type = 'vector';
 
-  length: number;
+	length: number;
 
-  constructor(coords: number[]) {
-  	coords.forEach((x,i)=>{this[i] = x;});
-  	this.length = coords.length;
-  }
+	constructor(coords: number[]) {
+		coords.forEach((x,i)=>{this[i] = x;});
+		this.length = coords.length;
+	}

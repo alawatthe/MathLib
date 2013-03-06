@@ -3,5 +3,5 @@
 //
 // *@returns {boolean}*
 isInvertible() {
-  return this.isSquare() && this.rank() === this.rows;
+	return this.isSquare() && this.rank() === this.rows;
 }

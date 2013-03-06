@@ -13,29 +13,28 @@
 //    ⎝ 7 8 9 ⎠
 
 export class Matrix {
-  type = 'matrix';
+	type = 'matrix';
 
-  length: number;
-  cols: number;
-  rows: number;
-  LUpermutation: Permutation;
+	length: number;
+	cols: number;
+	rows: number;
+	LUpermutation: Permutation;
 
-  constructor(matrix) {
-    if (typeof matrix === 'string') {
-      // If there is a < in the string we assume it's MathML
-      if (matrix.indexOf('<') > -1) {
-        return new MathLib.MathML(matrix).parse();
-      }
-      // else we assume it's MatLab notation
-      else {
-        matrix = matrix.trim().replace(/;?\n/g, '],[');
-        matrix = JSON.parse('[[' + matrix + ']]');
-      }
-    }
-    matrix.forEach((x,i)=>{this[i] = x;});
-    this.length = matrix.length;
-    this.cols = matrix[0].length;
-    this.rows = matrix.length;
+	constructor(matrix) {
+		if (typeof matrix === 'string') {
+			// If there is a < in the string we assume it's MathML
+			if (matrix.indexOf('<') > -1) {
+				return new MathLib.MathML(matrix).parse();
+			}
+			// else we assume it's MatLab notation
+			else {
+				matrix = matrix.trim().replace(/;?\n/g, '],[');
+				matrix = JSON.parse('[[' + matrix + ']]');
+			}
+		}
+		matrix.forEach((x,i)=>{this[i] = x;});
+		this.length = matrix.length;
+		this.cols = matrix[0].length;
+		this.rows = matrix.length;
 
-
-  }
+	}

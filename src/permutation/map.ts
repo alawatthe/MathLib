@@ -3,5 +3,5 @@
 //
 // *@returns {permutation}*
 map(...args: any[]) {
-  return new this.constructor(Array.prototype.map.apply(this, args));
+	return new this['constructor'](Array.prototype.map.apply(this, args));
 }

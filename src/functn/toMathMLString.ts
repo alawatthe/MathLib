@@ -3,5 +3,5 @@
 //
 // *@returns {string}*
 functnPrototype.toMathMLString = function() {
-  return this.contentMathML.toMathMLString();
+	return this.contentMathML.toMathMLString();
 };

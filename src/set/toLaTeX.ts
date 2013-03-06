@@ -3,12 +3,12 @@
 //
 // *@returns {string}*
 toLaTeX() : string {
-  if (this.isEmpty()) {
-    return '\\emptyset';
-  }
-  else {
-    return this.reduce(function(old, cur) {
-      return old + MathLib.toLaTeX(cur) + ', ';
-    }, '\\{').slice(0, -2) + '\\}';
-  }
+	if (this.isEmpty()) {
+		return '\\emptyset';
+	}
+	else {
+		return this.reduce(function(old, cur) {
+			return old + MathLib.toLaTeX(cur) + ', ';
+		}, '\\{').slice(0, -2) + '\\}';
+	}
 }

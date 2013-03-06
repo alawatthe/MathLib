@@ -3,5 +3,5 @@
 //
 // *@returns {array}*
 toColVectors() {
-  return this.transpose().toRowVectors();
+	return this.transpose().toRowVectors();
 }

@@ -3,5 +3,5 @@
 //
 // *@returns {matrix}*
 toMatrix() {
-  return new MathLib.Matrix([[this.re, MathLib.negative(this.im)], [this.im, this.re]]);
+	return new MathLib.Matrix([[this.re, MathLib.negative(this.im)], [this.im, this.re]]);
 }

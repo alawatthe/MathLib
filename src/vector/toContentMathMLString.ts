@@ -3,7 +3,7 @@
 //
 // *@returns {string}*
 toContentMathMLString() : string {
-  return this.reduce(function (old, cur) {
-    return old + MathLib.toContentMathMLString(cur);
-  }, '<vector>') + '</vector>';
+	return this.reduce(function (old, cur) {
+		return old + MathLib.toContentMathMLString(cur);
+	}, '<vector>') + '</vector>';
 }

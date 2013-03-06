@@ -3,5 +3,5 @@
 //
 // *@returns {boolean}*
 isZero() : bool {
-  return this.every(MathLib.isZero);
+	return this.every(MathLib.isZero);
 }

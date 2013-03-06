@@ -13,12 +13,12 @@ var	colorConvert = function (n) {
 
 var canvas = {
 	normalizeOptions: function (opt) {
-		var res = {};
+		var res:any = {};
 		if ('fillColor' in opt) {
-			res['fillStyle'] = opt.fillColor
+			res.fillStyle = opt.fillColor
 		}
 		else if ('color' in opt) {
-			res['fillStyle'] = opt.color
+			res.fillStyle = opt.color
 		}
 
 
@@ -32,10 +32,10 @@ var canvas = {
 
 
 		if ('lineColor' in opt) {
-			res['strokeStyle'] = opt.lineColor
+			res.strokeStyle = opt.lineColor
 		}
 		else if ('color' in opt) {
-			res['strokeStyle'] = opt.color
+			res.strokeStyle = opt.color
 		}
 
 		return res;
@@ -44,16 +44,16 @@ var canvas = {
 
 	applyTransformation: function () {
 		var m = this.transformation;
-		this.layer.forEach(function(l){l.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2])});;
+		this.layer.forEach(function(l){l.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2])});
 	},
 
 
 
 
 	draw: function (x?, options = {}) {
-		if (arguments.length === 0) {
 		var _this = this;
 
+		if (arguments.length === 0) {
 			this.stack.forEach(function(x,i){
 				if (x.type === 'text' ) {
 					_this.text(x.object, x.x, x.y, x.options, true);
@@ -75,7 +75,6 @@ var canvas = {
 			this.line(x, options);
 		}
 		else if (Array.isArray(x)) {
-			var _this = this;
 			x.forEach(function (y) {_this[y.type](y, options);});
 		}
 	},
@@ -297,7 +296,7 @@ var canvas = {
 				left    = (              - screen.translation.x) / screen.scale.x,
 				right   = (screen.width  - screen.translation.x) / screen.scale.x,
 				ctx = this.ctx,
-				prop, opts, path, x, y;
+				prop, opts, path, x, y, i;
 
 		t = Math.min(top, t);
 		r = Math.min(right, r);
@@ -315,8 +314,8 @@ var canvas = {
 				pxl;
 
 
-		for (var y = tPxl, i = 0; y > bPxl; y--) {
-			for (var x = lPxl; x < rPxl; x++, i++) {
+		for (y = tPxl, i = 0; y > bPxl; y--) {
+			for (x = lPxl; x < rPxl; x++, i++) {
 				pxl = f(x/screen.scale.x, y/screen.scale.y);
 				imgData.data[4*i]   = pxl[0];
 				imgData.data[4*i+1] = pxl[1];

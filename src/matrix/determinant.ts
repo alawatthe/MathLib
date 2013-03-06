@@ -4,19 +4,19 @@
 //
 // *@returns {number|complex}*
 determinant() : any {
-  if (this.isSquare()) {
-    var arr, determinant;
-    if(this.rank() < this.rows) {
-      determinant = 0;
-    }
-    else {
-      arr = this.LU();
-      determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, arr.diag()));
-    }
+	if (this.isSquare()) {
+		var arr, determinant;
+		if(this.rank() < this.rows) {
+			determinant = 0;
+		}
+		else {
+			arr = this.LU();
+			determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, arr.diag()));
+		}
 
-    this.determinant = function () {
-      return determinant;
-    };
-    return determinant;
-  }
+		this.determinant = function () {
+			return determinant;
+		};
+		return determinant;
+	}
 }

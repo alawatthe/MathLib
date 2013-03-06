@@ -3,5 +3,5 @@
 //
 // *@returns {number|complex}*
 content() {
-  return MathLib.gcd(this);
+	return MathLib.gcd(this);
 }

@@ -3,5 +3,5 @@
 //
 // *@returns {boolean}*
 isOrthogonal() {
-  return this.transpose().times(this).isIdentity();
+	return this.transpose().times(this).isIdentity();
 }

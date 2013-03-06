@@ -3,5 +3,5 @@
 //
 // *@returns {set}*
 splice(...args : any[]) : any {
-  return Array.prototype.splice.apply(this, args);
+	return Array.prototype.splice.apply(this, args);
 }

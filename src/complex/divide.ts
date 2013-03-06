@@ -4,5 +4,5 @@
 // *@param {number|complex}* The divisor  
 // *@returns {complex}*
 divide(c) {
-  return this.times(MathLib.inverse(c));
+	return this.times(MathLib.inverse(c));
 }

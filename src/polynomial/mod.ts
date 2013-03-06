@@ -4,7 +4,7 @@
 // *@param {number}*  
 // *@returns {polynomial}*
 mod(m) {
-  return this.map(function (x) {
-    return MathLib.mod(x, m);
-  });
+	return this.map(function (x) {
+		return MathLib.mod(x, m);
+	});
 }

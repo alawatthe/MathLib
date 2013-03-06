@@ -3,6 +3,6 @@
 //
 // *@returns {string}*
 functnPrototype.toMathML = function() {
-  // Get the content MathML and convert it to presentation MathML
-  return this.contentMathML.toMathML();
+	// Get the content MathML and convert it to presentation MathML
+	return this.contentMathML.toMathML();
 };

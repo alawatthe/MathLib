@@ -8,12 +8,12 @@
 // *@param {function}* The function which is called on every argument  
 // *@returns {matrix}*
 map(f) {
-  var m = this;
-  return new MathLib.Matrix(
-    Array.prototype.map.call(this, function (x, i) {
-      return Array.prototype.map.call(x, function (y, j) {
-        return f(y, i, j, m);
-      });
-    })
-  );
+	var m = this;
+	return new MathLib.Matrix(
+		Array.prototype.map.call(this, function (x, i) {
+			return Array.prototype.map.call(x, function (y, j) {
+				return f(y, i, j, m);
+			});
+		})
+	);
 }

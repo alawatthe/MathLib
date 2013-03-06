@@ -3,11 +3,11 @@
 // real plane possible. (Higher dimensions will be supported later)
 
 export class Line extends Vector {
-  type = 'line';
+	type = 'line';
 
-  dim: number;
+	dim: number;
 
-  constructor(coords: number[]) {
+	constructor(coords: number[]) {
 		super(coords);
 		this.dim = 2;
-  }
+	}

@@ -3,5 +3,5 @@
 //
 // *@returns {point}*
 toPoint() {
-  return new MathLib.Point(this.re, this.im);
+	return new MathLib.Point(this.re, this.im);
 }

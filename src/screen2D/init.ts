@@ -43,7 +43,6 @@ export class Screen2D extends Screen {
 
 	constructor (id: string, options) {
 		super(id, options)
-		var _this = this;
 		var defaults = {
 					axis: {
 						color: 0x000000,
@@ -72,7 +71,8 @@ export class Screen2D extends Screen {
 				},
 				opts = extendObject(defaults, options),
 				element,
-				transformation = opts.transformation;
+				transformation = opts.transformation,
+				_this = this;
 
 
 		this.background = opts.background;

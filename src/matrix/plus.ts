@@ -5,16 +5,16 @@
 // *@param {matrix}* The matrix to be added.  
 // *@returns {matrix}*
 plus(m) {
-  var res = [],
-      r = this.rows,
-      c = this.cols,
-      i, j;
+	var res = [],
+			r = this.rows,
+			c = this.cols,
+			i, j;
 
-  for (i = 0; i < r; i++) {
-    res[i] = [];
-    for (j = 0; j < c; j++) {
-      res[i][j] = MathLib.plus(this[i][j], m[i][j]);
-    }
-  }
-  return new MathLib.Matrix(res);
+	for (i = 0; i < r; i++) {
+		res[i] = [];
+		for (j = 0; j < c; j++) {
+			res[i][j] = MathLib.plus(this[i][j], m[i][j]);
+		}
+	}
+	return new MathLib.Matrix(res);
 }

@@ -5,29 +5,29 @@
 // *@param {number|array}* The column(s) to be removed.  
 // *@returns {matrix}*
 remove(row, col) {
-  var res = this.toArray();
+	var res = this.toArray();
 
-  if (row || row === 0) {
-    if (typeof row === 'number') {
-      row = [row];
-    }
-    res = res.filter(function (x, i, arr) {
-      return row.indexOf(i) === -1;
-    });
-  }
+	if (row || row === 0) {
+		if (typeof row === 'number') {
+			row = [row];
+		}
+		res = res.filter(function (x, i, arr) {
+			return row.indexOf(i) === -1;
+		});
+	}
 
-  if (col || col === 0) {
-    if (typeof col === 'number') {
-      col = [col];
-    }
-    col = col.sort().reverse();
-    col.forEach(function (n) {
-      res = res.map(function (x) {
-        x.splice(n, 1);
-        return x;
-      });
-    });
-  }
+	if (col || col === 0) {
+		if (typeof col === 'number') {
+			col = [col];
+		}
+		col = col.sort().reverse();
+		col.forEach(function (n) {
+			res = res.map(function (x) {
+				x.splice(n, 1);
+				return x;
+			});
+		});
+	}
 
-  return new MathLib.Matrix(res);
+	return new MathLib.Matrix(res);
 }

@@ -4,14 +4,14 @@
 // *@param {line}*  
 // *@returns {boolean}*
 isEqual(q : Line) : bool {
-  var p = this.normalize();
-      q = q.normalize();
+	var p = this.normalize();
+			q = q.normalize();
 
-  if(this.length !== q.length) {
-    return false;
-  }
+	if(this.length !== q.length) {
+		return false;
+	}
 
-  return p.every(function (x, i) {
-    return MathLib.isEqual(x, q[i]);
-  });
+	return p.every(function (x, i) {
+		return MathLib.isEqual(x, q[i]);
+	});
 }

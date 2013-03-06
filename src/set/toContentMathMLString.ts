@@ -3,12 +3,12 @@
 //
 // *@returns {string}*
 toContentMathMLString() : string {
-  if (this.isEmpty()) {
-    return '<emptyset/>';
-  }
-  else {
-    return this.reduce(function(old, cur) {
-      return old + MathLib.toContentMathMLString(cur);
-    }, '<set>') + '</set>';
-  }
+	if (this.isEmpty()) {
+		return '<emptyset/>';
+	}
+	else {
+		return this.reduce(function(old, cur) {
+			return old + MathLib.toContentMathMLString(cur);
+		}, '<set>') + '</set>';
+	}
 }

@@ -12,18 +12,18 @@
 // ```
 
 export class Circle {
-    
-  type = 'circle';
 
-  center: Point;
-  radius: number;
+	type = 'circle';
 
-  constructor(center: any, radius: number) {
+	center: Point;
+	radius: number;
 
-  	if (center.type === undefined) {
-    	center = new MathLib.Point(center.concat(1));
-  	}
+	constructor(center: any, radius: number) {
 
-  	this.center = center;
-  	this.radius = radius;
-  }
+		if (center.type === undefined) {
+			center = new MathLib.Point(center.concat(1));
+		}
+
+		this.center = center;
+		this.radius = radius;
+	}

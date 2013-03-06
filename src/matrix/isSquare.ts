@@ -3,5 +3,5 @@
 //
 // *@returns {boolean}*
 isSquare() {
-  return this.cols === this.rows;
+	return this.cols === this.rows;
 }

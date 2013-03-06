@@ -4,5 +4,5 @@
 // *@param {matrix}* The matrix to be subtracted.  
 // *@returns {matrix}*
 minus(m) {
-  return this.plus(m.negative());
+	return this.plus(m.negative());
 }

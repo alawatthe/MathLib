@@ -3,5 +3,5 @@
 //
 // *@returns {array}*
 slice(...args : any[]) : any {
-  return Array.prototype.slice.apply(this, args);
+	return Array.prototype.slice.apply(this, args);
 }

@@ -3,5 +3,5 @@
 //
 // *@return {string}* 
 toLaTeX() : string {
-  return 'B_{' + MathLib.toLaTeX(this.radius) + '}\\left(' + this.center.toLaTeX() + '\\right)';
+	return 'B_{' + MathLib.toLaTeX(this.radius) + '}\\left(' + this.center.toLaTeX() + '\\right)';
 }

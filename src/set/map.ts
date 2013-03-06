@@ -4,5 +4,5 @@
 // *@param {function}* The mapping function  
 // *@returns {set}*
 map(...args : any[]) : any {
-  return new MathLib.Set(Array.prototype.map.apply(this, args));
+	return new MathLib.Set(Array.prototype.map.apply(this, args));
 }

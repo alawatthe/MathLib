@@ -3,5 +3,5 @@
 //  
 // *@returns {number}*
 indexOf(...args : any[]) : number {
-  return Array.prototype.indexOf.apply(this, args);
+	return Array.prototype.indexOf.apply(this, args);
 }

@@ -1,5 +1,5 @@
 /*global module:true */
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 	'use strict';
 	
 	grunt.loadNpmTasks('grunt-contrib-clean');
@@ -111,8 +111,8 @@ module.exports = function(grunt) {
 				dest: 'build/MathLib.ts',
 				options: {
 					separator: '\n\n\n',
-					banner: '// MathLib.js is a JavaScript library for mathematical computations.\n'+
-							'//\n'+
+					banner: '// MathLib.js is a JavaScript library for mathematical computations.\n' +
+							'//\n' +
 							'// ## Version\n' +
 							'// v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>  \n' +
 							'// MathLib is currently in public beta testing.\n' +
@@ -238,8 +238,11 @@ module.exports = function(grunt) {
 		
 		// Documentation
 		docco: {
-			app: {
-				src: ['build/MathLib.ts']
+			MathLib: {
+				src: ['build/MathLib.ts'],
+				options: {
+					output: 'docs/'
+				}
 			}
 		},
 

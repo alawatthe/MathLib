@@ -3,10 +3,10 @@
 //
 // *@returns {number|complex}*
 trace() {
-  var trace = MathLib.plus.apply(null, this.diag());
+	var trace = MathLib.plus.apply(null, this.diag());
 
-  this.trace = function () {
-    return trace;
-  };
-  return trace;
+	this.trace = function () {
+		return trace;
+	};
+	return trace;
 }

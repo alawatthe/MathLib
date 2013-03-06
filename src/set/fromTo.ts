@@ -6,11 +6,11 @@
 // *@param {number}* The stepsize (default = 1)  
 // *@returns {set}*
 static fromTo = function(f : number, t : number, s : number = 1) : Set {
-  var i, arr = [];
-  if (f <= t) {
-    for (i = f; i <= t; i += s) {
-      arr.push(i);
-    }
-    return new MathLib.Set(arr);
-  }
+	var i, arr = [];
+	if (f <= t) {
+		for (i = f; i <= t; i += s) {
+			arr.push(i);
+		}
+		return new MathLib.Set(arr);
+	}
 };

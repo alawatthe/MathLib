@@ -3,5 +3,5 @@
 //
 // *@returns {complex}*
 ln() {
-  return new MathLib.Complex(MathLib.ln(this.abs()), this.arg());
+	return new MathLib.Complex(MathLib.ln(this.abs()), this.arg());
 }

@@ -4,5 +4,5 @@
 //
 // *@returns {boolean}*
 isVector() {
-  return (this.rows === 1) || (this.cols === 1);
+	return (this.rows === 1) || (this.cols === 1);
 }

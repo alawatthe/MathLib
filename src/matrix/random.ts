@@ -5,14 +5,14 @@
 // *@param {number}* The number of columns.
 // *@returns {matrix}*
 static random = function (r, c) {
-  var temp, arr = [],
-      i, j, ii, jj;
-  for (i = 0, ii = r || 1; i < ii; i++) {
-    temp = [];
-    for (j = 0, jj = c || r || 1; j < jj; j++) {
-      temp.push(Math.random());
-    }
-    arr.push(temp);
-  }
-  return new MathLib.Matrix(arr);
+	var temp, arr = [],
+			i, j, ii, jj;
+	for (i = 0, ii = r || 1; i < ii; i++) {
+		temp = [];
+		for (j = 0, jj = c || r || 1; j < jj; j++) {
+			temp.push(Math.random());
+		}
+		arr.push(temp);
+	}
+	return new MathLib.Matrix(arr);
 };
