@@ -203,7 +203,6 @@ module.exports = function (grunt) {
 			index: ['test/test.html', 'test/test.min.html']
 		},
 
-
 		
 		// Linting
 		jshint: {
