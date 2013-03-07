@@ -15,7 +15,7 @@ export class Rational {
 	numerator: number;
 	denominator: number;
 
-	constructor(numerator: number, denominator = 1) {
+	constructor (numerator: number, denominator = 1) {
 		if (MathLib.isZero(denominator)) {
 			throw 'The denominator cannot be zero.';
 		}

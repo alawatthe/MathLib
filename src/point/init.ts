@@ -15,7 +15,7 @@ export class Point extends Vector {
 
 	dim: number;
 
-	constructor(coords: number[]) {
+	constructor (coords: number[]) {
 		super(arguments.length > 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
 
 		this.dim = 2;

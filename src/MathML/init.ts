@@ -14,10 +14,10 @@ export class MathML {
 	parentNode: any;
 	prevNode: any;
 
-	constructor(MathMLString) {
+	constructor (MathMLString) {
 		var tokenizer = new DOMParser(),
 			MathMLdoc,
-			MathML;
+			token;
 
 		if (typeof MathMLString !== 'string') {
 			MathMLString = MathMLString.toContentMathML();
@@ -116,16 +116,16 @@ export class MathML {
 			return newToken;
 		};
 
-		MathML = createToken(MathMLdoc.childNodes[0]);
+		token = createToken(MathMLdoc.childNodes[0]);
 
 
 
-		this.attributes = MathML.attributes;
-		this.childNodes = MathML.childNodes;
-		this.innerMathML = MathML.innerMathML;
-		this.outerMathML = MathML.outerMathML;
-		this.nodeName = MathML.nodeName;
-		this.nextNode = MathML.nextNode;
+		this.attributes = token.attributes;
+		this.childNodes = token.childNodes;
+		this.innerMathML = token.innerMathML;
+		this.outerMathML = token.outerMathML;
+		this.nodeName = token.nodeName;
+		this.nextNode = token.nextNode;
 		this.parentNode = null;
 		this.prevNode = null;
 	 

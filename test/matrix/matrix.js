@@ -60,10 +60,10 @@ test('.determinant()', 3, function () {
 
 test('.gershgorin()', 2, function () {
 	var c = MathLib.Complex,
-			m = new MathLib.Matrix([[1,2,3], [4,5,6], [7,8,9]]),
-			n = new MathLib.Matrix([[new c(1,4),2,3], [new c(2,3), new c(4,2),6], [7, new c(0,5),9]]),
-			resm = [new MathLib.Circle([1,0], 5), new MathLib.Circle([5,0], 10), new MathLib.Circle([9,0], 9)],
-			resn = [new MathLib.Circle([1,4], 5), new MathLib.Circle([4,2], 7), new MathLib.Circle([9,0], 9)];
+			m = new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
+			n = new MathLib.Matrix([[new c(1, 4), 2, 3], [new c(2, 3), new c(4, 2), 6], [7, new c(0, 5), 9]]),
+			resm = [new MathLib.Circle([1, 0], 5), new MathLib.Circle([5, 0], 10), new MathLib.Circle([9, 0], 9)],
+			resn = [new MathLib.Circle([1, 4], 5), new MathLib.Circle([4, 2], 7), new MathLib.Circle([9, 0], 9)];
 
 	deepEqual(m.gershgorin(), resm, 'Gershgorin circles of a 3x3 matrix');
 	deepEqual(n.gershgorin(), resn, 'Gershgorin circles of a complex 3x3 matrix');
@@ -77,13 +77,13 @@ test('.givens()', 9, function () {
 			QRm = m.givens(),
 			Qm = QRm[0],
 			Rm = QRm[1],
-			Q1 = new MathLib.Matrix([[3/5, 4/(5*Math.sqrt(5)), 0, -8/(5*Math.sqrt(5))], [0, 2/Math.sqrt(5), 0, 1/Math.sqrt(5)], [0, 0, 1, 0], [4/5, -3/(5*Math.sqrt(5)), 0, 6/(5*Math.sqrt(5))]]),
+			Q1 = new MathLib.Matrix([[3 / 5, 4 / (5 * Math.sqrt(5)), 0, -8 / (5 * Math.sqrt(5))], [0, 2 / Math.sqrt(5), 0, 1 / Math.sqrt(5)], [0, 0, 1, 0], [4 / 5, -3 / (5 * Math.sqrt(5)), 0, 6 / (5 * Math.sqrt(5))]]),
 			R1 = new MathLib.Matrix([[5, 7], [0, 2.23606797749979], [0, 0], [0, 0]]),
 
 			QRn = n.givens(),
 			Qn = QRn[0],
 			Rn = QRn[1],
-			Q2 = new MathLib.Matrix([[0.768221279597376, -0.332654179360071, -0.546970988744419], [0.640184399664480 , 0.399185015232086 , 0.656365186493303], [0, -0.854395997514289, 0.519622439307198]]),
+			Q2 = new MathLib.Matrix([[0.768221279597376, -0.332654179360071, -0.546970988744419], [0.640184399664480, 0.399185015232086, 0.656365186493303], [0, -0.854395997514289, 0.519622439307198]]),
 			R2 = new MathLib.Matrix([[7.810249675906652, 4.481290797651358, 2.560737598657919], [0, -4.681669871625427, -0.966447931614524], [0, 0, 4.184328063894809]]),
 
 			QRo = o.givens(),
@@ -105,10 +105,10 @@ test('.givens()', 9, function () {
 
 
 test('.isBandMatrix()', 2, function () {
-	var m = new MathLib.Matrix([[2,1,3,0],[1,2,1,3],[0,1,2,1],[0,0,1,2]]);
+	var m = new MathLib.Matrix([[2, 1, 3, 0], [1, 2, 1, 3], [0, 1, 2, 1], [0, 0, 1, 2]]);
 
-	equal(m.isBandMatrix(1,2), true, 'band matrix');
-	equal(m.isBandMatrix(1,1), false, 'upper bandwidth to small');
+	equal(m.isBandMatrix(1, 2), true, 'band matrix');
+	equal(m.isBandMatrix(1, 1), false, 'upper bandwidth to small');
 });
 
 test('.isDiag()', 2, function () {
@@ -232,7 +232,7 @@ test('.LU()', 2, function () {
 
 
 test('.map()', 2, function () {
-	var p = new MathLib.Matrix([[1, 2],[3, 4]]),
+	var p = new MathLib.Matrix([[1, 2], [3, 4]]),
 			q = new MathLib.Matrix([[2, 4], [6, 8]]),
 			f = function (x) {
 				return 2 * x;
@@ -334,7 +334,7 @@ test('.times()', 5, function () {
 	deepEqual(m.times(new c(0, 1)), new MathLib.Matrix([[new c(0, 1), new c(0, 2)], [new c(0, 3), new c(0, 4)]]), 'matrix scalar multiplication');
 	deepEqual(m.times(n), res, 'multiplying two simple matrices');
 	deepEqual(mc.times(bc), resc, 'complex matrix times complex vector');
-	equal(m.times(r).isEqual(new MathLib.Matrix([[2/3, 4/3], [6/3, 8/3]])), true, 'complex matrix times rational number');
+	equal(m.times(r).isEqual(new MathLib.Matrix([[2 / 3, 4 / 3], [6 / 3, 8 / 3]])), true, 'complex matrix times rational number');
 });
 
 

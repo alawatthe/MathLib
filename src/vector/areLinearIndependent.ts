@@ -12,7 +12,7 @@ static areLinearIndependent = function (v : Vector[]) : bool {
 	}
 
 	if (! v.every(function (x){
-		return x.length == m;
+		return x.length === m;
 		}) ) {
 		return undefined;
 	}

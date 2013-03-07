@@ -34,7 +34,9 @@ MathLib.Functn = function (f, options) {
 
 	//functn[proto] = prototypes.functn;
 	for (var name in functnPrototype) {
-		functn[name] = functnPrototype[name];
+		if (functnPrototype.hasOwnProperty(name)) {
+			functn[name] = functnPrototype[name];
+		}
 	}
 	functn.type = 'functn';
 	functn.constructor = MathLib.Functn;

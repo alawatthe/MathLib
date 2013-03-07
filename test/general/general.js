@@ -41,7 +41,7 @@ test('.arccos()', 8, function () {
 
 	// Spec. 4: otherwise MathLib.arccos(x) = inverse cosine of x
 	equal(MathLib.arccos(1), 0, 'Spec. 4: otherwise MathLib.arccos(x) = inverse cosine of x');
-	equal(MathLib.arccos(+0), Math.PI/2, 'Spec. 4: otherwise MathLib.arccos(x) = inverse cosine of x');
+	equal(MathLib.arccos(+0), Math.PI / 2, 'Spec. 4: otherwise MathLib.arccos(x) = inverse cosine of x');
 	equal(MathLib.arccos(-1), Math.PI, 'Spec. 4: otherwise MathLib.arccos(x) = inverse cosine of x');
 });
 
@@ -57,8 +57,8 @@ test('.arccot()', 5, function () {
 	equal(MathLib.arccot(-Infinity), Math.PI, 'Spec. 3: MathLib.arccot(-&infin;) = &pi;');
 
 	// Spec. 4: otherwise MathLib.arccot(x) = inverse cotangent of x
-	equal(MathLib.arccot(1), Math.PI/4, 'Spec. 4: otherwise MathLib.arccot(x) = inverse cotangent of x');
-	equal(MathLib.arccot(+0), Math.PI/2, 'Spec. 4: otherwise MathLib.arccot(x) = inverse cotangent of x');
+	equal(MathLib.arccot(1), Math.PI / 4, 'Spec. 4: otherwise MathLib.arccot(x) = inverse cotangent of x');
+	equal(MathLib.arccot(+0), Math.PI / 2, 'Spec. 4: otherwise MathLib.arccot(x) = inverse cotangent of x');
 });
 
 
@@ -119,10 +119,10 @@ test('.arcsec()', 9, function () {
 	equal(MathLib.isNaN(MathLib.arcsec(0.5)), true, 'Spec. 2: MathLib.arcsec(x) = NaN (if -1<x<1)');
 
 	// Spec. 3: MathLib.arcsec(+&infin;) = &pi;/2
-	equal(MathLib.arcsec(+Infinity), Math.PI/2, 'Spec. 3: MathLib.arcsec(+&infin;) = &pi;/2');
+	equal(MathLib.arcsec(+Infinity), Math.PI / 2, 'Spec. 3: MathLib.arcsec(+&infin;) = &pi;/2');
 
 	// Spec. 4: MathLib.arcsec(-&infin;) = &pi;/2
-	equal(MathLib.arcsec(-Infinity), Math.PI/2, 'Spec. 4: MathLib.arcsec(-&infin;) = &pi;/2');
+	equal(MathLib.arcsec(-Infinity), Math.PI / 2, 'Spec. 4: MathLib.arcsec(-&infin;) = &pi;/2');
 
 	// Spec. 5: MathLib.arcsec(1) = +0
 	equal(MathLib.isPosZero(MathLib.arcsec(1)), true, 'Spec. 5: otherwise MathLib.arcsec(1) = +0');
@@ -197,12 +197,12 @@ test('.arctan2()', 24, function () {
 	equal(MathLib.isNegZero(MathLib.arctan2(-0, 4)), true, 'Spec. 4: arctan2(&plusmn;0, x) is &plusmn;0 for x>0');
 
 	// Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0
-	equal(MathLib.arctan2(-4, 0), -Math.PI/2, 'Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0');
-	equal(MathLib.arctan2(-4, -0), -Math.PI/2, 'Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0');
+	equal(MathLib.arctan2(-4, 0), -Math.PI / 2, 'Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0');
+	equal(MathLib.arctan2(-4, -0), -Math.PI / 2, 'Spec. 5: arctan2(y, &plusmn;0) is -&pi;/2 for y < 0');
 
 	// Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0
-	equal(MathLib.arctan2(4, 0), Math.PI/2, 'Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0');
-	equal(MathLib.arctan2(4, -0), Math.PI/2, 'Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0');
+	equal(MathLib.arctan2(4, 0), Math.PI / 2, 'Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0');
+	equal(MathLib.arctan2(4, -0), Math.PI / 2, 'Spec. 6: arctan2(y, &plusmn;0) is +&pi;/2 for y > 0');
 
 	// Spec. 7: arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0
 	equal(MathLib.arctan2(4, -Infinity), Math.PI, 'Spec. 7: arctan2(&plusmn;y, -&infin;) is &plusmn;&pi; for finite y > 0');
@@ -213,26 +213,26 @@ test('.arctan2()', 24, function () {
 	equal(MathLib.isNegZero(MathLib.arctan2(-4, Infinity)), true, 'Spec. 8: arctan2(&plusmn;y, +&infin;) is &plusmn;0 for finite y > 0');
 
 	// Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x
-	equal(MathLib.arctan2(Infinity, 4), Math.PI/2, 'Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x');
-	equal(MathLib.arctan2(-Infinity, 4), -Math.PI/2, 'Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x');
+	equal(MathLib.arctan2(Infinity, 4), Math.PI / 2, 'Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x');
+	equal(MathLib.arctan2(-Infinity, 4), -Math.PI / 2, 'Spec. 9: arctan2(&plusmn;&infin;, x) is &plusmn;&pi;/2 for finite x');
 
 	// Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4
-	equal(MathLib.arctan2(Infinity, -Infinity), 3/4*Math.PI, 'Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4');
-	equal(MathLib.arctan2(-Infinity, -Infinity), -3/4*Math.PI, 'Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4');
+	equal(MathLib.arctan2(Infinity, -Infinity), 3 / 4 * Math.PI, 'Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4');
+	equal(MathLib.arctan2(-Infinity, -Infinity), -3 / 4 * Math.PI, 'Spec. 10: arctan2(&plusmn;&infin;, -&infin;) is &plusmn;3&pi;/4');
 
 	// Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4
-	equal(MathLib.arctan2(Infinity, Infinity), Math.PI/4, 'Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4');
-	equal(MathLib.arctan2(-Infinity, Infinity), -Math.PI/4, 'Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4');
+	equal(MathLib.arctan2(Infinity, Infinity), Math.PI / 4, 'Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4');
+	equal(MathLib.arctan2(-Infinity, Infinity), -Math.PI / 4, 'Spec. 11: arctan2(&plusmn;&infin;, +&infin;) is &plusmn;&pi;/4');
 
 	// Spec. 12: otherwise MathLib.arctan2(y, x) = -i ln((x+iy)/sqrt(x^2+y^2)
-	equal(MathLib.arctan2(1, 1), Math.PI/4, 'Spec. 12: otherwise MathLib.arctan2(y, x) = -i ln((x+iy)/sqrt(x^2+y^2)');
-	equal(MathLib.arctan2(-1, 1), -Math.PI/4, 'Spec. 12: otherwise MathLib.arctan2(y, x) = -i ln((x+iy)/sqrt(x^2+y^2)');
+	equal(MathLib.arctan2(1, 1), Math.PI / 4, 'Spec. 12: otherwise MathLib.arctan2(y, x) = -i ln((x+iy)/sqrt(x^2+y^2)');
+	equal(MathLib.arctan2(-1, 1), -Math.PI / 4, 'Spec. 12: otherwise MathLib.arctan2(y, x) = -i ln((x+iy)/sqrt(x^2+y^2)');
 });
 
 
 test('.arithMean()', 1, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
-	equal(MathLib.arithMean(s), 26/5, 'Testing .arithMean() (set)');
+	equal(MathLib.arithMean(s), 26 / 5, 'Testing .arithMean() (set)');
 });
 
 
@@ -350,8 +350,8 @@ test('.cot()', 7, function () {
 	equal(MathLib.isNaN(MathLib.cot(-Infinity)), true, 'Spec. 5: MathLib.cot(-&infin;) = NaN');
 
 	// Spec. 6: otherwise MathLib.cot(x) = cotangent of x
-	equal(MathLib.cot(Math.PI/3), 1/Math.sqrt(3), 'Spec. 6: otherwise MathLib.cot(x) = cotangent of x');
-	equal(MathLib.cot(Math.PI/2), 0, 'Spec. 6: otherwise MathLib.cot(x) = cotangent of x');
+	equal(MathLib.cot(Math.PI / 3), 1 / Math.sqrt(3), 'Spec. 6: otherwise MathLib.cot(x) = cotangent of x');
+	equal(MathLib.cot(Math.PI / 2), 0, 'Spec. 6: otherwise MathLib.cot(x) = cotangent of x');
 });
 
 
@@ -372,8 +372,8 @@ test('.csc()', 7, function () {
 	equal(MathLib.isNaN(MathLib.csc(-Infinity)), true, 'Spec. 5: MathLib.csc(-&infin;) = NaN');
 
 	// Spec. 6: otherwise MathLib.csc(x) = cosecant of x
-	equal(MathLib.csc(Math.PI/2), 1, 'Spec. 6: otherwise MathLib.csc(x) = cosecant of x');
-	equal(MathLib.csc(-Math.PI/2), -1, 'Spec. 6: otherwise MathLib.csc(x) = cosecant of x');
+	equal(MathLib.csc(Math.PI / 2), 1, 'Spec. 6: otherwise MathLib.csc(x) = cosecant of x');
+	equal(MathLib.csc(-Math.PI / 2), -1, 'Spec. 6: otherwise MathLib.csc(x) = cosecant of x');
 });
 
 
@@ -529,7 +529,7 @@ test('.is()', 12, function () {
 	equal(MathLib.is(v, 'vector'), true);
 	equal(MathLib.is(v, 'point'), false);
 	equal(MathLib.is([], 'array'), true);
-	equal(MathLib.is(function(){}, 'function'), true);
+	equal(MathLib.is(function () {}, 'function'), true);
 	equal(MathLib.is({}, 'null'), false);
 	equal(MathLib.is(null, 'null'), true);
 	equal(MathLib.is(undefined, 'undefined'), true);
@@ -619,7 +619,8 @@ test('.plus()', 5, function () {
 	equal(MathLib.plus([]), 0, 'The empty sum is zero.');
 	equal(MathLib.plus(1, 2), 3);
 	equal(MathLib.plus([1, 2]), 3);
-	deepEqual(MathLib.plus(MathLib.Matrix.identity(3), MathLib.Matrix.identity(3)), new MathLib.Matrix([[2,0,0],[0,2,0],[0,0,2]]));
+	deepEqual(MathLib.plus(MathLib.Matrix.identity(3), MathLib.Matrix.identity(3)),
+		new MathLib.Matrix([[2, 0, 0], [0, 2, 0], [0, 0, 2]]));
 });
 
 
@@ -748,7 +749,7 @@ test('.radToDeg()', 7, function () {
 	equal(MathLib.radToDeg(-Infinity), -Infinity, 'Spec. 5: MathLib.radToDeg(-&infin;) = -&infin;');
 
 	// Spec. 6: otherwise MathLib.radToDeg(x) = x * 180/π
-	equal(MathLib.radToDeg(Math.PI/2), 90, 'Spec. 6: otherwise MathLib.radToDeg(x) = x * π/180');
+	equal(MathLib.radToDeg(Math.PI / 2), 90, 'Spec. 6: otherwise MathLib.radToDeg(x) = x * π/180');
 	equal(MathLib.radToDeg(Math.PI), 180, 'Spec. 6: otherwise MathLib.radToDeg(x) = x * π/180');
 });
 
@@ -804,7 +805,7 @@ test('.sec()', 7, function () {
 
 	// Spec. 6: otherwise MathLib.sec(x) = secant of x
 	equal(MathLib.sec(Math.PI), -1, 'Spec. 6: otherwise MathLib.sec(x) = secant of x');
-	equal(MathLib.sec(2*Math.PI), 1, 'Spec. 6: otherwise MathLib.sec(x) = secant of x');
+	equal(MathLib.sec(2 * Math.PI), 1, 'Spec. 6: otherwise MathLib.sec(x) = secant of x');
 });
 
 
@@ -845,8 +846,8 @@ test('.sin()', 7, function () {
 	equal(MathLib.isNaN(MathLib.sin(-Infinity)), true, 'Spec. 5: MathLib.sin(-&infin;) = NaN');
 
 	// Spec. 6: otherwise MathLib.sin(x) = sine of x
-	equal(MathLib.sin(Math.PI/2), 1, 'Spec. 6: otherwise MathLib.sin(x) = sine of x');
-	equal(MathLib.sin(-Math.PI/2), -1, 'Spec. 6: otherwise MathLib.sin(x) = sine of x');
+	equal(MathLib.sin(Math.PI / 2), 1, 'Spec. 6: otherwise MathLib.sin(x) = sine of x');
+	equal(MathLib.sin(-Math.PI / 2), -1, 'Spec. 6: otherwise MathLib.sin(x) = sine of x');
 });
 
 
@@ -891,7 +892,7 @@ test('.tan()', 7, function () {
 
 	// Spec. 6: otherwise MathLib.tan(x) = tangent of x
 	equal(MathLib.isZero(MathLib.tan(Math.PI)), true, 'Spec. 6: otherwise MathLib.tan(x) = tangent of x');
-	equal(MathLib.isOne(MathLib.tan(Math.PI/4)), true, 'Spec. 6: otherwise MathLib.tan(x) = tangent of x');
+	equal(MathLib.isOne(MathLib.tan(Math.PI / 4)), true, 'Spec. 6: otherwise MathLib.tan(x) = tangent of x');
 });
 
 
@@ -900,7 +901,8 @@ test('.plus()', 5, function () {
 	equal(MathLib.times([]), 1, 'The empty product is one.');
 	equal(MathLib.times(1, 2), 2);
 	equal(MathLib.times([1, 2]), 2);
-	deepEqual(MathLib.times(MathLib.Matrix.identity(3), MathLib.Matrix.identity(3)), new MathLib.Matrix([[1,0,0],[0,1,0],[0,0,1]]));
+	deepEqual(MathLib.times(MathLib.Matrix.identity(3), MathLib.Matrix.identity(3)),
+		new MathLib.Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]));
 });
 
 
@@ -911,7 +913,7 @@ test('.type()', 11, function () {
 	equal(MathLib.type({ob: 'ject'}), 'object', 'MathLib.type({obj: 42}) = "object"');
 	equal(MathLib.type(true), 'boolean', 'MathLib.type(true) = "boolean"');
 	equal(MathLib.type('string'), 'string', 'MathLib.type("str") = "string"');
-	equal(MathLib.type(function(){}), 'function', 'MathLib.type(function(){}) = "function"');
+	equal(MathLib.type(function () {}), 'function', 'MathLib.type(function(){}) = "function"');
 	equal(MathLib.type(/regexp/), 'regexp', 'MathLib.type(/regexp/) = "regexp"');
 	equal(MathLib.type(document.getElementsByTagName('div')[0]), 'htmldivelement', 'MathLib.type(document.getElementsByTagName("div")[0]) = "htmldivelement"');
 	equal(MathLib.type(undefined), 'undefined', 'MathLib.type(undefined) = "undefined"');

@@ -18,7 +18,7 @@ export class Circle {
 	center: Point;
 	radius: number;
 
-	constructor(center: any, radius: number) {
+	constructor (center: any, radius: number) {
 
 		if (center.type === undefined) {
 			center = new MathLib.Point(center.concat(1));

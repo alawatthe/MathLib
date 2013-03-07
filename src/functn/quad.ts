@@ -90,7 +90,7 @@ var quadstep = function  (f, a, b, fa, fc, fb, options) {
 	}
 
 	// Minimum step size reached; singularity possible
-	if (Math.abs(h) < options.minStep || c == a || c == b) {
+	if (Math.abs(h) < options.minStep || c === a || c === b) {
 		options.warn = Math.max(options.warn, 1);
 		return Q;
 	}

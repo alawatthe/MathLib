@@ -20,7 +20,7 @@ export class Matrix {
 	rows: number;
 	LUpermutation: Permutation;
 
-	constructor(matrix) {
+	constructor (matrix) {
 		if (typeof matrix === 'string') {
 			// If there is a < in the string we assume it's MathML
 			if (matrix.indexOf('<') > -1) {

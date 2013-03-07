@@ -67,8 +67,10 @@
 			"MathJax"   : true, 
 			"module"    : true,
 			"ok"        : true,
-			"test"      : true
+			"requestAnimationFrame": true,
+			"test"      : true,
+			"throws"    : true,
+			"THREE"     : true
 	},
-	"indent"        : 2,
 	"quotmark"      : "single"
 }

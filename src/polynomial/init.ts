@@ -24,7 +24,7 @@ export class Polynomial {
 	length: number;
 	subdeg: number;
 
-	constructor(polynomial) {
+	constructor (polynomial) {
 		var temp = [];
 
 		if (polynomial === undefined || polynomial.length === 0) {

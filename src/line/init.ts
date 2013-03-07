@@ -7,7 +7,7 @@ export class Line extends Vector {
 
 	dim: number;
 
-	constructor(coords: number[]) {
+	constructor (coords: number[]) {
 		super(coords);
 		this.dim = 2;
 	}

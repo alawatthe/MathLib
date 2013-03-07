@@ -11,12 +11,12 @@ times(n : any) : any {
 	if(n.type === 'rational') {
 		n = n.toNumber(); 
 	}
-	if (typeof n === "number" || n.type === "complex") {
+	if (typeof n === 'number' || n.type === 'complex') {
 		return this.map(function (x) {
 			return MathLib.times(n, x);
 		});
 	}
-	if (n.type === "matrix") {
+	if (n.type === 'matrix') {
 		res = n.toColVectors();
 		for (i = 0, ii = res.length; i < ii; i++) {
 			res[i] = this.scalarProduct(res[i]);

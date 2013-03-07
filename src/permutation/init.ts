@@ -8,7 +8,7 @@ export class Permutation {
 	cycle: any[];
 
 
-	constructor(p) {
+	constructor (p) {
 		var cycle, permutation;
 		
 		if (Array.isArray(p[0])) {

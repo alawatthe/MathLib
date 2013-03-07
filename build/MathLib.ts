@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2013-03-06  
+// v0.3.5 - 2013-03-07  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -175,10 +175,10 @@ export class MathML {
 	parentNode: any;
 	prevNode: any;
 
-	constructor(MathMLString) {
+	constructor (MathMLString) {
 		var tokenizer = new DOMParser(),
 			MathMLdoc,
-			MathML;
+			token;
 
 		if (typeof MathMLString !== 'string') {
 			MathMLString = MathMLString.toContentMathML();
@@ -277,16 +277,16 @@ export class MathML {
 			return newToken;
 		};
 
-		MathML = createToken(MathMLdoc.childNodes[0]);
+		token = createToken(MathMLdoc.childNodes[0]);
 
 
 
-		this.attributes = MathML.attributes;
-		this.childNodes = MathML.childNodes;
-		this.innerMathML = MathML.innerMathML;
-		this.outerMathML = MathML.outerMathML;
-		this.nodeName = MathML.nodeName;
-		this.nextNode = MathML.nextNode;
+		this.attributes = token.attributes;
+		this.childNodes = token.childNodes;
+		this.innerMathML = token.innerMathML;
+		this.outerMathML = token.outerMathML;
+		this.nodeName = token.nodeName;
+		this.nextNode = token.nextNode;
 		this.parentNode = null;
 		this.prevNode = null;
 	 
@@ -652,7 +652,9 @@ MathLib.Functn = function (f, options) {
 
 	//functn[proto] = prototypes.functn;
 	for (var name in functnPrototype) {
-		functn[name] = functnPrototype[name];
+		if (functnPrototype.hasOwnProperty(name)) {
+			functn[name] = functnPrototype[name];
+		}
 	}
 	functn.type = 'functn';
 	functn.constructor = MathLib.Functn;
@@ -772,7 +774,7 @@ var quadstep = function  (f, a, b, fa, fc, fb, options) {
 	}
 
 	// Minimum step size reached; singularity possible
-	if (Math.abs(h) < options.minStep || c == a || c == b) {
+	if (Math.abs(h) < options.minStep || c === a || c === b) {
 		options.warn = Math.max(options.warn, 1);
 		return Q;
 	}
@@ -3541,7 +3543,8 @@ export class Screen3D extends Screen {
 	scene: any;
 
 	constructor (id: string, options) {
-		super(id, options)
+		super(id, options);
+
 		var defaults = {
 					anaglyphMode: false,
 					axis: true,
@@ -3789,13 +3792,15 @@ surfacePlot3D(f, options) {
 				var res = f(u, v);
 				return new THREE.Vector3(res[0], res[1], res[2]);
 			},
+			material = new THREE[opts.material.type + 'Material'](opts.material),
+			mesh;
+
+			material.side = THREE.DoubleSide;
+
 			mesh = new THREE.Mesh(
 				new THREE.ParametricGeometry(map, opts.pointNumX, opts.pointNumY, false),
-				new THREE[opts.material.type + 'Material'](opts.material)
+				material
 			);
-
-	mesh.doubleSided = true;
-	this.scene.add(mesh);
 
 
 
@@ -3849,7 +3854,7 @@ export class Vector {
 
 	length: number;
 
-	constructor(coords: number[]) {
+	constructor (coords: number[]) {
 		coords.forEach((x,i)=>{this[i] = x;});
 		this.length = coords.length;
 	}
@@ -3869,7 +3874,7 @@ static areLinearIndependent = function (v : Vector[]) : bool {
 	}
 
 	if (! v.every(function (x){
-		return x.length == m;
+		return x.length === m;
 		}) ) {
 		return undefined;
 	}
@@ -4044,12 +4049,12 @@ times(n : any) : any {
 	if(n.type === 'rational') {
 		n = n.toNumber(); 
 	}
-	if (typeof n === "number" || n.type === "complex") {
+	if (typeof n === 'number' || n.type === 'complex') {
 		return this.map(function (x) {
 			return MathLib.times(n, x);
 		});
 	}
-	if (n.type === "matrix") {
+	if (n.type === 'matrix') {
 		res = n.toColVectors();
 		for (i = 0, ii = res.length; i < ii; i++) {
 			res[i] = this.scalarProduct(res[i]);
@@ -4166,7 +4171,7 @@ export class Circle {
 	center: Point;
 	radius: number;
 
-	constructor(center: any, radius: number) {
+	constructor (center: any, radius: number) {
 
 		if (center.type === undefined) {
 			center = new MathLib.Point(center.concat(1));
@@ -4300,7 +4305,7 @@ export class Complex {
 	re: number;
 	im: number;
 
-	constructor(re: number, im: number) {
+	constructor (re: number, im: number) {
 		this.re = re;
 		this.im = im;
 	}
@@ -4707,7 +4712,7 @@ export class Line extends Vector {
 
 	dim: number;
 
-	constructor(coords: number[]) {
+	constructor (coords: number[]) {
 		super(coords);
 		this.dim = 2;
 	}
@@ -4837,7 +4842,7 @@ export class Matrix {
 	rows: number;
 	LUpermutation: Permutation;
 
-	constructor(matrix) {
+	constructor (matrix) {
 		if (typeof matrix === 'string') {
 			// If there is a < in the string we assume it's MathML
 			if (matrix.indexOf('<') > -1) {
@@ -6026,7 +6031,7 @@ export class Permutation {
 	cycle: any[];
 
 
-	constructor(p) {
+	constructor (p) {
 		var cycle, permutation;
 		
 		if (Array.isArray(p[0])) {
@@ -6233,7 +6238,7 @@ export class Point extends Vector {
 
 	dim: number;
 
-	constructor(coords: number[]) {
+	constructor (coords: number[]) {
 		super(arguments.length > 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
 
 		this.dim = 2;
@@ -6543,7 +6548,7 @@ export class Polynomial {
 	length: number;
 	subdeg: number;
 
-	constructor(polynomial) {
+	constructor (polynomial) {
 		var temp = [];
 
 		if (polynomial === undefined || polynomial.length === 0) {
@@ -7134,7 +7139,7 @@ export class Rational {
 	numerator: number;
 	denominator: number;
 
-	constructor(numerator: number, denominator = 1) {
+	constructor (numerator: number, denominator = 1) {
 		if (MathLib.isZero(denominator)) {
 			throw 'The denominator cannot be zero.';
 		}
@@ -7336,7 +7341,7 @@ export class Set {
 	length: number;
 	card: number;
 
-	constructor(elements) {
+	constructor (elements) {
 		if (!elements) {
 			elements = [];
 		}

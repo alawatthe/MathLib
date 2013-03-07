@@ -6,7 +6,8 @@ export class Screen3D extends Screen {
 	scene: any;
 
 	constructor (id: string, options) {
-		super(id, options)
+		super(id, options);
+
 		var defaults = {
 					anaglyphMode: false,
 					axis: true,

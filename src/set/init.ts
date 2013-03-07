@@ -11,7 +11,7 @@ export class Set {
 	length: number;
 	card: number;
 
-	constructor(elements) {
+	constructor (elements) {
 		if (!elements) {
 			elements = [];
 		}

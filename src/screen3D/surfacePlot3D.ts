@@ -23,13 +23,15 @@ surfacePlot3D(f, options) {
 				var res = f(u, v);
 				return new THREE.Vector3(res[0], res[1], res[2]);
 			},
+			material = new THREE[opts.material.type + 'Material'](opts.material),
+			mesh;
+
+			material.side = THREE.DoubleSide;
+
 			mesh = new THREE.Mesh(
 				new THREE.ParametricGeometry(map, opts.pointNumX, opts.pointNumY, false),
-				new THREE[opts.material.type + 'Material'](opts.material)
+				material
 			);
-
-	mesh.doubleSided = true;
-	this.scene.add(mesh);
 
 
 

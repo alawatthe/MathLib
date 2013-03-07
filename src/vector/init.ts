@@ -15,7 +15,7 @@ export class Vector {
 
 	length: number;
 
-	constructor(coords: number[]) {
+	constructor (coords: number[]) {
 		coords.forEach((x,i)=>{this[i] = x;});
 		this.length = coords.length;
 	}
