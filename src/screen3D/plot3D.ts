@@ -4,7 +4,7 @@
 // *@param {function}* The map for the height  
 // *@param {object}* Options  
 // *@returns {screen3D}*
-plot3D(f, options) {
+plot3D(f, options) : Screen3D {
 	return this.surfacePlot3D(function (u, v){
 		return [u,v,f(u,v)];
 	},

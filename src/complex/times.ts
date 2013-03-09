@@ -1,9 +1,9 @@
 // ### Complex.prototype.times()
 // Multiplies complex numbers
 //
-// *@param {complex}* The number to be multiplied  
+// *@param {complex|number|rational}* The number to be multiplied  
 // *@returns {complex}*
-times(c) {
+times(c) : Complex {
 	if (c.type === 'complex') {
 		return new MathLib.Complex(MathLib.minus(MathLib.times(this.re, c.re), MathLib.times(this.im, c.im)),
 			MathLib.plus(MathLib.times(this.re, c.im), MathLib.times(this.im, c.re)));

@@ -2,6 +2,6 @@
 // Converts the rows of the matrix to vectors
 //
 // *@returns {array}*
-toRowVectors() {
+toRowVectors() : string {
 	return this.toArray().map(function (v) {return new MathLib.Vector(v);});
 }

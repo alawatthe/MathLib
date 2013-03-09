@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2013-03-07  
+// v0.3.5 - 2013-03-10  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -323,7 +323,7 @@ static isSupported = function () : bool {
 // Loads MathJax dynamically.
 //
 // *@param{string}* [config] Optional config options
-loadMathJax(config : string) {
+loadMathJax(config : string) : void {
 	var script = <HTMLScriptElement>document.createElement('script');
 	script.type = 'text/javascript';
 	script.src  = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js';
@@ -924,9 +924,9 @@ var mathStart = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>
 		mathEnd   = '/><ci>x</ci></apply></lambda></math>';
 
 
-// ## Elementary functions
+// ## unary functions
 // Some functions for the functn prototype
-var functionList = {
+var unaryFunctions = {
 	abs: Math.abs,
 	arccos: Math.acos,
 	arccot: function (x) {
@@ -939,10 +939,18 @@ var functionList = {
 		return Math.log(x + Math.sqrt(x * x - 1));
 	},  
 	arcoth: function (x) {
+		// Handle ±∞
+		if (!MathLib.isFinite(x)) {
+			return 1/x;
+		}
 		return 0.5 * Math.log((x + 1) / (x - 1));
 	},
 	arcsch: function (x) {
-		return Math.log((1 + Math.sqrt(1 + x * x)) / (x));
+		// Handle ±0 and ±∞ separately
+		if (x === 0 || !MathLib.isFinite(x)) {
+			return 1/x;
+		}
+		return Math.log(1/x + Math.sqrt(1/(x*x) +1));
 	},
 	arcsec: function (x) {
 		return Math.acos(1 / x);
@@ -953,9 +961,17 @@ var functionList = {
 		return Math.log((1 + Math.sqrt(1 - x * x)) / (x));
 	},
 	arsinh: (<any>Math).asinh || function (x) {
+		// Handle ±0 and ±∞ separately
+		if (x === 0 || !MathLib.isFinite(x)) {
+			return x;
+		}
 		return Math.log(x + Math.sqrt(x * x + 1));
 	},
 	artanh: (<any>Math).atanh || function (x) {
+		// Handle ±0
+		if (x === 0) {
+			return x;
+		}
 		return 0.5 * Math.log((1 + x) / (1 - x));
 	},
 	ceil: function (x) {
@@ -979,12 +995,26 @@ var functionList = {
 		return Math.tan(1.5707963267948966 - x);
 	},
 	coth: function (x) {
+		// Handle ±0
+		if (x === 0) {
+			return 1/x;
+		}
+
+		// Handle ±∞
+		if (!MathLib.isFinite(x)) {
+			return MathLib.sign(x);
+		}
+
 		return (Math.exp(x) + Math.exp(-x)) / (Math.exp(x) - Math.exp(-x));
 	},
 	csc: function (x) {
 		return 1 / Math.sin(x);
 	},
 	csch: function (x) {
+		// csch(-0) should be -∞ not ∞
+		if (x === 0) {
+			return 1/x;
+		}
 		return 2 / (Math.exp(x) - Math.exp(-x));
 	},
 	exp: function (x) {
@@ -1001,11 +1031,24 @@ var functionList = {
 	},
 	sin: Math.sin,
 	sinh: (<any>Math).sinh || function (x) {
+		// sinh(-0) should be -0
+		if (x === 0) {
+			return x;
+		}
 		return (Math.exp(x) - Math.exp(-x)) / 2;
 	},
 	tan: Math.tan,
 	tanh: (<any>Math).tanh || function (x) {
-		return (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));
+		var n, p;
+
+		// Handle ±0 and ±∞ separately
+		// Their values happen to coincide with sign
+		if (x === 0 || !MathLib.isFinite(x)) {
+			return MathLib.sign(x);
+		}
+
+		p = Math.exp(x);
+		return (p*p - 1) / (p*p + 1);
 	}
 };
 
@@ -1013,12 +1056,9 @@ var functionList = {
 
 
 // Create the elementary functions
-for (var elemfn in functionList) {
-	if (functionList.hasOwnProperty(elemfn)) {
-
-		// MathLib[elemfn] = functionList[elemfn];
-		// MathLib[elemfn] = MathLib.functn(functionList[elemfn], {name: elemfn, contentMathMLString: mathStart + elemfn + mathEnd});
-		MathLib.extend('', elemfn, new MathLib.Functn(functionList[elemfn], {name: elemfn, contentMathMLString: mathStart + elemfn + mathEnd}));
+for (var elemfn in unaryFunctions) {
+	if (unaryFunctions.hasOwnProperty(elemfn)) {
+		MathLib.extend('', elemfn, new MathLib.Functn(unaryFunctions[elemfn], {name: elemfn, contentMathMLString: mathStart + elemfn + mathEnd}));
 	}
 }
 
@@ -1132,7 +1172,13 @@ var functionList1 = {
 			},
 	factorial: function (x) {
 				var out = 1, i;
-				for (i = 1; i <= x; i = i + 1) {
+				if ((x > 170 && MathLib.isInt(x)) || x === Infinity ) {
+					return Infinity;
+				}
+				if (x < 0 || !MathLib.isInt(x) || MathLib.isNaN(x)) {
+					return NaN;
+				}
+				for (i = 1; i <= x; i++) {
 					out *= i;
 				}
 				return out;
@@ -1247,7 +1293,7 @@ var functionList1 = {
 			},
 	minus: function (a, b) {
 				return MathLib.plus(a, MathLib.negative(b));
-	},
+			},
 	mod: function (n, m) {
 				var nm = n%m;
 				return nm >= 0 ? nm : nm + m;
@@ -1291,13 +1337,7 @@ var functionList1 = {
 	sign: function (x) {
 				return x && (x<0 ? -1 : 1);
 			},
-	sqrt: function (x) {
-				// sqrt(-0) = -0 in JavaScript, but we want sqrt(-0) = +0
-				if (x === 0) {
-					return 0;
-				}
-				return Math.sqrt(x);
-			},
+	sqrt: Math.sqrt,
 	trunc: function (x, n) {
 				return x.toFixed(n || 0);
 			},
@@ -1339,37 +1379,6 @@ MathLib.toContentMathMLString = function (x) {
 
 
 
-
-// ### MathLib.and()
-// Returns true iff all arguments are true.
-// 
-// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-// *@returns {boolean}*
-MathLib.and = function () {
-	return Array.prototype.slice.call(arguments).every(function (x) {return !!x;});
-};
-
-
-// ### MathLib.or()
-// Returns true iff at least one argument is true.
-// 
-// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-// *@returns {boolean}*
-MathLib.or = function () {
-	return Array.prototype.slice.call(arguments).some(function (x) {return !!x;});
-};
-
-
-// ### MathLib.xor()
-// Returns true iff an odd number of the arguments is true.
-// 
-// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-// *@returns {boolean}*
-MathLib.xor = function () {
-	return Array.prototype.slice.call(arguments).reduce(function (x, y) {return x + y;}) % 2 !== 0;
-};
-
-
 // ### MathLib.not()
 // Negates the argument.
 // 
@@ -1378,9 +1387,6 @@ MathLib.xor = function () {
 MathLib.not = function (x) {
 	return !x;
 };
-
-
-
 
 
 
@@ -1427,133 +1433,157 @@ MathLib.is = function (obj, type) {
 
 
 // Functions that act on set-like structures and return one single number/matrix...
-var functionList3 = {
+var nAryFunctions = {
+	// ### MathLib.and()
+	// Returns true iff all arguments are true.
+	// 
+	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
+	// *@returns {boolean}*
+	and: function (n) {
+		return n.every(function (x) {return !!x;});
+	},
 	arithMean: function (n) {
-				return MathLib.plus(n) / n.length;
-			},
+		return MathLib.plus(n) / n.length;
+	},
 	gcd: function (a) {
-				var min,
-						reduction = function (x) {
-							return x !== min ? x%min : x;
-						},
-						isntZero = function (x) {
-							return x !== 0;
-						};
+		var min,
+				reduction = function (x) {
+					return x !== min ? x%min : x;
+				},
+				isntZero = function (x) {
+					return x !== 0;
+				};
 
-				// remove zeros and make negative values positive
-				a = a.filter(isntZero).map(Math.abs);
+		// remove zeros and make negative values positive
+		a = a.filter(isntZero).map(Math.abs);
 
-				if (a.length === 0) {
-					return 0;
-				}
+		if (a.length === 0) {
+			return 0;
+		}
 
-				while(a.length > 1) {
-					min = MathLib.min(a);
-					a = a.map(reduction).filter(isntZero);
-				}
-				return a[0] || min;
-			},
+		while(a.length > 1) {
+			min = MathLib.min(a);
+			a = a.map(reduction).filter(isntZero);
+		}
+		return a[0] || min;
+	},
 	geoMean: function (n) {
-				return MathLib.root(MathLib.times(n), n.length);
-			},
+		return MathLib.root(MathLib.times(n), n.length);
+	},
 	harmonicMean: function (n) {
-				return n.length / MathLib.plus(n.map(MathLib.inverse));
-			},
+		return n.length / MathLib.plus(n.map(MathLib.inverse));
+	},
 	lcm: function (n) {
-				return MathLib.times(n) / MathLib.gcd(n);
-			},
+		return MathLib.times(n) / MathLib.gcd(n);
+	},
 	max: function (n) {
-				/*if (n) {
-					return this.sort(MathLib.compare)[this.length-n];
-				}*/
-				return Math.max.apply(null, n);
-			},
+		/*if (n) {
+			return this.sort(MathLib.compare)[this.length-n];
+		}*/
+		return Math.max.apply(null, n);
+	},
 	min: function (n) {
-				/*if (n) {
-					return this.sort(MathLib.compare)[n-1];
-				}*/
-				return Math.min.apply(null, n);
-			},
+		/*if (n) {
+			return this.sort(MathLib.compare)[n-1];
+		}*/
+		return Math.min.apply(null, n);
+	},
+	// ### MathLib.or()
+	// Returns true iff at least one argument is true.
+	// 
+	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
+	// *@returns {boolean}*
+	or: function (n) {
+		return n.some(function (x) {return !!x;});
+	},
 	plus: function (n) {
-				if (n.length === 0) {
-					return 0;
+		if (n.length === 0) {
+			return 0;
+		}
+		return n.reduce(function (a, b) {
+			var f1, f2, astr, bstr;
+			if (typeof a === 'number' && typeof b === 'number') {
+				return a + b;
+			}
+			else if (a.type === 'functn' || b.type === 'functn') {
+				astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
+				bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
+				f1 = a;
+				f2 = b;
+				if (a.type !== 'functn') {
+					f1 = function () {
+						return a;
+					};
 				}
-				return n.reduce(function (a, b) {
-					var f1, f2, astr, bstr;
-					if (typeof a === 'number' && typeof b === 'number') {
-						return a + b;
-					}
-					else if (a.type === 'functn' || b.type === 'functn') {
-						astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
-						bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
-						f1 = a;
-						f2 = b;
-						if (a.type !== 'functn') {
-							f1 = function () {
-								return a;
-							};
-						}
-						else if(b.type !== 'functn') {
-							f2 = function () {
-								return b;
-							};
-						}
-						var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
-						return new MathLib.Functn(function (x) {
-							return MathLib.plus(f1(x), f2(x));
-						}, {
-							contentMathMLString: MathML
-						});
-					}
-					else if (typeof a === 'object') {
-						return a.plus(b);
-					}
-					// We're assuming that the operations are commutative
-					else if (typeof b === 'object') {
-						return b.plus(a);
-					}
-				});
-			},
-	times: function (n) {
-				if (n.length === 0) {
-					return 1;
+				else if(b.type !== 'functn') {
+					f2 = function () {
+						return b;
+					};
 				}
-				return n.reduce(function (a, b) {
-					var f1, f2, astr, bstr;
-					if (typeof a === 'number' && typeof b === 'number') {
-						return a * b;
-					}
-					else if (a.type === 'functn' || b.type === 'functn') {
-						astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
-						bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
-						f1 = a;
-						f2 = b;
-						if (a.type !== 'functn') {
-							f1 = function () {
-								return a;
-							};
-						}
-						else if(b.type !== 'functn') {
-							f2 = function () {
-								return b;
-							};
-						}
-						var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
-						return new MathLib.Functn(function (x) {
-							return MathLib.times(f1(x), f2(x));
-						}, {
-							contentMathMLString: MathML
-						});
-					}
-					else if (typeof a === 'object') {
-						return a.times(b);
-					}
-					// We're assuming that the operations are commutative
-					else if (typeof b === 'object') {
-						return b.times(a);
-					}
+				var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
+				return new MathLib.Functn(function (x) {
+					return MathLib.plus(f1(x), f2(x));
+				}, {
+					contentMathMLString: MathML
 				});
 			}
+			else if (typeof a === 'object') {
+				return a.plus(b);
+			}
+			// We're assuming that the operations are commutative
+			else if (typeof b === 'object') {
+				return b.plus(a);
+			}
+		});
+	},
+	times: function (n) {
+		if (n.length === 0) {
+			return 1;
+		}
+		return n.reduce(function (a, b) {
+			var f1, f2, astr, bstr;
+			if (typeof a === 'number' && typeof b === 'number') {
+				return a * b;
+			}
+			else if (a.type === 'functn' || b.type === 'functn') {
+				astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
+				bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
+				f1 = a;
+				f2 = b;
+				if (a.type !== 'functn') {
+					f1 = function () {
+						return a;
+					};
+				}
+				else if(b.type !== 'functn') {
+					f2 = function () {
+						return b;
+					};
+				}
+				var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
+				return new MathLib.Functn(function (x) {
+					return MathLib.times(f1(x), f2(x));
+				}, {
+					contentMathMLString: MathML
+				});
+			}
+			else if (typeof a === 'object') {
+				return a.times(b);
+			}
+			// We're assuming that the operations are commutative
+			else if (typeof b === 'object') {
+				return b.times(a);
+			}
+		});
+	},
+	// ### MathLib.xor()
+	// Returns true iff an odd number of the arguments is true.
+	// 
+	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
+	// *@returns {boolean}*
+	xor: function (n) {
+		return n.reduce(function (x, y) {return x + !!y;}, 0) % 2 !== 0;
+	}	
 };
  
 
@@ -1724,12 +1754,12 @@ for (func in functionList1) {
 
 
 
-for (func in functionList3) {
-	if (functionList3.hasOwnProperty(func)) {
+for (func in nAryFunctions) {
+	if (nAryFunctions.hasOwnProperty(func)) {
 
-		cur = functionList3[func];
+		cur = nAryFunctions[func];
 		Object.defineProperty(MathLib, func, {
-			value: createFunction3(functionList3[func], func)
+			value: createFunction3(nAryFunctions[func], func)
 		});
 
 	}
@@ -3701,7 +3731,7 @@ export class Screen3D extends Screen {
 //
 // *@param {function}* The function which is called on every argument  
 // *@returns {screen3D}*
-parametricPlot3D(f, options) {
+parametricPlot3D(f, options) : Screen3D {
 
 	var defaults = {
 				closed: false,
@@ -3759,7 +3789,7 @@ parametricPlot3D(f, options) {
 // *@param {function}* The map for the height  
 // *@param {object}* Options  
 // *@returns {screen3D}*
-plot3D(f, options) {
+plot3D(f, options) : Screen3D {
 	return this.surfacePlot3D(function (u, v){
 		return [u,v,f(u,v)];
 	},
@@ -3773,7 +3803,7 @@ plot3D(f, options) {
 // *@param {function}* The map for the surface    
 // *@param {object}* Options  
 // *@returns {screen3D}*
-surfacePlot3D(f, options) {
+surfacePlot3D(f, options) : Screen3D {
 	var defaults = {
 				material: {
 					type: 'MeshLambert'
@@ -4226,7 +4256,7 @@ draw(screen, options) {
 //
 // *@return {boolean}*
 isEqual(c: Circle) : bool {
-	return MathLib.isEqual(this.radius, c.radius)  && this.center.isEqual(c.center);
+	return MathLib.isEqual(this.radius, c.radius) && this.center.isEqual(c.center);
 }
 
 
@@ -4292,7 +4322,7 @@ toMatrix() : Matrix {
 // * Two numbers representing the real and the complex part.
 // * MathLib.Complex.polar(abs, arg)
 //
-// #### Simple use case:
+// #### Simple example:
 // ```
 // // Create the complex number 1 + 2i  
 // var c = new MathLib.Complex(1, 2]);  
@@ -4311,32 +4341,47 @@ export class Complex {
 	}
 
 
-// Returns the absolute value of the number
-abs() {
+// ### Complex.prototype.abs()
+// Returns the absolute value of the number.
+//
+// *@returns {number}*
+abs() : number {
 	return MathLib.hypot(this.re, this.im);
 }
 
 
-// Returns the inverse cosine of the number
-arccos() {
+// ### Complex.prototype.arccos()
+// Returns the inverse cosine of the number.
+//
+// *@returns {Complex}*
+arccos() : Complex {
 	return MathLib.minus(Math.PI/2, this.arcsin());
 }
 
 
-// Returns the inverse cotangent of the number
-arccot() {
+// ### Complex.prototype.arccot()
+// Returns the inverse cotangent of the number.
+//
+// *@returns {Complex}*
+arccot() : Complex {
 	return MathLib.minus(Math.PI/2, this.arctan());
 }
 
 
+// ### Complex.prototype.arccsc()
 // Returns the inverse cosecant of the number
-arccsc() {
+//
+// *@returns {Complex}*
+arccsc() : Complex {
 	return MathLib.times(new MathLib.Complex(0, 1), MathLib.ln(MathLib.plus(MathLib.sqrt(MathLib.minus(1, MathLib.divide(1, MathLib.times(this, this)))) , MathLib.divide(new MathLib.Complex(0, 1), this))));
 }
 
 
+// ### Complex.prototype.arcsin()
 // Returns the inverse sine of the number
-arcsin() {
+//
+// *@returns {Complex}*
+arcsin() : Complex {
 	var a = this.re, b = this.im;
 	return new MathLib.Complex(
 			MathLib.sign(a)/2 * MathLib.arccos(Math.sqrt(Math.pow(a*a + b*b - 1, 2) +4*b*b) - (a*a + b*b)),
@@ -4345,52 +4390,76 @@ arcsin() {
 }
 
 
-// Returns the inverse cotangent of the number
-arctan() {
+// ### Complex.prototype.arctan()
+// Returns the inverse tangent of the number
+//
+// *@returns {Complex}*
+arctan() : Complex {
 	var iz = new MathLib.Complex(-this.im, this.re);
 	return MathLib.times(new MathLib.Complex(0, 0.5), MathLib.ln(MathLib.divide( MathLib.plus(1, iz), MathLib.minus(1, iz))));
 }
 
 
+// ### Complex.prototype.arg()
 // Returns the argument (= the angle) of the complex number
-arg() {
+//
+// *@returns {number}*
+arg() : number {
 	return Math.atan2(this.im, this.re);
 }
 
 
+// ### Complex.prototype.artanh()
 // Returns the inverse hyperbolic tangent of the number
-artanh() {
+//
+// *@returns {Complex}*
+artanh() : Complex {
 	return MathLib.times(0.5, MathLib.minus(MathLib.ln(MathLib.plus(1, this)), MathLib.ln(MathLib.minus(1, this))));
 }
 
 
+// ### Complex.prototype.compare()
 // Compares two complex numbers
-compare(x) {
+//
+// *@returns {number}*
+compare(x) : number {
 	var a = MathLib.sign(this.abs() - x.abs());
 	return a ? a : MathLib.sign(this.arg() - x.arg());
 }
 
 
+// ### Complex.prototype.conjugate()
 // Calculates the conjugate of a complex number
-conjugate() {
+//
+// *@returns {Complex}*
+conjugate() : Complex {
 	return new MathLib.Complex(this.re, MathLib.negative(this.im));
 }
 
 
+// ### Complex.prototype.copy()
 // Copies the complex number
-copy() {
+//
+// *@returns {Complex}*
+copy() : Complex {
 	return new MathLib.Complex(MathLib.copy(this.re), MathLib.copy(this.im));
 }
 
 
+// ### Complex.prototype.cos()
 // Calculates the cosine of a complex number
-cos() {
+//
+// *@returns {Complex}*
+cos() : Complex {
 	return new MathLib.Complex(MathLib.cos(this.re) * MathLib.cosh(this.im), -MathLib.sin(this.re)*MathLib.sinh(this.im));
 }
 
 
+// ### Complex.prototype.cosh()
 // Calculates the hyperbolic cosine of a complex number
-cosh() {
+//
+// *@returns {Complex}*
+cosh() : Complex {
 	return new MathLib.Complex(MathLib.cos(this.im) * MathLib.cosh(this.re), MathLib.sin(this.im)*MathLib.sinh(this.re));
 }
 
@@ -4400,16 +4469,16 @@ cosh() {
 //
 // *@param {number|complex}* The divisor  
 // *@returns {complex}*
-divide(c) {
+divide(c) : Complex {
 	return this.times(MathLib.inverse(c));
 }
 
 
 // ### Complex.prototype.exp()
-// Evaluates the exponential function with complex argument
+// Evaluates the exponential function with a complex argument
 //
 // *@returns {complex}*
-exp() {
+exp() : Complex {
 	return new MathLib.Complex(MathLib.exp(this.re) * MathLib.cos(this.im), MathLib.exp(this.re)*MathLib.sin(this.im));
 }
 
@@ -4418,7 +4487,7 @@ exp() {
 // Calculates the inverse of a complex number
 //
 // *@returns {complex}*
-inverse() {
+inverse() : Complex {
 	return new MathLib.Complex(MathLib.divide(this.re, MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2))),
 		MathLib.divide(MathLib.negative(this.im), MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2))));
 }
@@ -4428,7 +4497,7 @@ inverse() {
 // Determines if the complex number is equal to another number.
 //
 // *@returns {boolean}*
-isEqual(n) {
+isEqual(n) : bool {
 	if (typeof n === 'number') {
 		return MathLib.isEqual(this.re, n) && MathLib.isZero(this.im);
 	}
@@ -4443,7 +4512,7 @@ isEqual(n) {
 // Determines if the complex number is finite.
 //
 // *@returns {boolean}*
-isFinite() {
+isFinite() : bool {
 	return MathLib.isFinite(this.re) && MathLib.isFinite(this.im);
 }
 
@@ -4452,7 +4521,7 @@ isFinite() {
 // Determines if the complex number is equal to 1.
 //
 // *@returns {boolean}*
-isOne() {
+isOne() : bool {
 	return MathLib.isOne(this.re) && MathLib.isZero(this.im);
 }
 
@@ -4461,7 +4530,7 @@ isOne() {
 // Determines if the complex number is real.
 //
 // *@returns {boolean}*
-isReal() {
+isReal() : bool {
 	return MathLib.isZero(this.im);
 }
 
@@ -4470,7 +4539,7 @@ isReal() {
 // Determines if the complex number is equal to 0.
 //
 // *@returns {boolean}*
-isZero() {
+isZero() : bool {
 	return MathLib.isZero(this.re) && MathLib.isZero(this.im);
 }
 
@@ -4479,7 +4548,7 @@ isZero() {
 // Evaluates the natural logarithm with complex arguments
 //
 // *@returns {complex}*
-ln() {
+ln() : Complex {
 	return new MathLib.Complex(MathLib.ln(this.abs()), this.arg());
 }
 
@@ -4489,7 +4558,7 @@ ln() {
 //
 // *@param {number|complex}* The subtrahend  
 // *@returns {complex}*
-minus(c) {
+minus(c) : Complex {
 	return this.plus(MathLib.negative(c));
 }
 
@@ -4499,7 +4568,7 @@ minus(c) {
 //
 // *@param {number}*  
 // *@returns {complex}*
-mod(m) {
+mod(m) : Complex {
 	return new MathLib.Complex(MathLib.mod(this.re, m), MathLib.mod(this.im, m));
 }
 
@@ -4508,7 +4577,7 @@ mod(m) {
 // Calculates the negative of the complex number
 //
 // *@returns {complex}*
-negative() {
+negative() : Complex {
 	return new MathLib.Complex(MathLib.negative(this.re), MathLib.negative(this.im));
 }
 
@@ -4523,9 +4592,9 @@ static one = new Complex(1, 0);
 // ### Complex.prototype.plus()
 // Add complex numbers
 //
-// *@param {complex}* The number to be added  
+// *@param {complex|number|rational}* The number to be added  
 // *@returns {complex}*
-plus(c) {
+plus(c) : Complex {
 	if (c.type === 'complex') {
 		return new MathLib.Complex(MathLib.plus(this.re, c.re), MathLib.plus(this.im, c.im));
 	}
@@ -4542,7 +4611,7 @@ plus(c) {
 // Construct a complex number out of the absolute value and the argument
 //
 // *@returns {complex}*
-static polar = function (abs, arg) {
+static polar = function (abs, arg) : Complex {
 	return new MathLib.Complex(abs * Math.cos(arg), abs * Math.sin(arg));
 };
 
@@ -4552,7 +4621,7 @@ static polar = function (abs, arg) {
 //
 // *@param {number}* The pow to which the complex number should be raised   
 // *@returns {complex}*
-pow(n) {
+pow(n) : Complex {
 	return new MathLib.Complex(Math.pow(this.abs(), n), n * this.arg());
 }
 
@@ -4561,7 +4630,7 @@ pow(n) {
 // Calculates the signum of a complex number
 //
 // *@returns {complex}*
-sign() {
+sign() : Complex {
 	return MathLib.Complex.polar(1, this.arg());
 }
 
@@ -4570,7 +4639,7 @@ sign() {
 // Calculates the sine of a complex number
 //
 // *@returns {complex}*
-sin() {
+sin() : Complex {
 	return new MathLib.Complex(MathLib.sin(this.re) * MathLib.cosh(this.im), MathLib.cos(this.re)*MathLib.sinh(this.im));
 }
 
@@ -4579,7 +4648,7 @@ sin() {
 // Calculates the hyperbolic sine of a complex number
 //
 // *@returns {complex}*
-sinh() {
+sinh() : Complex {
 	return new MathLib.Complex(MathLib.cos(this.im) * MathLib.sinh(this.re), MathLib.sin(this.im)*MathLib.cosh(this.re));
 }
 
@@ -4587,9 +4656,9 @@ sinh() {
 // ### Complex.prototype.times()
 // Multiplies complex numbers
 //
-// *@param {complex}* The number to be multiplied  
+// *@param {complex|number|rational}* The number to be multiplied  
 // *@returns {complex}*
-times(c) {
+times(c) : Complex {
 	if (c.type === 'complex') {
 		return new MathLib.Complex(MathLib.minus(MathLib.times(this.re, c.re), MathLib.times(this.im, c.im)),
 			MathLib.plus(MathLib.times(this.re, c.im), MathLib.times(this.im, c.re)));
@@ -4607,7 +4676,7 @@ times(c) {
 // Returns the content MathML representation of the number
 //
 // *@returns {string}*
-toContentMathMLString() {
+toContentMathMLString() : String {
 	return '<cn type="complex-cartesian">' + this.re + '<sep/>' + this.im + '</cn>';
 }
 
@@ -4616,7 +4685,7 @@ toContentMathMLString() {
 // Returns the LaTeX representation of the complex number
 //
 // *@returns {string}*
-toLaTeX() {
+toLaTeX() : string {
 	var str = '',
 			reFlag = false;
 
@@ -4638,7 +4707,7 @@ toLaTeX() {
 // Returns the (presentation) MathML representation of the number
 //
 // *@returns {string}*
-toMathMLString() {
+toMathMLString() : string {
 	var str = '', reFlag = false;
 
 	if (!MathLib.isZero(this.re)) {
@@ -4659,7 +4728,7 @@ toMathMLString() {
 // Transforms the complex number to a 2x2 matrix
 //
 // *@returns {matrix}*
-toMatrix() {
+toMatrix() : Matrix {
 	return new MathLib.Matrix([[this.re, MathLib.negative(this.im)], [this.im, this.re]]);
 }
 
@@ -4668,7 +4737,7 @@ toMatrix() {
 // Interprets the complex number as point in the two dimensional plane
 //
 // *@returns {point}*
-toPoint() {
+toPoint() : Point {
 	return new MathLib.Point(this.re, this.im);
 }
 
@@ -4677,7 +4746,7 @@ toPoint() {
 // Custom toString function
 //
 // *@returns {string}*
-toString() {
+toString() : string {
 	var str = '';
 
 	if (!MathLib.isZero(this.re)) {
@@ -4795,11 +4864,11 @@ isParallelTo(l : Line) : bool {
 
 
 // ### Line.prototype.meet()
-// Calculates the meet off two points
+// Calculates the meeting point of two lines
 //
 // *@param {line}*  
 // *@returns {point}*
-meet(l : Line) : Point{
+meet(l : Line) : Point {
 	return new MathLib.Point([this[1]*l[2]-this[2]*l[1], l[0]*this[2]-this[0]*l[2], this[0]*l[1]-this[1]*l[0]]);
 }
 
@@ -5811,7 +5880,7 @@ solve(b) {
 //
 // *@param {function}* The function which is called on every argument  
 // *@returns {boolean}*
-some(f) {
+some(f) : bool {
 	return Array.prototype.some.call(this, function (x, i) {
 		return Array.prototype.some.call(x, function (y, j) {
 			return f(y, i, j, this);
@@ -5895,7 +5964,7 @@ toColVectors() {
 // (if the entries allow the transformation)
 //
 // *@returns {complex}*
-toComplex() {
+toComplex() : Complex {
 	if (this.rows !== 2 || this.cols !== 2 || this[0][0] !== this[1][1] || this[0][1] !== MathLib.negative(this[1][0])) {
 		return;
 	}
@@ -5907,7 +5976,7 @@ toComplex() {
 // converting the matrix to content MathML
 //
 // *@returns {string}*
-toContentMathMLString() {
+toContentMathMLString() : string {
 	return this.reduce(function (str, x) {
 		return str + x.reduce(function(prev, cur) {
 			return prev + MathLib.toContentMathMLString(cur);
@@ -5920,7 +5989,7 @@ toContentMathMLString() {
 // Converting the matrix to LaTeX
 //
 // *@returns {string}*
-toLaTeX() {
+toLaTeX() : string {
 	return '\\begin{pmatrix}\n' + this.reduce(function (str, x) {
 		return str + x.reduce(function(prev, cur) {
 			return prev + ' & ' + MathLib.toLaTeX(cur);
@@ -5933,7 +6002,7 @@ toLaTeX() {
 // converting the matrix to (presentation) MathML
 //
 // *@returns {string}*
-toMathMLString() {
+toMathMLString() : string {
 	return this.reduce(function (str, x) {
 		return str + x.reduce(function(prev, cur) {
 			return prev + '<mtd>' + MathLib.toMathMLString(cur) + '</mtd>';
@@ -5946,7 +6015,7 @@ toMathMLString() {
 // Converts the rows of the matrix to vectors
 //
 // *@returns {array}*
-toRowVectors() {
+toRowVectors() : string {
 	return this.toArray().map(function (v) {return new MathLib.Vector(v);});
 }
 
@@ -5955,7 +6024,7 @@ toRowVectors() {
 // Creating a custom .toString() function
 //
 // *@returns {string}*
-toString() {
+toString() : string {
 	return this.reduce(function (str, x) {
 		return str + x.reduce(function(prev, cur) {
 			return prev + '\t' + MathLib.toString(cur);
@@ -6151,8 +6220,8 @@ static listToCycle(list : number[]) : any {
 // Works like Array.prototype.map.
 //
 // *@returns {permutation}*
-map(...args: any[]) {
-	return new this['constructor'](Array.prototype.map.apply(this, args));
+map(...args: any[]) : Permutation {
+	return new MathLib.Permutation(Array.prototype.map.apply(this, args));
 }
 
 
@@ -6661,10 +6730,9 @@ every(f : (value : any, index : number, vector : Vector ) => bool) : bool {
 
 // ### Polynomial.prototype.forEach()
 // Works like the Array.prototype.forEach function
-//
-// *@returns {array}*
-forEach() {
-	return Array.prototype.forEach.apply(this, arguments);
+// 
+forEach() : void {
+	Array.prototype.forEach.apply(this, arguments);
 }
 
 
@@ -6729,7 +6797,7 @@ interpolation(a, b) {
 //
 // *@param {polynomial}*  
 // *@returns {boolean}*
-isEqual(p) {
+isEqual(p : Polynomial) : bool {
 	var i, ii;
 	if (this.deg !== p.deg || this.subdeg !== p.subdeg) {
 		return false;
@@ -6747,7 +6815,7 @@ isEqual(p) {
 // Decides if the polynomial is primitive
 //
 // *@returns {boolean}*
-isPrimitive() {
+isPrimitive() : bool {
 	return MathLib.gcd(this) === 1;
 }
 
@@ -6756,7 +6824,7 @@ isPrimitive() {
 // Checks wether the coefficients are real numbers
 //
 // *@returns {boolean}*
-isReal() {
+isReal() : bool {
 	return this.every(MathLib.isReal);
 }
 
@@ -6765,7 +6833,7 @@ isReal() {
 // Works like the Array.prototype.map function
 //
 // *@returns {polynomial}*
-map(f) {
+map(f) : Polynomial {
 	return new MathLib.Polynomial(Array.prototype.map.call(this, f));
 }
 
@@ -6775,7 +6843,7 @@ map(f) {
 //
 // *@param {number}*  
 // *@returns {polynomial}*
-mod(m) {
+mod(m) : Polynomial {
 	return this.map(function (x) {
 		return MathLib.mod(x, m);
 	});
@@ -6786,7 +6854,7 @@ mod(m) {
 // Returns the negative polynomial
 //
 // *@returns {polynomial}*
-negative() {
+negative() : Polynomial {
 	return new MathLib.Polynomial(this.map(MathLib.negative));
 }
 
@@ -6804,7 +6872,7 @@ static one = new Polynomial([1]);
 // *@param {boolean}* [all] If the value is true, the number is added to all 
 // coefficients.  
 // *@returns {polynomial}*
-plus(a, all) {
+plus(a, all) : Polynomial {
 	var temparr = [],
 			i;
 	if (typeof a === 'number') {
@@ -6832,7 +6900,7 @@ plus(a, all) {
 // Calculates the regression line for some points
 //
 // *@returns {polynomial}*
-static regression(x, y) {
+static regression(x, y) : Polynomial {
 	var length = x.length,
 			xy = 0,
 			xi = 0,
@@ -6867,7 +6935,7 @@ static regression(x, y) {
 // Returns a polynomial with the specified roots
 //
 // *@returns {polynomial}*
-static roots(zeros) {
+static roots(zeros) : Polynomial {
 	var temp, coef = [], i, ii;
 	if (MathLib.type(zeros) === 'array') {
 		zeros = MathLib.set(zeros, true);
@@ -6909,7 +6977,7 @@ slice(...args : any[]) : any[] {
 //
 // *@param{number}* The x-value of the point.  
 // *@returns {polynomial}*
-tangent(p) {
+tangent(p) : Polynomial {
 	var value = this.valueAt(p),
 			slope = this.differentiate().valueAt(p);
 	return new MathLib.Polynomial([value - slope * p, slope]);
@@ -6921,7 +6989,7 @@ tangent(p) {
 //
 // *@param{number|Polynomial}* The multiplicator  
 // *@returns {Polynomial}*
-times(a) {
+times(a) : Polynomial {
 	var temparr = [],
 			i, j;
 			
@@ -6934,13 +7002,13 @@ times(a) {
 				temparr[i + j] = MathLib.plus((temparr[i + j] ? temparr[i + j] : 0), MathLib.times(this[i], a[j]));
 			}
 		}
+		return new MathLib.Polynomial(temparr);
 	}
 	else {  // we we multiply it to every coefficient
-		temparr = this.map(function (b) {
+		return this.map(function (b) {
 												return MathLib.times(a, b);
 											});
 	}
-	return new MathLib.Polynomial(temparr);
 }
 
 
@@ -6948,7 +7016,7 @@ times(a) {
 // Returns a content MathML representation of the polynomial
 //
 // *@returns {string}*
-toContentMathMLString(math) {
+toContentMathMLString(math) : string {
 	var str = '<apply><plus/>', i;
 	for (i=this.deg; i>=0; i--) {
 		if (!MathLib.isZero(this[i])) {
@@ -7010,7 +7078,7 @@ toFunctn() {
 // Returns a LaTeX representation of the polynomial
 //
 // *@returns {string}*
-toLaTeX() {
+toLaTeX() : string {
 	var str = MathLib.toString(this[this.deg]) + '*x^{' + this.deg + '}',
 			i;
 
@@ -7039,7 +7107,7 @@ toLaTeX() {
 // Returns a MathML representation of the polynomial
 //
 // *@returns {string}*
-toMathMLString(math) {
+toMathMLString(math) :string {
 	var str = '<mrow>' + MathLib.toMathMLString(this[this.deg], true) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathMLString(this.deg) + '</msup>',
 			i;
 	for (i=this.deg-1; i>=0; i--) {
@@ -7074,7 +7142,7 @@ toMathMLString(math) {
 // Custom toString function
 //
 // *@returns {string}*
-toString(opt) {
+toString(opt) : string {
 	var str = MathLib.toString(this[this.deg]) + '*x^' + this.deg,
 			i;
 	for (i=this.deg-1; i>=0; i--) {
@@ -7401,7 +7469,7 @@ filter(...args : any[]) : Set {
 
 // ### Set.prototype.forEach()
 // Works like the Array.prototype.forEach function
-forEach(...args : any[]) {
+forEach(...args : any[]) : void {
 	Array.prototype.forEach.apply(this, args);
 }
 
@@ -7492,7 +7560,6 @@ isSubsetOf(a : Set) : bool {
 // *@param {set}* The element to locate  
 // *@returns {number}*
 locate(x : any) : number {
-
 	var left = 0,
 			right = this.card - 1,
 			middle,

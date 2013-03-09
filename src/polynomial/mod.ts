@@ -3,7 +3,7 @@
 //
 // *@param {number}*  
 // *@returns {polynomial}*
-mod(m) {
+mod(m) : Polynomial {
 	return this.map(function (x) {
 		return MathLib.mod(x, m);
 	});

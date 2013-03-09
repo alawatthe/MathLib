@@ -2,6 +2,6 @@
 // Determines if the complex number is equal to 1.
 //
 // *@returns {boolean}*
-isOne() {
+isOne() : bool {
 	return MathLib.isOne(this.re) && MathLib.isZero(this.im);
 }

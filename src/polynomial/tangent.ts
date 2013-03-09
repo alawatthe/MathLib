@@ -3,7 +3,7 @@
 //
 // *@param{number}* The x-value of the point.  
 // *@returns {polynomial}*
-tangent(p) {
+tangent(p) : Polynomial {
 	var value = this.valueAt(p),
 			slope = this.differentiate().valueAt(p);
 	return new MathLib.Polynomial([value - slope * p, slope]);

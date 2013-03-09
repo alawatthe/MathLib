@@ -3,7 +3,7 @@
 //
 // *@param {function}* The function which is called on every argument  
 // *@returns {screen3D}*
-parametricPlot3D(f, options) {
+parametricPlot3D(f, options) : Screen3D {
 
 	var defaults = {
 				closed: false,

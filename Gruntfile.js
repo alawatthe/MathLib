@@ -158,6 +158,7 @@ module.exports = function (grunt) {
 			},
 			tests: {
 				src: ['test/general/general.js',
+							'test/general/!(general).js',
 
 							'test/circle/init.js',
 							'test/circle/!(init).js',

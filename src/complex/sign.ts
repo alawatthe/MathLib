@@ -2,6 +2,6 @@
 // Calculates the signum of a complex number
 //
 // *@returns {complex}*
-sign() {
+sign() : Complex {
 	return MathLib.Complex.polar(1, this.arg());
 }

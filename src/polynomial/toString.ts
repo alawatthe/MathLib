@@ -2,7 +2,7 @@
 // Custom toString function
 //
 // *@returns {string}*
-toString(opt) {
+toString(opt) : string {
 	var str = MathLib.toString(this[this.deg]) + '*x^' + this.deg,
 			i;
 	for (i=this.deg-1; i>=0; i--) {

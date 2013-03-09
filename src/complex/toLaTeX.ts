@@ -2,7 +2,7 @@
 // Returns the LaTeX representation of the complex number
 //
 // *@returns {string}*
-toLaTeX() {
+toLaTeX() : string {
 	var str = '',
 			reFlag = false;
 

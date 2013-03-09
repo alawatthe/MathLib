@@ -4,7 +4,7 @@
 // *@param {function}* The map for the surface    
 // *@param {object}* Options  
 // *@returns {screen3D}*
-surfacePlot3D(f, options) {
+surfacePlot3D(f, options) : Screen3D {
 	var defaults = {
 				material: {
 					type: 'MeshLambert'

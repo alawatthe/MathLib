@@ -2,7 +2,7 @@
 // Returns a LaTeX representation of the polynomial
 //
 // *@returns {string}*
-toLaTeX() {
+toLaTeX() : string {
 	var str = MathLib.toString(this[this.deg]) + '*x^{' + this.deg + '}',
 			i;
 

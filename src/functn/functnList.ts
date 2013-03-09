@@ -2,9 +2,9 @@ var mathStart = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>
 		mathEnd   = '/><ci>x</ci></apply></lambda></math>';
 
 
-// ## Elementary functions
+// ## unary functions
 // Some functions for the functn prototype
-var functionList = {
+var unaryFunctions = {
 	abs: Math.abs,
 	arccos: Math.acos,
 	arccot: function (x) {
@@ -17,10 +17,18 @@ var functionList = {
 		return Math.log(x + Math.sqrt(x * x - 1));
 	},  
 	arcoth: function (x) {
+		// Handle ±∞
+		if (!MathLib.isFinite(x)) {
+			return 1/x;
+		}
 		return 0.5 * Math.log((x + 1) / (x - 1));
 	},
 	arcsch: function (x) {
-		return Math.log((1 + Math.sqrt(1 + x * x)) / (x));
+		// Handle ±0 and ±∞ separately
+		if (x === 0 || !MathLib.isFinite(x)) {
+			return 1/x;
+		}
+		return Math.log(1/x + Math.sqrt(1/(x*x) +1));
 	},
 	arcsec: function (x) {
 		return Math.acos(1 / x);
@@ -31,9 +39,17 @@ var functionList = {
 		return Math.log((1 + Math.sqrt(1 - x * x)) / (x));
 	},
 	arsinh: (<any>Math).asinh || function (x) {
+		// Handle ±0 and ±∞ separately
+		if (x === 0 || !MathLib.isFinite(x)) {
+			return x;
+		}
 		return Math.log(x + Math.sqrt(x * x + 1));
 	},
 	artanh: (<any>Math).atanh || function (x) {
+		// Handle ±0
+		if (x === 0) {
+			return x;
+		}
 		return 0.5 * Math.log((1 + x) / (1 - x));
 	},
 	ceil: function (x) {
@@ -57,12 +73,26 @@ var functionList = {
 		return Math.tan(1.5707963267948966 - x);
 	},
 	coth: function (x) {
+		// Handle ±0
+		if (x === 0) {
+			return 1/x;
+		}
+
+		// Handle ±∞
+		if (!MathLib.isFinite(x)) {
+			return MathLib.sign(x);
+		}
+
 		return (Math.exp(x) + Math.exp(-x)) / (Math.exp(x) - Math.exp(-x));
 	},
 	csc: function (x) {
 		return 1 / Math.sin(x);
 	},
 	csch: function (x) {
+		// csch(-0) should be -∞ not ∞
+		if (x === 0) {
+			return 1/x;
+		}
 		return 2 / (Math.exp(x) - Math.exp(-x));
 	},
 	exp: function (x) {
@@ -79,11 +109,24 @@ var functionList = {
 	},
 	sin: Math.sin,
 	sinh: (<any>Math).sinh || function (x) {
+		// sinh(-0) should be -0
+		if (x === 0) {
+			return x;
+		}
 		return (Math.exp(x) - Math.exp(-x)) / 2;
 	},
 	tan: Math.tan,
 	tanh: (<any>Math).tanh || function (x) {
-		return (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));
+		var n, p;
+
+		// Handle ±0 and ±∞ separately
+		// Their values happen to coincide with sign
+		if (x === 0 || !MathLib.isFinite(x)) {
+			return MathLib.sign(x);
+		}
+
+		p = Math.exp(x);
+		return (p*p - 1) / (p*p + 1);
 	}
 };
 
@@ -91,12 +134,9 @@ var functionList = {
 
 
 // Create the elementary functions
-for (var elemfn in functionList) {
-	if (functionList.hasOwnProperty(elemfn)) {
-
-		// MathLib[elemfn] = functionList[elemfn];
-		// MathLib[elemfn] = MathLib.functn(functionList[elemfn], {name: elemfn, contentMathMLString: mathStart + elemfn + mathEnd});
-		MathLib.extend('', elemfn, new MathLib.Functn(functionList[elemfn], {name: elemfn, contentMathMLString: mathStart + elemfn + mathEnd}));
+for (var elemfn in unaryFunctions) {
+	if (unaryFunctions.hasOwnProperty(elemfn)) {
+		MathLib.extend('', elemfn, new MathLib.Functn(unaryFunctions[elemfn], {name: elemfn, contentMathMLString: mathStart + elemfn + mathEnd}));
 	}
 }
 
@@ -210,7 +250,13 @@ var functionList1 = {
 			},
 	factorial: function (x) {
 				var out = 1, i;
-				for (i = 1; i <= x; i = i + 1) {
+				if ((x > 170 && MathLib.isInt(x)) || x === Infinity ) {
+					return Infinity;
+				}
+				if (x < 0 || !MathLib.isInt(x) || MathLib.isNaN(x)) {
+					return NaN;
+				}
+				for (i = 1; i <= x; i++) {
 					out *= i;
 				}
 				return out;
@@ -325,7 +371,7 @@ var functionList1 = {
 			},
 	minus: function (a, b) {
 				return MathLib.plus(a, MathLib.negative(b));
-	},
+			},
 	mod: function (n, m) {
 				var nm = n%m;
 				return nm >= 0 ? nm : nm + m;
@@ -369,13 +415,7 @@ var functionList1 = {
 	sign: function (x) {
 				return x && (x<0 ? -1 : 1);
 			},
-	sqrt: function (x) {
-				// sqrt(-0) = -0 in JavaScript, but we want sqrt(-0) = +0
-				if (x === 0) {
-					return 0;
-				}
-				return Math.sqrt(x);
-			},
+	sqrt: Math.sqrt,
 	trunc: function (x, n) {
 				return x.toFixed(n || 0);
 			},
@@ -417,37 +457,6 @@ MathLib.toContentMathMLString = function (x) {
 
 
 
-
-// ### MathLib.and()
-// Returns true iff all arguments are true.
-// 
-// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-// *@returns {boolean}*
-MathLib.and = function () {
-	return Array.prototype.slice.call(arguments).every(function (x) {return !!x;});
-};
-
-
-// ### MathLib.or()
-// Returns true iff at least one argument is true.
-// 
-// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-// *@returns {boolean}*
-MathLib.or = function () {
-	return Array.prototype.slice.call(arguments).some(function (x) {return !!x;});
-};
-
-
-// ### MathLib.xor()
-// Returns true iff an odd number of the arguments is true.
-// 
-// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-// *@returns {boolean}*
-MathLib.xor = function () {
-	return Array.prototype.slice.call(arguments).reduce(function (x, y) {return x + y;}) % 2 !== 0;
-};
-
-
 // ### MathLib.not()
 // Negates the argument.
 // 
@@ -456,9 +465,6 @@ MathLib.xor = function () {
 MathLib.not = function (x) {
 	return !x;
 };
-
-
-
 
 
 
@@ -505,133 +511,157 @@ MathLib.is = function (obj, type) {
 
 
 // Functions that act on set-like structures and return one single number/matrix...
-var functionList3 = {
+var nAryFunctions = {
+	// ### MathLib.and()
+	// Returns true iff all arguments are true.
+	// 
+	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
+	// *@returns {boolean}*
+	and: function (n) {
+		return n.every(function (x) {return !!x;});
+	},
 	arithMean: function (n) {
-				return MathLib.plus(n) / n.length;
-			},
+		return MathLib.plus(n) / n.length;
+	},
 	gcd: function (a) {
-				var min,
-						reduction = function (x) {
-							return x !== min ? x%min : x;
-						},
-						isntZero = function (x) {
-							return x !== 0;
-						};
+		var min,
+				reduction = function (x) {
+					return x !== min ? x%min : x;
+				},
+				isntZero = function (x) {
+					return x !== 0;
+				};
 
-				// remove zeros and make negative values positive
-				a = a.filter(isntZero).map(Math.abs);
+		// remove zeros and make negative values positive
+		a = a.filter(isntZero).map(Math.abs);
 
-				if (a.length === 0) {
-					return 0;
-				}
+		if (a.length === 0) {
+			return 0;
+		}
 
-				while(a.length > 1) {
-					min = MathLib.min(a);
-					a = a.map(reduction).filter(isntZero);
-				}
-				return a[0] || min;
-			},
+		while(a.length > 1) {
+			min = MathLib.min(a);
+			a = a.map(reduction).filter(isntZero);
+		}
+		return a[0] || min;
+	},
 	geoMean: function (n) {
-				return MathLib.root(MathLib.times(n), n.length);
-			},
+		return MathLib.root(MathLib.times(n), n.length);
+	},
 	harmonicMean: function (n) {
-				return n.length / MathLib.plus(n.map(MathLib.inverse));
-			},
+		return n.length / MathLib.plus(n.map(MathLib.inverse));
+	},
 	lcm: function (n) {
-				return MathLib.times(n) / MathLib.gcd(n);
-			},
+		return MathLib.times(n) / MathLib.gcd(n);
+	},
 	max: function (n) {
-				/*if (n) {
-					return this.sort(MathLib.compare)[this.length-n];
-				}*/
-				return Math.max.apply(null, n);
-			},
+		/*if (n) {
+			return this.sort(MathLib.compare)[this.length-n];
+		}*/
+		return Math.max.apply(null, n);
+	},
 	min: function (n) {
-				/*if (n) {
-					return this.sort(MathLib.compare)[n-1];
-				}*/
-				return Math.min.apply(null, n);
-			},
+		/*if (n) {
+			return this.sort(MathLib.compare)[n-1];
+		}*/
+		return Math.min.apply(null, n);
+	},
+	// ### MathLib.or()
+	// Returns true iff at least one argument is true.
+	// 
+	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
+	// *@returns {boolean}*
+	or: function (n) {
+		return n.some(function (x) {return !!x;});
+	},
 	plus: function (n) {
-				if (n.length === 0) {
-					return 0;
+		if (n.length === 0) {
+			return 0;
+		}
+		return n.reduce(function (a, b) {
+			var f1, f2, astr, bstr;
+			if (typeof a === 'number' && typeof b === 'number') {
+				return a + b;
+			}
+			else if (a.type === 'functn' || b.type === 'functn') {
+				astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
+				bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
+				f1 = a;
+				f2 = b;
+				if (a.type !== 'functn') {
+					f1 = function () {
+						return a;
+					};
 				}
-				return n.reduce(function (a, b) {
-					var f1, f2, astr, bstr;
-					if (typeof a === 'number' && typeof b === 'number') {
-						return a + b;
-					}
-					else if (a.type === 'functn' || b.type === 'functn') {
-						astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
-						bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
-						f1 = a;
-						f2 = b;
-						if (a.type !== 'functn') {
-							f1 = function () {
-								return a;
-							};
-						}
-						else if(b.type !== 'functn') {
-							f2 = function () {
-								return b;
-							};
-						}
-						var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
-						return new MathLib.Functn(function (x) {
-							return MathLib.plus(f1(x), f2(x));
-						}, {
-							contentMathMLString: MathML
-						});
-					}
-					else if (typeof a === 'object') {
-						return a.plus(b);
-					}
-					// We're assuming that the operations are commutative
-					else if (typeof b === 'object') {
-						return b.plus(a);
-					}
-				});
-			},
-	times: function (n) {
-				if (n.length === 0) {
-					return 1;
+				else if(b.type !== 'functn') {
+					f2 = function () {
+						return b;
+					};
 				}
-				return n.reduce(function (a, b) {
-					var f1, f2, astr, bstr;
-					if (typeof a === 'number' && typeof b === 'number') {
-						return a * b;
-					}
-					else if (a.type === 'functn' || b.type === 'functn') {
-						astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
-						bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
-						f1 = a;
-						f2 = b;
-						if (a.type !== 'functn') {
-							f1 = function () {
-								return a;
-							};
-						}
-						else if(b.type !== 'functn') {
-							f2 = function () {
-								return b;
-							};
-						}
-						var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
-						return new MathLib.Functn(function (x) {
-							return MathLib.times(f1(x), f2(x));
-						}, {
-							contentMathMLString: MathML
-						});
-					}
-					else if (typeof a === 'object') {
-						return a.times(b);
-					}
-					// We're assuming that the operations are commutative
-					else if (typeof b === 'object') {
-						return b.times(a);
-					}
+				var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
+				return new MathLib.Functn(function (x) {
+					return MathLib.plus(f1(x), f2(x));
+				}, {
+					contentMathMLString: MathML
 				});
 			}
+			else if (typeof a === 'object') {
+				return a.plus(b);
+			}
+			// We're assuming that the operations are commutative
+			else if (typeof b === 'object') {
+				return b.plus(a);
+			}
+		});
+	},
+	times: function (n) {
+		if (n.length === 0) {
+			return 1;
+		}
+		return n.reduce(function (a, b) {
+			var f1, f2, astr, bstr;
+			if (typeof a === 'number' && typeof b === 'number') {
+				return a * b;
+			}
+			else if (a.type === 'functn' || b.type === 'functn') {
+				astr = a.type === 'functn' ? a.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(a);
+				bstr = b.type === 'functn' ? b.contentMathML.childNodes[0].apply.outerMathML : MathLib.toContentMathMLString(b);
+				f1 = a;
+				f2 = b;
+				if (a.type !== 'functn') {
+					f1 = function () {
+						return a;
+					};
+				}
+				else if(b.type !== 'functn') {
+					f2 = function () {
+						return b;
+					};
+				}
+				var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
+				return new MathLib.Functn(function (x) {
+					return MathLib.times(f1(x), f2(x));
+				}, {
+					contentMathMLString: MathML
+				});
+			}
+			else if (typeof a === 'object') {
+				return a.times(b);
+			}
+			// We're assuming that the operations are commutative
+			else if (typeof b === 'object') {
+				return b.times(a);
+			}
+		});
+	},
+	// ### MathLib.xor()
+	// Returns true iff an odd number of the arguments is true.
+	// 
+	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
+	// *@returns {boolean}*
+	xor: function (n) {
+		return n.reduce(function (x, y) {return x + !!y;}, 0) % 2 !== 0;
+	}	
 };
  
 
@@ -802,12 +832,12 @@ for (func in functionList1) {
 
 
 
-for (func in functionList3) {
-	if (functionList3.hasOwnProperty(func)) {
+for (func in nAryFunctions) {
+	if (nAryFunctions.hasOwnProperty(func)) {
 
-		cur = functionList3[func];
+		cur = nAryFunctions[func];
 		Object.defineProperty(MathLib, func, {
-			value: createFunction3(functionList3[func], func)
+			value: createFunction3(nAryFunctions[func], func)
 		});
 
 	}

@@ -2,7 +2,7 @@
 // Returns a content MathML representation of the polynomial
 //
 // *@returns {string}*
-toContentMathMLString(math) {
+toContentMathMLString(math) : string {
 	var str = '<apply><plus/>', i;
 	for (i=this.deg; i>=0; i--) {
 		if (!MathLib.isZero(this[i])) {

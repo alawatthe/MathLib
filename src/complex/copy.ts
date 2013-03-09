@@ -1,4 +1,7 @@
+// ### Complex.prototype.copy()
 // Copies the complex number
-copy() {
+//
+// *@returns {Complex}*
+copy() : Complex {
 	return new MathLib.Complex(MathLib.copy(this.re), MathLib.copy(this.im));
 }

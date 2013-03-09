@@ -3,6 +3,6 @@
 //
 // *@param {number|complex}* The divisor  
 // *@returns {complex}*
-divide(c) {
+divide(c) : Complex {
 	return this.times(MathLib.inverse(c));
 }

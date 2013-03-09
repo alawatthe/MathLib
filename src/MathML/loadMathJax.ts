@@ -2,7 +2,7 @@
 // Loads MathJax dynamically.
 //
 // *@param{string}* [config] Optional config options
-loadMathJax(config : string) {
+loadMathJax(config : string) : void {
 	var script = <HTMLScriptElement>document.createElement('script');
 	script.type = 'text/javascript';
 	script.src  = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js';

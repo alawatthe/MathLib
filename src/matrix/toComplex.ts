@@ -3,7 +3,7 @@
 // (if the entries allow the transformation)
 //
 // *@returns {complex}*
-toComplex() {
+toComplex() : Complex {
 	if (this.rows !== 2 || this.cols !== 2 || this[0][0] !== this[1][1] || this[0][1] !== MathLib.negative(this[1][0])) {
 		return;
 	}

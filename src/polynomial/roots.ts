@@ -2,7 +2,7 @@
 // Returns a polynomial with the specified roots
 //
 // *@returns {polynomial}*
-static roots(zeros) {
+static roots(zeros) : Polynomial {
 	var temp, coef = [], i, ii;
 	if (MathLib.type(zeros) === 'array') {
 		zeros = MathLib.set(zeros, true);

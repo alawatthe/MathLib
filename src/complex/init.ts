@@ -6,7 +6,7 @@
 // * Two numbers representing the real and the complex part.
 // * MathLib.Complex.polar(abs, arg)
 //
-// #### Simple use case:
+// #### Simple example:
 // ```
 // // Create the complex number 1 + 2i  
 // var c = new MathLib.Complex(1, 2]);  

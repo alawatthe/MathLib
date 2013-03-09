@@ -2,6 +2,6 @@
 // Works like Array.prototype.map.
 //
 // *@returns {permutation}*
-map(...args: any[]) {
-	return new this['constructor'](Array.prototype.map.apply(this, args));
+map(...args: any[]) : Permutation {
+	return new MathLib.Permutation(Array.prototype.map.apply(this, args));
 }

@@ -2,6 +2,6 @@
 // Determines if the complex number is finite.
 //
 // *@returns {boolean}*
-isFinite() {
+isFinite() : bool {
 	return MathLib.isFinite(this.re) && MathLib.isFinite(this.im);
 }

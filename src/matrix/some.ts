@@ -7,7 +7,7 @@
 //
 // *@param {function}* The function which is called on every argument  
 // *@returns {boolean}*
-some(f) {
+some(f) : bool {
 	return Array.prototype.some.call(this, function (x, i) {
 		return Array.prototype.some.call(x, function (y, j) {
 			return f(y, i, j, this);

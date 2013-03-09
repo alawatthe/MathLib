@@ -2,6 +2,6 @@
 // Determines if the complex number is real.
 //
 // *@returns {boolean}*
-isReal() {
+isReal() : bool {
 	return MathLib.isZero(this.im);
 }

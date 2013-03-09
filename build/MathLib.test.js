@@ -3,9 +3,6 @@ module('MathLib');
 test('general', 1, function () {
 	equal(typeof MathLib, 'object', 'is MathLib defined');
 });
-
-
-// Static methods
 test('.abs()', 7, function () {
 	// Spec. 1: MathLib.abs(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.abs(NaN)), true, 'Spec. 1: MathLib.abs(NaN) = NaN');
@@ -26,8 +23,22 @@ test('.abs()', 7, function () {
 	equal(MathLib.abs(1), 1, 'Spec. 6: otherwise MathLib.abs(x) = absolute value of x');
 	equal(MathLib.abs(-1), 1, 'Spec. 6: otherwise MathLib.abs(x) =  absolute value of x');
 });
-
-
+test('.and()', 14, function () {
+	equal(MathLib.and(), true);
+	equal(MathLib.and([]), true);
+	equal(MathLib.and(true), true);
+	equal(MathLib.and([true]), true);
+	equal(MathLib.and(false), false);
+	equal(MathLib.and([false]), false);
+	equal(MathLib.and(true, true), true, 'true and true = true');
+	equal(MathLib.and([true, true]), true, 'true and true = true');
+	equal(MathLib.and(true, false), false, 'true and false = false');
+	equal(MathLib.and([true, false]), false, 'true and false = false');
+	equal(MathLib.and(false, true), false, 'false and true = false');
+	equal(MathLib.and([false, true]), false, 'false and true = false');
+	equal(MathLib.and(false, false), false, 'false and false = false');
+	equal(MathLib.and([false, false]), false, 'false and false = false');
+});
 test('.arccos()', 8, function () {
 	// Spec. 1: MathLib.arccos(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.arccos(NaN)), true, 'Spec. 1: MathLib.arccos(NaN) = NaN');
@@ -45,9 +56,7 @@ test('.arccos()', 8, function () {
 	equal(MathLib.arccos(+0), Math.PI / 2, 'Spec. 4: otherwise MathLib.arccos(x) = inverse cosine of x');
 	equal(MathLib.arccos(-1), Math.PI, 'Spec. 4: otherwise MathLib.arccos(x) = inverse cosine of x');
 });
-
-
-test('.arccot()', 5, function () {
+test('.arccot()', 6, function () {
 	// Spec. 1: MathLib.arccot(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.arccot(NaN)), true, 'Spec. 1: MathLib.arccot(NaN) = NaN');
 
@@ -59,17 +68,9 @@ test('.arccot()', 5, function () {
 
 	// Spec. 4: otherwise MathLib.arccot(x) = inverse cotangent of x
 	equal(MathLib.arccot(1), Math.PI / 4, 'Spec. 4: otherwise MathLib.arccot(x) = inverse cotangent of x');
+	equal(MathLib.arccot(-0), Math.PI / 2, 'Spec. 4: otherwise MathLib.arccot(x) = inverse cotangent of x');
 	equal(MathLib.arccot(+0), Math.PI / 2, 'Spec. 4: otherwise MathLib.arccot(x) = inverse cotangent of x');
 });
-
-
-test('.arccot()', 3, function () {
-	equal(MathLib.arccot(0), Math.PI / 2);
-	equal(MathLib.arccot(1), Math.PI / 4);
-	deepEqual(MathLib.arccot(NaN), NaN);
-});
-
-
 test('.arccsc()', 9, function () {
 	// Spec. 1: MathLib.arccsc(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.arccsc(NaN)), true, 'Spec. 1: MathLib.arccsc(NaN) = NaN');
@@ -90,26 +91,74 @@ test('.arccsc()', 9, function () {
 	equal(MathLib.arccsc(-1), -Math.PI / 2, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
 	equal(MathLib.arccsc(2), Math.PI / 6, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
 });
+test('.arcosh()', 9, function () {
+	// Spec. 1: MathLib.arcosh(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.arcosh(NaN)), true, 'Spec. 1: MathLib.arcosh(NaN) = NaN');
 
+	// Spec. 2: MathLib.arcosh(+&infin;) = +&infin;
+	equal(MathLib.arcosh(+Infinity), Infinity, 'Spec. 2: MathLib.arcosh(+&infin;) = +&infin;');
 
-test('.arcosh()', 2, function () {
-	equal(MathLib.arcosh(1), 0);
-	deepEqual(MathLib.arcosh(NaN), NaN);
+	// Spec. 3: MathLib.arcosh(-&infin;) = NaN
+	equal(MathLib.isNaN(MathLib.arcosh(-Infinity)), true, 'Spec. 3: MathLib.arcosh(-&infin;) = NaN');
+
+	// Spec. 4: MathLib.arcosh(x) = NaN if x < 1
+	equal(MathLib.isNaN(MathLib.arcosh(-1)), true, 'Spec. 4: otherwise MathLib.arcosh(x) = NaN if x < 1');
+	equal(MathLib.isNaN(MathLib.arcosh(-0)), true, 'Spec. 4: otherwise MathLib.arcosh(x) = NaN if x < 1');
+	equal(MathLib.isNaN(MathLib.arcosh(+0)), true, 'Spec. 4: otherwise MathLib.arcosh(x) = NaN if x < 1');
+
+	// Spec. 5: MathLib.arcosh(1) = +0
+	equal(MathLib.isPosZero(MathLib.arcosh(1)), true, 'Spec. 5: otherwise MathLib.arcosh(1) = +0');
+
+	// Spec. 6: otherwise MathLib.arcosh(x) = inverse hyperbolic cosine of x
+	equal(MathLib.arcosh(2), 1.3169578969248166, 'Spec. 6: otherwise MathLib.arcosh(x) = inverse hyperbolic cosine of x');
+	equal(MathLib.arcosh(10), 2.993222846126381, 'Spec. 6: otherwise MathLib.arcosh(x) = inverse hyperbolic cosine of x');
 });
+test('.arcoth()', 11, function () {
+	// Spec. 1: MathLib.arcoth(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.arcoth(NaN)), true, 'Spec. 1: MathLib.arcoth(NaN) = NaN');
 
+	// Spec. 2: MathLib.arcoth(+&infin;) = +0
+	equal(MathLib.isPosZero(MathLib.arcoth(Infinity)), true, 'Spec. 2: MathLib.arcoth(+&infin;) = +0');
 
-test('.arcoth()', 2, function () {
-	equal(MathLib.arcoth(1), Infinity);
-	deepEqual(MathLib.arcoth(NaN), NaN);
+	// Spec. 3: MathLib.arcoth(-&infin;) = -0
+	equal(MathLib.isNegZero(MathLib.arcoth(-Infinity)), true, 'Spec. 3: MathLib.arcoth(-&infin;) = -0');
+
+	// Spec. 4: MathLib.arcoth(1) = +&infin;
+	equal(MathLib.arcoth(1), Infinity, 'Spec. 4: MathLib.arcoth(1) = +&infin;');
+
+	// Spec. 5: MathLib.arcoth(-1) = -&infin;
+	equal(MathLib.arcoth(-1), -Infinity, 'Spec. 5: MathLib.arcoth(-1) = -&infin;');
+
+	// Spec. 6: MathLib.arcoth(x) = NaN if x > -1 and x < 1
+	equal(MathLib.isNaN(MathLib.arcoth(+0)), true, 'Spec. 6: MathLib.arcoth(x) = NaN if x > -1 and x < 1');
+	equal(MathLib.isNaN(MathLib.arcoth(-0)), true, 'Spec. 6: MathLib.arcoth(x) = NaN if x > -1 and x < 1');
+	equal(MathLib.isNaN(MathLib.arcoth(+0.5)), true, 'Spec. 6: MathLib.arcoth(x) = NaN if x > -1 and x < 1');
+	equal(MathLib.isNaN(MathLib.arcoth(-0.5)), true, 'Spec. 6: MathLib.arcoth(x) = NaN if x > -1 and x < 1');
+
+	// Spec. 7: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x
+	equal(MathLib.arcoth(2), 0.5493061443340549, 'Spec. 9: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x');
+	equal(MathLib.arcoth(10), 0.10033534773107562, 'Spec. 9: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x');
 });
+test('.arcsch()', 7, function () {
+	// Spec. 1: MathLib.arcsch(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.arcsch(NaN)), true, 'Spec. 1: MathLib.arcsch(NaN) = NaN');
 
+	// Spec. 2: MathLib.arcsch(+0) = +&infin;
+	equal(MathLib.arcsch(+0), +Infinity, 'Spec. 2: MathLib.arcsch(+0) = +&infin;');
 
-test('.arcsch()', 2, function () {
-	equal(MathLib.arcsch(1), 0.8813735870195429);
-	deepEqual(MathLib.arcsch(NaN), NaN);
+	// Spec. 3: MathLib.arcsch(-0) = -&infin;
+	equal(MathLib.arcsch(-0), -Infinity, 'Spec. 3: MathLib.arcsch(-0) = -&infin;');
+
+	// Spec. 4: MathLib.arcsch(+&infin;) = +0
+	equal(MathLib.isPosZero(MathLib.arcsch(+Infinity)), true, 'Spec. 4: MathLib.arcsch(+&infin;) = +0');
+
+	// Spec. 5: MathLib.arcsch(-&infin;) = -0
+	equal(MathLib.isNegZero(MathLib.arcsch(-Infinity)), true, 'Spec. 5: MathLib.arcsch(-&infin;) = -0');
+
+	// Spec. 6: otherwise MathLib.arcsch(x) = inverse hyperbolic cosecant of x
+	equal(MathLib.arcsch(1), 0.8813735870195429, 'Spec. 6: otherwise MathLib.arcsch(x) = inverse hyperbolic cosecant of x');
+	equal(MathLib.arcsch(10), 0.09983407889920758, 'Spec. 6: otherwise MathLib.arcsch(x) = inverse hyperbolic cosecant of x');
 });
-
-
 test('.arcsec()', 9, function () {
 	// Spec. 1: MathLib.arcsec(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.arcsec(NaN)), true, 'Spec. 1: MathLib.arcsec(NaN) = NaN');
@@ -132,8 +181,6 @@ test('.arcsec()', 9, function () {
 	equal(MathLib.arcsec(-1), Math.PI, 'Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x');
 	equal(MathLib.arcsec(2), 2 * Math.PI / 6, 'Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x');
 });
-
-
 test('.arcsin()', 9, function () {
 	// Spec. 1: MathLib.arcsin(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.arcsin(NaN)), true, 'Spec. 1: MathLib.arcsin(NaN) = NaN');
@@ -156,8 +203,6 @@ test('.arcsin()', 9, function () {
 	equal(MathLib.arcsin(1), Math.PI / 2, 'Spec. 6: otherwise MathLib.arcsin(x) = inverse sine of x');
 	equal(MathLib.arcsin(-1), -Math.PI / 2, 'Spec. 6: otherwise MathLib.arcsin(x) = inverse sine of x');
 });
-
-
 test('.arctan()', 7, function () {
 	// Spec. 1: MathLib.arctan(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.arctan(NaN)), true, 'Spec. 1: MathLib.arctan(NaN) = NaN');
@@ -178,8 +223,6 @@ test('.arctan()', 7, function () {
 	equal(MathLib.arctan(1), Math.PI / 4, 'Spec. 6: otherwise MathLib.arctan(x) = inverse tangent of x');
 	equal(MathLib.arctan(-1), -Math.PI / 4, 'Spec. 6: otherwise MathLib.arctan(x) = inverse tangent of x');
 });
-
-
 test('.arctan2()', 24, function () {
 	// Spec. 1: arctan2(&plusmn;0, -0) is &plusmn;&pi;
 	equal(MathLib.arctan2(+0, -0), Math.PI, 'Spec. 1: arctan2(&plusmn;0, -0) is &plusmn;&pi;');
@@ -229,43 +272,93 @@ test('.arctan2()', 24, function () {
 	equal(MathLib.arctan2(1, 1), Math.PI / 4, 'Spec. 12: otherwise MathLib.arctan2(y, x) = -i ln((x+iy)/sqrt(x^2+y^2)');
 	equal(MathLib.arctan2(-1, 1), -Math.PI / 4, 'Spec. 12: otherwise MathLib.arctan2(y, x) = -i ln((x+iy)/sqrt(x^2+y^2)');
 });
-
-
 test('.arithMean()', 1, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
 	equal(MathLib.arithMean(s), 26 / 5, 'Testing .arithMean() (set)');
 });
+test('.arsech()', 10, function () {
+	// Spec. 1: MathLib.arsech(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.arsech(NaN)), true, 'Spec. 1: MathLib.arsech(NaN) = NaN');
 
+	// Spec. 2: MathLib.arsech(+0) = +Infinity
+	equal(MathLib.arsech(+0), Infinity, 'Spec. 2: MathLib.arsech(+0) = +&infin;');
 
-test('.arsech()', 3, function () {
-	equal(MathLib.arsech(0), Infinity);
-	equal(MathLib.arsech(1), 0);
-	deepEqual(MathLib.arsech(NaN), NaN);
+	// Spec. 3: MathLib.arsech(-0) = NaN
+	equal(MathLib.isNaN(MathLib.arsech(-0)), true, 'Spec. 3: MathLib.arsech(-0) = NaN');
+
+	// Spec. 4: MathLib.arsech(+&infin;) = NaN
+	equal(MathLib.isNaN(MathLib.arsech(Infinity)), true, 'Spec. 4: MathLib.arsech(+&infin;) = NaN');
+
+	// Spec. 5: MathLib.arsech(-&infin;) = NaN
+	equal(MathLib.isNaN(MathLib.arsech(-Infinity)), true, 'Spec. 5: MathLib.arsech(-&infin;) = NaN');
+
+	// Spec. 6: MathLib.arsech(1) = +0;
+	equal(MathLib.isPosZero(MathLib.arsech(1)), true, 'Spec. 6: MathLib.arsech(1) = +0');
+
+	// Spec. 7: MathLib.arsech(x) = NaN if x < 0 or x > 1
+	equal(MathLib.isNaN(MathLib.arsech(+2)), true, 'Spec. 7: MathLib.arsech(x) = NaN if x < 0 or x > 1');
+	equal(MathLib.isNaN(MathLib.arsech(-2)), true, 'Spec. 7: MathLib.arsech(x) = NaN if x < 0 or x > 1');
+
+	// Spec. 8: otherwise MathLib.arsech(x) = inverse hyperbolic secant of x
+	equal(MathLib.arsech(0.5), 1.3169578969248166, 'Spec. 8: otherwise MathLib.arsech(x) = inverse hyperbolic secant of x');
+	equal(MathLib.arsech(0.75), 0.7953654612239056, 'Spec. 8: otherwise MathLib.arsech(x) = inverse hyperbolic secant of x');
 });
+test('.arsinh()', 7, function () {
+	// Spec. 1: MathLib.arsinh(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.arsinh(NaN)), true, 'Spec. 1: MathLib.arsinh(NaN) = NaN');
 
+	// Spec. 2: MathLib.arsinh(+0) = +0
+	equal(MathLib.isPosZero(MathLib.arsinh(+0)), true, 'Spec. 2: MathLib.arsinh(+0) = +0');
 
-test('.arsinh()', 3, function () {
-	equal(MathLib.arsinh(0), 0);
-	equal(MathLib.arsinh(1), 0.8813735870195429);
-	deepEqual(MathLib.arsinh(NaN), NaN);
+	// Spec. 3: MathLib.arsinh(-0) = -0
+	equal(MathLib.isNegZero(MathLib.arsinh(-0)), true, 'Spec. 3: MathLib.arsinh(-0) = -0');
+
+	// Spec. 4: MathLib.arsinh(+&infin;) = +&infin;
+	equal(MathLib.arsinh(+Infinity), +Infinity, 'Spec. 4: MathLib.arsinh(+&infin;) = +&infin;');
+
+	// Spec. 5: MathLib.arsinh(-&infin;) = -&infin;
+	equal(MathLib.arsinh(-Infinity), -Infinity, 'Spec. 5: MathLib.arsinh(-&infin;) = -&infin;');
+
+	// Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x
+	equal(MathLib.arsinh(1), 0.8813735870195429, 'Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x');
+	equal(MathLib.arsinh(10), 2.99822295029797, 'Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x');
 });
+test('.artanh()', 11, function () {
+	// Spec. 1: MathLib.artanh(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.artanh(NaN)), true, 'Spec. 1: MathLib.artanh(NaN) = NaN');
 
+	// Spec. 2: MathLib.artanh(+0) = +0
+	equal(MathLib.isPosZero(MathLib.artanh(+0)), true, 'Spec. 2: MathLib.artanh(+0) = +0');
 
-test('.artanh()', 3, function () {
-	equal(MathLib.artanh(0), 0);
-	equal(MathLib.artanh(1), Infinity);
-	deepEqual(MathLib.artanh(NaN), NaN);
+	// Spec. 3: MathLib.artanh(-0) = -0
+	equal(MathLib.isNegZero(MathLib.artanh(-0)), true, 'Spec. 3: MathLib.artanh(-0) = -0');
+
+	// Spec. 4: MathLib.artanh(+&infin;) = NaN
+	equal(MathLib.isNaN(MathLib.artanh(Infinity)), true, 'Spec. 4: MathLib.artanh(+&infin;) = NaN');
+
+	// Spec. 5: MathLib.artanh(-&infin;) = NaN
+	equal(MathLib.isNaN(MathLib.artanh(-Infinity)), true, 'Spec. 5: MathLib.artanh(-&infin;) = NaN');
+
+	// Spec. 6: MathLib.artanh(1) = +&infin;
+	equal(MathLib.artanh(1), Infinity, 'Spec. 6: MathLib.artanh(1) = +&infin;');
+
+	// Spec. 7: MathLib.artanh(-1) = -&infin;
+	equal(MathLib.artanh(-1), -Infinity, 'Spec. 7: MathLib.artanh(-1) = -&infin;');
+
+	// Spec. 8: MathLib.artanh(x) = NaN if x < -1 or x > 1
+	equal(MathLib.isNaN(MathLib.artanh(+2)), true, 'Spec. 8: MathLib.artanh(x) = NaN if x < -1 or x > 1');
+	equal(MathLib.isNaN(MathLib.artanh(-2)), true, 'Spec. 8: MathLib.artanh(x) = NaN if x < -1 or x > 1');
+
+	// Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x
+	equal(MathLib.artanh(0.5), 0.5493061443340549, 'Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x');
+	equal(MathLib.artanh(0.75), 0.9729550745276566, 'Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x');
 });
-
-
 test('.binomial()', 4, function () {
 	equal(MathLib.binomial(0, 0), 1);
 	equal(MathLib.binomial(6, 3), 20);
 	equal(MathLib.binomial(2, 4), 0);
 	equal(MathLib.binomial(-4, 3), -20);
 });
-
-/*
 test('.cbrt()', 7, function () {
 	// Spec. 1: MathLib.cbrt(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.cbrt(NaN)), true, 'Spec. 1: MathLib.cbrt(NaN) = NaN');
@@ -285,9 +378,7 @@ test('.cbrt()', 7, function () {
 	// Spec. 6: otherwise MathLib.cbrt(x) = cube root of x
 	equal(MathLib.cbrt(8), 2, 'Spec. 6: otherwise MathLib.cbrt(x) = cube root of x');
 	equal(MathLib.cbrt(-8), -2, 'Spec. 6: otherwise MathLib.cbrt(x) = cube root of x');
-});*/
-
-
+});
 test('.ceil()', 7, function () {
 	// Spec. 1: MathLib.ceil(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.ceil(NaN)), true, 'Spec. 1: MathLib.ceil(NaN) = NaN');
@@ -308,15 +399,11 @@ test('.ceil()', 7, function () {
 	equal(MathLib.ceil(2.2), 3, 'Spec. 6: otherwise MathLib.ceil(x) =  ⎡x⎤');
 	equal(MathLib.ceil(-2.2), -2, 'Spec. 6: otherwise MathLib.ceil(x) = ⎡x⎤');
 });
-
-
 test('.compare()', 3, function () {
 	equal(MathLib.compare(12, 12), 0);
 	equal(MathLib.compare(1, 2), -1);
 	equal(MathLib.compare(23, new MathLib.Complex([3, 4])), 1);
 });
-
-
 test('.cos()', 6, function () {
 	// Spec. 1: MathLib.cos(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.cos(NaN)), true, 'Spec. 1: MathLib.cos(NaN) = NaN');
@@ -332,8 +419,21 @@ test('.cos()', 6, function () {
 	equal(MathLib.cos(-0), 1, 'Spec. 4: otherwise MathLib.cos(x) = cosine of x');
 	equal(MathLib.cos(Math.PI), -1, 'Spec. 4: otherwise MathLib.cos(x) = cosine of x');
 });
+test('.cosh()', 6, function () {
+	// Spec. 1: MathLib.cosh(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.cosh(NaN)), true, 'Spec. 1: MathLib.cosh(NaN) = NaN');
 
+	// Spec. 2: MathLib.cosh(+&infin;) = +&infin;
+	equal(MathLib.cosh(+Infinity), +Infinity, 'Spec. 2: MathLib.cosh(+&infin;) = +&infin;');
 
+	// Spec. 3: MathLib.cosh(-&infin;) = +&infin;
+	equal(MathLib.cosh(-Infinity), +Infinity, 'Spec. 3: MathLib.cosh(-&infin;) = +&infin;');
+
+	// Spec. 4: otherwise MathLib.cosh(x) = hyperbolic cosine of x
+	equal(MathLib.cosh(+0), 1, 'Spec. 4: otherwise MathLib.cosh(x) = hyperbolic cosine of x');
+	equal(MathLib.cosh(-0), 1, 'Spec. 4: otherwise MathLib.cosh(x) = hyperbolic cosine of x');
+	equal(MathLib.cosh(1), 1.5430806348152437, 'Spec. 4: otherwise MathLib.cosh(x) = hyperbolic cosine of x');
+});
 test('.cot()', 7, function () {
 	// Spec. 1: MathLib.cot(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.cot(NaN)), true, 'Spec. 1: MathLib.cot(NaN) = NaN');
@@ -354,8 +454,26 @@ test('.cot()', 7, function () {
 	equal(MathLib.cot(Math.PI / 3), 1 / Math.sqrt(3), 'Spec. 6: otherwise MathLib.cot(x) = cotangent of x');
 	equal(MathLib.cot(Math.PI / 2), 0, 'Spec. 6: otherwise MathLib.cot(x) = cotangent of x');
 });
+test('.coth()', 7, function () {
+	// Spec. 1: MathLib.coth(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.coth(NaN)), true, 'Spec. 1: MathLib.coth(NaN) = NaN');
 
+	// Spec. 2: MathLib.coth(+0) = +&infin;
+	equal(MathLib.coth(+0), Infinity, 'Spec. 2: MathLib.coth(+0) = +&infin;');
 
+	// Spec. 3: MathLib.coth(-0) = -&infin;
+	equal(MathLib.coth(-0), -Infinity, 'Spec. 3: MathLib.coth(-0) = -&infin;');
+
+	// Spec. 4: MathLib.coth(+&infin;) = 1
+	equal(MathLib.coth(+Infinity), 1, 'Spec. 4: MathLib.coth(+&infin;) = 1');
+
+	// Spec. 5: MathLib.coth(-&infin;) = -1
+	equal(MathLib.coth(-Infinity), -1, 'Spec. 5: MathLib.coth(-&infin;) = -1');
+
+	// Spec. 6: otherwise MathLib.coth(x) = hyperbolic cotangent of x
+	equal(MathLib.coth(1), 1.3130352854993313, 'Spec. 6: otherwise MathLib.coth(x) = hyperbolic cotangent of x');
+	equal(MathLib.coth(10), 1.0000000041223073, 'Spec. 6: otherwise MathLib.coth(x) = hyperbolic cotangent of x');
+});
 test('.csc()', 7, function () {
 	// Spec. 1: MathLib.csc(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.csc(NaN)), true, 'Spec. 1: MathLib.csc(NaN) = NaN');
@@ -376,8 +494,26 @@ test('.csc()', 7, function () {
 	equal(MathLib.csc(Math.PI / 2), 1, 'Spec. 6: otherwise MathLib.csc(x) = cosecant of x');
 	equal(MathLib.csc(-Math.PI / 2), -1, 'Spec. 6: otherwise MathLib.csc(x) = cosecant of x');
 });
+test('.csch()', 7, function () {
+	// Spec. 1: MathLib.csch(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.csch(NaN)), true, 'Spec. 1: MathLib.csch(NaN) = NaN');
 
+	// Spec. 2: MathLib.csch(+0) = +&infin;
+	equal(MathLib.csch(+0), +Infinity, 'Spec. 2: MathLib.csch(+0) = +&infin;');
 
+	// Spec. 3: MathLib.csch(-0) = -&infin;
+	equal(MathLib.csch(-0), -Infinity, 'Spec. 3: MathLib.csch(-0) = -&infin;');
+
+	// Spec. 4: MathLib.csch(+&infin;) = +0
+	equal(MathLib.isPosZero(MathLib.csch(+Infinity)), true, 'Spec. 4: MathLib.csch(+&infin;) = +0');
+
+	// Spec. 5: MathLib.csch(-&infin;) = -0
+	equal(MathLib.isNegZero(MathLib.csch(-Infinity)), true, 'Spec. 5: MathLib.csch(-&infin;) = -0');
+
+	// Spec. 6: otherwise MathLib.csch(x) = hyperbolic cosecant of x
+	equal(MathLib.csch(1), 0.8509181282393216, 'Spec. 6: otherwise MathLib.csch(x) = hyperbolic cosecant of x');
+	equal(MathLib.csch(10), 0.00009079985971212217, 'Spec. 6: otherwise MathLib.csch(x) = hyperbolic cosecant of x');
+});
 test('.degToRad()', 7, function () {
 	// Spec. 1: MathLib.degToRad(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.degToRad(NaN)), true, 'Spec. 1: MathLib.degToRad(NaN) = NaN');
@@ -398,8 +534,6 @@ test('.degToRad()', 7, function () {
 	equal(MathLib.degToRad(90), Math.PI / 2, 'Spec. 6: otherwise MathLib.degToRad(x) = x * π/180');
 	equal(MathLib.degToRad(180), Math.PI, 'Spec. 6: otherwise MathLib.degToRad(x) = x * π/180');
 });
-
-
 test('.exp()', 6, function () {
 	// Spec. 1: MathLib.exp(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.exp(NaN)), true, 'Spec. 1: MathLib.exp(NaN) = NaN');
@@ -415,32 +549,42 @@ test('.exp()', 6, function () {
 	equal(MathLib.exp(-0), 1, 'Spec. 4: otherwise MathLib.exp(x) = e^x');
 	equal(MathLib.exp(1), Math.E, 'Spec. 4: otherwise MathLib.exp(x) = e^x');
 });
-
-
 test('.factor()', 2, function () {
 	deepEqual(MathLib.factor(12), new MathLib.Set([2, 2, 3], true));
 	deepEqual(MathLib.factor(-15), new MathLib.Set([3, 5], true));
 });
+test('.factorial()', 10, function () {
+	// Spec. 1: MathLib.factorial(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.factorial(NaN)), true, 'Spec. 1: MathLib.factorial(NaN) = NaN');
 
+	// Spec. 2: MathLib.factorial(+&infin;) = +&infin;
+	equal(MathLib.factorial(+Infinity), Infinity, 'Spec. 2: MathLib.factorial(+&infin;) = +&infin;');
 
-test('.factorial()', 1, function () {
-	equal(MathLib.factorial(6), 720);
+	// Spec. 3: MathLib.factorial(-&infin;) = NaN
+	equal(MathLib.isNaN(MathLib.factorial(-Infinity)), true, 'Spec. 3: MathLib.factorial(-&infin;) = NaN');
+
+	// Spec. 4: MathLib.factorial(n) = NaN if n<0 or n not an integer
+	equal(MathLib.isNaN(MathLib.factorial(-1)), true, 'Spec. 4: MathLib.factorial(n) = NaN if n<0 or n not an integer');
+	equal(MathLib.isNaN(MathLib.factorial(1.5)), true, 'Spec. 4: MathLib.factorial(n) = NaN if n<0 or n not an integer');
+
+	// Spec. 5: MathLib.factorial(n) = &infin; if n is an integer greater 170
+	equal(MathLib.factorial(171), Infinity, 'Spec. 5: MathLib.factorial(n) = &infin; if n is an integer greater 170');
+
+	// Spec. 6: MathLib.factorial(n) = n!
+	equal(MathLib.factorial(+0), 1, 'Spec. 6: MathLib.factorial(n) = n!');
+	equal(MathLib.factorial(-0), 1, 'Spec. 6: MathLib.factorial(n) = n!');
+	equal(MathLib.factorial(1), 1, 'Spec. 6: MathLib.factorial(n) = n!');
+	equal(MathLib.factorial(6), 720, 'Spec. 6: MathLib.factorial(n) = n!');
 });
-
-
 test('.fallingFactorial()', 4, function () {
 	equal(MathLib.fallingFactorial(2, 0), 1);
 	equal(MathLib.fallingFactorial(6, 3), 120);
 	equal(MathLib.fallingFactorial(2, 4), 0);
 	equal(MathLib.fallingFactorial(4, 3, 0.5), 4 * 3.5 * 3);
 });
-
-
 test('.fibonacci()', 1, function () {
 	equal(MathLib.fibonacci(4), 3, 'Is the fourth fibonacci number 3?');
 });
-
-
 test('.floor()', 7, function () {
 	// Spec. 1: MathLib.floor(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.floor(NaN)), true, 'Spec. 1: MathLib.floor(NaN) = NaN');
@@ -461,20 +605,14 @@ test('.floor()', 7, function () {
 	equal(MathLib.floor(2.2), 2, 'Spec. 6: otherwise MathLib.floor(x) =  ⎣x⎦');
 	equal(MathLib.floor(-2.2), -3, 'Spec. 6: otherwise MathLib.floor(x) = ⎣x⎦');
 });
-
-
 test('.geoMean()', 1, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
 	equal(MathLib.geoMean(s), Math.pow(1728, 1 / 5), 'Testing .geoMean() (set)');
 });
-
-
 test('.harmonicMean()', 1, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
 	equal(MathLib.harmonicMean(s), 3.7894736842105265, 'Testing .harmonicMean() (set)');
 });
-
-
 test('.hypot()', 16, function () {
 	// Spec. 1: MathLib.hypot(x, y, ...) = +&infin; if any argument is infinite
 	equal(MathLib.hypot(+Infinity, NaN), Infinity, 'Spec. 1: MathLib.hypot(x, y, ...) = +&infin; if any argument is infinite');
@@ -501,8 +639,6 @@ test('.hypot()', 16, function () {
 	equal(MathLib.isEqual(MathLib.hypot(3, 4), 5), true, 'Spec. 4: Otherwise MathLib.hypot(x, y, ...) = the square root of the sum of the squared arguments');
 	equal(MathLib.isEqual(MathLib.hypot(3, 4, 12), 13), true, 'Spec. 4: Otherwise MathLib.hypot(x, y, ...) = the square root of the sum of the squared arguments');
 });
-
-
 test('.hypot2()', 6, function () {
 	equal(MathLib.isEqual(MathLib.hypot2(3, 4), 25), true);
 	equal(MathLib.isEqual(MathLib.hypot2(3, 4, 12), 169), true);
@@ -511,14 +647,10 @@ test('.hypot2()', 6, function () {
 	equal(MathLib.hypot2(-Infinity, NaN), Infinity);
 	equal(MathLib.hypot2(Infinity, 4), Infinity);
 });
-
-
 test('.inverse()', 2, function () {
 	equal(MathLib.inverse(2), 0.5, 'MathLib.inverse(2) should be 0.5');
 	equal(MathLib.isNaN(MathLib.inverse(NaN)), true, 'MathLib.inverse(NaN) should be NaN');
 });
-
-
 test('.is()', 12, function () {
 	var p = new MathLib.Point([1, 2, 3]),
 			v = new MathLib.Vector([1, 2, 3]);
@@ -535,58 +667,40 @@ test('.is()', 12, function () {
 	equal(MathLib.is(null, 'null'), true);
 	equal(MathLib.is(undefined, 'undefined'), true);
 });
-
-
 test('.isFinite()', 4, function () {
 	equal(MathLib.isFinite(2), true);
 	equal(MathLib.isFinite(NaN), false);
 	equal(MathLib.isFinite(+Infinity), false);
 	equal(MathLib.isFinite(-Infinity), false);
 });
-
-
 test('.isInt()', 2, function () {
 	equal(MathLib.isInt(2), true);
 	equal(MathLib.isInt(2.5), false);
 });
-
-
 test('.isNaN()', 2, function () {
 	equal(MathLib.isNaN(NaN), true);
 	equal(MathLib.isNaN(2), false);
 });
-
-
 test('.isNegZero()', 2, function () {
 	equal(MathLib.isNegZero(-0), true);
 	equal(MathLib.isNegZero(+0), false);
 });
-
-
 test('.isOne()', 2, function () {
 	equal(MathLib.isOne(1), true);
 	equal(MathLib.isOne(2), false);
 });
-
-
 test('.isPosZero()', 2, function () {
 	equal(MathLib.isPosZero(+0), true);
 	equal(MathLib.isPosZero(-0), false);
 });
-
-
 test('.isPrime()', 2, function () {
 	equal(MathLib.isPrime(4567), true);
 	equal(MathLib.isPrime(112), false);
 });
-
-
 test('.isZero()', 2, function () {
 	equal(MathLib.isZero(0), true);
 	equal(MathLib.isZero(1), false);
 });
-
-
 test('.ln()', 8, function () {
 	equal(MathLib.ln(1), 0, 'MathLib.ln(1) should be 0');
 	equal(MathLib.ln(Math.E), 1, 'MathLib.ln(Math.E) should be 1');
@@ -597,24 +711,38 @@ test('.ln()', 8, function () {
 	equal(MathLib.isNaN(MathLib.ln(-Infinity)), true, 'MathLib.ln(-Infinity) should be NaN');
 	equal(MathLib.isNaN(MathLib.ln(NaN)), true, 'MathLib.ln(NaN) should be NaN');
 });
-
-
 test('.max()', 3, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
 	equal(MathLib.max([1, 42, 17, 4]), 42);
 	equal(MathLib.max(1, 42, 17, 4), 42);
 	equal(MathLib.max(s), 9, 'Testing .max() (set)');
 });
-
-
 test('.min()', 3, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
 	equal(MathLib.min([1, 42, 17, 4]), 1);
 	equal(MathLib.min(1, 42, 17, 4), 1);
 	equal(MathLib.min(s), 2, 'Testing .min() (set)');
 });
-
-
+test('.not()', 2, function () {
+	equal(MathLib.not(true), false, 'not true = false');
+	equal(MathLib.not(false), true, 'not false = true');
+});
+test('.or()', 14, function () {
+	equal(MathLib.or(), false);
+	equal(MathLib.or([]), false);
+	equal(MathLib.or(true), true);
+	equal(MathLib.or([true]), true);
+	equal(MathLib.or(false), false);
+	equal(MathLib.or([false]), false);
+	equal(MathLib.or(true, true), true, 'true or true = true');
+	equal(MathLib.or([true, true]), true, 'true or true = true');
+	equal(MathLib.or(true, false), true, 'true or false = true');
+	equal(MathLib.or([true, false]), true, 'true or false = true');
+	equal(MathLib.or(false, true), true, 'false or true = true');
+	equal(MathLib.or([false, true]), true, 'false or true = true');
+	equal(MathLib.or(false, false), false, 'false or false = false');
+	equal(MathLib.or([false, false]), false, 'false or false = false');
+});
 test('.plus()', 5, function () {
 	equal(MathLib.plus(), 0, 'The empty sum is zero.');
 	equal(MathLib.plus([]), 0, 'The empty sum is zero.');
@@ -623,8 +751,6 @@ test('.plus()', 5, function () {
 	deepEqual(MathLib.plus(MathLib.Matrix.identity(3), MathLib.Matrix.identity(3)),
 		new MathLib.Matrix([[2, 0, 0], [0, 2, 0], [0, 0, 2]]));
 });
-
-
 test('pow()', 65, function () {
 	// Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)
 	equal(MathLib.pow(1, +0), 1, 'Spec. 1: MathLib.pow (x, &plusmn;0) = 1 (for any x, even a zero, NaN, or &plusmn;&infin;)');
@@ -731,8 +857,6 @@ test('pow()', 65, function () {
 	equal(MathLib.pow(2, 3), 8, 'Spec. 20: otherwise MathLib.pow(x, n) = x^n');
 	equal(MathLib.pow(2, -3), 0.125, 'Spec. 20: otherwise MathLib.pow(x, n) = x^n');
 });
-
-
 test('.radToDeg()', 7, function () {
 	// Spec. 1: MathLib.radToDeg(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.radToDeg(NaN)), true, 'Spec. 1: MathLib.radToDeg(NaN) = NaN');
@@ -753,15 +877,11 @@ test('.radToDeg()', 7, function () {
 	equal(MathLib.radToDeg(Math.PI / 2), 90, 'Spec. 6: otherwise MathLib.radToDeg(x) = x * π/180');
 	equal(MathLib.radToDeg(Math.PI), 180, 'Spec. 6: otherwise MathLib.radToDeg(x) = x * π/180');
 });
-
-
 test('.risingFactorial()', 3, function () {
 	equal(MathLib.risingFactorial(2, 0), 1);
 	equal(MathLib.risingFactorial(2, 3), 24);
 	equal(MathLib.risingFactorial(3, 4, 0.5), 189);
 });
-
-
 test('.round()', 10, function () {
 	// Spec. 1: MathLib.round(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.round(NaN)), true, 'Spec. 1: MathLib.round(NaN) = NaN');
@@ -786,8 +906,6 @@ test('.round()', 10, function () {
 	equal(MathLib.round(2.5), 3, 'Spec. 6: otherwise MathLib.round(x) = ⎣ x+0.5 ⎦');
 	equal(MathLib.round(-2.2), -2, 'Spec. 6: otherwise MathLib.round(x) = ⎣ x+0.5 ⎦');
 });
-
-
 test('.sec()', 7, function () {
 	// Spec. 1: MathLib.sec(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.sec(NaN)), true, 'Spec. 1: MathLib.sec(NaN) = NaN');
@@ -808,8 +926,21 @@ test('.sec()', 7, function () {
 	equal(MathLib.sec(Math.PI), -1, 'Spec. 6: otherwise MathLib.sec(x) = secant of x');
 	equal(MathLib.sec(2 * Math.PI), 1, 'Spec. 6: otherwise MathLib.sec(x) = secant of x');
 });
+test('.sech()', 6, function () {
+	// Spec. 1: MathLib.sech(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.sech(NaN)), true, 'Spec. 1: MathLib.sech(NaN) = NaN');
 
+	// Spec. 2: MathLib.sech(+&infin;) = +0
+	equal(MathLib.isPosZero(MathLib.sech(+Infinity)), true, 'Spec. 2: MathLib.sech(+&infin;) = +0');
 
+	// Spec. 3: MathLib.sech(-&infin;) = +0
+	equal(MathLib.isPosZero(MathLib.sech(-Infinity)), true, 'Spec. 3: MathLib.sech(-&infin;) = +0');
+
+	// Spec. 4: otherwise MathLib.sech(x) = hyperbolic secant of x
+	equal(MathLib.sech(+0), 1, 'Spec. 4: otherwise MathLib.sech(x) = hyperbolic secant of x');
+	equal(MathLib.sech(-0), 1, 'Spec. 4: otherwise MathLib.sech(x) = hyperbolic secant of x');
+	equal(MathLib.sech(1), 0.6480542736638855, 'Spec. 4: otherwise MathLib.sech(x) = hyperbolic secant of x');
+});
 test('.sign()', 7, function () {
 	// Spec. 1: MathLib.sign(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.sign(NaN)), true, 'Spec. 1: MathLib.sign(NaN) = NaN');
@@ -828,8 +959,6 @@ test('.sign()', 7, function () {
 	equal(MathLib.sign(-4), -1, 'Spec. 5: MathLib.sign(x) = -1 for x < 0');
 	equal(MathLib.sign(-Infinity), -1, 'Spec. 5: MathLib.sign(x) = -1 for x < 0');
 });
-
-
 test('.sin()', 7, function () {
 	// Spec. 1: MathLib.sin(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.sin(NaN)), true, 'Spec. 1: MathLib.sin(NaN) = NaN');
@@ -850,8 +979,26 @@ test('.sin()', 7, function () {
 	equal(MathLib.sin(Math.PI / 2), 1, 'Spec. 6: otherwise MathLib.sin(x) = sine of x');
 	equal(MathLib.sin(-Math.PI / 2), -1, 'Spec. 6: otherwise MathLib.sin(x) = sine of x');
 });
+test('.sinh()', 7, function () {
+	// Spec. 1: MathLib.sinh(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.sinh(NaN)), true, 'Spec. 1: MathLib.sinh(NaN) = NaN');
 
+	// Spec. 2: MathLib.sinh(+0) = +0
+	equal(MathLib.isPosZero(MathLib.sinh(+0)), true, 'Spec. 2: MathLib.sinh(+0) = +0');
 
+	// Spec. 3: MathLib.sinh(-0) = -0
+	equal(MathLib.isNegZero(MathLib.sinh(-0)), true, 'Spec. 3: MathLib.sinh(-0) = -0');
+
+	// Spec. 4: MathLib.sinh(+&infin;) = +&infin;
+	equal(MathLib.sinh(+Infinity), +Infinity, 'Spec. 4: MathLib.sinh(+&infin;) = +&infin;');
+
+	// Spec. 5: MathLib.sinh(-&infin;) = -&infin;
+	equal(MathLib.sinh(-Infinity), -Infinity, 'Spec. 5: MathLib.sinh(-&infin;) = -&infin;');
+
+	// Spec. 6: otherwise MathLib.sinh(x) = hyperbolic sine of x
+	equal(MathLib.sinh(1), 1.1752011936438014, 'Spec. 6: otherwise MathLib.sinh(x) = hyperbolic sine of x');
+	equal(MathLib.sinh(10), 11013.232874703393, 'Spec. 6: otherwise MathLib.sinh(x) = hyperbolic sine of x');
+});
 test('.sqrt()', 8, function () {
 	// Spec. 1: MathLib.sqrt(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.sqrt(NaN)), true, 'Spec. 1: MathLib.sqrt(NaN) = NaN');
@@ -860,7 +1007,7 @@ test('.sqrt()', 8, function () {
 	equal(MathLib.isPosZero(MathLib.sqrt(+0)), true, 'Spec. 2: MathLib.sqrt(+0) = +0');
 
 	// Spec. 3: MathLib.sqrt(-0) = -0
-	equal(MathLib.isPosZero(MathLib.sqrt(-0)), true, 'Spec. 3: MathLib.sqrt(-0) = +0');
+	equal(MathLib.isNegZero(MathLib.sqrt(-0)), true, 'Spec. 3: MathLib.sqrt(-0) = -0');
 
 	// Spec. 4: MathLib.sqrt(+&infin;) = +&infin;
 	equal(MathLib.sqrt(+Infinity), +Infinity, 'Spec. 4: MathLib.sqrt(+&infin;) = +&infin;');
@@ -873,8 +1020,6 @@ test('.sqrt()', 8, function () {
 	equal(MathLib.sqrt(9), 3, 'Spec. 6: otherwise MathLib.sqrt(x) = square root of x');
 	equal(MathLib.sqrt(2), 1.41421356237309504, 'Spec. 6: otherwise MathLib.sqrt(x) = square root of x');
 });
-
-
 test('.tan()', 7, function () {
 	// Spec. 1: MathLib.tan(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.tan(NaN)), true, 'Spec. 1: MathLib.tan(NaN) = NaN');
@@ -895,9 +1040,27 @@ test('.tan()', 7, function () {
 	equal(MathLib.isZero(MathLib.tan(Math.PI)), true, 'Spec. 6: otherwise MathLib.tan(x) = tangent of x');
 	equal(MathLib.isOne(MathLib.tan(Math.PI / 4)), true, 'Spec. 6: otherwise MathLib.tan(x) = tangent of x');
 });
+test('.tanh()', 7, function () {
+	// Spec. 1: MathLib.tanh(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.tanh(NaN)), true, 'Spec. 1: MathLib.tanh(NaN) = NaN');
 
+	// Spec. 2: MathLib.tanh(+0) = +0
+	equal(MathLib.isPosZero(MathLib.tanh(+0)), true, 'Spec. 2: MathLib.tanh(+0) = +0');
 
-test('.plus()', 5, function () {
+	// Spec. 3: MathLib.tanh(-0) = -0
+	equal(MathLib.isNegZero(MathLib.tanh(-0)), true, 'Spec. 3: MathLib.tanh(-0) = -0');
+
+	// Spec. 4: MathLib.tanh(+&infin;) = 1
+	equal(MathLib.tanh(+Infinity), 1, 'Spec. 4: MathLib.tanh(+&infin;) = +1');
+
+	// Spec. 5: MathLib.tanh(-&infin;) = -1
+	equal(MathLib.tanh(-Infinity), -1, 'Spec. 5: MathLib.tanh(-&infin;) = -1');
+
+	// Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x
+	equal(MathLib.tanh(1), 0.761594155955765, 'Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x');
+	equal(MathLib.tanh(10), 0.9999999958776927, 'Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x');
+});
+test('.times()', 5, function () {
 	equal(MathLib.times(), 1, 'The empty product is one.');
 	equal(MathLib.times([]), 1, 'The empty product is one.');
 	equal(MathLib.times(1, 2), 2);
@@ -905,8 +1068,6 @@ test('.plus()', 5, function () {
 	deepEqual(MathLib.times(MathLib.Matrix.identity(3), MathLib.Matrix.identity(3)),
 		new MathLib.Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]));
 });
-
-
 test('.type()', 11, function () {
 	equal(MathLib.type(new MathLib.Complex([2, 3])), 'complex', 'MathLib.type(MathLib.complex([2, 3])) = "complex"');
 	equal(MathLib.type(42), 'number', 'MathLib.type(42) = "number"');
@@ -920,7 +1081,22 @@ test('.type()', 11, function () {
 	equal(MathLib.type(undefined), 'undefined', 'MathLib.type(undefined) = "undefined"');
 	equal(MathLib.type(null), 'null', 'MathLib.type(null) = "null"');
 });
-
+test('.xor()', 14, function () {
+	equal(MathLib.xor(), false);
+	equal(MathLib.xor([]), false);
+	equal(MathLib.xor(true), true);
+	equal(MathLib.xor([true]), true);
+	equal(MathLib.xor(false), false);
+	equal(MathLib.xor([false]), false);
+	equal(MathLib.xor(true, true), false, 'true xor true = false');
+	equal(MathLib.xor([true, true]), false, 'true xor true = false');
+	equal(MathLib.xor(true, false), true, 'true xor false = true');
+	equal(MathLib.xor([true, false]), true, 'true xor false = true');
+	equal(MathLib.xor(false, true), true, 'false xor true = true');
+	equal(MathLib.xor([false, true]), true, 'false xor true = true');
+	equal(MathLib.xor(false, false), false, 'false xor false = false');
+	equal(MathLib.xor([false, false]), false, 'false xor false = false');
+});
 module('Circle');
 test('init', 2, function () {
 	var p = new MathLib.Point(1, 2),
@@ -1334,10 +1510,10 @@ test('.type', 4, function () {
 	equal(MathLib.plus(1, MathLib.cos).type, 'functn', 'MathLib.plus(1, MathLib.cos).type should be functn');
 	equal(MathLib.plus(MathLib.cos, 1).type, 'functn', 'MathLib.plus(MathLib.cos, 1).type should be functn');
 });
-
-
-
-// Methods
+test('.quad()', 2, function () {
+	ok(Math.abs(MathLib.sin.quad(0, 2 * Math.PI)) < 1e-15, 'integrate sin from 0 to 2*pi');
+	ok(Math.abs(MathLib.exp.quad(0, 1) - Math.E + 1) < 1e-7, 'integrate exp from 0 to 1');
+});
 test('.toContentMathMLString()', 6, function () {
 	equal(MathLib.sin.toContentMathMLString().toString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><sin/><ci>x</ci></apply></lambda></math>', 'MathLib.sin.toContentMathMLString()');
 	equal(MathLib.exp(MathLib.sin).toContentMathMLString().toString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><exp/><apply><sin/><ci>x</ci></apply></apply></lambda></math>', 'MathLib.exp(MathLib.sin).toContentMathMLString()');
@@ -1347,9 +1523,6 @@ test('.toContentMathMLString()', 6, function () {
 	equal(MathLib.times(2, MathLib.sin).toContentMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/><cn>2</cn><apply><sin/><ci>x</ci></apply></apply></lambda></math>', 'MathLib.times(2, MathLib.sin).toContentMathMLString()');
 	equal(MathLib.plus(MathLib.sin, MathLib.cos).toContentMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><apply><sin/><ci>x</ci></apply><apply><cos/><ci>x</ci></apply></apply></lambda></math>', 'MathLib.plus(MathLib.sin, MathLib.cos).toContentMathMLString()');
 });
-
-
-
 test('.toLaTeX()', 7, function () {
 	equal(MathLib.sin.toLaTeX(), '\\sin(x)', 'MathLib.sin.toLaTeX() should be sin(x)');
 	equal(MathLib.sin.toLaTeX('z'), '\\sin(z)', 'custom bound variable');
@@ -1360,9 +1533,6 @@ test('.toLaTeX()', 7, function () {
 	equal(MathLib.times(2, MathLib.sin).toLaTeX(), '2*\\sin(x)', 'MathLib.times(2, MathLib.sin).toLaTeX() = 2*sin(x)');
 	equal(MathLib.plus(MathLib.sin, MathLib.cos).toLaTeX(), '\\sin(x)+\\cos(x)', 'MathLib.plus(MathLib.sin, MathLib.cos).toLaTeX() = sin(x)+cos(x)');
 });
-
-
-
 test('.toMathMLString()', 6, function () {
 	equal(MathLib.sin.toMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></math>', 'MathLib.sin.toMathML()');
 	equal(MathLib.exp(MathLib.sin).toMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>exp</mi><mo>&af;</mo><mfenced><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></mfenced></mrow></math>', 'MathLib.exp(MathLib.sin).toMathML()');
@@ -1372,8 +1542,6 @@ test('.toMathMLString()', 6, function () {
 	equal(MathLib.times(2, MathLib.sin).toMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>2</mn><mo>*</mo><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></mrow></math>', 'MathLib.times(2, MathLib.sin).toMathML()');
 	equal(MathLib.plus(MathLib.sin, MathLib.cos).toMathMLString(), '<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow><mo>+</mo><mrow><mi>cos</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow></mrow></math>', 'MathLib.plus(MathLib.sin, MathLib.cos).toMathML()');
 });
-
-
 test('.toString()', 7, function () {
 	equal(MathLib.sin.toString(), 'sin(x)', 'MathLib.sin.toString() should be sin(x)');
 	equal(MathLib.sin.toString('z'), 'sin(z)', 'custom bound variable');
@@ -1383,11 +1551,6 @@ test('.toString()', 7, function () {
 	equal(MathLib.plus(2, MathLib.sin).toString(), '2+sin(x)', 'MathLib.plus(2, MathLib.sin).toString() = 2+sin(x)');
 	equal(MathLib.times(2, MathLib.sin).toString(), '2*sin(x)', 'MathLib.times(2, MathLib.sin).toString() = 2*sin(x)');
 	equal(MathLib.plus(MathLib.sin, MathLib.cos).toString(), 'sin(x)+cos(x)', 'MathLib.plus(MathLib.sin, MathLib.cos).toString() = sin(x)+cos(x)');
-});
-
-test('.quad()', 2, function () {
-	ok(Math.abs(MathLib.sin.quad(0, 2 * Math.PI)) < 1e-15, 'integrate sin from 0 to 2*pi');
-	ok(Math.abs(MathLib.exp.quad(0, 1) - Math.E + 1) < 1e-7, 'integrate exp from 0 to 1');
 });
 module('Line');
 test('init', 4, function () {

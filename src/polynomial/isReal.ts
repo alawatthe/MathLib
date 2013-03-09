@@ -2,6 +2,6 @@
 // Checks wether the coefficients are real numbers
 //
 // *@returns {boolean}*
-isReal() {
+isReal() : bool {
 	return this.every(MathLib.isReal);
 }

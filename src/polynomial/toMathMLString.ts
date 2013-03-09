@@ -2,7 +2,7 @@
 // Returns a MathML representation of the polynomial
 //
 // *@returns {string}*
-toMathMLString(math) {
+toMathMLString(math) :string {
 	var str = '<mrow>' + MathLib.toMathMLString(this[this.deg], true) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathMLString(this.deg) + '</msup>',
 			i;
 	for (i=this.deg-1; i>=0; i--) {

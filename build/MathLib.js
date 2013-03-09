@@ -95,7 +95,7 @@ var MathLib;
 				var attributes = {
 				}, i, ii;
 				if (t.attributes) {
-					for (i = 0, ii = t.attributes.length; i < ii; i++) {
+					for (i = 0 , ii = t.attributes.length; i < ii; i++) {
 						attributes[t.attributes[i].name] = t.attributes[i].value;
 					}
 				}
@@ -148,7 +148,7 @@ var MathLib;
 				}
 				if (newToken.nodeName === 'lambda') {
 					newToken.bvars = [];
-					for (i = 0, ii = newToken.childNodes.length; i < ii; i++) {
+					for (i = 0 , ii = newToken.childNodes.length; i < ii; i++) {
 						if (newToken.childNodes[i].nodeName === 'bvar') {
 							newToken.bvars.push(newToken.childNodes[i].childNodes[0].innerMathML);
 						} else if (newToken.childNodes[i].nodeName === 'domainofapplication') {
@@ -623,7 +623,7 @@ var MathLib;
 		return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
 	};
 	var mathStart = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><', mathEnd = '/><ci>x</ci></apply></lambda></math>';
-	var functionList = {
+	var unaryFunctions = {
 		abs: Math.abs,
 		arccos: Math.acos,
 		arccot: function (x) {
@@ -636,10 +636,16 @@ var MathLib;
 			return Math.log(x + Math.sqrt(x * x - 1));
 		},
 		arcoth: function (x) {
+			if (!MathLib.isFinite(x)) {
+				return 1 / x;
+			}
 			return 0.5 * Math.log((x + 1) / (x - 1));
 		},
 		arcsch: function (x) {
-			return Math.log((1 + Math.sqrt(1 + x * x)) / (x));
+			if (x === 0 || !MathLib.isFinite(x)) {
+				return 1 / x;
+			}
+			return Math.log(1 / x + Math.sqrt(1 / (x * x) + 1));
 		},
 		arcsec: function (x) {
 			return Math.acos(1 / x);
@@ -650,9 +656,15 @@ var MathLib;
 			return Math.log((1 + Math.sqrt(1 - x * x)) / (x));
 		},
 		arsinh: (Math).asinh || function (x) {
+			if (x === 0 || !MathLib.isFinite(x)) {
+				return x;
+			}
 			return Math.log(x + Math.sqrt(x * x + 1));
 		},
 		artanh: (Math).atanh || function (x) {
+			if (x === 0) {
+				return x;
+			}
 			return 0.5 * Math.log((1 + x) / (1 - x));
 		},
 		ceil: function (x) {
@@ -673,12 +685,21 @@ var MathLib;
 			return Math.tan(1.5707963267948966 - x);
 		},
 		coth: function (x) {
+			if (x === 0) {
+				return 1 / x;
+			}
+			if (!MathLib.isFinite(x)) {
+				return MathLib.sign(x);
+			}
 			return (Math.exp(x) + Math.exp(-x)) / (Math.exp(x) - Math.exp(-x));
 		},
 		csc: function (x) {
 			return 1 / Math.sin(x);
 		},
 		csch: function (x) {
+			if (x === 0) {
+				return 1 / x;
+			}
 			return 2 / (Math.exp(x) - Math.exp(-x));
 		},
 		exp: function (x) {
@@ -695,16 +716,24 @@ var MathLib;
 		},
 		sin: Math.sin,
 		sinh: (Math).sinh || function (x) {
+			if (x === 0) {
+				return x;
+			}
 			return (Math.exp(x) - Math.exp(-x)) / 2;
 		},
 		tan: Math.tan,
 		tanh: (Math).tanh || function (x) {
-			return (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));
+			var n, p;
+			if (x === 0 || !MathLib.isFinite(x)) {
+				return MathLib.sign(x);
+			}
+			p = Math.exp(x);
+			return (p * p - 1) / (p * p + 1);
 		}
 	};
-	for (var elemfn in functionList) {
-		if (functionList.hasOwnProperty(elemfn)) {
-			MathLib.extend('', elemfn, new MathLib.Functn(functionList[elemfn], {
+	for (var elemfn in unaryFunctions) {
+		if (unaryFunctions.hasOwnProperty(elemfn)) {
+			MathLib.extend('', elemfn, new MathLib.Functn(unaryFunctions[elemfn], {
 				name: elemfn,
 				contentMathMLString: mathStart + elemfn + mathEnd
 			}));
@@ -775,7 +804,7 @@ var MathLib;
 			var res = x === 1 ? [] : [
 				1
 			], i, ii;
-			for (i = 2, ii = x / 2; i <= ii; i++) {
+			for (i = 2 , ii = x / 2; i <= ii; i++) {
 				if (x % i === 0) {
 					res.push(i);
 				}
@@ -802,7 +831,13 @@ var MathLib;
 		},
 		factorial: function (x) {
 			var out = 1, i;
-			for (i = 1; i <= x; i = i + 1) {
+			if ((x > 170 && MathLib.isInt(x)) || x === Infinity) {
+				return Infinity;
+			}
+			if (x < 0 || !MathLib.isInt(x) || MathLib.isNaN(x)) {
+				return NaN;
+			}
+			for (i = 1; i <= x; i++) {
 				out *= i;
 			}
 			return out;
@@ -947,12 +982,7 @@ var MathLib;
 		sign: function (x) {
 			return x && (x < 0 ? -1 : 1);
 		},
-		sqrt: function (x) {
-			if (x === 0) {
-				return 0;
-			}
-			return Math.sqrt(x);
-		},
+		sqrt: Math.sqrt,
 		trunc: function (x, n) {
 			return x.toFixed(n || 0);
 		},
@@ -985,21 +1015,6 @@ var MathLib;
 			return x.toContentMathML();
 		}
 	};
-	MathLib.and = function () {
-		return Array.prototype.slice.call(arguments).every(function (x) {
-			return !!x;
-		});
-	};
-	MathLib.or = function () {
-		return Array.prototype.slice.call(arguments).some(function (x) {
-			return !!x;
-		});
-	};
-	MathLib.xor = function () {
-		return Array.prototype.slice.call(arguments).reduce(function (x, y) {
-			return x + y;
-		}) % 2 !== 0;
-	};
 	MathLib.not = function (x) {
 		return !x;
 	};
@@ -1031,7 +1046,12 @@ var MathLib;
 		}while (obj);
 		return false;
 	};
-	var functionList3 = {
+	var nAryFunctions = {
+		and: function (n) {
+			return n.every(function (x) {
+				return !!x;
+			});
+		},
 		arithMean: function (n) {
 			return MathLib.plus(n) / n.length;
 		},
@@ -1065,6 +1085,11 @@ var MathLib;
 		},
 		min: function (n) {
 			return Math.min.apply(null, n);
+		},
+		or: function (n) {
+			return n.some(function (x) {
+				return !!x;
+			});
 		},
 		plus: function (n) {
 			if (n.length === 0) {
@@ -1135,6 +1160,11 @@ var MathLib;
 					return b.times(a);
 				}
 			});
+		},
+		xor: function (n) {
+			return n.reduce(function (x, y) {
+				return x + !!y;
+			}, 0) % 2 !== 0;
 		}
 	};
 	MathLib.isEqual = function () {
@@ -1189,11 +1219,11 @@ var MathLib;
 			});
 		}
 	}
-	for (func in functionList3) {
-		if (functionList3.hasOwnProperty(func)) {
-			cur = functionList3[func];
+	for (func in nAryFunctions) {
+		if (nAryFunctions.hasOwnProperty(func)) {
+			cur = nAryFunctions[func];
 			Object.defineProperty(MathLib, func, {
-				value: createFunction3(functionList3[func], func)
+				value: createFunction3(nAryFunctions[func], func)
 			});
 		}
 	}
@@ -1729,8 +1759,8 @@ var MathLib;
 			b = Math.max(bottom, b);
 			l = Math.max(left, l);
 			var tPxl = Math.floor(-t * screen.scale.y), rPxl = Math.floor(r * screen.scale.x), bPxl = Math.floor(-b * screen.scale.y), lPxl = Math.floor(l * screen.scale.x), w = (rPxl - lPxl), h = (bPxl - tPxl), imgData = ctx.createImageData(w, h), pxl;
-			for (y = tPxl, i = 0; y > bPxl; y--) {
-				for (x = lPxl; x < rPxl; x++, i++) {
+			for (y = tPxl , i = 0; y > bPxl; y--) {
+				for (x = lPxl; x < rPxl; x++ , i++) {
 					pxl = f(x / screen.scale.x, y / screen.scale.y);
 					imgData.data[4 * i] = pxl[0];
 					imgData.data[4 * i + 1] = pxl[1];
@@ -1974,8 +2004,8 @@ var MathLib;
 			b = Math.max(bottom, b);
 			l = Math.max(left, l);
 			var tPxl = Math.floor(-t * screen.scale.y), rPxl = Math.floor(r * screen.scale.x), bPxl = Math.floor(-b * screen.scale.y), lPxl = Math.floor(l * screen.scale.x), w = (rPxl - lPxl), h = (tPxl - bPxl), imgData = canvasCtx.createImageData(w, h);
-			for (y = tPxl, i = 0; y > bPxl; y--) {
-				for (x = lPxl; x < rPxl; x++, i++) {
+			for (y = tPxl , i = 0; y > bPxl; y--) {
+				for (x = lPxl; x < rPxl; x++ , i++) {
 					pxl = f(x / screen.scale.x, y / screen.scale.y);
 					imgData.data[4 * i] = pxl[0];
 					imgData.data[4 * i + 1] = pxl[1];
@@ -2685,7 +2715,7 @@ function render() {
 			}
 			if (n.type === 'matrix') {
 				res = n.toColVectors();
-				for (i = 0, ii = res.length; i < ii; i++) {
+				for (i = 0 , ii = res.length; i < ii; i++) {
 					res[i] = this.scalarProduct(res[i]);
 				}
 				return new MathLib.Vector(res);
@@ -3125,19 +3155,19 @@ function render() {
 		};
 		Matrix.prototype.cholesky = function () {
 			var r, rr, temp = [], k, kk, sum, c, cholesky;
-			for (r = 0, rr = this.rows; r < rr; r++) {
+			for (r = 0 , rr = this.rows; r < rr; r++) {
 				temp.push([]);
 			}
-			for (r = 0, rr = this.rows; r < rr; r++) {
+			for (r = 0 , rr = this.rows; r < rr; r++) {
 				for (c = 0; c < r; c++) {
 					sum = 0;
-					for (k = 0, kk = c; k < kk; k++) {
+					for (k = 0 , kk = c; k < kk; k++) {
 						sum = MathLib.plus(sum, MathLib.times(temp[r][k], temp[c][k]));
 					}
 					temp[r][c] = (this[r][c] - sum) / temp[c][c];
 				}
 				sum = 0;
-				for (k = 0, kk = c; k < kk; k++) {
+				for (k = 0 , kk = c; k < kk; k++) {
 					sum = MathLib.plus(sum, MathLib.times(temp[r][k], temp[r][k]));
 				}
 				temp[r][c] = Math.sqrt(this[c][c] - sum);
@@ -3171,7 +3201,7 @@ function render() {
 		};
 		Matrix.prototype.diag = function () {
 			var arr = [], i, ii;
-			for (i = 0, ii = Math.min(this.rows, this.cols); i < ii; i++) {
+			for (i = 0 , ii = Math.min(this.rows, this.cols); i < ii; i++) {
 				arr.push(this[i][i]);
 			}
 			return arr;
@@ -3195,7 +3225,7 @@ function render() {
 		};
 		Matrix.prototype.gershgorin = function () {
 			var c = [], rc = [], rr = [], res = [], i, ii;
-			for (i = 0, ii = this.rows; i < ii; i++) {
+			for (i = 0 , ii = this.rows; i < ii; i++) {
 				rc.push(0);
 				rr.push(0);
 			}
@@ -3215,7 +3245,7 @@ function render() {
 					rr[i] += MathLib.abs(x);
 				}
 			});
-			for (i = 0, ii = this.rows; i < ii; i++) {
+			for (i = 0 , ii = this.rows; i < ii; i++) {
 				res.push(new MathLib.Circle(c[i], Math.min(rc[i], rr[i])));
 			}
 			return res;
@@ -3266,13 +3296,13 @@ function render() {
 		Matrix.identity = function (n) {
 			var temp = [], arr = [], i, ii;
 			n = n || 1;
-			for (i = 0, ii = n - 1; i < ii; i++) {
+			for (i = 0 , ii = n - 1; i < ii; i++) {
 				temp.push(0);
 			}
 			temp.push(1);
 			temp = temp.concat(temp);
 			temp = temp.slice(0, -1);
-			for (i = 0, ii = n; i < ii; i++) {
+			for (i = 0 , ii = n; i < ii; i++) {
 				arr.push(temp.slice(n - i - 1, 2 * n - i - 1));
 			}
 			return new MathLib.Matrix(arr);
@@ -3297,8 +3327,8 @@ function render() {
 			if ((this.hasOwnProperty('isUpper') && this.isUpper()) + (+(this.hasOwnProperty('isLower') && this.isLower())) + (+(this.hasOwnProperty('isSymmetric') && this.isSymmetric())) > 1) {
 				return true;
 			}
-			for (i = 0, ii = this.rows; i < ii; i++) {
-				for (j = 0, jj = this.cols; j < jj; j++) {
+			for (i = 0 , ii = this.rows; i < ii; i++) {
+				for (j = 0 , jj = this.cols; j < jj; j++) {
 					if (i !== j && this[i][j] !== 0) {
 						return false;
 					}
@@ -3312,8 +3342,8 @@ function render() {
 				return true;
 			}
 			if (this.rows === x.rows && this.cols === x.cols) {
-				for (i = 0, ii = this.rows; i < ii; i++) {
-					for (j = 0, jj = this.cols; j < jj; j++) {
+				for (i = 0 , ii = this.rows; i < ii; i++) {
+					for (j = 0 , jj = this.cols; j < jj; j++) {
 						if (!MathLib.isEqual(this[i][j], x[i][j])) {
 							return false;
 						}
@@ -3461,17 +3491,17 @@ for (i = 0; i < this.rows; i++) {
 		};
 		Matrix.prototype.negative = function () {
 			var res = [], i, ii;
-			for (i = 0, ii = this.rows; i < ii; i++) {
+			for (i = 0 , ii = this.rows; i < ii; i++) {
 				res.push(this[i].map(MathLib.negative));
 			}
 			return new MathLib.Matrix(res);
 		};
 		Matrix.numbers = function (n, r, c) {
 			var help = [], res = [], i, ii;
-			for (i = 0, ii = c || r || 1; i < ii; i++) {
+			for (i = 0 , ii = c || r || 1; i < ii; i++) {
 				help.push(n);
 			}
-			for (i = 0, ii = r || 1; i < ii; i++) {
+			for (i = 0 , ii = r || 1; i < ii; i++) {
 				res.push(help.slice(0));
 			}
 			return new MathLib.Matrix(res);
@@ -3493,9 +3523,9 @@ for (i = 0; i < this.rows; i++) {
 		};
 		Matrix.random = function (r, c) {
 			var temp, arr = [], i, j, ii, jj;
-			for (i = 0, ii = r || 1; i < ii; i++) {
+			for (i = 0 , ii = r || 1; i < ii; i++) {
 				temp = [];
-				for (j = 0, jj = c || r || 1; j < jj; j++) {
+				for (j = 0 , jj = c || r || 1; j < jj; j++) {
 					temp.push(Math.random());
 				}
 				arr.push(temp);
@@ -3717,9 +3747,9 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		};
 		Matrix.prototype.transpose = function () {
 			var temp = [], transpose, help, i, j, ii, jj;
-			for (i = 0, ii = this.cols; i < ii; i++) {
+			for (i = 0 , ii = this.cols; i < ii; i++) {
 				help = [];
-				for (j = 0, jj = this.rows; j < jj; j++) {
+				for (j = 0 , jj = this.rows; j < jj; j++) {
 					help.push(this[j][i]);
 				}
 				temp.push(help);
@@ -3777,9 +3807,9 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				return Math.max.apply(null, b);
 			});
 			max = Math.max.apply(null, max);
-			for (i = 0, ii = max; i <= ii; i++) {
+			for (i = 0 , ii = max; i <= ii; i++) {
 				cur = i;
-				for (j = 0, jj = cycle.length; j < jj; j++) {
+				for (j = 0 , jj = cycle.length; j < jj; j++) {
 					index = cycle[j].indexOf(cur);
 					if (++index) {
 						cur = cycle[j][index % cycle[j].length];
@@ -3801,7 +3831,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		};
 		Permutation.listToCycle = function listToCycle(list) {
 			var finished = [], cur, i, ii, temp, res = [];
-			for (i = 0, ii = list.length; i < ii; i++) {
+			for (i = 0 , ii = list.length; i < ii; i++) {
 				cur = i;
 				temp = [];
 				while (!finished[cur]) {
@@ -3820,7 +3850,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
 			}
-			return new this['constructor'](Array.prototype.map.apply(this, args));
+			return new MathLib.Permutation(Array.prototype.map.apply(this, args));
 		};
 		Permutation.prototype.sgn = function () {
 			var count = 0, i;
@@ -3839,13 +3869,13 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		Permutation.prototype.toMatrix = function (n) {
 			var arr = [], res = [], temp, i, ii;
 			n = n || this.length;
-			for (i = 0, ii = n - 1; i < ii; i++) {
+			for (i = 0 , ii = n - 1; i < ii; i++) {
 				arr.push(0);
 			}
 			arr = arr.concat([
 				1
 			]).concat(arr);
-			for (i = 0, ii = n; i < ii; i++) {
+			for (i = 0 , ii = n; i < ii; i++) {
 				temp = n - this.applyTo(i) - 1;
 				res.push(arr.slice(temp, temp + n));
 			}
@@ -3980,7 +4010,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		};
 		Point.prototype.toArray = function () {
 			var res = [], i, ii;
-			for (i = 0, ii = this.dim; i <= ii; i++) {
+			for (i = 0 , ii = this.dim; i <= ii; i++) {
 				res.push(this[i]);
 			}
 			return res;
@@ -4120,7 +4150,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			return Array.prototype.every.call(this, f);
 		};
 		Polynomial.prototype.forEach = function () {
-			return Array.prototype.forEach.apply(this, arguments);
+			Array.prototype.forEach.apply(this, arguments);
 		};
 		Polynomial.prototype.integrate = function (n) {
 			if (typeof n === 'undefined') {
@@ -4174,7 +4204,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			if (this.deg !== p.deg || this.subdeg !== p.subdeg) {
 				return false;
 			}
-			for (i = 0, ii = this.deg; i <= ii; i++) {
+			for (i = 0 , ii = this.deg; i <= ii; i++) {
 				if (!MathLib.isEqual(this[i], p[i])) {
 					return false;
 				}
@@ -4250,7 +4280,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				zeros = MathLib.set(zeros, true);
 			}
 			temp = zeros.powerset();
-			for (i = 0, ii = zeros.card; i < ii; i++) {
+			for (i = 0 , ii = zeros.card; i < ii; i++) {
 				coef[i] = 0;
 			}
 			temp.slice(1).forEach(function (x, i) {
@@ -4290,12 +4320,12 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 						temparr[i + j] = MathLib.plus((temparr[i + j] ? temparr[i + j] : 0), MathLib.times(this[i], a[j]));
 					}
 				}
+				return new MathLib.Polynomial(temparr);
 			} else {
-				temparr = this.map(function (b) {
+				return this.map(function (b) {
 					return MathLib.times(a, b);
 				});
 			}
-			return new MathLib.Polynomial(temparr);
 		};
 		Polynomial.prototype.toContentMathMLString = function (math) {
 			var str = '<apply><plus/>', i;
@@ -4321,7 +4351,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		};
 		Polynomial.prototype.toFunctn = function () {
 			var str = '', i, ii;
-			for (i = 0, ii = this.deg; i <= ii; i++) {
+			for (i = 0 , ii = this.deg; i <= ii; i++) {
 				if (!MathLib.isZero(this[i])) {
 					if (i === 0) {
 						str += MathLib.toString(this[i]);
@@ -4387,7 +4417,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		};
 		Polynomial.prototype.valueAt = function (x) {
 			var pot = MathLib.is(x, 'matrix') ? MathLib.Matrix.identity(x.rows, x.cols) : 1, res = MathLib.is(x, 'matrix') ? MathLib.Matrix.zero(x.rows, x.cols) : 0, i, ii;
-			for (i = 0, ii = this.deg; i <= ii; i++) {
+			for (i = 0 , ii = this.deg; i <= ii; i++) {
 				res = MathLib.plus(res, MathLib.times(this[i], pot));
 				pot = MathLib.times(pot, x);
 			}
@@ -4634,10 +4664,10 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		};
 		Set.prototype.powerset = function () {
 			var res = [], arr, temp, i, ii, j, jj;
-			for (i = 0, ii = Math.pow(2, this.card); i < ii; i++) {
+			for (i = 0 , ii = Math.pow(2, this.card); i < ii; i++) {
 				arr = i.toString(2).split('').reverse();
 				temp = [];
-				for (j = 0, jj = this.card; j < jj; j++) {
+				for (j = 0 , jj = this.card; j < jj; j++) {
 					if (arr[j] === '1') {
 						temp.push(this[j]);
 					}

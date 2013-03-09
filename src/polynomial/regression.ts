@@ -2,7 +2,7 @@
 // Calculates the regression line for some points
 //
 // *@returns {polynomial}*
-static regression(x, y) {
+static regression(x, y) : Polynomial {
 	var length = x.length,
 			xy = 0,
 			xi = 0,

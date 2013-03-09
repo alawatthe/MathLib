@@ -2,7 +2,7 @@
 // converting the matrix to content MathML
 //
 // *@returns {string}*
-toContentMathMLString() {
+toContentMathMLString() : string {
 	return this.reduce(function (str, x) {
 		return str + x.reduce(function(prev, cur) {
 			return prev + MathLib.toContentMathMLString(cur);

@@ -2,6 +2,6 @@
 // Decides if the polynomial is primitive
 //
 // *@returns {boolean}*
-isPrimitive() {
+isPrimitive() : bool {
 	return MathLib.gcd(this) === 1;
 }

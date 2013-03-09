@@ -2,6 +2,6 @@
 // Returns the negative polynomial
 //
 // *@returns {polynomial}*
-negative() {
+negative() : Polynomial {
 	return new MathLib.Polynomial(this.map(MathLib.negative));
 }

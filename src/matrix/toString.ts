@@ -2,7 +2,7 @@
 // Creating a custom .toString() function
 //
 // *@returns {string}*
-toString() {
+toString() : string {
 	return this.reduce(function (str, x) {
 		return str + x.reduce(function(prev, cur) {
 			return prev + '\t' + MathLib.toString(cur);

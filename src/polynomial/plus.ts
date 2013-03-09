@@ -4,7 +4,7 @@
 // *@param {boolean}* [all] If the value is true, the number is added to all 
 // coefficients.  
 // *@returns {polynomial}*
-plus(a, all) {
+plus(a, all) : Polynomial {
 	var temparr = [],
 			i;
 	if (typeof a === 'number') {

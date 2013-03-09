@@ -1,9 +1,9 @@
 // ### Complex.prototype.plus()
 // Add complex numbers
 //
-// *@param {complex}* The number to be added  
+// *@param {complex|number|rational}* The number to be added  
 // *@returns {complex}*
-plus(c) {
+plus(c) : Complex {
 	if (c.type === 'complex') {
 		return new MathLib.Complex(MathLib.plus(this.re, c.re), MathLib.plus(this.im, c.im));
 	}

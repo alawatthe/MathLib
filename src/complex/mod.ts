@@ -3,6 +3,6 @@
 //
 // *@param {number}*  
 // *@returns {complex}*
-mod(m) {
+mod(m) : Complex {
 	return new MathLib.Complex(MathLib.mod(this.re, m), MathLib.mod(this.im, m));
 }

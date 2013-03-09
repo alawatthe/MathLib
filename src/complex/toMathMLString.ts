@@ -2,7 +2,7 @@
 // Returns the (presentation) MathML representation of the number
 //
 // *@returns {string}*
-toMathMLString() {
+toMathMLString() : string {
 	var str = '', reFlag = false;
 
 	if (!MathLib.isZero(this.re)) {

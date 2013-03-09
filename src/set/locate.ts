@@ -5,7 +5,6 @@
 // *@param {set}* The element to locate  
 // *@returns {number}*
 locate(x : any) : number {
-
 	var left = 0,
 			right = this.card - 1,
 			middle,

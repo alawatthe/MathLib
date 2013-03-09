@@ -2,7 +2,7 @@
 // Custom toString function
 //
 // *@returns {string}*
-toString() {
+toString() : string {
 	var str = '';
 
 	if (!MathLib.isZero(this.re)) {
