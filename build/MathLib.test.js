@@ -89,7 +89,7 @@ test('.arccsc()', 9, function () {
 	// Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x
 	equal(MathLib.arccsc(1), Math.PI / 2, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
 	equal(MathLib.arccsc(-1), -Math.PI / 2, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
-	equal(MathLib.arccsc(2), Math.PI / 6, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
+	equal(MathLib.arccsc(10), 0.1001674211615598, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
 });
 test('.arcosh()', 9, function () {
 	// Spec. 1: MathLib.arcosh(NaN) = NaN
@@ -179,7 +179,7 @@ test('.arcsec()', 9, function () {
 
 	// Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x
 	equal(MathLib.arcsec(-1), Math.PI, 'Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x');
-	equal(MathLib.arcsec(2), 2 * Math.PI / 6, 'Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x');
+	equal(MathLib.arcsec(10), 1.4706289056333368, 'Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x');
 });
 test('.arcsin()', 9, function () {
 	// Spec. 1: MathLib.arcsin(NaN) = NaN
@@ -1163,8 +1163,18 @@ test('.circumference()', 5, function () {
 	// Spec. 5: otherwise c.circumference() = 2 &pi; r
 	equal(c5.circumference(), 4 * MathLib.pi, 'Spec. 5: otherwise c.circumference() = 2 &pi; r');
 });
-// test('.draw()', 1, function () {
-// });
+test('.draw()', 1, function () {
+	var screen,
+			div = document.createElement('div'),
+			circle = new MathLib.Circle([0, 0], 1);
+
+	div.id = 'circleDraw';
+	document.getElementById('testPlots').appendChild(div);
+
+	screen = new MathLib.Screen2D('circleDraw', {});
+
+	equal(circle.draw(screen), circle, 'The draw method should return the circle.');
+});
 test('.isEqual()', 3, function () {
 	var c1 = new MathLib.Circle(new MathLib.Point(1, 2), 2),
 			c2 = new MathLib.Circle(new MathLib.Point(1, 2), 3),
@@ -1487,12 +1497,6 @@ test('zero', 1, function () {
 	deepEqual(c, new MathLib.Complex(0, 0), '.zero');
 });
 
-test('.diff()', 4, function () {
-	ok(Math.abs(MathLib.cos.diff(0) - 0) < 1e-10, 'cos’(0) = 0');
-	ok(Math.abs(MathLib.sin.diff(0) - 1) < 1e-10, 'sin’(0) = 1');
-	ok(Math.abs(MathLib.exp.diff(0) - 1) < 1e-10, 'exp’(0) = 1');
-	ok(Math.abs(MathLib.exp.diff(1) - Math.E) < 1e-10, 'exp’(1) = e');
-});
 module('Functn');
 test('execution', 4, function () {
 	equal(MathLib.sin(0), 0, 'MathLib.sin(0) should be 0');
@@ -1504,11 +1508,22 @@ test('execution', 4, function () {
 
 
 // Properties
+test('.constructor', 1, function () {
+	equal(MathLib.sin.constructor, MathLib.Functn, 'Testing .constructor');
+});
+
+
 test('.type', 4, function () {
 	equal(MathLib.sin.type, 'functn', 'MathLib.sin.type should be functn');
 	equal(MathLib.exp(MathLib.sin).type, 'functn', 'MathLib.exp(MathLib.sin).type should be functn');
 	equal(MathLib.plus(1, MathLib.cos).type, 'functn', 'MathLib.plus(1, MathLib.cos).type should be functn');
 	equal(MathLib.plus(MathLib.cos, 1).type, 'functn', 'MathLib.plus(MathLib.cos, 1).type should be functn');
+});
+test('.diff()', 4, function () {
+	ok(Math.abs(MathLib.cos.diff(0) - 0) < 1e-10, 'cos’(0) = 0');
+	ok(Math.abs(MathLib.sin.diff(0) - 1) < 1e-10, 'sin’(0) = 1');
+	ok(Math.abs(MathLib.exp.diff(0) - 1) < 1e-10, 'exp’(0) = 1');
+	ok(Math.abs(MathLib.exp.diff(1) - Math.E) < 1e-10, 'exp’(1) = e');
 });
 test('.quad()', 2, function () {
 	ok(Math.abs(MathLib.sin.quad(0, 2 * Math.PI)) < 1e-15, 'integrate sin from 0 to 2*pi');

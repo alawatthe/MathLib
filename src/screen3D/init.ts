@@ -5,7 +5,7 @@ export class Screen3D extends Screen {
  
 	scene: any;
 
-	constructor (id: string, options) {
+	constructor (id: string, options = {}) {
 		super(id, options);
 
 		var defaults = {

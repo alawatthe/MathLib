@@ -25,6 +25,10 @@ var drawAxis = function () {
 			xTick = Math.pow(10, xExp),
 			i;
 
+  if (!this.screen.axis) {
+		return this;
+	}
+
 	// The axes
 	this.line([[left, 0], [right, 0]], false, true);
 	this.line([[0, bottom], [0, top]], false, true);

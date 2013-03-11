@@ -16,5 +16,5 @@ test('.arccsc()', 9, function () {
 	// Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x
 	equal(MathLib.arccsc(1), Math.PI / 2, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
 	equal(MathLib.arccsc(-1), -Math.PI / 2, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
-	equal(MathLib.arccsc(2), Math.PI / 6, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
+	equal(MathLib.arccsc(10), 0.1001674211615598, 'Spec. 5: otherwise MathLib.arccsc(x) = inverse cosecant of x');
 });

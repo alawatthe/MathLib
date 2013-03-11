@@ -93,7 +93,7 @@ var svg = {
 	// *@param {circle}* The circle to be drawn  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {canvas}* Returns the screen
-	circle: function (circle, options, redraw) {
+	circle: function (circle, options = {}, redraw = false) {
 		var screen = this.screen,
 				prop, opts,
 				svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -103,7 +103,7 @@ var svg = {
 		svgCircle.setAttribute('r', circle.radius);
 
 		if (options) {
-			svgCircle.setAttribute('stroke-width', (options.lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+			svgCircle.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
 			opts = svg.normalizeOptions(options);
 			for (prop in opts) {
 				if (opts.hasOwnProperty(prop)) {
@@ -137,7 +137,7 @@ var svg = {
 	// *@param {line}* The line to be drawn  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {canvas}* Returns the screen
-	line: function (line, options, redraw) {
+	line: function (line, options = {}, redraw = false) {
 		var screen = this.screen,
 				points = this.screen.getLineEndPoints(line),
 				prop, opts,
@@ -149,7 +149,7 @@ var svg = {
 		svgLine.setAttribute('y2', points[1][1]);
 
 		if (options) {
-			svgLine.setAttribute('stroke-width', (options.lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+			svgLine.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
 			opts = svg.normalizeOptions(options);
 			for (prop in opts) {
 				if (opts.hasOwnProperty(prop)) {
@@ -181,14 +181,14 @@ var svg = {
 	// *@param {curve}* The path to be drawn  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
-	path: function (curve, options, redraw) {
+	path: function (curve, options = {}, redraw = false) {
 		var screen = this.screen,
 				svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
 				step = 2/(screen.scale.x - screen.scale.y),
 				pathString, from, to, prop, opts, x, y, i, path;
 
-		from = ('from' in options ? options.from : ( - screen.translation.x) / screen.scale.x)-step;
-		to = ('to' in options ? options.to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
+		from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x)-step;
+		to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
 
 
 		// If curve is a function f, the path will be (x, f(x))
@@ -218,7 +218,7 @@ var svg = {
 		});
 		svgPath.setAttribute('d', pathString);
 
-		svgPath.setAttribute('stroke-width', (options.lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+		svgPath.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
 
 
 		if (options) {
@@ -256,7 +256,7 @@ var svg = {
 	// *@param {left}* The left coordinate of the draw rectangle  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
-	pixel: function (f, t, r, b, l, options, redraw = false) {
+	pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 		var screen = this.screen,
 				top     = (              - screen.translation.y) / screen.scale.y,
 				bottom  = (screen.height - screen.translation.y) / screen.scale.y,
@@ -342,7 +342,7 @@ var svg = {
 	// *@param {y}* The y coordinate  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {canvas}* Returns the canvas
-	text: function (str, x, y, options, redraw) {
+	text: function (str, x, y, options = {}, redraw = false) {
 	  var screen = this.screen,
 	      svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
 		    ctx = this.ctx,
@@ -352,9 +352,9 @@ var svg = {
 		svgText.setAttribute('x', x*screen.scale.x + '');
 		svgText.setAttribute('y', y*screen.scale.y + '');
 		svgText.setAttribute('transform', 'matrix(' + 1/screen.scale.x + ' , 0, 0, ' + 1/screen.scale.y + ', 0, 0)');
-		svgText.setAttribute('fill', colorConvert(options.color) || '#000000');
+		svgText.setAttribute('fill', colorConvert((<any>options).color) || '#000000');
 		svgText.setAttribute('fill-opacity', '1');
-		svgText.setAttribute('stroke', colorConvert(options.color) || '#000000');
+		svgText.setAttribute('stroke', colorConvert((<any>options).color) || '#000000');
 		svgText.setAttribute('text-anchor', 'middle');
 
 		// alignment-baseline isn't defined for text elements, 

@@ -87,13 +87,13 @@ var canvas = {
 	// *@param {circle}* The circle to be drawn  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
-	circle: function (circle, options, redraw = false) {
+	circle: function (circle, options = {}, redraw = false) {
 		var screen = this.screen,
 				ctx = this.ctx,
 				prop, opts;
 
 		ctx.save();
-		ctx.lineWidth = (options.lineWidth || 4)/(screen.scale.x - screen.scale.y);
+		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
 
 		// Set the drawing options
 		if (options) {
@@ -105,10 +105,10 @@ var canvas = {
 			}
 
 			if('setLineDash' in ctx) {
-				ctx.setLineDash(('dash' in options ? options.dash : []));
+				ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 			}
 			if ('lineDashOffset' in ctx) {
-				ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
+				ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
 			}
 		}
 
@@ -141,14 +141,14 @@ var canvas = {
 	// *@param {line}* The line to be drawn  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
-	line: function (line, options, redraw = false) {
+	line: function (line, options = {}, redraw = false) {
 		var screen = this.screen,
 				points = this.screen.getLineEndPoints(line),
 				ctx = this.ctx,
 				prop, opts;
 
 		ctx.save()
-		ctx.lineWidth = (options.lineWidth || 4)/(screen.scale.x - screen.scale.y);
+		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
 
 
 		// Set the drawing options
@@ -161,10 +161,10 @@ var canvas = {
 			}
 
 			if('setLineDash' in ctx) {
-				ctx.setLineDash(('dash' in options ? options.dash : []));
+				ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 			}
 			if ('lineDashOffset' in ctx) {
-				ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
+				ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
 			}
 		}
 
@@ -199,7 +199,7 @@ var canvas = {
 // *@param {path}* The path to be drawn  
 // *@param {object}* [options] Optional drawing options  
 // *@returns {screen}* Returns the scren
-	path: function (curve, options, redraw = false) {
+	path: function (curve, options = {}, redraw = false) {
 		var screen = this.screen,
 				ctx = this.ctx,
 				prop, opts, path, x, y, i,
@@ -207,12 +207,12 @@ var canvas = {
 				from, to;
 
 
-		from = ('from' in options ? options.from : ( - screen.translation.x) / screen.scale.x)-step;
-		to = ('to' in options ? options.to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
+		from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x)-step;
+		to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
 		
 
 		ctx.save()
-		ctx.lineWidth = (options.lineWidth || 4)/(screen.scale.x - screen.scale.y);
+		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
 
 
 		// Set the drawing options
@@ -225,10 +225,10 @@ var canvas = {
 			}
 
 			if('setLineDash' in ctx) {
-				ctx.setLineDash(('dash' in options ? options.dash : []));
+				ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 			}
 			if ('lineDashOffset' in ctx) {
-				ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
+				ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
 			}
 		}
 
@@ -289,7 +289,7 @@ var canvas = {
 	// *@param {path}* The path to be drawn  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
-	pixel: function (f, t, r, b, l, options, redraw = false) {
+	pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 		var screen = this.screen,
 				top     = (              - screen.translation.y) / screen.scale.y,
 				bottom  = (screen.height - screen.translation.y) / screen.scale.y,
@@ -353,7 +353,7 @@ var canvas = {
 	// *@param {y}* The y coordinate  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
-	text: function (str, x, y, options, redraw = false) {
+	text: function (str, x, y, options = {}, redraw = false) {
 		var defaults = {
 					font:       'Helvetica',
 					fontSize:   10,

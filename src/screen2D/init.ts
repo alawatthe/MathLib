@@ -41,7 +41,7 @@ export class Screen2D extends Screen {
 	zoomSpeed: any;
 
 
-	constructor (id: string, options) {
+	constructor (id: string, options = {}) {
 		super(id, options)
 		var defaults = {
 					axis: {
@@ -175,7 +175,7 @@ export class Screen2D extends Screen {
 				background.setAttribute('y', '0px');
 				background.setAttribute('width', this.width + 'px');
 				background.setAttribute('height', this.height + 'px');
-				background.setAttribute('fill', colorConvert(options.background));
+				background.setAttribute('fill', colorConvert((<any>options).background));
 				background.setAttribute('fill-opacity', '1');
 				this.element.appendChild(background);
 			}

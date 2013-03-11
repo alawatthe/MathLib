@@ -18,5 +18,5 @@ test('.arcsec()', 9, function () {
 
 	// Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x
 	equal(MathLib.arcsec(-1), Math.PI, 'Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x');
-	equal(MathLib.arcsec(2), 2 * Math.PI / 6, 'Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x');
+	equal(MathLib.arcsec(10), 1.4706289056333368, 'Spec. 6: otherwise MathLib.arcsec(x) = inverse secant of x');
 });

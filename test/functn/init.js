@@ -9,6 +9,11 @@ test('execution', 4, function () {
 
 
 // Properties
+test('.constructor', 1, function () {
+	equal(MathLib.sin.constructor, MathLib.Functn, 'Testing .constructor');
+});
+
+
 test('.type', 4, function () {
 	equal(MathLib.sin.type, 'functn', 'MathLib.sin.type should be functn');
 	equal(MathLib.exp(MathLib.sin).type, 'functn', 'MathLib.exp(MathLib.sin).type should be functn');

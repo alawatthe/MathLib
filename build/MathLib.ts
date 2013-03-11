@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2013-03-10  
+// v0.3.5 - 2013-03-11  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -1785,13 +1785,12 @@ export class Screen {
 
 
 
-	constructor (id: string, options) {
+	constructor (id: string, options = {}) {
 		// Remove the uuid when the scoped attribute has enough support.
 		this.uuid = Date.now()+'';
 
-
-		this.height = options.height || 500;
-		this.width = options.width || 500;
+		this.height = (<any>options).height || 500;
+		this.width = (<any>options).width || 500;
 
 		var container = document.getElementById(id),
 				screen, // The object to be returned
@@ -1857,7 +1856,7 @@ export class Screen {
 					'<div class="MathLib_wrapper_'+this.uuid+'"></div>',
 
 					// Add the optional figcaption
-					options.figcaption ? '<figcaption class="MathLib_figcaption_'+this.uuid+'">'+options.figcaption+'</figcaption>' : '',
+					(<any>options).figcaption ? '<figcaption class="MathLib_figcaption_'+this.uuid+'">'+(<any>options).figcaption+'</figcaption>' : '',
 
 					'</figure>',
 
@@ -2164,6 +2163,10 @@ var drawAxis = function () {
 			xTick = Math.pow(10, xExp),
 			i;
 
+  if (!this.screen.axis) {
+		return this;
+	}
+
 	// The axes
 	this.line([[left, 0], [right, 0]], false, true);
 	this.line([[0, bottom], [0, top]], false, true);
@@ -2368,13 +2371,13 @@ var canvas = {
 	// *@param {circle}* The circle to be drawn  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
-	circle: function (circle, options, redraw = false) {
+	circle: function (circle, options = {}, redraw = false) {
 		var screen = this.screen,
 				ctx = this.ctx,
 				prop, opts;
 
 		ctx.save();
-		ctx.lineWidth = (options.lineWidth || 4)/(screen.scale.x - screen.scale.y);
+		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
 
 		// Set the drawing options
 		if (options) {
@@ -2386,10 +2389,10 @@ var canvas = {
 			}
 
 			if('setLineDash' in ctx) {
-				ctx.setLineDash(('dash' in options ? options.dash : []));
+				ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 			}
 			if ('lineDashOffset' in ctx) {
-				ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
+				ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
 			}
 		}
 
@@ -2422,14 +2425,14 @@ var canvas = {
 	// *@param {line}* The line to be drawn  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
-	line: function (line, options, redraw = false) {
+	line: function (line, options = {}, redraw = false) {
 		var screen = this.screen,
 				points = this.screen.getLineEndPoints(line),
 				ctx = this.ctx,
 				prop, opts;
 
 		ctx.save()
-		ctx.lineWidth = (options.lineWidth || 4)/(screen.scale.x - screen.scale.y);
+		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
 
 
 		// Set the drawing options
@@ -2442,10 +2445,10 @@ var canvas = {
 			}
 
 			if('setLineDash' in ctx) {
-				ctx.setLineDash(('dash' in options ? options.dash : []));
+				ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 			}
 			if ('lineDashOffset' in ctx) {
-				ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
+				ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
 			}
 		}
 
@@ -2480,7 +2483,7 @@ var canvas = {
 // *@param {path}* The path to be drawn  
 // *@param {object}* [options] Optional drawing options  
 // *@returns {screen}* Returns the scren
-	path: function (curve, options, redraw = false) {
+	path: function (curve, options = {}, redraw = false) {
 		var screen = this.screen,
 				ctx = this.ctx,
 				prop, opts, path, x, y, i,
@@ -2488,12 +2491,12 @@ var canvas = {
 				from, to;
 
 
-		from = ('from' in options ? options.from : ( - screen.translation.x) / screen.scale.x)-step;
-		to = ('to' in options ? options.to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
+		from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x)-step;
+		to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
 		
 
 		ctx.save()
-		ctx.lineWidth = (options.lineWidth || 4)/(screen.scale.x - screen.scale.y);
+		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
 
 
 		// Set the drawing options
@@ -2506,10 +2509,10 @@ var canvas = {
 			}
 
 			if('setLineDash' in ctx) {
-				ctx.setLineDash(('dash' in options ? options.dash : []));
+				ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 			}
 			if ('lineDashOffset' in ctx) {
-				ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
+				ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
 			}
 		}
 
@@ -2570,7 +2573,7 @@ var canvas = {
 	// *@param {path}* The path to be drawn  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
-	pixel: function (f, t, r, b, l, options, redraw = false) {
+	pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 		var screen = this.screen,
 				top     = (              - screen.translation.y) / screen.scale.y,
 				bottom  = (screen.height - screen.translation.y) / screen.scale.y,
@@ -2634,7 +2637,7 @@ var canvas = {
 	// *@param {y}* The y coordinate  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
-	text: function (str, x, y, options, redraw = false) {
+	text: function (str, x, y, options = {}, redraw = false) {
 		var defaults = {
 					font:       'Helvetica',
 					fontSize:   10,
@@ -2787,7 +2790,7 @@ var svg = {
 	// *@param {circle}* The circle to be drawn  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {canvas}* Returns the screen
-	circle: function (circle, options, redraw) {
+	circle: function (circle, options = {}, redraw = false) {
 		var screen = this.screen,
 				prop, opts,
 				svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -2797,7 +2800,7 @@ var svg = {
 		svgCircle.setAttribute('r', circle.radius);
 
 		if (options) {
-			svgCircle.setAttribute('stroke-width', (options.lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+			svgCircle.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
 			opts = svg.normalizeOptions(options);
 			for (prop in opts) {
 				if (opts.hasOwnProperty(prop)) {
@@ -2831,7 +2834,7 @@ var svg = {
 	// *@param {line}* The line to be drawn  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {canvas}* Returns the screen
-	line: function (line, options, redraw) {
+	line: function (line, options = {}, redraw = false) {
 		var screen = this.screen,
 				points = this.screen.getLineEndPoints(line),
 				prop, opts,
@@ -2843,7 +2846,7 @@ var svg = {
 		svgLine.setAttribute('y2', points[1][1]);
 
 		if (options) {
-			svgLine.setAttribute('stroke-width', (options.lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+			svgLine.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
 			opts = svg.normalizeOptions(options);
 			for (prop in opts) {
 				if (opts.hasOwnProperty(prop)) {
@@ -2875,14 +2878,14 @@ var svg = {
 	// *@param {curve}* The path to be drawn  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
-	path: function (curve, options, redraw) {
+	path: function (curve, options = {}, redraw = false) {
 		var screen = this.screen,
 				svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
 				step = 2/(screen.scale.x - screen.scale.y),
 				pathString, from, to, prop, opts, x, y, i, path;
 
-		from = ('from' in options ? options.from : ( - screen.translation.x) / screen.scale.x)-step;
-		to = ('to' in options ? options.to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
+		from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x)-step;
+		to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
 
 
 		// If curve is a function f, the path will be (x, f(x))
@@ -2912,7 +2915,7 @@ var svg = {
 		});
 		svgPath.setAttribute('d', pathString);
 
-		svgPath.setAttribute('stroke-width', (options.lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+		svgPath.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
 
 
 		if (options) {
@@ -2950,7 +2953,7 @@ var svg = {
 	// *@param {left}* The left coordinate of the draw rectangle  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
-	pixel: function (f, t, r, b, l, options, redraw = false) {
+	pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 		var screen = this.screen,
 				top     = (              - screen.translation.y) / screen.scale.y,
 				bottom  = (screen.height - screen.translation.y) / screen.scale.y,
@@ -3036,7 +3039,7 @@ var svg = {
 	// *@param {y}* The y coordinate  
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {canvas}* Returns the canvas
-	text: function (str, x, y, options, redraw) {
+	text: function (str, x, y, options = {}, redraw = false) {
 	  var screen = this.screen,
 	      svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
 		    ctx = this.ctx,
@@ -3046,9 +3049,9 @@ var svg = {
 		svgText.setAttribute('x', x*screen.scale.x + '');
 		svgText.setAttribute('y', y*screen.scale.y + '');
 		svgText.setAttribute('transform', 'matrix(' + 1/screen.scale.x + ' , 0, 0, ' + 1/screen.scale.y + ', 0, 0)');
-		svgText.setAttribute('fill', colorConvert(options.color) || '#000000');
+		svgText.setAttribute('fill', colorConvert((<any>options).color) || '#000000');
 		svgText.setAttribute('fill-opacity', '1');
-		svgText.setAttribute('stroke', colorConvert(options.color) || '#000000');
+		svgText.setAttribute('stroke', colorConvert((<any>options).color) || '#000000');
 		svgText.setAttribute('text-anchor', 'middle');
 
 		// alignment-baseline isn't defined for text elements, 
@@ -3118,7 +3121,7 @@ export class Screen2D extends Screen {
 	zoomSpeed: any;
 
 
-	constructor (id: string, options) {
+	constructor (id: string, options = {}) {
 		super(id, options)
 		var defaults = {
 					axis: {
@@ -3252,7 +3255,7 @@ export class Screen2D extends Screen {
 				background.setAttribute('y', '0px');
 				background.setAttribute('width', this.width + 'px');
 				background.setAttribute('height', this.height + 'px');
-				background.setAttribute('fill', colorConvert(options.background));
+				background.setAttribute('fill', colorConvert((<any>options).background));
 				background.setAttribute('fill-opacity', '1');
 				this.element.appendChild(background);
 			}
@@ -3572,7 +3575,7 @@ export class Screen3D extends Screen {
  
 	scene: any;
 
-	constructor (id: string, options) {
+	constructor (id: string, options = {}) {
 		super(id, options);
 
 		var defaults = {

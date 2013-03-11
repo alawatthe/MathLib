@@ -27,7 +27,7 @@ module MathLib {
 		public height: number;
 		public width: number;
 		public uuid: string;
-		constructor(id: string, options);
+		constructor(id: string, options?: {});
 	}
 	class Layer {
 		public ctx: any;
@@ -71,7 +71,7 @@ module MathLib {
 		public range: any;
 		public interaction: any;
 		public zoomSpeed: any;
-		constructor(id: string, options);
+		constructor(id: string, options?: {});
 		public getEventPoint(evt);
 		public getLineEndPoints(l);
 		public onmousedown(evt): void;
@@ -81,7 +81,7 @@ module MathLib {
 	}
 	class Screen3D extends Screen {
 		public scene: any;
-		constructor(id: string, options);
+		constructor(id: string, options?: {});
 		public parametricPlot3D(f, options): Screen3D;
 		public plot3D(f, options): Screen3D;
 		public surfacePlot3D(f, options): Screen3D;

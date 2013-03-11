@@ -16,13 +16,12 @@ export class Screen {
 
 
 
-	constructor (id: string, options) {
+	constructor (id: string, options = {}) {
 		// Remove the uuid when the scoped attribute has enough support.
 		this.uuid = Date.now()+'';
 
-
-		this.height = options.height || 500;
-		this.width = options.width || 500;
+		this.height = (<any>options).height || 500;
+		this.width = (<any>options).width || 500;
 
 		var container = document.getElementById(id),
 				screen, // The object to be returned
@@ -88,7 +87,7 @@ export class Screen {
 					'<div class="MathLib_wrapper_'+this.uuid+'"></div>',
 
 					// Add the optional figcaption
-					options.figcaption ? '<figcaption class="MathLib_figcaption_'+this.uuid+'">'+options.figcaption+'</figcaption>' : '',
+					(<any>options).figcaption ? '<figcaption class="MathLib_figcaption_'+this.uuid+'">'+(<any>options).figcaption+'</figcaption>' : '',
 
 					'</figure>',
 

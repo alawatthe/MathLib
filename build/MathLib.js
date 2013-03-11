@@ -1229,9 +1229,13 @@ var MathLib;
 	}
 	var Screen = (function () {
 		function Screen(id, options) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
 			this.uuid = Date.now() + '';
-			this.height = options.height || 500;
-			this.width = options.width || 500;
+			this.height = (options).height || 500;
+			this.width = (options).width || 500;
 			var container = document.getElementById(id), screen, innerHTML = [
 				'<style scoped>', 
 				'.MathLib_figure_' + this.uuid + '{margin: 1em auto; display: -webkit-flex; -webkit-flex-direction: column; -webkit-flex-wrap: nowrap; -webkit-justify-content: center; -webkit-align-content: center; -webkit-align-items: center;}', 
@@ -1279,7 +1283,7 @@ var MathLib;
 				'</style>', 
 				'<figure class="MathLib_figure_' + this.uuid + '">', 
 				'<div class="MathLib_wrapper_' + this.uuid + '"></div>', 
-				options.figcaption ? '<figcaption class="MathLib_figcaption_' + this.uuid + '">' + options.figcaption + '</figcaption>' : '', 
+				(options).figcaption ? '<figcaption class="MathLib_figcaption_' + this.uuid + '">' + (options).figcaption + '</figcaption>' : '', 
 				'</figure>', 
 				'<div class="MathLib_contextMenuOverlay_' + this.uuid + '">', 
 				'<ul class="MathLib_contextMenu_' + this.uuid + '">', 
@@ -1414,6 +1418,9 @@ var MathLib;
 			strokeStyle: colorConvert(this.screen.axis.textColor),
 			fillStyle: colorConvert(this.screen.axis.textColor)
 		}, top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x, lengthX = +10 / screen.transformation[0][0], lengthY = -10 / screen.transformation[1][1], yExp = 1 - Math.floor(Math.log(-screen.transformation[1][1]) / Math.LN10 - 0.3), xExp = 1 - Math.floor(Math.log(+screen.transformation[0][0]) / Math.LN10 - 0.3), yTick = Math.pow(10, yExp), xTick = Math.pow(10, xExp), i;
+		if (!this.screen.axis) {
+			return this;
+		}
 		this.line([
 			[
 				left, 
@@ -1617,12 +1624,16 @@ var MathLib;
 			}
 		},
 		circle: function (circle, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
 			if (typeof redraw === 'undefined') {
 				redraw = false;
 			}
 			var screen = this.screen, ctx = this.ctx, prop, opts;
 			ctx.save();
-			ctx.lineWidth = (options.lineWidth || 4) / (screen.scale.x - screen.scale.y);
+			ctx.lineWidth = ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 			if (options) {
 				opts = canvas.normalizeOptions(options);
 				for (prop in opts) {
@@ -1631,10 +1642,10 @@ var MathLib;
 					}
 				}
 				if ('setLineDash' in ctx) {
-					ctx.setLineDash(('dash' in options ? options.dash : []));
+					ctx.setLineDash(('dash' in options ? (options).dash : []));
 				}
 				if ('lineDashOffset' in ctx) {
-					ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
+					ctx.lineDashOffset = ('dashOffset' in options ? (options).dashOffset : 0);
 				}
 			}
 			ctx.beginPath();
@@ -1653,12 +1664,16 @@ var MathLib;
 			return this;
 		},
 		line: function (line, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
 			if (typeof redraw === 'undefined') {
 				redraw = false;
 			}
 			var screen = this.screen, points = this.screen.getLineEndPoints(line), ctx = this.ctx, prop, opts;
 			ctx.save();
-			ctx.lineWidth = (options.lineWidth || 4) / (screen.scale.x - screen.scale.y);
+			ctx.lineWidth = ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 			if (options) {
 				opts = canvas.normalizeOptions(options);
 				for (prop in opts) {
@@ -1667,10 +1682,10 @@ var MathLib;
 					}
 				}
 				if ('setLineDash' in ctx) {
-					ctx.setLineDash(('dash' in options ? options.dash : []));
+					ctx.setLineDash(('dash' in options ? (options).dash : []));
 				}
 				if ('lineDashOffset' in ctx) {
-					ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
+					ctx.lineDashOffset = ('dashOffset' in options ? (options).dashOffset : 0);
 				}
 			}
 			ctx.beginPath();
@@ -1689,14 +1704,18 @@ var MathLib;
 			return this;
 		},
 		path: function (curve, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
 			if (typeof redraw === 'undefined') {
 				redraw = false;
 			}
 			var screen = this.screen, ctx = this.ctx, prop, opts, path, x, y, i, step = 2 / (screen.scale.x - screen.scale.y), from, to;
-			from = ('from' in options ? options.from : (-screen.translation.x) / screen.scale.x) - step;
-			to = ('to' in options ? options.to : (screen.width - screen.translation.x) / screen.scale.x) + step;
+			from = ('from' in options ? (options).from : (-screen.translation.x) / screen.scale.x) - step;
+			to = ('to' in options ? (options).to : (screen.width - screen.translation.x) / screen.scale.x) + step;
 			ctx.save();
-			ctx.lineWidth = (options.lineWidth || 4) / (screen.scale.x - screen.scale.y);
+			ctx.lineWidth = ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 			if (options) {
 				opts = canvas.normalizeOptions(options);
 				for (prop in opts) {
@@ -1705,10 +1724,10 @@ var MathLib;
 					}
 				}
 				if ('setLineDash' in ctx) {
-					ctx.setLineDash(('dash' in options ? options.dash : []));
+					ctx.setLineDash(('dash' in options ? (options).dash : []));
 				}
 				if ('lineDashOffset' in ctx) {
-					ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
+					ctx.lineDashOffset = ('dashOffset' in options ? (options).dashOffset : 0);
 				}
 			}
 			if (typeof curve === 'function') {
@@ -1750,6 +1769,10 @@ var MathLib;
 			return this;
 		},
 		pixel: function (f, t, r, b, l, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
 			if (typeof redraw === 'undefined') {
 				redraw = false;
 			}
@@ -1783,6 +1806,10 @@ var MathLib;
 			return this;
 		},
 		text: function (str, x, y, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
 			if (typeof redraw === 'undefined') {
 				redraw = false;
 			}
@@ -1890,12 +1917,19 @@ var MathLib;
 			}
 		},
 		circle: function (circle, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
+			if (typeof redraw === 'undefined') {
+				redraw = false;
+			}
 			var screen = this.screen, prop, opts, svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 			svgCircle.setAttribute('cx', circle.center[0]);
 			svgCircle.setAttribute('cy', circle.center[1]);
 			svgCircle.setAttribute('r', circle.radius);
 			if (options) {
-				svgCircle.setAttribute('stroke-width', (options.lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
+				svgCircle.setAttribute('stroke-width', ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
 				opts = svg.normalizeOptions(options);
 				for (prop in opts) {
 					if (opts.hasOwnProperty(prop)) {
@@ -1914,13 +1948,20 @@ var MathLib;
 			return this;
 		},
 		line: function (line, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
+			if (typeof redraw === 'undefined') {
+				redraw = false;
+			}
 			var screen = this.screen, points = this.screen.getLineEndPoints(line), prop, opts, svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
 			svgLine.setAttribute('x1', points[0][0]);
 			svgLine.setAttribute('y1', points[0][1]);
 			svgLine.setAttribute('x2', points[1][0]);
 			svgLine.setAttribute('y2', points[1][1]);
 			if (options) {
-				svgLine.setAttribute('stroke-width', (options.lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
+				svgLine.setAttribute('stroke-width', ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
 				opts = svg.normalizeOptions(options);
 				for (prop in opts) {
 					if (opts.hasOwnProperty(prop)) {
@@ -1939,9 +1980,16 @@ var MathLib;
 			return this;
 		},
 		path: function (curve, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
+			if (typeof redraw === 'undefined') {
+				redraw = false;
+			}
 			var screen = this.screen, svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'), step = 2 / (screen.scale.x - screen.scale.y), pathString, from, to, prop, opts, x, y, i, path;
-			from = ('from' in options ? options.from : (-screen.translation.x) / screen.scale.x) - step;
-			to = ('to' in options ? options.to : (screen.width - screen.translation.x) / screen.scale.x) + step;
+			from = ('from' in options ? (options).from : (-screen.translation.x) / screen.scale.x) - step;
+			to = ('to' in options ? (options).to : (screen.width - screen.translation.x) / screen.scale.x) + step;
 			if (typeof curve === 'function') {
 				path = [];
 				for (i = from; i <= to; i += step) {
@@ -1967,7 +2015,7 @@ var MathLib;
 				return prev + ' L' + cur.join(' ');
 			});
 			svgPath.setAttribute('d', pathString);
-			svgPath.setAttribute('stroke-width', (options.lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
+			svgPath.setAttribute('stroke-width', ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
 			if (options) {
 				opts = svg.normalizeOptions(options);
 				for (prop in opts) {
@@ -1987,6 +2035,10 @@ var MathLib;
 			return this;
 		},
 		pixel: function (f, t, r, b, l, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
 			if (typeof redraw === 'undefined') {
 				redraw = false;
 			}
@@ -2031,14 +2083,21 @@ var MathLib;
 			return this;
 		},
 		text: function (str, x, y, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
+			if (typeof redraw === 'undefined') {
+				redraw = false;
+			}
 			var screen = this.screen, svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'), ctx = this.ctx, prop, opts;
 			svgText.textContent = str;
 			svgText.setAttribute('x', x * screen.scale.x + '');
 			svgText.setAttribute('y', y * screen.scale.y + '');
 			svgText.setAttribute('transform', 'matrix(' + 1 / screen.scale.x + ' , 0, 0, ' + 1 / screen.scale.y + ', 0, 0)');
-			svgText.setAttribute('fill', colorConvert(options.color) || '#000000');
+			svgText.setAttribute('fill', colorConvert((options).color) || '#000000');
 			svgText.setAttribute('fill-opacity', '1');
-			svgText.setAttribute('stroke', colorConvert(options.color) || '#000000');
+			svgText.setAttribute('stroke', colorConvert((options).color) || '#000000');
 			svgText.setAttribute('text-anchor', 'middle');
 			svgText.setAttribute('alignment-baseline', 'middle');
 			this.ctx.appendChild(svgText);
@@ -2057,6 +2116,10 @@ var MathLib;
 	var Screen2D = (function (_super) {
 		__extends(Screen2D, _super);
 		function Screen2D(id, options) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
 			var _this = this;
 			_super.call(this, id, options);
 			var defaults = {
@@ -2224,7 +2287,7 @@ var MathLib;
 					background.setAttribute('y', '0px');
 					background.setAttribute('width', this.width + 'px');
 					background.setAttribute('height', this.height + 'px');
-					background.setAttribute('fill', colorConvert(options.background));
+					background.setAttribute('fill', colorConvert((options).background));
 					background.setAttribute('fill-opacity', '1');
 					this.element.appendChild(background);
 				}
@@ -2478,6 +2541,10 @@ var MathLib;
 	var Screen3D = (function (_super) {
 		__extends(Screen3D, _super);
 		function Screen3D(id, options) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
 			_super.call(this, id, options);
 			var defaults = {
 				anaglyphMode: false,
