@@ -155,7 +155,6 @@ module MathLib {
 		public isZero(): bool;
 		public ln(): Complex;
 		public minus(c): Complex;
-		public mod(m): Complex;
 		public negative(): Complex;
 		static one: Complex;
 		public plus(c): Complex;
@@ -296,7 +295,6 @@ module MathLib {
 		public length: number;
 		public subdeg: number;
 		constructor(polynomial);
-		public content();
 		public differentiate(n?: number): Polynomial;
 		public draw(screen, options): Polynomial;
 		public every(f: (value: any, index: number, vector: Vector) => bool): bool;
@@ -304,10 +302,7 @@ module MathLib {
 		public integrate(n?: number): Polynomial;
 		public interpolation(a, b);
 		public isEqual(p: Polynomial): bool;
-		public isPrimitive(): bool;
-		public isReal(): bool;
 		public map(f): Polynomial;
-		public mod(m): Polynomial;
 		public negative(): Polynomial;
 		static one: Polynomial;
 		public plus(a, all): Polynomial;

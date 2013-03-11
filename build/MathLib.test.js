@@ -1360,13 +1360,6 @@ test('.ln()', 1, function () {
 });
 
 
-test('.mod()', 1, function () {
-	var c = new MathLib.Complex(5, 6),
-			d = new MathLib.Complex(2, 0);
-	equal(c.mod(3).isEqual(d), true, '.mod()');
-});
-
-
 test('.minus()', 1, function () {
 	var c = new MathLib.Complex(3, -4),
 			d = new MathLib.Complex(7, -8);
@@ -2507,15 +2500,6 @@ test('.map()', 2, function () {
 
 	deepEqual(res, q, '.map()');
 	equal(res.type, 'polynomial', '.type should be polynomial');
-});
-
-
-test('.mod()', 1, function () {
-	var cp = new MathLib.Complex(5, 6),
-			cq = new MathLib.Complex(2, 0),
-			p = new MathLib.Polynomial([3, cp, -2, 0, 4, 5]),
-			q = new MathLib.Polynomial([0, cq, 1, 0, 1, 2]);
-	equal(p.mod(3).isEqual(q), true, '.mod()');
 });
 
 

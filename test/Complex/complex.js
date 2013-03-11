@@ -141,13 +141,6 @@ test('.ln()', 1, function () {
 });
 
 
-test('.mod()', 1, function () {
-	var c = new MathLib.Complex(5, 6),
-			d = new MathLib.Complex(2, 0);
-	equal(c.mod(3).isEqual(d), true, '.mod()');
-});
-
-
 test('.minus()', 1, function () {
 	var c = new MathLib.Complex(3, -4),
 			d = new MathLib.Complex(7, -8);

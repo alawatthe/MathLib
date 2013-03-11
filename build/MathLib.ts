@@ -4566,16 +4566,6 @@ minus(c) : Complex {
 }
 
 
-// ### Complex.prototype.mod()
-// Reduces the real and imaginary part mod a number
-//
-// *@param {number}*  
-// *@returns {complex}*
-mod(m) : Complex {
-	return new MathLib.Complex(MathLib.mod(this.re, m), MathLib.mod(this.im, m));
-}
-
-
 // ### Complex.prototype.negative()
 // Calculates the negative of the complex number
 //
@@ -6651,15 +6641,6 @@ export class Polynomial {
 	}
 
 
-// ### Polynomial.prototype.content()
-// Returns the content of the polynomial.
-//
-// *@returns {number|complex}*
-content() {
-	return MathLib.gcd(this);
-}
-
-
 // ### Polynomial.prototype.differentiate()
 // Differentiates the polynomial
 //
@@ -6814,42 +6795,12 @@ isEqual(p : Polynomial) : bool {
 }
 
 
-// ### Polynomial.prototype.isPrimitive()
-// Decides if the polynomial is primitive
-//
-// *@returns {boolean}*
-isPrimitive() : bool {
-	return MathLib.gcd(this) === 1;
-}
-
-
-// ### Polynomial.prototype.isReal()
-// Checks wether the coefficients are real numbers
-//
-// *@returns {boolean}*
-isReal() : bool {
-	return this.every(MathLib.isReal);
-}
-
-
 // ### Polynomial.prototype.map()
 // Works like the Array.prototype.map function
 //
 // *@returns {polynomial}*
 map(f) : Polynomial {
 	return new MathLib.Polynomial(Array.prototype.map.call(this, f));
-}
-
-
-// ### Polynomial.prototype.mod()
-// Reduces the coefficients mod a number
-//
-// *@param {number}*  
-// *@returns {polynomial}*
-mod(m) : Polynomial {
-	return this.map(function (x) {
-		return MathLib.mod(x, m);
-	});
 }
 
 

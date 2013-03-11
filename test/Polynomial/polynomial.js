@@ -67,15 +67,6 @@ test('.map()', 2, function () {
 });
 
 
-test('.mod()', 1, function () {
-	var cp = new MathLib.Complex(5, 6),
-			cq = new MathLib.Complex(2, 0),
-			p = new MathLib.Polynomial([3, cp, -2, 0, 4, 5]),
-			q = new MathLib.Polynomial([0, cq, 1, 0, 1, 2]);
-	equal(p.mod(3).isEqual(q), true, '.mod()');
-});
-
-
 test('.plus()', 4, function () {
 	var p = new MathLib.Polynomial(3),
 			p1 = new MathLib.Polynomial([1, 2, 3]);

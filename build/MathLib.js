@@ -2985,9 +2985,6 @@ function render() {
 		Complex.prototype.minus = function (c) {
 			return this.plus(MathLib.negative(c));
 		};
-		Complex.prototype.mod = function (m) {
-			return new MathLib.Complex(MathLib.mod(this.re, m), MathLib.mod(this.im, m));
-		};
 		Complex.prototype.negative = function () {
 			return new MathLib.Complex(MathLib.negative(this.re), MathLib.negative(this.im));
 		};
@@ -4149,9 +4146,6 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				return Infinity;
 			})(polynomial));
 		}
-		Polynomial.prototype.content = function () {
-			return MathLib.gcd(this);
-		};
 		Polynomial.prototype.differentiate = function (n) {
 			if (typeof n === 'undefined') {
 				n = 1;
@@ -4278,19 +4272,8 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			}
 			return true;
 		};
-		Polynomial.prototype.isPrimitive = function () {
-			return MathLib.gcd(this) === 1;
-		};
-		Polynomial.prototype.isReal = function () {
-			return this.every(MathLib.isReal);
-		};
 		Polynomial.prototype.map = function (f) {
 			return new MathLib.Polynomial(Array.prototype.map.call(this, f));
-		};
-		Polynomial.prototype.mod = function (m) {
-			return this.map(function (x) {
-				return MathLib.mod(x, m);
-			});
 		};
 		Polynomial.prototype.negative = function () {
 			return new MathLib.Polynomial(this.map(MathLib.negative));
