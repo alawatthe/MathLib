@@ -1,4 +1,4 @@
-// ### Circle.prototype.toLaTeX()
+// ### [Circle.prototype.toLaTeX()](http://mathlib.de/en/docs/Circle/toLaTeX)
 // Returns a LaTeX expression of the circle
 //
 // *@return {string}* 

@@ -1,4 +1,4 @@
-// ### Circle.prototype.toMatrix()
+// ### [Circle.prototype.toMatrix()](http://mathlib.de/en/docs/Circle/toMatrix)
 // Converts the circle to the corresponding matrix.
 //
 // *@return {Matrix}* 

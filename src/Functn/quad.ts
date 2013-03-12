@@ -1,4 +1,4 @@
-// ### [Functn.prototype.quad()](http://mathlib.de/en/docs/functn/quad)
+// ### [Functn.prototype.quad()](http://mathlib.de/en/docs/Functn/quad)
 // Numeric evaluation of an integral using an adative simpson approach.
 // 
 // Inspired by "adaptsim.m" by Walter Gander

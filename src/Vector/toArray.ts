@@ -1,4 +1,4 @@
-// ### [Vector.prototype.toArray()](http://mathlib.de/en/docs/vector/toArray)
+// ### [Vector.prototype.toArray()](http://mathlib.de/en/docs/Vector/toArray)
 // Converts the vector to an array.
 //
 // *@returns {array}*

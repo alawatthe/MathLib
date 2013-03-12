@@ -1,4 +1,4 @@
-// ### [Vector.prototype.map()](http://mathlib.de/en/docs/vector/map)
+// ### [Vector.prototype.map()](http://mathlib.de/en/docs/Vector/map)
 // Works like Array.prototype.map.
 //
 // *@param {function}*  

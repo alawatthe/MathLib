@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2013-03-11  
+// v0.3.5 - 2013-03-12  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -383,7 +383,7 @@ parse() : any {
 				
 				if (innerFunc === undefined) {
 					return new MathLib.Functn(function (x) {return MathLib[funcName](x);}, {
-						contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + node.outerMathML + '</lambda></math>'
+						contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><reals/></domainofapplication>' + node.outerMathML + '</lambda></math>'
 					});
 				}
 				else {
@@ -419,7 +419,7 @@ parse() : any {
 				return MathLib.MathML.variables[node.innerMathML];
 			}
 			else {
-				return new MathLib.Functn(function (x) {return x;}, {contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><ident/><ci>x</ci></apply></lambda></math>'});
+				return new MathLib.Functn(function (x) {return x;}, {contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><reals/></domainofapplication><apply><ident/><ci>x</ci></apply></lambda></math>'});
 			}
 		},
 
@@ -636,7 +636,7 @@ MathLib.Functn = function (f, options) {
 					innerVar = x.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML,
 					innerStr = x.contentMathML.childNodes[0].childNodes[2].outerMathML.replace('<bvar>' + innerVar + '</bvar>', ''), 
 					outerStr = functn.contentMathML.childNodes[0].childNodes[2].outerMathML.replace(outerVar, innerStr),
-					res = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><complexes/></domainofapplication>' + outerStr + '</lambda></math>';
+					res = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><reals/></domainofapplication>' + outerStr + '</lambda></math>';
 			return new MathLib.Functn(function (y) {return f(x(y));}, {contentMathMLString: res});
 		}
 		else if (typeof x === 'function') {
@@ -671,7 +671,28 @@ MathLib.Functn = function (f, options) {
 };
 
 
-// ### [Functn.prototype.diff()](http://mathlib.de/en/docs/functn/diff)
+// ### [Functn.prototype.draw()](http://mathlib.de/en/docs/Functn/draw)
+// Draws the function on the screen
+//
+// *@param {screen}* The screen to draw the function onto.  
+// *@param {object}* [options] Optional drawing options.  
+// *@returns {functn}*
+functnPrototype.draw = function(screen, options:any = {}) : number {
+	var functn = this;
+	if (Array.isArray(screen)) {
+		screen.forEach(function (x) {
+			x.path(functn, options);
+		});
+	}
+	else {
+		screen.path(functn, options);
+	}
+
+	return this;
+};
+
+
+// ### [Functn.prototype.diff()](http://mathlib.de/en/docs/Functn/diff)
 // Numeric derivative at a given point
 // 
 // *@param {number}* The point  
@@ -682,7 +703,7 @@ functnPrototype.diff = function(x: number, h = 1e-5) : number {
 };
 
 
-// ### [Functn.prototype.quad()](http://mathlib.de/en/docs/functn/quad)
+// ### [Functn.prototype.quad()](http://mathlib.de/en/docs/Functn/quad)
 // Numeric evaluation of an integral using an adative simpson approach.
 // 
 // Inspired by "adaptsim.m" by Walter Gander
@@ -794,7 +815,7 @@ functnPrototype.toContentMathML = function() {
 };
 
 
-// ### Functn.prototype.toContentMathMLString()
+// ### [Functn.prototype.toContentMathMLString()](http://mathlib.de/en/docs/Functn/toContentMathMLString)
 // Returns a content MathML representation of the function
 //
 // *@returns {string}*
@@ -803,7 +824,7 @@ functnPrototype.toContentMathMLString = function(bvar = '') {
 };
 
 
-// ### Functn.prototype.toLaTeX()
+// ### [Functn.prototype.toLaTeX()](http://mathlib.de/en/docs/Functn/toLaTeX)
 // Returns a LaTeX representation of the function
 //
 // *@param {string}* Optional: custom name for the bound variable (default: x)  
@@ -856,13 +877,13 @@ functnPrototype.toLaTeX = function(bvar = '') {
 // Returns a MathML representation of the function
 //
 // *@returns {string}*
-functnPrototype.toMathML = function() {
+/*functnPrototype.toMathML = function() {
 	// Get the content MathML and convert it to presentation MathML
 	return this.contentMathML.toMathML();
-};
+};*/
 
 
-// ### Functn.prototype.toMathMLString()
+// ### [Functn.prototype.toMathMLString()](http://mathlib.de/en/docs/Functn/toMathMLString)
 // Returns a MathML representation of the function
 //
 // *@returns {string}*
@@ -871,7 +892,7 @@ functnPrototype.toMathMLString = function() {
 };
 
 
-// ### Functn.prototype.toString()
+// ### [Functn.prototype.toString()](http://mathlib.de/en/docs/Functn/toString)
 // Returns a string representation of the function
 //
 // *@param {string}* Optional: custom name for the bound variable (default: x)  
@@ -920,7 +941,7 @@ functnPrototype.toString = function(bvar = '') {
 }
 
 
-var mathStart = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><',
+var mathStart = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><reals/></domainofapplication><apply><',
 		mathEnd   = '/><ci>x</ci></apply></lambda></math>';
 
 
@@ -1520,7 +1541,7 @@ var nAryFunctions = {
 						return b;
 					};
 				}
-				var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
+				var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><reals/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
 				return new MathLib.Functn(function (x) {
 					return MathLib.plus(f1(x), f2(x));
 				}, {
@@ -1560,7 +1581,7 @@ var nAryFunctions = {
 						return b;
 					};
 				}
-				var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
+				var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><reals/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
 				return new MathLib.Functn(function (x) {
 					return MathLib.times(f1(x), f2(x));
 				}, {
@@ -2265,13 +2286,12 @@ var drawGrid = function () {
 
 	}
 	else if (screen.grid.type === 'polar') {
-		for (i = 0; i < 2*Math.PI; i += screen.grid.angle) {
-			this.line([[0, 0], [50*Math.cos(i), 50*Math.sin(i)]], false, true);
-		}
-
-
 		var max = Math.sqrt(Math.max(top*top, bottom*bottom) + Math.max(left*left, right*right)),
 				min = 0; // improve this estimate
+
+		for (i = 0; i < 2*Math.PI; i += screen.grid.angle) {
+			this.line([[0, 0], [max*Math.cos(i), max*Math.sin(i)]], false, true);
+		}
 
 		for (i = min; i <= max; i += Math.min(xTick, yTick)) {
 			this.circle(new MathLib.Circle([0, 0, 1], i), false, true);
@@ -2493,7 +2513,6 @@ var canvas = {
 
 		from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x)-step;
 		to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
-		
 
 		ctx.save()
 		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
@@ -2538,7 +2557,6 @@ var canvas = {
 		else {
 			path = curve;
 		}
-
 
 
 		// Draw the path
@@ -3044,11 +3062,12 @@ var svg = {
 	      svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
 		    ctx = this.ctx,
 	      prop, opts;
+		var tf = this.screen.transformation;
 
 		svgText.textContent = str;
 		svgText.setAttribute('x', x*screen.scale.x + '');
 		svgText.setAttribute('y', y*screen.scale.y + '');
-		svgText.setAttribute('transform', 'matrix(' + 1/screen.scale.x + ' , 0, 0, ' + 1/screen.scale.y + ', 0, 0)');
+		svgText.setAttribute('transform', 'matrix(' + 1/screen.scale.x + ', 0, 0, ' + 1/screen.scale.y + ', 0, 0)');
 		svgText.setAttribute('fill', colorConvert((<any>options).color) || '#000000');
 		svgText.setAttribute('fill-opacity', '1');
 		svgText.setAttribute('stroke', colorConvert((<any>options).color) || '#000000');
@@ -3870,7 +3889,7 @@ surfacePlot3D(f, options) : Screen3D {
 }
 
 
-// ## <a id="Vector" href="http://mathlib.de/en/docs/vector">Vector</a>
+// ## <a id="Vector" href="http://mathlib.de/en/docs/Vector">Vector</a>
 // The vector implementation of MathLib makes calculations with vectors of
 // arbitrary size possible. The entries of the vector can be numbers and complex
 // numbers.
@@ -3893,7 +3912,7 @@ export class Vector {
 	}
 
 
-// ### Vector.areLinearIndependent()
+// ### [Vector.prototype.areLinearIndependent()](http://mathlib.de/en/docs/Vector/areLinearIndependent)
 // Checks if the vectors are linear independent.
 //
 // *@param {array}* An array containing the vectors.  
@@ -3916,7 +3935,7 @@ static areLinearIndependent = function (v : Vector[]) : bool {
 };
 
 
-// ### [Vector.prototype.every()](http://mathlib.de/en/docs/vector/every)
+// ### [Vector.prototype.every()](http://mathlib.de/en/docs/Vector/every)
 // Works like Array.prototype.every.
 //
 // *@returns {boolean}*
@@ -3925,7 +3944,7 @@ every(f : (value : any, index : number, vector : Vector ) => bool) : bool {
 }
 
 
-// ### [Vector.prototype.forEach()](http://mathlib.de/en/docs/vector/forEach)
+// ### [Vector.prototype.forEach()](http://mathlib.de/en/docs/Vector/forEach)
 // Works like Array.prototype.forEach.
 //
 forEach(f : (value : any, index : number, vector : Vector ) => void) : void {
@@ -3933,7 +3952,7 @@ forEach(f : (value : any, index : number, vector : Vector ) => void) : void {
 }
 
 
-// ### [Vector.prototype.isEqual()](http://mathlib.de/en/docs/vector/isEqual)
+// ### [Vector.prototype.isEqual()](http://mathlib.de/en/docs/Vector/isEqual)
 // Determines if two vectors are equal
 //
 // *@param {Vector}* v The vector to compare  
@@ -3949,7 +3968,7 @@ isEqual(v : Vector) : bool {
 }
 
 
-// ### [Vector.prototype.isZero()](http://mathlib.de/en/docs/vector/isZero)
+// ### [Vector.prototype.isZero()](http://mathlib.de/en/docs/Vector/isZero)
 // Determines if the vector is the zero vector.
 //
 // *@returns {boolean}*
@@ -3958,7 +3977,7 @@ isZero() : bool {
 }
 
 
-// ### [Vector.prototype.map()](http://mathlib.de/en/docs/vector/map)
+// ### [Vector.prototype.map()](http://mathlib.de/en/docs/Vector/map)
 // Works like Array.prototype.map.
 //
 // *@param {function}*  
@@ -3968,7 +3987,7 @@ map(f : (value : any, index : number, vector : Vector ) => any) : any {
 }
 
 
-// ### [Vector.prototype.minus()](http://mathlib.de/en/docs/vector/minus)
+// ### [Vector.prototype.minus()](http://mathlib.de/en/docs/Vector/minus)
 // Calculates the difference of two vectors.
 //
 // *@param {Vector}* The vector to be subtracted.  
@@ -3980,7 +3999,7 @@ minus(v : Vector) {
 }
 
 
-// ### [Vector.prototype.negative()](http://mathlib.de/en/docs/vector/negative)
+// ### [Vector.prototype.negative()](http://mathlib.de/en/docs/Vector/negative)
 // Returns the negative vector.
 //
 // *@returns {Vector}*
@@ -3989,7 +4008,7 @@ negative() : Vector {
 }
 
 
-// ### [Vector.prototype.norm()](http://mathlib.de/en/docs/vector/norm)
+// ### [Vector.prototype.norm()](http://mathlib.de/en/docs/Vector/norm)
 // Calcultes the norm of the vector.
 //
 // *@param {number}* [default=2] The p for the p-norm
@@ -4009,7 +4028,7 @@ norm(p = 2) : number {
 }
 
 
-// ### [Vector.prototype.outerProduct()](http://mathlib.de/en/docs/vector/outerProduct)
+// ### [Vector.prototype.outerProduct()](http://mathlib.de/en/docs/Vector/outerProduct)
 // Calculates the outer product of two vectors.
 //
 // *@param {Vector}*  
@@ -4023,7 +4042,7 @@ outerProduct(v : Vector) : Matrix {
 }
 
 
-// ### [Vector.prototype.plus()](http://mathlib.de/en/docs/vector/plus)
+// ### [Vector.prototype.plus()](http://mathlib.de/en/docs/Vector/plus)
 // Calculates the sum of two vectors.
 //
 // *@param {Vector}*  
@@ -4037,7 +4056,7 @@ plus(v : Vector) : Vector {
 }
 
 
-// ### [Vector.prototype.reduce()](http://mathlib.de/en/docs/vector/reduce)
+// ### [Vector.prototype.reduce()](http://mathlib.de/en/docs/Vector/reduce)
 // Works like Array.prototype.reduce.
 //
 // *@returns {any}*
@@ -4046,7 +4065,7 @@ reduce(...args : any[]) : any {
 }
 
 
-// ### [Vector.prototype.scalarProduct()](http://mathlib.de/en/docs/vector/scalarProduct)
+// ### [Vector.prototype.scalarProduct()](http://mathlib.de/en/docs/Vector/scalarProduct)
 // Calculates the scalar product of two vectors.
 //
 // *@param {vector}*  
@@ -4060,7 +4079,7 @@ scalarProduct(v : Vector) : any {
 }
 
 
-// ### [Vector.prototype.slice()](http://mathlib.de/en/docs/vector/slice)
+// ### [Vector.prototype.slice()](http://mathlib.de/en/docs/Vector/slice)
 // Works like the Array.prototype.slice function
 //
 // *@returns {array}*
@@ -4069,7 +4088,7 @@ slice(...args : any[]) : any[] {
 }
 
 
-// ### [Vector.prototype.times()](http://mathlib.de/en/docs/vector/times)
+// ### [Vector.prototype.times()](http://mathlib.de/en/docs/Vector/times)
 // Multiplies the vector by a (complex) number or a matrix.
 // The vector is multiplied from left to the matrix. 
 // If you want to multiply it from the right use
@@ -4097,7 +4116,7 @@ times(n : any) : any {
 }
 
 
-// ### [Vector.prototype.toArray()](http://mathlib.de/en/docs/vector/toArray)
+// ### [Vector.prototype.toArray()](http://mathlib.de/en/docs/Vector/toArray)
 // Converts the vector to an array.
 //
 // *@returns {array}*
@@ -4106,7 +4125,7 @@ toArray() : any[] {
 }
 
 
-// ### [Vector.prototype.toContentMathMLString()](http://mathlib.de/en/docs/vector/toContentMathMLString)
+// ### [Vector.prototype.toContentMathMLString()](http://mathlib.de/en/docs/Vector/toContentMathMLString)
 // Returns the content MathML representation of the vector.
 //
 // *@returns {string}*
@@ -4117,7 +4136,7 @@ toContentMathMLString() : string {
 }
 
 
-// ### [Vector.prototype.toLaTeX()](http://mathlib.de/en/docs/vector/toLaTeX)
+// ### [Vector.prototype.toLaTeX()](http://mathlib.de/en/docs/Vector/toLaTeX)
 // Returns a LaTeX representation of the vector.
 //
 // *@returns {string}*
@@ -4128,7 +4147,7 @@ toLaTeX() : string {
 }
 
 
-// ### [Vector.prototype.toMathMLString()](http://mathlib.de/en/docs/vector/toMathMLString)
+// ### [Vector.prototype.toMathMLString()](http://mathlib.de/en/docs/Vector/toMathMLString)
 // Returns the (presentation) MathML representation of the vector.
 //
 // *@returns {string}*
@@ -4139,7 +4158,7 @@ toMathMLString() : string {
 }
 
 
-// ### [Vector.prototype.toString()](http://mathlib.de/en/docs/vector/toString)
+// ### [Vector.prototype.toString()](http://mathlib.de/en/docs/Vector/toString)
 // Returns a string representation of the vector.
 //
 // *@returns {string}*
@@ -4150,7 +4169,7 @@ toString() : string {
 }
 
 
-// ### [Vector.prototype.vectorProduct()](http://mathlib.de/en/docs/vector/vectorProduct)
+// ### [Vector.prototype.vectorProduct()](http://mathlib.de/en/docs/Vector/vectorProduct)
 // Calculates the vector product of two vectors.
 //
 // *@param {Vector}*  
@@ -4167,7 +4186,7 @@ vectorProduct(v : Vector) : Vector {
 }
 
 
-// ### Vector.zero()
+// ### [Vector.prototype.zero()](http://mathlib.de/en/docs/Vector/zero)
 // Returns a zero vector of given size.
 //
 // *@param {number}* The number of entries in the vector.  
@@ -4184,8 +4203,8 @@ static zero = function (n : number) : Vector {
 }
 
 
-// ## <a id="Circle"></a>Circle
-// MathLib.circle expects two arguments.
+// ## <a id="Circle" href="http://mathlib.de/en/docs/Circle">Circle</a>
+// MathLib.Circle expects two arguments.
 // First the center in the form of an Array or a MathLib.point.
 // The second argument should be the radius of the circle.
 //
@@ -4216,7 +4235,7 @@ export class Circle {
 
 
 
-// ### Circle.prototype.area()
+// ### [Circle.prototype.area()](http://mathlib.de/en/docs/Circle/area)
 // Calculates the area of the circle.
 //
 // *@param {number}* The area of the circle
@@ -4225,7 +4244,7 @@ area() : number {
 }
 
 
-// ### Circle.prototype.circumference()
+// ### [Circle.prototype.circumference()](http://mathlib.de/en/docs/Circle/circumference)
 // Calculates the circumference of the circle.
 //
 // *@param {number}* The circumference of the circle
@@ -4234,7 +4253,7 @@ circumference() : number {
 }
 
 
-// ### Circle.prototype.draw()
+// ### [Circle.prototype.draw()](http://mathlib.de/en/docs/Circle/draw)
 // Draw the circle onto the screen.
 //
 // *@param {screen}* The screen to draw onto.  
@@ -4254,7 +4273,7 @@ draw(screen, options) {
 }
 
 
-// ### Circle.prototype.isEqual()
+// ### [Circle.prototype.isEqual()](http://mathlib.de/en/docs/Circle/isEqual)
 // Checks if two circles are equal
 //
 // *@return {boolean}*
@@ -4263,7 +4282,7 @@ isEqual(c: Circle) : bool {
 }
 
 
-// ### Circle.prototype.positionOf()
+// ### [Circle.prototype.positionOf()](http://mathlib.de/en/docs/Circle/positionOf)
 // Determine if a point is in, on or outside a circle.
 //
 // *@return {string}*
@@ -4284,7 +4303,7 @@ positionOf(p) : string {
 }
 
 
-// ### Circle.prototype.reflectAt()
+// ### [Circle.prototype.reflectAt()](http://mathlib.de/en/docs/Circle/reflectAt)
 // Reflect the circle at a point or line
 //
 // *@return {Circle}*
@@ -4293,7 +4312,7 @@ reflectAt(a) : Circle {
 }
 
 
-// ### Circle.prototype.toLaTeX()
+// ### [Circle.prototype.toLaTeX()](http://mathlib.de/en/docs/Circle/toLaTeX)
 // Returns a LaTeX expression of the circle
 //
 // *@return {string}* 
@@ -4302,7 +4321,7 @@ toLaTeX() : string {
 }
 
 
-// ### Circle.prototype.toMatrix()
+// ### [Circle.prototype.toMatrix()](http://mathlib.de/en/docs/Circle/toMatrix)
 // Converts the circle to the corresponding matrix.
 //
 // *@return {Matrix}* 
@@ -4318,7 +4337,7 @@ toMatrix() : Matrix {
 
 
 // ## <a id="Complex"></a>Complex
-// MathLib.complex is the MathLib implementation of complex numbers.
+// MathLib.Complex is the MathLib implementation of complex numbers.
 //
 // There are two ways of defining complex numbers:
 //
@@ -6823,22 +6842,13 @@ static one = new Polynomial([1]);
 // ### Polynomial.prototype.plus()
 // Adds a number or a polynomial
 //
-// *@param {boolean}* [all] If the value is true, the number is added to all 
-// coefficients.  
 // *@returns {polynomial}*
-plus(a, all) : Polynomial {
+plus(a) : Polynomial {
 	var temparr = [],
 			i;
 	if (typeof a === 'number') {
-		if (all) {
-			return this.map(function (b) {
-				return MathLib.plus(a, b);
-			});
-		}
-		else {
-			temparr = this.slice();
-			temparr[0] = MathLib.plus(temparr[0], a);
-		}
+		temparr = this.slice();
+		temparr[0] = MathLib.plus(temparr[0], a);
 	}
 	else if (a.type === 'polynomial') {
 		for (i = 0; i <= Math.min(this.deg, a.deg); i++) {
@@ -7033,7 +7043,7 @@ toFunctn() {
 //
 // *@returns {string}*
 toLaTeX() : string {
-	var str = MathLib.toString(this[this.deg]) + '*x^{' + this.deg + '}',
+	var str = MathLib.toString(this[this.deg]) + 'x^{' + this.deg + '}',
 			i;
 
 	for (i=this.deg-1; i>=0; i--) {
@@ -7062,7 +7072,7 @@ toLaTeX() : string {
 //
 // *@returns {string}*
 toMathMLString(math) :string {
-	var str = '<mrow>' + MathLib.toMathMLString(this[this.deg], true) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathMLString(this.deg) + '</msup>',
+	var str = '<mrow>' + MathLib.toMathMLString(this[this.deg]) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathMLString(this.deg) + '</msup>',
 			i;
 	for (i=this.deg-1; i>=0; i--) {
 		if (!MathLib.isZero(this[i])) {

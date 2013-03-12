@@ -1,4 +1,4 @@
-// ### Vector.zero()
+// ### [Vector.prototype.zero()](http://mathlib.de/en/docs/Vector/zero)
 // Returns a zero vector of given size.
 //
 // *@param {number}* The number of entries in the vector.  

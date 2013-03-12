@@ -1,4 +1,4 @@
-// ### [Vector.prototype.toLaTeX()](http://mathlib.de/en/docs/vector/toLaTeX)
+// ### [Vector.prototype.toLaTeX()](http://mathlib.de/en/docs/Vector/toLaTeX)
 // Returns a LaTeX representation of the vector.
 //
 // *@returns {string}*

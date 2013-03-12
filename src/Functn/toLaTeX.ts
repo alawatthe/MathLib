@@ -1,4 +1,4 @@
-// ### Functn.prototype.toLaTeX()
+// ### [Functn.prototype.toLaTeX()](http://mathlib.de/en/docs/Functn/toLaTeX)
 // Returns a LaTeX representation of the function
 //
 // *@param {string}* Optional: custom name for the bound variable (default: x)  

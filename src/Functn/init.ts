@@ -18,7 +18,7 @@ MathLib.Functn = function (f, options) {
 					innerVar = x.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML,
 					innerStr = x.contentMathML.childNodes[0].childNodes[2].outerMathML.replace('<bvar>' + innerVar + '</bvar>', ''), 
 					outerStr = functn.contentMathML.childNodes[0].childNodes[2].outerMathML.replace(outerVar, innerStr),
-					res = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><complexes/></domainofapplication>' + outerStr + '</lambda></math>';
+					res = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><reals/></domainofapplication>' + outerStr + '</lambda></math>';
 			return new MathLib.Functn(function (y) {return f(x(y));}, {contentMathMLString: res});
 		}
 		else if (typeof x === 'function') {

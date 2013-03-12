@@ -1,4 +1,4 @@
-// ### Vector.areLinearIndependent()
+// ### [Vector.prototype.areLinearIndependent()](http://mathlib.de/en/docs/Vector/areLinearIndependent)
 // Checks if the vectors are linear independent.
 //
 // *@param {array}* An array containing the vectors.  

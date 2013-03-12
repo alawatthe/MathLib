@@ -1,23 +1,19 @@
-// ### Functn.prototype.draw()
+// ### [Functn.prototype.draw()](http://mathlib.de/en/docs/Functn/draw)
 // Draws the function on the screen
 //
 // *@param {screen}* The screen to draw the function onto.  
 // *@param {object}* [options] Optional drawing options.  
 // *@returns {functn}*
-MathLib.extendPrototype('functn', 'draw', function(screen, options) {
-	var path = [], i;
-
-	for (i = -50; i <= 50; i = Math.round((i + 0.01) * 100) / 100) {
-		path.push([i, this(i)]);
-	}
+functnPrototype.draw = function(screen, options:any = {}) : number {
+	var functn = this;
 	if (Array.isArray(screen)) {
 		screen.forEach(function (x) {
-			x.path(path, options);
+			x.path(functn, options);
 		});
 	}
 	else {
-		screen.path(path, options);
+		screen.path(functn, options);
 	}
 
 	return this;
-});
+};

@@ -217,7 +217,7 @@ var MathLib;
 							return new MathLib.Functn(function (x) {
 								return MathLib[funcName](x);
 							}, {
-								contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + node.outerMathML + '</lambda></math>'
+								contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><reals/></domainofapplication>' + node.outerMathML + '</lambda></math>'
 							});
 						} else {
 							return new MathLib.Functn(function (x) {
@@ -250,7 +250,7 @@ var MathLib;
 						return new MathLib.Functn(function (x) {
 							return x;
 						}, {
-							contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><ident/><ci>x</ci></apply></lambda></math>'
+							contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><reals/></domainofapplication><apply><ident/><ci>x</ci></apply></lambda></math>'
 						});
 					}
 				},
@@ -423,7 +423,7 @@ var MathLib;
 			if (typeof x === 'number') {
 				return f.apply('', arguments);
 			} else if (x.type === 'functn') {
-				var outerVar = functn.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML, innerVar = x.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML, innerStr = x.contentMathML.childNodes[0].childNodes[2].outerMathML.replace('<bvar>' + innerVar + '</bvar>', ''), outerStr = functn.contentMathML.childNodes[0].childNodes[2].outerMathML.replace(outerVar, innerStr), res = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><complexes/></domainofapplication>' + outerStr + '</lambda></math>';
+				var outerVar = functn.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML, innerVar = x.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML, innerStr = x.contentMathML.childNodes[0].childNodes[2].outerMathML.replace('<bvar>' + innerVar + '</bvar>', ''), outerStr = functn.contentMathML.childNodes[0].childNodes[2].outerMathML.replace(outerVar, innerStr), res = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><reals/></domainofapplication>' + outerStr + '</lambda></math>';
 				return new MathLib.Functn(function (y) {
 					return f(x(y));
 				}, {
@@ -456,6 +456,21 @@ var MathLib;
 			}
 		});
 		return functn;
+	};
+	functnPrototype.draw = function (screen, options) {
+		if (typeof options === 'undefined') {
+			options = {
+		};
+		}
+		var functn = this;
+		if (Array.isArray(screen)) {
+			screen.forEach(function (x) {
+				x.path(functn, options);
+			});
+		} else {
+			screen.path(functn, options);
+		}
+		return this;
 	};
 	functnPrototype.diff = function (x, h) {
 		if (typeof h === 'undefined') {
@@ -570,9 +585,6 @@ var MathLib;
 		};
 		return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
 	};
-	functnPrototype.toMathML = function () {
-		return this.contentMathML.toMathML();
-	};
 	functnPrototype.toMathMLString = function () {
 		return this.contentMathML.toMathMLString();
 	};
@@ -622,7 +634,7 @@ var MathLib;
 		};
 		return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
 	};
-	var mathStart = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><', mathEnd = '/><ci>x</ci></apply></lambda></math>';
+	var mathStart = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><reals/></domainofapplication><apply><', mathEnd = '/><ci>x</ci></apply></lambda></math>';
 	var unaryFunctions = {
 		abs: Math.abs,
 		arccos: Math.acos,
@@ -1113,7 +1125,7 @@ var MathLib;
 							return b;
 						};
 					}
-					var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
+					var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><reals/></domainofapplication><apply><plus/>' + astr + bstr + '</apply></lambda></math>';
 					return new MathLib.Functn(function (x) {
 						return MathLib.plus(f1(x), f2(x));
 					}, {
@@ -1148,7 +1160,7 @@ var MathLib;
 							return b;
 						};
 					}
-					var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
+					var MathML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><reals/></domainofapplication><apply><times/>' + astr + bstr + '</apply></lambda></math>';
 					return new MathLib.Functn(function (x) {
 						return MathLib.times(f1(x), f2(x));
 					}, {
@@ -1537,6 +1549,7 @@ var MathLib;
 				], false, true);
 			}
 		} else if (screen.grid.type === 'polar') {
+			var max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right)), min = 0;
 			for (i = 0; i < 2 * Math.PI; i += screen.grid.angle) {
 				this.line([
 					[
@@ -1544,12 +1557,11 @@ var MathLib;
 						0
 					], 
 					[
-						50 * Math.cos(i), 
-						50 * Math.sin(i)
+						max * Math.cos(i), 
+						max * Math.sin(i)
 					]
 				], false, true);
 			}
-			var max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right)), min = 0;
 			for (i = min; i <= max; i += Math.min(xTick, yTick)) {
 				this.circle(new MathLib.Circle([
 					0, 
@@ -2091,10 +2103,11 @@ var MathLib;
 				redraw = false;
 			}
 			var screen = this.screen, svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'), ctx = this.ctx, prop, opts;
+			var tf = this.screen.transformation;
 			svgText.textContent = str;
 			svgText.setAttribute('x', x * screen.scale.x + '');
 			svgText.setAttribute('y', y * screen.scale.y + '');
-			svgText.setAttribute('transform', 'matrix(' + 1 / screen.scale.x + ' , 0, 0, ' + 1 / screen.scale.y + ', 0, 0)');
+			svgText.setAttribute('transform', 'matrix(' + 1 / screen.scale.x + ', 0, 0, ' + 1 / screen.scale.y + ', 0, 0)');
 			svgText.setAttribute('fill', colorConvert((options).color) || '#000000');
 			svgText.setAttribute('fill-opacity', '1');
 			svgText.setAttribute('stroke', colorConvert((options).color) || '#000000');
@@ -4281,17 +4294,11 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		Polynomial.one = new Polynomial([
 			1
 		]);
-		Polynomial.prototype.plus = function (a, all) {
+		Polynomial.prototype.plus = function (a) {
 			var temparr = [], i;
 			if (typeof a === 'number') {
-				if (all) {
-					return this.map(function (b) {
-						return MathLib.plus(a, b);
-					});
-				} else {
-					temparr = this.slice();
-					temparr[0] = MathLib.plus(temparr[0], a);
-				}
+				temparr = this.slice();
+				temparr[0] = MathLib.plus(temparr[0], a);
 			} else if (a.type === 'polynomial') {
 				for (i = 0; i <= Math.min(this.deg, a.deg); i++) {
 					temparr[i] = MathLib.plus(this[i], a[i]);
@@ -4420,7 +4427,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			});
 		};
 		Polynomial.prototype.toLaTeX = function () {
-			var str = MathLib.toString(this[this.deg]) + '*x^{' + this.deg + '}', i;
+			var str = MathLib.toString(this[this.deg]) + 'x^{' + this.deg + '}', i;
 			for (i = this.deg - 1; i >= 0; i--) {
 				if (!MathLib.isZero(this[i])) {
 					str += MathLib.toLaTeX(this[i], true);
@@ -4434,7 +4441,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			return str;
 		};
 		Polynomial.prototype.toMathMLString = function (math) {
-			var str = '<mrow>' + MathLib.toMathMLString(this[this.deg], true) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathMLString(this.deg) + '</msup>', i;
+			var str = '<mrow>' + MathLib.toMathMLString(this[this.deg]) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathMLString(this.deg) + '</msup>', i;
 			for (i = this.deg - 1; i >= 0; i--) {
 				if (!MathLib.isZero(this[i])) {
 					str += MathLib.toMathMLString(this[i], true);

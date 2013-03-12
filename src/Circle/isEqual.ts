@@ -1,4 +1,4 @@
-// ### Circle.prototype.isEqual()
+// ### [Circle.prototype.isEqual()](http://mathlib.de/en/docs/Circle/isEqual)
 // Checks if two circles are equal
 //
 // *@return {boolean}*

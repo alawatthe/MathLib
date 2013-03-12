@@ -1,4 +1,4 @@
-// ### [Vector.prototype.every()](http://mathlib.de/en/docs/vector/every)
+// ### [Vector.prototype.every()](http://mathlib.de/en/docs/Vector/every)
 // Works like Array.prototype.every.
 //
 // *@returns {boolean}*

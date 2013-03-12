@@ -1,4 +1,4 @@
-// ### [Vector.prototype.toString()](http://mathlib.de/en/docs/vector/toString)
+// ### [Vector.prototype.toString()](http://mathlib.de/en/docs/Vector/toString)
 // Returns a string representation of the vector.
 //
 // *@returns {string}*

@@ -1,4 +1,4 @@
-// ### [Vector.prototype.plus()](http://mathlib.de/en/docs/vector/plus)
+// ### [Vector.prototype.plus()](http://mathlib.de/en/docs/Vector/plus)
 // Calculates the sum of two vectors.
 //
 // *@param {Vector}*  

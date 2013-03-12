@@ -1,4 +1,4 @@
-// ### [Vector.prototype.toContentMathMLString()](http://mathlib.de/en/docs/vector/toContentMathMLString)
+// ### [Vector.prototype.toContentMathMLString()](http://mathlib.de/en/docs/Vector/toContentMathMLString)
 // Returns the content MathML representation of the vector.
 //
 // *@returns {string}*

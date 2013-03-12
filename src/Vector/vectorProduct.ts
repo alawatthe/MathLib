@@ -1,4 +1,4 @@
-// ### [Vector.prototype.vectorProduct()](http://mathlib.de/en/docs/vector/vectorProduct)
+// ### [Vector.prototype.vectorProduct()](http://mathlib.de/en/docs/Vector/vectorProduct)
 // Calculates the vector product of two vectors.
 //
 // *@param {Vector}*  

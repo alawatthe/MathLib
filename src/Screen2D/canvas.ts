@@ -209,7 +209,6 @@ var canvas = {
 
 		from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x)-step;
 		to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
-		
 
 		ctx.save()
 		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
@@ -254,7 +253,6 @@ var canvas = {
 		else {
 			path = curve;
 		}
-
 
 
 		// Draw the path

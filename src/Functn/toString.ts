@@ -1,4 +1,4 @@
-// ### Functn.prototype.toString()
+// ### [Functn.prototype.toString()](http://mathlib.de/en/docs/Functn/toString)
 // Returns a string representation of the function
 //
 // *@param {string}* Optional: custom name for the bound variable (default: x)  

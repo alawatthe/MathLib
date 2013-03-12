@@ -30,6 +30,7 @@ module.exports = function (grunt) {
 							'src/meta/bracket1.ts',
 
 							'src/Functn/init.ts',
+							'src/Functn/draw.ts',
 							'src/Functn/diff.ts',
 							'src/Functn/quad.ts',
 							'src/Functn/toContentMathML.ts',
@@ -163,8 +164,9 @@ module.exports = function (grunt) {
 							'test/Circle/init.js',
 							'test/Circle/!(init).js',
 
-							'test/Complex/complex.js',
-							
+							'test/Complex/init.js',
+							'test/Complex/!(init).js',
+
 							'test/Functn/init.js',
 							'test/Functn/!(init).js',
 
@@ -173,7 +175,9 @@ module.exports = function (grunt) {
 							'test/Matrix/matrix.js',
 							'test/Permutation/permutation.js',
 							'test/Point/point.js',
-							'test/Polynomial/polynomial.js',
+
+							'test/Polynomial/init.js',
+							'test/Polynomial/!(init).js',
 
 							'test/Rational/init.js',
 							'test/Rational/!(init).js',

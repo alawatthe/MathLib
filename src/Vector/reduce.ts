@@ -1,4 +1,4 @@
-// ### [Vector.prototype.reduce()](http://mathlib.de/en/docs/vector/reduce)
+// ### [Vector.prototype.reduce()](http://mathlib.de/en/docs/Vector/reduce)
 // Works like Array.prototype.reduce.
 //
 // *@returns {any}*

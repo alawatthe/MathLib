@@ -1,4 +1,4 @@
-// ### Functn.prototype.toContentMathMLString()
+// ### [Functn.prototype.toContentMathMLString()](http://mathlib.de/en/docs/Functn/toContentMathMLString)
 // Returns a content MathML representation of the function
 //
 // *@returns {string}*

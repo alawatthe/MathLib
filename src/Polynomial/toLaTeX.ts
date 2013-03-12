@@ -3,7 +3,7 @@
 //
 // *@returns {string}*
 toLaTeX() : string {
-	var str = MathLib.toString(this[this.deg]) + '*x^{' + this.deg + '}',
+	var str = MathLib.toString(this[this.deg]) + 'x^{' + this.deg + '}',
 			i;
 
 	for (i=this.deg-1; i>=0; i--) {

@@ -1,4 +1,4 @@
-// ### Circle.prototype.circumference()
+// ### [Circle.prototype.circumference()](http://mathlib.de/en/docs/Circle/circumference)
 // Calculates the circumference of the circle.
 //
 // *@param {number}* The circumference of the circle

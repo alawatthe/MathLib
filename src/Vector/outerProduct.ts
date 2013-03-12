@@ -1,4 +1,4 @@
-// ### [Vector.prototype.outerProduct()](http://mathlib.de/en/docs/vector/outerProduct)
+// ### [Vector.prototype.outerProduct()](http://mathlib.de/en/docs/Vector/outerProduct)
 // Calculates the outer product of two vectors.
 //
 // *@param {Vector}*  

@@ -1,4 +1,4 @@
-// ### Circle.prototype.draw()
+// ### [Circle.prototype.draw()](http://mathlib.de/en/docs/Circle/draw)
 // Draw the circle onto the screen.
 //
 // *@param {screen}* The screen to draw onto.  

@@ -1,4 +1,4 @@
-// ### [Vector.prototype.norm()](http://mathlib.de/en/docs/vector/norm)
+// ### [Vector.prototype.norm()](http://mathlib.de/en/docs/Vector/norm)
 // Calcultes the norm of the vector.
 //
 // *@param {number}* [default=2] The p for the p-norm

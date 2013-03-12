@@ -1,4 +1,4 @@
-// ### [Vector.prototype.negative()](http://mathlib.de/en/docs/vector/negative)
+// ### [Vector.prototype.negative()](http://mathlib.de/en/docs/Vector/negative)
 // Returns the negative vector.
 //
 // *@returns {Vector}*

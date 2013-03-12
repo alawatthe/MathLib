@@ -42,13 +42,12 @@ var drawGrid = function () {
 
 	}
 	else if (screen.grid.type === 'polar') {
-		for (i = 0; i < 2*Math.PI; i += screen.grid.angle) {
-			this.line([[0, 0], [50*Math.cos(i), 50*Math.sin(i)]], false, true);
-		}
-
-
 		var max = Math.sqrt(Math.max(top*top, bottom*bottom) + Math.max(left*left, right*right)),
 				min = 0; // improve this estimate
+
+		for (i = 0; i < 2*Math.PI; i += screen.grid.angle) {
+			this.line([[0, 0], [max*Math.cos(i), max*Math.sin(i)]], false, true);
+		}
 
 		for (i = min; i <= max; i += Math.min(xTick, yTick)) {
 			this.circle(new MathLib.Circle([0, 0, 1], i), false, true);

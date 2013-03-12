@@ -1,5 +1,5 @@
 // ## <a id="Complex"></a>Complex
-// MathLib.complex is the MathLib implementation of complex numbers.
+// MathLib.Complex is the MathLib implementation of complex numbers.
 //
 // There are two ways of defining complex numbers:
 //

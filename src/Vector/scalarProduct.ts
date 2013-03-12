@@ -1,4 +1,4 @@
-// ### [Vector.prototype.scalarProduct()](http://mathlib.de/en/docs/vector/scalarProduct)
+// ### [Vector.prototype.scalarProduct()](http://mathlib.de/en/docs/Vector/scalarProduct)
 // Calculates the scalar product of two vectors.
 //
 // *@param {vector}*  

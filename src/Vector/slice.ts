@@ -1,4 +1,4 @@
-// ### [Vector.prototype.slice()](http://mathlib.de/en/docs/vector/slice)
+// ### [Vector.prototype.slice()](http://mathlib.de/en/docs/Vector/slice)
 // Works like the Array.prototype.slice function
 //
 // *@returns {array}*

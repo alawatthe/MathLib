@@ -1,4 +1,4 @@
-// ### Circle.prototype.reflectAt()
+// ### [Circle.prototype.reflectAt()](http://mathlib.de/en/docs/Circle/reflectAt)
 // Reflect the circle at a point or line
 //
 // *@return {Circle}*

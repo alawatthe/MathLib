@@ -305,7 +305,7 @@ module MathLib {
 		public map(f): Polynomial;
 		public negative(): Polynomial;
 		static one: Polynomial;
-		public plus(a, all): Polynomial;
+		public plus(a): Polynomial;
 		static regression(x, y): Polynomial;
 		static roots(zeros): Polynomial;
 		public slice(...args: any[]): any[];

@@ -1,4 +1,4 @@
-// ### Circle.prototype.positionOf()
+// ### [Circle.prototype.positionOf()](http://mathlib.de/en/docs/Circle/positionOf)
 // Determine if a point is in, on or outside a circle.
 //
 // *@return {string}*

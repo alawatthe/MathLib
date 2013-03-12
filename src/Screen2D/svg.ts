@@ -347,11 +347,12 @@ var svg = {
 	      svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
 		    ctx = this.ctx,
 	      prop, opts;
+		var tf = this.screen.transformation;
 
 		svgText.textContent = str;
 		svgText.setAttribute('x', x*screen.scale.x + '');
 		svgText.setAttribute('y', y*screen.scale.y + '');
-		svgText.setAttribute('transform', 'matrix(' + 1/screen.scale.x + ' , 0, 0, ' + 1/screen.scale.y + ', 0, 0)');
+		svgText.setAttribute('transform', 'matrix(' + 1/screen.scale.x + ', 0, 0, ' + 1/screen.scale.y + ', 0, 0)');
 		svgText.setAttribute('fill', colorConvert((<any>options).color) || '#000000');
 		svgText.setAttribute('fill-opacity', '1');
 		svgText.setAttribute('stroke', colorConvert((<any>options).color) || '#000000');
