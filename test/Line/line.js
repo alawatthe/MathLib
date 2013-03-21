@@ -1,7 +1,7 @@
 module('Line');
 test('init', 4, function () {
 	var line = new MathLib.Line([3, 2, 1]);
-	equal(line.dim, 2, 'Testing the dimension');
+	equal(line.dimension, 2, 'Testing the dimension');
 	equal(line[0], 3, 'Testing the entries');
 	equal(line[1], 2, 'Testing the entries');
 	equal(line[2], 1, 'Testing the entries');

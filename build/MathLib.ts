@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2013-03-12  
+// v0.3.5 - 2013-03-21  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -112,7 +112,18 @@ module MathLib {
 				else if (x.length === 3) {
 					return new THREE.Vector3(x[0], x[1], x[2]);
 				}
+			},
+
+			colorConvert = function (n) {
+				if (typeof n === 'number') {
+					n = Math.max(Math.min(Math.floor(n), 0xffffff), 0);
+					return '#' + ('00000'+n.toString(16)).slice(-6); 
+				}
+				return n;
 			};
+
+
+
 
 	MathLib.prototypes = prototypes;
 
@@ -2006,8 +2017,9 @@ export class Layer {
 	draw: any;
 	circle: any;
 	line: any;
-	pixel: any;
 	path: any;
+	pixel: any;
+	point: any;
 	text: any;
 
 
@@ -2091,6 +2103,7 @@ export class Layer {
 			this.line = canvas.line;
 			this.path = canvas.path;
 			this.pixel = canvas.pixel;
+			this.point = canvas.point;
 			this.text = canvas.text;
 
 		}
@@ -2143,6 +2156,7 @@ export class Layer {
 			this.line = svg.line;
 			this.path = svg.path;
 			this.pixel = svg.pixel;
+			this.point = svg.point;
 			this.text = svg.text;
 		}
 
@@ -2302,15 +2316,6 @@ var drawGrid = function () {
 }
 
 
-var	colorConvert = function (n) {
-			if (n === undefined){
-				return undefined;
-			}
-			else if (typeof n === 'string'){
-				return n;
-			}
-			return '#' + ('00000'+n.toString(16)).slice(-6); 
-		};
 
 
 
@@ -2319,27 +2324,27 @@ var canvas = {
 	normalizeOptions: function (opt) {
 		var res:any = {};
 		if ('fillColor' in opt) {
-			res.fillStyle = opt.fillColor
+			res.fillStyle = colorConvert(opt.fillColor);
 		}
 		else if ('color' in opt) {
-			res.fillStyle = opt.color
+			res.fillStyle = colorConvert(opt.color);
 		}
 
 
 		if ('font' in opt) {
-			res['font-family'] = opt.font
+			res['font-family'] = opt.font;
 		}
 
 		if ('fontSize' in opt) {
-			res['font-size'] = opt.fontSize
+			res['font-size'] = opt.fontSize;
 		}
 
 
 		if ('lineColor' in opt) {
-			res.strokeStyle = opt.lineColor
+			res.strokeStyle = colorConvert(opt.lineColor);
 		}
 		else if ('color' in opt) {
-			res.strokeStyle = opt.color
+			res.strokeStyle = colorConvert(opt.color);
 		}
 
 		return res;
@@ -2418,7 +2423,7 @@ var canvas = {
 
 
 
-		// Draw the line
+		// Draw the circle
 		ctx.beginPath();
 		ctx.arc(circle.center[0], circle.center[1], circle.radius, 0, 2*Math.PI);
 		ctx.closePath();
@@ -2436,7 +2441,7 @@ var canvas = {
 
 		return this;
 
-		},
+	},
 
 
 	// ### Canvas line
@@ -2647,6 +2652,77 @@ var canvas = {
 
 
 
+
+	// ### Canvas point
+	// Draws a point on the screen.
+	//
+	// *@param {point}* The point to be drawn  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {screen}* Returns the screen
+	point: function (point, options = {}, redraw = false) {
+		var screen = this.screen,
+				ctx = this.ctx,
+				prop, opts, dist, textOptions;
+
+		ctx.save();
+		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
+
+		// Set the drawing options
+		if (options) {
+			opts = canvas.normalizeOptions(options);
+
+			if (!('fillColor' in options) && !('color' in options)) {
+				opts['fillStyle'] = 'black';
+			}
+
+			for (prop in opts) {
+				if (opts.hasOwnProperty(prop)) {
+					ctx[prop] = opts[prop];
+				}
+			}
+
+			if('setLineDash' in ctx) {
+				ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
+			}
+			if ('lineDashOffset' in ctx) {
+				ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
+			}
+		}
+
+
+		// Draw the point
+		ctx.beginPath();
+		ctx.arc(point[0]/point[2], point[1]/point[2], ((<any>options).size || 10)/(screen.scale.x - screen.scale.y), 0, 2*Math.PI);
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
+		ctx.restore();
+
+
+		if ((<any>options).label) {
+			dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
+			screen.text((<any>options).label,
+				point[0]/point[2]+dist/(screen.scale.x - screen.scale.y),
+				point[1]/point[2]+dist/(screen.scale.x - screen.scale.y), {}, true);
+		}
+
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'point',
+				object: point,
+				options: options
+			});
+		}
+
+		return this;
+
+	},
+
+
+
+
+
 	// ### Canvas text
 	// Writes text on the screen.
 	//
@@ -2662,19 +2738,13 @@ var canvas = {
 					fillColor:  'rgba(0, 0, 0, 1)',
 					lineColor:  'rgba(0, 0, 0, 1)',
 					lineWidth:  0.05
-					//size:       0.4
 				},
 				ctx, prop, opts;
 
 		// Determine the layer to draw onto
 		ctx = this.ctx;
 
-		if (!redraw){
-			opts = extendObject(defaults, options);
-		}
-		else {
-			opts = options;
-		}
+		opts = canvas.normalizeOptions(extendObject(defaults, options));
 
 
 		// Set the drawing options
@@ -2684,7 +2754,6 @@ var canvas = {
 			}
 		}
 
-		ctx.font = (opts.fontSize*this.screen.range.x) + 'px ' + opts.font;
 		ctx.font = '10px Helvetica';
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
@@ -2704,7 +2773,7 @@ var canvas = {
 				object: str,
 				x: x,
 				y: y,
-				options: opts
+				options: options
 			});
 		}
 
@@ -2718,40 +2787,40 @@ var svg = {
 	normalizeOptions: function (opt) {
 		var res:any = {};
 		if ('fillColor' in opt) {
-			res.fill = opt.fillColor
+			res.fill = colorConvert(opt.fillColor);
 		}
 		else if ('color' in opt) {
-			res.fill = opt.color
+			res.fill = colorConvert(opt.color);
 		}
 
 
 		if ('font' in opt) {
-			res['font-family'] = opt.font
+			res['font-family'] = opt.font;
 		}
 
 		if ('fontSize' in opt) {
-			res['font-size'] = opt.fontSize
+			res['font-size'] = opt.fontSize;
 		}
 
 		if ('size' in opt) {
-			res.size = opt.size
+			res.size = opt.size;
 		}
 
 
 		if ('lineColor' in opt) {
-			res.stroke = opt.lineColor
+			res.stroke = colorConvert(opt.lineColor);
 		}
 		else if ('color' in opt) {
-			res.stroke = opt.color
+			res.stroke = colorConvert(opt.color);
 		}
 
 
 		if ('dash' in opt && opt.dash.length !== 0) {
-			res['stroke-dasharray'] = opt.dash
+			res['stroke-dasharray'] = opt.dash;
 		}
 
 		if ('dashOffset' in opt && opt.dashOffset !== 0) {
-			res['stroke-dashoffset'] = opt.dashOffset
+			res['stroke-dashoffset'] = opt.dashOffset;
 		}
 
 
@@ -2807,7 +2876,7 @@ var svg = {
 	//
 	// *@param {circle}* The circle to be drawn  
 	// *@param {object}* [options] Optional drawing options  
-	// *@returns {canvas}* Returns the screen
+	// *@returns {screen}* Returns the screen
 	circle: function (circle, options = {}, redraw = false) {
 		var screen = this.screen,
 				prop, opts,
@@ -3049,6 +3118,101 @@ var svg = {
 
 
 
+
+	// ### SVG point
+	// Draws a point on the screen.
+	//
+	// *@param {point}* The point to be drawn  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {screen}* Returns the screen
+	point: function (point, options = {}, redraw = false) {
+		var screen = this.screen,
+				prop, opts, dist,
+				svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+		svgPoint.setAttribute('cx', point[0]/point[2] + '');
+		svgPoint.setAttribute('cy', point[1]/point[2] + '');
+		svgPoint.setAttribute('r', ((<any>options).size || 10)/(screen.scale.x - screen.scale.y) + '');
+
+
+		if (options) {
+			svgPoint.setAttribute('stroke-width', ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y) + '');
+			opts = svg.normalizeOptions(options);
+
+			if (!('fillOpacity' in options)) {
+				opts['fill-opacity'] = '1';
+			}
+
+			if (!('fillColor' in options) && !('color' in options)) {
+				opts['fill'] = 'black';
+			}
+
+			for (prop in opts) {
+				if (opts.hasOwnProperty(prop)) {
+					svgPoint.setAttribute(prop, opts[prop]);
+				}
+			}
+		}
+
+
+		if ((<any>options).moveable) {
+			svgPoint.setAttribute('cursor', 'move');
+
+			// mousedown
+			svgPoint.addEventListener('mousedown', 
+				function () {
+					screen.interaction.type = 'move';
+					var invTransformation = screen.transformation.inverse();
+
+					var move = function (evt) {
+								evt.stopPropagation();
+
+								var evtPoint = invTransformation.times(screen.getEventPoint(evt));
+								point[0] = evtPoint[0];
+								point[1] = evtPoint[1];
+								screen.draw()
+							},
+
+							up = function () {
+								screen.interaction.type = '';
+
+								document.body.removeEventListener('mousemove', move);
+								document.body.removeEventListener('mouseup', up);
+							};
+
+					// mousemove
+					document.body.addEventListener('mousemove', move);
+
+					// mouseup
+					document.body.addEventListener('mouseup', up);
+				}
+			);
+		}
+
+
+		this.ctx.appendChild(svgPoint);
+
+
+		if ((<any>options).label) {
+			dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
+			screen.text((<any>options).label,
+				point[0]/point[2]+dist/(screen.scale.x - screen.scale.y),
+				point[1]/point[2]+dist/(screen.scale.x - screen.scale.y), {}, true);
+		}
+
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'point',
+				object: point,
+				options: options
+			});
+		}
+
+		return this;
+	},
+
+
 	// ### SVG text
 	// Writes text on the screen.
 	//
@@ -3056,7 +3220,7 @@ var svg = {
 	// *@param {x}* The x coordinate  
 	// *@param {y}* The y coordinate  
 	// *@param {object}* [options] Optional drawing options  
-	// *@returns {canvas}* Returns the canvas
+	// *@returns {screen}* Returns the screen
 	text: function (str, x, y, options = {}, redraw = false) {
 	  var screen = this.screen,
 	      svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
@@ -3068,6 +3232,7 @@ var svg = {
 		svgText.setAttribute('x', x*screen.scale.x + '');
 		svgText.setAttribute('y', y*screen.scale.y + '');
 		svgText.setAttribute('transform', 'matrix(' + 1/screen.scale.x + ', 0, 0, ' + 1/screen.scale.y + ', 0, 0)');
+		svgText.setAttribute('font-family', 'Helvetica');
 		svgText.setAttribute('fill', colorConvert((<any>options).color) || '#000000');
 		svgText.setAttribute('fill-opacity', '1');
 		svgText.setAttribute('stroke', colorConvert((<any>options).color) || '#000000');
@@ -3124,6 +3289,7 @@ export class Screen2D extends Screen {
 	line: any;
 	path: any;
 	pixel: any;
+	point: any;
 	text: any;
 
 
@@ -3357,6 +3523,7 @@ export class Screen2D extends Screen {
 			this.path = function (){ canvas.path.apply(_this.layer.main, arguments);};
 			// Should the pixel method default to the main layer or to the back layer?
 			this.pixel = function (){ canvas.pixel.apply(_this.layer.main, arguments);};
+			this.point = function (){ canvas.point.apply(_this.layer.main, arguments);};
 			this.text = function (){ canvas.text.apply(_this.layer.main, arguments);};
 		}
 
@@ -3396,6 +3563,7 @@ export class Screen2D extends Screen {
 			this.path = function (){ svg.path.apply(_this.layer.main, arguments);};
 			// Should the pixel method default to the main layer or to the back layer?
 			this.pixel = function (){ svg.pixel.apply(_this.layer.main, arguments);};
+			this.point = function (){ svg.point.apply(_this.layer.main, arguments);};
 			this.text = function (){ svg.text.apply(_this.layer.main, arguments);};
 
 		}
@@ -3446,10 +3614,10 @@ getLineEndPoints (l) {
 				lineBottom = -(l[2] + l[1]* bottom) / l[0],
 				res = [];
 
-		if (lineRight<top && lineRight>bottom) {
+		if (lineRight<=top && lineRight>=bottom) {
 			res.push([right, lineRight]);
 		}
-		if (lineLeft<top && lineLeft>bottom) {
+		if (lineLeft<=top && lineLeft>=bottom) {
 			res.push([left, lineLeft]);
 		}
 		if (lineTop<right && lineTop>left) {
@@ -3472,7 +3640,7 @@ getLineEndPoints (l) {
 // *@param {event}*
 onmousedown(evt) {
 	// Only start the action if the left mouse button was clicked
-	if (evt.button !== 0) {
+	if (evt.button === 1) {
 		return;
 	}
 
@@ -3484,7 +3652,7 @@ onmousedown(evt) {
 	evt.returnValue = false;
 
 	// Pan mode
-	if(this.interaction.allowPan) {
+	if (this.interaction.allowPan && !this.interaction.type) {
 		this.interaction.type = 'pan'
 		this.interaction.startPoint = this.getEventPoint(evt);
 		this.interaction.startTransformation = this.transformation.copy();
@@ -3612,18 +3780,15 @@ export class Screen3D extends Screen {
 				},
 				opts = extendObject(defaults, options),
 				scene = new THREE.Scene(),
-				camera, renderer, controls,
-				// keyboard = new THREEx.KeyboardState(),
-				clock = new THREE.Clock();
-				
-
+				clock = new THREE.Clock(),
+				camera, renderer, controls, viewAngle, aspect, near, far;
 
 		// Camera
 		// ======
-		var viewAngle = 45,
-				aspect = opts.width / opts.height,
-				near = 0.1,
-				far = 20000;
+		viewAngle = 45,
+		aspect = opts.width / opts.height,
+		near = 0.1,
+		far = 20000;
 
 		camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
 		camera.position = to3js(opts.camera.position);
@@ -3631,7 +3796,7 @@ export class Screen3D extends Screen {
 		camera.up = new THREE.Vector3(0, 0, 1);
 		scene.add(camera);
 
-		
+
 
 		// Renderer
 		// ========
@@ -3673,7 +3838,6 @@ export class Screen3D extends Screen {
 
 
 
-
 		// Light
 		// =====
 		var light1 = new THREE.PointLight(0xffffff);
@@ -3697,7 +3861,7 @@ export class Screen3D extends Screen {
 		// Axis
 		// ====
 		if (opts.axis) {
-			var axis = new THREE.AxisHelper();
+			var axis = new THREE.AxisHelper(10);
 			scene.add(axis);
 		}
 
@@ -3733,18 +3897,7 @@ export class Screen3D extends Screen {
 		animate();
 
 
-
-		// screen3D = Object.create(screen3DProto, {
-		//   container: {writable:false, configurable:false, value: screen.container},
-		//   figure: {writable:false, configurable:false, value: screen.figure},
-		//   scene: {writable:false, configurable:false, value: scene}
-		// });
-
-
-
 		this.scene = scene;
-
-
 	}
 
 
@@ -3854,7 +4007,7 @@ surfacePlot3D(f, options) : Screen3D {
 				material
 			);
 
-
+	this.scene.add(mesh);
 
 	// if (options.datGUI) {
 	//   guiObj = {
@@ -4288,7 +4441,7 @@ isEqual(c: Circle) : bool {
 // *@return {string}*
 positionOf(p) : string {
 	var diff;
-	if (p.type === 'point' && p.dim === 2) {
+	if (p.type === 'point' && p.dimension === 2) {
 		diff = p.distanceTo(this.center) - this.radius;
 		if (MathLib.isZero(diff)) {
 			return 'on';
@@ -4361,6 +4514,11 @@ export class Complex {
 		this.re = re;
 		this.im = im;
 	}
+
+
+// ### Complex.infinity
+//
+static infinity = 'complexInfinity';
 
 
 // ### Complex.prototype.abs()
@@ -4791,11 +4949,11 @@ static zero = new Complex(0, 0);
 export class Line extends Vector {
 	type = 'line';
 
-	dim: number;
+	dimension: number;
 
 	constructor (coords: number[]) {
 		super(coords);
-		this.dim = 2;
+		this.dimension = 2;
 	}
 
 
@@ -4880,20 +5038,49 @@ isParallelTo(l : Line) : bool {
 //
 // *@param {line}*  
 // *@returns {point}*
-meet(l : Line) : Point {
-	return new MathLib.Point([this[1]*l[2]-this[2]*l[1], l[0]*this[2]-this[0]*l[2], this[0]*l[1]-this[1]*l[0]]);
+meet(l : Line, dyn = false) : Point {
+	var point,
+			k = this;
+
+	if (this.dimension === 2 && l.dimension === 2) {
+		point = new MathLib.Point(this.vectorProduct(l));
+
+		if (dyn) {
+			Object.defineProperties(point, {
+				"0": {
+					get : function(){ return k[1]*l[2]-k[2]*l[1]; },
+					set : function(){},
+					enumerable : true,
+					configurable : true
+				},
+				"1": {
+					get : function(){ return k[2]*l[0]-k[0]*l[2]; },
+					set : function(){},
+					enumerable : true,
+					configurable : true
+				},
+				"2": {
+					get : function(){ return k[0]*l[1]-k[1]*l[0]; },
+					set : function(){},
+					enumerable : true,
+					configurable : true
+				}
+			});
+		}
+		
+		return point;
+	}
 }
 
 
 // ### Line.prototype.normalize()
 // Normalizes the line.
-// (Making the last component 1)
 //
 // *@returns {line}*
 normalize() : Line {
-	var last = this[this.dim];
+	var h = MathLib.hypot(this[0], this[1]);
 	return this.map(function (x) {
-		return x / last;
+		return x / h;
 	});
 }
 
@@ -6317,12 +6504,12 @@ toString() : string {
 
 export class Point extends Vector {
 
-	dim: number;
+	dimension: number;
 
 	constructor (coords: number[]) {
 		super(arguments.length > 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
 
-		this.dim = 2;
+		this.dimension = 2;
 		this.type = 'point';
 
 	}
@@ -6352,18 +6539,11 @@ static J = new Point([new MathLib.Complex(0, 1), 0, 1]);
 // *@param {point}* c The point C  
 // *@param {point}* d The point D  
 // *@returns {number}*
-crossRatio(m : Point, n : Point, o : Point, p : Point) : number {
-	var x  = this.toArray(),
-			a = m.toArray(),
-			b = n.toArray(),
-			c = o.toArray(),
-			d = p.toArray(),
-			m1 = new MathLib.Matrix([x, a, c]),
-			m2 = new MathLib.Matrix([x, b, d]),
-			m3 = new MathLib.Matrix([x, a, d]),
-			m4 = new MathLib.Matrix([x, b, c]);
+crossRatio(a : Point, b : Point, c : Point, d : Point) : number {
+	var xa = this.vectorProduct(a),
+			xb = this.vectorProduct(b);
 
-	return (m1.det() * m2.det()) / (m3.det() * m4.det());
+	return xa.scalarProduct(c)*xb.scalarProduct(d) / (xa.scalarProduct(d)* xb.scalarProduct(c));
 }
 
 
@@ -6374,22 +6554,13 @@ crossRatio(m : Point, n : Point, o : Point, p : Point) : number {
 // *@param {point}* [point] The point to calculate the distance to  
 // *@returns {number}*
 distanceTo(point : Point) : number {
-	var res = 0,
-			i;
-
 	if (arguments.length === 0) {
-		for (i = 0; i < this.dim; i++) {
-			res += Math.pow(this[i], 2);
-		}
-		return Math.sqrt(res);
+		return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
 	}
 
-	if (point.type === 'point' && this.dim === point.dim) {
-		for (i = 0; i < this.dim; i++) {
-			res += Math.pow(this[i] - point[i], 2);
-		}
+	if (point.type === 'point' && this.dimension === point.dimension) {
+		return MathLib.hypot.apply(null, this.normalize().minus(point.normalize()).slice(0, -1));
 	}
-	return Math.sqrt(res);
 }
 
 
@@ -6486,20 +6657,47 @@ isOutside(a : Circle) : bool {
 //
 // *@param {point}* The point to calculate the line to
 // *@returns {line}*
-lineTo(q : Point) : Line {
-	if (this.dim === 2 && q.dim === 2) {
-		return new MathLib.Line(this, q);
+lineTo(q : Point, dyn = false) : Line {
+	var line,
+			p = this;
+
+	if (this.dimension === 2 && q.dimension === 2) {
+		line = new MathLib.Line(this.vectorProduct(q));
+
+		if (dyn) {
+			Object.defineProperties(line, {
+				"0": {
+					get : function(){ return p[1]*q[2]-p[2]*q[1]; },
+					set : function(){},
+					enumerable : true,
+					configurable : true
+				},
+				"1": {
+					get : function(){ return p[2]*q[0]-p[0]*q[2]; },
+					set : function(){},
+					enumerable : true,
+					configurable : true
+				},
+				"2": {
+					get : function(){ return p[0]*q[1]-p[1]*q[0]; },
+					set : function(){},
+					enumerable : true,
+					configurable : true
+				}
+			});
+		}
+
+		return line;
 	}
 }
 
 
 // ### Point.prototype.normalize()
 // Normalizes the point.
-// (Making the last component 1)
 //
 // *@returns {point}*
 normalize() : Point {
-	var last = this[this.dim];
+	var last = this[this.dimension] || 1;
 	return this.map(function (x) {
 		return x / last;
 	});
@@ -6512,11 +6710,11 @@ normalize() : Point {
 // *@returns {point}*
 reflectAt(a : Point) : Point {
 	if (a.type === 'point') {
-		if (this.dim === a.dim) {
+		if (this.dimension === a.dimension) {
 			var arr = [], i,
 					p = this.normalize();
 			a = a.normalize();
-			for (i = 0; i < this.dim; i++) {
+			for (i = 0; i < this.dimension; i++) {
 				arr.push(2 * a[i] - p[i]);
 			}
 			arr.push(1);
@@ -6526,25 +6724,15 @@ reflectAt(a : Point) : Point {
 }
 
 
-// ### Point.prototype.toArray()
-// Converts he Point to a real array
-//
-// *@returns {array}*
-toArray() : any[] {
-	var res = [], i, ii;
-	for (i = 0, ii=this.dim; i <= ii; i++) {
-		res.push(this[i]);
-	}
-	return res;
-}
-
-
 // ### Point.prototype.toComplex()
 // Converts a two dimensional point to the corresponding complex number.
 //
 // *@returns {complex}*
 toComplex() : Complex {
-	if (this.dim === 2) {
+	if (this.dimension === 2) {
+		if (MathLib.isZero(this[2])) {
+			return MathLib.Complex.infinity;
+		}
 		return new MathLib.Complex(this[0]/this[2], this[1]/this[2]);
 	}
 }

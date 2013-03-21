@@ -69,7 +69,18 @@ module MathLib {
 				else if (x.length === 3) {
 					return new THREE.Vector3(x[0], x[1], x[2]);
 				}
+			},
+
+			colorConvert = function (n) {
+				if (typeof n === 'number') {
+					n = Math.max(Math.min(Math.floor(n), 0xffffff), 0);
+					return '#' + ('00000'+n.toString(16)).slice(-6); 
+				}
+				return n;
 			};
+
+
+
 
 	MathLib.prototypes = prototypes;
 

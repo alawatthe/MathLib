@@ -33,7 +33,7 @@ surfacePlot3D(f, options) : Screen3D {
 				material
 			);
 
-
+	this.scene.add(mesh);
 
 	// if (options.datGUI) {
 	//   guiObj = {

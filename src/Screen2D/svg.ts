@@ -3,40 +3,40 @@ var svg = {
 	normalizeOptions: function (opt) {
 		var res:any = {};
 		if ('fillColor' in opt) {
-			res.fill = opt.fillColor
+			res.fill = colorConvert(opt.fillColor);
 		}
 		else if ('color' in opt) {
-			res.fill = opt.color
+			res.fill = colorConvert(opt.color);
 		}
 
 
 		if ('font' in opt) {
-			res['font-family'] = opt.font
+			res['font-family'] = opt.font;
 		}
 
 		if ('fontSize' in opt) {
-			res['font-size'] = opt.fontSize
+			res['font-size'] = opt.fontSize;
 		}
 
 		if ('size' in opt) {
-			res.size = opt.size
+			res.size = opt.size;
 		}
 
 
 		if ('lineColor' in opt) {
-			res.stroke = opt.lineColor
+			res.stroke = colorConvert(opt.lineColor);
 		}
 		else if ('color' in opt) {
-			res.stroke = opt.color
+			res.stroke = colorConvert(opt.color);
 		}
 
 
 		if ('dash' in opt && opt.dash.length !== 0) {
-			res['stroke-dasharray'] = opt.dash
+			res['stroke-dasharray'] = opt.dash;
 		}
 
 		if ('dashOffset' in opt && opt.dashOffset !== 0) {
-			res['stroke-dashoffset'] = opt.dashOffset
+			res['stroke-dashoffset'] = opt.dashOffset;
 		}
 
 
@@ -92,7 +92,7 @@ var svg = {
 	//
 	// *@param {circle}* The circle to be drawn  
 	// *@param {object}* [options] Optional drawing options  
-	// *@returns {canvas}* Returns the screen
+	// *@returns {screen}* Returns the screen
 	circle: function (circle, options = {}, redraw = false) {
 		var screen = this.screen,
 				prop, opts,
@@ -334,6 +334,101 @@ var svg = {
 
 
 
+
+	// ### SVG point
+	// Draws a point on the screen.
+	//
+	// *@param {point}* The point to be drawn  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {screen}* Returns the screen
+	point: function (point, options = {}, redraw = false) {
+		var screen = this.screen,
+				prop, opts, dist,
+				svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+		svgPoint.setAttribute('cx', point[0]/point[2] + '');
+		svgPoint.setAttribute('cy', point[1]/point[2] + '');
+		svgPoint.setAttribute('r', ((<any>options).size || 10)/(screen.scale.x - screen.scale.y) + '');
+
+
+		if (options) {
+			svgPoint.setAttribute('stroke-width', ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y) + '');
+			opts = svg.normalizeOptions(options);
+
+			if (!('fillOpacity' in options)) {
+				opts['fill-opacity'] = '1';
+			}
+
+			if (!('fillColor' in options) && !('color' in options)) {
+				opts['fill'] = 'black';
+			}
+
+			for (prop in opts) {
+				if (opts.hasOwnProperty(prop)) {
+					svgPoint.setAttribute(prop, opts[prop]);
+				}
+			}
+		}
+
+
+		if ((<any>options).moveable) {
+			svgPoint.setAttribute('cursor', 'move');
+
+			// mousedown
+			svgPoint.addEventListener('mousedown', 
+				function () {
+					screen.interaction.type = 'move';
+					var invTransformation = screen.transformation.inverse();
+
+					var move = function (evt) {
+								evt.stopPropagation();
+
+								var evtPoint = invTransformation.times(screen.getEventPoint(evt));
+								point[0] = evtPoint[0];
+								point[1] = evtPoint[1];
+								screen.draw()
+							},
+
+							up = function () {
+								screen.interaction.type = '';
+
+								document.body.removeEventListener('mousemove', move);
+								document.body.removeEventListener('mouseup', up);
+							};
+
+					// mousemove
+					document.body.addEventListener('mousemove', move);
+
+					// mouseup
+					document.body.addEventListener('mouseup', up);
+				}
+			);
+		}
+
+
+		this.ctx.appendChild(svgPoint);
+
+
+		if ((<any>options).label) {
+			dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
+			screen.text((<any>options).label,
+				point[0]/point[2]+dist/(screen.scale.x - screen.scale.y),
+				point[1]/point[2]+dist/(screen.scale.x - screen.scale.y), {}, true);
+		}
+
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'point',
+				object: point,
+				options: options
+			});
+		}
+
+		return this;
+	},
+
+
 	// ### SVG text
 	// Writes text on the screen.
 	//
@@ -341,7 +436,7 @@ var svg = {
 	// *@param {x}* The x coordinate  
 	// *@param {y}* The y coordinate  
 	// *@param {object}* [options] Optional drawing options  
-	// *@returns {canvas}* Returns the canvas
+	// *@returns {screen}* Returns the screen
 	text: function (str, x, y, options = {}, redraw = false) {
 	  var screen = this.screen,
 	      svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
@@ -353,6 +448,7 @@ var svg = {
 		svgText.setAttribute('x', x*screen.scale.x + '');
 		svgText.setAttribute('y', y*screen.scale.y + '');
 		svgText.setAttribute('transform', 'matrix(' + 1/screen.scale.x + ', 0, 0, ' + 1/screen.scale.y + ', 0, 0)');
+		svgText.setAttribute('font-family', 'Helvetica');
 		svgText.setAttribute('fill', colorConvert((<any>options).color) || '#000000');
 		svgText.setAttribute('fill-opacity', '1');
 		svgText.setAttribute('stroke', colorConvert((<any>options).color) || '#000000');

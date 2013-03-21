@@ -17,10 +17,10 @@ getLineEndPoints (l) {
 				lineBottom = -(l[2] + l[1]* bottom) / l[0],
 				res = [];
 
-		if (lineRight<top && lineRight>bottom) {
+		if (lineRight<=top && lineRight>=bottom) {
 			res.push([right, lineRight]);
 		}
-		if (lineLeft<top && lineLeft>bottom) {
+		if (lineLeft<=top && lineLeft>=bottom) {
 			res.push([left, lineLeft]);
 		}
 		if (lineTop<right && lineTop>left) {

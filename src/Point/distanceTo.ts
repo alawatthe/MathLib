@@ -5,20 +5,11 @@
 // *@param {point}* [point] The point to calculate the distance to  
 // *@returns {number}*
 distanceTo(point : Point) : number {
-	var res = 0,
-			i;
-
 	if (arguments.length === 0) {
-		for (i = 0; i < this.dim; i++) {
-			res += Math.pow(this[i], 2);
-		}
-		return Math.sqrt(res);
+		return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
 	}
 
-	if (point.type === 'point' && this.dim === point.dim) {
-		for (i = 0; i < this.dim; i++) {
-			res += Math.pow(this[i] - point[i], 2);
-		}
+	if (point.type === 'point' && this.dimension === point.dimension) {
+		return MathLib.hypot.apply(null, this.normalize().minus(point.normalize()).slice(0, -1));
 	}
-	return Math.sqrt(res);
 }

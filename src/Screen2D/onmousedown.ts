@@ -4,7 +4,7 @@
 // *@param {event}*
 onmousedown(evt) {
 	// Only start the action if the left mouse button was clicked
-	if (evt.button !== 0) {
+	if (evt.button === 1) {
 		return;
 	}
 
@@ -16,7 +16,7 @@ onmousedown(evt) {
 	evt.returnValue = false;
 
 	// Pan mode
-	if(this.interaction.allowPan) {
+	if (this.interaction.allowPan && !this.interaction.type) {
 		this.interaction.type = 'pan'
 		this.interaction.startPoint = this.getEventPoint(evt);
 		this.interaction.startTransformation = this.transformation.copy();

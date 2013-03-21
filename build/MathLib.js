@@ -54,6 +54,12 @@ var MathLib;
 		} else if (x.length === 3) {
 			return new THREE.Vector3(x[0], x[1], x[2]);
 		}
+	}, colorConvert = function (n) {
+		if (typeof n === 'number') {
+			n = Math.max(Math.min(Math.floor(n), 0xffffff), 0);
+			return '#' + ('00000' + n.toString(16)).slice(-6);
+		}
+		return n;
 	};
 	MathLib.prototypes = prototypes;
 	MathLib.extend = function (obj, name, prop, options) {
@@ -1385,6 +1391,7 @@ var MathLib;
 				this.line = canvas.line;
 				this.path = canvas.path;
 				this.pixel = canvas.pixel;
+				this.point = canvas.point;
 				this.text = canvas.text;
 			} else if (screen.renderer === 'SVG') {
 				var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g'), m = screen.transformation;
@@ -1415,6 +1422,7 @@ var MathLib;
 				this.line = svg.line;
 				this.path = svg.path;
 				this.pixel = svg.pixel;
+				this.point = svg.point;
 				this.text = svg.text;
 			}
 			screen.layer.splice(zIndex, 0, this);
@@ -1572,22 +1580,14 @@ var MathLib;
 		}
 		return this;
 	};
-	var colorConvert = function (n) {
-		if (n === undefined) {
-			return undefined;
-		} else if (typeof n === 'string') {
-			return n;
-		}
-		return '#' + ('00000' + n.toString(16)).slice(-6);
-	};
 	var canvas = {
 		normalizeOptions: function (opt) {
 			var res = {
 			};
 			if ('fillColor' in opt) {
-				res.fillStyle = opt.fillColor;
+				res.fillStyle = colorConvert(opt.fillColor);
 			} else if ('color' in opt) {
-				res.fillStyle = opt.color;
+				res.fillStyle = colorConvert(opt.color);
 			}
 			if ('font' in opt) {
 				res['font-family'] = opt.font;
@@ -1596,9 +1596,9 @@ var MathLib;
 				res['font-size'] = opt.fontSize;
 			}
 			if ('lineColor' in opt) {
-				res.strokeStyle = opt.lineColor;
+				res.strokeStyle = colorConvert(opt.lineColor);
 			} else if ('color' in opt) {
-				res.strokeStyle = opt.color;
+				res.strokeStyle = colorConvert(opt.color);
 			}
 			return res;
 		},
@@ -1817,6 +1817,54 @@ var MathLib;
 			}
 			return this;
 		},
+		point: function (point, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
+			if (typeof redraw === 'undefined') {
+				redraw = false;
+			}
+			var screen = this.screen, ctx = this.ctx, prop, opts, dist, textOptions;
+			ctx.save();
+			ctx.lineWidth = ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
+			if (options) {
+				opts = canvas.normalizeOptions(options);
+				if (!('fillColor' in options) && !('color' in options)) {
+					opts['fillStyle'] = 'black';
+				}
+				for (prop in opts) {
+					if (opts.hasOwnProperty(prop)) {
+						ctx[prop] = opts[prop];
+					}
+				}
+				if ('setLineDash' in ctx) {
+					ctx.setLineDash(('dash' in options ? (options).dash : []));
+				}
+				if ('lineDashOffset' in ctx) {
+					ctx.lineDashOffset = ('dashOffset' in options ? (options).dashOffset : 0);
+				}
+			}
+			ctx.beginPath();
+			ctx.arc(point[0] / point[2], point[1] / point[2], ((options).size || 10) / (screen.scale.x - screen.scale.y), 0, 2 * Math.PI);
+			ctx.closePath();
+			ctx.fill();
+			ctx.stroke();
+			ctx.restore();
+			if ((options).label) {
+				dist = 1.75 * ((options).size || 10) + 0.75 * ((options).lineWidth || 4);
+				screen.text((options).label, point[0] / point[2] + dist / (screen.scale.x - screen.scale.y), point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), {
+				}, true);
+			}
+			if (!redraw) {
+				this.stack.push({
+					type: 'point',
+					object: point,
+					options: options
+				});
+			}
+			return this;
+		},
 		text: function (str, x, y, options, redraw) {
 			if (typeof options === 'undefined') {
 				options = {
@@ -1833,17 +1881,12 @@ var MathLib;
 				lineWidth: 0.05
 			}, ctx, prop, opts;
 			ctx = this.ctx;
-			if (!redraw) {
-				opts = extendObject(defaults, options);
-			} else {
-				opts = options;
-			}
+			opts = canvas.normalizeOptions(extendObject(defaults, options));
 			for (prop in opts) {
 				if (opts.hasOwnProperty(prop)) {
 					ctx[prop] = opts[prop];
 				}
 			}
-			ctx.font = (opts.fontSize * this.screen.range.x) + 'px ' + opts.font;
 			ctx.font = '10px Helvetica';
 			ctx.textAlign = 'center';
 			ctx.textBaseline = 'middle';
@@ -1858,7 +1901,7 @@ var MathLib;
 					object: str,
 					x: x,
 					y: y,
-					options: opts
+					options: options
 				});
 			}
 			return this;
@@ -1869,9 +1912,9 @@ var MathLib;
 			var res = {
 			};
 			if ('fillColor' in opt) {
-				res.fill = opt.fillColor;
+				res.fill = colorConvert(opt.fillColor);
 			} else if ('color' in opt) {
-				res.fill = opt.color;
+				res.fill = colorConvert(opt.color);
 			}
 			if ('font' in opt) {
 				res['font-family'] = opt.font;
@@ -1883,9 +1926,9 @@ var MathLib;
 				res.size = opt.size;
 			}
 			if ('lineColor' in opt) {
-				res.stroke = opt.lineColor;
+				res.stroke = colorConvert(opt.lineColor);
 			} else if ('color' in opt) {
-				res.stroke = opt.color;
+				res.stroke = colorConvert(opt.color);
 			}
 			if ('dash' in opt && opt.dash.length !== 0) {
 				res['stroke-dasharray'] = opt.dash;
@@ -2094,6 +2137,68 @@ var MathLib;
 			}
 			return this;
 		},
+		point: function (point, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
+			if (typeof redraw === 'undefined') {
+				redraw = false;
+			}
+			var screen = this.screen, prop, opts, dist, svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+			svgPoint.setAttribute('cx', point[0] / point[2] + '');
+			svgPoint.setAttribute('cy', point[1] / point[2] + '');
+			svgPoint.setAttribute('r', ((options).size || 10) / (screen.scale.x - screen.scale.y) + '');
+			if (options) {
+				svgPoint.setAttribute('stroke-width', ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
+				opts = svg.normalizeOptions(options);
+				if (!('fillOpacity' in options)) {
+					opts['fill-opacity'] = '1';
+				}
+				if (!('fillColor' in options) && !('color' in options)) {
+					opts['fill'] = 'black';
+				}
+				for (prop in opts) {
+					if (opts.hasOwnProperty(prop)) {
+						svgPoint.setAttribute(prop, opts[prop]);
+					}
+				}
+			}
+			if ((options).moveable) {
+				svgPoint.setAttribute('cursor', 'move');
+				svgPoint.addEventListener('mousedown', function () {
+					screen.interaction.type = 'move';
+					var invTransformation = screen.transformation.inverse();
+					var move = function (evt) {
+						evt.stopPropagation();
+						var evtPoint = invTransformation.times(screen.getEventPoint(evt));
+						point[0] = evtPoint[0];
+						point[1] = evtPoint[1];
+						screen.draw();
+					}, up = function () {
+						screen.interaction.type = '';
+						document.body.removeEventListener('mousemove', move);
+						document.body.removeEventListener('mouseup', up);
+					};
+					document.body.addEventListener('mousemove', move);
+					document.body.addEventListener('mouseup', up);
+				});
+			}
+			this.ctx.appendChild(svgPoint);
+			if ((options).label) {
+				dist = 1.75 * ((options).size || 10) + 0.75 * ((options).lineWidth || 4);
+				screen.text((options).label, point[0] / point[2] + dist / (screen.scale.x - screen.scale.y), point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), {
+				}, true);
+			}
+			if (!redraw) {
+				this.stack.push({
+					type: 'point',
+					object: point,
+					options: options
+				});
+			}
+			return this;
+		},
 		text: function (str, x, y, options, redraw) {
 			if (typeof options === 'undefined') {
 				options = {
@@ -2108,6 +2213,7 @@ var MathLib;
 			svgText.setAttribute('x', x * screen.scale.x + '');
 			svgText.setAttribute('y', y * screen.scale.y + '');
 			svgText.setAttribute('transform', 'matrix(' + 1 / screen.scale.x + ', 0, 0, ' + 1 / screen.scale.y + ', 0, 0)');
+			svgText.setAttribute('font-family', 'Helvetica');
 			svgText.setAttribute('fill', colorConvert((options).color) || '#000000');
 			svgText.setAttribute('fill-opacity', '1');
 			svgText.setAttribute('stroke', colorConvert((options).color) || '#000000');
@@ -2381,6 +2487,9 @@ var MathLib;
 				this.pixel = function () {
 					canvas.pixel.apply(_this.layer.main, arguments);
 				};
+				this.point = function () {
+					canvas.point.apply(_this.layer.main, arguments);
+				};
 				this.text = function () {
 					canvas.text.apply(_this.layer.main, arguments);
 				};
@@ -2421,6 +2530,9 @@ var MathLib;
 				this.pixel = function () {
 					svg.pixel.apply(_this.layer.main, arguments);
 				};
+				this.point = function () {
+					svg.point.apply(_this.layer.main, arguments);
+				};
 				this.text = function () {
 					svg.text.apply(_this.layer.main, arguments);
 				};
@@ -2445,13 +2557,13 @@ var MathLib;
 		Screen2D.prototype.getLineEndPoints = function (l) {
 			if (l.type === 'line') {
 				var top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lineRight = -(l[2] + l[0] * right) / l[1], lineTop = -(l[2] + l[1] * top) / l[0], lineLeft = -(l[2] + l[0] * left) / l[1], lineBottom = -(l[2] + l[1] * bottom) / l[0], res = [];
-				if (lineRight < top && lineRight > bottom) {
+				if (lineRight <= top && lineRight >= bottom) {
 					res.push([
 						right, 
 						lineRight
 					]);
 				}
-				if (lineLeft < top && lineLeft > bottom) {
+				if (lineLeft <= top && lineLeft >= bottom) {
 					res.push([
 						left, 
 						lineLeft
@@ -2475,14 +2587,14 @@ var MathLib;
 			}
 		};
 		Screen2D.prototype.onmousedown = function (evt) {
-			if (evt.button !== 0) {
+			if (evt.button === 1) {
 				return;
 			}
 			if (evt.preventDefault) {
 				evt.preventDefault();
 			}
 			evt.returnValue = false;
-			if (this.interaction.allowPan) {
+			if (this.interaction.allowPan && !this.interaction.type) {
 				this.interaction.type = 'pan';
 				this.interaction.startPoint = this.getEventPoint(evt);
 				this.interaction.startTransformation = this.transformation.copy();
@@ -2579,8 +2691,8 @@ var MathLib;
 				height: 500,
 				renderer: 'WebGL',
 				width: 500
-			}, opts = extendObject(defaults, options), scene = new THREE.Scene(), camera, renderer, controls, clock = new THREE.Clock();
-			var viewAngle = 45, aspect = opts.width / opts.height, near = 0.1, far = 20000;
+			}, opts = extendObject(defaults, options), scene = new THREE.Scene(), clock = new THREE.Clock(), camera, renderer, controls, viewAngle, aspect, near, far;
+			viewAngle = 45 , aspect = opts.width / opts.height , near = 0.1 , far = 20000;
 			camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
 			camera.position = to3js(opts.camera.position);
 			camera.lookAt(to3js(opts.camera.lookAt));
@@ -2613,7 +2725,7 @@ var MathLib;
 			renderer.setClearColorHex(opts.background, 1);
 			renderer.clear();
 			if (opts.axis) {
-				var axis = new THREE.AxisHelper();
+				var axis = new THREE.AxisHelper(10);
 				scene.add(axis);
 			}
 function animate() {
@@ -2680,6 +2792,7 @@ function render() {
 			}, material = new THREE[opts.material.type + 'Material'](opts.material), mesh;
 			material.side = THREE.DoubleSide;
 			mesh = new THREE.Mesh(new THREE.ParametricGeometry(map, opts.pointNumX, opts.pointNumY, false), material);
+			this.scene.add(mesh);
 			return this;
 		};
 		return Screen3D;
@@ -2874,7 +2987,7 @@ function render() {
 		};
 		Circle.prototype.positionOf = function (p) {
 			var diff;
-			if (p.type === 'point' && p.dim === 2) {
+			if (p.type === 'point' && p.dimension === 2) {
 				diff = p.distanceTo(this.center) - this.radius;
 				if (MathLib.isZero(diff)) {
 					return 'on';
@@ -2920,6 +3033,7 @@ function render() {
 			this.re = re;
 			this.im = im;
 		}
+		Complex.infinity = 'complexInfinity';
 		Complex.prototype.abs = function () {
 			return MathLib.hypot(this.re, this.im);
 		};
@@ -3105,7 +3219,7 @@ function render() {
 		function Line(coords) {
 			_super.call(this, coords);
 			this.type = 'line';
-			this.dim = 2;
+			this.dimension = 2;
 		}
 		Line.prototype.draw = function (screen, options) {
 			if (Array.isArray(screen)) {
@@ -3151,17 +3265,51 @@ function render() {
 				return MathLib.isEqual(x, l[i]) || i === l.length - 1;
 			});
 		};
-		Line.prototype.meet = function (l) {
-			return new MathLib.Point([
-				this[1] * l[2] - this[2] * l[1], 
-				l[0] * this[2] - this[0] * l[2], 
-				this[0] * l[1] - this[1] * l[0]
-			]);
+		Line.prototype.meet = function (l, dyn) {
+			if (typeof dyn === 'undefined') {
+				dyn = false;
+			}
+			var point, k = this;
+			if (this.dimension === 2 && l.dimension === 2) {
+				point = new MathLib.Point(this.vectorProduct(l));
+				if (dyn) {
+					Object.defineProperties(point, {
+						"0": {
+							get: function () {
+								return k[1] * l[2] - k[2] * l[1];
+							},
+							set: function () {
+							},
+							enumerable: true,
+							configurable: true
+						},
+						"1": {
+							get: function () {
+								return k[2] * l[0] - k[0] * l[2];
+							},
+							set: function () {
+							},
+							enumerable: true,
+							configurable: true
+						},
+						"2": {
+							get: function () {
+								return k[0] * l[1] - k[1] * l[0];
+							},
+							set: function () {
+							},
+							enumerable: true,
+							configurable: true
+						}
+					});
+				}
+				return point;
+			}
 		};
 		Line.prototype.normalize = function () {
-			var last = this[this.dim];
+			var h = MathLib.hypot(this[0], this[1]);
 			return this.map(function (x) {
-				return x / last;
+				return x / h;
 			});
 		};
 		return Line;
@@ -3972,7 +4120,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		__extends(Point, _super);
 		function Point(coords) {
 			_super.call(this, arguments.length > 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
-			this.dim = 2;
+			this.dimension = 2;
 			this.type = 'point';
 		}
 		Point.I = new Point([
@@ -3985,40 +4133,17 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			0, 
 			1
 		]);
-		Point.prototype.crossRatio = function (m, n, o, p) {
-			var x = this.toArray(), a = m.toArray(), b = n.toArray(), c = o.toArray(), d = p.toArray(), m1 = new MathLib.Matrix([
-				x, 
-				a, 
-				c
-			]), m2 = new MathLib.Matrix([
-				x, 
-				b, 
-				d
-			]), m3 = new MathLib.Matrix([
-				x, 
-				a, 
-				d
-			]), m4 = new MathLib.Matrix([
-				x, 
-				b, 
-				c
-			]);
-			return (m1.det() * m2.det()) / (m3.det() * m4.det());
+		Point.prototype.crossRatio = function (a, b, c, d) {
+			var xa = this.vectorProduct(a), xb = this.vectorProduct(b);
+			return xa.scalarProduct(c) * xb.scalarProduct(d) / (xa.scalarProduct(d) * xb.scalarProduct(c));
 		};
 		Point.prototype.distanceTo = function (point) {
-			var res = 0, i;
 			if (arguments.length === 0) {
-				for (i = 0; i < this.dim; i++) {
-					res += Math.pow(this[i], 2);
-				}
-				return Math.sqrt(res);
+				return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
 			}
-			if (point.type === 'point' && this.dim === point.dim) {
-				for (i = 0; i < this.dim; i++) {
-					res += Math.pow(this[i] - point[i], 2);
-				}
+			if (point.type === 'point' && this.dimension === point.dimension) {
+				return MathLib.hypot.apply(null, this.normalize().minus(point.normalize()).slice(0, -1));
 			}
-			return Math.sqrt(res);
 		};
 		Point.prototype.draw = function (screen, options) {
 			if (Array.isArray(screen)) {
@@ -4061,23 +4186,59 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				return this.distanceTo(a.center) > a.radius;
 			}
 		};
-		Point.prototype.lineTo = function (q) {
-			if (this.dim === 2 && q.dim === 2) {
-				return new MathLib.Line(this, q);
+		Point.prototype.lineTo = function (q, dyn) {
+			if (typeof dyn === 'undefined') {
+				dyn = false;
+			}
+			var line, p = this;
+			if (this.dimension === 2 && q.dimension === 2) {
+				line = new MathLib.Line(this.vectorProduct(q));
+				if (dyn) {
+					Object.defineProperties(line, {
+						"0": {
+							get: function () {
+								return p[1] * q[2] - p[2] * q[1];
+							},
+							set: function () {
+							},
+							enumerable: true,
+							configurable: true
+						},
+						"1": {
+							get: function () {
+								return p[2] * q[0] - p[0] * q[2];
+							},
+							set: function () {
+							},
+							enumerable: true,
+							configurable: true
+						},
+						"2": {
+							get: function () {
+								return p[0] * q[1] - p[1] * q[0];
+							},
+							set: function () {
+							},
+							enumerable: true,
+							configurable: true
+						}
+					});
+				}
+				return line;
 			}
 		};
 		Point.prototype.normalize = function () {
-			var last = this[this.dim];
+			var last = this[this.dimension] || 1;
 			return this.map(function (x) {
 				return x / last;
 			});
 		};
 		Point.prototype.reflectAt = function (a) {
 			if (a.type === 'point') {
-				if (this.dim === a.dim) {
+				if (this.dimension === a.dimension) {
 					var arr = [], i, p = this.normalize();
 					a = a.normalize();
-					for (i = 0; i < this.dim; i++) {
+					for (i = 0; i < this.dimension; i++) {
 						arr.push(2 * a[i] - p[i]);
 					}
 					arr.push(1);
@@ -4085,15 +4246,11 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				}
 			}
 		};
-		Point.prototype.toArray = function () {
-			var res = [], i, ii;
-			for (i = 0 , ii = this.dim; i <= ii; i++) {
-				res.push(this[i]);
-			}
-			return res;
-		};
 		Point.prototype.toComplex = function () {
-			if (this.dim === 2) {
+			if (this.dimension === 2) {
+				if (MathLib.isZero(this[2])) {
+					return MathLib.Complex.infinity;
+				}
 				return new MathLib.Complex(this[0] / this[2], this[1] / this[2]);
 			}
 		};

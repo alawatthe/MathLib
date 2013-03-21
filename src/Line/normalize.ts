@@ -1,11 +1,10 @@
 // ### Line.prototype.normalize()
 // Normalizes the line.
-// (Making the last component 1)
 //
 // *@returns {line}*
 normalize() : Line {
-	var last = this[this.dim];
+	var h = MathLib.hypot(this[0], this[1]);
 	return this.map(function (x) {
-		return x / last;
+		return x / h;
 	});
 }

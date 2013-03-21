@@ -41,8 +41,9 @@ module MathLib {
 		public draw: any;
 		public circle: any;
 		public line: any;
-		public pixel: any;
 		public path: any;
+		public pixel: any;
+		public point: any;
 		public text: any;
 		constructor(screen, id: string, zIndex);
 	}
@@ -63,6 +64,7 @@ module MathLib {
 		public line: any;
 		public path: any;
 		public pixel: any;
+		public point: any;
 		public text: any;
 		public transformation: any;
 		public translation: any;
@@ -132,6 +134,7 @@ module MathLib {
 		public re: number;
 		public im: number;
 		constructor(re: number, im: number);
+		static infinity: string;
 		public abs(): number;
 		public arccos(): Complex;
 		public arccot(): Complex;
@@ -174,14 +177,14 @@ module MathLib {
 	}
 	class Line extends Vector {
 		public type: string;
-		public dim: number;
+		public dimension: number;
 		constructor(coords: number[]);
 		public draw(screen, options): Line;
 		public isEqual(q: Line): bool;
 		public isFinite(): bool;
 		public isOrthogonalTo(l: Line): Line;
 		public isParallelTo(l: Line): bool;
-		public meet(l: Line): Point;
+		public meet(l: Line, dyn?: bool): Point;
 		public normalize(): Line;
 	}
 	class Matrix {
@@ -268,11 +271,11 @@ module MathLib {
 		public toString(): string;
 	}
 	class Point extends Vector {
-		public dim: number;
+		public dimension: number;
 		constructor(coords: number[]);
 		static I: Point;
 		static J: Point;
-		public crossRatio(m: Point, n: Point, o: Point, p: Point): number;
+		public crossRatio(a: Point, b: Point, c: Point, d: Point): number;
 		public distanceTo(point: Point): number;
 		public draw(screen, options): Point;
 		public isEqual(q: Point): bool;
@@ -280,10 +283,9 @@ module MathLib {
 		public isInside(a: Circle): bool;
 		public isOn(a: Circle): bool;
 		public isOutside(a: Circle): bool;
-		public lineTo(q: Point): Line;
+		public lineTo(q: Point, dyn?: bool): Line;
 		public normalize(): Point;
 		public reflectAt(a: Point): Point;
-		public toArray(): any[];
 		public toComplex(): Complex;
 		public toLaTeX(opt?: bool): string;
 		public toMathMLString(opt?: bool): string;

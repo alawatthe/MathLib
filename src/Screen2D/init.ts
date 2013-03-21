@@ -25,6 +25,7 @@ export class Screen2D extends Screen {
 	line: any;
 	path: any;
 	pixel: any;
+	point: any;
 	text: any;
 
 
@@ -258,6 +259,7 @@ export class Screen2D extends Screen {
 			this.path = function (){ canvas.path.apply(_this.layer.main, arguments);};
 			// Should the pixel method default to the main layer or to the back layer?
 			this.pixel = function (){ canvas.pixel.apply(_this.layer.main, arguments);};
+			this.point = function (){ canvas.point.apply(_this.layer.main, arguments);};
 			this.text = function (){ canvas.text.apply(_this.layer.main, arguments);};
 		}
 
@@ -297,6 +299,7 @@ export class Screen2D extends Screen {
 			this.path = function (){ svg.path.apply(_this.layer.main, arguments);};
 			// Should the pixel method default to the main layer or to the back layer?
 			this.pixel = function (){ svg.pixel.apply(_this.layer.main, arguments);};
+			this.point = function (){ svg.point.apply(_this.layer.main, arguments);};
 			this.text = function (){ svg.text.apply(_this.layer.main, arguments);};
 
 		}

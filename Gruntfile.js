@@ -158,8 +158,8 @@ module.exports = function (grunt) {
 				}
 			},
 			tests: {
-				src: ['test/general/general.js',
-							'test/general/!(general).js',
+				src: ['test/meta/general.js',
+							'test/meta/!(general).js',
 
 							'test/Circle/init.js',
 							'test/Circle/!(init).js',
@@ -174,7 +174,9 @@ module.exports = function (grunt) {
 							'test/MathML/MathML.js',
 							'test/Matrix/matrix.js',
 							'test/Permutation/permutation.js',
-							'test/Point/point.js',
+
+							'test/Point/init.js',
+							'test/Point/!(init).js',
 
 							'test/Polynomial/init.js',
 							'test/Polynomial/!(init).js',

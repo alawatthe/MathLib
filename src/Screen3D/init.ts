@@ -23,18 +23,15 @@ export class Screen3D extends Screen {
 				},
 				opts = extendObject(defaults, options),
 				scene = new THREE.Scene(),
-				camera, renderer, controls,
-				// keyboard = new THREEx.KeyboardState(),
-				clock = new THREE.Clock();
-				
-
+				clock = new THREE.Clock(),
+				camera, renderer, controls, viewAngle, aspect, near, far;
 
 		// Camera
 		// ======
-		var viewAngle = 45,
-				aspect = opts.width / opts.height,
-				near = 0.1,
-				far = 20000;
+		viewAngle = 45,
+		aspect = opts.width / opts.height,
+		near = 0.1,
+		far = 20000;
 
 		camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
 		camera.position = to3js(opts.camera.position);
@@ -42,7 +39,7 @@ export class Screen3D extends Screen {
 		camera.up = new THREE.Vector3(0, 0, 1);
 		scene.add(camera);
 
-		
+
 
 		// Renderer
 		// ========
@@ -84,7 +81,6 @@ export class Screen3D extends Screen {
 
 
 
-
 		// Light
 		// =====
 		var light1 = new THREE.PointLight(0xffffff);
@@ -108,7 +104,7 @@ export class Screen3D extends Screen {
 		// Axis
 		// ====
 		if (opts.axis) {
-			var axis = new THREE.AxisHelper();
+			var axis = new THREE.AxisHelper(10);
 			scene.add(axis);
 		}
 
@@ -144,16 +140,5 @@ export class Screen3D extends Screen {
 		animate();
 
 
-
-		// screen3D = Object.create(screen3DProto, {
-		//   container: {writable:false, configurable:false, value: screen.container},
-		//   figure: {writable:false, configurable:false, value: screen.figure},
-		//   scene: {writable:false, configurable:false, value: scene}
-		// });
-
-
-
 		this.scene = scene;
-
-
 	}

@@ -18,8 +18,9 @@ export class Layer {
 	draw: any;
 	circle: any;
 	line: any;
-	pixel: any;
 	path: any;
+	pixel: any;
+	point: any;
 	text: any;
 
 
@@ -103,6 +104,7 @@ export class Layer {
 			this.line = canvas.line;
 			this.path = canvas.path;
 			this.pixel = canvas.pixel;
+			this.point = canvas.point;
 			this.text = canvas.text;
 
 		}
@@ -155,6 +157,7 @@ export class Layer {
 			this.line = svg.line;
 			this.path = svg.path;
 			this.pixel = svg.pixel;
+			this.point = svg.point;
 			this.text = svg.text;
 		}
 

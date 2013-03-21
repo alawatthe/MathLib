@@ -1,12 +1,3 @@
-var	colorConvert = function (n) {
-			if (n === undefined){
-				return undefined;
-			}
-			else if (typeof n === 'string'){
-				return n;
-			}
-			return '#' + ('00000'+n.toString(16)).slice(-6); 
-		};
 
 
 
@@ -15,27 +6,27 @@ var canvas = {
 	normalizeOptions: function (opt) {
 		var res:any = {};
 		if ('fillColor' in opt) {
-			res.fillStyle = opt.fillColor
+			res.fillStyle = colorConvert(opt.fillColor);
 		}
 		else if ('color' in opt) {
-			res.fillStyle = opt.color
+			res.fillStyle = colorConvert(opt.color);
 		}
 
 
 		if ('font' in opt) {
-			res['font-family'] = opt.font
+			res['font-family'] = opt.font;
 		}
 
 		if ('fontSize' in opt) {
-			res['font-size'] = opt.fontSize
+			res['font-size'] = opt.fontSize;
 		}
 
 
 		if ('lineColor' in opt) {
-			res.strokeStyle = opt.lineColor
+			res.strokeStyle = colorConvert(opt.lineColor);
 		}
 		else if ('color' in opt) {
-			res.strokeStyle = opt.color
+			res.strokeStyle = colorConvert(opt.color);
 		}
 
 		return res;
@@ -114,7 +105,7 @@ var canvas = {
 
 
 
-		// Draw the line
+		// Draw the circle
 		ctx.beginPath();
 		ctx.arc(circle.center[0], circle.center[1], circle.radius, 0, 2*Math.PI);
 		ctx.closePath();
@@ -132,7 +123,7 @@ var canvas = {
 
 		return this;
 
-		},
+	},
 
 
 	// ### Canvas line
@@ -343,6 +334,77 @@ var canvas = {
 
 
 
+
+	// ### Canvas point
+	// Draws a point on the screen.
+	//
+	// *@param {point}* The point to be drawn  
+	// *@param {object}* [options] Optional drawing options  
+	// *@returns {screen}* Returns the screen
+	point: function (point, options = {}, redraw = false) {
+		var screen = this.screen,
+				ctx = this.ctx,
+				prop, opts, dist, textOptions;
+
+		ctx.save();
+		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
+
+		// Set the drawing options
+		if (options) {
+			opts = canvas.normalizeOptions(options);
+
+			if (!('fillColor' in options) && !('color' in options)) {
+				opts['fillStyle'] = 'black';
+			}
+
+			for (prop in opts) {
+				if (opts.hasOwnProperty(prop)) {
+					ctx[prop] = opts[prop];
+				}
+			}
+
+			if('setLineDash' in ctx) {
+				ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
+			}
+			if ('lineDashOffset' in ctx) {
+				ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
+			}
+		}
+
+
+		// Draw the point
+		ctx.beginPath();
+		ctx.arc(point[0]/point[2], point[1]/point[2], ((<any>options).size || 10)/(screen.scale.x - screen.scale.y), 0, 2*Math.PI);
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
+		ctx.restore();
+
+
+		if ((<any>options).label) {
+			dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
+			screen.text((<any>options).label,
+				point[0]/point[2]+dist/(screen.scale.x - screen.scale.y),
+				point[1]/point[2]+dist/(screen.scale.x - screen.scale.y), {}, true);
+		}
+
+
+		if (!redraw) {
+			this.stack.push({
+				type: 'point',
+				object: point,
+				options: options
+			});
+		}
+
+		return this;
+
+	},
+
+
+
+
+
 	// ### Canvas text
 	// Writes text on the screen.
 	//
@@ -358,19 +420,13 @@ var canvas = {
 					fillColor:  'rgba(0, 0, 0, 1)',
 					lineColor:  'rgba(0, 0, 0, 1)',
 					lineWidth:  0.05
-					//size:       0.4
 				},
 				ctx, prop, opts;
 
 		// Determine the layer to draw onto
 		ctx = this.ctx;
 
-		if (!redraw){
-			opts = extendObject(defaults, options);
-		}
-		else {
-			opts = options;
-		}
+		opts = canvas.normalizeOptions(extendObject(defaults, options));
 
 
 		// Set the drawing options
@@ -380,7 +436,6 @@ var canvas = {
 			}
 		}
 
-		ctx.font = (opts.fontSize*this.screen.range.x) + 'px ' + opts.font;
 		ctx.font = '10px Helvetica';
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
@@ -400,7 +455,7 @@ var canvas = {
 				object: str,
 				x: x,
 				y: y,
-				options: opts
+				options: options
 			});
 		}
 
