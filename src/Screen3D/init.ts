@@ -1,8 +1,17 @@
+
+
+
 // ## <a id="Screen3D"></a>Screen3D
 // Two dimensional plotting
 
 export class Screen3D extends Screen {
+	type = 'screen3D';
  
+ 	grid: any;
+ 	axis: any;
+ 	render: any;
+ 	camera: any;
+ 	element: any;
 	scene: any;
 
 	constructor (id: string, options = {}) {
@@ -17,14 +26,39 @@ export class Screen3D extends Screen {
 						position: [10, 10, 10]
 					},
 					controls: 'Trackball',
+					grid: {
+						xy: {
+							angle: Math.PI/8,
+							color: 0xcccccc,
+							type: 'none',
+							tick: {x: 1, y: 1, r: 1}
+						},
+						xz: {
+							angle: Math.PI/8,
+							color: 0xcccccc,
+							type: 'none',
+							tick: {x: 1, z: 1, r: 1}
+						},
+						yz: {
+							angle: Math.PI/8,
+							color: 0xcccccc,
+							type: 'none',
+							tick: {y: 1, z: 1, r: 1}
+						}
+					},
 					height: 500,
 					renderer: 'WebGL',
 					width: 500
 				},
 				opts = extendObject(defaults, options),
 				scene = new THREE.Scene(),
-				clock = new THREE.Clock(),
+				//clock = new THREE.Clock(),
 				camera, renderer, controls, viewAngle, aspect, near, far;
+
+		this.scene = scene;
+		this.axis = opts.axis;
+		this.grid = opts.grid;
+
 
 		// Camera
 		// ======
@@ -98,7 +132,11 @@ export class Screen3D extends Screen {
 		renderer.clear();
 
 
-
+		// Grid
+		// ====
+		if (this.grid) {
+			this.drawGrid();
+		}
 
 
 		// Axis
@@ -119,15 +157,8 @@ export class Screen3D extends Screen {
 		}
 
 		function update() {
-			var delta = clock.getDelta();
+			//var delta = clock.getDelta();
 			controls.update();
-
-//      if (opts.autoRotation) {
-//        phi += 0.003;
-//        camera.position.x = 20*Math.cos(phi);
-//        camera.position.y = 20*Math.sin(phi);
-//      }
-
 		}
 
 		// Render the scene
@@ -140,5 +171,10 @@ export class Screen3D extends Screen {
 		animate();
 
 
-		this.scene = scene;
+		this.options = opts;
+		this.element = renderer.domElement;
+		this.renderer = renderer;
+		this.camera = camera;
+
+		this.container.classList.add('MathLib_screen3D');
 	}

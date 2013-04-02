@@ -36,11 +36,11 @@ export class Layer {
 		var element;
 
 
-		if (screen.renderer === 'Canvas') {
+		if (screen.options.renderer === 'Canvas') {
 
 			// Create the canvas
 			element = document.createElement('canvas');
-			element.classList.add('MathLib_screen_'+screen.uuid);
+			element.classList.add('MathLib_screen');
 			element.width = screen.width;
 			element.height = screen.height;
 			screen.wrapper.appendChild(element);
@@ -108,7 +108,7 @@ export class Layer {
 			this.text = canvas.text;
 
 		}
-		else if (screen.renderer === 'SVG') {
+		else if (screen.options.renderer === 'SVG') {
 			var ctx = document.createElementNS('http://www.w3.org/2000/svg','g'),
 					m = screen.transformation;
 			ctx.setAttribute('transform',

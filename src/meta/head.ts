@@ -36,7 +36,6 @@ module MathLib {
 				object: Object.getPrototypeOf({}),
 				functn: function(){}
 			},
-			proto = '__proto__',
 			flatten = function (a) {
 				var res = [];
 				a.forEach(function (x) {

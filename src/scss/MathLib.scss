@@ -1,0 +1,294 @@
+/*!
+ MathLib v0.3.5 MathLib.de | MathLib.de/en/license
+ */
+
+
+// Imports
+@import "compass";
+@import "compass/css3/user-interface";
+
+
+// Variables and Mixins
+$width: 200px;
+$padding: 4px;
+
+@mixin blueGradient {
+	@include background(linear-gradient(top, #66f, #33f));
+}
+
+@mixin expandToFullscreen {
+	.MathLib_container:-webkit-full-screen & {
+		width: 100%!important;
+		height: 100%!important;
+	}
+	.MathLib_container:-moz-full-screen & {
+		width: 100%!important;
+		height: 100%!important;
+	}
+	.MathLib_container:-ms-full-screen & {
+		width: 100%!important;
+		height: 100%!important;
+	}
+	.MathLib_container:full-screen & {
+		width: 100%!important;
+		height: 100%!important;
+	}
+}
+
+
+
+
+
+
+.MathLib_container {
+	&:-webkit-full-screen {
+		width: 100%!important;
+		height: 100%!important;
+	}
+	&:-moz-full-screen {
+		width: 100%!important;
+		height: 100%!important;
+	}
+	&:-ms-full-screen {
+		width: 100%!important;
+		height: 100%!important;
+	}
+	&:full-screen {
+		width: 100%!important;
+		height: 100%!important;
+	}
+}
+
+
+.MathLib_figure {
+	@include display-box;
+	@include box-align(center);
+	@include expandToFullscreen;
+	margin: 0em auto;
+	@include box-orient(vertical);
+}
+
+
+.MathLib_wrapper {
+	@include expandToFullscreen;
+	position: relative;
+}
+
+
+
+
+.MathLib_figcaption {
+	margin: 1em;
+	color: #444;
+	text-align: center;
+	font-size: 1em;
+	font-family: Helvetica, sans-serif;
+
+	.MathLib_container:-webkit-full-screen & {
+		position: relative;
+		bottom: 4em;
+		padding: 0.5em;
+		border-radius: 0.5em;
+		background: rgba(255, 255, 255, 0.8);
+	}
+
+	.MathLib_container:-moz-full-screen & {
+		position: relative;
+		bottom: 4em;
+		padding: 0.5em;
+		border-radius: 0.5em;
+		background: rgba(255, 255, 255, 0.8);
+	}
+
+	.MathLib_container:full-screen & {
+		position: relative;
+		bottom: 4em;
+		padding: 0.5em;
+		border-radius: 0.5em;
+		background: rgba(255, 255, 255, 0.8);
+	}
+}
+
+
+.MathLib_screen {
+	position: absolute;
+}
+
+.MathLib_screen2D .MathLib_needs3D  {
+	display: none;
+}
+
+.MathLib_screen3D .MathLib_needs2D  {
+	display: none;
+}
+
+/* Context menu */
+
+.MathLib_contextMenuOverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 100;
+	background: transparent;
+	display: none;
+	width: 100vw;
+	height: 100vh;
+}
+
+
+
+
+.MathLib_mainmenu {
+	position: relative;
+	z-index: 1001;
+	margin: 10px;
+	color: #222;
+}
+
+
+.MathLib_menu {
+	padding: $padding 0 $padding 0;
+	width: $width;
+	background: white;
+	border-radius: 5px;
+	box-shadow: 5px 5px 10px 1px #555;
+	font-family: Helvetica;
+}
+
+
+.MathLib_submenu {
+	position: absolute;
+	top: -20px;
+	left: $width;
+	display: none;
+}
+
+
+.MathLib_menuItem {
+	@include user-select(none);
+	position: relative;
+	display: block;
+	padding: $padding 2*$padding $padding 2*$padding;
+}
+
+.MathLib_hasSubmenu::after {
+	content: '▸';
+	position: absolute;
+	right: 2*$padding;
+}
+
+
+.MathLib_menuItem:hover {
+	@include blueGradient;
+	color: white;
+}
+
+
+.MathLib_menuItem:hover > .MathLib_submenu {
+	display: block;
+	background: white;
+	color: black;
+}
+
+
+
+
+
+
+
+
+
+.MathLib_separator {
+	display: block;
+	height: 1px;
+	border: 0;
+	border-top: 1px solid #ccc;
+}
+
+
+.MathLib_radio {
+	position: relative;
+	display: inline-block;
+	margin: 0 1.4em 0 0;
+
+	/*
+	appearance is a none standard property.
+	-moz-appearance: none;  gives ugly radioboxes instead of no radioboxes
+	*/
+	-webkit-appearance: none;
+
+
+	&::before {
+		content: ' ';
+		position: absolute;
+		top: -1em;
+		font-size: 1.4em;
+	}
+
+	&:checked::before {
+		content: '✓';
+	}
+}
+
+
+.MathLib_menuItem:hover > .MathLib_radio:checked::before {
+	color: white;
+}
+
+
+.needs-nofullscreen {
+	.MathLib_container:-webkit-full-screen & {
+		display: none;
+	}
+	.MathLib_container:-moz-full-screen & {
+		display: none;
+	}
+	.MathLib_container:-ms-full-screen & {
+		display: none;
+	}
+	.MathLib_container:full-screen & {
+		display: none;
+	}
+}
+
+.needs-fullscreen {
+	display: none;
+
+	.MathLib_container:-webkit-full-screen & {
+		display: inline;
+	}
+	.MathLib_container:-moz-full-screen & {
+		display: inline;
+	}
+	.MathLib_container:-ms-full-screen & {
+		display: inline;
+	}
+	.MathLib_container:full-screen & {
+		display: inline;
+	}
+}
+
+
+
+// States
+.MathLib_menuItem.MathLib_is_disabled {
+	background: white;
+	color: #bbb;
+	
+	:hover > .submenu {
+		display: none;
+	}
+}
+
+.MathLib_is_selectable {
+	@include user-select(text);
+}
+
+.MathLib_is_centered {
+	text-align: center;
+}
+
+.MathLib_is_right {
+	position: absolute;
+	right: 2*$padding;
+}

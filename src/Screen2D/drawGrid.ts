@@ -1,7 +1,7 @@
-// ### Screen.prototype.drawGrid
+// ### Screen2D.prototype.drawGrid
 // Draws the grid.
 //
-// *@returns {screen}*
+// *@returns {Screen2D}*
 var drawGrid = function () {
 	if (!this.screen.grid) {
 		return this;

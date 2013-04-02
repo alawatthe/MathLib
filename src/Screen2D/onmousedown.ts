@@ -4,7 +4,7 @@
 // *@param {event}*
 onmousedown(evt) {
 	// Only start the action if the left mouse button was clicked
-	if (evt.button === 1) {
+	if (evt.button !== 0) {
 		return;
 	}
 

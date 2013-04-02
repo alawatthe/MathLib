@@ -2,8 +2,9 @@
 // This module contains the common methods of all drawing modules.
 
 
-export class Screen {
 
+export class Screen {
+	type = 'screen';
 
 	container: any;
 	figure: any;
@@ -12,182 +13,265 @@ export class Screen {
 	contextMenuOverlay: any;
 	height: number;
 	width: number;
-	uuid: string;
+	origHeight: number;
+	origWidth: number;
+	options: any;
+	renderer: any;
+	element: any;
+	innerHTMLContextMenu: string;
 
+
+	// 3D
+	camera: any;
 
 
 	constructor (id: string, options = {}) {
-		// Remove the uuid when the scoped attribute has enough support.
-		this.uuid = Date.now()+'';
 
-		this.height = (<any>options).height || 500;
-		this.width = (<any>options).width || 500;
+		var _this = this,
+				defaults = {
+					height: 500,
+					width: 500,
+					contextMenu: {
+						screenshot: true,
+						fullscreen: true,
+						grid: true,
+					},
+					figcaption: ''
+				},
+				opts = extendObject(defaults, options),
+				container = document.getElementById(id),
+				innerHTMLContextMenu = '',
+				id = +Date.now(),
+				fullscreenchange,
+				innerHTML,
+				screen;
 
-		var container = document.getElementById(id),
-				screen, // The object to be returned
+
+
+				// Generate the context menu
+				if ((<any>opts).contextMenu) {
+					if ((<any>opts).contextMenu.screenshot) {
+						innerHTMLContextMenu += '<div class="MathLib_screenshot MathLib_menuItem">Save Screenshot</div>';
+					}
+					if ((<any>opts).contextMenu.fullscreen) {
+						innerHTMLContextMenu += '<div class="MathLib_fullscreen MathLib_menuItem"><span class="needs-nofullscreen">Enter Fullscreen</span><span class="needs-fullscreen">Exit Fullscreen</span></div>';
+					}
+
+					if ((<any>opts).contextMenu.grid) {
+						innerHTMLContextMenu += '<div class="MathLib_menuItem MathLib_hasSubmenu">Grid';
+						innerHTMLContextMenu += '<menu class="MathLib_menu MathLib_submenu">';
+
+						innerHTMLContextMenu += [
+								'<div class="MathLib_needs2D">',
+									'<label class="MathLib_menuItem">',
+										'<input type="radio" name="MathLib_grid_type_' + id + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
+									'</label>',
+									'<label class="MathLib_menuItem">',
+										'<input type="radio" name="MathLib_grid_type_' + id + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
+									'</label>',
+									'<label class="MathLib_menuItem">',
+										'<input type="radio" name="MathLib_grid_type_' + id + '" class="MathLib_radio MathLib_grid_type" value="none">none',
+									'</label>',
+								'</div>'
+						].join('');
+						innerHTMLContextMenu += '<div class="MathLib_needs3D MathLib_menuItem MathLib_is_disabled" style="font-size: 0.7em">Gridoptions for 3D are coming soon.</div>';
+						/*
+						innerHTMLContextMenu += [
+								'<div class="MathLib_needs3D">',
+									'<div class="MathLib_menuItem MathLib_is_disabled">xy-plane</div>',
+									'<label class="MathLib_menuItem">',
+										'<input type="radio" name="MathLib_grid_type_xy' + id + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
+									'</label>',
+									'<label class="MathLib_menuItem">',
+										'<input type="radio" name="MathLib_grid_type_xy' + id + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
+									'</label>',
+									'<label class="MathLib_menuItem">',
+										'<input type="radio" name="MathLib_grid_type_xy' + id + '" class="MathLib_radio MathLib_grid_type" value="none">none',
+									'</label>'
+						].join('');
+						innerHTMLContextMenu += [
+									'<div class="MathLib_menuItem MathLib_is_disabled">xz-plane</div>',
+									'<label class="MathLib_menuItem">',
+										'<input type="radio" name="MathLib_grid_type_xz' + id + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
+									'</label>',
+									'<label class="MathLib_menuItem">',
+										'<input type="radio" name="MathLib_grid_type_xz' + id + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
+									'</label>',
+									'<label class="MathLib_menuItem">',
+										'<input type="radio" name="MathLib_grid_type_xz' + id + '" class="MathLib_radio MathLib_grid_type" value="none">none',
+									'</label>'
+						].join('');
+						innerHTMLContextMenu += [
+									'<div class="MathLib_menuItem MathLib_is_disabled">yz-plane</div>',
+									'<label class="MathLib_menuItem">',
+										'<input type="radio" name="MathLib_grid_type_yz' + id + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
+									'</label>',
+									'<label class="MathLib_menuItem">',
+										'<input type="radio" name="MathLib_grid_type_yz' + id + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
+									'</label>',
+									'<label class="MathLib_menuItem">',
+										'<input type="radio" name="MathLib_grid_type_yz' + id + '" class="MathLib_radio MathLib_grid_type" value="none">none',
+									'</label>',
+								'</div>'
+						].join('');
+						*/
+						innerHTMLContextMenu += '</menu></div>';
+					}
+
+					innerHTMLContextMenu += '<hr class="MathLib_separator"><div class="MathLib_is_disabled MathLib_menuItem MathLib_is_centered" style="font-size:0.83em">Plot generated by MathLib.js</div>';
+				}	
+
+
+
 				innerHTML = [
+					// The figure contains the plot and the caption
+					'<figure class="MathLib_figure">',
 
-					// Construct the Mark-Up
-					// Scoped styles
-					'<style scoped>',
-						'.MathLib_figure_'+this.uuid+'{margin: 1em auto; display: -webkit-flex; -webkit-flex-direction: column; -webkit-flex-wrap: nowrap; -webkit-justify-content: center; -webkit-align-content: center; -webkit-align-items: center;}',
-						'.MathLib_figcaption_'+this.uuid+' {font-family: Helvetica, sans-serif; font-size: 1em; color: #444; text-align: center; margin: 1em}',
-						'.MathLib_wrapper_'+this.uuid+' {width: '+this.width+'px; height: '+this.height+'px; position: relative;}',
-						'.MathLib_screen_'+this.uuid+' {width: '+this.width+'px; height: '+this.height+'px; position: absolute;}',
-						'.MathLib_contextMenuOverlay_'+this.uuid+' {display: none; position: fixed; top: 0; left: 0; z-index:100; width: 100vw; height: 100vh}',
-						'.MathLib_contextMenu_'+this.uuid+' {',
-							'position: relative;',
-							'top: 200px;',
-							'left: 200px;',
-							'z-index:1001;',
-							'padding: 5px 0 5px 0;',
-							'width: 200px;',
-							'border: 1px solid #ccc;',
-							'border-radius: 5px;',
-							'background: #FFFFFF;',
-							'box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);',
-							'font-family: Helvetica;',
-							'list-style-type: none;',
-						'}',
-						'.MathLib_contextMenu_item_'+this.uuid+' {',
-							'padding-left: 20px;',
-							'border-top: 1px solid transparent;',
-							'border-bottom: 1px solid transparent;',
-							'-webkit-user-select: none;',
-						'}',
-						'.MathLib_contextMenu_item_'+this.uuid+':hover {',
-							'border-top: 1px solid #5b82e8;',
-							'border-bottom: 1px solid #4060a7;',
-							'background-color: #658bf1;',
-							// 'background-image: -webkit-gradient(linear, left top, left bottom, from(#658bf1), to(#2a63ee));',
-							// 'background-image: -webkit-linear-gradient(top, #658bf1, #2a63ee);',
-							// 'background-image:    -moz-linear-gradient(top, #658bf1, #2a63ee);',
-							// 'background-image:     -ms-linear-gradient(top, #658bf1, #2a63ee);',
-							// 'background-image:      -o-linear-gradient(top, #658bf1, #2a63ee);',
-							'background-image:         linear-gradient(to bottom, #658bf1, #2a63ee);',
+						// The canvas or SVG element will be inserted here
+						'<div class="MathLib_wrapper" style="width: '+opts.width+'px; height: '+opts.height+'px"></div>',
 
-							'color: white;',
-						'}',
-						'.MathLib_contextMenu_item_'+this.uuid+' > .MathLib_contextMenu_'+this.uuid+' {',
-							'display: none;',
-							'position: absolute;',
-							'left: 200px;',
-							'top: 19px;',
-						'}',
-						'.MathLib_contextMenu_item_'+this.uuid+':hover > .MathLib_contextMenu_'+this.uuid+' {',
-							'display: block;',
-							'color: #000000;',
-						'}',
-					'</style>',
-
-					// The figure
-					'<figure class="MathLib_figure_'+this.uuid+'">',
-
-					// The canvas or SVG element will be inserted here
-					'<div class="MathLib_wrapper_'+this.uuid+'"></div>',
-
-					// Add the optional figcaption
-					(<any>options).figcaption ? '<figcaption class="MathLib_figcaption_'+this.uuid+'">'+(<any>options).figcaption+'</figcaption>' : '',
+						// Add the optional figcaption
+						(<any>opts).figcaption ? '<figcaption class="MathLib_figcaption">'+(<any>opts).figcaption+'</figcaption>' : '',
 
 					'</figure>',
 
 					// The context menu
-					'<div class="MathLib_contextMenuOverlay_'+this.uuid+'">',
-						'<ul class="MathLib_contextMenu_'+this.uuid+'">',
-							'<li class="MathLib_contextMenu_ite_'+this.uuid+'m" id="MathLib_screenshot_item">Save screenshot</li>',
-							'<li class="MathLib_contextMenu_item_'+this.uuid+'">Options',
-								'<ul class="MathLib_contextMenu_'+this.uuid+'">',
-									'<li class="MathLib_contextMenu_item_'+this.uuid+'">Axis',
-									'<ul class="MathLib_contextMenu_'+this.uuid+'">',
-										'<li class="MathLib_contextMenu_item">Axis1</li>',
-										'<li class="MathLib_contextMenu_item">Axis2</li>',
-									'</ul>',
-									'</li>',
-									'<li class="MathLib_contextMenu_item">Grid',
-										'<ul class="MathLib_contextMenu">',
-											'<li class="MathLib_contextMenu_item">Grid1</li>',
-											'<li class="MathLib_contextMenu_item">Grid2</li>',
-										'</ul>',
-									'</li>',
-									'</li>',
-								'</ul>',
-							'</li>',
-							'<li class="MathLib_contextMenu_item" id="MathLib_fullscreen_item">Enter Fullscreen</li>',
-						'</ul>',
+					'<div class="MathLib_contextMenuOverlay">',
+						'<menu class="MathLib_menu MathLib_mainmenu">',
+							innerHTMLContextMenu,
+						'</menu>',
 					'</div>'
 				].join('');
 
-		// Put the HTMl in the container
+
 		container.innerHTML = innerHTML;
+		container.classList.add('MathLib_container');
 
 
-
+		this.height = opts.height;
+		this.width = opts.width;
 		this.container = container;
-		this.figure = container.getElementsByClassName('MathLib_figure_'+this.uuid)[0];
-		this.wrapper = container.getElementsByClassName('MathLib_wrapper_'+this.uuid)[0];
-		this.contextMenu = container.getElementsByClassName('MathLib_contextMenu_'+this.uuid)[0];
-		this.contextMenuOverlay = container.getElementsByClassName('MathLib_contextMenuOverlay_'+this.uuid)[0];
+		this.figure = container.getElementsByClassName('MathLib_figure')[0];
+		this.wrapper = container.getElementsByClassName('MathLib_wrapper')[0];
+		this.contextMenu = container.getElementsByClassName('MathLib_mainmenu')[0];
+		this.contextMenuOverlay = container.getElementsByClassName('MathLib_contextMenuOverlay')[0];
+		this.innerHTMLContextMenu = innerHTMLContextMenu;
 
 
+		if ((<any>options).contextMenu) {
+			this.wrapper.oncontextmenu = function (evt) {
+				_this.oncontextmenu(evt);
+			};
+		
+			if ((<any>opts).contextMenu.screenshot) {
+				this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function () {
+					var dataURI,
+							a = document.createElement('a');
 
-		/* The context menu will be reenabled soon.
-		var _this = this;
-		this.wrapper.oncontextmenu = function (evt) {
-			_that.oncontextmenu(evt);
+					if (_this.options.renderer === 'Canvas' && _this.type === 'screen2D') {
+						var canvas = document.createElement('canvas'),
+								ctx = (<any>canvas).getContext('2d');
+
+						(<any>canvas).height = _this.height;
+						(<any>canvas).width = _this.width;
+
+						ctx.drawImage((<any>_this).layer.back.element, 0, 0);
+						ctx.drawImage((<any>_this).layer.grid.element, 0, 0);
+						ctx.drawImage((<any>_this).layer.axis.element, 0, 0);
+						ctx.drawImage((<any>_this).layer.main.element, 0, 0);
+
+
+						dataURI = (<any>canvas).toDataURL("image/png");
+						if ('download' in a) {
+							(<any>a).href = dataURI;
+							(<any>a).download = 'plot.png';
+							(<any>a).click();
+						}
+						else {
+							window.location.href = dataURI.replace("image/png", "image/octet-stream");
+						}
+					}
+
+					if (_this.options.renderer === 'WebGL' && _this.type === 'screen3D') {
+						dataURI = _this.element.toDataURL("image/png");
+						if ('download' in a) {
+							(<any>a).href = dataURI;
+							(<any>a).download = 'plot.png';
+							(<any>a).click();
+						}
+						else {
+							window.location.href = dataURI.replace("image/png", "image/octet-stream");
+						}
+					}
+
+					else if (_this.options.renderer === 'SVG') {
+						dataURI = 'data:image/svg+xml,' + _this.element.parentElement.innerHTML;
+
+						if ('download' in a) {
+							(<any>a).href = dataURI;
+							(<any>a).download = 'plot.svg';
+							(<any>a).click();
+						}
+						else {
+							window.location.href = dataURI.replace("image/svg+xml", "image/octet-stream");
+						}
+					}
+				}
+			}
+
+
+			if ((<any>opts).contextMenu.fullscreen) {
+				this.contextMenu.getElementsByClassName('MathLib_fullscreen')[0].onclick = function () {
+					if ((<any>document).fullscreenElement) {
+						(<any>document).exitFullScreen();
+					}
+					else {
+						_this.container.requestFullScreen();
+					}
+				};
+			}
+
+			if ((<any>opts).contextMenu.grid) {
+				this.contextMenu.getElementsByClassName('MathLib_grid_type')[0].onchange = function () {
+					(<any>_this).grid.type = 'cartesian';
+					(<any>_this).draw();
+				}
+				this.contextMenu.getElementsByClassName('MathLib_grid_type')[1].onchange = function () {
+					(<any>_this).grid.type = 'polar';
+					(<any>_this).draw();
+				}
+				this.contextMenu.getElementsByClassName('MathLib_grid_type')[2].onchange = function () {
+					(<any>_this).grid.type = false;
+					(<any>_this).draw();
+				}
+			}
+
+
 		}
 
-		document.getElementById('MathLib_fullscreen_item'+this.uuid).onclick = function (){
-			_that.enterFullscreen();
-		}*/
-	}
 
 
-/*  The fullscreen methods will also be reenabled soon
-	/ / Firefox support will be enabled when FF is supporting the fullscreenchange event
-	/ / see https:/ /bugzilla.mozilla.org/show_bug.cgi?id=724816
-
-	if (document.webkitCancelFullScreen || document.mozCancelFullScreen) {
-		/ / The fullscreen menuitem
-		/ / (Only enabled if the browser supports fullscreen mode)
-		var fullscreen = document.createElement('li');
-		fullscreen.className = 'MathLib menuitem';
-		fullscreen.innerHTML = 'View full screen';
-		fullscreen.onclick = function (evt) {
-			if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
-				screen.enterFullscreen();
+		fullscreenchange = function (evt) {
+			if ((<any>document).fullscreenElement) {
+				_this.origWidth = _this.width;
+				_this.origHeight = _this.height;
+				(<any>_this).resize(window.outerWidth, window.outerHeight);
 			}
 			else {
-				screen.exitFullscreen();
-			}
-
-			screen.contextmenuWrapper.style.setProperty('display', 'none');
-		};
-		contextmenu.appendChild(fullscreen);
-
-
-		/ / Handle the fullscreenchange event
-		var fullscreenchange = function (evt) {
-			if ((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
-				fullscreen.innerHTML = 'View Fullscreen';
-				screen.resize(screen.width, screen.height);
-				screen.curTranslateX = screen.origTranslateX;
-				screen.curTranslateY = screen.origTranslateY;
-				screen.redraw();
-			}
-			else {
-				fullscreen.innerHTML = 'Exit Fullscreen';
-				screen.resize(window.outerWidth, window.outerHeight);
-				screen.curTranslateX = window.outerWidth/2;
-				screen.curTranslateY = window.outerHeight/2;
-				screen.redraw();
+				(<any>_this).resize(_this.origWidth, _this.origHeight);
+				delete _this.origWidth;
+				delete _this.origHeight;
 			}
 		};
 
-		if (document.webkitCancelFullScreen) {
-			screen.screenWrapper.addEventListener('webkitfullscreenchange', fullscreenchange, false);
+		if ('onfullscreenchange' in this.container) {
+			this.container.addEventListener('fullscreenchange', fullscreenchange);
 		}
-		else if (document.mozCancelFullScreen) {
-			screen.screenWrapper.addEventListener('mozfullscreenchange', fullscreenchange, false);
+		else if ('onmozfullscreenchange' in this.container) {
+			this.container.addEventListener('mozfullscreenchange', fullscreenchange);
 		}
+		else if ('onwebkitfullscreenchange' in this.container) {
+			this.container.addEventListener('webkitfullscreenchange', fullscreenchange);
+		}
+
 	}
-*/

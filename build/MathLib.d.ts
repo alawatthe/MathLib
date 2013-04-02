@@ -19,6 +19,7 @@ module MathLib {
 		static write(id: string, math: string): void;
 	}
 	class Screen {
+		public type: string;
 		public container: any;
 		public figure: any;
 		public wrapper: any;
@@ -26,8 +27,15 @@ module MathLib {
 		public contextMenuOverlay: any;
 		public height: number;
 		public width: number;
-		public uuid: string;
+		public origHeight: number;
+		public origWidth: number;
+		public options: any;
+		public renderer: any;
+		public element: any;
+		public innerHTMLContextMenu: string;
+		public camera: any;
 		constructor(id: string, options?: {});
+		public oncontextmenu(evt): void;
 	}
 	class Layer {
 		public ctx: any;
@@ -48,6 +56,7 @@ module MathLib {
 		constructor(screen, id: string, zIndex);
 	}
 	class Screen2D extends Screen {
+		public type: string;
 		public applyTransformation: any;
 		public background: any;
 		public renderer: any;
@@ -74,6 +83,7 @@ module MathLib {
 		public interaction: any;
 		public zoomSpeed: any;
 		constructor(id: string, options?: {});
+		public resize(width: number, height: number): Screen2D;
 		public getEventPoint(evt);
 		public getLineEndPoints(l);
 		public onmousedown(evt): void;
@@ -82,10 +92,18 @@ module MathLib {
 		public onmousewheel(evt): void;
 	}
 	class Screen3D extends Screen {
+		public type: string;
+		public grid: any;
+		public axis: any;
+		public render: any;
+		public camera: any;
+		public element: any;
 		public scene: any;
 		constructor(id: string, options?: {});
+		public drawGrid(): Screen3D;
 		public parametricPlot3D(f, options): Screen3D;
 		public plot3D(f, options): Screen3D;
+		public resize(width: number, height: number): Screen3D;
 		public surfacePlot3D(f, options): Screen3D;
 	}
 	class Vector {

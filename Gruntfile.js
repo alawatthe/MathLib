@@ -3,10 +3,13 @@ module.exports = function (grunt) {
 	'use strict';
 	
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-contrib-compass');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	grunt.loadNpmTasks('grunt-docco');
 	grunt.loadNpmTasks('grunt-typescript');
@@ -18,9 +21,6 @@ module.exports = function (grunt) {
 		
 
 		// This is a nasty hack with all the bracket files.
-		// Revisit this once
-		//   https://github.com/gruntjs/grunt-contrib-concat/pull/11
-		// is done. 
 		concat: {
 			MathLib: {
 				src: ['src/meta/head.ts',
@@ -42,9 +42,7 @@ module.exports = function (grunt) {
 							'src/Functn/functnList.ts',
 
 							'src/Screen/init.ts',
-							//'src/screen/enterFullscreen.ts',
-							//'src/screen/exitFullscreen.ts',
-							//'src/screen/oncontextmenu.ts',
+							'src/screen/!(init).ts',
 							'src/meta/bracket2.ts',
 
 							'src/Layer/init.ts',
@@ -55,6 +53,7 @@ module.exports = function (grunt) {
 							'src/Screen2D/canvas.ts',
 							'src/Screen2D/svg.ts',
 							'src/Screen2D/init.ts',
+							'src/Screen2D/resize.ts',
 							'src/Screen2D/getEventPoint.ts',
 							'src/Screen2D/getLineEndPoints.ts',
 							'src/Screen2D/onmousedown.ts',
@@ -184,6 +183,9 @@ module.exports = function (grunt) {
 							'test/Rational/init.js',
 							'test/Rational/!(init).js',
 
+							'test/Screen/init.js',
+							'test/Screen/!(init).js',
+
 							'test/Set/set.js',
 							
 							'test/Vector/init.js',
@@ -201,6 +203,10 @@ module.exports = function (grunt) {
 			concat: {
 				files: ['src/*/*.ts'],
 				tasks: ['concat', 'typescript', 'uglify']
+			},
+			compass: {
+				files: ['src/scss/MathLib.scss'],
+				tasks: ['compass']
 			}
 		},
 		
@@ -241,6 +247,30 @@ module.exports = function (grunt) {
 				}
 			}
 		},
+
+		cssmin: {
+			MathLib: {
+				options: {
+					banner: banner
+				},
+				files: {
+					'build/MathLib.min.css': ['build/MathLib.css']
+				}
+			}
+		},
+
+
+		// SCSS
+		compass: {
+			MathLib: {
+				options: {
+					sassDir: 'src/scss/',
+					cssDir: 'build/',
+					outputStyle: 'expanded',
+					noLineComments: true
+				}
+			}
+		},
 		
 		// Documentation
 		docco: {
@@ -269,4 +299,5 @@ module.exports = function (grunt) {
 	});
 
 	grunt.registerTask('default', ['concat', 'typescript', 'uglify', 'qunit']);
+	grunt.registerTask('release', ['default', 'cssmin', 'docco']);
 };

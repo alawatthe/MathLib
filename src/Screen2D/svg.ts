@@ -417,6 +417,40 @@ var svg = {
 		}
 
 
+		svgPoint.addEventListener('contextmenu', function (evt) {
+			screen.interaction.type = 'contextmenu';
+			var x = (<any>svgPoint).cx.baseVal.value,
+					y = (<any>svgPoint).cy.baseVal.value;
+
+			screen.contextMenu.innerHTML = 
+				'<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_is_disabled MathLib_is_centered">Point</div>' +
+				'<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_hasSubmenu">Coordinates' +
+						'<menu class="MathLib_menu MathLib_submenu">' +
+						'<div class="MathLib_menuItem">cartesian: <span class="MathLib_is_selectable MathLib_is_right">(' + x.toFixed(3) + ', ' + y.toFixed(3) + ')</span></div>' +
+						'<div class="MathLib_menuItem">polar: <span class="MathLib_is_selectable MathLib_is_right">(' + MathLib.hypot(x, y).toFixed(3) + ', ' + Math.atan2(y, x).toFixed(3) + ')</span></div>' +
+					'</menu>' +
+				'</div>' +
+				'<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_hasSubmenu">Options' +
+					'<menu class="MathLib_menu MathLib_submenu">' +
+						'<div class="MathLib_menuItem">Moveable:' +
+							'<input type="checkbox" class="MathLib_is_right">' +
+						'</div>' +
+						'<div class="MathLib_menuItem">Size:' +
+							'<input type="spinner" class="MathLib_is_right">' +
+						'</div>' +
+						'<div class="MathLib_menuItem">Fill color:' +
+							'<input type="color" class="MathLib_is_right">' +
+						'</div>' +
+						'<div class="MathLib_menuItem">Line color:' +
+							'<input type="color" class="MathLib_is_right">' +
+						'</div>' +
+					'</menu>' +
+				'</div>' +
+				'<hr class="MathLib_separator MathLib_temporaryMenuItem">' +
+				screen.contextMenu.innerHTML;
+		});
+
+
 		if (!redraw) {
 			this.stack.push({
 				type: 'point',
@@ -438,10 +472,10 @@ var svg = {
 	// *@param {object}* [options] Optional drawing options  
 	// *@returns {screen}* Returns the screen
 	text: function (str, x, y, options = {}, redraw = false) {
-	  var screen = this.screen,
-	      svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
-		    ctx = this.ctx,
-	      prop, opts;
+		var screen = this.screen,
+				svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
+				ctx = this.ctx,
+				prop, opts;
 		var tf = this.screen.transformation;
 
 		svgText.textContent = str;
@@ -473,6 +507,6 @@ var svg = {
 			});
 		}
 
-	  return this;
+		return this;
 	}
 }

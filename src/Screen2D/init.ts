@@ -3,6 +3,7 @@
 
 
 export class Screen2D extends Screen {
+	type = 'screen2D';
 
 	applyTransformation: any;
 	background: any;
@@ -43,7 +44,7 @@ export class Screen2D extends Screen {
 
 
 	constructor (id: string, options = {}) {
-		super(id, options)
+		super(id, options);
 		var defaults = {
 					axis: {
 						color: 0x000000,
@@ -66,22 +67,20 @@ export class Screen2D extends Screen {
 					range: {x: 1, y: 1},
 					figcaption: '',
 					renderer: 'Canvas',
-					transformation: new MathLib.Matrix([[Math.min(this.height, this.width)/2,0,this.width/2],
-																							[0,-Math.min(this.height, this.width)/2,this.height/2],
-																							[0,0,1]])
+					transformation: new MathLib.Matrix([[Math.min(this.height, this.width) / 2, 0, this.width / 2],
+																							[0, -Math.min(this.height, this.width) / 2, this.height / 2],
+																							[0, 0, 1]])
 				},
 				opts = extendObject(defaults, options),
 				element,
 				transformation = opts.transformation,
 				_this = this;
 
-
+		this.options = opts;
 		this.background = opts.background;
-		this.renderer = opts.renderer;
 		this.interaction = opts.interaction;
 		this.axis = opts.axis;
 		this.grid = opts.grid;
-
 
 
 	
@@ -154,7 +153,7 @@ export class Screen2D extends Screen {
 		if (opts.renderer === 'SVG') {
 			// Create the canvas
 			element = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-			element.classList.add('MathLib_screen_'+this.uuid);
+			element.classList.add('MathLib_screen');
 			element.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 			element.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 			element.setAttribute('height', this.height + 'px');
@@ -190,7 +189,7 @@ export class Screen2D extends Screen {
 
 		// Create the Layers
 		// =================
-		this.layer = []
+		this.layer = [];
 		this.layer.back = new MathLib.Layer(this, 'back', 0);
 		this.layer.grid = new MathLib.Layer(this, 'grid', 1);
 		this.layer.axis = new MathLib.Layer(this, 'axis', 2);
@@ -304,8 +303,10 @@ export class Screen2D extends Screen {
 
 		}
 
+		this.container.classList.add('MathLib_screen2D');
 
-	
+		var gridType = this.grid.type ? this.grid.type : 'none';
+		this.contextMenu.querySelectorAll('.MathLib_grid_type[value=' + gridType + ']')[0].checked = true;
 
 
 		this.draw();
