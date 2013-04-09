@@ -10,10 +10,10 @@ onmouseup(evt) {
 	evt.returnValue = false;
 
 	// Go back to normal mode
-	if(this.interaction.type === 'pan') {
-		delete this.interaction.type;
-		delete this.interaction.startPoint;
-		delete this.interaction.startTransformation;
+	if(this.options.interaction.type === 'pan') {
+		delete this.options.interaction.type;
+		delete this.options.interaction.startPoint;
+		delete this.options.interaction.startTransformation;
 	}
 
 }

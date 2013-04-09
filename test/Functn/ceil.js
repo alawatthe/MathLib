@@ -8,11 +8,11 @@ test('.ceil()', 7, function () {
 	// Spec. 3: MathLib.ceil(-0) = -0
 	equal(MathLib.isNegZero(MathLib.ceil(-0)), true, 'Spec. 3: MathLib.ceil(-0) = -0');
 
-	// Spec. 4: MathLib.ceil(+&infin;) = +&infin;
-	equal(MathLib.ceil(+Infinity), +Infinity, 'Spec. 4: MathLib.ceil(+&infin;) = +&infin;');
+	// Spec. 4: MathLib.ceil(+∞) = +∞
+	equal(MathLib.ceil(+Infinity), +Infinity, 'Spec. 4: MathLib.ceil(+∞) = +∞');
 
-	// Spec. 5: MathLib.ceil(-&infin;) = -&infin;
-	equal(MathLib.ceil(-Infinity), -Infinity, 'Spec. 5: MathLib.ceil(-&infin;) = -&infin;');
+	// Spec. 5: MathLib.ceil(-∞) = -∞
+	equal(MathLib.ceil(-Infinity), -Infinity, 'Spec. 5: MathLib.ceil(-∞) = -∞');
 
 	// Spec. 6: otherwise MathLib.ceil(x) = ⎡x⎤
 	equal(MathLib.ceil(2.2), 3, 'Spec. 6: otherwise MathLib.ceil(x) =  ⎡x⎤');

@@ -8,11 +8,11 @@ test('.sin()', 7, function () {
 	// Spec. 3: MathLib.sin(-0) = -0
 	equal(MathLib.isNegZero(MathLib.sin(-0)), true, 'Spec. 3: MathLib.sin(-0) = -0');
 
-	// Spec. 4: MathLib.sin(+&infin;) = NaN
-	equal(MathLib.isNaN(MathLib.sin(+Infinity)), true, 'Spec. 4: MathLib.sin(+&infin;) = NaN');
+	// Spec. 4: MathLib.sin(+∞) = NaN
+	equal(MathLib.isNaN(MathLib.sin(+Infinity)), true, 'Spec. 4: MathLib.sin(+∞) = NaN');
 
-	// Spec. 5: MathLib.sin(-&infin;) = NaN
-	equal(MathLib.isNaN(MathLib.sin(-Infinity)), true, 'Spec. 5: MathLib.sin(-&infin;) = NaN');
+	// Spec. 5: MathLib.sin(-∞) = NaN
+	equal(MathLib.isNaN(MathLib.sin(-Infinity)), true, 'Spec. 5: MathLib.sin(-∞) = NaN');
 
 	// Spec. 6: otherwise MathLib.sin(x) = sine of x
 	equal(MathLib.sin(Math.PI / 2), 1, 'Spec. 6: otherwise MathLib.sin(x) = sine of x');

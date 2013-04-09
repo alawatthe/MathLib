@@ -3,16 +3,16 @@ test('.arsech()', 10, function () {
 	equal(MathLib.isNaN(MathLib.arsech(NaN)), true, 'Spec. 1: MathLib.arsech(NaN) = NaN');
 
 	// Spec. 2: MathLib.arsech(+0) = +Infinity
-	equal(MathLib.arsech(+0), Infinity, 'Spec. 2: MathLib.arsech(+0) = +&infin;');
+	equal(MathLib.arsech(+0), Infinity, 'Spec. 2: MathLib.arsech(+0) = +∞');
 
 	// Spec. 3: MathLib.arsech(-0) = NaN
 	equal(MathLib.isNaN(MathLib.arsech(-0)), true, 'Spec. 3: MathLib.arsech(-0) = NaN');
 
-	// Spec. 4: MathLib.arsech(+&infin;) = NaN
-	equal(MathLib.isNaN(MathLib.arsech(Infinity)), true, 'Spec. 4: MathLib.arsech(+&infin;) = NaN');
+	// Spec. 4: MathLib.arsech(+∞) = NaN
+	equal(MathLib.isNaN(MathLib.arsech(Infinity)), true, 'Spec. 4: MathLib.arsech(+∞) = NaN');
 
-	// Spec. 5: MathLib.arsech(-&infin;) = NaN
-	equal(MathLib.isNaN(MathLib.arsech(-Infinity)), true, 'Spec. 5: MathLib.arsech(-&infin;) = NaN');
+	// Spec. 5: MathLib.arsech(-∞) = NaN
+	equal(MathLib.isNaN(MathLib.arsech(-Infinity)), true, 'Spec. 5: MathLib.arsech(-∞) = NaN');
 
 	// Spec. 6: MathLib.arsech(1) = +0;
 	equal(MathLib.isPosZero(MathLib.arsech(1)), true, 'Spec. 6: MathLib.arsech(1) = +0');

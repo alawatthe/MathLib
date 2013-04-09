@@ -7,11 +7,11 @@ test('.arcsec()', 9, function () {
 	equal(MathLib.isNaN(MathLib.arcsec(-0)), true, 'Spec. 2: MathLib.arcsec(x) = NaN (if -1<x<1)');
 	equal(MathLib.isNaN(MathLib.arcsec(0.5)), true, 'Spec. 2: MathLib.arcsec(x) = NaN (if -1<x<1)');
 
-	// Spec. 3: MathLib.arcsec(+&infin;) = &pi;/2
-	equal(MathLib.arcsec(+Infinity), Math.PI / 2, 'Spec. 3: MathLib.arcsec(+&infin;) = &pi;/2');
+	// Spec. 3: MathLib.arcsec(+∞) = π/2
+	equal(MathLib.arcsec(+Infinity), Math.PI / 2, 'Spec. 3: MathLib.arcsec(+∞) = π/2');
 
-	// Spec. 4: MathLib.arcsec(-&infin;) = &pi;/2
-	equal(MathLib.arcsec(-Infinity), Math.PI / 2, 'Spec. 4: MathLib.arcsec(-&infin;) = &pi;/2');
+	// Spec. 4: MathLib.arcsec(-∞) = π/2
+	equal(MathLib.arcsec(-Infinity), Math.PI / 2, 'Spec. 4: MathLib.arcsec(-∞) = π/2');
 
 	// Spec. 5: MathLib.arcsec(1) = +0
 	equal(MathLib.isPosZero(MathLib.arcsec(1)), true, 'Spec. 5: otherwise MathLib.arcsec(1) = +0');

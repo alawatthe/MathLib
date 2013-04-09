@@ -1,7 +1,3 @@
-
-
-
-
 var canvas = {
 	normalizeOptions: function (opt) {
 		var res:any = {};

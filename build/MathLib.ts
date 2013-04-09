@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2013-04-03  
+// v0.3.5 - 2013-04-09  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -69,6 +69,7 @@ module MathLib {
 	MathLib.eulerMascheroni = 0.5772156649015329;
 	MathLib.goldenRatio = 1.618033988749895;
 	MathLib.pi = Math.PI;
+
 	MathLib.isArrayLike = function (x) {
 		return typeof x === 'object' && 'length' in x;
 	};
@@ -888,7 +889,7 @@ functnPrototype.toLaTeX = function(bvar = '') {
 //
 // *@returns {string}*
 /*functnPrototype.toMathML = function() {
-	// Get the content MathML and convert it to presentation MathML
+	Get the content MathML and convert it to presentation MathML
 	return this.contentMathML.toMathML();
 };*/
 
@@ -968,7 +969,7 @@ var unaryFunctions = {
 	},
 	arcosh: (<any>Math).acosh || function (x){
 		return Math.log(x + Math.sqrt(x * x - 1));
-	},  
+	},
 	arcoth: function (x) {
 		// Handle ±∞
 		if (!MathLib.isFinite(x)) {
@@ -1850,10 +1851,11 @@ export class Screen {
 
 				// Generate the context menu
 				if ((<any>opts).contextMenu) {
-					if ((<any>opts).contextMenu.screenshot) {
+					// FIXME: Creating screenshots in Opera is not possible
+					if ((<any>opts).contextMenu.screenshot && !('opera' in window)) {
 						innerHTMLContextMenu += '<div class="MathLib_screenshot MathLib_menuItem">Save Screenshot</div>';
 					}
-					if ((<any>opts).contextMenu.fullscreen) {
+					if ((<any>opts).contextMenu.fullscreen && 'requestFullScreen' in document.body) {
 						innerHTMLContextMenu += '<div class="MathLib_fullscreen MathLib_menuItem"><span class="needs-nofullscreen">Enter Fullscreen</span><span class="needs-fullscreen">Exit Fullscreen</span></div>';
 					}
 
@@ -1928,7 +1930,10 @@ export class Screen {
 					'<figure class="MathLib_figure">',
 
 						// The canvas or SVG element will be inserted here
-						'<div class="MathLib_wrapper" style="width: '+opts.width+'px; height: '+opts.height+'px"></div>',
+						'<div class="MathLib_wrapper" style="width: '+opts.width+'px; height: '+opts.height+'px">',
+			 			'<div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>',
+			 			'Please update your browser to see the plot.</div>',
+						'</div>',
 
 						// Add the optional figcaption
 						(<any>opts).figcaption ? '<figcaption class="MathLib_figcaption">'+(<any>opts).figcaption+'</figcaption>' : '',
@@ -1950,6 +1955,7 @@ export class Screen {
 
 		this.height = opts.height;
 		this.width = opts.width;
+		this.options = opts;
 		this.container = container;
 		this.figure = container.getElementsByClassName('MathLib_figure')[0];
 		this.wrapper = container.getElementsByClassName('MathLib_wrapper')[0];
@@ -1963,7 +1969,7 @@ export class Screen {
 				_this.oncontextmenu(evt);
 			};
 		
-			if ((<any>opts).contextMenu.screenshot) {
+			if ((<any>opts).contextMenu.screenshot && !('opera' in window)) {
 				this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function () {
 					var dataURI,
 							a = document.createElement('a');
@@ -2020,7 +2026,7 @@ export class Screen {
 			}
 
 
-			if ((<any>opts).contextMenu.fullscreen) {
+			if ((<any>opts).contextMenu.fullscreen && 'requestFullScreen' in document.body) {
 				this.contextMenu.getElementsByClassName('MathLib_fullscreen')[0].onclick = function () {
 					if ((<any>document).fullscreenElement) {
 						(<any>document).exitFullScreen();
@@ -2033,15 +2039,15 @@ export class Screen {
 
 			if ((<any>opts).contextMenu.grid) {
 				this.contextMenu.getElementsByClassName('MathLib_grid_type')[0].onchange = function () {
-					(<any>_this).grid.type = 'cartesian';
+					(<any>_this).options.grid.type = 'cartesian';
 					(<any>_this).draw();
 				}
 				this.contextMenu.getElementsByClassName('MathLib_grid_type')[1].onchange = function () {
-					(<any>_this).grid.type = 'polar';
+					(<any>_this).options.grid.type = 'polar';
 					(<any>_this).draw();
 				}
 				this.contextMenu.getElementsByClassName('MathLib_grid_type')[2].onchange = function () {
-					(<any>_this).grid.type = false;
+					(<any>_this).options.grid.type = false;
 					(<any>_this).draw();
 				}
 			}
@@ -2067,6 +2073,10 @@ export class Screen {
 		if ('onfullscreenchange' in this.container) {
 			this.container.addEventListener('fullscreenchange', fullscreenchange);
 		}
+
+		// The mozfullscreenchange event is not firing at all.
+		// Therefore the screen is not resized when going fullscreen.
+		// FIXME: are there any workarounds?
 		else if ('onmozfullscreenchange' in this.container) {
 			this.container.addEventListener('mozfullscreenchange', fullscreenchange);
 		}
@@ -2185,14 +2195,14 @@ export class Layer {
 							right   = (screen.width  - screen.translation.x) / screen.scale.x;
 
 					// Draw the background
-					this.ctx.fillStyle = colorConvert(screen.background);
+					this.ctx.fillStyle = colorConvert(screen.options.background);
 					this.ctx.fillRect(left, bottom, right-left, top-bottom);
 
 					canvas.draw.call(_this);
 				}
 			}
 			else if (id === 'grid') {
-				this.ctx.strokeStyle = colorConvert(screen.grid.color) || '#cccccc';
+				this.ctx.strokeStyle = colorConvert(screen.options.grid.color) || '#cccccc';
 				this.ctx.fillStyle = 'rgba(255,255,255,0)';
 
 				
@@ -2202,7 +2212,7 @@ export class Layer {
 				}
 			}
 			else if (id === 'axis') {
-				this.ctx.strokeStyle = colorConvert(screen.axis.color) || '#000000';
+				this.ctx.strokeStyle = colorConvert(screen.options.axis.color) || '#000000';
 				
 				this.draw = function (){
 					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
@@ -2252,7 +2262,7 @@ export class Layer {
 				}
 			}
 			else if (id === 'grid') {
-				ctx.setAttribute('stroke', colorConvert(screen.grid.color) || '#cccccc');
+				ctx.setAttribute('stroke', colorConvert(screen.options.grid.color) || '#cccccc');
 
 				this.draw = function (){
 					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
@@ -2261,7 +2271,7 @@ export class Layer {
 
 			}
 			else if (id === 'axis') {
-				ctx.setAttribute('stroke', colorConvert(screen.axis.color) || '#000000');
+				ctx.setAttribute('stroke', colorConvert(screen.options.axis.color) || '#000000');
 				
 				this.draw = function (){
 					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
@@ -2299,12 +2309,12 @@ export class Layer {
 var drawAxis = function () {
 	var screen = this.screen,
 			options = {
-				stroke: colorConvert(this.screen.axis.color),
+				stroke: colorConvert(this.screen.options.axis.color),
 				'stroke-width': -1/screen.transformation[1][1]
 			},
 			textOptions = {
-				strokeStyle: colorConvert(this.screen.axis.textColor),
-				fillStyle: colorConvert(this.screen.axis.textColor)
+				strokeStyle: colorConvert(this.screen.options.axis.textColor),
+				fillStyle: colorConvert(this.screen.options.axis.textColor)
 			},
 			top     = (              - screen.translation.y) / screen.scale.y,
 			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
@@ -2319,7 +2329,7 @@ var drawAxis = function () {
 			xTick = Math.pow(10, xExp),
 			i;
 
-  if (!this.screen.axis) {
+  if (!this.screen.options.axis) {
 		return this;
 	}
 
@@ -2331,7 +2341,7 @@ var drawAxis = function () {
 
 	// The ticks on the axes
 	// The x axis
-	if(screen.grid.tick) {
+	if(screen.options.grid.tick) {
 		for (i = -yTick; i >= left; i -= yTick) {
 			this.line([[i, -lengthY], [i, lengthY]], false, true);
 		}
@@ -2382,7 +2392,7 @@ var drawAxis = function () {
 //
 // *@returns {Screen2D}*
 var drawGrid = function () {
-	if (!this.screen.grid) {
+	if (!this.screen.options.grid) {
 		return this;
 	}
 
@@ -2396,7 +2406,7 @@ var drawGrid = function () {
 			i;
 
 
-	if (screen.grid.type === 'cartesian') {
+	if (screen.options.grid.type === 'cartesian') {
 
 
 		// The horizontal lines
@@ -2420,11 +2430,11 @@ var drawGrid = function () {
 
 
 	}
-	else if (screen.grid.type === 'polar') {
+	else if (screen.options.grid.type === 'polar') {
 		var max = Math.sqrt(Math.max(top*top, bottom*bottom) + Math.max(left*left, right*right)),
 				min = 0; // improve this estimate
 
-		for (i = 0; i < 2*Math.PI; i += screen.grid.angle) {
+		for (i = 0; i < 2*Math.PI; i += screen.options.grid.angle) {
 			this.line([[0, 0], [max*Math.cos(i), max*Math.sin(i)]], false, true);
 		}
 
@@ -2435,10 +2445,6 @@ var drawGrid = function () {
 
 	return this;
 }
-
-
-
-
 
 
 var canvas = {
@@ -3282,7 +3288,7 @@ var svg = {
 			// mousedown
 			svgPoint.addEventListener('mousedown', 
 				function () {
-					screen.interaction.type = 'move';
+					screen.options.interaction.type = 'move';
 					var invTransformation = screen.transformation.inverse();
 
 					var move = function (evt) {
@@ -3295,7 +3301,7 @@ var svg = {
 							},
 
 							up = function () {
-								screen.interaction.type = '';
+								screen.options.interaction.type = '';
 
 								document.body.removeEventListener('mousemove', move);
 								document.body.removeEventListener('mouseup', up);
@@ -3323,7 +3329,7 @@ var svg = {
 
 
 		svgPoint.addEventListener('contextmenu', function (evt) {
-			screen.interaction.type = 'contextmenu';
+			screen.options.interaction.type = 'contextmenu';
 			var x = (<any>svgPoint).cx.baseVal.value,
 					y = (<any>svgPoint).cy.baseVal.value;
 
@@ -3496,12 +3502,11 @@ export class Screen2D extends Screen {
 				_this = this;
 
 		this.options = opts;
-		this.background = opts.background;
-		this.interaction = opts.interaction;
-		this.axis = opts.axis;
-		this.grid = opts.grid;
+		//this.background = opts.background;
+		//this.interaction = opts.interaction;
 
-
+		// Remove the warning message.
+		this.wrapper.innerHTML = '';
 	
 		this.applyTransformation = function () {};
 
@@ -3534,7 +3539,7 @@ export class Screen2D extends Screen {
 
 
 
-		this.lookAt= {};
+		this.lookAt = {};
 		this.range = {};
 		Object.defineProperty(this.lookAt, 'x', {
 			get: function (){return (_this.width/2 - _this.transformation[0][2])/_this.transformation[0][0];},
@@ -3572,7 +3577,11 @@ export class Screen2D extends Screen {
 		if (opts.renderer === 'SVG') {
 			// Create the canvas
 			element = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-			element.classList.add('MathLib_screen');
+
+			// Safari does not support .classList on SVG elements
+			// This feature has be in webkit since [08/02/12](http://trac.webkit.org/changeset/124499)
+			/* element.classList.add('MathLib_screen'); */
+			element.className.baseVal = 'MathLib_screen';
 			element.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 			element.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 			element.setAttribute('height', this.height + 'px');
@@ -3616,19 +3625,19 @@ export class Screen2D extends Screen {
 
 
 		if (opts.renderer === 'Canvas') {
-			this.layer.main.element.onmouseup      = (evt) => this.onmouseup(evt);
-			this.layer.main.element.onmousedown    = (evt) => this.onmousedown(evt);
-			this.layer.main.element.onmousemove    = (evt) => this.onmousemove(evt);
-			this.layer.main.element.onmousewheel   = (evt) => this.onmousewheel(evt);
+			this.layer.main.element.addEventListener('onmouseup',      (evt) => this.onmouseup(evt), false);
+			this.layer.main.element.addEventListener('onmousedown',    (evt) => this.onmousedown(evt), false);
+			this.layer.main.element.addEventListener('onmousemove',    (evt) => this.onmousemove(evt), false);
+			this.layer.main.element.addEventListener('onmousewheel',   (evt) => this.onmousewheel(evt), false);
 			// For Firefox: [Bug report for the missing onmousewheel method](https://bugzilla.mozilla.org/show_bug.cgi?id=111647)
-			this.layer.main.element.DOMMouseScroll = (evt) => this.onmousewheel(evt); 
+			this.layer.main.element.addEventListener('DOMMouseScroll', (evt) => this.onmousewheel(evt), false);
 		}
 		else if (opts.renderer === 'SVG') {
-			this.wrapper.onmouseup      = (evt) => this.onmouseup(evt);
-			this.wrapper.onmousedown    = (evt) => this.onmousedown(evt);
-			this.wrapper.onmousemove    = (evt) => this.onmousemove(evt);
-			this.wrapper.onmousewheel   = (evt) => this.onmousewheel(evt);
-			this.wrapper.DOMMouseScroll = (evt) => this.onmousewheel(evt);
+			this.wrapper.addEventListener('onmouseup',      (evt) => this.onmouseup(evt), false);
+			this.wrapper.addEventListener('onmousedown',    (evt) => this.onmousedown(evt), false);
+			this.wrapper.addEventListener('onmousemove',    (evt) => this.onmousemove(evt), false);
+			this.wrapper.addEventListener('onmousewheel',   (evt) => this.onmousewheel(evt), false);
+			this.wrapper.addEventListener('DOMMouseScroll', (evt) => this.onmousewheel(evt), false);
 		}
 
 
@@ -3644,7 +3653,7 @@ export class Screen2D extends Screen {
 			this.applyTransformation = canvas.applyTransformation;
 
 			
-			this.draw = function (x, options = {}){
+			this.draw = function (x, options = {}) {
 				var _this = this;
 				if (arguments.length === 0) {
 					var top     = (            - this.translation.y) / this.scale.y,
@@ -3654,9 +3663,9 @@ export class Screen2D extends Screen {
 			
 
 					// Clear the canvas
-					this.layer.forEach(function(l){l.ctx.clearRect(left, top, right-left, bottom-top)})
+					this.layer.forEach(function (l) {l.ctx.clearRect(left, top, right-left, bottom-top)})
 
-					_this.layer.forEach(function (x){x.draw();})
+					_this.layer.forEach(function (x) {x.draw();})
 				}
 
 
@@ -3672,13 +3681,13 @@ export class Screen2D extends Screen {
 			}
 
 
-			this.circle = function (){ canvas.circle.apply(_this.layer.main, arguments);};
-			this.line = function (){ canvas.line.apply(_this.layer.main, arguments);};
-			this.path = function (){ canvas.path.apply(_this.layer.main, arguments);};
+			this.circle = function () { canvas.circle.apply(_this.layer.main, arguments);};
+			this.line = function () { canvas.line.apply(_this.layer.main, arguments);};
+			this.path = function () { canvas.path.apply(_this.layer.main, arguments);};
 			// Should the pixel method default to the main layer or to the back layer?
-			this.pixel = function (){ canvas.pixel.apply(_this.layer.main, arguments);};
-			this.point = function (){ canvas.point.apply(_this.layer.main, arguments);};
-			this.text = function (){ canvas.text.apply(_this.layer.main, arguments);};
+			this.pixel = function () { canvas.pixel.apply(_this.layer.main, arguments);};
+			this.point = function () { canvas.point.apply(_this.layer.main, arguments);};
+			this.text = function () { canvas.text.apply(_this.layer.main, arguments);};
 		}
 
 
@@ -3688,16 +3697,16 @@ export class Screen2D extends Screen {
 		else if (opts.renderer === 'SVG') {
 			this.applyTransformation = svg.applyTransformation;
 	 
-			this.draw = function (x, options = {}){
+			this.draw = function (x, options = {}) {
 				var _this = this;
 				if (arguments.length === 0) {
 
 					// Clear the layer
-					this.layer.forEach(function(l){
+					this.layer.forEach(function (l) {
 						l.ctx.textContent = '';
 					});
 
-					_this.layer.forEach(function (x){x.draw();})
+					_this.layer.forEach(function (x) {x.draw();})
 				}
 
 
@@ -3712,20 +3721,22 @@ export class Screen2D extends Screen {
 				}
 			}
 
-			this.circle = function (){ svg.circle.apply(_this.layer.main, arguments);};
-			this.line = function (){ svg.line.apply(_this.layer.main, arguments);};
-			this.path = function (){ svg.path.apply(_this.layer.main, arguments);};
+			this.circle = function () { svg.circle.apply(_this.layer.main, arguments);};
+			this.line = function () { svg.line.apply(_this.layer.main, arguments);};
+			this.path = function () { svg.path.apply(_this.layer.main, arguments);};
 			// Should the pixel method default to the main layer or to the back layer?
-			this.pixel = function (){ svg.pixel.apply(_this.layer.main, arguments);};
-			this.point = function (){ svg.point.apply(_this.layer.main, arguments);};
-			this.text = function (){ svg.text.apply(_this.layer.main, arguments);};
+			this.pixel = function () { svg.pixel.apply(_this.layer.main, arguments);};
+			this.point = function () { svg.point.apply(_this.layer.main, arguments);};
+			this.text = function () { svg.text.apply(_this.layer.main, arguments);};
 
 		}
 
 		this.container.classList.add('MathLib_screen2D');
 
-		var gridType = this.grid.type ? this.grid.type : 'none';
-		this.contextMenu.querySelectorAll('.MathLib_grid_type[value=' + gridType + ']')[0].checked = true;
+		if (this.options.contextMenu) {
+			var gridType = opts.grid.type ? opts.grid.type : 'none';
+			this.contextMenu.querySelectorAll('.MathLib_grid_type[value=' + gridType + ']')[0].checked = true;
+		}
 
 
 		this.draw();
@@ -3743,7 +3754,7 @@ resize(width : number, height : number) : Screen2D {
 	this.width = width;
 
 
-	if (this.renderer === 'Canvas') {
+	if (this.options.renderer === 'Canvas') {
 		this.layer.back.element.width = width;
 		this.layer.back.element.height = height;
 		this.layer.back.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
@@ -3751,7 +3762,7 @@ resize(width : number, height : number) : Screen2D {
 		this.layer.grid.element.width = width;
 		this.layer.grid.element.height = height;
 		this.layer.grid.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-		this.layer.grid.ctx.strokeStyle = colorConvert(this.grid.color) || '#cccccc';
+		this.layer.grid.ctx.strokeStyle = colorConvert(this.options.grid.color) || '#cccccc';
 
 		this.layer.axis.element.width = width;
 		this.layer.axis.element.height = height;
@@ -3763,7 +3774,7 @@ resize(width : number, height : number) : Screen2D {
 	}
 
 
-	else if (this.renderer === 'SVG') {
+	else if (this.options.renderer === 'SVG') {
 		this.element.setAttribute('width', width + 'px');
 		this.element.setAttribute('height', height + 'px');
 	}
@@ -3802,8 +3813,7 @@ getEventPoint(evt) {
 // *@returns {array}* The array has the format [[x1, y1], [x2, y2]]
 getLineEndPoints (l) {
 	if (l.type === 'line') {
-		var 
-				top    = (            - this.translation.y) / this.scale.y,
+		var top    = (            - this.translation.y) / this.scale.y,
 				bottom = (this.height - this.translation.y) / this.scale.y,
 				left   = (            - this.translation.x) / this.scale.x,
 				right  = (this.width  - this.translation.x) / this.scale.x,
@@ -3851,10 +3861,10 @@ onmousedown(evt) {
 	evt.returnValue = false;
 
 	// Pan mode
-	if (this.interaction.allowPan && !this.interaction.type) {
-		this.interaction.type = 'pan'
-		this.interaction.startPoint = this.getEventPoint(evt);
-		this.interaction.startTransformation = this.transformation.copy();
+	if (this.options.interaction.allowPan && !this.options.interaction.type) {
+		this.options.interaction.type = 'pan'
+		this.options.interaction.startPoint = this.getEventPoint(evt);
+		this.options.interaction.startTransformation = this.transformation.copy();
 	}
 }
 
@@ -3874,10 +3884,10 @@ onmousemove(evt) {
 	
 
 	// Pan mode
-	if(this.interaction.type === 'pan') {
-		p = this.getEventPoint(evt).minus(this.interaction.startPoint);
-		this.translation.x = this.interaction.startTransformation[0][2] + p[0];
-		this.translation.y = this.interaction.startTransformation[1][2] + p[1];
+	if(this.options.interaction.type === 'pan') {
+		p = this.getEventPoint(evt).minus(this.options.interaction.startPoint);
+		this.translation.x = this.options.interaction.startTransformation[0][2] + p[0];
+		this.translation.y = this.options.interaction.startTransformation[1][2] + p[1];
 		this.draw();
 	}
 }
@@ -3895,10 +3905,10 @@ onmouseup(evt) {
 	evt.returnValue = false;
 
 	// Go back to normal mode
-	if(this.interaction.type === 'pan') {
-		delete this.interaction.type;
-		delete this.interaction.startPoint;
-		delete this.interaction.startTransformation;
+	if(this.options.interaction.type === 'pan') {
+		delete this.options.interaction.type;
+		delete this.options.interaction.startPoint;
+		delete this.options.interaction.startTransformation;
 	}
 
 }
@@ -3911,7 +3921,7 @@ onmouseup(evt) {
 onmousewheel(evt) {
 	var delta, s, p, z;
 
-	if (this.interaction.allowZoom) {
+	if (this.options.interaction.allowZoom) {
 
 		if (evt.preventDefault) {
 			evt.preventDefault();
@@ -3930,7 +3940,7 @@ onmousewheel(evt) {
 
 		// The amount of zoom is determined by the zoom speed
 		// and the amount how much the scrollwheel has been moved
-		z = Math.pow(1 + this.interaction.zoomSpeed, delta);
+		z = Math.pow(1 + this.options.interaction.zoomSpeed, delta);
 
 
 
@@ -4011,9 +4021,8 @@ export class Screen3D extends Screen {
 				//clock = new THREE.Clock(),
 				camera, renderer, controls, viewAngle, aspect, near, far;
 
+		this.options = opts;
 		this.scene = scene;
-		this.axis = opts.axis;
-		this.grid = opts.grid;
 
 
 		// Camera
@@ -4034,6 +4043,8 @@ export class Screen3D extends Screen {
 		// Renderer
 		// ========
 		renderer = new THREE[opts.renderer + 'Renderer']( {antialias:true, preserveDrawingBuffer: true} );
+		// Remove the warning message.
+		this.wrapper.innerHTML = '';
 		this.wrapper.appendChild(renderer.domElement);
 
 
@@ -4090,7 +4101,7 @@ export class Screen3D extends Screen {
 
 		// Grid
 		// ====
-		if (this.grid) {
+		if (opts.grid) {
 			this.drawGrid();
 		}
 
@@ -4141,7 +4152,7 @@ export class Screen3D extends Screen {
 //
 // *@returns {Screen3D}*
 drawGrid() {
-	if (!this.grid) {
+	if (!this.options.grid) {
 		return this;
 	}
 
@@ -4205,9 +4216,9 @@ drawGrid() {
 			};
 
 
-	gridDrawer(this.grid.xy, 0, 0);
-	gridDrawer(this.grid.xz, Math.PI/2, 0);
-	gridDrawer(this.grid.yz, 0, Math.PI/2);
+	gridDrawer(this.options.grid.xy, 0, 0);
+	gridDrawer(this.options.grid.xz, Math.PI/2, 0);
+	gridDrawer(this.options.grid.yz, 0, Math.PI/2);
 
 	return this;
 }
@@ -4827,7 +4838,7 @@ toMatrix() : Matrix {
 // #### Simple example:
 // ```
 // // Create the complex number 1 + 2i  
-// var c = new MathLib.Complex(1, 2]);  
+// var c = new MathLib.Complex(1, 2);  
 // ```
 
 export class Complex {
@@ -4837,7 +4848,7 @@ export class Complex {
 	re: number;
 	im: number;
 
-	constructor (re: number, im: number) {
+	constructor (re: number, im = 0) {
 		this.re = re;
 		this.im = im;
 	}
@@ -5147,6 +5158,15 @@ sin() : Complex {
 // *@returns {complex}*
 sinh() : Complex {
 	return new MathLib.Complex(MathLib.cos(this.im) * MathLib.sinh(this.re), MathLib.sin(this.im)*MathLib.cosh(this.re));
+}
+
+
+// ### Complex.prototype.sqrt()
+// Takes the square root of a complex number
+//
+// *@returns {complex}*
+sqrt() : Complex {
+	return MathLib.Complex.polar(Math.sqrt(this.abs()), this.arg()/2);
 }
 
 
@@ -8297,12 +8317,221 @@ toString() : string {
 	// Restores the original value of MathLib in the global namespace
 	//
 	// *@returns {object}* Returns a reference to this MathLib library
-	/*
-	MathLib.noConflict = function () {
+	/*MathLib.noConflict = function () {
 		global.MathLib = oldMathLib;
 		return MathLib;
-	};
-	*/
-
+	};*/
 }
 //@ sourceMappingURL=MathLib.js.map
+
+
+// [Specification](https://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html)  
+// Chrome: ~  
+// Firefox: ~ [Unprefix the DOM fullscreen API](https://bugzilla.mozilla.org/show_bug.cgi?id=743198)  
+// Safari: ✗  
+// Internet Explorer: ✗  
+// Opera: ✗  
+
+
+// @fileoverview game-shim - Shims to normalize gaming-related APIs to their respective specs
+// @author Brandon Jones
+// @version 1.2
+
+
+/* Copyright (c) 2012, Brandon Jones. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+  * Redistributions of source code must retain the above copyright notice, this
+	list of conditions and the following disclaimer.
+  * Redistributions in binary form must reproduce the above copyright notice,
+	this list of conditions and the following disclaimer in the documentation 
+	and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+
+(function(global) {
+	"use strict";
+
+	var elementPrototype = (global.HTMLElement || global.Element)["prototype"];
+	var getter;
+
+
+	// document.fullscreenEnabled
+	if(!document.hasOwnProperty("fullscreenEnabled")) {
+		getter = (function() {
+			// These are the functions that match the spec, and should be preferred
+			if("webkitIsFullScreen" in document) {
+				return function() { return (<any>document).webkitFullscreenEnabled; };
+			}
+			if("mozFullScreenEnabled" in document) {
+				return function() { return (<any>document).mozFullScreenEnabled; };
+			}
+
+			return function() { return false; }; // not supported, never fullscreen
+		})();
+
+
+	}
+
+	if(!document.hasOwnProperty("fullscreenElement")) {
+		getter = (function() {
+			// These are the functions that match the spec, and should be preferred
+			var i=0, name=["webkitCurrentFullScreenElement", "webkitFullscreenElement", "mozFullScreenElement"];
+			for (; i<name.length; i++)
+			{
+				if (name[i] in document)
+				{
+					return function() { return document[name[i]]; };
+				}
+			}
+			return function() { return null; }; // not supported
+		})();
+
+		Object.defineProperty(document, "fullscreenElement", {
+			enumerable: true, configurable: false, writeable: false,
+			get: getter
+		});
+	}
+
+	// Document event: fullscreenchange
+	function fullscreenchange(oldEvent) {
+		var newEvent = document.createEvent("CustomEvent");
+		(<any>newEvent).initCustomEvent("fullscreenchange", true, false, null);
+		// TODO: Any need for variable copy?
+		document.dispatchEvent(newEvent);
+	}
+	document.addEventListener("webkitfullscreenchange", fullscreenchange, false);
+	document.addEventListener("mozfullscreenchange", fullscreenchange, false);
+
+	// Document event: fullscreenerror
+	function fullscreenerror(oldEvent) {
+		var newEvent = document.createEvent("CustomEvent");
+		(<any>newEvent).initCustomEvent("fullscreenerror", true, false, null);
+		// TODO: Any need for variable copy?
+		document.dispatchEvent(newEvent);
+	}
+	document.addEventListener("webkitfullscreenerror", fullscreenerror, false);
+	document.addEventListener("mozfullscreenerror", fullscreenerror, false);
+
+	// element.requestFullScreen
+	if(!elementPrototype.requestFullScreen) {
+		elementPrototype.requestFullScreen = (function() {
+			if(elementPrototype.webkitRequestFullScreen) {
+				return function() {
+					this.webkitRequestFullScreen((<any>Element).ALLOW_KEYBOARD_INPUT);
+				};
+			}
+
+			if(elementPrototype.mozRequestFullScreen) {
+				return function() {
+					this.mozRequestFullScreen();
+				};
+			}
+
+			return function(){};
+		})();
+	}
+
+	// document.exitFullScreen
+	if(!(<any>document).exitFullScreen) {
+		(<any>document).exitFullScreen = (function() {
+			return  (<any>document).webkitCancelFullScreen ||
+					(<any>document).mozCancelFullScreen ||
+					function(){};
+		})();
+	}
+
+})(window);
+
+
+// [Specification](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#line-styles)  
+// Chrome: ✓ [Implement canvas v5 line dash feature](http://trac.webkit.org/changeset/128116)  
+// Firefox: ~ [Implement canvasRenderingContext2D.get/setLineDash](https://bugzilla.mozilla.org/show_bug.cgi?id=768067)  
+// Safari: ✗  
+// Internet Explorer: ✗  
+// Opera: ✗  
+
+if (!('setLineDash' in CanvasRenderingContext2D.prototype)) {
+	var setLineDash, getLineDash, setLineDashOffset, getLineDashOffset, prototype;
+
+	if ('mozDash' in CanvasRenderingContext2D.prototype) {
+		prototype = CanvasRenderingContext2D.prototype;
+		setLineDash = function (dash) {
+			this.mozDash = dash;
+		};
+		getLineDash = function () {
+			return this.mozDash;
+		};
+
+		setLineDashOffset = function (dashOffset) {
+			this.mozDashOffset = dashOffset;
+		};
+		getLineDashOffset = function () {
+			return this.mozDashOffset;
+		};
+
+	}
+
+	// Safari isn't supporting webkitLineDash any longer, but it also has no support for setLineDash.
+	// Additionally extending the CanvasRenderingContext2D.prototype is only possible with a weird hack.
+	/*
+	else if ('webkitLineDash' in CanvasRenderingContext2D.prototype) {
+		prototype	= document.createElement('canvas').getContext('2d').__proto__;
+		setLineDash = function (dash) {
+			this.webkitLineDash = dash;
+		};
+		getLineDash = function () {
+			return this.webkitLineDash;
+		};
+
+		setLineDashOffset = function (dashOffset) {
+			this.webkitLineDashOffset = dashOffset;
+		};
+		getLineDashOffset = function () {
+			return this.webkitLineDashOffset;
+		};
+	}
+	*/
+	else {
+		prototype = CanvasRenderingContext2D.prototype;
+		setLineDash = function () {};
+		getLineDash = function () {};
+		setLineDashOffset = function () {};
+		getLineDashOffset = function () {};
+	}
+
+
+	Object.defineProperty(prototype, 'setLineDash', {
+		value: setLineDash,
+		enumerable: true,
+		configurable: false,
+		writeable: false
+	});
+
+	Object.defineProperty(prototype, 'getLineDash', {
+		value: getLineDash,
+		enumerable: true,
+		configurable: false,
+		writeable: false
+	});
+
+	Object.defineProperty(prototype, 'lineDashOffset', {
+		set: setLineDashOffset,
+		get: getLineDashOffset,
+		enumerable: true,
+		configurable: false,
+		writeable: false
+	});
+		
+}

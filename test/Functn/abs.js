@@ -8,11 +8,11 @@ test('.abs()', 7, function () {
 	// Spec. 3: MathLib.abs(-0) = +0
 	equal(MathLib.isPosZero(MathLib.abs(-0)), true, 'Spec. 3: MathLib.abs(-0) = +0');
 
-	// Spec. 4: MathLib.abs(+&infin;) = &infin;
-	equal(MathLib.abs(+Infinity), +Infinity, 'Spec. 4: MathLib.abs(+&infin;) = &infin;');
+	// Spec. 4: MathLib.abs(+∞) = ∞
+	equal(MathLib.abs(+Infinity), +Infinity, 'Spec. 4: MathLib.abs(+∞) = ∞');
 
-	// Spec. 5: MathLib.abs(-&infin;) = &infin;
-	equal(MathLib.abs(-Infinity), +Infinity, 'Spec. 5: MathLib.abs(-&infin;) = &infin;');
+	// Spec. 5: MathLib.abs(-∞) = ∞
+	equal(MathLib.abs(-Infinity), +Infinity, 'Spec. 5: MathLib.abs(-∞) = ∞');
 
 	// Spec. 6: otherwise MathLib.abs(x) = absolute value of x
 	equal(MathLib.abs(1), 1, 'Spec. 6: otherwise MathLib.abs(x) = absolute value of x');

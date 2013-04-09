@@ -15,9 +15,9 @@ test('.circumference()', 5, function () {
 	// Spec. 3: c.circumference() = -0 if r = -0
 	equal(MathLib.isNegZero(c3.circumference()), true, 'Spec. 3: c.circumference() = -0 if r = -0');
 
-	// Spec. 4: c.circumference() = &infin; if r = &infin;
-	equal(c4.circumference(), Infinity, 'Spec. 4: c.circumference() = &infin; if r = &infin;');
+	// Spec. 4: c.circumference() = ∞ if r = ∞
+	equal(c4.circumference(), Infinity, 'Spec. 4: c.circumference() = ∞ if r = ∞');
 
-	// Spec. 5: otherwise c.circumference() = 2 &pi; r
-	equal(c5.circumference(), 4 * MathLib.pi, 'Spec. 5: otherwise c.circumference() = 2 &pi; r');
+	// Spec. 5: otherwise c.circumference() = 2 π r
+	equal(c5.circumference(), 4 * MathLib.pi, 'Spec. 5: otherwise c.circumference() = 2 π r');
 });

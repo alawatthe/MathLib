@@ -9,7 +9,7 @@
 // #### Simple example:
 // ```
 // // Create the complex number 1 + 2i  
-// var c = new MathLib.Complex(1, 2]);  
+// var c = new MathLib.Complex(1, 2);  
 // ```
 
 export class Complex {
@@ -19,7 +19,7 @@ export class Complex {
 	re: number;
 	im: number;
 
-	constructor (re: number, im: number) {
+	constructor (re: number, im = 0) {
 		this.re = re;
 		this.im = im;
 	}

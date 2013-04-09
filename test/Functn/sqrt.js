@@ -8,8 +8,8 @@ test('.sqrt()', 8, function () {
 	// Spec. 3: MathLib.sqrt(-0) = -0
 	equal(MathLib.isNegZero(MathLib.sqrt(-0)), true, 'Spec. 3: MathLib.sqrt(-0) = -0');
 
-	// Spec. 4: MathLib.sqrt(+&infin;) = +&infin;
-	equal(MathLib.sqrt(+Infinity), +Infinity, 'Spec. 4: MathLib.sqrt(+&infin;) = +&infin;');
+	// Spec. 4: MathLib.sqrt(+∞) = +∞
+	equal(MathLib.sqrt(+Infinity), +Infinity, 'Spec. 4: MathLib.sqrt(+∞) = +∞');
 
 	// Spec. 5: MathLib.sqrt(x) = NaN if x < 0
 	equal(MathLib.isNaN(MathLib.sqrt(-Infinity)), true, 'Spec. 5: MathLib.sqrt(x) = NaN if x < 0');

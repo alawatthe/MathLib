@@ -77,12 +77,11 @@ export class Screen2D extends Screen {
 				_this = this;
 
 		this.options = opts;
-		this.background = opts.background;
-		this.interaction = opts.interaction;
-		this.axis = opts.axis;
-		this.grid = opts.grid;
+		//this.background = opts.background;
+		//this.interaction = opts.interaction;
 
-
+		// Remove the warning message.
+		this.wrapper.innerHTML = '';
 	
 		this.applyTransformation = function () {};
 
@@ -115,7 +114,7 @@ export class Screen2D extends Screen {
 
 
 
-		this.lookAt= {};
+		this.lookAt = {};
 		this.range = {};
 		Object.defineProperty(this.lookAt, 'x', {
 			get: function (){return (_this.width/2 - _this.transformation[0][2])/_this.transformation[0][0];},
@@ -153,7 +152,11 @@ export class Screen2D extends Screen {
 		if (opts.renderer === 'SVG') {
 			// Create the canvas
 			element = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-			element.classList.add('MathLib_screen');
+
+			// Safari does not support .classList on SVG elements
+			// This feature has be in webkit since [08/02/12](http://trac.webkit.org/changeset/124499)
+			/* element.classList.add('MathLib_screen'); */
+			element.className.baseVal = 'MathLib_screen';
 			element.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 			element.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 			element.setAttribute('height', this.height + 'px');
@@ -197,19 +200,19 @@ export class Screen2D extends Screen {
 
 
 		if (opts.renderer === 'Canvas') {
-			this.layer.main.element.onmouseup      = (evt) => this.onmouseup(evt);
-			this.layer.main.element.onmousedown    = (evt) => this.onmousedown(evt);
-			this.layer.main.element.onmousemove    = (evt) => this.onmousemove(evt);
-			this.layer.main.element.onmousewheel   = (evt) => this.onmousewheel(evt);
+			this.layer.main.element.addEventListener('onmouseup',      (evt) => this.onmouseup(evt), false);
+			this.layer.main.element.addEventListener('onmousedown',    (evt) => this.onmousedown(evt), false);
+			this.layer.main.element.addEventListener('onmousemove',    (evt) => this.onmousemove(evt), false);
+			this.layer.main.element.addEventListener('onmousewheel',   (evt) => this.onmousewheel(evt), false);
 			// For Firefox: [Bug report for the missing onmousewheel method](https://bugzilla.mozilla.org/show_bug.cgi?id=111647)
-			this.layer.main.element.DOMMouseScroll = (evt) => this.onmousewheel(evt); 
+			this.layer.main.element.addEventListener('DOMMouseScroll', (evt) => this.onmousewheel(evt), false);
 		}
 		else if (opts.renderer === 'SVG') {
-			this.wrapper.onmouseup      = (evt) => this.onmouseup(evt);
-			this.wrapper.onmousedown    = (evt) => this.onmousedown(evt);
-			this.wrapper.onmousemove    = (evt) => this.onmousemove(evt);
-			this.wrapper.onmousewheel   = (evt) => this.onmousewheel(evt);
-			this.wrapper.DOMMouseScroll = (evt) => this.onmousewheel(evt);
+			this.wrapper.addEventListener('onmouseup',      (evt) => this.onmouseup(evt), false);
+			this.wrapper.addEventListener('onmousedown',    (evt) => this.onmousedown(evt), false);
+			this.wrapper.addEventListener('onmousemove',    (evt) => this.onmousemove(evt), false);
+			this.wrapper.addEventListener('onmousewheel',   (evt) => this.onmousewheel(evt), false);
+			this.wrapper.addEventListener('DOMMouseScroll', (evt) => this.onmousewheel(evt), false);
 		}
 
 
@@ -225,7 +228,7 @@ export class Screen2D extends Screen {
 			this.applyTransformation = canvas.applyTransformation;
 
 			
-			this.draw = function (x, options = {}){
+			this.draw = function (x, options = {}) {
 				var _this = this;
 				if (arguments.length === 0) {
 					var top     = (            - this.translation.y) / this.scale.y,
@@ -235,9 +238,9 @@ export class Screen2D extends Screen {
 			
 
 					// Clear the canvas
-					this.layer.forEach(function(l){l.ctx.clearRect(left, top, right-left, bottom-top)})
+					this.layer.forEach(function (l) {l.ctx.clearRect(left, top, right-left, bottom-top)})
 
-					_this.layer.forEach(function (x){x.draw();})
+					_this.layer.forEach(function (x) {x.draw();})
 				}
 
 
@@ -253,13 +256,13 @@ export class Screen2D extends Screen {
 			}
 
 
-			this.circle = function (){ canvas.circle.apply(_this.layer.main, arguments);};
-			this.line = function (){ canvas.line.apply(_this.layer.main, arguments);};
-			this.path = function (){ canvas.path.apply(_this.layer.main, arguments);};
+			this.circle = function () { canvas.circle.apply(_this.layer.main, arguments);};
+			this.line = function () { canvas.line.apply(_this.layer.main, arguments);};
+			this.path = function () { canvas.path.apply(_this.layer.main, arguments);};
 			// Should the pixel method default to the main layer or to the back layer?
-			this.pixel = function (){ canvas.pixel.apply(_this.layer.main, arguments);};
-			this.point = function (){ canvas.point.apply(_this.layer.main, arguments);};
-			this.text = function (){ canvas.text.apply(_this.layer.main, arguments);};
+			this.pixel = function () { canvas.pixel.apply(_this.layer.main, arguments);};
+			this.point = function () { canvas.point.apply(_this.layer.main, arguments);};
+			this.text = function () { canvas.text.apply(_this.layer.main, arguments);};
 		}
 
 
@@ -269,16 +272,16 @@ export class Screen2D extends Screen {
 		else if (opts.renderer === 'SVG') {
 			this.applyTransformation = svg.applyTransformation;
 	 
-			this.draw = function (x, options = {}){
+			this.draw = function (x, options = {}) {
 				var _this = this;
 				if (arguments.length === 0) {
 
 					// Clear the layer
-					this.layer.forEach(function(l){
+					this.layer.forEach(function (l) {
 						l.ctx.textContent = '';
 					});
 
-					_this.layer.forEach(function (x){x.draw();})
+					_this.layer.forEach(function (x) {x.draw();})
 				}
 
 
@@ -293,20 +296,22 @@ export class Screen2D extends Screen {
 				}
 			}
 
-			this.circle = function (){ svg.circle.apply(_this.layer.main, arguments);};
-			this.line = function (){ svg.line.apply(_this.layer.main, arguments);};
-			this.path = function (){ svg.path.apply(_this.layer.main, arguments);};
+			this.circle = function () { svg.circle.apply(_this.layer.main, arguments);};
+			this.line = function () { svg.line.apply(_this.layer.main, arguments);};
+			this.path = function () { svg.path.apply(_this.layer.main, arguments);};
 			// Should the pixel method default to the main layer or to the back layer?
-			this.pixel = function (){ svg.pixel.apply(_this.layer.main, arguments);};
-			this.point = function (){ svg.point.apply(_this.layer.main, arguments);};
-			this.text = function (){ svg.text.apply(_this.layer.main, arguments);};
+			this.pixel = function () { svg.pixel.apply(_this.layer.main, arguments);};
+			this.point = function () { svg.point.apply(_this.layer.main, arguments);};
+			this.text = function () { svg.text.apply(_this.layer.main, arguments);};
 
 		}
 
 		this.container.classList.add('MathLib_screen2D');
 
-		var gridType = this.grid.type ? this.grid.type : 'none';
-		this.contextMenu.querySelectorAll('.MathLib_grid_type[value=' + gridType + ']')[0].checked = true;
+		if (this.options.contextMenu) {
+			var gridType = opts.grid.type ? opts.grid.type : 'none';
+			this.contextMenu.querySelectorAll('.MathLib_grid_type[value=' + gridType + ']')[0].checked = true;
+		}
 
 
 		this.draw();

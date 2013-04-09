@@ -15,7 +15,7 @@ var unaryFunctions = {
 	},
 	arcosh: (<any>Math).acosh || function (x){
 		return Math.log(x + Math.sqrt(x * x - 1));
-	},  
+	},
 	arcoth: function (x) {
 		// Handle ±∞
 		if (!MathLib.isFinite(x)) {

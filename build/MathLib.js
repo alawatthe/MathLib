@@ -1263,10 +1263,10 @@ var MathLib;
 				figcaption: ''
 			}, opts = extendObject(defaults, options), container = document.getElementById(id), innerHTMLContextMenu = '', id = +Date.now(), fullscreenchange, innerHTML, screen;
 			if ((opts).contextMenu) {
-				if ((opts).contextMenu.screenshot) {
+				if ((opts).contextMenu.screenshot && !('opera' in window)) {
 					innerHTMLContextMenu += '<div class="MathLib_screenshot MathLib_menuItem">Save Screenshot</div>';
 				}
-				if ((opts).contextMenu.fullscreen) {
+				if ((opts).contextMenu.fullscreen && 'requestFullScreen' in document.body) {
 					innerHTMLContextMenu += '<div class="MathLib_fullscreen MathLib_menuItem"><span class="needs-nofullscreen">Enter Fullscreen</span><span class="needs-fullscreen">Exit Fullscreen</span></div>';
 				}
 				if ((opts).contextMenu.grid) {
@@ -1292,7 +1292,10 @@ var MathLib;
 			}
 			innerHTML = [
 				'<figure class="MathLib_figure">', 
-				'<div class="MathLib_wrapper" style="width: ' + opts.width + 'px; height: ' + opts.height + 'px"></div>', 
+				'<div class="MathLib_wrapper" style="width: ' + opts.width + 'px; height: ' + opts.height + 'px">', 
+				'<div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>', 
+				'Please update your browser to see the plot.</div>', 
+				'</div>', 
 				(opts).figcaption ? '<figcaption class="MathLib_figcaption">' + (opts).figcaption + '</figcaption>' : '', 
 				'</figure>', 
 				'<div class="MathLib_contextMenuOverlay">', 
@@ -1305,6 +1308,7 @@ var MathLib;
 			container.classList.add('MathLib_container');
 			this.height = opts.height;
 			this.width = opts.width;
+			this.options = opts;
 			this.container = container;
 			this.figure = container.getElementsByClassName('MathLib_figure')[0];
 			this.wrapper = container.getElementsByClassName('MathLib_wrapper')[0];
@@ -1315,7 +1319,7 @@ var MathLib;
 				this.wrapper.oncontextmenu = function (evt) {
 					_this.oncontextmenu(evt);
 				};
-				if ((opts).contextMenu.screenshot) {
+				if ((opts).contextMenu.screenshot && !('opera' in window)) {
 					this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function () {
 						var dataURI, a = document.createElement('a');
 						if (_this.options.renderer === 'Canvas' && _this.type === 'screen2D') {
@@ -1356,7 +1360,7 @@ var MathLib;
 						}
 					};
 				}
-				if ((opts).contextMenu.fullscreen) {
+				if ((opts).contextMenu.fullscreen && 'requestFullScreen' in document.body) {
 					this.contextMenu.getElementsByClassName('MathLib_fullscreen')[0].onclick = function () {
 						if ((document).fullscreenElement) {
 							(document).exitFullScreen();
@@ -1367,15 +1371,15 @@ var MathLib;
 				}
 				if ((opts).contextMenu.grid) {
 					this.contextMenu.getElementsByClassName('MathLib_grid_type')[0].onchange = function () {
-						(_this).grid.type = 'cartesian';
+						(_this).options.grid.type = 'cartesian';
 						(_this).draw();
 					};
 					this.contextMenu.getElementsByClassName('MathLib_grid_type')[1].onchange = function () {
-						(_this).grid.type = 'polar';
+						(_this).options.grid.type = 'polar';
 						(_this).draw();
 					};
 					this.contextMenu.getElementsByClassName('MathLib_grid_type')[2].onchange = function () {
-						(_this).grid.type = false;
+						(_this).options.grid.type = false;
 						(_this).draw();
 					};
 				}
@@ -1445,19 +1449,19 @@ var MathLib;
 				if (id === 'back') {
 					this.draw = function () {
 						var top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x;
-						this.ctx.fillStyle = colorConvert(screen.background);
+						this.ctx.fillStyle = colorConvert(screen.options.background);
 						this.ctx.fillRect(left, bottom, right - left, top - bottom);
 						canvas.draw.call(_this);
 					};
 				} else if (id === 'grid') {
-					this.ctx.strokeStyle = colorConvert(screen.grid.color) || '#cccccc';
+					this.ctx.strokeStyle = colorConvert(screen.options.grid.color) || '#cccccc';
 					this.ctx.fillStyle = 'rgba(255,255,255,0)';
 					this.draw = function () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 						drawGrid.call(_this);
 					};
 				} else if (id === 'axis') {
-					this.ctx.strokeStyle = colorConvert(screen.axis.color) || '#000000';
+					this.ctx.strokeStyle = colorConvert(screen.options.axis.color) || '#000000';
 					this.draw = function () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 						drawAxis.call(_this);
@@ -1487,13 +1491,13 @@ var MathLib;
 						svg.draw.call(_this);
 					};
 				} else if (id === 'grid') {
-					ctx.setAttribute('stroke', colorConvert(screen.grid.color) || '#cccccc');
+					ctx.setAttribute('stroke', colorConvert(screen.options.grid.color) || '#cccccc');
 					this.draw = function () {
 						ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
 						drawGrid.call(_this);
 					};
 				} else if (id === 'axis') {
-					ctx.setAttribute('stroke', colorConvert(screen.axis.color) || '#000000');
+					ctx.setAttribute('stroke', colorConvert(screen.options.axis.color) || '#000000');
 					this.draw = function () {
 						ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
 						drawAxis.call(_this);
@@ -1515,13 +1519,13 @@ var MathLib;
 	MathLib.Layer = Layer;	
 	var drawAxis = function () {
 		var screen = this.screen, options = {
-			stroke: colorConvert(this.screen.axis.color),
+			stroke: colorConvert(this.screen.options.axis.color),
 			'stroke-width': -1 / screen.transformation[1][1]
 		}, textOptions = {
-			strokeStyle: colorConvert(this.screen.axis.textColor),
-			fillStyle: colorConvert(this.screen.axis.textColor)
+			strokeStyle: colorConvert(this.screen.options.axis.textColor),
+			fillStyle: colorConvert(this.screen.options.axis.textColor)
 		}, top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x, lengthX = +10 / screen.transformation[0][0], lengthY = -10 / screen.transformation[1][1], yExp = 1 - Math.floor(Math.log(-screen.transformation[1][1]) / Math.LN10 - 0.3), xExp = 1 - Math.floor(Math.log(+screen.transformation[0][0]) / Math.LN10 - 0.3), yTick = Math.pow(10, yExp), xTick = Math.pow(10, xExp), i;
-		if (!this.screen.axis) {
+		if (!this.screen.options.axis) {
 			return this;
 		}
 		this.line([
@@ -1544,7 +1548,7 @@ var MathLib;
 				top
 			]
 		], false, true);
-		if (screen.grid.tick) {
+		if (screen.options.grid.tick) {
 			for (i = -yTick; i >= left; i -= yTick) {
 				this.line([
 					[
@@ -1610,11 +1614,11 @@ var MathLib;
 		return this;
 	};
 	var drawGrid = function () {
-		if (!this.screen.grid) {
+		if (!this.screen.options.grid) {
 			return this;
 		}
 		var screen = this.screen, top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x, yTick = Math.pow(10, 1 - Math.floor(Math.log(-screen.transformation[1][1]) / Math.LN10 - 0.3)), xTick = Math.pow(10, 1 - Math.floor(Math.log(+screen.transformation[0][0]) / Math.LN10 - 0.3)), i;
-		if (screen.grid.type === 'cartesian') {
+		if (screen.options.grid.type === 'cartesian') {
 			for (i = bottom - (bottom % yTick); i <= top; i += yTick) {
 				this.line([
 					[
@@ -1639,9 +1643,9 @@ var MathLib;
 					]
 				], false, true);
 			}
-		} else if (screen.grid.type === 'polar') {
+		} else if (screen.options.grid.type === 'polar') {
 			var max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right)), min = 0;
-			for (i = 0; i < 2 * Math.PI; i += screen.grid.angle) {
+			for (i = 0; i < 2 * Math.PI; i += screen.options.grid.angle) {
 				this.line([
 					[
 						0, 
@@ -2250,7 +2254,7 @@ var MathLib;
 			if ((options).moveable) {
 				svgPoint.setAttribute('cursor', 'move');
 				svgPoint.addEventListener('mousedown', function () {
-					screen.interaction.type = 'move';
+					screen.options.interaction.type = 'move';
 					var invTransformation = screen.transformation.inverse();
 					var move = function (evt) {
 						evt.stopPropagation();
@@ -2259,7 +2263,7 @@ var MathLib;
 						point[1] = evtPoint[1];
 						screen.draw();
 					}, up = function () {
-						screen.interaction.type = '';
+						screen.options.interaction.type = '';
 						document.body.removeEventListener('mousemove', move);
 						document.body.removeEventListener('mouseup', up);
 					};
@@ -2274,7 +2278,7 @@ var MathLib;
 				}, true);
 			}
 			svgPoint.addEventListener('contextmenu', function (evt) {
-				screen.interaction.type = 'contextmenu';
+				screen.options.interaction.type = 'contextmenu';
 				var x = (svgPoint).cx.baseVal.value, y = (svgPoint).cy.baseVal.value;
 				screen.contextMenu.innerHTML = '<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_is_disabled MathLib_is_centered">Point</div>' + '<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_hasSubmenu">Coordinates' + '<menu class="MathLib_menu MathLib_submenu">' + '<div class="MathLib_menuItem">cartesian: <span class="MathLib_is_selectable MathLib_is_right">(' + x.toFixed(3) + ', ' + y.toFixed(3) + ')</span></div>' + '<div class="MathLib_menuItem">polar: <span class="MathLib_is_selectable MathLib_is_right">(' + MathLib.hypot(x, y).toFixed(3) + ', ' + Math.atan2(y, x).toFixed(3) + ')</span></div>' + '</menu>' + '</div>' + '<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_hasSubmenu">Options' + '<menu class="MathLib_menu MathLib_submenu">' + '<div class="MathLib_menuItem">Moveable:' + '<input type="checkbox" class="MathLib_is_right">' + '</div>' + '<div class="MathLib_menuItem">Size:' + '<input type="spinner" class="MathLib_is_right">' + '</div>' + '<div class="MathLib_menuItem">Fill color:' + '<input type="color" class="MathLib_is_right">' + '</div>' + '<div class="MathLib_menuItem">Line color:' + '<input type="color" class="MathLib_is_right">' + '</div>' + '</menu>' + '</div>' + '<hr class="MathLib_separator MathLib_temporaryMenuItem">' + screen.contextMenu.innerHTML;
 			});
@@ -2384,10 +2388,7 @@ var MathLib;
 				])
 			}, opts = extendObject(defaults, options), element, transformation = opts.transformation, _this = this;
 			this.options = opts;
-			this.background = opts.background;
-			this.interaction = opts.interaction;
-			this.axis = opts.axis;
-			this.grid = opts.grid;
+			this.wrapper.innerHTML = '';
 			this.applyTransformation = function () {
 			};
 			this.translation = {
@@ -2477,7 +2478,7 @@ var MathLib;
 			this.lookAt.y = opts.lookAt.y;
 			if (opts.renderer === 'SVG') {
 				element = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-				element.classList.add('MathLib_screen');
+				element.className.baseVal = 'MathLib_screen';
 				element.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 				element.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 				element.setAttribute('height', this.height + 'px');
@@ -2506,37 +2507,37 @@ var MathLib;
 			this.layer.axis = new MathLib.Layer(this, 'axis', 2);
 			this.layer.main = new MathLib.Layer(this, 'main', 3);
 			if (opts.renderer === 'Canvas') {
-				this.layer.main.element.onmouseup = function (evt) {
+				this.layer.main.element.addEventListener('onmouseup', function (evt) {
 					return _this.onmouseup(evt);
-				};
-				this.layer.main.element.onmousedown = function (evt) {
+				}, false);
+				this.layer.main.element.addEventListener('onmousedown', function (evt) {
 					return _this.onmousedown(evt);
-				};
-				this.layer.main.element.onmousemove = function (evt) {
+				}, false);
+				this.layer.main.element.addEventListener('onmousemove', function (evt) {
 					return _this.onmousemove(evt);
-				};
-				this.layer.main.element.onmousewheel = function (evt) {
+				}, false);
+				this.layer.main.element.addEventListener('onmousewheel', function (evt) {
 					return _this.onmousewheel(evt);
-				};
-				this.layer.main.element.DOMMouseScroll = function (evt) {
+				}, false);
+				this.layer.main.element.addEventListener('DOMMouseScroll', function (evt) {
 					return _this.onmousewheel(evt);
-				};
+				}, false);
 			} else if (opts.renderer === 'SVG') {
-				this.wrapper.onmouseup = function (evt) {
+				this.wrapper.addEventListener('onmouseup', function (evt) {
 					return _this.onmouseup(evt);
-				};
-				this.wrapper.onmousedown = function (evt) {
+				}, false);
+				this.wrapper.addEventListener('onmousedown', function (evt) {
 					return _this.onmousedown(evt);
-				};
-				this.wrapper.onmousemove = function (evt) {
+				}, false);
+				this.wrapper.addEventListener('onmousemove', function (evt) {
 					return _this.onmousemove(evt);
-				};
-				this.wrapper.onmousewheel = function (evt) {
+				}, false);
+				this.wrapper.addEventListener('onmousewheel', function (evt) {
 					return _this.onmousewheel(evt);
-				};
-				this.wrapper.DOMMouseScroll = function (evt) {
+				}, false);
+				this.wrapper.addEventListener('DOMMouseScroll', function (evt) {
 					return _this.onmousewheel(evt);
-				};
+				}, false);
 			}
 			if (opts.renderer === 'Canvas') {
 				this.applyTransformation = canvas.applyTransformation;
@@ -2627,28 +2628,30 @@ var MathLib;
 				};
 			}
 			this.container.classList.add('MathLib_screen2D');
-			var gridType = this.grid.type ? this.grid.type : 'none';
-			this.contextMenu.querySelectorAll('.MathLib_grid_type[value=' + gridType + ']')[0].checked = true;
+			if (this.options.contextMenu) {
+				var gridType = opts.grid.type ? opts.grid.type : 'none';
+				this.contextMenu.querySelectorAll('.MathLib_grid_type[value=' + gridType + ']')[0].checked = true;
+			}
 			this.draw();
 		}
 		Screen2D.prototype.resize = function (width, height) {
 			this.height = height;
 			this.width = width;
-			if (this.renderer === 'Canvas') {
+			if (this.options.renderer === 'Canvas') {
 				this.layer.back.element.width = width;
 				this.layer.back.element.height = height;
 				this.layer.back.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 				this.layer.grid.element.width = width;
 				this.layer.grid.element.height = height;
 				this.layer.grid.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-				this.layer.grid.ctx.strokeStyle = colorConvert(this.grid.color) || '#cccccc';
+				this.layer.grid.ctx.strokeStyle = colorConvert(this.options.grid.color) || '#cccccc';
 				this.layer.axis.element.width = width;
 				this.layer.axis.element.height = height;
 				this.layer.axis.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 				this.layer.main.element.width = width;
 				this.layer.main.element.height = height;
 				this.layer.main.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-			} else if (this.renderer === 'SVG') {
+			} else if (this.options.renderer === 'SVG') {
 				this.element.setAttribute('width', width + 'px');
 				this.element.setAttribute('height', height + 'px');
 			}
@@ -2711,10 +2714,10 @@ var MathLib;
 				evt.preventDefault();
 			}
 			evt.returnValue = false;
-			if (this.interaction.allowPan && !this.interaction.type) {
-				this.interaction.type = 'pan';
-				this.interaction.startPoint = this.getEventPoint(evt);
-				this.interaction.startTransformation = this.transformation.copy();
+			if (this.options.interaction.allowPan && !this.options.interaction.type) {
+				this.options.interaction.type = 'pan';
+				this.options.interaction.startPoint = this.getEventPoint(evt);
+				this.options.interaction.startTransformation = this.transformation.copy();
 			}
 		};
 		Screen2D.prototype.onmousemove = function (evt) {
@@ -2723,10 +2726,10 @@ var MathLib;
 				evt.preventDefault();
 			}
 			evt.returnValue = false;
-			if (this.interaction.type === 'pan') {
-				p = this.getEventPoint(evt).minus(this.interaction.startPoint);
-				this.translation.x = this.interaction.startTransformation[0][2] + p[0];
-				this.translation.y = this.interaction.startTransformation[1][2] + p[1];
+			if (this.options.interaction.type === 'pan') {
+				p = this.getEventPoint(evt).minus(this.options.interaction.startPoint);
+				this.translation.x = this.options.interaction.startTransformation[0][2] + p[0];
+				this.translation.y = this.options.interaction.startTransformation[1][2] + p[1];
 				this.draw();
 			}
 		};
@@ -2735,15 +2738,15 @@ var MathLib;
 				evt.preventDefault();
 			}
 			evt.returnValue = false;
-			if (this.interaction.type === 'pan') {
-				delete this.interaction.type;
-				delete this.interaction.startPoint;
-				delete this.interaction.startTransformation;
+			if (this.options.interaction.type === 'pan') {
+				delete this.options.interaction.type;
+				delete this.options.interaction.startPoint;
+				delete this.options.interaction.startTransformation;
 			}
 		};
 		Screen2D.prototype.onmousewheel = function (evt) {
 			var delta, s, p, z;
-			if (this.interaction.allowZoom) {
+			if (this.options.interaction.allowZoom) {
 				if (evt.preventDefault) {
 					evt.preventDefault();
 				}
@@ -2753,7 +2756,7 @@ var MathLib;
 				} else {
 					delta = evt.detail / -9;
 				}
-				z = Math.pow(1 + this.interaction.zoomSpeed, delta);
+				z = Math.pow(1 + this.options.interaction.zoomSpeed, delta);
 				p = this.transformation.inverse().times(this.getEventPoint(evt));
 				s = new MathLib.Matrix([
 					[
@@ -2842,9 +2845,8 @@ var MathLib;
 				renderer: 'WebGL',
 				width: 500
 			}, opts = extendObject(defaults, options), scene = new THREE.Scene(), camera, renderer, controls, viewAngle, aspect, near, far;
+			this.options = opts;
 			this.scene = scene;
-			this.axis = opts.axis;
-			this.grid = opts.grid;
 			viewAngle = 45 , aspect = opts.width / opts.height , near = 0.1 , far = 20000;
 			camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
 			camera.position = to3js(opts.camera.position);
@@ -2855,6 +2857,7 @@ var MathLib;
 				antialias: true,
 				preserveDrawingBuffer: true
 			});
+			this.wrapper.innerHTML = '';
 			this.wrapper.appendChild(renderer.domElement);
 			var origRenderer = renderer;
 			if (opts.anaglyphMode) {
@@ -2877,7 +2880,7 @@ var MathLib;
 			scene.add(light2);
 			renderer.setClearColorHex(opts.background, 1);
 			renderer.clear();
-			if (this.grid) {
+			if (opts.grid) {
 				this.drawGrid();
 			}
 			if (opts.axis) {
@@ -2903,7 +2906,7 @@ function render() {
 			this.container.classList.add('MathLib_screen3D');
 		}
 		Screen3D.prototype.drawGrid = function () {
-			if (!this.grid) {
+			if (!this.options.grid) {
 				return this;
 			}
 			var _this = this, gridDrawer = function (opts, rotX, rotY) {
@@ -2945,9 +2948,9 @@ function render() {
 					_this.scene.add(grid);
 				}
 			};
-			gridDrawer(this.grid.xy, 0, 0);
-			gridDrawer(this.grid.xz, Math.PI / 2, 0);
-			gridDrawer(this.grid.yz, 0, Math.PI / 2);
+			gridDrawer(this.options.grid.xy, 0, 0);
+			gridDrawer(this.options.grid.xz, Math.PI / 2, 0);
+			gridDrawer(this.options.grid.yz, 0, Math.PI / 2);
 			return this;
 		};
 		Screen3D.prototype.parametricPlot3D = function (f, options) {
@@ -3242,6 +3245,9 @@ function render() {
 	MathLib.Circle = Circle;	
 	var Complex = (function () {
 		function Complex(re, im) {
+			if (typeof im === 'undefined') {
+				im = 0;
+			}
 			this.type = 'complex';
 			this.re = re;
 			this.im = im;
@@ -3353,6 +3359,9 @@ function render() {
 		};
 		Complex.prototype.sinh = function () {
 			return new MathLib.Complex(MathLib.cos(this.im) * MathLib.sinh(this.re), MathLib.sin(this.im) * MathLib.cosh(this.re));
+		};
+		Complex.prototype.sqrt = function () {
+			return MathLib.Complex.polar(Math.sqrt(this.abs()), this.arg() / 2);
 		};
 		Complex.prototype.times = function (c) {
 			if (c.type === 'complex') {
@@ -5216,4 +5225,134 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 	})();
 	MathLib.Set = Set;	
 })(MathLib || (MathLib = {}));
+(function (global) {
+	"use strict";
+	var elementPrototype = (global.HTMLElement || global.Element)["prototype"];
+	var getter;
+	if (!document.hasOwnProperty("fullscreenEnabled")) {
+		getter = (function () {
+			if ("webkitIsFullScreen" in document) {
+				return function () {
+					return (document).webkitFullscreenEnabled;
+				};
+			}
+			if ("mozFullScreenEnabled" in document) {
+				return function () {
+					return (document).mozFullScreenEnabled;
+				};
+			}
+			return function () {
+				return false;
+			};
+		})();
+	}
+	if (!document.hasOwnProperty("fullscreenElement")) {
+		getter = (function () {
+			var i = 0, name = [
+				"webkitCurrentFullScreenElement", 
+				"webkitFullscreenElement", 
+				"mozFullScreenElement"
+			];
+			for (; i < name.length; i++) {
+				if (name[i] in document) {
+					return function () {
+						return document[name[i]];
+					};
+				}
+			}
+			return function () {
+				return null;
+			};
+		})();
+		Object.defineProperty(document, "fullscreenElement", {
+			enumerable: true,
+			configurable: false,
+			writeable: false,
+			get: getter
+		});
+	}
+	function fullscreenchange(oldEvent) {
+		var newEvent = document.createEvent("CustomEvent");
+		(newEvent).initCustomEvent("fullscreenchange", true, false, null);
+		document.dispatchEvent(newEvent);
+	}
+	document.addEventListener("webkitfullscreenchange", fullscreenchange, false);
+	document.addEventListener("mozfullscreenchange", fullscreenchange, false);
+	function fullscreenerror(oldEvent) {
+		var newEvent = document.createEvent("CustomEvent");
+		(newEvent).initCustomEvent("fullscreenerror", true, false, null);
+		document.dispatchEvent(newEvent);
+	}
+	document.addEventListener("webkitfullscreenerror", fullscreenerror, false);
+	document.addEventListener("mozfullscreenerror", fullscreenerror, false);
+	if (!elementPrototype.requestFullScreen) {
+		elementPrototype.requestFullScreen = (function () {
+			if (elementPrototype.webkitRequestFullScreen) {
+				return function () {
+					this.webkitRequestFullScreen((Element).ALLOW_KEYBOARD_INPUT);
+				};
+			}
+			if (elementPrototype.mozRequestFullScreen) {
+				return function () {
+					this.mozRequestFullScreen();
+				};
+			}
+			return function () {
+			};
+		})();
+	}
+	if (!(document).exitFullScreen) {
+		(document).exitFullScreen = (function () {
+			return (document).webkitCancelFullScreen || (document).mozCancelFullScreen || function () {
+			};
+		})();
+	}
+})(window);
+if (!('setLineDash' in CanvasRenderingContext2D.prototype)) {
+	var setLineDash, getLineDash, setLineDashOffset, getLineDashOffset, prototype;
+	if ('mozDash' in CanvasRenderingContext2D.prototype) {
+		prototype = CanvasRenderingContext2D.prototype;
+		setLineDash = function (dash) {
+			this.mozDash = dash;
+		};
+		getLineDash = function () {
+			return this.mozDash;
+		};
+		setLineDashOffset = function (dashOffset) {
+			this.mozDashOffset = dashOffset;
+		};
+		getLineDashOffset = function () {
+			return this.mozDashOffset;
+		};
+	} else {
+		prototype = CanvasRenderingContext2D.prototype;
+		setLineDash = function () {
+		};
+		getLineDash = function () {
+		};
+		setLineDashOffset = function () {
+		};
+		getLineDashOffset = function () {
+		};
+	}
+	Object.defineProperty(prototype, 'setLineDash', {
+		value: setLineDash,
+		enumerable: true,
+		configurable: false,
+		writeable: false
+	});
+	Object.defineProperty(prototype, 'getLineDash', {
+		value: getLineDash,
+		enumerable: true,
+		configurable: false,
+		writeable: false
+	});
+	Object.defineProperty(prototype, 'lineDashOffset', {
+		set: setLineDashOffset,
+		get: getLineDashOffset,
+		enumerable: true,
+		configurable: false,
+		writeable: false
+	});
+}
 //@ sourceMappingURL=MathLib.js.map

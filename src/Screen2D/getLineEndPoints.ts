@@ -6,8 +6,7 @@
 // *@returns {array}* The array has the format [[x1, y1], [x2, y2]]
 getLineEndPoints (l) {
 	if (l.type === 'line') {
-		var 
-				top    = (            - this.translation.y) / this.scale.y,
+		var top    = (            - this.translation.y) / this.scale.y,
 				bottom = (this.height - this.translation.y) / this.scale.y,
 				left   = (            - this.translation.x) / this.scale.x,
 				right  = (this.width  - this.translation.x) / this.scale.x,

@@ -377,7 +377,7 @@ var svg = {
 			// mousedown
 			svgPoint.addEventListener('mousedown', 
 				function () {
-					screen.interaction.type = 'move';
+					screen.options.interaction.type = 'move';
 					var invTransformation = screen.transformation.inverse();
 
 					var move = function (evt) {
@@ -390,7 +390,7 @@ var svg = {
 							},
 
 							up = function () {
-								screen.interaction.type = '';
+								screen.options.interaction.type = '';
 
 								document.body.removeEventListener('mousemove', move);
 								document.body.removeEventListener('mouseup', up);
@@ -418,7 +418,7 @@ var svg = {
 
 
 		svgPoint.addEventListener('contextmenu', function (evt) {
-			screen.interaction.type = 'contextmenu';
+			screen.options.interaction.type = 'contextmenu';
 			var x = (<any>svgPoint).cx.baseVal.value,
 					y = (<any>svgPoint).cy.baseVal.value;
 

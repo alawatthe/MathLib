@@ -106,7 +106,8 @@ module.exports = function (grunt) {
 							'src/Set/!(init).ts',
 							'src/meta/bracket15.ts',
 
-							'src/meta/foot.ts'
+							'src/meta/foot.ts',
+							'src/shims/*.ts'
 							],
 				dest: 'build/MathLib.ts',
 				options: {

@@ -151,7 +151,7 @@ module MathLib {
 		public type: string;
 		public re: number;
 		public im: number;
-		constructor(re: number, im: number);
+		constructor(re: number, im?: number);
 		static infinity: string;
 		public abs(): number;
 		public arccos(): Complex;
@@ -184,6 +184,7 @@ module MathLib {
 		public sign(): Complex;
 		public sin(): Complex;
 		public sinh(): Complex;
+		public sqrt(): Complex;
 		public times(c): Complex;
 		public toContentMathMLString(): String;
 		public toLaTeX(): string;

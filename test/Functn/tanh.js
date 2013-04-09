@@ -8,11 +8,11 @@ test('.tanh()', 7, function () {
 	// Spec. 3: MathLib.tanh(-0) = -0
 	equal(MathLib.isNegZero(MathLib.tanh(-0)), true, 'Spec. 3: MathLib.tanh(-0) = -0');
 
-	// Spec. 4: MathLib.tanh(+&infin;) = 1
-	equal(MathLib.tanh(+Infinity), 1, 'Spec. 4: MathLib.tanh(+&infin;) = +1');
+	// Spec. 4: MathLib.tanh(+∞) = 1
+	equal(MathLib.tanh(+Infinity), 1, 'Spec. 4: MathLib.tanh(+∞) = +1');
 
-	// Spec. 5: MathLib.tanh(-&infin;) = -1
-	equal(MathLib.tanh(-Infinity), -1, 'Spec. 5: MathLib.tanh(-&infin;) = -1');
+	// Spec. 5: MathLib.tanh(-∞) = -1
+	equal(MathLib.tanh(-Infinity), -1, 'Spec. 5: MathLib.tanh(-∞) = -1');
 
 	// Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x
 	equal(MathLib.tanh(1), 0.761594155955765, 'Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x');

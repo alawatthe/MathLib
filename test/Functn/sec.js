@@ -8,11 +8,11 @@ test('.sec()', 7, function () {
 	// Spec. 3: MathLib.sec(-0) = 1
 	equal(MathLib.sec(-0), 1, 'Spec. 3: MathLib.sec(-0) = 1');
 
-	// Spec. 4: MathLib.sec(+&infin;) = NaN
-	equal(MathLib.isNaN(MathLib.sec(+Infinity)), true, 'Spec. 4: MathLib.sec(+&infin;) = NaN');
+	// Spec. 4: MathLib.sec(+∞) = NaN
+	equal(MathLib.isNaN(MathLib.sec(+Infinity)), true, 'Spec. 4: MathLib.sec(+∞) = NaN');
 
-	// Spec. 5: MathLib.sec(-&infin;) = NaN
-	equal(MathLib.isNaN(MathLib.sec(-Infinity)), true, 'Spec. 5: MathLib.sec(-&infin;) = NaN');
+	// Spec. 5: MathLib.sec(-∞) = NaN
+	equal(MathLib.isNaN(MathLib.sec(-Infinity)), true, 'Spec. 5: MathLib.sec(-∞) = NaN');
 
 	// Spec. 6: otherwise MathLib.sec(x) = secant of x
 	equal(MathLib.sec(Math.PI), -1, 'Spec. 6: otherwise MathLib.sec(x) = secant of x');

@@ -26,6 +26,7 @@ module MathLib {
 	MathLib.eulerMascheroni = 0.5772156649015329;
 	MathLib.goldenRatio = 1.618033988749895;
 	MathLib.pi = Math.PI;
+
 	MathLib.isArrayLike = function (x) {
 		return typeof x === 'object' && 'length' in x;
 	};

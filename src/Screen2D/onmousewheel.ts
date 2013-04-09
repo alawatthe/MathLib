@@ -5,7 +5,7 @@
 onmousewheel(evt) {
 	var delta, s, p, z;
 
-	if (this.interaction.allowZoom) {
+	if (this.options.interaction.allowZoom) {
 
 		if (evt.preventDefault) {
 			evt.preventDefault();
@@ -24,7 +24,7 @@ onmousewheel(evt) {
 
 		// The amount of zoom is determined by the zoom speed
 		// and the amount how much the scrollwheel has been moved
-		z = Math.pow(1 + this.interaction.zoomSpeed, delta);
+		z = Math.pow(1 + this.options.interaction.zoomSpeed, delta);
 
 
 

@@ -50,10 +50,11 @@ export class Screen {
 
 				// Generate the context menu
 				if ((<any>opts).contextMenu) {
-					if ((<any>opts).contextMenu.screenshot) {
+					// FIXME: Creating screenshots in Opera is not possible
+					if ((<any>opts).contextMenu.screenshot && !('opera' in window)) {
 						innerHTMLContextMenu += '<div class="MathLib_screenshot MathLib_menuItem">Save Screenshot</div>';
 					}
-					if ((<any>opts).contextMenu.fullscreen) {
+					if ((<any>opts).contextMenu.fullscreen && 'requestFullScreen' in document.body) {
 						innerHTMLContextMenu += '<div class="MathLib_fullscreen MathLib_menuItem"><span class="needs-nofullscreen">Enter Fullscreen</span><span class="needs-fullscreen">Exit Fullscreen</span></div>';
 					}
 
@@ -128,7 +129,10 @@ export class Screen {
 					'<figure class="MathLib_figure">',
 
 						// The canvas or SVG element will be inserted here
-						'<div class="MathLib_wrapper" style="width: '+opts.width+'px; height: '+opts.height+'px"></div>',
+						'<div class="MathLib_wrapper" style="width: '+opts.width+'px; height: '+opts.height+'px">',
+			 			'<div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>',
+			 			'Please update your browser to see the plot.</div>',
+						'</div>',
 
 						// Add the optional figcaption
 						(<any>opts).figcaption ? '<figcaption class="MathLib_figcaption">'+(<any>opts).figcaption+'</figcaption>' : '',
@@ -150,6 +154,7 @@ export class Screen {
 
 		this.height = opts.height;
 		this.width = opts.width;
+		this.options = opts;
 		this.container = container;
 		this.figure = container.getElementsByClassName('MathLib_figure')[0];
 		this.wrapper = container.getElementsByClassName('MathLib_wrapper')[0];
@@ -163,7 +168,7 @@ export class Screen {
 				_this.oncontextmenu(evt);
 			};
 		
-			if ((<any>opts).contextMenu.screenshot) {
+			if ((<any>opts).contextMenu.screenshot && !('opera' in window)) {
 				this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function () {
 					var dataURI,
 							a = document.createElement('a');
@@ -220,7 +225,7 @@ export class Screen {
 			}
 
 
-			if ((<any>opts).contextMenu.fullscreen) {
+			if ((<any>opts).contextMenu.fullscreen && 'requestFullScreen' in document.body) {
 				this.contextMenu.getElementsByClassName('MathLib_fullscreen')[0].onclick = function () {
 					if ((<any>document).fullscreenElement) {
 						(<any>document).exitFullScreen();
@@ -233,15 +238,15 @@ export class Screen {
 
 			if ((<any>opts).contextMenu.grid) {
 				this.contextMenu.getElementsByClassName('MathLib_grid_type')[0].onchange = function () {
-					(<any>_this).grid.type = 'cartesian';
+					(<any>_this).options.grid.type = 'cartesian';
 					(<any>_this).draw();
 				}
 				this.contextMenu.getElementsByClassName('MathLib_grid_type')[1].onchange = function () {
-					(<any>_this).grid.type = 'polar';
+					(<any>_this).options.grid.type = 'polar';
 					(<any>_this).draw();
 				}
 				this.contextMenu.getElementsByClassName('MathLib_grid_type')[2].onchange = function () {
-					(<any>_this).grid.type = false;
+					(<any>_this).options.grid.type = false;
 					(<any>_this).draw();
 				}
 			}
@@ -267,6 +272,10 @@ export class Screen {
 		if ('onfullscreenchange' in this.container) {
 			this.container.addEventListener('fullscreenchange', fullscreenchange);
 		}
+
+		// The mozfullscreenchange event is not firing at all.
+		// Therefore the screen is not resized when going fullscreen.
+		// FIXME: are there any workarounds?
 		else if ('onmozfullscreenchange' in this.container) {
 			this.container.addEventListener('mozfullscreenchange', fullscreenchange);
 		}

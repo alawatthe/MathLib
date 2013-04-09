@@ -8,11 +8,11 @@ test('.arctan()', 7, function () {
 	// Spec. 3: MathLib.arctan(-0) = -0
 	equal(MathLib.isNegZero(MathLib.arctan(-0)), true, 'Spec. 3: MathLib.arctan(-0) = -0');
 
-	// Spec. 4: MathLib.arctan(+&infin;) = +&pi;/2
-	equal(MathLib.arctan(+Infinity), +Math.PI / 2, 'Spec. 4: MathLib.arctan(+&infin;) = +&pi;/2');
+	// Spec. 4: MathLib.arctan(+∞) = +π/2
+	equal(MathLib.arctan(+Infinity), +Math.PI / 2, 'Spec. 4: MathLib.arctan(+∞) = +π/2');
 
-	// Spec. 5: MathLib.arctan(-&infin;) = -&pi;/2
-	equal(MathLib.arctan(-Infinity), -Math.PI / 2, 'Spec. 5: MathLib.arctan(-&infin;) = -&pi;/2');
+	// Spec. 5: MathLib.arctan(-∞) = -π/2
+	equal(MathLib.arctan(-Infinity), -Math.PI / 2, 'Spec. 5: MathLib.arctan(-∞) = -π/2');
 
 	// Spec. 6: otherwise MathLib.arctan(x) = inverse tangent of x
 	equal(MathLib.arctan(1), Math.PI / 4, 'Spec. 6: otherwise MathLib.arctan(x) = inverse tangent of x');

@@ -8,11 +8,11 @@ test('.floor()', 7, function () {
 	// Spec. 3: MathLib.floor(-0) = -0
 	equal(MathLib.isNegZero(MathLib.floor(-0)), true, 'Spec. 3: MathLib.floor(-0) = -0');
 
-	// Spec. 4: MathLib.floor(+&infin;) = +&infin;
-	equal(MathLib.floor(+Infinity), +Infinity, 'Spec. 4: MathLib.floor(+&infin;) = +&infin;');
+	// Spec. 4: MathLib.floor(+∞) = +∞
+	equal(MathLib.floor(+Infinity), +Infinity, 'Spec. 4: MathLib.floor(+∞) = +∞');
 
-	// Spec. 5: MathLib.floor(-&infin;) = -&infin;
-	equal(MathLib.floor(-Infinity), -Infinity, 'Spec. 5: MathLib.floor(-&infin;) = -&infin;');
+	// Spec. 5: MathLib.floor(-∞) = -∞
+	equal(MathLib.floor(-Infinity), -Infinity, 'Spec. 5: MathLib.floor(-∞) = -∞');
 
 	// Spec. 6: otherwise MathLib.floor(x) = ⎣x⎦
 	equal(MathLib.floor(2.2), 2, 'Spec. 6: otherwise MathLib.floor(x) =  ⎣x⎦');

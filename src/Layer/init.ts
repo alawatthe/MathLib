@@ -65,14 +65,14 @@ export class Layer {
 							right   = (screen.width  - screen.translation.x) / screen.scale.x;
 
 					// Draw the background
-					this.ctx.fillStyle = colorConvert(screen.background);
+					this.ctx.fillStyle = colorConvert(screen.options.background);
 					this.ctx.fillRect(left, bottom, right-left, top-bottom);
 
 					canvas.draw.call(_this);
 				}
 			}
 			else if (id === 'grid') {
-				this.ctx.strokeStyle = colorConvert(screen.grid.color) || '#cccccc';
+				this.ctx.strokeStyle = colorConvert(screen.options.grid.color) || '#cccccc';
 				this.ctx.fillStyle = 'rgba(255,255,255,0)';
 
 				
@@ -82,7 +82,7 @@ export class Layer {
 				}
 			}
 			else if (id === 'axis') {
-				this.ctx.strokeStyle = colorConvert(screen.axis.color) || '#000000';
+				this.ctx.strokeStyle = colorConvert(screen.options.axis.color) || '#000000';
 				
 				this.draw = function (){
 					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
@@ -132,7 +132,7 @@ export class Layer {
 				}
 			}
 			else if (id === 'grid') {
-				ctx.setAttribute('stroke', colorConvert(screen.grid.color) || '#cccccc');
+				ctx.setAttribute('stroke', colorConvert(screen.options.grid.color) || '#cccccc');
 
 				this.draw = function (){
 					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
@@ -141,7 +141,7 @@ export class Layer {
 
 			}
 			else if (id === 'axis') {
-				ctx.setAttribute('stroke', colorConvert(screen.axis.color) || '#000000');
+				ctx.setAttribute('stroke', colorConvert(screen.options.axis.color) || '#000000');
 				
 				this.draw = function (){
 					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');

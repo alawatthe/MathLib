@@ -3,7 +3,7 @@
 //
 // *@returns {Screen2D}*
 var drawGrid = function () {
-	if (!this.screen.grid) {
+	if (!this.screen.options.grid) {
 		return this;
 	}
 
@@ -17,7 +17,7 @@ var drawGrid = function () {
 			i;
 
 
-	if (screen.grid.type === 'cartesian') {
+	if (screen.options.grid.type === 'cartesian') {
 
 
 		// The horizontal lines
@@ -41,11 +41,11 @@ var drawGrid = function () {
 
 
 	}
-	else if (screen.grid.type === 'polar') {
+	else if (screen.options.grid.type === 'polar') {
 		var max = Math.sqrt(Math.max(top*top, bottom*bottom) + Math.max(left*left, right*right)),
 				min = 0; // improve this estimate
 
-		for (i = 0; i < 2*Math.PI; i += screen.grid.angle) {
+		for (i = 0; i < 2*Math.PI; i += screen.options.grid.angle) {
 			this.line([[0, 0], [max*Math.cos(i), max*Math.sin(i)]], false, true);
 		}
 

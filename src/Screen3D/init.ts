@@ -55,9 +55,8 @@ export class Screen3D extends Screen {
 				//clock = new THREE.Clock(),
 				camera, renderer, controls, viewAngle, aspect, near, far;
 
+		this.options = opts;
 		this.scene = scene;
-		this.axis = opts.axis;
-		this.grid = opts.grid;
 
 
 		// Camera
@@ -78,6 +77,8 @@ export class Screen3D extends Screen {
 		// Renderer
 		// ========
 		renderer = new THREE[opts.renderer + 'Renderer']( {antialias:true, preserveDrawingBuffer: true} );
+		// Remove the warning message.
+		this.wrapper.innerHTML = '';
 		this.wrapper.appendChild(renderer.domElement);
 
 
@@ -134,7 +135,7 @@ export class Screen3D extends Screen {
 
 		// Grid
 		// ====
-		if (this.grid) {
+		if (opts.grid) {
 			this.drawGrid();
 		}
 

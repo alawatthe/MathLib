@@ -28,7 +28,7 @@
   -moz-box-align: center;
   -ms-box-align: center;
   box-align: center;
-  margin: 0;
+  margin: 0em auto;
   -webkit-box-orient: vertical;
   -moz-box-orient: vertical;
   -ms-box-orient: vertical;
@@ -69,6 +69,13 @@
 .MathLib_container:full-screen .MathLib_wrapper {
   width: 100%!important;
   height: 100%!important;
+}
+
+.MathLib_info_message {
+  font-family: Helvetica;
+  line-height: 2em;
+  text-align: center;
+  padding: 50% 10px 50% 10px;
 }
 
 .MathLib_figcaption {

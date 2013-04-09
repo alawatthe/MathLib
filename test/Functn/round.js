@@ -11,11 +11,11 @@ test('.round()', 10, function () {
 	equal(MathLib.isNegZero(MathLib.round(-0)), true, 'Spec. 3: MathLib.round(x) = -0 if -0.5 ≤ x ≤ -0');
 	equal(MathLib.isNegZero(MathLib.round(-0.5)), true, 'Spec. 3: MathLib.round(x) = -0 if -0.5 ≤ x ≤ -0');
 
-	// Spec. 4: MathLib.round(+&infin;) = +&infin;
-	equal(MathLib.round(+Infinity), +Infinity, 'Spec. 4: MathLib.round(+&infin;) = +&infin;');
+	// Spec. 4: MathLib.round(+∞) = +∞
+	equal(MathLib.round(+Infinity), +Infinity, 'Spec. 4: MathLib.round(+∞) = +∞');
 
-	// Spec. 5: MathLib.round(-&infin;) = -&infin;
-	equal(MathLib.round(-Infinity), -Infinity, 'Spec. 5: MathLib.round(-&infin;) = -&infin;');
+	// Spec. 5: MathLib.round(-∞) = -∞
+	equal(MathLib.round(-Infinity), -Infinity, 'Spec. 5: MathLib.round(-∞) = -∞');
 
 	// Spec. 6: otherwise MathLib.round(x) = ⎣ x+0.5 ⎦
 	equal(MathLib.round(2.2), 2, 'Spec. 6: otherwise MathLib.round(x) =  ⎣ x+0.5 ⎦');

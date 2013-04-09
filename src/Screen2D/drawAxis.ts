@@ -5,12 +5,12 @@
 var drawAxis = function () {
 	var screen = this.screen,
 			options = {
-				stroke: colorConvert(this.screen.axis.color),
+				stroke: colorConvert(this.screen.options.axis.color),
 				'stroke-width': -1/screen.transformation[1][1]
 			},
 			textOptions = {
-				strokeStyle: colorConvert(this.screen.axis.textColor),
-				fillStyle: colorConvert(this.screen.axis.textColor)
+				strokeStyle: colorConvert(this.screen.options.axis.textColor),
+				fillStyle: colorConvert(this.screen.options.axis.textColor)
 			},
 			top     = (              - screen.translation.y) / screen.scale.y,
 			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
@@ -25,7 +25,7 @@ var drawAxis = function () {
 			xTick = Math.pow(10, xExp),
 			i;
 
-  if (!this.screen.axis) {
+  if (!this.screen.options.axis) {
 		return this;
 	}
 
@@ -37,7 +37,7 @@ var drawAxis = function () {
 
 	// The ticks on the axes
 	// The x axis
-	if(screen.grid.tick) {
+	if(screen.options.grid.tick) {
 		for (i = -yTick; i >= left; i -= yTick) {
 			this.line([[i, -lengthY], [i, lengthY]], false, true);
 		}

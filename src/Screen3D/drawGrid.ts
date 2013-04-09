@@ -3,7 +3,7 @@
 //
 // *@returns {Screen3D}*
 drawGrid() {
-	if (!this.grid) {
+	if (!this.options.grid) {
 		return this;
 	}
 
@@ -67,9 +67,9 @@ drawGrid() {
 			};
 
 
-	gridDrawer(this.grid.xy, 0, 0);
-	gridDrawer(this.grid.xz, Math.PI/2, 0);
-	gridDrawer(this.grid.yz, 0, Math.PI/2);
+	gridDrawer(this.options.grid.xy, 0, 0);
+	gridDrawer(this.options.grid.xz, Math.PI/2, 0);
+	gridDrawer(this.options.grid.yz, 0, Math.PI/2);
 
 	return this;
 }

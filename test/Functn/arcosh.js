@@ -2,11 +2,11 @@ test('.arcosh()', 9, function () {
 	// Spec. 1: MathLib.arcosh(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.arcosh(NaN)), true, 'Spec. 1: MathLib.arcosh(NaN) = NaN');
 
-	// Spec. 2: MathLib.arcosh(+&infin;) = +&infin;
-	equal(MathLib.arcosh(+Infinity), Infinity, 'Spec. 2: MathLib.arcosh(+&infin;) = +&infin;');
+	// Spec. 2: MathLib.arcosh(+∞) = +∞
+	equal(MathLib.arcosh(+Infinity), Infinity, 'Spec. 2: MathLib.arcosh(+∞) = +∞');
 
-	// Spec. 3: MathLib.arcosh(-&infin;) = NaN
-	equal(MathLib.isNaN(MathLib.arcosh(-Infinity)), true, 'Spec. 3: MathLib.arcosh(-&infin;) = NaN');
+	// Spec. 3: MathLib.arcosh(-∞) = NaN
+	equal(MathLib.isNaN(MathLib.arcosh(-Infinity)), true, 'Spec. 3: MathLib.arcosh(-∞) = NaN');
 
 	// Spec. 4: MathLib.arcosh(x) = NaN if x < 1
 	equal(MathLib.isNaN(MathLib.arcosh(-1)), true, 'Spec. 4: otherwise MathLib.arcosh(x) = NaN if x < 1');

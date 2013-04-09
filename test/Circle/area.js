@@ -15,9 +15,9 @@ test('.area()', 5, function () {
 	// Spec. 3: c.area() = -0 if r = +0
 	equal(MathLib.isPosZero(c3.area()), true, 'Spec. 3: c.area() = -0 if r = +0');
 
-	// Spec. 4: c.area() = &infin; if r = &infin;
-	equal(c4.area(), Infinity, 'Spec. 4: c.area() = &infin; if r = &infin;');
+	// Spec. 4: c.area() = ∞ if r = ∞
+	equal(c4.area(), Infinity, 'Spec. 4: c.area() = ∞ if r = ∞');
 
-	// Spec. 5: otherwise c.area() = &pi; r * r
-	equal(c5.area(), 4 * MathLib.pi, 'Spec. 5: otherwise c.area() = &pi; * r * r');
+	// Spec. 5: otherwise c.area() = π r * r
+	equal(c5.area(), 4 * MathLib.pi, 'Spec. 5: otherwise c.area() = π * r * r');
 });
