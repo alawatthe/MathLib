@@ -408,6 +408,103 @@ test('zero', 1, function () {
 	deepEqual(c, new MathLib.Complex(0, 0), '.zero');
 });
 
+module('Expression');
+test('init', 2, function () {
+	var e1 = new MathLib.Expression('sin(1)'),
+			e2 = new MathLib.Expression({value: 1, subtype: 'number'});
+	equal(e1.subtype, 'functionCall', 'init (string)');
+	equal(e2.subtype, 'number', 'init (object)');
+});
+
+
+// Properties
+test('.constructor', 1, function () {
+	var e = new MathLib.Expression();
+	equal(e.constructor, MathLib.Expression, 'Testing .constructor');
+});
+
+test('.type', 1, function () {
+	var e = new MathLib.Expression();
+	equal(e.type, 'expression', 'Testing .type');
+});
+test('.parse (Number)', 11, function () {
+	equal(MathLib.Expression.parse('123').value, 123, '.parse("123")');
+	equal(MathLib.Expression.parse('123.').value, 123, '.parse("123.")');
+	equal(MathLib.Expression.parse('.456').value, 0.456, '.parse(".456")');
+	equal(MathLib.Expression.parse('123.456e7').value, 123.456e7, '.parse("123.456e7")');
+	equal(MathLib.Expression.parse('123.456E7').value, 123.456E7, '.parse("123.456eE7")');
+	equal(MathLib.Expression.parse('123.456e+7').value, 123.456e+7, '.parse("123.456e+7")');
+	equal(MathLib.Expression.parse('123.456E+7').value, 123.456E+7, '.parse("123.456E+7")');
+	equal(MathLib.Expression.parse('123.456e-7').value, 123.456e-7, '.parse("123.456e-7")');
+	equal(MathLib.Expression.parse('123.456E-7').value, 123.456E-7, '.parse("123.456E-7")');
+
+	var num = MathLib.Expression.parse('123');
+	equal(num.type, 'expression');
+	equal(num.subtype, 'number');
+});
+
+
+test('.parse (unaryOperator)', 4, function () {
+	var unary = MathLib.Expression.parse('-12');
+	equal(unary.subtype, 'unaryOperator');
+	equal(unary.value, '-');
+
+	equal(MathLib.Expression.parse('+12').numericallyEvaluate(), +12, '.parse("12+34")');
+	equal(MathLib.Expression.parse('-12').numericallyEvaluate(), -12, '.parse("12*34")');
+});
+
+
+
+test('.parse (binaryOperator)', 10, function () {
+	equal(MathLib.Expression.parse('12+34').numericallyEvaluate(), 12 + 34, '.parse("12+34")');
+	equal(MathLib.Expression.parse('12*34').numericallyEvaluate(), 12 * 34, '.parse("12*34")');
+
+	equal(MathLib.Expression.parse('65-43-21').numericallyEvaluate(), 65 - 43 - 21, '.parse("65-43-21")');
+
+
+	equal(MathLib.Expression.parse('12*34+56').numericallyEvaluate(), 12 * 34 + 56, '.parse("12*34+56")');
+	equal(MathLib.Expression.parse('12+34*56').numericallyEvaluate(), 12 + 34 * 56, '.parse("12+34*56")');
+	equal(MathLib.Expression.parse('12*34/6').numericallyEvaluate(), 12 * 34 / 6, '.parse("12*34/6")');
+	equal(MathLib.Expression.parse('12/3*4').numericallyEvaluate(), 12 / 3 * 4, '.parse("12/3*4")');
+	equal(MathLib.Expression.parse('12/3/4').numericallyEvaluate(), 12 / 3 / 4, '.parse("12/3/4")');
+	equal(MathLib.Expression.parse('36/2/3/6').numericallyEvaluate(), 36 / 2 / 3 / 6, '.parse("36/2/3/6")');
+	equal(MathLib.Expression.parse('36/2/3/2/3').numericallyEvaluate(), 36 / 2 / 3 / 2 / 3, '.parse("36/2/3/2/3")');
+});
+
+
+
+test('.parse (brackets)', 3, function () {
+	var br = MathLib.Expression.parse('(1)');
+	equal(br.subtype, 'brackets');
+	equal(br.value, 'brackets');
+	deepEqual(br.content.value, '1');
+});
+
+
+test('.parse (functionCall)', 3, function () {
+	var fn = MathLib.Expression.parse('cos(1)');
+	equal(fn.subtype, 'functionCall');
+	equal(fn.value, 'cos');
+	deepEqual(fn.content[0].value, '1');
+});
+
+test('.toLaTeX', 8, function () {
+	equal(MathLib.Expression.parse('123.456E-7').toLaTeX(), '123.456E-7', '("123.456E-7").toLaTeX()');
+	equal(MathLib.Expression.parse('1+2').toLaTeX(), '1+2', '("1+2").toLaTeX()');
+	equal(MathLib.Expression.parse('(1+2)*3').toLaTeX(), '\\left(1+2\\right)\\cdot3', '("(1+2)*3").toLaTeX()');
+	equal(MathLib.Expression.parse('sin(1)').toLaTeX(), '\\sin\\left(1\\right)', '("sin(1)").toLaTeX()');
+	equal(MathLib.Expression.parse('exp(1)').toLaTeX(), 'e^{1}', '("exp(1)").toLaTeX()');
+	equal(MathLib.Expression.parse('sqrt(1)').toLaTeX(), '\\sqrt{1}', '("sqrt(1)").toLaTeX()');
+	equal(MathLib.Expression.parse('arsinh(1)').toLaTeX(), '\\operatorname{arsinh}\\left(1\\right)', '("arsinh(1)").toLaTeX()');
+	equal(MathLib.Expression.parse('sin(1)+cos(exp(2)*3)').toLaTeX(), '\\sin\\left(1\\right)+\\cos\\left(e^{2}\\cdot3\\right)', '("sin(1)+cos(exp(2)*3)").toLaTeX()');
+});
+test('.toString', 5, function () {
+	equal(MathLib.Expression.parse('123.456E-7').toString(), '123.456E-7', '("123.456E-7").toString()');
+	equal(MathLib.Expression.parse('1+2').toString(), '1+2', '("1+2").toString()');
+	equal(MathLib.Expression.parse('(1+2)*3').toString(), '(1+2)*3', '("(1+2)*3").toString()');
+	equal(MathLib.Expression.parse('sin(1)').toString(), 'sin(1)', '("sin(1)").toString()');
+	equal(MathLib.Expression.parse('sin(1)+cos(exp(2)*3)').toString(), 'sin(1)+cos(exp(2)*3)', '("sin(1)+cos(exp(2)*3)").toString()');
+});
 module('Functn');
 test('execution', 4, function () {
 	equal(MathLib.sin(0), 0, 'MathLib.sin(0) should be 0');

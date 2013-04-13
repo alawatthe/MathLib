@@ -1,6 +1,3 @@
-
-
-
 // ## <a id="Screen3D"></a>Screen3D
 // Two dimensional plotting
 

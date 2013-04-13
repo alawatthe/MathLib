@@ -194,6 +194,18 @@ module MathLib {
 		public toString(): string;
 		static zero: Complex;
 	}
+	class Expression {
+		public type: string;
+		public subtype: string;
+		public name: string;
+		public value: any;
+		public content: any;
+		constructor(expr?: {});
+		public numericallyEvaluate(): any;
+		static parse: (str: any) => any;
+		public toLaTeX(): string;
+		public toString(): string;
+	}
 	class Line extends Vector {
 		public type: string;
 		public dimension: number;

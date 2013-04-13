@@ -3436,6 +3436,501 @@ function render() {
 		return Complex;
 	})();
 	MathLib.Complex = Complex;	
+	var Expression = (function () {
+		function Expression(expr) {
+			if (typeof expr === 'undefined') {
+				expr = {
+			};
+			}
+			this.type = 'expression';
+			var prop;
+			if (typeof expr === 'string') {
+				expr = MathLib.Expression.parse(expr);
+			}
+			for (prop in expr) {
+				this[prop] = expr[prop];
+			}
+		}
+		Expression.prototype.numericallyEvaluate = function () {
+			if (this.subtype === 'brackets') {
+				return this.content.numericallyEvaluate();
+			}
+			if (this.subtype === 'number') {
+				return parseFloat(this.value);
+			}
+			if (this.subtype === 'naryOperator') {
+				return MathLib[this.name].apply(null, this.content.map(function (x) {
+					return x.numericallyEvaluate();
+				}));
+			}
+			if (this.subtype === 'unaryOperator') {
+				if (this.value === '-') {
+					return MathLib.negative(this.content.numericallyEvaluate());
+				}
+				return this.content.numericallyEvaluate();
+			}
+			if (this.subtype === 'functionCall') {
+				return MathLib[this.value].apply(null, this.content.map(function (x) {
+					return x.numericallyEvaluate();
+				}));
+			}
+		};
+		Expression.parse = function (str) {
+			var Token, Lexer, Parser;
+			Token = {
+				Operator: 'Operator',
+				Identifier: 'Identifier',
+				Number: 'Number'
+			};
+			Lexer = function () {
+				var expression = '', length = 0, index = 0, marker = 0, T = Token;
+				function peekNextChar() {
+					var idx = index;
+					return ((idx < length) ? expression.charAt(idx) : '\x00');
+				}
+				function getNextChar() {
+					var ch = '\x00', idx = index;
+					if (idx < length) {
+						ch = expression.charAt(idx);
+						index += 1;
+					}
+					return ch;
+				}
+				function isWhiteSpace(ch) {
+					return (ch === '\u0009') || (ch === ' ') || (ch === '\u00A0');
+				}
+				function isLetter(ch) {
+					return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
+				}
+				function isDecimalDigit(ch) {
+					return (ch >= '0') && (ch <= '9');
+				}
+				function createToken(type, value) {
+					return {
+						type: type,
+						value: value,
+						start: marker,
+						end: index - 1
+					};
+				}
+				function skipSpaces() {
+					var ch;
+					while (index < length) {
+						ch = peekNextChar();
+						if (!isWhiteSpace(ch)) {
+							break;
+						}
+						getNextChar();
+					}
+				}
+				function scanOperator() {
+					var ch = peekNextChar();
+					if ('+-*/()^%=;,'.indexOf(ch) >= 0) {
+						return createToken(T.Operator, getNextChar());
+					}
+					return undefined;
+				}
+				function isIdentifierStart(ch) {
+					return (ch === '_') || isLetter(ch);
+				}
+				function isIdentifierPart(ch) {
+					return isIdentifierStart(ch) || isDecimalDigit(ch);
+				}
+				function scanIdentifier() {
+					var ch, id;
+					ch = peekNextChar();
+					if (!isIdentifierStart(ch)) {
+						return undefined;
+					}
+					id = getNextChar();
+					while (true) {
+						ch = peekNextChar();
+						if (!isIdentifierPart(ch)) {
+							break;
+						}
+						id += getNextChar();
+					}
+					return createToken(T.Identifier, id);
+				}
+				function scanNumber() {
+					var ch, number;
+					ch = peekNextChar();
+					if (!isDecimalDigit(ch) && (ch !== '.')) {
+						return undefined;
+					}
+					number = '';
+					if (ch !== '.') {
+						number = getNextChar();
+						while (true) {
+							ch = peekNextChar();
+							if (!isDecimalDigit(ch)) {
+								break;
+							}
+							number += getNextChar();
+						}
+					}
+					if (ch === '.') {
+						number += getNextChar();
+						while (true) {
+							ch = peekNextChar();
+							if (!isDecimalDigit(ch)) {
+								break;
+							}
+							number += getNextChar();
+						}
+					}
+					if (ch === 'e' || ch === 'E') {
+						number += getNextChar();
+						ch = peekNextChar();
+						if (ch === '+' || ch === '-' || isDecimalDigit(ch)) {
+							number += getNextChar();
+							while (true) {
+								ch = peekNextChar();
+								if (!isDecimalDigit(ch)) {
+									break;
+								}
+								number += getNextChar();
+							}
+						} else {
+							ch = 'character ' + ch;
+							if (index >= length) {
+								ch = '<end>';
+							}
+							throw new SyntaxError('Unexpected ' + ch + ' after the exponent sign');
+						}
+					}
+					if (number === '.') {
+						throw new SyntaxError('Expecting decimal digits after the dot sign');
+					}
+					return createToken(T.Number, number);
+				}
+				function reset(str) {
+					expression = str;
+					length = str.length;
+					index = 0;
+				}
+				function next() {
+					var token;
+					skipSpaces();
+					if (index >= length) {
+						return undefined;
+					}
+					marker = index;
+					token = scanNumber();
+					if (typeof token !== 'undefined') {
+						return token;
+					}
+					token = scanOperator();
+					if (typeof token !== 'undefined') {
+						return token;
+					}
+					token = scanIdentifier();
+					if (typeof token !== 'undefined') {
+						return token;
+					}
+					throw new SyntaxError('Unknown token from character ' + peekNextChar());
+				}
+				function peek() {
+					var token, idx;
+					idx = index;
+					try  {
+						token = next();
+						delete token.start;
+						delete token.end;
+					} catch (e) {
+						token = undefined;
+					}
+					index = idx;
+					return token;
+				}
+				return {
+					reset: reset,
+					next: next,
+					peek: peek
+				};
+			};
+			Parser = function () {
+				var lexer = new Lexer(), T = Token;
+				function matchOp(token, op) {
+					return (typeof token !== 'undefined') && token.type === T.Operator && token.value === op;
+				}
+				function parseArgumentList() {
+					var token, expr, args = [];
+					while (true) {
+						expr = parseExpression();
+						if (typeof expr === 'undefined') {
+							break;
+						}
+						args.push(expr);
+						token = lexer.peek();
+						if (!matchOp(token, ',')) {
+							break;
+						}
+						lexer.next();
+					}
+					return args;
+				}
+				function parseFunctionCall(name) {
+					var token, args = [];
+					token = lexer.next();
+					if (!matchOp(token, '(')) {
+						throw new SyntaxError('Expecting ( in a function call "' + name + '"');
+					}
+					token = lexer.peek();
+					if (!matchOp(token, ')')) {
+						args = parseArgumentList();
+					}
+					token = lexer.next();
+					if (!matchOp(token, ')')) {
+						throw new SyntaxError('Expecting ) in a function call "' + name + '"');
+					}
+					return new MathLib.Expression({
+						subtype: 'functionCall',
+						value: name,
+						content: args
+					});
+				}
+				function parsePrimary() {
+					var token, expr;
+					token = lexer.peek();
+					if (typeof token === 'undefined') {
+						throw new SyntaxError('Unexpected termination of expression');
+					}
+					if (token.type === T.Identifier) {
+						token = lexer.next();
+						if (matchOp(lexer.peek(), '(')) {
+							return parseFunctionCall(token.value);
+						} else {
+							return new MathLib.Expression({
+								subtype: 'Identifier',
+								value: token.value
+							});
+						}
+					}
+					if (token.type === T.Number) {
+						token = lexer.next();
+						return new MathLib.Expression({
+							value: token.value,
+							subtype: 'number'
+						});
+					}
+					if (matchOp(token, '(')) {
+						lexer.next();
+						expr = parseAssignment();
+						token = lexer.next();
+						if (!matchOp(token, ')')) {
+							throw new SyntaxError('Expecting )');
+						}
+						return new MathLib.Expression({
+							subtype: 'brackets',
+							value: 'brackets',
+							content: expr
+						});
+					}
+					throw new SyntaxError('Parse error, can not process token ' + token.value);
+				}
+				function parseUnary() {
+					var token, expr;
+					token = lexer.peek();
+					if (matchOp(token, '-') || matchOp(token, '+')) {
+						token = lexer.next();
+						expr = parseUnary();
+						return new MathLib.Expression({
+							subtype: 'unaryOperator',
+							value: token.value,
+							content: expr
+						});
+					}
+					return parsePrimary();
+				}
+				function parseMultiplicative() {
+					var token, left, right, r;
+					left = parseUnary();
+					token = lexer.peek();
+					if (matchOp(token, '*') || matchOp(token, '/')) {
+						token = lexer.next();
+						right = parseMultiplicative();
+						if (right.subtype === 'naryOperator') {
+							r = right;
+							while (r.content[0].subtype === 'naryOperator') {
+								r = r.content[0];
+							}
+							r.content[0] = new MathLib.Expression({
+								subtype: 'naryOperator',
+								content: [
+									left, 
+									r.content[0]
+								],
+								value: token.value,
+								name: token.value === '*' ? 'times' : 'divide'
+							});
+							return right;
+						} else {
+							return new MathLib.Expression({
+								subtype: 'naryOperator',
+								value: token.value,
+								name: token.value === '*' ? 'times' : 'divide',
+								content: [
+									left, 
+									right
+								]
+							});
+						}
+					}
+					return left;
+				}
+				function parseAdditive() {
+					var token, left, right, r;
+					left = parseMultiplicative();
+					token = lexer.peek();
+					if (matchOp(token, '+') || matchOp(token, '-')) {
+						token = lexer.next();
+						right = parseAdditive();
+						if (right.value === '+' || right.value === '-') {
+							r = right;
+							while (r.content[0].subtype === 'naryOperator') {
+								r = r.content[0];
+							}
+							r.content[0] = new MathLib.Expression({
+								subtype: 'naryOperator',
+								content: [
+									left, 
+									r.content[0]
+								],
+								value: token.value,
+								name: token.value === '+' ? 'plus' : 'minus'
+							});
+							return right;
+						} else {
+							return new MathLib.Expression({
+								subtype: 'naryOperator',
+								value: token.value,
+								name: token.value === '+' ? 'plus' : 'minus',
+								content: [
+									left, 
+									right
+								]
+							});
+						}
+					}
+					return left;
+				}
+				function parseAssignment() {
+					var token, expr;
+					expr = parseAdditive();
+					return expr;
+				}
+				function parseExpression() {
+					return parseAssignment();
+				}
+				function parse(expression) {
+					var expr, token;
+					lexer.reset(expression);
+					expr = parseExpression();
+					token = lexer.next();
+					if (typeof token !== 'undefined') {
+						throw new SyntaxError('Unexpected token ' + token.value);
+					}
+					return new MathLib.Expression(expr);
+				}
+				return {
+					parse: parse
+				};
+			};
+			return Parser().parse(str);
+		};
+		Expression.prototype.toLaTeX = function () {
+			var op;
+			if (this.subtype === 'brackets') {
+				return '\\left(' + this.content.toLaTeX() + '\\right)';
+			}
+			if (this.subtype === 'number') {
+				return this.value;
+			}
+			if (this.subtype === 'naryOperator') {
+				op = this.value === '*' ? '\\cdot' : this.value;
+				return this.content.reduce(function (old, cur, idx) {
+					return old + (idx ? op : '') + cur.toLaTeX();
+				}, '');
+			}
+			if (this.subtype === 'unaryOperator') {
+				if (this.value === '-') {
+					return '-' + this.content.toLaTeX();
+				}
+				return this.content.toLaTeX();
+			}
+			if (this.subtype === 'functionCall') {
+				if ([
+					'arccos', 
+					'arcsin', 
+					'arctan', 
+					'arg', 
+					'cos', 
+					'cosh', 
+					'cot', 
+					'coth', 
+					'csc', 
+					'deg', 
+					'det', 
+					'dim', 
+					'gcd', 
+					'lg', 
+					'ln', 
+					'log', 
+					'max', 
+					'min', 
+					'sec', 
+					'sin', 
+					'sinh', 
+					'tan', 
+					'tanh'
+				].indexOf(this.value) + 1) {
+					return '\\' + this.value + '\\left(' + this.content.reduce(function (old, cur, idx) {
+						return old + (idx ? ',' : '') + cur.toLaTeX();
+					}, '') + '\\right)';
+				} else if (this.value === 'exp') {
+					return 'e^{' + this.content.reduce(function (old, cur, idx) {
+						return old + (idx ? ',' : '') + cur.toLaTeX();
+					}, '') + '}';
+				} else if (this.value === 'sqrt') {
+					return '\\' + this.value + '{' + this.content.reduce(function (old, cur, idx) {
+						return old + (idx ? ',' : '') + cur.toLaTeX();
+					}, '') + '}';
+				} else {
+					return '\\operatorname{' + this.value + '}\\left(' + this.content.reduce(function (old, cur, idx) {
+						return old + (idx ? ',' : '') + cur.toLaTeX();
+					}, '') + '\\right)';
+				}
+			}
+		};
+		Expression.prototype.toString = function () {
+			var _this = this;
+			if (this.subtype === 'brackets') {
+				return '(' + this.content.toString() + ')';
+			}
+			if (this.subtype === 'number') {
+				return this.value;
+			}
+			if (this.subtype === 'naryOperator') {
+				return this.content.reduce(function (old, cur) {
+					return old + _this.value + cur;
+				});
+			}
+			if (this.subtype === 'unaryOperator') {
+				if (this.value === '-') {
+					return '-' + this.content.toString();
+				}
+				return this.content.toString();
+			}
+			if (this.subtype === 'functionCall') {
+				return this.value + '(' + this.content.reduce(function (old, cur) {
+					return old + ',' + cur;
+				}) + ')';
+			}
+		};
+		return Expression;
+	})();
+	MathLib.Expression = Expression;	
 	var Line = (function (_super) {
 		__extends(Line, _super);
 		function Line(coords) {

@@ -78,33 +78,37 @@ module.exports = function (grunt) {
 							'src/Complex/!(init).ts',
 							'src/meta/bracket8.ts',
 
+							'src/Expression/init.ts',
+							'src/Expression/!(init).ts',
+							'src/meta/bracket9.ts',
+
 							'src/Line/init.ts',
 							'src/Line/!(init).ts',
-							'src/meta/bracket9.ts',
+							'src/meta/bracket10.ts',
 
 							'src/Matrix/init.ts',
 							'src/Matrix/!(init).ts',
-							'src/meta/bracket10.ts',
+							'src/meta/bracket11.ts',
 
 							'src/Permutation/init.ts',
 							'src/Permutation/!(init).ts',
-							'src/meta/bracket11.ts',
+							'src/meta/bracket12.ts',
 
 							'src/Point/init.ts',
 							'src/Point/!(init).ts',
-							'src/meta/bracket12.ts',
+							'src/meta/bracket13.ts',
 
 							'src/Polynomial/init.ts',
 							'src/Polynomial/!(init).ts',
-							'src/meta/bracket13.ts',
+							'src/meta/bracket14.ts',
 
 							'src/Rational/init.ts',
 							'src/Rational/!(init).ts',
-							'src/meta/bracket14.ts',
+							'src/meta/bracket15.ts',
 
 							'src/Set/init.ts',
 							'src/Set/!(init).ts',
-							'src/meta/bracket15.ts',
+							'src/meta/bracket16.ts',
 
 							'src/meta/foot.ts',
 							'src/shims/*.ts'
@@ -148,6 +152,7 @@ module.exports = function (grunt) {
 							'//\n' +
 							'// - [circle](#Circle "Jump to the circle implementation")\n' +
 							'// - [complex](#Complex "Jump to the complex number implementation")\n' +
+							'// - [expression](#Expression "Jump to the expression implementation")\n' +
 							'// - [line](#Line "Jump to the line implementation")\n' +
 							'// - [matrix](#Matrix "Jump to the matrix implementation")\n' +
 							'// - [permutation](#Permutation "Jump to the permutation implementation")\n' +
@@ -166,6 +171,9 @@ module.exports = function (grunt) {
 
 							'test/Complex/init.js',
 							'test/Complex/!(init).js',
+
+							'test/Expression/init.js',
+							'test/Expression/!(init).js',
 
 							'test/Functn/init.js',
 							'test/Functn/!(init).js',

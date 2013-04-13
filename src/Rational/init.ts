@@ -1,4 +1,4 @@
-// ## <a id="Rational" href="http://mathlib.de/en/docs/rational">Rational</a>
+// ## <a id="Rational" href="http://mathlib.de/en/docs/Rational">Rational</a>
 // MathLib.Rational is the MathLib implementation of rational numbers.
 //
 //
