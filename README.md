@@ -1,13 +1,15 @@
 # MathLib
+ 
 
-MathLib.js is a JavaScript library for mathematical computations. It can handle circles, complex numbers, functions, lines, matrices, permutations, points, polynomials, sets, and vectors.
+MathLib.js is a JavaScript library for mathematical computations. It can handle circles, complex numbers, expressions, functions, lines, matrices, permutations, points, polynomials, rational numbers, sets, and vectors.
+
+There is a SVG and Canvas renderer for 2D plotting. 3D plotting is supported with [Three.js](https://github.com/mrdoob/three.js).
 
 Further it can parse Content MathML and write Content MathML, Presentation MathML and LaTeX.
 
-Please check out the library's homepage at: <http://MathLib.de/en>
+[Homepage](http://mathlib.de/en/) - [Download](http://mathlib.de/en/download) - [Demonstrations](http://mathlib.de/en/demos) - [Documentation](http://mathlib.de/en/docs)
 
-**Be aware that MathLib is in an early beta stage.
-There are many bugs to find and fix, before MathLib hits version 1.0.**
+
 
 ## Getting Started
 
@@ -23,39 +25,56 @@ In your web page:
 </script>
 ```
 
-
-## Documentation
-The documentation isn't ready yet. In the meantime you can browse the [annotated source](http://mathlib.de/en/docs/annotatedSource).
-
-
-## Demos
-Some demos can be found on the [MathLib demo site](http://mathlib.de/en/demos).
+If you want to use the plotting funtionality you also need to download the [MathLib.css](https://raw.github.com/alawatthe/MathLib/master/build/MathLib.css) or the [MathLib.min.css](https://raw.github.com/alawatthe/MathLib/master/build/MathLib.min.css) file and link to it in the head of your document:
+```
+<link rel="stylesheet" href="path/to/MathLib.min.css" charset="utf-8">
+```
 
 
 ## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [grunt](http://gruntjs.com/).
-
 
 ### Building MathLib
 
 Open your Terminal, clone MathLib
 
 ```
-git://github.com/alawatthe/MathLib.git
+git clone git://github.com/alawatthe/MathLib.git
 ```
+
+Enter the directoy
+```
+cd MathLib
+```
+
+and run
+```
+npm install
+```
+to install the development dependencies (For this you need to have [Node.js](http://nodejs.org) installed).
+
+
+The grunt default task
+```
+grunt
+```
+will concat all the source and test files, convert the TypeScript to JavaScript, create a minified version of the library and run the tests on the minified and unminified libraries.
+
+
+### Making Changes
 
 Make your changes to the files in the _src_ directory. Do not edit the files in the _build_ directory, these files will be generated via grunt.
 
-Running ```grunt``` will update the library, the minified version of MathLib and the testing files.
-To update the annotated source run ```docco build/MathLib.js```.
+Please maintain the current coding style and stick to the [style guide](http://mathlib.de/en/meta/styleguide).
+New functionality should always be added with proper testing and documentation.
 
-You need to have [Node.js](nodejs.org) and [grunt](http://gruntjs.com/) installed. 
 
 ## Release History
+* v0.4.0: Typescript, better plotting
 * v0.3.0: grunt integration
 * v0.2.0: Improved function and MathML modules
 * v0.1.0: Initial release
 
+
 ## License
-Copyright (c) 2012 Alexander Zeilmann  
+Copyright (c) 2013 Alexander Zeilmann  
 Licensed under the MIT license.

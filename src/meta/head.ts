@@ -11,7 +11,7 @@ module MathLib {
 
 
 
-	MathLib.version = '0.3.5';
+	MathLib.version = '0.4.0';
 	MathLib.apery = 1.2020569031595942;
 	MathLib.e = Math.E;
 	// Number.EPSILON is probably coming in ES6
