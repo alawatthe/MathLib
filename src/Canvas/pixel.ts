@@ -1,0 +1,58 @@
+// ### Canvas.pixel
+// Draws pixel on the screen.
+//
+// *@param {path}* The path to be drawn  
+// *@param {object}* [options] Optional drawing options  
+// *@returns {screen}* Returns the screen
+pixel: function(f, t, r, b, l, options = {}, redraw = false) {
+	var screen = this.screen,
+			top     = (              - screen.translation.y) / screen.scale.y,
+			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
+			left    = (              - screen.translation.x) / screen.scale.x,
+			right   = (screen.width  - screen.translation.x) / screen.scale.x,
+			ctx = this.ctx,
+			prop, opts, path, x, y, i;
+
+	t = Math.min(top, t);
+	r = Math.min(right, r);
+	b = Math.max(bottom, b);
+	l = Math.max(left, l);
+
+
+	var tPxl = Math.floor(-t * screen.scale.y),
+			rPxl = Math.floor( r * screen.scale.x),
+			bPxl = Math.floor(-b * screen.scale.y),
+			lPxl = Math.floor( l * screen.scale.x),
+			w = (rPxl - lPxl),
+			h = (bPxl - tPxl),
+			imgData = ctx.createImageData(w, h),
+			pxl;
+
+
+	for (y = tPxl, i = 0; y > bPxl; y--) {
+		for (x = lPxl; x < rPxl; x++, i++) {
+			pxl = f(x / screen.scale.x, y / screen.scale.y);
+			imgData.data[4*i]   = pxl[0];
+			imgData.data[4*i+1] = pxl[1];
+			imgData.data[4*i+2] = pxl[2];
+			imgData.data[4*i+3] = pxl[3];
+		}
+	}
+
+	ctx.putImageData(imgData, (left - l) * screen.scale.x, (t - top) * screen.scale.y);
+
+
+	if (!redraw) {
+		this.stack.push({
+			type: 'pixel',
+			object: f,
+			t: t,
+			r: r,
+			b: b,
+			l: l,
+			options: options
+		});
+	}
+
+	return this;
+},

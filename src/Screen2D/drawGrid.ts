@@ -2,33 +2,34 @@
 // Draws the grid.
 //
 // *@returns {Screen2D}*
-var drawGrid = function () {
-	if (!this.screen.options.grid) {
+drawGrid() {
+
+	if (!this.options.grid) {
 		return this;
 	}
 
-	var screen = this.screen,
-			top     = (              - screen.translation.y) / screen.scale.y,
-			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
-			left    = (              - screen.translation.x) / screen.scale.x,
-			right   = (screen.width  - screen.translation.x) / screen.scale.x,
-			yTick = Math.pow(10, 1-Math.floor(Math.log(-screen.transformation[1][1])/Math.LN10-0.3)),
-			xTick = Math.pow(10, 1-Math.floor(Math.log(+screen.transformation[0][0])/Math.LN10-0.3)),
+	var line   = (...args : any[]) => this.renderer.line.apply(this.layer.grid, args),
+			circle = (...args : any[]) => this.renderer.circle.apply(this.layer.grid, args),
+			top    = (            - this.translation.y) / this.scale.y,
+			bottom = (this.height - this.translation.y) / this.scale.y,
+			left   = (            - this.translation.x) / this.scale.x,
+			right  = (this.width  - this.translation.x) / this.scale.x,
+			yTick  = Math.pow(10, 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3)),
+			xTick  = Math.pow(10, 1 - Math.floor(Math.log(+this.transformation[0][0]) / Math.LN10 - 0.3)),
 			i;
 
 
-	if (screen.options.grid.type === 'cartesian') {
-
+	if (this.options.grid.type === 'cartesian') {
 
 		// The horizontal lines
-		for (i = bottom-(bottom%yTick); i <= top; i += yTick) {
-			this.line([[left, i], [right, i]], false, true);
+		for (i = bottom - (bottom % yTick); i <= top; i += yTick) {
+			line([[left, i], [right, i]], false, true);
 		}
 
 
 		// The vertical lines
-		for (i = left-(left%xTick); i <= right; i += xTick) {
-			this.line([[i, bottom], [i, top]], false, true);
+		for (i = left - (left % xTick); i <= right; i += xTick) {
+			line([[i, bottom], [i, top]], false, true);
 		}
 
 
@@ -41,16 +42,16 @@ var drawGrid = function () {
 
 
 	}
-	else if (screen.options.grid.type === 'polar') {
+	else if (this.options.grid.type === 'polar') {
 		var max = Math.sqrt(Math.max(top*top, bottom*bottom) + Math.max(left*left, right*right)),
-				min = 0; // improve this estimate
+				min = 0; // TODO: improve this estimate
 
-		for (i = 0; i < 2*Math.PI; i += screen.options.grid.angle) {
-			this.line([[0, 0], [max*Math.cos(i), max*Math.sin(i)]], false, true);
+		for (i = 0; i < 2*Math.PI; i += this.options.grid.angle) {
+			line([[0, 0], [max*Math.cos(i), max*Math.sin(i)]], false, true);
 		}
 
 		for (i = min; i <= max; i += Math.min(xTick, yTick)) {
-			this.circle(new MathLib.Circle([0, 0, 1], i), false, true);
+			circle(new MathLib.Circle([0, 0, 1], i), false, true);
 		}
 	}
 

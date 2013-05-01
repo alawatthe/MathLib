@@ -2,55 +2,57 @@
 // Draws the axis.
 //
 // *@returns {screen}*
-var drawAxis = function () {
-	var screen = this.screen,
+drawAxis() {
+
+	var line = (...args : any[]) => this.renderer.line.apply(this.layer.axis, args),
+			text = (...args : any[]) => this.renderer.text.apply(this.layer.axis, args),
 			options = {
-				stroke: colorConvert(this.screen.options.axis.color),
-				'stroke-width': -1/screen.transformation[1][1]
+				lineColor: colorConvert(this.options.axis.color),
+				'stroke-width': -1 / this.transformation[1][1]
 			},
 			textOptions = {
-				strokeStyle: colorConvert(this.screen.options.axis.textColor),
-				fillStyle: colorConvert(this.screen.options.axis.textColor)
+				strokeStyle: colorConvert(this.options.axis.textColor),
+				fillStyle: colorConvert(this.options.axis.textColor)
 			},
-			top     = (              - screen.translation.y) / screen.scale.y,
-			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
-			left    = (              - screen.translation.x) / screen.scale.x,
-			right   = (screen.width  - screen.translation.x) / screen.scale.x,
-			lengthX = +10/screen.transformation[0][0],
-			lengthY = -10/screen.transformation[1][1],
+			top     = (            - this.translation.y) / this.scale.y,
+			bottom  = (this.height - this.translation.y) / this.scale.y,
+			left    = (            - this.translation.x) / this.scale.x,
+			right   = (this.width  - this.translation.x) / this.scale.x,
+			lengthX = +10 / this.transformation[0][0],
+			lengthY = -10 / this.transformation[1][1],
 
-			yExp = 1-Math.floor(Math.log(-screen.transformation[1][1])/Math.LN10-0.3),
-			xExp = 1-Math.floor(Math.log(+screen.transformation[0][0])/Math.LN10-0.3),
+			yExp = 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3),
+			xExp = 1 - Math.floor(Math.log(+this.transformation[0][0]) / Math.LN10 - 0.3),
 			yTick = Math.pow(10, yExp),
 			xTick = Math.pow(10, xExp),
 			i;
 
-  if (!this.screen.options.axis) {
+  if (!this.options.axis) {
 		return this;
 	}
 
 	// The axes
-	this.line([[left, 0], [right, 0]], false, true);
-	this.line([[0, bottom], [0, top]], false, true);
+	line([[left, 0], [right, 0]], options, true);
+	line([[0, bottom], [0, top]], options, true);
 
 
 
 	// The ticks on the axes
 	// The x axis
-	if(screen.options.grid.tick) {
+	if(this.options.grid.tick) {
 		for (i = -yTick; i >= left; i -= yTick) {
-			this.line([[i, -lengthY], [i, lengthY]], false, true);
+			line([[i, -lengthY], [i, lengthY]], options, true);
 		}
 		for (i = yTick; i <= right; i += yTick) {
-			this.line([[i, -lengthY], [i, lengthY]], false, true);
+			line([[i, -lengthY], [i, lengthY]], options, true);
 		}
 
 		// The y axis
 		for (i = -xTick; i >= bottom; i -= xTick) {
-			this.line([[-lengthX, i], [lengthX, i]], false, true);
+			line([[-lengthX, i], [lengthX, i]], options, true);
 		}
 		for (i = xTick; i <= top; i += xTick) {
-			this.line([[-lengthX, i], [lengthX, i]], false, true);
+			line([[-lengthX, i], [lengthX, i]], options, true);
 		}
 	}
 
@@ -63,19 +65,19 @@ var drawAxis = function () {
 			yLen = Math.max(0, Math.min(20, -yExp));
 
 	for (i = -yTick; i >= left; i -= yTick) {
-		this.text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
+		text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
 	}
 	for (i = yTick; i <= right; i += yTick) {
-		this.text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
+		text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
 	}
 
 
 	// The y axis
 	for (i = -xTick; i >= bottom; i -= xTick) {
-		this.text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
+		text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
 	}
 	for (i = xTick; i <= top; i += xTick) {
-		this.text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
+		text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
 	}
 
 	return this;

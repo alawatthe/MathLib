@@ -46,69 +46,76 @@ module.exports = function (grunt) {
 							'src/meta/bracket2.ts',
 
 							'src/Layer/init.ts',
+							'src/Layer/!(init).ts',
 							'src/meta/bracket3.ts',
 
-							'src/Screen2D/drawAxis.ts',
-							'src/Screen2D/drawGrid.ts',
-							'src/Screen2D/canvas.ts',
-							'src/Screen2D/svg.ts',
+							'src/Canvas/init.ts',
+							'src/Canvas/!(init).ts',
+							'src/meta/bracket4.ts',
+
+							'src/SVG/init.ts',
+							'src/SVG/!(init).ts',
+							'src/meta/bracket5.ts',
+
 							'src/Screen2D/init.ts',
 							'src/Screen2D/resize.ts',
 							'src/Screen2D/getEventPoint.ts',
 							'src/Screen2D/getLineEndPoints.ts',
+							'src/Screen2D/drawGrid.ts',
+							'src/Screen2D/drawAxis.ts',
 							'src/Screen2D/onmousedown.ts',
 							'src/Screen2D/onmousemove.ts',
 							'src/Screen2D/onmouseup.ts',
 							'src/Screen2D/onmousewheel.ts',
-							'src/meta/bracket4.ts',
+							'src/meta/bracket6.ts',
 
 							'src/Screen3D/init.ts',
 							'src/Screen3D/!(init).ts',
-							'src/meta/bracket5.ts',
+							'src/meta/bracket7.ts',
 
 							'src/Vector/init.ts',
 							'src/Vector/!(init).ts',
-							'src/meta/bracket6.ts',
+							'src/meta/bracket8.ts',
 
 							'src/Circle/init.ts',
 							'src/Circle/!(init).ts',
-							'src/meta/bracket7.ts',
+							'src/meta/bracket9.ts',
 
 							'src/Complex/init.ts',
 							'src/Complex/!(init).ts',
-							'src/meta/bracket8.ts',
+							'src/meta/bracket10.ts',
 
 							'src/Expression/init.ts',
 							'src/Expression/!(init).ts',
-							'src/meta/bracket9.ts',
+							'src/meta/bracket11.ts',
 
 							'src/Line/init.ts',
 							'src/Line/!(init).ts',
-							'src/meta/bracket10.ts',
+							'src/meta/bracket12.ts',
 
 							'src/Matrix/init.ts',
 							'src/Matrix/!(init).ts',
-							'src/meta/bracket11.ts',
+							'src/meta/bracket13.ts',
 
 							'src/Permutation/init.ts',
 							'src/Permutation/!(init).ts',
-							'src/meta/bracket12.ts',
+							'src/meta/bracket14.ts',
 
 							'src/Point/init.ts',
 							'src/Point/!(init).ts',
-							'src/meta/bracket13.ts',
+							'src/meta/bracket15.ts',
 
 							'src/Polynomial/init.ts',
 							'src/Polynomial/!(init).ts',
-							'src/meta/bracket14.ts',
+							'src/meta/bracket16.ts',
 
 							'src/Rational/init.ts',
 							'src/Rational/!(init).ts',
-							'src/meta/bracket15.ts',
+							'src/meta/bracket17.ts',
 
 							'src/Set/init.ts',
 							'src/Set/!(init).ts',
-							'src/meta/bracket16.ts',
+							'src/meta/bracket18.ts',
 
 							'src/meta/foot.ts',
 							'src/shims/*.ts'

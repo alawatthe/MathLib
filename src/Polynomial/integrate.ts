@@ -10,9 +10,6 @@ integrate(n = 1) : Polynomial {
 	if (MathLib.isZero(n)) {
 		return this;
 	}
-	if (n < 0) {
-		return this.differentiate(-n);
-	}
 
 	for (i = 0; i < n; i++) {
 		temparr.push(0);

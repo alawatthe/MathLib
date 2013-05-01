@@ -54,6 +54,7 @@ module MathLib {
 		public point: any;
 		public text: any;
 		constructor(screen, id: string, zIndex);
+		public clear(): Layer;
 	}
 	class Screen2D extends Screen {
 		public type: string;
@@ -66,8 +67,6 @@ module MathLib {
 		public element: any;
 		public init: any;
 		public redraw: any;
-		public drawAxis: any;
-		public drawGrid: any;
 		public draw: any;
 		public circle: any;
 		public line: any;
@@ -86,6 +85,8 @@ module MathLib {
 		public resize(width: number, height: number): Screen2D;
 		public getEventPoint(evt);
 		public getLineEndPoints(l);
+		public drawGrid(): Screen2D;
+		public drawAxis(): Screen2D;
 		public onmousedown(evt): void;
 		public onmousemove(evt): void;
 		public onmouseup(evt): void;
@@ -342,7 +343,6 @@ module MathLib {
 		static regression(x, y): Polynomial;
 		static roots(zeros): Polynomial;
 		public slice(...args: any[]): any[];
-		public tangent(p): Polynomial;
 		public times(a): Polynomial;
 		public toContentMathMLString(math): string;
 		public toFunctn();

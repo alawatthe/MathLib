@@ -15,9 +15,6 @@ export class Screen2D extends Screen {
 
 	init: any;
 	redraw: any;
-	drawAxis:any;
-	drawGrid:any;
-
 
 
 	// Drawing functions
@@ -52,7 +49,7 @@ export class Screen2D extends Screen {
 						tick: {x: 1, y: 1}
 					},
 					grid: {
-						angle: Math.PI/8,
+						angle: Math.PI / 8,
 						color: 0xcccccc,
 						type: 'cartesian',
 						tick: {x: 1, y: 1, r: 1}
@@ -77,13 +74,29 @@ export class Screen2D extends Screen {
 				_this = this;
 
 		this.options = opts;
-		//this.background = opts.background;
-		//this.interaction = opts.interaction;
+		this.renderer = MathLib[opts.renderer];
+
+
+		this.circle = (...args : any[]) => this.renderer.circle.apply(this.layer.main, args);
+		this.line   = (...args : any[]) => this.renderer.line.apply(  this.layer.main, args);
+		this.path   = (...args : any[]) => this.renderer.path.apply(  this.layer.main, args);
+		// Should the pixel method default to the main layer or to the back layer?
+		this.pixel  = (...args : any[]) => this.renderer.pixel.apply( this.layer.main, args);
+		this.point  = (...args : any[]) => this.renderer.point.apply( this.layer.main, args);
+		this.text   = (...args : any[]) => this.renderer.text.apply(  this.layer.main, args);
+
+
+
 
 		// Remove the warning message.
 		this.wrapper.innerHTML = '';
-	
+
+		this.container.classList.add('MathLib_screen2D');
+
+		// This is just a dummy method for the following few lines.
+		// The real applyTransformation method is specified after the creation of the layers.
 		this.applyTransformation = function () {};
+
 
 		// The interaction methods
 		this.translation = {};
@@ -112,8 +125,6 @@ export class Screen2D extends Screen {
 
 
 
-
-
 		this.lookAt = {};
 		this.range = {};
 		Object.defineProperty(this.lookAt, 'x', {
@@ -137,14 +148,10 @@ export class Screen2D extends Screen {
 		});
 
 
-
 		this.range.x = opts.range.x
 		this.range.y = opts.range.y
 		this.lookAt.x = opts.lookAt.x
 		this.lookAt.y = opts.lookAt.y
-
-
-
 
 
 
@@ -186,10 +193,6 @@ export class Screen2D extends Screen {
 
 
 
-
-
-
-
 		// Create the Layers
 		// =================
 		this.layer = [];
@@ -199,120 +202,40 @@ export class Screen2D extends Screen {
 		this.layer.main = new MathLib.Layer(this, 'main', 3);
 
 
-		if (opts.renderer === 'Canvas') {
-			this.layer.main.element.addEventListener('onmouseup',      (evt) => this.onmouseup(evt), false);
-			this.layer.main.element.addEventListener('onmousedown',    (evt) => this.onmousedown(evt), false);
-			this.layer.main.element.addEventListener('onmousemove',    (evt) => this.onmousemove(evt), false);
-			this.layer.main.element.addEventListener('onmousewheel',   (evt) => this.onmousewheel(evt), false);
-			// For Firefox: [Bug report for the missing onmousewheel method](https://bugzilla.mozilla.org/show_bug.cgi?id=111647)
-			this.layer.main.element.addEventListener('DOMMouseScroll', (evt) => this.onmousewheel(evt), false);
-		}
-		else if (opts.renderer === 'SVG') {
-			this.wrapper.addEventListener('onmouseup',      (evt) => this.onmouseup(evt), false);
-			this.wrapper.addEventListener('onmousedown',    (evt) => this.onmousedown(evt), false);
-			this.wrapper.addEventListener('onmousemove',    (evt) => this.onmousemove(evt), false);
-			this.wrapper.addEventListener('onmousewheel',   (evt) => this.onmousewheel(evt), false);
-			this.wrapper.addEventListener('DOMMouseScroll', (evt) => this.onmousewheel(evt), false);
-		}
+		this.wrapper.addEventListener('mouseup',      (evt) => this.onmouseup(evt), false);
+		this.wrapper.addEventListener('mousedown',    (evt) => this.onmousedown(evt), false);
+		this.wrapper.addEventListener('mousemove',    (evt) => this.onmousemove(evt), false);
+		this.wrapper.addEventListener('mousewheel',   (evt) => this.onmousewheel(evt), false);
+		// For Firefox: [Bug report for the missing onmousewheel method](https://bugzilla.mozilla.org/show_bug.cgi?id=111647)
+		this.wrapper.addEventListener('DOMMouseScroll', (evt) => this.onmousewheel(evt), false);
 
 
+		this.applyTransformation = this.renderer.applyTransformation;
 
 
-
-
-
-
-		// The canvas renderer
-		// ===================
-		if (opts.renderer === 'Canvas') {
-			this.applyTransformation = canvas.applyTransformation;
-
-			
-			this.draw = function (x, options = {}) {
-				var _this = this;
-				if (arguments.length === 0) {
-					var top     = (            - this.translation.y) / this.scale.y,
-							bottom  = (this.height - this.translation.y) / this.scale.y,
-							left    = (            - this.translation.x) / this.scale.x,
-							right   = (this.width  - this.translation.x) / this.scale.x;
-			
-
-					// Clear the canvas
-					this.layer.forEach(function (l) {l.ctx.clearRect(left, top, right-left, bottom-top)})
-
-					_this.layer.forEach(function (x) {x.draw();})
-				}
-
-
-				else if (x.type === 'circle') {
-					this.circle(x, options);
-				}
-				else if (x.type === 'line') {
-					this.line(x, options);
-				}
-				else if (Array.isArray(x)) {
-					x.forEach(function (y) {_this[y.type](y, options);});
-				}
+		this.draw = function (x, options = {}) {
+			// Clear and redraw the screen
+			if (arguments.length === 0) {
+				this.layer.forEach(function (l) {
+					l.clear().draw()
+				});
 			}
-
-
-			this.circle = function () { canvas.circle.apply(_this.layer.main, arguments);};
-			this.line = function () { canvas.line.apply(_this.layer.main, arguments);};
-			this.path = function () { canvas.path.apply(_this.layer.main, arguments);};
-			// Should the pixel method default to the main layer or to the back layer?
-			this.pixel = function () { canvas.pixel.apply(_this.layer.main, arguments);};
-			this.point = function () { canvas.point.apply(_this.layer.main, arguments);};
-			this.text = function () { canvas.text.apply(_this.layer.main, arguments);};
-		}
-
-
-
-		// The SVG renderer
-		// ================
-		else if (opts.renderer === 'SVG') {
-			this.applyTransformation = svg.applyTransformation;
-	 
-			this.draw = function (x, options = {}) {
-				var _this = this;
-				if (arguments.length === 0) {
-
-					// Clear the layer
-					this.layer.forEach(function (l) {
-						l.ctx.textContent = '';
-					});
-
-					_this.layer.forEach(function (x) {x.draw();})
-				}
-
-
-				else if (x.type === 'circle') {
-					this.circle(x, options);
-				}
-				else if (x.type === 'line') {
-					this.line(x, options);
-				}
-				else if (Array.isArray(x)) {
-					x.forEach(function (y) {_this[y.type](y, options);});
-				}
+			else if (x.type === 'circle') {
+				this.circle(x, options);
 			}
+			else if (x.type === 'line') {
+				this.line(x, options);
+			}
+			else if (Array.isArray(x)) {
+				x.forEach((y) => this[y.type](y, options));
+			}
+		};
 
-			this.circle = function () { svg.circle.apply(_this.layer.main, arguments);};
-			this.line = function () { svg.line.apply(_this.layer.main, arguments);};
-			this.path = function () { svg.path.apply(_this.layer.main, arguments);};
-			// Should the pixel method default to the main layer or to the back layer?
-			this.pixel = function () { svg.pixel.apply(_this.layer.main, arguments);};
-			this.point = function () { svg.point.apply(_this.layer.main, arguments);};
-			this.text = function () { svg.text.apply(_this.layer.main, arguments);};
-
-		}
-
-		this.container.classList.add('MathLib_screen2D');
 
 		if (this.options.contextMenu) {
 			var gridType = opts.grid.type ? opts.grid.type : 'none';
 			this.contextMenu.querySelectorAll('.MathLib_grid_type[value=' + gridType + ']')[0].checked = true;
 		}
-
 
 		this.draw();
 	}

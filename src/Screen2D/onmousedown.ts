@@ -1,4 +1,4 @@
-// ### Screen.prototype.onmousedown()
+// ### Screen2D.prototype.onmousedown()
 // Handles the mousedown event
 //
 // *@param {event}*

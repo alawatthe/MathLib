@@ -164,9 +164,7 @@ export class Screen {
 
 
 		if ((<any>options).contextMenu) {
-			this.wrapper.oncontextmenu = function (evt) {
-				_this.oncontextmenu(evt);
-			};
+			this.wrapper.oncontextmenu = (evt) => this.oncontextmenu(evt);
 		
 			if ((<any>opts).contextMenu.screenshot && !('opera' in window)) {
 				this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function () {

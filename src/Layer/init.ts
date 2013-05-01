@@ -68,7 +68,17 @@ export class Layer {
 					this.ctx.fillStyle = colorConvert(screen.options.background);
 					this.ctx.fillRect(left, bottom, right-left, top-bottom);
 
-					canvas.draw.call(_this);
+					this.stack.forEach(function(x,i){
+						if (x.type === 'text' ) {
+							_this.text(x.object, x.x, x.y, x.options, true);
+						}
+						if (x.type === 'pixel' ) {
+							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+						}
+						else {
+							_this[x.type](x.object, x.options, true);
+						}
+					});
 				}
 			}
 			else if (id === 'grid') {
@@ -78,15 +88,16 @@ export class Layer {
 				
 				this.draw = function (){
 					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
-					drawGrid.call(_this);
+					_this.screen.drawGrid();
 				}
 			}
 			else if (id === 'axis') {
+				console.log(screen.options.axis.color);
 				this.ctx.strokeStyle = colorConvert(screen.options.axis.color) || '#000000';
 				
 				this.draw = function (){
 					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
-					drawAxis.call(_this);
+					_this.screen.drawAxis();
 				}
 			}
 			else {
@@ -95,17 +106,29 @@ export class Layer {
 
 				this.draw = function (){
 					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
-					canvas.draw.call(_this);
+
+					this.stack.forEach(function(x,i){
+						if (x.type === 'text' ) {
+							_this.text(x.object, x.x, x.y, x.options, true);
+						}
+						if (x.type === 'pixel' ) {
+							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+						}
+						else {
+							_this[x.type](x.object, x.options, true);
+						}
+					});
+				
 				}
 			}
 
 
-			this.circle = canvas.circle;
-			this.line = canvas.line;
-			this.path = canvas.path;
-			this.pixel = canvas.pixel;
-			this.point = canvas.point;
-			this.text = canvas.text;
+			this.circle = MathLib.Canvas.circle;
+			this.line = MathLib.Canvas.line;
+			this.path = MathLib.Canvas.path;
+			this.pixel = MathLib.Canvas.pixel;
+			this.point = MathLib.Canvas.point;
+			this.text = MathLib.Canvas.text;
 
 		}
 		else if (screen.options.renderer === 'SVG') {
@@ -117,9 +140,6 @@ export class Layer {
 			this.ctx = ctx;
 
 
-
-
-
 			// Set the drawing functions      
 			if (id === 'back') {
 				this.draw = function () {
@@ -128,7 +148,17 @@ export class Layer {
 							left    = (              - screen.translation.x) / screen.scale.x,
 							right   = (screen.width  - screen.translation.x) / screen.scale.x;
 
-					svg.draw.call(_this);
+					this.stack.forEach(function(x,i){
+						if (x.type === 'text' ) {
+							_this.text(x.object, x.x, x.y, x.options, true);
+						}
+						if (x.type === 'pixel' ) {
+							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+						}
+						else {
+							_this[x.type](x.object, x.options, true);
+						}
+					});
 				}
 			}
 			else if (id === 'grid') {
@@ -136,7 +166,7 @@ export class Layer {
 
 				this.draw = function (){
 					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
-					drawGrid.call(_this);
+					_this.screen.drawGrid();
 				};
 
 			}
@@ -145,20 +175,33 @@ export class Layer {
 				
 				this.draw = function (){
 					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
-					drawAxis.call(_this);
+					_this.screen.drawAxis();
 				}
 			}
 			else {
-				this.draw = svg.draw;
+				this.draw = function() {
+
+					this.stack.forEach(function(x,i){
+						if (x.type === 'text' ) {
+							_this.text(x.object, x.x, x.y, x.options, true);
+						}
+						if (x.type === 'pixel' ) {
+							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+						}
+						else {
+							_this[x.type](x.object, x.options, true);
+						}
+					});
+				}
 			}
 
 
-			this.circle = svg.circle;
-			this.line = svg.line;
-			this.path = svg.path;
-			this.pixel = svg.pixel;
-			this.point = svg.point;
-			this.text = svg.text;
+			this.circle = MathLib.SVG.circle;
+			this.line = MathLib.SVG.line;
+			this.path = MathLib.SVG.path;
+			this.pixel = MathLib.SVG.pixel;
+			this.point = MathLib.SVG.point;
+			this.text = MathLib.SVG.text;
 		}
 
 

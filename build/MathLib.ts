@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.3.5 - 2013-04-13  
+// v0.4.0 - 2013-05-01  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -43,7 +43,7 @@
 // - [rational](#Rational "Jump to the rational number implementation")
 // - [set](#Set "Jump to the set implementation")
 // The MathLib module which wraps everything
-module MathLib {
+ module MathLib {
 
 
 	// Typescript is throwing the following error otherwise:
@@ -55,7 +55,7 @@ module MathLib {
 
 
 
-	MathLib.version = '0.3.5';
+	MathLib.version = '0.4.0';
 	MathLib.apery = 1.2020569031595942;
 	MathLib.e = Math.E;
 	// Number.EPSILON is probably coming in ES6
@@ -1966,9 +1966,7 @@ export class Screen {
 
 
 		if ((<any>options).contextMenu) {
-			this.wrapper.oncontextmenu = function (evt) {
-				_this.oncontextmenu(evt);
-			};
+			this.wrapper.oncontextmenu = (evt) => this.oncontextmenu(evt);
 		
 			if ((<any>opts).contextMenu.screenshot && !('opera' in window)) {
 				this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function () {
@@ -2114,8 +2112,8 @@ oncontextmenu(evt) {
 	listener = function () {
 		overlay.style.setProperty('display', 'none');
 		
-		Array.prototype.slice.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem'))
-		.forEach(function (x) {
+		Array.prototype.forEach.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem'),
+		function (x) {
 			_this.contextMenu.removeChild(x);
 		});
 
@@ -2199,7 +2197,17 @@ export class Layer {
 					this.ctx.fillStyle = colorConvert(screen.options.background);
 					this.ctx.fillRect(left, bottom, right-left, top-bottom);
 
-					canvas.draw.call(_this);
+					this.stack.forEach(function(x,i){
+						if (x.type === 'text' ) {
+							_this.text(x.object, x.x, x.y, x.options, true);
+						}
+						if (x.type === 'pixel' ) {
+							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+						}
+						else {
+							_this[x.type](x.object, x.options, true);
+						}
+					});
 				}
 			}
 			else if (id === 'grid') {
@@ -2209,15 +2217,16 @@ export class Layer {
 				
 				this.draw = function (){
 					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
-					drawGrid.call(_this);
+					_this.screen.drawGrid();
 				}
 			}
 			else if (id === 'axis') {
+				console.log(screen.options.axis.color);
 				this.ctx.strokeStyle = colorConvert(screen.options.axis.color) || '#000000';
 				
 				this.draw = function (){
 					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
-					drawAxis.call(_this);
+					_this.screen.drawAxis();
 				}
 			}
 			else {
@@ -2226,17 +2235,29 @@ export class Layer {
 
 				this.draw = function (){
 					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
-					canvas.draw.call(_this);
+
+					this.stack.forEach(function(x,i){
+						if (x.type === 'text' ) {
+							_this.text(x.object, x.x, x.y, x.options, true);
+						}
+						if (x.type === 'pixel' ) {
+							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+						}
+						else {
+							_this[x.type](x.object, x.options, true);
+						}
+					});
+				
 				}
 			}
 
 
-			this.circle = canvas.circle;
-			this.line = canvas.line;
-			this.path = canvas.path;
-			this.pixel = canvas.pixel;
-			this.point = canvas.point;
-			this.text = canvas.text;
+			this.circle = MathLib.Canvas.circle;
+			this.line = MathLib.Canvas.line;
+			this.path = MathLib.Canvas.path;
+			this.pixel = MathLib.Canvas.pixel;
+			this.point = MathLib.Canvas.point;
+			this.text = MathLib.Canvas.text;
 
 		}
 		else if (screen.options.renderer === 'SVG') {
@@ -2248,9 +2269,6 @@ export class Layer {
 			this.ctx = ctx;
 
 
-
-
-
 			// Set the drawing functions      
 			if (id === 'back') {
 				this.draw = function () {
@@ -2259,7 +2277,17 @@ export class Layer {
 							left    = (              - screen.translation.x) / screen.scale.x,
 							right   = (screen.width  - screen.translation.x) / screen.scale.x;
 
-					svg.draw.call(_this);
+					this.stack.forEach(function(x,i){
+						if (x.type === 'text' ) {
+							_this.text(x.object, x.x, x.y, x.options, true);
+						}
+						if (x.type === 'pixel' ) {
+							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+						}
+						else {
+							_this[x.type](x.object, x.options, true);
+						}
+					});
 				}
 			}
 			else if (id === 'grid') {
@@ -2267,7 +2295,7 @@ export class Layer {
 
 				this.draw = function (){
 					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
-					drawGrid.call(_this);
+					_this.screen.drawGrid();
 				};
 
 			}
@@ -2276,20 +2304,33 @@ export class Layer {
 				
 				this.draw = function (){
 					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
-					drawAxis.call(_this);
+					_this.screen.drawAxis();
 				}
 			}
 			else {
-				this.draw = svg.draw;
+				this.draw = function() {
+
+					this.stack.forEach(function(x,i){
+						if (x.type === 'text' ) {
+							_this.text(x.object, x.x, x.y, x.options, true);
+						}
+						if (x.type === 'pixel' ) {
+							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+						}
+						else {
+							_this[x.type](x.object, x.options, true);
+						}
+					});
+				}
 			}
 
 
-			this.circle = svg.circle;
-			this.line = svg.line;
-			this.path = svg.path;
-			this.pixel = svg.pixel;
-			this.point = svg.point;
-			this.text = svg.text;
+			this.circle = MathLib.SVG.circle;
+			this.line = MathLib.SVG.line;
+			this.path = MathLib.SVG.path;
+			this.pixel = MathLib.SVG.pixel;
+			this.point = MathLib.SVG.point;
+			this.text = MathLib.SVG.text;
 		}
 
 
@@ -2300,1128 +2341,950 @@ export class Layer {
 	}
 
 
-}
-
-
-// ### Screen.prototype.drawAxis
-// Draws the axis.
+// ### Layer.prototype.clear()
+// Clears the Layer
 //
-// *@returns {screen}*
-var drawAxis = function () {
-	var screen = this.screen,
-			options = {
-				stroke: colorConvert(this.screen.options.axis.color),
-				'stroke-width': -1/screen.transformation[1][1]
-			},
-			textOptions = {
-				strokeStyle: colorConvert(this.screen.options.axis.textColor),
-				fillStyle: colorConvert(this.screen.options.axis.textColor)
-			},
-			top     = (              - screen.translation.y) / screen.scale.y,
-			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
-			left    = (              - screen.translation.x) / screen.scale.x,
-			right   = (screen.width  - screen.translation.x) / screen.scale.x,
-			lengthX = +10/screen.transformation[0][0],
-			lengthY = -10/screen.transformation[1][1],
-
-			yExp = 1-Math.floor(Math.log(-screen.transformation[1][1])/Math.LN10-0.3),
-			xExp = 1-Math.floor(Math.log(+screen.transformation[0][0])/Math.LN10-0.3),
-			yTick = Math.pow(10, yExp),
-			xTick = Math.pow(10, xExp),
-			i;
-
-  if (!this.screen.options.axis) {
-		return this;
-	}
-
-	// The axes
-	this.line([[left, 0], [right, 0]], false, true);
-	this.line([[0, bottom], [0, top]], false, true);
-
-
-
-	// The ticks on the axes
-	// The x axis
-	if(screen.options.grid.tick) {
-		for (i = -yTick; i >= left; i -= yTick) {
-			this.line([[i, -lengthY], [i, lengthY]], false, true);
-		}
-		for (i = yTick; i <= right; i += yTick) {
-			this.line([[i, -lengthY], [i, lengthY]], false, true);
-		}
-
-		// The y axis
-		for (i = -xTick; i >= bottom; i -= xTick) {
-			this.line([[-lengthX, i], [lengthX, i]], false, true);
-		}
-		for (i = xTick; i <= top; i += xTick) {
-			this.line([[-lengthX, i], [lengthX, i]], false, true);
-		}
-	}
-
-
-	// The labels
-	// The x axis
-	// .toFixed() is necessary to display 0.3 as "0.3" and not as "0.30000000000000004".
-	// .toFixed expects arguments between 0 and 20.
-	var xLen = Math.max(0, Math.min(20, -xExp)),
-			yLen = Math.max(0, Math.min(20, -yExp));
-
-	for (i = -yTick; i >= left; i -= yTick) {
-		this.text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
-	}
-	for (i = yTick; i <= right; i += yTick) {
-		this.text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
-	}
-
-
-	// The y axis
-	for (i = -xTick; i >= bottom; i -= xTick) {
-		this.text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
-	}
-	for (i = xTick; i <= top; i += xTick) {
-		this.text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
-	}
-
+// *@return {Layer}* Returns the current Layer
+clear() {
+	this.screen.renderer.clear(this);
 	return this;
 }
 
 
-
-// ### Screen2D.prototype.drawGrid
-// Draws the grid.
-//
-// *@returns {Screen2D}*
-var drawGrid = function () {
-	if (!this.screen.options.grid) {
-		return this;
-	}
-
-	var screen = this.screen,
-			top     = (              - screen.translation.y) / screen.scale.y,
-			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
-			left    = (              - screen.translation.x) / screen.scale.x,
-			right   = (screen.width  - screen.translation.x) / screen.scale.x,
-			yTick = Math.pow(10, 1-Math.floor(Math.log(-screen.transformation[1][1])/Math.LN10-0.3)),
-			xTick = Math.pow(10, 1-Math.floor(Math.log(+screen.transformation[0][0])/Math.LN10-0.3)),
-			i;
-
-
-	if (screen.options.grid.type === 'cartesian') {
-
-
-		// The horizontal lines
-		for (i = bottom-(bottom%yTick); i <= top; i += yTick) {
-			this.line([[left, i], [right, i]], false, true);
-		}
-
-
-		// The vertical lines
-		for (i = left-(left%xTick); i <= right; i += xTick) {
-			this.line([[i, bottom], [i, top]], false, true);
-		}
-
-
-		// Test for logarithmic plots
-		/*for (i = left-(left%this.axis.tick.x); i <= right; i += this.axis.tick.x) {
-			for (var j = 1 ; j <=10; j++ ) {
-				this.line([[i*Math.log(10)+ Math.log(j), bottom], [i*Math.log(10)+Math.log(j), top]], options);
-			}
-		}*/
-
-
-	}
-	else if (screen.options.grid.type === 'polar') {
-		var max = Math.sqrt(Math.max(top*top, bottom*bottom) + Math.max(left*left, right*right)),
-				min = 0; // improve this estimate
-
-		for (i = 0; i < 2*Math.PI; i += screen.options.grid.angle) {
-			this.line([[0, 0], [max*Math.cos(i), max*Math.sin(i)]], false, true);
-		}
-
-		for (i = min; i <= max; i += Math.min(xTick, yTick)) {
-			this.circle(new MathLib.Circle([0, 0, 1], i), false, true);
-		}
-	}
-
-	return this;
 }
 
 
-var canvas = {
-	normalizeOptions: function (opt) {
-		var res:any = {};
-		if ('fillColor' in opt) {
-			res.fillStyle = colorConvert(opt.fillColor);
-		}
-		else if ('color' in opt) {
-			res.fillStyle = colorConvert(opt.color);
-		}
-
-
-		if ('font' in opt) {
-			res['font-family'] = opt.font;
-		}
-
-		if ('fontSize' in opt) {
-			res['font-size'] = opt.fontSize;
-		}
-
-
-		if ('lineColor' in opt) {
-			res.strokeStyle = colorConvert(opt.lineColor);
-		}
-		else if ('color' in opt) {
-			res.strokeStyle = colorConvert(opt.color);
-		}
-
-		return res;
-	},
-
-
-	applyTransformation: function () {
-		var m = this.transformation;
-		this.layer.forEach(function(l){l.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2])});
-	},
-
-
-
-
-	draw: function (x?, options = {}) {
-		var _this = this;
-
-		if (arguments.length === 0) {
-			this.stack.forEach(function(x,i){
-				if (x.type === 'text' ) {
-					_this.text(x.object, x.x, x.y, x.options, true);
-				}
-				if (x.type === 'pixel' ) {
-					_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
-				}
-				else {
-					_this[x.type](x.object, x.options, true);
-				}
-			});
-		}
-
-
-		else if (x.type === 'circle') {
-			this.circle(x, options);
-		}
-		else if (x.type === 'line') {
-			this.line(x, options);
-		}
-		else if (Array.isArray(x)) {
-			x.forEach(function (y) {_this[y.type](y, options);});
-		}
-	},
-
-
-
-	// ### Canvas circle
-	// Draws a circle on the screen.
-	//
-	// *@param {circle}* The circle to be drawn  
-	// *@param {object}* [options] Optional drawing options  
-	// *@returns {screen}* Returns the screen
-	circle: function (circle, options = {}, redraw = false) {
-		var screen = this.screen,
-				ctx = this.ctx,
-				prop, opts;
-
-		ctx.save();
-		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
-
-		// Set the drawing options
-		if (options) {
-			opts = canvas.normalizeOptions(options);
-			for (prop in opts) {
-				if (opts.hasOwnProperty(prop)) {
-					ctx[prop] = opts[prop];
-				}
-			}
-
-			if('setLineDash' in ctx) {
-				ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
-			}
-			if ('lineDashOffset' in ctx) {
-				ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
-			}
-		}
-
-
-
-		// Draw the circle
-		ctx.beginPath();
-		ctx.arc(circle.center[0], circle.center[1], circle.radius, 0, 2*Math.PI);
-		ctx.closePath();
-		ctx.fill();
-		ctx.stroke();
-		ctx.restore();
-
-		if (!redraw) {
-			this.stack.push({
-				type: 'circle',
-				object: circle,
-				options: options
-			});
-		}
-
-		return this;
-
-	},
-
-
-	// ### Canvas line
-	// Draws a line on the screen.
-	//
-	// *@param {line}* The line to be drawn  
-	// *@param {object}* [options] Optional drawing options  
-	// *@returns {screen}* Returns the screen
-	line: function (line, options = {}, redraw = false) {
-		var screen = this.screen,
-				points = this.screen.getLineEndPoints(line),
-				ctx = this.ctx,
-				prop, opts;
-
-		ctx.save()
-		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
-
-
-		// Set the drawing options
-		if (options) {
-			opts = canvas.normalizeOptions(options);
-			for (prop in opts) {
-				if (opts.hasOwnProperty(prop)) {
-					ctx[prop] = opts[prop];
-				}
-			}
-
-			if('setLineDash' in ctx) {
-				ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
-			}
-			if ('lineDashOffset' in ctx) {
-				ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
-			}
-		}
-
-
-
-
-		// Draw the line
-		ctx.beginPath();
-		ctx.moveTo(points[0][0], points[0][1]);
-		ctx.lineTo(points[1][0], points[1][1]);
-		ctx.stroke();
-		ctx.closePath();
-		ctx.restore();
-
-		if (!redraw) {
-			this.stack.push({
-				type: 'line',
-				object: line,
-				options: options
-			});
-		}
-
-		return this;
-	},
-
-
-
-
-// ### Canvas path
-// Draws a path on the screen.
+// ## Canvas
+// The Canvas renderer for 2D plotting
 //
-// *@param {path}* The path to be drawn  
+MathLib.Canvas = {
+
+
+// ### Canvas.applyTransformation
+// Applies the current transformations to the screen
+//
+applyTransformation: function() {
+	var m = this.transformation;
+	this.layer.forEach(function(l){l.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2])});
+},
+
+
+// ### Canvas.circle
+// Draws a circle on the screen.
+//
+// *@param {circle}* The circle to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the scren
-	path: function (curve, options = {}, redraw = false) {
-		var screen = this.screen,
-				ctx = this.ctx,
-				prop, opts, path, x, y, i,
-				step = 2/(screen.scale.x - screen.scale.y),
-				from, to;
+// *@returns {screen}* Returns the screen
+circle: function(circle, options = {}, redraw = false) {
+	var screen = this.screen,
+			ctx = this.ctx,
+			prop, opts;
 
+	ctx.save();
+	ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
 
-		from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x)-step;
-		to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
-
-		ctx.save()
-		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
-
-
-		// Set the drawing options
-		if (options) {
-			opts = canvas.normalizeOptions(options);
-			for (prop in opts) {
-				if (opts.hasOwnProperty(prop)) {
-					ctx[prop] = opts[prop];
-				}
-			}
-
-			if('setLineDash' in ctx) {
-				ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
-			}
-			if ('lineDashOffset' in ctx) {
-				ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
-			}
-		}
-
-
-		// If curve is a function f, the path will be (x, f(x))
-		if (typeof curve === 'function') {
-			path = [];
-			for (i = from; i <= to; i+=step) {
-				path.push([i, curve(i)]);
-			}
-		}
-
-
-		// If curve is an array of two functions [f, g], the path will be (f(x), g(x))
-		else if (typeof curve[0] === 'function') {
-			path = [];
-			x = curve[0];
-			y = curve[1];
-			for (i = from; i <= to; i+=step) {
-				path.push([x(i), y(i)]);
-			}
-		}
-		else {
-			path = curve;
-		}
-
-
-		// Draw the path
-		ctx.beginPath();
-		ctx.moveTo(path[0][0], path[0][1]);
-		path.forEach(function (x) {
-			ctx.lineTo(x[0], x[1]);
-		});
-		ctx.stroke();
-		ctx.closePath();
-		ctx.restore();
-
-
-		if (!redraw) {
-			this.stack.push({
-				type: 'path',
-				object: curve,
-				options: options
-			});
-		}
-
-		return this;
-	},
-
-
-
-
-
-	// ### Canvas pixel
-	// Draws pixel on the screen.
-	//
-	// *@param {path}* The path to be drawn  
-	// *@param {object}* [options] Optional drawing options  
-	// *@returns {screen}* Returns the screen
-	pixel: function (f, t, r, b, l, options = {}, redraw = false) {
-		var screen = this.screen,
-				top     = (              - screen.translation.y) / screen.scale.y,
-				bottom  = (screen.height - screen.translation.y) / screen.scale.y,
-				left    = (              - screen.translation.x) / screen.scale.x,
-				right   = (screen.width  - screen.translation.x) / screen.scale.x,
-				ctx = this.ctx,
-				prop, opts, path, x, y, i;
-
-		t = Math.min(top, t);
-		r = Math.min(right, r);
-		b = Math.max(bottom, b);
-		l = Math.max(left, l);
-
-
-		var tPxl = Math.floor(-t*screen.scale.y),
-				rPxl = Math.floor(r*screen.scale.x),
-				bPxl = Math.floor(-b*screen.scale.y),
-				lPxl = Math.floor(l*screen.scale.x),
-				w = (rPxl-lPxl),
-				h = (bPxl-tPxl),
-				imgData = ctx.createImageData(w, h),
-				pxl;
-
-
-		for (y = tPxl, i = 0; y > bPxl; y--) {
-			for (x = lPxl; x < rPxl; x++, i++) {
-				pxl = f(x/screen.scale.x, y/screen.scale.y);
-				imgData.data[4*i]   = pxl[0];
-				imgData.data[4*i+1] = pxl[1];
-				imgData.data[4*i+2] = pxl[2];
-				imgData.data[4*i+3] = pxl[3];
-			}
-		}
-
-		ctx.putImageData(imgData, (left-l)*screen.scale.x, (t-top)*screen.scale.y);
-
-
-		if (!redraw) {
-			this.stack.push({
-				type: 'pixel',
-				object: f,
-				t: t,
-				r: r,
-				b: b,
-				l: l,
-				options: options
-			});
-		}
-
-		return this;
-	},
-
-
-
-
-
-	// ### Canvas point
-	// Draws a point on the screen.
-	//
-	// *@param {point}* The point to be drawn  
-	// *@param {object}* [options] Optional drawing options  
-	// *@returns {screen}* Returns the screen
-	point: function (point, options = {}, redraw = false) {
-		var screen = this.screen,
-				ctx = this.ctx,
-				prop, opts, dist, textOptions;
-
-		ctx.save();
-		ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
-
-		// Set the drawing options
-		if (options) {
-			opts = canvas.normalizeOptions(options);
-
-			if (!('fillColor' in options) && !('color' in options)) {
-				opts['fillStyle'] = 'black';
-			}
-
-			for (prop in opts) {
-				if (opts.hasOwnProperty(prop)) {
-					ctx[prop] = opts[prop];
-				}
-			}
-
-			if('setLineDash' in ctx) {
-				ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
-			}
-			if ('lineDashOffset' in ctx) {
-				ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
-			}
-		}
-
-
-		// Draw the point
-		ctx.beginPath();
-		ctx.arc(point[0]/point[2], point[1]/point[2], ((<any>options).size || 10)/(screen.scale.x - screen.scale.y), 0, 2*Math.PI);
-		ctx.closePath();
-		ctx.fill();
-		ctx.stroke();
-		ctx.restore();
-
-
-		if ((<any>options).label) {
-			dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
-			screen.text((<any>options).label,
-				point[0]/point[2]+dist/(screen.scale.x - screen.scale.y),
-				point[1]/point[2]+dist/(screen.scale.x - screen.scale.y), {}, true);
-		}
-
-
-		if (!redraw) {
-			this.stack.push({
-				type: 'point',
-				object: point,
-				options: options
-			});
-		}
-
-		return this;
-
-	},
-
-
-
-
-
-	// ### Canvas text
-	// Writes text on the screen.
-	//
-	// *@param {str}* The string to be drawn  
-	// *@param {x}* The x coordinate  
-	// *@param {y}* The y coordinate  
-	// *@param {object}* [options] Optional drawing options  
-	// *@returns {screen}* Returns the screen
-	text: function (str, x, y, options = {}, redraw = false) {
-		var defaults = {
-					font:       'Helvetica',
-					fontSize:   10,
-					fillColor:  'rgba(0, 0, 0, 1)',
-					lineColor:  'rgba(0, 0, 0, 1)',
-					lineWidth:  0.05
-				},
-				ctx, prop, opts;
-
-		// Determine the layer to draw onto
-		ctx = this.ctx;
-
-		opts = canvas.normalizeOptions(extendObject(defaults, options));
-
-
-		// Set the drawing options
+	// Set the drawing options
+	if (options) {
+		opts = MathLib.Canvas.convertOptions(options);
 		for (prop in opts) {
 			if (opts.hasOwnProperty(prop)) {
 				ctx[prop] = opts[prop];
 			}
 		}
 
-		ctx.font = '10px Helvetica';
-		ctx.textAlign = 'center';
-		ctx.textBaseline = 'middle';
-
-		// Draw the text
-		var tf = this.screen.transformation;
-
-		ctx.save();
-			ctx.transform(1/tf[0][0],0,0,1/tf[1][1],0,0);
-			ctx.fillText(str, tf[0][0]*x, tf[1][1]*y);
-		ctx.restore();
-
-
-		if (!redraw) {
-			this.stack.push({
-				type: 'text',
-				object: str,
-				x: x,
-				y: y,
-				options: options
-			});
+		if('setLineDash' in ctx) {
+			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 		}
-
-		return this;
+		if ('lineDashOffset' in ctx) {
+			ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
+		}
 	}
-}
 
+	// Draw the circle
+	ctx.beginPath();
+	ctx.arc(circle.center[0], circle.center[1], circle.radius, 0, 2*Math.PI);
+	ctx.closePath();
+	ctx.fill();
+	ctx.stroke();
+	ctx.restore();
 
-var svg = {
-
-	normalizeOptions: function (opt) {
-		var res:any = {};
-		if ('fillColor' in opt) {
-			res.fill = colorConvert(opt.fillColor);
-		}
-		else if ('color' in opt) {
-			res.fill = colorConvert(opt.color);
-		}
-
-
-		if ('font' in opt) {
-			res['font-family'] = opt.font;
-		}
-
-		if ('fontSize' in opt) {
-			res['font-size'] = opt.fontSize;
-		}
-
-		if ('size' in opt) {
-			res.size = opt.size;
-		}
-
-
-		if ('lineColor' in opt) {
-			res.stroke = colorConvert(opt.lineColor);
-		}
-		else if ('color' in opt) {
-			res.stroke = colorConvert(opt.color);
-		}
-
-
-		if ('dash' in opt && opt.dash.length !== 0) {
-			res['stroke-dasharray'] = opt.dash;
-		}
-
-		if ('dashOffset' in opt && opt.dashOffset !== 0) {
-			res['stroke-dashoffset'] = opt.dashOffset;
-		}
-
-
-		return res;
-	},
-
-
-	applyTransformation: function () {
-		var m = this.transformation;
-		this.layer.forEach(function(l){
-			l.ctx.setAttribute('transform',
-				'matrix(' + m[0][0]+ ',' + m[1][0]+ ',' + m[0][1]+ ',' + m[1][1]+ ',' + m[0][2]+ ',' + m[1][2] + ')' )});
-	},
-
-
-
-
-	draw: function (x?, options = {}) {
-		var _this = this;
-		
-		if (arguments.length === 0) {
-			this.stack.forEach(function(x,i){
-				if (x.type === 'text' ) {
-					_this.text(x.object, x.x, x.y, x.options, true);
-				}
-				if (x.type === 'pixel' ) {
-					_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
-				}
-				else {
-					_this[x.type](x.object, x.options, true);
-				}
-			});
-		}
-
-
-		else if (x.type === 'circle') {
-			this.circle(x, options);
-		}
-		else if (x.type === 'line') {
-			this.line(x, options);
-		}
-		else if (Array.isArray(x)) {
-			x.forEach(function (y) {_this[y.type](y, options);});
-		}
-	},
-
-
-
-
-
-	// ### SVG circle
-	// Draws a circle on the screen.
-	//
-	// *@param {circle}* The circle to be drawn  
-	// *@param {object}* [options] Optional drawing options  
-	// *@returns {screen}* Returns the screen
-	circle: function (circle, options = {}, redraw = false) {
-		var screen = this.screen,
-				prop, opts,
-				svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-
-		svgCircle.setAttribute('cx', circle.center[0]);
-		svgCircle.setAttribute('cy', circle.center[1]);
-		svgCircle.setAttribute('r', circle.radius);
-
-		if (options) {
-			svgCircle.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
-			opts = svg.normalizeOptions(options);
-			for (prop in opts) {
-				if (opts.hasOwnProperty(prop)) {
-					svgCircle.setAttribute(prop, opts[prop]);
-				}
-			}
-		}
-
-		this.ctx.appendChild(svgCircle)
-
-		if (!redraw) {
-			this.stack.push({
-				type: 'circle',
-				object: circle,
-				options: options
-			});
-		}
-
-		return this;
-	},
-
-
-
-
-
-
-
-	// ### SVG line
-	// Draws a line on the screen.
-	//
-	// *@param {line}* The line to be drawn  
-	// *@param {object}* [options] Optional drawing options  
-	// *@returns {canvas}* Returns the screen
-	line: function (line, options = {}, redraw = false) {
-		var screen = this.screen,
-				points = this.screen.getLineEndPoints(line),
-				prop, opts,
-				svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-
-		svgLine.setAttribute('x1', points[0][0]);
-		svgLine.setAttribute('y1', points[0][1]);
-		svgLine.setAttribute('x2', points[1][0]);
-		svgLine.setAttribute('y2', points[1][1]);
-
-		if (options) {
-			svgLine.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
-			opts = svg.normalizeOptions(options);
-			for (prop in opts) {
-				if (opts.hasOwnProperty(prop)) {
-					svgLine.setAttribute(prop, opts[prop]);
-				}
-			}
-		}
-
-		this.ctx.appendChild(svgLine);
-		
-		if (!redraw) {
-			this.stack.push({
-				type: 'line',
-				object: line,
-				options: options
-			});
-		}
-
-		return this;
-	},
-
-
-
-
-
-	// ### SVG path
-	// Draws a path on the screen.
-	//
-	// *@param {curve}* The path to be drawn  
-	// *@param {object}* [options] Optional drawing options  
-	// *@returns {screen}* Returns the screen
-	path: function (curve, options = {}, redraw = false) {
-		var screen = this.screen,
-				svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
-				step = 2/(screen.scale.x - screen.scale.y),
-				pathString, from, to, prop, opts, x, y, i, path;
-
-		from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x)-step;
-		to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x)+step;
-
-
-		// If curve is a function f, the path will be (x, f(x))
-		if (typeof curve === 'function') {
-			path = [];
-			for (i = from; i <= to; i+=step) {
-				path.push([i, curve(i)]);
-			}
-		}
-
-
-		// If curve is an array of two functions [f, g], the path will be (f(x), g(x))
-		else if (typeof curve[0] === 'function') {
-			path = [];
-			x = curve[0];
-			y = curve[1];
-			for (i = from; i <= to; i+=step) {
-				path.push([x(i), y(i)]);
-			}
-		}
-		else {
-			path = curve;
-		}
-
-		pathString = 'M' + path.reduce(function(prev, cur) {
-			return prev + ' L' + cur.join(' ');
+	if (!redraw) {
+		this.stack.push({
+			type: 'circle',
+			object: circle,
+			options: options
 		});
-		svgPath.setAttribute('d', pathString);
+	}
 
-		svgPath.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+	return this;
+},
 
 
-		if (options) {
-			opts = svg.normalizeOptions(options);
-			for (prop in opts) {
-				if (opts.hasOwnProperty(prop)) {
-					svgPath.setAttribute(prop, opts[prop]);
-				}
+// ### Canvas.clear
+// Clears a given Layer.
+//
+// *@param {Layer}* The layer to be cleared
+clear: function (layer) {
+	var screen = layer.screen,
+			left   = -screen.translation.x / screen.scale.x,
+			top    = -screen.translation.y / screen.scale.y,
+			width  =  screen.width         / screen.scale.x,
+			height =  screen.height        / screen.scale.y;
+
+			console.dir(layer);
+	layer.ctx.clearRect(left, top, width, height);
+},
+
+
+// ### Canvas.convertOptions
+// Converts the options to the Canvas options format
+//
+// *@param {object}* The drawing options  
+// *@returns {object}* The converted options
+convertOptions: function(opt) {
+	var res:any = {};
+	if ('fillColor' in opt) {
+		res.fillStyle = colorConvert(opt.fillColor);
+	}
+	else if ('color' in opt) {
+		res.fillStyle = colorConvert(opt.color);
+	}
+
+
+	if ('font' in opt) {
+		res['font-family'] = opt.font;
+	}
+
+	if ('fontSize' in opt) {
+		res['font-size'] = opt.fontSize;
+	}
+
+
+	if ('lineColor' in opt) {
+		res.strokeStyle = colorConvert(opt.lineColor);
+	}
+	else if ('color' in opt) {
+		res.strokeStyle = colorConvert(opt.color);
+	}
+
+	return res;
+},
+
+
+// ### Canvas.line
+// Draws a line on the screen.
+//
+// *@param {line}* The line to be drawn  
+// *@param {object}* [options] Optional drawing options  
+// *@returns {screen}* Returns the screen
+line: function(line, options = {}, redraw = false) {
+	var screen = this.screen,
+			points = this.screen.getLineEndPoints(line),
+			ctx = this.ctx,
+			prop, opts;
+
+	ctx.save()
+	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
+
+
+	// Set the drawing options
+	if (options) {
+		opts = MathLib.Canvas.convertOptions(options);
+		for (prop in opts) {
+			if (opts.hasOwnProperty(prop)) {
+				ctx[prop] = opts[prop];
 			}
 		}
 
-		this.ctx.appendChild(svgPath);
-
-		if (!redraw) {
-			this.stack.push({
-				type: 'path',
-				object: curve,
-				options: options
-			});
+		if ('setLineDash' in ctx) {
+			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 		}
-
-		return this;
-	},
-
-
-
-
-	// ### SVG pixel
-	// Draws pixel on the screen.
-	//
-	// *@param {path}* The path to be drawn  
-	// *@param {top}* The top coordinate of the draw rectangle  
-	// *@param {right}* The right coordinate of the draw rectangle  
-	// *@param {bottom}* The bottom coordinate of the draw rectangle  
-	// *@param {left}* The left coordinate of the draw rectangle  
-	// *@param {object}* [options] Optional drawing options  
-	// *@returns {screen}* Returns the screen
-	pixel: function (f, t, r, b, l, options = {}, redraw = false) {
-		var screen = this.screen,
-				top     = (              - screen.translation.y) / screen.scale.y,
-				bottom  = (screen.height - screen.translation.y) / screen.scale.y,
-				left    = (              - screen.translation.x) / screen.scale.x,
-				right   = (screen.width  - screen.translation.x) / screen.scale.x,
-				ctx = this.ctx,
-				canvas = <any>document.createElement('canvas'),
-				canvasCtx = canvas.getContext('2d'),
-				svgImage = document.createElementNS('http://www.w3.org/2000/svg', 'image'),
-				svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'g'),
-				dataURL, prop, opts, x, y, i, pxl,
-				m = screen.transformation;
-
-		canvas.width = screen.width;
-		canvas.height = screen.height;
-		canvasCtx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2])
+		if ('lineDashOffset' in ctx) {
+			ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
+		}
+	}
 
 
+	// Draw the line
+	ctx.beginPath();
+	ctx.moveTo(points[0][0], points[0][1]);
+	ctx.lineTo(points[1][0], points[1][1]);
+	ctx.stroke();
+	ctx.closePath();
+	ctx.restore();
 
-		svgContainer.setAttribute('transform', 'matrix('+1/m[0][0]+',0,0,'+1/m[1][1]+',-'+m[0][2]/m[0][0]+','+-m[1][2]/m[1][1]+')');
-		svgImage.setAttribute('width', screen.width+'px');
-		svgImage.setAttribute('height', screen.height+'px');
-		svgImage.setAttribute('x', '0');
-		svgImage.setAttribute('y', '0');
+	if (!redraw) {
+		this.stack.push({
+			type: 'line',
+			object: line,
+			options: options
+		});
+	}
 
-
-
-		t = Math.min(top, t);
-		r = Math.min(right, r);
-		b = Math.max(bottom, b);
-		l = Math.max(left, l);
-
-
-		var tPxl = Math.floor(-t*screen.scale.y),
-				rPxl = Math.floor(r*screen.scale.x),
-				bPxl = Math.floor(-b*screen.scale.y),
-				lPxl = Math.floor(l*screen.scale.x),
-				w = (rPxl-lPxl),
-				h = (tPxl-bPxl),
-				imgData = canvasCtx.createImageData(w, h);
+	return this;
+},
 
 
+// ### Canvas.path
+// Draws a path on the screen.
+//
+// *@param {path}* The path to be drawn  
+// *@param {object}* [options] Optional drawing options  
+// *@returns {screen}* Returns the scren
+path: function(curve, options = {}, redraw = false) {
+	var screen = this.screen,
+			ctx = this.ctx,
+			prop, opts, path, x, y, i,
+			step = 2 / (screen.scale.x - screen.scale.y),
+			from, to;
 
-		for (y = tPxl, i = 0; y > bPxl; y--) {
-			for (x = lPxl; x < rPxl; x++, i++) {
-				pxl = f(x/screen.scale.x, y/screen.scale.y);
-				imgData.data[4*i]   = pxl[0];
-				imgData.data[4*i+1] = pxl[1];
-				imgData.data[4*i+2] = pxl[2];
-				imgData.data[4*i+3] = pxl[3];
+
+	from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x) - step;
+	to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x) + step;
+
+	ctx.save()
+	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
+
+
+	// Set the drawing options
+	if (options) {
+		opts = MathLib.Canvas.convertOptions(options);
+		for (prop in opts) {
+			if (opts.hasOwnProperty(prop)) {
+				ctx[prop] = opts[prop];
 			}
 		}
 
-		canvasCtx.putImageData(imgData, 0,0);
+		if('setLineDash' in ctx) {
+			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
+		}
+		if ('lineDashOffset' in ctx) {
+			ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
+		}
+	}
 
-		svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', canvas.toDataURL());
 
-		svgContainer.appendChild(svgImage);
-		this.ctx.appendChild(svgContainer);
+	// If curve is a function f, the path will be (x, f(x))
+	if (typeof curve === 'function') {
+		path = [];
+		for (i = from; i <= to; i+=step) {
+			path.push([i, curve(i)]);
+		}
+	}
 
-		if (!redraw) {
-			this.stack.push({
-				type: 'pixel',
-				object: f,
-				t: t,
-				r: r,
-				b: b,
-				l: l,
-				options: options
-			});
+
+	// If curve is an array of two functions [f, g], the path will be (f(x), g(x))
+	else if (typeof curve[0] === 'function') {
+		path = [];
+		x = curve[0];
+		y = curve[1];
+		for (i = from; i <= to; i += step) {
+			path.push([x(i), y(i)]);
+		}
+	}
+	else {
+		path = curve;
+	}
+
+
+	// Draw the path
+	ctx.beginPath();
+	ctx.moveTo(path[0][0], path[0][1]);
+	path.forEach(function (x) {
+		ctx.lineTo(x[0], x[1]);
+	});
+	ctx.stroke();
+	ctx.closePath();
+	ctx.restore();
+
+
+	if (!redraw) {
+		this.stack.push({
+			type: 'path',
+			object: curve,
+			options: options
+		});
+	}
+
+	return this;
+},
+
+
+// ### Canvas.pixel
+// Draws pixel on the screen.
+//
+// *@param {path}* The path to be drawn  
+// *@param {object}* [options] Optional drawing options  
+// *@returns {screen}* Returns the screen
+pixel: function(f, t, r, b, l, options = {}, redraw = false) {
+	var screen = this.screen,
+			top     = (              - screen.translation.y) / screen.scale.y,
+			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
+			left    = (              - screen.translation.x) / screen.scale.x,
+			right   = (screen.width  - screen.translation.x) / screen.scale.x,
+			ctx = this.ctx,
+			prop, opts, path, x, y, i;
+
+	t = Math.min(top, t);
+	r = Math.min(right, r);
+	b = Math.max(bottom, b);
+	l = Math.max(left, l);
+
+
+	var tPxl = Math.floor(-t * screen.scale.y),
+			rPxl = Math.floor( r * screen.scale.x),
+			bPxl = Math.floor(-b * screen.scale.y),
+			lPxl = Math.floor( l * screen.scale.x),
+			w = (rPxl - lPxl),
+			h = (bPxl - tPxl),
+			imgData = ctx.createImageData(w, h),
+			pxl;
+
+
+	for (y = tPxl, i = 0; y > bPxl; y--) {
+		for (x = lPxl; x < rPxl; x++, i++) {
+			pxl = f(x / screen.scale.x, y / screen.scale.y);
+			imgData.data[4*i]   = pxl[0];
+			imgData.data[4*i+1] = pxl[1];
+			imgData.data[4*i+2] = pxl[2];
+			imgData.data[4*i+3] = pxl[3];
+		}
+	}
+
+	ctx.putImageData(imgData, (left - l) * screen.scale.x, (t - top) * screen.scale.y);
+
+
+	if (!redraw) {
+		this.stack.push({
+			type: 'pixel',
+			object: f,
+			t: t,
+			r: r,
+			b: b,
+			l: l,
+			options: options
+		});
+	}
+
+	return this;
+},
+
+
+// ### Canvas.point
+// Draws a point on the screen.
+//
+// *@param {point}* The point to be drawn  
+// *@param {object}* [options] Optional drawing options  
+// *@returns {screen}* Returns the screen
+point: function(point, options = {}, redraw = false) {
+	var screen = this.screen,
+			ctx = this.ctx,
+			prop, opts, dist, textOptions;
+
+	ctx.save();
+	ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
+
+	// Set the drawing options
+	if (options) {
+		opts = MathLib.Canvas.convertOptions(options);
+
+		if (!('fillColor' in options) && !('color' in options)) {
+			opts['fillStyle'] = 'black';
 		}
 
-		return this;
-	},
-
-
-
-
-	// ### SVG point
-	// Draws a point on the screen.
-	//
-	// *@param {point}* The point to be drawn  
-	// *@param {object}* [options] Optional drawing options  
-	// *@returns {screen}* Returns the screen
-	point: function (point, options = {}, redraw = false) {
-		var screen = this.screen,
-				prop, opts, dist,
-				svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-
-		svgPoint.setAttribute('cx', point[0]/point[2] + '');
-		svgPoint.setAttribute('cy', point[1]/point[2] + '');
-		svgPoint.setAttribute('r', ((<any>options).size || 10)/(screen.scale.x - screen.scale.y) + '');
-
-
-		if (options) {
-			svgPoint.setAttribute('stroke-width', ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y) + '');
-			opts = svg.normalizeOptions(options);
-
-			if (!('fillOpacity' in options)) {
-				opts['fill-opacity'] = '1';
+		for (prop in opts) {
+			if (opts.hasOwnProperty(prop)) {
+				ctx[prop] = opts[prop];
 			}
+		}
 
-			if (!('fillColor' in options) && !('color' in options)) {
-				opts['fill'] = 'black';
+		if('setLineDash' in ctx) {
+			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
+		}
+		if ('lineDashOffset' in ctx) {
+			ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
+		}
+	}
+
+
+	// Draw the point
+	ctx.beginPath();
+	ctx.arc(point[0]/point[2], point[1]/point[2], ((<any>options).size || 10)/(screen.scale.x - screen.scale.y), 0, 2*Math.PI);
+	ctx.closePath();
+	ctx.fill();
+	ctx.stroke();
+	ctx.restore();
+
+
+	if ((<any>options).label) {
+		dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
+		screen.text((<any>options).label,
+			point[0]/point[2]+dist/(screen.scale.x - screen.scale.y),
+			point[1]/point[2]+dist/(screen.scale.x - screen.scale.y), {}, true);
+	}
+
+
+	if (!redraw) {
+		this.stack.push({
+			type: 'point',
+			object: point,
+			options: options
+		});
+	}
+
+	return this;
+},
+
+
+// ### Canvas.text
+// Writes text on the screen.
+//
+// *@param {str}* The string to be drawn  
+// *@param {x}* The x coordinate  
+// *@param {y}* The y coordinate  
+// *@param {object}* [options] Optional drawing options  
+// *@returns {screen}* Returns the screen
+text: function(str, x, y, options = {}, redraw = false) {
+	var defaults = {
+				font:       'Helvetica',
+				fontSize:   10,
+				fillColor:  'rgba(0, 0, 0, 1)',
+				lineColor:  'rgba(0, 0, 0, 1)',
+				lineWidth:  0.05
+			},
+			ctx, prop, opts;
+
+	// Determine the layer to draw onto
+	ctx = this.ctx;
+
+	opts = MathLib.Canvas.convertOptions(extendObject(defaults, options));
+
+
+	// Set the drawing options
+	for (prop in opts) {
+		if (opts.hasOwnProperty(prop)) {
+			ctx[prop] = opts[prop];
+		}
+	}
+
+	ctx.font = '10px Helvetica';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+
+	// Draw the text
+	var tf = this.screen.transformation;
+
+	ctx.save();
+		ctx.transform(1/tf[0][0],0,0,1/tf[1][1],0,0);
+		ctx.fillText(str, tf[0][0]*x, tf[1][1]*y);
+	ctx.restore();
+
+
+	if (!redraw) {
+		this.stack.push({
+			type: 'text',
+			object: str,
+			x: x,
+			y: y,
+			options: options
+		});
+	}
+
+	return this;
+},
+
+
+};
+
+
+// ## SVG
+// The SVG renderer for 2D plotting
+//
+MathLib.SVG = {
+
+
+// ### SVG.applyTransformation
+// Applies the current transformations to the screen
+//
+applyTransformation: function () {
+	var m = this.transformation;
+	this.layer.forEach(function(l){
+		l.ctx.setAttribute('transform',
+			'matrix(' + m[0][0]+ ',' + m[1][0]+ ',' + m[0][1]+ ',' + m[1][1]+ ',' + m[0][2]+ ',' + m[1][2] + ')' )});
+},
+
+
+// ### SVG circle
+// Draws a circle on the screen.
+//
+// *@param {circle}* The circle to be drawn  
+// *@param {object}* [options] Optional drawing options  
+// *@returns {screen}* Returns the screen
+circle: function (circle, options = {}, redraw = false) {
+	var screen = this.screen,
+			prop, opts,
+			svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+	svgCircle.setAttribute('cx', circle.center[0]);
+	svgCircle.setAttribute('cy', circle.center[1]);
+	svgCircle.setAttribute('r', circle.radius);
+
+	if (options) {
+		svgCircle.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+		opts = MathLib.SVG.convertOptions(options);
+		for (prop in opts) {
+			if (opts.hasOwnProperty(prop)) {
+				svgCircle.setAttribute(prop, opts[prop]);
 			}
+		}
+	}
 
-			for (prop in opts) {
-				if (opts.hasOwnProperty(prop)) {
-					svgPoint.setAttribute(prop, opts[prop]);
-				}
+	this.ctx.appendChild(svgCircle)
+
+	if (!redraw) {
+		this.stack.push({
+			type: 'circle',
+			object: circle,
+			options: options
+		});
+	}
+
+	return this;
+},
+
+
+// ### SVG.clear
+// Clears a given Layer.
+//
+// *@param {Layer}* The layer to be cleared  
+clear: function (layer) {
+	layer.ctx.textContent = '';
+},
+
+
+// ### SVG.convertOptions
+// Converts the options to the SVG options format
+//
+// *@param {object}* The drawing options  
+// *@returns {object}* The converted options
+convertOptions: function (opt) {
+	var res:any = {};
+	if ('fillColor' in opt) {
+		res.fill = colorConvert(opt.fillColor);
+	}
+	else if ('color' in opt) {
+		res.fill = colorConvert(opt.color);
+	}
+
+
+	if ('font' in opt) {
+		res['font-family'] = opt.font;
+	}
+
+	if ('fontSize' in opt) {
+		res['font-size'] = opt.fontSize;
+	}
+
+	if ('size' in opt) {
+		res.size = opt.size;
+	}
+
+
+	if ('lineColor' in opt) {
+		res.stroke = colorConvert(opt.lineColor);
+	}
+	else if ('color' in opt) {
+		res.stroke = colorConvert(opt.color);
+	}
+
+
+	if ('dash' in opt && opt.dash.length !== 0) {
+		res['stroke-dasharray'] = opt.dash;
+	}
+
+	if ('dashOffset' in opt && opt.dashOffset !== 0) {
+		res['stroke-dashoffset'] = opt.dashOffset;
+	}
+
+
+	return res;
+},
+
+
+// ### SVG line
+// Draws a line on the screen.
+//
+// *@param {line}* The line to be drawn  
+// *@param {object}* [options] Optional drawing options  
+// *@returns {canvas}* Returns the screen
+line: function (line, options = {}, redraw = false) {
+	var screen = this.screen,
+			points = this.screen.getLineEndPoints(line),
+			prop, opts,
+			svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+
+	svgLine.setAttribute('x1', points[0][0]);
+	svgLine.setAttribute('y1', points[0][1]);
+	svgLine.setAttribute('x2', points[1][0]);
+	svgLine.setAttribute('y2', points[1][1]);
+
+	if (options) {
+		svgLine.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+		opts = MathLib.SVG.convertOptions(options);
+		for (prop in opts) {
+			if (opts.hasOwnProperty(prop)) {
+				svgLine.setAttribute(prop, opts[prop]);
 			}
 		}
+	}
+
+	this.ctx.appendChild(svgLine);
+	
+	if (!redraw) {
+		this.stack.push({
+			type: 'line',
+			object: line,
+			options: options
+		});
+	}
+
+	return this;
+},
 
 
-		if ((<any>options).moveable) {
-			svgPoint.setAttribute('cursor', 'move');
+// ### SVG path
+// Draws a path on the screen.
+//
+// *@param {curve}* The path to be drawn  
+// *@param {object}* [options] Optional drawing options  
+// *@returns {screen}* Returns the screen
+path: function (curve, options = {}, redraw = false) {
+	var screen = this.screen,
+			svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
+			step = 2/(screen.scale.x - screen.scale.y),
+			pathString, from, to, prop, opts, x, y, i, path;
 
-			// mousedown
-			svgPoint.addEventListener('mousedown', 
-				function () {
-					screen.options.interaction.type = 'move';
-					var invTransformation = screen.transformation.inverse();
+	from = ('from' in options ? (<any>options).from :         - screen.translation.x  / screen.scale.x) - step;
+	to = ('to' in options ? (<any>options).to : (screen.width - screen.translation.x) / screen.scale.x) + step;
 
-					var move = function (evt) {
-								evt.stopPropagation();
 
-								var evtPoint = invTransformation.times(screen.getEventPoint(evt));
-								point[0] = evtPoint[0];
-								point[1] = evtPoint[1];
-								screen.draw()
-							},
+	// If curve is a function f, the path will be (x, f(x))
+	if (typeof curve === 'function') {
+		path = [];
+		for (i = from; i <= to; i+=step) {
+			path.push([i, curve(i)]);
+		}
+	}
 
-							up = function () {
-								screen.options.interaction.type = '';
 
-								document.body.removeEventListener('mousemove', move);
-								document.body.removeEventListener('mouseup', up);
-							};
+	// If curve is an array of two functions [f, g], the path will be (f(x), g(x))
+	else if (typeof curve[0] === 'function') {
+		path = [];
+		x = curve[0];
+		y = curve[1];
+		for (i = from; i <= to; i+=step) {
+			path.push([x(i), y(i)]);
+		}
+	}
+	else {
+		path = curve;
+	}
 
-					// mousemove
-					document.body.addEventListener('mousemove', move);
+	pathString = 'M' + path.reduce(function(prev, cur) {
+		return prev + ' L' + cur.join(' ');
+	});
+	svgPath.setAttribute('d', pathString);
 
-					// mouseup
-					document.body.addEventListener('mouseup', up);
-				}
-			);
+	svgPath.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+
+
+	if (options) {
+		opts = MathLib.SVG.convertOptions(options);
+		for (prop in opts) {
+			if (opts.hasOwnProperty(prop)) {
+				svgPath.setAttribute(prop, opts[prop]);
+			}
+		}
+	}
+
+	this.ctx.appendChild(svgPath);
+
+	if (!redraw) {
+		this.stack.push({
+			type: 'path',
+			object: curve,
+			options: options
+		});
+	}
+
+	return this;
+},
+
+
+// ### SVG pixel
+// Draws pixel on the screen.
+//
+// *@param {path}* The path to be drawn  
+// *@param {top}* The top coordinate of the draw rectangle  
+// *@param {right}* The right coordinate of the draw rectangle  
+// *@param {bottom}* The bottom coordinate of the draw rectangle  
+// *@param {left}* The left coordinate of the draw rectangle  
+// *@param {object}* [options] Optional drawing options  
+// *@returns {screen}* Returns the screen
+pixel: function (f, t, r, b, l, options = {}, redraw = false) {
+	var screen = this.screen,
+			top     = (              - screen.translation.y) / screen.scale.y,
+			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
+			left    = (              - screen.translation.x) / screen.scale.x,
+			right   = (screen.width  - screen.translation.x) / screen.scale.x,
+			ctx = this.ctx,
+			canvas = <any>document.createElement('canvas'),
+			canvasCtx = canvas.getContext('2d'),
+			svgImage = document.createElementNS('http://www.w3.org/2000/svg', 'image'),
+			svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'g'),
+			dataURL, prop, opts, x, y, i, pxl,
+			m = screen.transformation;
+
+	canvas.width = screen.width;
+	canvas.height = screen.height;
+	canvasCtx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2])
+
+
+
+	svgContainer.setAttribute('transform', 'matrix('+1/m[0][0]+',0,0,'+1/m[1][1]+',-'+m[0][2]/m[0][0]+','+-m[1][2]/m[1][1]+')');
+	svgImage.setAttribute('width', screen.width+'px');
+	svgImage.setAttribute('height', screen.height+'px');
+	svgImage.setAttribute('x', '0');
+	svgImage.setAttribute('y', '0');
+
+
+
+	t = Math.min(top, t);
+	r = Math.min(right, r);
+	b = Math.max(bottom, b);
+	l = Math.max(left, l);
+
+
+	var tPxl = Math.floor(-t*screen.scale.y),
+			rPxl = Math.floor(r*screen.scale.x),
+			bPxl = Math.floor(-b*screen.scale.y),
+			lPxl = Math.floor(l*screen.scale.x),
+			w = (rPxl-lPxl),
+			h = (tPxl-bPxl),
+			imgData = canvasCtx.createImageData(w, h);
+
+
+
+	for (y = tPxl, i = 0; y > bPxl; y--) {
+		for (x = lPxl; x < rPxl; x++, i++) {
+			pxl = f(x/screen.scale.x, y/screen.scale.y);
+			imgData.data[4*i]   = pxl[0];
+			imgData.data[4*i+1] = pxl[1];
+			imgData.data[4*i+2] = pxl[2];
+			imgData.data[4*i+3] = pxl[3];
+		}
+	}
+
+	canvasCtx.putImageData(imgData, 0,0);
+
+	svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', canvas.toDataURL());
+
+	svgContainer.appendChild(svgImage);
+	this.ctx.appendChild(svgContainer);
+
+	if (!redraw) {
+		this.stack.push({
+			type: 'pixel',
+			object: f,
+			t: t,
+			r: r,
+			b: b,
+			l: l,
+			options: options
+		});
+	}
+
+	return this;
+},
+
+
+// ### SVG point
+// Draws a point on the screen.
+//
+// *@param {point}* The point to be drawn  
+// *@param {object}* [options] Optional drawing options  
+// *@returns {screen}* Returns the screen
+point: function (point, options = {}, redraw = false) {
+	var screen = this.screen,
+			prop, opts, dist,
+			svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+	svgPoint.setAttribute('cx', point[0]/point[2] + '');
+	svgPoint.setAttribute('cy', point[1]/point[2] + '');
+	svgPoint.setAttribute('r', ((<any>options).size || 10)/(screen.scale.x - screen.scale.y) + '');
+
+
+	if (options) {
+		svgPoint.setAttribute('stroke-width', ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y) + '');
+		opts = MathLib.SVG.convertOptions(options);
+
+		if (!('fillOpacity' in options)) {
+			opts['fill-opacity'] = '1';
 		}
 
-
-		this.ctx.appendChild(svgPoint);
-
-
-		if ((<any>options).label) {
-			dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
-			screen.text((<any>options).label,
-				point[0]/point[2]+dist/(screen.scale.x - screen.scale.y),
-				point[1]/point[2]+dist/(screen.scale.x - screen.scale.y), {}, true);
+		if (!('fillColor' in options) && !('color' in options)) {
+			opts['fill'] = 'black';
 		}
 
+		for (prop in opts) {
+			if (opts.hasOwnProperty(prop)) {
+				svgPoint.setAttribute(prop, opts[prop]);
+			}
+		}
+	}
 
-		svgPoint.addEventListener('contextmenu', function (evt) {
-			screen.options.interaction.type = 'contextmenu';
-			var x = (<any>svgPoint).cx.baseVal.value,
-					y = (<any>svgPoint).cy.baseVal.value;
 
-			screen.contextMenu.innerHTML = 
-				'<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_is_disabled MathLib_is_centered">Point</div>' +
-				'<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_hasSubmenu">Coordinates' +
-						'<menu class="MathLib_menu MathLib_submenu">' +
-						'<div class="MathLib_menuItem">cartesian: <span class="MathLib_is_selectable MathLib_is_right">(' + x.toFixed(3) + ', ' + y.toFixed(3) + ')</span></div>' +
-						'<div class="MathLib_menuItem">polar: <span class="MathLib_is_selectable MathLib_is_right">(' + MathLib.hypot(x, y).toFixed(3) + ', ' + Math.atan2(y, x).toFixed(3) + ')</span></div>' +
-					'</menu>' +
-				'</div>' +
-				'<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_hasSubmenu">Options' +
+	if ((<any>options).moveable) {
+		svgPoint.setAttribute('cursor', 'move');
+
+		// mousedown
+		svgPoint.addEventListener('mousedown', 
+			function () {
+				screen.options.interaction.type = 'move';
+				var invTransformation = screen.transformation.inverse();
+
+				var move = function (evt) {
+							evt.stopPropagation();
+
+							var evtPoint = invTransformation.times(screen.getEventPoint(evt));
+							point[0] = evtPoint[0];
+							point[1] = evtPoint[1];
+							screen.draw()
+						},
+
+						up = function () {
+							screen.options.interaction.type = '';
+
+							document.body.removeEventListener('mousemove', move);
+							document.body.removeEventListener('mouseup', up);
+						};
+
+				// mousemove
+				document.body.addEventListener('mousemove', move);
+
+				// mouseup
+				document.body.addEventListener('mouseup', up);
+			}
+		);
+	}
+
+
+	this.ctx.appendChild(svgPoint);
+
+
+	if ((<any>options).label) {
+		dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
+		screen.text((<any>options).label,
+			point[0]/point[2]+dist/(screen.scale.x - screen.scale.y),
+			point[1]/point[2]+dist/(screen.scale.x - screen.scale.y), {}, true);
+	}
+
+
+	svgPoint.addEventListener('contextmenu', function (evt) {
+		screen.options.interaction.type = 'contextmenu';
+		var x = (<any>svgPoint).cx.baseVal.value,
+				y = (<any>svgPoint).cy.baseVal.value;
+
+		screen.contextMenu.innerHTML = 
+			'<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_is_disabled MathLib_is_centered">Point</div>' +
+			'<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_hasSubmenu">Coordinates' +
 					'<menu class="MathLib_menu MathLib_submenu">' +
-						'<div class="MathLib_menuItem">Moveable:' +
-							'<input type="checkbox" class="MathLib_is_right">' +
-						'</div>' +
-						'<div class="MathLib_menuItem">Size:' +
-							'<input type="spinner" class="MathLib_is_right">' +
-						'</div>' +
-						'<div class="MathLib_menuItem">Fill color:' +
-							'<input type="color" class="MathLib_is_right">' +
-						'</div>' +
-						'<div class="MathLib_menuItem">Line color:' +
-							'<input type="color" class="MathLib_is_right">' +
-						'</div>' +
-					'</menu>' +
-				'</div>' +
-				'<hr class="MathLib_separator MathLib_temporaryMenuItem">' +
-				screen.contextMenu.innerHTML;
+					'<div class="MathLib_menuItem">cartesian: <span class="MathLib_is_selectable MathLib_is_right">(' + x.toFixed(3) + ', ' + y.toFixed(3) + ')</span></div>' +
+					'<div class="MathLib_menuItem">polar: <span class="MathLib_is_selectable MathLib_is_right">(' + MathLib.hypot(x, y).toFixed(3) + ', ' + Math.atan2(y, x).toFixed(3) + ')</span></div>' +
+				'</menu>' +
+			'</div>' +
+			'<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_hasSubmenu">Options' +
+				'<menu class="MathLib_menu MathLib_submenu">' +
+					'<div class="MathLib_menuItem">Moveable:' +
+						'<input type="checkbox" class="MathLib_is_right">' +
+					'</div>' +
+					'<div class="MathLib_menuItem">Size:' +
+						'<input type="spinner" class="MathLib_is_right">' +
+					'</div>' +
+					'<div class="MathLib_menuItem">Fill color:' +
+						'<input type="color" class="MathLib_is_right">' +
+					'</div>' +
+					'<div class="MathLib_menuItem">Line color:' +
+						'<input type="color" class="MathLib_is_right">' +
+					'</div>' +
+				'</menu>' +
+			'</div>' +
+			'<hr class="MathLib_separator MathLib_temporaryMenuItem">' +
+			screen.contextMenu.innerHTML;
+	});
+
+
+	if (!redraw) {
+		this.stack.push({
+			type: 'point',
+			object: point,
+			options: options
 		});
-
-
-		if (!redraw) {
-			this.stack.push({
-				type: 'point',
-				object: point,
-				options: options
-			});
-		}
-
-		return this;
-	},
-
-
-	// ### SVG text
-	// Writes text on the screen.
-	//
-	// *@param {str}* The string to be drawn  
-	// *@param {x}* The x coordinate  
-	// *@param {y}* The y coordinate  
-	// *@param {object}* [options] Optional drawing options  
-	// *@returns {screen}* Returns the screen
-	text: function (str, x, y, options = {}, redraw = false) {
-		var screen = this.screen,
-				svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
-				ctx = this.ctx,
-				prop, opts;
-		var tf = this.screen.transformation;
-
-		svgText.textContent = str;
-		svgText.setAttribute('x', x*screen.scale.x + '');
-		svgText.setAttribute('y', y*screen.scale.y + '');
-		svgText.setAttribute('transform', 'matrix(' + 1/screen.scale.x + ', 0, 0, ' + 1/screen.scale.y + ', 0, 0)');
-		svgText.setAttribute('font-family', 'Helvetica');
-		svgText.setAttribute('fill', colorConvert((<any>options).color) || '#000000');
-		svgText.setAttribute('fill-opacity', '1');
-		svgText.setAttribute('stroke', colorConvert((<any>options).color) || '#000000');
-		svgText.setAttribute('text-anchor', 'middle');
-
-		// alignment-baseline isn't defined for text elements, 
-		// only for ‘tspan’, ‘tref’, ‘altGlyph’, ‘textPath’ elements.  
-		// see the [Specification](http://www.w3.org/TR/SVG/text.html#AlignmentBaselineProperty)  
-		// But it works for text elements, so we don't need an additional tspan element.
-		svgText.setAttribute('alignment-baseline', 'middle');
-
-
-		this.ctx.appendChild(svgText);
-
-		if (!redraw) {
-			this.stack.push({
-				type: 'text',
-				object: str,
-				x: x,
-				y: y,
-				options: options
-			});
-		}
-
-		return this;
 	}
+
+	return this;
+},
+
+
+// ### SVG text
+// Writes text on the screen.
+//
+// *@param {str}* The string to be drawn  
+// *@param {x}* The x coordinate  
+// *@param {y}* The y coordinate  
+// *@param {object}* [options] Optional drawing options  
+// *@returns {screen}* Returns the screen
+text: function (str, x, y, options = {}, redraw = false) {
+	var screen = this.screen,
+			svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
+			ctx = this.ctx,
+			prop, opts;
+	var tf = this.screen.transformation;
+
+	svgText.textContent = str;
+	svgText.setAttribute('x', x*screen.scale.x + '');
+	svgText.setAttribute('y', y*screen.scale.y + '');
+	svgText.setAttribute('transform', 'matrix(' + 1/screen.scale.x + ', 0, 0, ' + 1/screen.scale.y + ', 0, 0)');
+	svgText.setAttribute('font-family', 'Helvetica');
+	svgText.setAttribute('fill', colorConvert((<any>options).color) || '#000000');
+	svgText.setAttribute('fill-opacity', '1');
+	svgText.setAttribute('stroke', colorConvert((<any>options).color) || '#000000');
+	svgText.setAttribute('text-anchor', 'middle');
+
+	// alignment-baseline isn't defined for text elements, 
+	// only for ‘tspan’, ‘tref’, ‘altGlyph’, ‘textPath’ elements.  
+	// see the [Specification](http://www.w3.org/TR/SVG/text.html#AlignmentBaselineProperty)  
+	// But it works for text elements, so we don't need an additional tspan element.
+	svgText.setAttribute('alignment-baseline', 'middle');
+
+
+	this.ctx.appendChild(svgText);
+
+	if (!redraw) {
+		this.stack.push({
+			type: 'text',
+			object: str,
+			x: x,
+			y: y,
+			options: options
+		});
+	}
+
+	return this;
 }
+
+
+};
 
 
 // ## <a id="Screen2D"></a>Screen2D
@@ -3441,9 +3304,6 @@ export class Screen2D extends Screen {
 
 	init: any;
 	redraw: any;
-	drawAxis:any;
-	drawGrid:any;
-
 
 
 	// Drawing functions
@@ -3478,7 +3338,7 @@ export class Screen2D extends Screen {
 						tick: {x: 1, y: 1}
 					},
 					grid: {
-						angle: Math.PI/8,
+						angle: Math.PI / 8,
 						color: 0xcccccc,
 						type: 'cartesian',
 						tick: {x: 1, y: 1, r: 1}
@@ -3503,13 +3363,29 @@ export class Screen2D extends Screen {
 				_this = this;
 
 		this.options = opts;
-		//this.background = opts.background;
-		//this.interaction = opts.interaction;
+		this.renderer = MathLib[opts.renderer];
+
+
+		this.circle = (...args : any[]) => this.renderer.circle.apply(this.layer.main, args);
+		this.line   = (...args : any[]) => this.renderer.line.apply(  this.layer.main, args);
+		this.path   = (...args : any[]) => this.renderer.path.apply(  this.layer.main, args);
+		// Should the pixel method default to the main layer or to the back layer?
+		this.pixel  = (...args : any[]) => this.renderer.pixel.apply( this.layer.main, args);
+		this.point  = (...args : any[]) => this.renderer.point.apply( this.layer.main, args);
+		this.text   = (...args : any[]) => this.renderer.text.apply(  this.layer.main, args);
+
+
+
 
 		// Remove the warning message.
 		this.wrapper.innerHTML = '';
-	
+
+		this.container.classList.add('MathLib_screen2D');
+
+		// This is just a dummy method for the following few lines.
+		// The real applyTransformation method is specified after the creation of the layers.
 		this.applyTransformation = function () {};
+
 
 		// The interaction methods
 		this.translation = {};
@@ -3538,8 +3414,6 @@ export class Screen2D extends Screen {
 
 
 
-
-
 		this.lookAt = {};
 		this.range = {};
 		Object.defineProperty(this.lookAt, 'x', {
@@ -3563,14 +3437,10 @@ export class Screen2D extends Screen {
 		});
 
 
-
 		this.range.x = opts.range.x
 		this.range.y = opts.range.y
 		this.lookAt.x = opts.lookAt.x
 		this.lookAt.y = opts.lookAt.y
-
-
-
 
 
 
@@ -3612,10 +3482,6 @@ export class Screen2D extends Screen {
 
 
 
-
-
-
-
 		// Create the Layers
 		// =================
 		this.layer = [];
@@ -3625,120 +3491,40 @@ export class Screen2D extends Screen {
 		this.layer.main = new MathLib.Layer(this, 'main', 3);
 
 
-		if (opts.renderer === 'Canvas') {
-			this.layer.main.element.addEventListener('onmouseup',      (evt) => this.onmouseup(evt), false);
-			this.layer.main.element.addEventListener('onmousedown',    (evt) => this.onmousedown(evt), false);
-			this.layer.main.element.addEventListener('onmousemove',    (evt) => this.onmousemove(evt), false);
-			this.layer.main.element.addEventListener('onmousewheel',   (evt) => this.onmousewheel(evt), false);
-			// For Firefox: [Bug report for the missing onmousewheel method](https://bugzilla.mozilla.org/show_bug.cgi?id=111647)
-			this.layer.main.element.addEventListener('DOMMouseScroll', (evt) => this.onmousewheel(evt), false);
-		}
-		else if (opts.renderer === 'SVG') {
-			this.wrapper.addEventListener('onmouseup',      (evt) => this.onmouseup(evt), false);
-			this.wrapper.addEventListener('onmousedown',    (evt) => this.onmousedown(evt), false);
-			this.wrapper.addEventListener('onmousemove',    (evt) => this.onmousemove(evt), false);
-			this.wrapper.addEventListener('onmousewheel',   (evt) => this.onmousewheel(evt), false);
-			this.wrapper.addEventListener('DOMMouseScroll', (evt) => this.onmousewheel(evt), false);
-		}
+		this.wrapper.addEventListener('mouseup',      (evt) => this.onmouseup(evt), false);
+		this.wrapper.addEventListener('mousedown',    (evt) => this.onmousedown(evt), false);
+		this.wrapper.addEventListener('mousemove',    (evt) => this.onmousemove(evt), false);
+		this.wrapper.addEventListener('mousewheel',   (evt) => this.onmousewheel(evt), false);
+		// For Firefox: [Bug report for the missing onmousewheel method](https://bugzilla.mozilla.org/show_bug.cgi?id=111647)
+		this.wrapper.addEventListener('DOMMouseScroll', (evt) => this.onmousewheel(evt), false);
 
 
+		this.applyTransformation = this.renderer.applyTransformation;
 
 
-
-
-
-
-		// The canvas renderer
-		// ===================
-		if (opts.renderer === 'Canvas') {
-			this.applyTransformation = canvas.applyTransformation;
-
-			
-			this.draw = function (x, options = {}) {
-				var _this = this;
-				if (arguments.length === 0) {
-					var top     = (            - this.translation.y) / this.scale.y,
-							bottom  = (this.height - this.translation.y) / this.scale.y,
-							left    = (            - this.translation.x) / this.scale.x,
-							right   = (this.width  - this.translation.x) / this.scale.x;
-			
-
-					// Clear the canvas
-					this.layer.forEach(function (l) {l.ctx.clearRect(left, top, right-left, bottom-top)})
-
-					_this.layer.forEach(function (x) {x.draw();})
-				}
-
-
-				else if (x.type === 'circle') {
-					this.circle(x, options);
-				}
-				else if (x.type === 'line') {
-					this.line(x, options);
-				}
-				else if (Array.isArray(x)) {
-					x.forEach(function (y) {_this[y.type](y, options);});
-				}
+		this.draw = function (x, options = {}) {
+			// Clear and redraw the screen
+			if (arguments.length === 0) {
+				this.layer.forEach(function (l) {
+					l.clear().draw()
+				});
 			}
-
-
-			this.circle = function () { canvas.circle.apply(_this.layer.main, arguments);};
-			this.line = function () { canvas.line.apply(_this.layer.main, arguments);};
-			this.path = function () { canvas.path.apply(_this.layer.main, arguments);};
-			// Should the pixel method default to the main layer or to the back layer?
-			this.pixel = function () { canvas.pixel.apply(_this.layer.main, arguments);};
-			this.point = function () { canvas.point.apply(_this.layer.main, arguments);};
-			this.text = function () { canvas.text.apply(_this.layer.main, arguments);};
-		}
-
-
-
-		// The SVG renderer
-		// ================
-		else if (opts.renderer === 'SVG') {
-			this.applyTransformation = svg.applyTransformation;
-	 
-			this.draw = function (x, options = {}) {
-				var _this = this;
-				if (arguments.length === 0) {
-
-					// Clear the layer
-					this.layer.forEach(function (l) {
-						l.ctx.textContent = '';
-					});
-
-					_this.layer.forEach(function (x) {x.draw();})
-				}
-
-
-				else if (x.type === 'circle') {
-					this.circle(x, options);
-				}
-				else if (x.type === 'line') {
-					this.line(x, options);
-				}
-				else if (Array.isArray(x)) {
-					x.forEach(function (y) {_this[y.type](y, options);});
-				}
+			else if (x.type === 'circle') {
+				this.circle(x, options);
 			}
+			else if (x.type === 'line') {
+				this.line(x, options);
+			}
+			else if (Array.isArray(x)) {
+				x.forEach((y) => this[y.type](y, options));
+			}
+		};
 
-			this.circle = function () { svg.circle.apply(_this.layer.main, arguments);};
-			this.line = function () { svg.line.apply(_this.layer.main, arguments);};
-			this.path = function () { svg.path.apply(_this.layer.main, arguments);};
-			// Should the pixel method default to the main layer or to the back layer?
-			this.pixel = function () { svg.pixel.apply(_this.layer.main, arguments);};
-			this.point = function () { svg.point.apply(_this.layer.main, arguments);};
-			this.text = function () { svg.text.apply(_this.layer.main, arguments);};
-
-		}
-
-		this.container.classList.add('MathLib_screen2D');
 
 		if (this.options.contextMenu) {
 			var gridType = opts.grid.type ? opts.grid.type : 'none';
 			this.contextMenu.querySelectorAll('.MathLib_grid_type[value=' + gridType + ']')[0].checked = true;
 		}
-
 
 		this.draw();
 	}
@@ -3768,6 +3554,9 @@ resize(width : number, height : number) : Screen2D {
 		this.layer.axis.element.width = width;
 		this.layer.axis.element.height = height;
 		this.layer.axis.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
+		this.layer.axis.ctx.strokeStyle = colorConvert(this.options.axis.color) || '#000000';
+
+		//'rgba(255, 255, 255, 0)';
 
 		this.layer.main.element.width = width;
 		this.layer.main.element.height = height;
@@ -3844,7 +3633,154 @@ getLineEndPoints (l) {
 }
 
 
-// ### Screen.prototype.onmousedown()
+// ### Screen2D.prototype.drawGrid
+// Draws the grid.
+//
+// *@returns {Screen2D}*
+drawGrid() {
+
+	if (!this.options.grid) {
+		return this;
+	}
+
+	var line   = (...args : any[]) => this.renderer.line.apply(this.layer.grid, args),
+			circle = (...args : any[]) => this.renderer.circle.apply(this.layer.grid, args),
+			top    = (            - this.translation.y) / this.scale.y,
+			bottom = (this.height - this.translation.y) / this.scale.y,
+			left   = (            - this.translation.x) / this.scale.x,
+			right  = (this.width  - this.translation.x) / this.scale.x,
+			yTick  = Math.pow(10, 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3)),
+			xTick  = Math.pow(10, 1 - Math.floor(Math.log(+this.transformation[0][0]) / Math.LN10 - 0.3)),
+			i;
+
+
+	if (this.options.grid.type === 'cartesian') {
+
+		// The horizontal lines
+		for (i = bottom - (bottom % yTick); i <= top; i += yTick) {
+			line([[left, i], [right, i]], false, true);
+		}
+
+
+		// The vertical lines
+		for (i = left - (left % xTick); i <= right; i += xTick) {
+			line([[i, bottom], [i, top]], false, true);
+		}
+
+
+		// Test for logarithmic plots
+		/*for (i = left-(left%this.axis.tick.x); i <= right; i += this.axis.tick.x) {
+			for (var j = 1 ; j <=10; j++ ) {
+				this.line([[i*Math.log(10)+ Math.log(j), bottom], [i*Math.log(10)+Math.log(j), top]], options);
+			}
+		}*/
+
+
+	}
+	else if (this.options.grid.type === 'polar') {
+		var max = Math.sqrt(Math.max(top*top, bottom*bottom) + Math.max(left*left, right*right)),
+				min = 0; // TODO: improve this estimate
+
+		for (i = 0; i < 2*Math.PI; i += this.options.grid.angle) {
+			line([[0, 0], [max*Math.cos(i), max*Math.sin(i)]], false, true);
+		}
+
+		for (i = min; i <= max; i += Math.min(xTick, yTick)) {
+			circle(new MathLib.Circle([0, 0, 1], i), false, true);
+		}
+	}
+
+	return this;
+}
+
+
+// ### Screen.prototype.drawAxis
+// Draws the axis.
+//
+// *@returns {screen}*
+drawAxis() {
+
+	var line = (...args : any[]) => this.renderer.line.apply(this.layer.axis, args),
+			text = (...args : any[]) => this.renderer.text.apply(this.layer.axis, args),
+			options = {
+				lineColor: colorConvert(this.options.axis.color),
+				'stroke-width': -1 / this.transformation[1][1]
+			},
+			textOptions = {
+				strokeStyle: colorConvert(this.options.axis.textColor),
+				fillStyle: colorConvert(this.options.axis.textColor)
+			},
+			top     = (            - this.translation.y) / this.scale.y,
+			bottom  = (this.height - this.translation.y) / this.scale.y,
+			left    = (            - this.translation.x) / this.scale.x,
+			right   = (this.width  - this.translation.x) / this.scale.x,
+			lengthX = +10 / this.transformation[0][0],
+			lengthY = -10 / this.transformation[1][1],
+
+			yExp = 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3),
+			xExp = 1 - Math.floor(Math.log(+this.transformation[0][0]) / Math.LN10 - 0.3),
+			yTick = Math.pow(10, yExp),
+			xTick = Math.pow(10, xExp),
+			i;
+
+  if (!this.options.axis) {
+		return this;
+	}
+
+	// The axes
+	line([[left, 0], [right, 0]], options, true);
+	line([[0, bottom], [0, top]], options, true);
+
+
+
+	// The ticks on the axes
+	// The x axis
+	if(this.options.grid.tick) {
+		for (i = -yTick; i >= left; i -= yTick) {
+			line([[i, -lengthY], [i, lengthY]], options, true);
+		}
+		for (i = yTick; i <= right; i += yTick) {
+			line([[i, -lengthY], [i, lengthY]], options, true);
+		}
+
+		// The y axis
+		for (i = -xTick; i >= bottom; i -= xTick) {
+			line([[-lengthX, i], [lengthX, i]], options, true);
+		}
+		for (i = xTick; i <= top; i += xTick) {
+			line([[-lengthX, i], [lengthX, i]], options, true);
+		}
+	}
+
+
+	// The labels
+	// The x axis
+	// .toFixed() is necessary to display 0.3 as "0.3" and not as "0.30000000000000004".
+	// .toFixed expects arguments between 0 and 20.
+	var xLen = Math.max(0, Math.min(20, -xExp)),
+			yLen = Math.max(0, Math.min(20, -yExp));
+
+	for (i = -yTick; i >= left; i -= yTick) {
+		text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
+	}
+	for (i = yTick; i <= right; i += yTick) {
+		text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
+	}
+
+
+	// The y axis
+	for (i = -xTick; i >= bottom; i -= xTick) {
+		text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
+	}
+	for (i = xTick; i <= top; i += xTick) {
+		text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
+	}
+
+	return this;
+}
+
+
+// ### Screen2D.prototype.onmousedown()
 // Handles the mousedown event
 //
 // *@param {event}*
@@ -3944,7 +3880,6 @@ onmousewheel(evt) {
 		z = Math.pow(1 + this.options.interaction.zoomSpeed, delta);
 
 
-
 		// Transform the (computer-)screen coordinates of the mouse to the internal coordinates
 		p = this.transformation.inverse().times(this.getEventPoint(evt));
 
@@ -3953,7 +3888,6 @@ onmousewheel(evt) {
 		s = new MathLib.Matrix([[z, 0, p[0] - p[0]*z], [0, z, p[1] - p[1]*z ], [0, 0, 1]]);
 
 		this.transformation = this.transformation.times(s);
-
 
 		this.applyTransformation();
 		this.draw();
@@ -6538,7 +6472,7 @@ isIdentity() {
 	}
 
 	var isIdentity = this.every(function (x, r, c) {
-		return r===c ? MathLib.isOne(x) : MathLib.isZero(x);
+		return r === c ? MathLib.isOne(x) : MathLib.isZero(x);
 	});
 
 	this.isIdentity = function () {
@@ -6652,7 +6586,7 @@ isReal() {
 
 // ### Matrix.prototype.isScalar()
 // Determines if the matrix is a scalar matrix
-// (that is a multiple of the scalar matrix)
+// (that is a multiple of the identity matrix)
 //
 // *@returns {boolean}*
 isScalar() {
@@ -7837,9 +7771,6 @@ differentiate(n = 1) : Polynomial {
 	if (n === 0) {
 		return this;
 	}
-	if (n < 0) {
-		return this.integrate(-n);
-	}
 
 	for (i = 0; i <= this.deg - n; i++) {
 		temparr[i] = MathLib.times(this[i + n], MathLib.fallingFactorial(i + n, n));
@@ -7915,9 +7846,6 @@ integrate(n = 1) : Polynomial {
 
 	if (MathLib.isZero(n)) {
 		return this;
-	}
-	if (n < 0) {
-		return this.differentiate(-n);
 	}
 
 	for (i = 0; i < n; i++) {
@@ -8098,18 +8026,6 @@ static roots(zeros) : Polynomial {
 // *@returns {array}*
 slice(...args : any[]) : any[] {
 	return Array.prototype.slice.apply(this, args);
-}
-
-
-// ### Polynomial.prototype.tangent()
-// Returns the tangent to the polynomial at a given point
-//
-// *@param{number}* The x-value of the point.  
-// *@returns {polynomial}*
-tangent(p) : Polynomial {
-	var value = this.valueAt(p),
-			slope = this.differentiate().valueAt(p);
-	return new MathLib.Polynomial([value - slope * p, slope]);
 }
 
 
@@ -8750,11 +8666,11 @@ plus(n : any) : any {
 // *@returns {set}*
 powerset() : Set {
 	var res = [], arr, temp, i, ii, j, jj;
-	for (i=0, ii=Math.pow(2, this.card); i<ii; i++) {
+	for (i = 0, ii = Math.pow(2, this.card); i < ii; i++) {
 		arr = i.toString(2).split('').reverse();
 		temp = [];
-		for (j=0, jj=this.card; j<jj; j++) {
-			if(arr[j] === '1') {
+		for (j = 0, jj = this.card; j < jj; j++) {
+			if (arr[j] === '1') {
 				temp.push(this[j]);
 			}
 		}

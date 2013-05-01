@@ -1,6 +1,6 @@
 // ### Matrix.prototype.isScalar()
 // Determines if the matrix is a scalar matrix
-// (that is a multiple of the scalar matrix)
+// (that is a multiple of the identity matrix)
 //
 // *@returns {boolean}*
 isScalar() {

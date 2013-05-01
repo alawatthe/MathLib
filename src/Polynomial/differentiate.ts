@@ -10,9 +10,6 @@ differentiate(n = 1) : Polynomial {
 	if (n === 0) {
 		return this;
 	}
-	if (n < 0) {
-		return this.integrate(-n);
-	}
 
 	for (i = 0; i <= this.deg - n; i++) {
 		temparr[i] = MathLib.times(this[i + n], MathLib.fallingFactorial(i + n, n));

@@ -8,7 +8,7 @@ isIdentity() {
 	}
 
 	var isIdentity = this.every(function (x, r, c) {
-		return r===c ? MathLib.isOne(x) : MathLib.isZero(x);
+		return r === c ? MathLib.isOne(x) : MathLib.isZero(x);
 	});
 
 	this.isIdentity = function () {

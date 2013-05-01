@@ -1,5 +1,5 @@
 // The MathLib module which wraps everything
-module MathLib {
+ module MathLib {
 
 
 	// Typescript is throwing the following error otherwise:

@@ -24,8 +24,8 @@ oncontextmenu(evt) {
 	listener = function () {
 		overlay.style.setProperty('display', 'none');
 		
-		Array.prototype.slice.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem'))
-		.forEach(function (x) {
+		Array.prototype.forEach.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem'),
+		function (x) {
 			_this.contextMenu.removeChild(x);
 		});
 

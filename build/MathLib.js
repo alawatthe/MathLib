@@ -5,7 +5,7 @@ var __extends = this.__extends || function (d, b) {
 };
 var MathLib;
 (function (MathLib) {
-	MathLib.version = '0.3.5';
+	MathLib.version = '0.4.0';
 	MathLib.apery = 1.2020569031595942;
 	MathLib.e = Math.E;
 	MathLib.epsilon = (Number).EPSILON || ((function () {
@@ -1251,6 +1251,7 @@ var MathLib;
 				options = {
 			};
 			}
+			var _this = this;
 			this.type = 'screen';
 			var _this = this, defaults = {
 				height: 500,
@@ -1317,7 +1318,7 @@ var MathLib;
 			this.innerHTMLContextMenu = innerHTMLContextMenu;
 			if ((options).contextMenu) {
 				this.wrapper.oncontextmenu = function (evt) {
-					_this.oncontextmenu(evt);
+					return _this.oncontextmenu(evt);
 				};
 				if ((opts).contextMenu.screenshot && !('opera' in window)) {
 					this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function () {
@@ -1414,7 +1415,7 @@ var MathLib;
 			overlay.style.setProperty('display', 'block');
 			listener = function () {
 				overlay.style.setProperty('display', 'none');
-				Array.prototype.slice.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem')).forEach(function (x) {
+				Array.prototype.forEach.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem'), function (x) {
 					_this.contextMenu.removeChild(x);
 				});
 				overlay.removeEventListener('click', listener);
@@ -1451,35 +1452,54 @@ var MathLib;
 						var top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x;
 						this.ctx.fillStyle = colorConvert(screen.options.background);
 						this.ctx.fillRect(left, bottom, right - left, top - bottom);
-						canvas.draw.call(_this);
+						this.stack.forEach(function (x, i) {
+							if (x.type === 'text') {
+								_this.text(x.object, x.x, x.y, x.options, true);
+							}
+							if (x.type === 'pixel') {
+								_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+							} else {
+								_this[x.type](x.object, x.options, true);
+							}
+						});
 					};
 				} else if (id === 'grid') {
 					this.ctx.strokeStyle = colorConvert(screen.options.grid.color) || '#cccccc';
 					this.ctx.fillStyle = 'rgba(255,255,255,0)';
 					this.draw = function () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
-						drawGrid.call(_this);
+						_this.screen.drawGrid();
 					};
 				} else if (id === 'axis') {
+					console.log(screen.options.axis.color);
 					this.ctx.strokeStyle = colorConvert(screen.options.axis.color) || '#000000';
 					this.draw = function () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
-						drawAxis.call(_this);
+						_this.screen.drawAxis();
 					};
 				} else {
 					this.ctx.strokeStyle = '#000000';
 					this.ctx.fillStyle = 'rgba(255,255,255,0)';
 					this.draw = function () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
-						canvas.draw.call(_this);
+						this.stack.forEach(function (x, i) {
+							if (x.type === 'text') {
+								_this.text(x.object, x.x, x.y, x.options, true);
+							}
+							if (x.type === 'pixel') {
+								_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+							} else {
+								_this[x.type](x.object, x.options, true);
+							}
+						});
 					};
 				}
-				this.circle = canvas.circle;
-				this.line = canvas.line;
-				this.path = canvas.path;
-				this.pixel = canvas.pixel;
-				this.point = canvas.point;
-				this.text = canvas.text;
+				this.circle = MathLib.Canvas.circle;
+				this.line = MathLib.Canvas.line;
+				this.path = MathLib.Canvas.path;
+				this.pixel = MathLib.Canvas.pixel;
+				this.point = MathLib.Canvas.point;
+				this.text = MathLib.Canvas.text;
 			} else if (screen.options.renderer === 'SVG') {
 				var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g'), m = screen.transformation;
 				ctx.setAttribute('transform', 'matrix(' + m[0][0] + ',' + m[1][0] + ',' + m[0][1] + ',' + m[1][1] + ',' + m[0][2] + ',' + m[1][2] + ')');
@@ -1488,239 +1508,65 @@ var MathLib;
 				if (id === 'back') {
 					this.draw = function () {
 						var top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x;
-						svg.draw.call(_this);
+						this.stack.forEach(function (x, i) {
+							if (x.type === 'text') {
+								_this.text(x.object, x.x, x.y, x.options, true);
+							}
+							if (x.type === 'pixel') {
+								_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+							} else {
+								_this[x.type](x.object, x.options, true);
+							}
+						});
 					};
 				} else if (id === 'grid') {
 					ctx.setAttribute('stroke', colorConvert(screen.options.grid.color) || '#cccccc');
 					this.draw = function () {
 						ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
-						drawGrid.call(_this);
+						_this.screen.drawGrid();
 					};
 				} else if (id === 'axis') {
 					ctx.setAttribute('stroke', colorConvert(screen.options.axis.color) || '#000000');
 					this.draw = function () {
 						ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
-						drawAxis.call(_this);
+						_this.screen.drawAxis();
 					};
 				} else {
-					this.draw = svg.draw;
+					this.draw = function () {
+						this.stack.forEach(function (x, i) {
+							if (x.type === 'text') {
+								_this.text(x.object, x.x, x.y, x.options, true);
+							}
+							if (x.type === 'pixel') {
+								_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
+							} else {
+								_this[x.type](x.object, x.options, true);
+							}
+						});
+					};
 				}
-				this.circle = svg.circle;
-				this.line = svg.line;
-				this.path = svg.path;
-				this.pixel = svg.pixel;
-				this.point = svg.point;
-				this.text = svg.text;
+				this.circle = MathLib.SVG.circle;
+				this.line = MathLib.SVG.line;
+				this.path = MathLib.SVG.path;
+				this.pixel = MathLib.SVG.pixel;
+				this.point = MathLib.SVG.point;
+				this.text = MathLib.SVG.text;
 			}
 			screen.layer.splice(zIndex, 0, this);
 		}
+		Layer.prototype.clear = function () {
+			this.screen.renderer.clear(this);
+			return this;
+		};
 		return Layer;
 	})();
 	MathLib.Layer = Layer;	
-	var drawAxis = function () {
-		var screen = this.screen, options = {
-			stroke: colorConvert(this.screen.options.axis.color),
-			'stroke-width': -1 / screen.transformation[1][1]
-		}, textOptions = {
-			strokeStyle: colorConvert(this.screen.options.axis.textColor),
-			fillStyle: colorConvert(this.screen.options.axis.textColor)
-		}, top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x, lengthX = +10 / screen.transformation[0][0], lengthY = -10 / screen.transformation[1][1], yExp = 1 - Math.floor(Math.log(-screen.transformation[1][1]) / Math.LN10 - 0.3), xExp = 1 - Math.floor(Math.log(+screen.transformation[0][0]) / Math.LN10 - 0.3), yTick = Math.pow(10, yExp), xTick = Math.pow(10, xExp), i;
-		if (!this.screen.options.axis) {
-			return this;
-		}
-		this.line([
-			[
-				left, 
-				0
-			], 
-			[
-				right, 
-				0
-			]
-		], false, true);
-		this.line([
-			[
-				0, 
-				bottom
-			], 
-			[
-				0, 
-				top
-			]
-		], false, true);
-		if (screen.options.grid.tick) {
-			for (i = -yTick; i >= left; i -= yTick) {
-				this.line([
-					[
-						i, 
-						-lengthY
-					], 
-					[
-						i, 
-						lengthY
-					]
-				], false, true);
-			}
-			for (i = yTick; i <= right; i += yTick) {
-				this.line([
-					[
-						i, 
-						-lengthY
-					], 
-					[
-						i, 
-						lengthY
-					]
-				], false, true);
-			}
-			for (i = -xTick; i >= bottom; i -= xTick) {
-				this.line([
-					[
-						-lengthX, 
-						i
-					], 
-					[
-						lengthX, 
-						i
-					]
-				], false, true);
-			}
-			for (i = xTick; i <= top; i += xTick) {
-				this.line([
-					[
-						-lengthX, 
-						i
-					], 
-					[
-						lengthX, 
-						i
-					]
-				], false, true);
-			}
-		}
-		var xLen = Math.max(0, Math.min(20, -xExp)), yLen = Math.max(0, Math.min(20, -yExp));
-		for (i = -yTick; i >= left; i -= yTick) {
-			this.text(i.toFixed(yLen), i, -2 * lengthY, textOptions, true);
-		}
-		for (i = yTick; i <= right; i += yTick) {
-			this.text(i.toFixed(yLen), i, -2 * lengthY, textOptions, true);
-		}
-		for (i = -xTick; i >= bottom; i -= xTick) {
-			this.text(i.toFixed(xLen), -2 * lengthX, i, textOptions, true);
-		}
-		for (i = xTick; i <= top; i += xTick) {
-			this.text(i.toFixed(xLen), -2 * lengthX, i, textOptions, true);
-		}
-		return this;
-	};
-	var drawGrid = function () {
-		if (!this.screen.options.grid) {
-			return this;
-		}
-		var screen = this.screen, top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x, yTick = Math.pow(10, 1 - Math.floor(Math.log(-screen.transformation[1][1]) / Math.LN10 - 0.3)), xTick = Math.pow(10, 1 - Math.floor(Math.log(+screen.transformation[0][0]) / Math.LN10 - 0.3)), i;
-		if (screen.options.grid.type === 'cartesian') {
-			for (i = bottom - (bottom % yTick); i <= top; i += yTick) {
-				this.line([
-					[
-						left, 
-						i
-					], 
-					[
-						right, 
-						i
-					]
-				], false, true);
-			}
-			for (i = left - (left % xTick); i <= right; i += xTick) {
-				this.line([
-					[
-						i, 
-						bottom
-					], 
-					[
-						i, 
-						top
-					]
-				], false, true);
-			}
-		} else if (screen.options.grid.type === 'polar') {
-			var max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right)), min = 0;
-			for (i = 0; i < 2 * Math.PI; i += screen.options.grid.angle) {
-				this.line([
-					[
-						0, 
-						0
-					], 
-					[
-						max * Math.cos(i), 
-						max * Math.sin(i)
-					]
-				], false, true);
-			}
-			for (i = min; i <= max; i += Math.min(xTick, yTick)) {
-				this.circle(new MathLib.Circle([
-					0, 
-					0, 
-					1
-				], i), false, true);
-			}
-		}
-		return this;
-	};
-	var canvas = {
-		normalizeOptions: function (opt) {
-			var res = {
-			};
-			if ('fillColor' in opt) {
-				res.fillStyle = colorConvert(opt.fillColor);
-			} else if ('color' in opt) {
-				res.fillStyle = colorConvert(opt.color);
-			}
-			if ('font' in opt) {
-				res['font-family'] = opt.font;
-			}
-			if ('fontSize' in opt) {
-				res['font-size'] = opt.fontSize;
-			}
-			if ('lineColor' in opt) {
-				res.strokeStyle = colorConvert(opt.lineColor);
-			} else if ('color' in opt) {
-				res.strokeStyle = colorConvert(opt.color);
-			}
-			return res;
-		},
+	MathLib.Canvas = {
 		applyTransformation: function () {
 			var m = this.transformation;
 			this.layer.forEach(function (l) {
 				l.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
 			});
-		},
-		draw: function (x, options) {
-			if (typeof options === 'undefined') {
-				options = {
-			};
-			}
-			var _this = this;
-			if (arguments.length === 0) {
-				this.stack.forEach(function (x, i) {
-					if (x.type === 'text') {
-						_this.text(x.object, x.x, x.y, x.options, true);
-					}
-					if (x.type === 'pixel') {
-						_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
-					} else {
-						_this[x.type](x.object, x.options, true);
-					}
-				});
-			} else if (x.type === 'circle') {
-				this.circle(x, options);
-			} else if (x.type === 'line') {
-				this.line(x, options);
-			} else if (Array.isArray(x)) {
-				x.forEach(function (y) {
-					_this[y.type](y, options);
-				});
-			}
 		},
 		circle: function (circle, options, redraw) {
 			if (typeof options === 'undefined') {
@@ -1734,7 +1580,7 @@ var MathLib;
 			ctx.save();
 			ctx.lineWidth = ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 			if (options) {
-				opts = canvas.normalizeOptions(options);
+				opts = MathLib.Canvas.convertOptions(options);
 				for (prop in opts) {
 					if (opts.hasOwnProperty(prop)) {
 						ctx[prop] = opts[prop];
@@ -1762,6 +1608,32 @@ var MathLib;
 			}
 			return this;
 		},
+		clear: function (layer) {
+			var screen = layer.screen, left = -screen.translation.x / screen.scale.x, top = -screen.translation.y / screen.scale.y, width = screen.width / screen.scale.x, height = screen.height / screen.scale.y;
+			console.dir(layer);
+			layer.ctx.clearRect(left, top, width, height);
+		},
+		convertOptions: function (opt) {
+			var res = {
+			};
+			if ('fillColor' in opt) {
+				res.fillStyle = colorConvert(opt.fillColor);
+			} else if ('color' in opt) {
+				res.fillStyle = colorConvert(opt.color);
+			}
+			if ('font' in opt) {
+				res['font-family'] = opt.font;
+			}
+			if ('fontSize' in opt) {
+				res['font-size'] = opt.fontSize;
+			}
+			if ('lineColor' in opt) {
+				res.strokeStyle = colorConvert(opt.lineColor);
+			} else if ('color' in opt) {
+				res.strokeStyle = colorConvert(opt.color);
+			}
+			return res;
+		},
 		line: function (line, options, redraw) {
 			if (typeof options === 'undefined') {
 				options = {
@@ -1774,7 +1646,7 @@ var MathLib;
 			ctx.save();
 			ctx.lineWidth = ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 			if (options) {
-				opts = canvas.normalizeOptions(options);
+				opts = MathLib.Canvas.convertOptions(options);
 				for (prop in opts) {
 					if (opts.hasOwnProperty(prop)) {
 						ctx[prop] = opts[prop];
@@ -1816,7 +1688,7 @@ var MathLib;
 			ctx.save();
 			ctx.lineWidth = ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 			if (options) {
-				opts = canvas.normalizeOptions(options);
+				opts = MathLib.Canvas.convertOptions(options);
 				for (prop in opts) {
 					if (opts.hasOwnProperty(prop)) {
 						ctx[prop] = opts[prop];
@@ -1916,7 +1788,7 @@ var MathLib;
 			ctx.save();
 			ctx.lineWidth = ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 			if (options) {
-				opts = canvas.normalizeOptions(options);
+				opts = MathLib.Canvas.convertOptions(options);
 				if (!('fillColor' in options) && !('color' in options)) {
 					opts['fillStyle'] = 'black';
 				}
@@ -1968,7 +1840,7 @@ var MathLib;
 				lineWidth: 0.05
 			}, ctx, prop, opts;
 			ctx = this.ctx;
-			opts = canvas.normalizeOptions(extendObject(defaults, options));
+			opts = MathLib.Canvas.convertOptions(extendObject(defaults, options));
 			for (prop in opts) {
 				if (opts.hasOwnProperty(prop)) {
 					ctx[prop] = opts[prop];
@@ -1994,8 +1866,48 @@ var MathLib;
 			return this;
 		}
 	};
-	var svg = {
-		normalizeOptions: function (opt) {
+	MathLib.SVG = {
+		applyTransformation: function () {
+			var m = this.transformation;
+			this.layer.forEach(function (l) {
+				l.ctx.setAttribute('transform', 'matrix(' + m[0][0] + ',' + m[1][0] + ',' + m[0][1] + ',' + m[1][1] + ',' + m[0][2] + ',' + m[1][2] + ')');
+			});
+		},
+		circle: function (circle, options, redraw) {
+			if (typeof options === 'undefined') {
+				options = {
+			};
+			}
+			if (typeof redraw === 'undefined') {
+				redraw = false;
+			}
+			var screen = this.screen, prop, opts, svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+			svgCircle.setAttribute('cx', circle.center[0]);
+			svgCircle.setAttribute('cy', circle.center[1]);
+			svgCircle.setAttribute('r', circle.radius);
+			if (options) {
+				svgCircle.setAttribute('stroke-width', ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
+				opts = MathLib.SVG.convertOptions(options);
+				for (prop in opts) {
+					if (opts.hasOwnProperty(prop)) {
+						svgCircle.setAttribute(prop, opts[prop]);
+					}
+				}
+			}
+			this.ctx.appendChild(svgCircle);
+			if (!redraw) {
+				this.stack.push({
+					type: 'circle',
+					object: circle,
+					options: options
+				});
+			}
+			return this;
+		},
+		clear: function (layer) {
+			layer.ctx.textContent = '';
+		},
+		convertOptions: function (opt) {
 			var res = {
 			};
 			if ('fillColor' in opt) {
@@ -2025,70 +1937,6 @@ var MathLib;
 			}
 			return res;
 		},
-		applyTransformation: function () {
-			var m = this.transformation;
-			this.layer.forEach(function (l) {
-				l.ctx.setAttribute('transform', 'matrix(' + m[0][0] + ',' + m[1][0] + ',' + m[0][1] + ',' + m[1][1] + ',' + m[0][2] + ',' + m[1][2] + ')');
-			});
-		},
-		draw: function (x, options) {
-			if (typeof options === 'undefined') {
-				options = {
-			};
-			}
-			var _this = this;
-			if (arguments.length === 0) {
-				this.stack.forEach(function (x, i) {
-					if (x.type === 'text') {
-						_this.text(x.object, x.x, x.y, x.options, true);
-					}
-					if (x.type === 'pixel') {
-						_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
-					} else {
-						_this[x.type](x.object, x.options, true);
-					}
-				});
-			} else if (x.type === 'circle') {
-				this.circle(x, options);
-			} else if (x.type === 'line') {
-				this.line(x, options);
-			} else if (Array.isArray(x)) {
-				x.forEach(function (y) {
-					_this[y.type](y, options);
-				});
-			}
-		},
-		circle: function (circle, options, redraw) {
-			if (typeof options === 'undefined') {
-				options = {
-			};
-			}
-			if (typeof redraw === 'undefined') {
-				redraw = false;
-			}
-			var screen = this.screen, prop, opts, svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-			svgCircle.setAttribute('cx', circle.center[0]);
-			svgCircle.setAttribute('cy', circle.center[1]);
-			svgCircle.setAttribute('r', circle.radius);
-			if (options) {
-				svgCircle.setAttribute('stroke-width', ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
-				opts = svg.normalizeOptions(options);
-				for (prop in opts) {
-					if (opts.hasOwnProperty(prop)) {
-						svgCircle.setAttribute(prop, opts[prop]);
-					}
-				}
-			}
-			this.ctx.appendChild(svgCircle);
-			if (!redraw) {
-				this.stack.push({
-					type: 'circle',
-					object: circle,
-					options: options
-				});
-			}
-			return this;
-		},
 		line: function (line, options, redraw) {
 			if (typeof options === 'undefined') {
 				options = {
@@ -2104,7 +1952,7 @@ var MathLib;
 			svgLine.setAttribute('y2', points[1][1]);
 			if (options) {
 				svgLine.setAttribute('stroke-width', ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
-				opts = svg.normalizeOptions(options);
+				opts = MathLib.SVG.convertOptions(options);
 				for (prop in opts) {
 					if (opts.hasOwnProperty(prop)) {
 						svgLine.setAttribute(prop, opts[prop]);
@@ -2130,7 +1978,7 @@ var MathLib;
 				redraw = false;
 			}
 			var screen = this.screen, svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'), step = 2 / (screen.scale.x - screen.scale.y), pathString, from, to, prop, opts, x, y, i, path;
-			from = ('from' in options ? (options).from : (-screen.translation.x) / screen.scale.x) - step;
+			from = ('from' in options ? (options).from : -screen.translation.x / screen.scale.x) - step;
 			to = ('to' in options ? (options).to : (screen.width - screen.translation.x) / screen.scale.x) + step;
 			if (typeof curve === 'function') {
 				path = [];
@@ -2159,7 +2007,7 @@ var MathLib;
 			svgPath.setAttribute('d', pathString);
 			svgPath.setAttribute('stroke-width', ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
 			if (options) {
-				opts = svg.normalizeOptions(options);
+				opts = MathLib.SVG.convertOptions(options);
 				for (prop in opts) {
 					if (opts.hasOwnProperty(prop)) {
 						svgPath.setAttribute(prop, opts[prop]);
@@ -2238,7 +2086,7 @@ var MathLib;
 			svgPoint.setAttribute('r', ((options).size || 10) / (screen.scale.x - screen.scale.y) + '');
 			if (options) {
 				svgPoint.setAttribute('stroke-width', ((options).lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
-				opts = svg.normalizeOptions(options);
+				opts = MathLib.SVG.convertOptions(options);
 				if (!('fillOpacity' in options)) {
 					opts['fill-opacity'] = '1';
 				}
@@ -2388,7 +2236,51 @@ var MathLib;
 				])
 			}, opts = extendObject(defaults, options), element, transformation = opts.transformation, _this = this;
 			this.options = opts;
+			this.renderer = MathLib[opts.renderer];
+			this.circle = function () {
+				var args = [];
+				for (var _i = 0; _i < (arguments.length - 0); _i++) {
+					args[_i] = arguments[_i + 0];
+				}
+				return _this.renderer.circle.apply(_this.layer.main, args);
+			};
+			this.line = function () {
+				var args = [];
+				for (var _i = 0; _i < (arguments.length - 0); _i++) {
+					args[_i] = arguments[_i + 0];
+				}
+				return _this.renderer.line.apply(_this.layer.main, args);
+			};
+			this.path = function () {
+				var args = [];
+				for (var _i = 0; _i < (arguments.length - 0); _i++) {
+					args[_i] = arguments[_i + 0];
+				}
+				return _this.renderer.path.apply(_this.layer.main, args);
+			};
+			this.pixel = function () {
+				var args = [];
+				for (var _i = 0; _i < (arguments.length - 0); _i++) {
+					args[_i] = arguments[_i + 0];
+				}
+				return _this.renderer.pixel.apply(_this.layer.main, args);
+			};
+			this.point = function () {
+				var args = [];
+				for (var _i = 0; _i < (arguments.length - 0); _i++) {
+					args[_i] = arguments[_i + 0];
+				}
+				return _this.renderer.point.apply(_this.layer.main, args);
+			};
+			this.text = function () {
+				var args = [];
+				for (var _i = 0; _i < (arguments.length - 0); _i++) {
+					args[_i] = arguments[_i + 0];
+				}
+				return _this.renderer.text.apply(_this.layer.main, args);
+			};
 			this.wrapper.innerHTML = '';
+			this.container.classList.add('MathLib_screen2D');
 			this.applyTransformation = function () {
 			};
 			this.translation = {
@@ -2506,128 +2398,42 @@ var MathLib;
 			this.layer.grid = new MathLib.Layer(this, 'grid', 1);
 			this.layer.axis = new MathLib.Layer(this, 'axis', 2);
 			this.layer.main = new MathLib.Layer(this, 'main', 3);
-			if (opts.renderer === 'Canvas') {
-				this.layer.main.element.addEventListener('onmouseup', function (evt) {
-					return _this.onmouseup(evt);
-				}, false);
-				this.layer.main.element.addEventListener('onmousedown', function (evt) {
-					return _this.onmousedown(evt);
-				}, false);
-				this.layer.main.element.addEventListener('onmousemove', function (evt) {
-					return _this.onmousemove(evt);
-				}, false);
-				this.layer.main.element.addEventListener('onmousewheel', function (evt) {
-					return _this.onmousewheel(evt);
-				}, false);
-				this.layer.main.element.addEventListener('DOMMouseScroll', function (evt) {
-					return _this.onmousewheel(evt);
-				}, false);
-			} else if (opts.renderer === 'SVG') {
-				this.wrapper.addEventListener('onmouseup', function (evt) {
-					return _this.onmouseup(evt);
-				}, false);
-				this.wrapper.addEventListener('onmousedown', function (evt) {
-					return _this.onmousedown(evt);
-				}, false);
-				this.wrapper.addEventListener('onmousemove', function (evt) {
-					return _this.onmousemove(evt);
-				}, false);
-				this.wrapper.addEventListener('onmousewheel', function (evt) {
-					return _this.onmousewheel(evt);
-				}, false);
-				this.wrapper.addEventListener('DOMMouseScroll', function (evt) {
-					return _this.onmousewheel(evt);
-				}, false);
-			}
-			if (opts.renderer === 'Canvas') {
-				this.applyTransformation = canvas.applyTransformation;
-				this.draw = function (x, options) {
-					if (typeof options === 'undefined') {
-						options = {
-					};
-					}
-					var _this = this;
-					if (arguments.length === 0) {
-						var top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x;
-						this.layer.forEach(function (l) {
-							l.ctx.clearRect(left, top, right - left, bottom - top);
-						});
-						_this.layer.forEach(function (x) {
-							x.draw();
-						});
-					} else if (x.type === 'circle') {
-						this.circle(x, options);
-					} else if (x.type === 'line') {
-						this.line(x, options);
-					} else if (Array.isArray(x)) {
-						x.forEach(function (y) {
-							_this[y.type](y, options);
-						});
-					}
+			this.wrapper.addEventListener('mouseup', function (evt) {
+				return _this.onmouseup(evt);
+			}, false);
+			this.wrapper.addEventListener('mousedown', function (evt) {
+				return _this.onmousedown(evt);
+			}, false);
+			this.wrapper.addEventListener('mousemove', function (evt) {
+				return _this.onmousemove(evt);
+			}, false);
+			this.wrapper.addEventListener('mousewheel', function (evt) {
+				return _this.onmousewheel(evt);
+			}, false);
+			this.wrapper.addEventListener('DOMMouseScroll', function (evt) {
+				return _this.onmousewheel(evt);
+			}, false);
+			this.applyTransformation = this.renderer.applyTransformation;
+			this.draw = function (x, options) {
+				if (typeof options === 'undefined') {
+					options = {
 				};
-				this.circle = function () {
-					canvas.circle.apply(_this.layer.main, arguments);
-				};
-				this.line = function () {
-					canvas.line.apply(_this.layer.main, arguments);
-				};
-				this.path = function () {
-					canvas.path.apply(_this.layer.main, arguments);
-				};
-				this.pixel = function () {
-					canvas.pixel.apply(_this.layer.main, arguments);
-				};
-				this.point = function () {
-					canvas.point.apply(_this.layer.main, arguments);
-				};
-				this.text = function () {
-					canvas.text.apply(_this.layer.main, arguments);
-				};
-			} else if (opts.renderer === 'SVG') {
-				this.applyTransformation = svg.applyTransformation;
-				this.draw = function (x, options) {
-					if (typeof options === 'undefined') {
-						options = {
-					};
-					}
-					var _this = this;
-					if (arguments.length === 0) {
-						this.layer.forEach(function (l) {
-							l.ctx.textContent = '';
-						});
-						_this.layer.forEach(function (x) {
-							x.draw();
-						});
-					} else if (x.type === 'circle') {
-						this.circle(x, options);
-					} else if (x.type === 'line') {
-						this.line(x, options);
-					} else if (Array.isArray(x)) {
-						x.forEach(function (y) {
-							_this[y.type](y, options);
-						});
-					}
-				};
-				this.circle = function () {
-					svg.circle.apply(_this.layer.main, arguments);
-				};
-				this.line = function () {
-					svg.line.apply(_this.layer.main, arguments);
-				};
-				this.path = function () {
-					svg.path.apply(_this.layer.main, arguments);
-				};
-				this.pixel = function () {
-					svg.pixel.apply(_this.layer.main, arguments);
-				};
-				this.point = function () {
-					svg.point.apply(_this.layer.main, arguments);
-				};
-				this.text = function () {
-					svg.text.apply(_this.layer.main, arguments);
-				};
-			}
-			this.container.classList.add('MathLib_screen2D');
+				}
+				var _this = this;
+				if (arguments.length === 0) {
+					this.layer.forEach(function (l) {
+						l.clear().draw();
+					});
+				} else if (x.type === 'circle') {
+					this.circle(x, options);
+				} else if (x.type === 'line') {
+					this.line(x, options);
+				} else if (Array.isArray(x)) {
+					x.forEach(function (y) {
+						return _this[y.type](y, options);
+					});
+				}
+			};
 			if (this.options.contextMenu) {
 				var gridType = opts.grid.type ? opts.grid.type : 'none';
 				this.contextMenu.querySelectorAll('.MathLib_grid_type[value=' + gridType + ']')[0].checked = true;
@@ -2648,6 +2454,7 @@ var MathLib;
 				this.layer.axis.element.width = width;
 				this.layer.axis.element.height = height;
 				this.layer.axis.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
+				this.layer.axis.ctx.strokeStyle = colorConvert(this.options.axis.color) || '#000000';
 				this.layer.main.element.width = width;
 				this.layer.main.element.height = height;
 				this.layer.main.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
@@ -2705,6 +2512,182 @@ var MathLib;
 			} else {
 				return l;
 			}
+		};
+		Screen2D.prototype.drawGrid = function () {
+			var _this = this;
+			if (!this.options.grid) {
+				return this;
+			}
+			var line = function () {
+				var args = [];
+				for (var _i = 0; _i < (arguments.length - 0); _i++) {
+					args[_i] = arguments[_i + 0];
+				}
+				return _this.renderer.line.apply(_this.layer.grid, args);
+			}, circle = function () {
+				var args = [];
+				for (var _i = 0; _i < (arguments.length - 0); _i++) {
+					args[_i] = arguments[_i + 0];
+				}
+				return _this.renderer.circle.apply(_this.layer.grid, args);
+			}, top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, yTick = Math.pow(10, 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3)), xTick = Math.pow(10, 1 - Math.floor(Math.log(+this.transformation[0][0]) / Math.LN10 - 0.3)), i;
+			if (this.options.grid.type === 'cartesian') {
+				for (i = bottom - (bottom % yTick); i <= top; i += yTick) {
+					line([
+						[
+							left, 
+							i
+						], 
+						[
+							right, 
+							i
+						]
+					], false, true);
+				}
+				for (i = left - (left % xTick); i <= right; i += xTick) {
+					line([
+						[
+							i, 
+							bottom
+						], 
+						[
+							i, 
+							top
+						]
+					], false, true);
+				}
+			} else if (this.options.grid.type === 'polar') {
+				var max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right)), min = 0;
+				for (i = 0; i < 2 * Math.PI; i += this.options.grid.angle) {
+					line([
+						[
+							0, 
+							0
+						], 
+						[
+							max * Math.cos(i), 
+							max * Math.sin(i)
+						]
+					], false, true);
+				}
+				for (i = min; i <= max; i += Math.min(xTick, yTick)) {
+					circle(new MathLib.Circle([
+						0, 
+						0, 
+						1
+					], i), false, true);
+				}
+			}
+			return this;
+		};
+		Screen2D.prototype.drawAxis = function () {
+			var _this = this;
+			var line = function () {
+				var args = [];
+				for (var _i = 0; _i < (arguments.length - 0); _i++) {
+					args[_i] = arguments[_i + 0];
+				}
+				return _this.renderer.line.apply(_this.layer.axis, args);
+			}, text = function () {
+				var args = [];
+				for (var _i = 0; _i < (arguments.length - 0); _i++) {
+					args[_i] = arguments[_i + 0];
+				}
+				return _this.renderer.text.apply(_this.layer.axis, args);
+			}, options = {
+				lineColor: colorConvert(this.options.axis.color),
+				'stroke-width': -1 / this.transformation[1][1]
+			}, textOptions = {
+				strokeStyle: colorConvert(this.options.axis.textColor),
+				fillStyle: colorConvert(this.options.axis.textColor)
+			}, top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lengthX = +10 / this.transformation[0][0], lengthY = -10 / this.transformation[1][1], yExp = 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3), xExp = 1 - Math.floor(Math.log(+this.transformation[0][0]) / Math.LN10 - 0.3), yTick = Math.pow(10, yExp), xTick = Math.pow(10, xExp), i;
+			if (!this.options.axis) {
+				return this;
+			}
+			line([
+				[
+					left, 
+					0
+				], 
+				[
+					right, 
+					0
+				]
+			], options, true);
+			line([
+				[
+					0, 
+					bottom
+				], 
+				[
+					0, 
+					top
+				]
+			], options, true);
+			if (this.options.grid.tick) {
+				for (i = -yTick; i >= left; i -= yTick) {
+					line([
+						[
+							i, 
+							-lengthY
+						], 
+						[
+							i, 
+							lengthY
+						]
+					], options, true);
+				}
+				for (i = yTick; i <= right; i += yTick) {
+					line([
+						[
+							i, 
+							-lengthY
+						], 
+						[
+							i, 
+							lengthY
+						]
+					], options, true);
+				}
+				for (i = -xTick; i >= bottom; i -= xTick) {
+					line([
+						[
+							-lengthX, 
+							i
+						], 
+						[
+							lengthX, 
+							i
+						]
+					], options, true);
+				}
+				for (i = xTick; i <= top; i += xTick) {
+					line([
+						[
+							-lengthX, 
+							i
+						], 
+						[
+							lengthX, 
+							i
+						]
+					], options, true);
+				}
+			}
+			var xLen = Math.max(0, Math.min(20, -xExp)), yLen = Math.max(0, Math.min(20, -yExp));
+			for (i = -yTick; i >= left; i -= yTick) {
+				text(i.toFixed(yLen), i, -2 * lengthY, textOptions, true);
+			}
+			for (i = yTick; i <= right; i += yTick) {
+				text(i.toFixed(yLen), i, -2 * lengthY, textOptions, true);
+			}
+			for (i = -xTick; i >= bottom; i -= xTick) {
+				text(i.toFixed(xLen), -2 * lengthX, i, textOptions, true);
+			}
+			for (i = xTick; i <= top; i += xTick) {
+				text(i.toFixed(xLen), -2 * lengthX, i, textOptions, true);
+			}
+			return this;
 		};
 		Screen2D.prototype.onmousedown = function (evt) {
 			if (evt.button !== 0) {
@@ -5041,9 +5024,6 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			if (n === 0) {
 				return this;
 			}
-			if (n < 0) {
-				return this.integrate(-n);
-			}
 			for (i = 0; i <= this.deg - n; i++) {
 				temparr[i] = MathLib.times(this[i + n], MathLib.fallingFactorial(i + n, n));
 			}
@@ -5107,9 +5087,6 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			var temparr = [], i;
 			if (MathLib.isZero(n)) {
 				return this;
-			}
-			if (n < 0) {
-				return this.differentiate(-n);
 			}
 			for (i = 0; i < n; i++) {
 				temparr.push(0);
@@ -5232,13 +5209,6 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				args[_i] = arguments[_i + 0];
 			}
 			return Array.prototype.slice.apply(this, args);
-		};
-		Polynomial.prototype.tangent = function (p) {
-			var value = this.valueAt(p), slope = this.differentiate().valueAt(p);
-			return new MathLib.Polynomial([
-				value - slope * p, 
-				slope
-			]);
 		};
 		Polynomial.prototype.times = function (a) {
 			var temparr = [], i, j;
