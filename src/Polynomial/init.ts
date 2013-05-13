@@ -25,26 +25,26 @@ export class Polynomial {
 	subdeg: number;
 
 	constructor (polynomial) {
-		var temp = [];
+		var coefficients = [];
 
 		if (polynomial === undefined || polynomial.length === 0) {
 			polynomial = [0];
 		}
 		else if (typeof polynomial === 'number') {
 			while (polynomial--) {
-				temp.push(0);
+				coefficients.push(0);
 			}
-			temp.push(1);
-			polynomial = temp;
+			coefficients.push(1);
+			polynomial = coefficients;
 		}
 
-		polynomial.forEach((x,i)=>{this[i] = x});
+		polynomial.forEach((x, i) => {this[i] = x});
 		this.length = polynomial.length;
 		this.deg = polynomial.length - 1;
 		this.subdeg = (function (a) {
 				var i = 0;
 				if (a.length > 1 || a[0]) {
-					while(i < a.length && MathLib.isZero(a[i])) {
+					while (i < a.length && MathLib.isZero(a[i])) {
 						i++;
 					}
 					return i;

@@ -1,8 +1,8 @@
 // ### [Rational.prototype.plus()](http://mathlib.de/en/docs/rational/plus)
 // Adds rational numbers
 //
-// *@param {Rational, number}* The number to be added  
-// *@returns {Rational}*
+// *@param {Rational|number}* The number to be added  
+// *@return {Rational}*
 plus(r) {
 	var n = this.numerator,
 			d = this.denominator;

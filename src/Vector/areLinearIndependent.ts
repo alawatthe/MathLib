@@ -2,7 +2,7 @@
 // Checks if the vectors are linear independent.
 //
 // *@param {array}* An array containing the vectors.  
-// *@returns {boolean}*
+// *@return {boolean}*
 static areLinearIndependent = function (v : Vector[]) : bool {
 	var n = v.length,
 			m = v[0].length;
@@ -11,7 +11,7 @@ static areLinearIndependent = function (v : Vector[]) : bool {
 		return false;
 	}
 
-	if (! v.every(function (x){
+	if (! v.every(function (x) {
 		return x.length === m;
 		}) ) {
 		return undefined;

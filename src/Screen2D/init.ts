@@ -104,23 +104,23 @@ export class Screen2D extends Screen {
 		this.transformation = transformation;
 
 		Object.defineProperty(this.translation, 'x', {
-			get: function (){return _this.transformation[0][2];},
-			set: function (x){_this.transformation[0][2] = x; _this.applyTransformation();}
+			get: function () {return _this.transformation[0][2];},
+			set: function (x) {_this.transformation[0][2] = x; _this.applyTransformation();}
 		});
 
 		Object.defineProperty(this.translation, 'y', {
-			get: function (){return _this.transformation[1][2];},
-			set: function (y){_this.transformation[1][2] = y; _this.applyTransformation();}
+			get: function () {return _this.transformation[1][2];},
+			set: function (y) {_this.transformation[1][2] = y; _this.applyTransformation();}
 		});
 
 		Object.defineProperty(this.scale, 'x', {
-			get: function (){return _this.transformation[0][0];},
-			set: function (x){_this.transformation[0][0] = x; _this.applyTransformation();}
+			get: function () {return _this.transformation[0][0];},
+			set: function (x) {_this.transformation[0][0] = x; _this.applyTransformation();}
 		});
 
 		Object.defineProperty(this.scale, 'y', {
-			get: function (){return _this.transformation[1][1];},
-			set: function (y){_this.transformation[1][1] = y; _this.applyTransformation();}
+			get: function () {return _this.transformation[1][1];},
+			set: function (y) {_this.transformation[1][1] = y; _this.applyTransformation();}
 		});
 
 
@@ -128,23 +128,23 @@ export class Screen2D extends Screen {
 		this.lookAt = {};
 		this.range = {};
 		Object.defineProperty(this.lookAt, 'x', {
-			get: function (){return (_this.width/2 - _this.transformation[0][2])/_this.transformation[0][0];},
-			set: function (x){_this.transformation[0][2] = _this.width/2 - x*_this.transformation[0][0]; _this.applyTransformation();}
+			get: function () {return (_this.width / 2 - _this.transformation[0][2]) / _this.transformation[0][0];},
+			set: function (x) {_this.transformation[0][2] = _this.width / 2 - x * _this.transformation[0][0]; _this.applyTransformation();}
 		});
 
 		Object.defineProperty(this.lookAt, 'y', {
-			get: function (){return (_this.height/2 - _this.transformation[1][2])/_this.transformation[1][1];},
-			set: function (y){_this.transformation[1][2] = _this.height/2 - y*_this.transformation[1][1]; _this.applyTransformation();}
+			get: function () {return (_this.height / 2 - _this.transformation[1][2]) / _this.transformation[1][1];},
+			set: function (y) {_this.transformation[1][2] = _this.height / 2 - y * _this.transformation[1][1]; _this.applyTransformation();}
 		});
 
 		Object.defineProperty(this.range, 'x', {
-			get: function (){return _this.width/(2*_this.transformation[0][0]);},
-			set: function (x){_this.transformation[0][0] = 0.5*_this.width/x; _this.applyTransformation();}
+			get: function () {return _this.width / (2 * _this.transformation[0][0]);},
+			set: function (x) {_this.transformation[0][0] = 0.5 * _this.width / x; _this.applyTransformation();}
 		});
 
 		Object.defineProperty(this.range, 'y', {
-			get: function (){return -_this.height/(2*_this.transformation[1][1]);},
-			set: function (y){_this.transformation[1][1] = -0.5*_this.height/y; _this.applyTransformation();}
+			get: function () {return -_this.height / (2 * _this.transformation[1][1]);},
+			set: function (y) {_this.transformation[1][1] = -0.5 * _this.height / y; _this.applyTransformation();}
 		});
 
 

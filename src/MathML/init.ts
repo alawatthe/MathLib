@@ -44,8 +44,8 @@ export class MathML {
 
 		createToken = function (t) {
 			var attributes = {}, i, ii;
-			if(t.attributes) {
-				for (i=0, ii=t.attributes.length; i<ii; i++) {
+			if (t.attributes) {
+				for (i = 0, ii = t.attributes.length; i < ii; i++) {
 					attributes[t.attributes[i].name] =  t.attributes[i].value;
 				}
 			}
@@ -54,12 +54,12 @@ export class MathML {
 			var newToken = Object.create({}, {
 				attributes: {value: attributes},
 				nodeName:   {value: t.nodeName},
-				parentNode: {value: tokenStack[tokenStack.length-1]},
+				parentNode: {value: tokenStack[tokenStack.length - 1]},
 				prevNode:   {value: curToken}
 			});
 
 
-			if(curToken) {
+			if (curToken) {
 				curToken.nextNode = newToken;
 			}
 			curToken = newToken;
@@ -71,7 +71,7 @@ export class MathML {
 			var attributesString = function (x) {
 				var str = '', attr;
 				for (attr in x.attributes) {
-					if (x.attributes.hasOwnProperty(attr)){
+					if (x.attributes.hasOwnProperty(attr)) {
 						str += ' ' + attr + '="' + x.attributes[attr] + '"';
 					}
 				}
@@ -79,7 +79,7 @@ export class MathML {
 			};
 
 			if (newToken.childNodes.length !== 0) {
-				newToken.innerMathML = newToken.childNodes.reduce(function(prev, cur, index, array){return prev + cur.outerMathML;}, '');
+				newToken.innerMathML = newToken.childNodes.reduce(function (prev, cur, index, array) {return prev + cur.outerMathML;}, '');
 			}
 			else {
 				newToken.innerMathML = '';
@@ -100,7 +100,7 @@ export class MathML {
 
 			if (newToken.nodeName === 'lambda') {
 				newToken.bvars = [];
-				for (i=0, ii=newToken.childNodes.length; i<ii; i++) {
+				for (i = 0, ii = newToken.childNodes.length; i < ii; i++) {
 					if (newToken.childNodes[i].nodeName === 'bvar') {
 						newToken.bvars.push(newToken.childNodes[i].childNodes[0].innerMathML);
 					}

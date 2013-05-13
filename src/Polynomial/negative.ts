@@ -1,7 +1,7 @@
 // ### Polynomial.prototype.negative()
 // Returns the negative polynomial
 //
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 negative() : Polynomial {
 	return new MathLib.Polynomial(this.map(MathLib.negative));
 }

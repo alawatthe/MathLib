@@ -1,10 +1,10 @@
 // ### Permutation.cycleToList()
 // Converts a cycle representation to a list representation
 // 
-// *@param{array}* cycle The cycle to be converted  
-// *@returns {array}*
+// *@param {array}* cycle The cycle to be converted  
+// *@return {array}*
 static cycleToList(cycle : any) : number[] {
-	var index, res = [],
+	var index, list = [],
 			cur, i, ii, j, jj, max;
 
 	max = cycle.map(function (b) {
@@ -12,7 +12,7 @@ static cycleToList(cycle : any) : number[] {
 	});
 	max = Math.max.apply(null, max);
 
-	for (i=0, ii=max; i<=ii; i++) {
+	for (i = 0, ii = max; i <= ii; i++) {
 		cur = i;
 		for (j = 0, jj = cycle.length; j < jj; j++) {
 			index = cycle[j].indexOf(cur);
@@ -20,7 +20,7 @@ static cycleToList(cycle : any) : number[] {
 				cur = cycle[j][index % cycle[j].length];
 			}
 		}
-		res.push(cur);
+		list.push(cur);
 	}
-	return res;
+	return list;
 }

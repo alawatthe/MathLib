@@ -3,7 +3,7 @@
 //
 // *@param {number}* The new width  
 // *@param {number}* The new height  
-// *@returns {Screen2D}*
+// *@return {Screen2D}*
 resize(width : number, height : number) : Screen2D {
 	this.height = height;
 	this.width = width;
@@ -23,8 +23,6 @@ resize(width : number, height : number) : Screen2D {
 		this.layer.axis.element.height = height;
 		this.layer.axis.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 		this.layer.axis.ctx.strokeStyle = colorConvert(this.options.axis.color) || '#000000';
-
-		//'rgba(255, 255, 255, 0)';
 
 		this.layer.main.element.width = width;
 		this.layer.main.element.height = height;

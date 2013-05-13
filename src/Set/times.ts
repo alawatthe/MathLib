@@ -3,7 +3,7 @@
 // Multiplies all elements by a argument if one is passed.
 //
 // *@param {number|MathLib object}*  
-// *@returns {set}*
+// *@return {Set}*
 times(n : any) : any {
 	if (!arguments.length) {
 		return MathLib.times.apply(null, this.toArray());

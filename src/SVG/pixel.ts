@@ -1,13 +1,13 @@
 // ### SVG pixel
 // Draws pixel on the screen.
 //
-// *@param {path}* The path to be drawn  
-// *@param {top}* The top coordinate of the draw rectangle  
-// *@param {right}* The right coordinate of the draw rectangle  
-// *@param {bottom}* The bottom coordinate of the draw rectangle  
-// *@param {left}* The left coordinate of the draw rectangle  
+// *@param {function}* The pixel function  
+// *@param {number}* The top coordinate of the draw rectangle  
+// *@param {number}* The right coordinate of the draw rectangle  
+// *@param {number}* The bottom coordinate of the draw rectangle  
+// *@param {number}* The left coordinate of the draw rectangle  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
+// *@return {Screen}* Returns the screen
 pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 	var screen = this.screen,
 			top     = (              - screen.translation.y) / screen.scale.y,
@@ -28,9 +28,9 @@ pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 
 
 
-	svgContainer.setAttribute('transform', 'matrix('+1/m[0][0]+',0,0,'+1/m[1][1]+',-'+m[0][2]/m[0][0]+','+-m[1][2]/m[1][1]+')');
-	svgImage.setAttribute('width', screen.width+'px');
-	svgImage.setAttribute('height', screen.height+'px');
+	svgContainer.setAttribute('transform', 'matrix(' + 1 / m[0][0] + ', 0, 0, ' + 1 / m[1][1] + ', -' + m[0][2] / m[0][0] + ', ' + -m[1][2] / m[1][1] + ')');
+	svgImage.setAttribute('width', screen.width + 'px');
+	svgImage.setAttribute('height', screen.height + 'px');
 	svgImage.setAttribute('x', '0');
 	svgImage.setAttribute('y', '0');
 
@@ -42,27 +42,27 @@ pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 	l = Math.max(left, l);
 
 
-	var tPxl = Math.floor(-t*screen.scale.y),
-			rPxl = Math.floor(r*screen.scale.x),
-			bPxl = Math.floor(-b*screen.scale.y),
-			lPxl = Math.floor(l*screen.scale.x),
-			w = (rPxl-lPxl),
-			h = (tPxl-bPxl),
+	var tPxl = Math.floor(-t * screen.scale.y),
+			rPxl = Math.floor(r * screen.scale.x),
+			bPxl = Math.floor(-b * screen.scale.y),
+			lPxl = Math.floor(l * screen.scale.x),
+			w = (rPxl - lPxl),
+			h = (tPxl - bPxl),
 			imgData = canvasCtx.createImageData(w, h);
 
 
 
 	for (y = tPxl, i = 0; y > bPxl; y--) {
 		for (x = lPxl; x < rPxl; x++, i++) {
-			pxl = f(x/screen.scale.x, y/screen.scale.y);
-			imgData.data[4*i]   = pxl[0];
-			imgData.data[4*i+1] = pxl[1];
-			imgData.data[4*i+2] = pxl[2];
-			imgData.data[4*i+3] = pxl[3];
+			pxl = f(x / screen.scale.x, y / screen.scale.y);
+			imgData.data[4 * i]     = pxl[0];
+			imgData.data[4 * i + 1] = pxl[1];
+			imgData.data[4 * i + 2] = pxl[2];
+			imgData.data[4 * i + 3] = pxl[3];
 		}
 	}
 
-	canvasCtx.putImageData(imgData, 0,0);
+	canvasCtx.putImageData(imgData, 0, 0);
 
 	svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', canvas.toDataURL());
 

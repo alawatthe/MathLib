@@ -1,7 +1,7 @@
 // ### Complex.prototype.toMathMLString()
 // Returns the (presentation) MathML representation of the number
 //
-// *@returns {string}*
+// *@return {string}*
 toMathMLString() : string {
 	var str = '', reFlag = false;
 

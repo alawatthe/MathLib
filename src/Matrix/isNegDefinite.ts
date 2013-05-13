@@ -1,7 +1,7 @@
 // ### Matrix.prototype.isNegDefinite()
 // Determines if the matrix is negative definite
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isNegDefinite() {
 	if (!this.isSquare()) {
 		return;
@@ -11,9 +11,9 @@ isNegDefinite() {
 	}
 	// Sylvester's criterion
 	if (this.rows % 2 === 0) {
-		return this.determinant() > 0 && this.remove(this.rows-1, this.cols-1).isNegDefinite();
+		return this.determinant() > 0 && this.remove(this.rows - 1, this.cols - 1).isNegDefinite();
 	}
 	else {
-		return this.determinant() < 0 && this.remove(this.rows-1, this.cols-1).isNegDefinite();
+		return this.determinant() < 0 && this.remove(this.rows - 1, this.cols - 1).isNegDefinite();
 	}
 }

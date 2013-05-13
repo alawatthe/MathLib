@@ -1,8 +1,8 @@
 // ### Matrix.prototype.isEqual()
 // Determines if the matrix is equal to an other matrix.
 //
-// *@param {matrix}* the matrix to compare with  
-// *@returns {boolean}*
+// *@param {Matrix}* the matrix to compare with  
+// *@return {boolean}*
 isEqual(x) {
 	var i, j, ii, jj;
 	if (this === x) {

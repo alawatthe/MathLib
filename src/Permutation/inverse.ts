@@ -1,7 +1,7 @@
 // ### Permutation.prototype.inverse()
 // Calculates the inverse of the permutation
 //
-// *@returns {permutation}*
+// *@return {Permutation}*
 inverse() : Permutation {
 	var cycle = this.cycle.slice(0);
 	cycle.reverse().forEach(function (e) {

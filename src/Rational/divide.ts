@@ -1,8 +1,8 @@
 // ### [Rational.prototype.divide()](http://mathlib.de/en/docs/rational/divide)
 // Divides rational numbers
 //
-// *@param {Rational, number}* The divisor  
-// *@returns {Rational}*
+// *@param {Rational|number}* The divisor  
+// *@return {Rational}*
 divide(r) {
 	if (r.type === 'rational') {
 		return new MathLib.Rational(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));

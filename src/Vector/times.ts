@@ -4,11 +4,12 @@
 // If you want to multiply it from the right use
 // matrix.times(vector) instead of vector.times(matrix)
 //
-// *@param {number|complex|matrix}*  
-// *@returns {vector}*
+// *@param {number|Complex|Matrix}*  
+// *@return {Vector}*
 times(n : any) : any {
-	var res = [], i, ii;
-	if(n.type === 'rational') {
+	var i, ii, colVectors,
+			product = [];
+	if (n.type === 'rational') {
 		n = n.toNumber(); 
 	}
 	if (typeof n === 'number' || n.type === 'complex') {
@@ -17,10 +18,10 @@ times(n : any) : any {
 		});
 	}
 	if (n.type === 'matrix') {
-		res = n.toColVectors();
-		for (i = 0, ii = res.length; i < ii; i++) {
-			res[i] = this.scalarProduct(res[i]);
+		colVectors = n.toColVectors();
+		for (i = 0, ii = colVectors.length; i < ii; i++) {
+			product[i] = this.scalarProduct(colVectors[i]);
 		}
-		return new MathLib.Vector(res);
+		return new MathLib.Vector(product);
 	}
 }

@@ -1,10 +1,10 @@
 // ### Permutation.prototype.applyTo()
 // Applies the permutation to a number or a array/matrix/point/vector
 //
-// *@param {number|array|matrix|point|vector}*  
-// *@returns {number|array|matrix|point|vector}*
+// *@param {number|array|Matrix|Point|Vector}*  
+// *@return {number|array|Matrix|Point|Vector}*
 applyTo(n : any) : any {
-	var p, res;
+	var p, permutatedObj;
 	if (typeof n === 'number') {
 		if (n >= this.length) {
 			return n;
@@ -13,10 +13,10 @@ applyTo(n : any) : any {
 	}
 	else {
 		p = this;
-		res = n.map(function (x, i) {
+		permutatedObj = n.map(function (x, i) {
 			return n[p.applyTo(i)];
 		});
 
-		return (n.type === undefined ? res : new n.constructor(res));
+		return (n.type === undefined ? permutatedObj : new n.constructor(permutatedObj));
 	}
 }

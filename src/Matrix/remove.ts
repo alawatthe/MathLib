@@ -3,15 +3,15 @@
 //
 // *@param {number|array}* The row(s) to be removed.  
 // *@param {number|array}* The column(s) to be removed.  
-// *@returns {matrix}*
+// *@return {Matrix}*
 remove(row, col) {
-	var res = this.toArray();
+	var rest = this.toArray();
 
 	if (row || row === 0) {
 		if (typeof row === 'number') {
 			row = [row];
 		}
-		res = res.filter(function (x, i, arr) {
+		rest = rest.filter(function (x, i) {
 			return row.indexOf(i) === -1;
 		});
 	}
@@ -22,12 +22,12 @@ remove(row, col) {
 		}
 		col = col.sort().reverse();
 		col.forEach(function (n) {
-			res = res.map(function (x) {
+			rest = rest.map(function (x) {
 				x.splice(n, 1);
 				return x;
 			});
 		});
 	}
 
-	return new MathLib.Matrix(res);
+	return new MathLib.Matrix(rest);
 }

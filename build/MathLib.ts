@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.4.0 - 2013-05-01  
+// v0.4.0 - 2013-05-12  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -43,12 +43,12 @@
 // - [rational](#Rational "Jump to the rational number implementation")
 // - [set](#Set "Jump to the set implementation")
 // The MathLib module which wraps everything
- module MathLib {
+module MathLib {
 
 
 	// Typescript is throwing the following error otherwise:
 	// The property 'methodname' does not exist on value of type 'MathLib'
-	// see http://typescript.codeplex.com/discussions/397908
+	// see [http://typescript.codeplex.com/discussions/397908](http://typescript.codeplex.com/discussions/397908)
 	declare var MathLib : any;
 	declare var MathJax : any;
 	declare var THREE : any;
@@ -77,23 +77,23 @@
 
 	var prototypes = {
 				array: Object.getPrototypeOf([]),
-				func: Object.getPrototypeOf(function (){}),
+				func: Object.getPrototypeOf(function () {}),
 				object: Object.getPrototypeOf({}),
-				functn: function(){}
+				functn: function () {}
 			},
 			flatten = function (a) {
-				var res = [];
+				var flattendArray = [];
 				a.forEach(function (x) {
 					if (Array.isArray(x)) {
-						res = res.concat(flatten(x));
+						flattendArray = flattendArray.concat(flatten(x));
 					}
 					else {
-						res.push(x);
+						flattendArray.push(x);
 					}
 				});
-				return res;
+				return flattendArray;
 			},
-			extendObject = function(dest, src) {
+			extendObject = function (dest, src) {
 				for (var prop in src) {
 					if (typeof dest[prop] === 'object' && typeof src[prop] === 'object') {
 						dest[prop] = extendObject(dest[prop], src[prop]);
@@ -118,7 +118,7 @@
 			colorConvert = function (n) {
 				if (typeof n === 'number') {
 					n = Math.max(Math.min(Math.floor(n), 0xffffff), 0);
-					return '#' + ('00000'+n.toString(16)).slice(-6); 
+					return '#' + ('00000' + n.toString(16)).slice(-6); 
 				}
 				return n;
 			};
@@ -217,8 +217,8 @@ export class MathML {
 
 		createToken = function (t) {
 			var attributes = {}, i, ii;
-			if(t.attributes) {
-				for (i=0, ii=t.attributes.length; i<ii; i++) {
+			if (t.attributes) {
+				for (i = 0, ii = t.attributes.length; i < ii; i++) {
 					attributes[t.attributes[i].name] =  t.attributes[i].value;
 				}
 			}
@@ -227,12 +227,12 @@ export class MathML {
 			var newToken = Object.create({}, {
 				attributes: {value: attributes},
 				nodeName:   {value: t.nodeName},
-				parentNode: {value: tokenStack[tokenStack.length-1]},
+				parentNode: {value: tokenStack[tokenStack.length - 1]},
 				prevNode:   {value: curToken}
 			});
 
 
-			if(curToken) {
+			if (curToken) {
 				curToken.nextNode = newToken;
 			}
 			curToken = newToken;
@@ -244,7 +244,7 @@ export class MathML {
 			var attributesString = function (x) {
 				var str = '', attr;
 				for (attr in x.attributes) {
-					if (x.attributes.hasOwnProperty(attr)){
+					if (x.attributes.hasOwnProperty(attr)) {
 						str += ' ' + attr + '="' + x.attributes[attr] + '"';
 					}
 				}
@@ -252,7 +252,7 @@ export class MathML {
 			};
 
 			if (newToken.childNodes.length !== 0) {
-				newToken.innerMathML = newToken.childNodes.reduce(function(prev, cur, index, array){return prev + cur.outerMathML;}, '');
+				newToken.innerMathML = newToken.childNodes.reduce(function (prev, cur, index, array) {return prev + cur.outerMathML;}, '');
 			}
 			else {
 				newToken.innerMathML = '';
@@ -273,7 +273,7 @@ export class MathML {
 
 			if (newToken.nodeName === 'lambda') {
 				newToken.bvars = [];
-				for (i=0, ii=newToken.childNodes.length; i<ii; i++) {
+				for (i = 0, ii = newToken.childNodes.length; i < ii; i++) {
 					if (newToken.childNodes[i].nodeName === 'bvar') {
 						newToken.bvars.push(newToken.childNodes[i].childNodes[0].innerMathML);
 					}
@@ -317,11 +317,11 @@ static isSupported = function () : bool {
 		ns = 'http://www.w3.org/1998/Math/MathML';
 		div = document.createElement('div');
 		div.style.position = 'absolute';
-		mfrac = div.appendChild(document.createElementNS(ns,'math'))
-								.appendChild(document.createElementNS(ns,'mfrac'));
-		mfrac.appendChild(document.createElementNS(ns,'mi'))
+		mfrac = div.appendChild(document.createElementNS(ns, 'math'))
+								.appendChild(document.createElementNS(ns, 'mfrac'));
+		mfrac.appendChild(document.createElementNS(ns, 'mi'))
 				 .appendChild(document.createTextNode('xx'));
-		mfrac.appendChild(document.createElementNS(ns,'mi'))
+		mfrac.appendChild(document.createElementNS(ns, 'mi'))
 				 .appendChild(document.createTextNode('yy'));
 		document.body.appendChild(div);
 		hasMathML = div.offsetHeight > div.offsetWidth;
@@ -334,7 +334,7 @@ static isSupported = function () : bool {
 // ### MathML.loadMathJax()
 // Loads MathJax dynamically.
 //
-// *@param{string}* [config] Optional config options
+// *@param {string}* [config] Optional config options
 loadMathJax(config : string) : void {
 	var script = <HTMLScriptElement>document.createElement('script');
 	script.type = 'text/javascript';
@@ -342,10 +342,10 @@ loadMathJax(config : string) : void {
 
 	config = config ||	'MathJax.Hub.Config({' +
 												'config: ["MMLorHTML.js"],' +
-												'jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],' +
-												'extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js"],' +
+												'jax: ["input/TeX", "input/MathML", "output/HTML-CSS", "output/NativeMML"],' +
+												'extensions: ["tex2jax.js", "mml2jax.js", "MathMenu.js", "MathZoom.js"],' +
 												'TeX: {' +
-													'extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]' +
+													'extensions: ["AMSmath.js", "AMSsymbols.js", "noErrors.js", "noUndefined.js"]' +
 												'}' +
 										 	'});';
 
@@ -406,7 +406,7 @@ parse() : any {
 				
 			}
 			else {
-				if(funcName in MathLib) {
+				if (funcName in MathLib) {
 					if (children.length === 1) {
 						return MathLib[funcName](parser(children[0]));
 					}
@@ -438,7 +438,7 @@ parse() : any {
 		cn: function (node) {
 			var type = node.attributes.type ? node.attributes.type : 'number';
 
-			if(type === 'number') {
+			if (type === 'number') {
 				/* TODO: base conversions
 				var base = node.getAttribute('base') !== null ? node.getAttributes('base') : '10'; */
 				return +node.innerMathML;
@@ -484,7 +484,7 @@ parse() : any {
 				});
 			}
 			else {
-				return new MathLib.Functn(function (x) {return MathLib[funcName].apply(null, innerFunc.map(function (f){
+				return new MathLib.Functn(function (x) {return MathLib[funcName].apply(null, innerFunc.map(function (f) {
 					return typeof f === 'function' ? f(x) : f;
 				}));}, {
 					contentMathMLString: node.outerMathML,
@@ -520,7 +520,7 @@ parse() : any {
 			return MathLib.e;
 		},
 		imaginaryi: function () {
-			return new MathLib.Complex(0,1);
+			return new MathLib.Complex(0, 1);
 		},
 		notanumber: function () {
 			return NaN;
@@ -560,7 +560,7 @@ toMathMLString() : string {
 	var handlers = {
 		apply: function (n) {
 			var f = n.childNodes[0],
-					args = n.childNodes.slice(1).map(function(x) {
+					args = n.childNodes.slice(1).map(function (x) {
 						return handlers[x.nodeName](x);
 					}),
 					str = '';
@@ -585,7 +585,7 @@ toMathMLString() : string {
 		cs: function (n) {return '<ms>' + n.innerMathML + '</ms>';},
 		domainofapplication: function () {return '';},
 		lambda: function (n) {
-			return n.childNodes.reduce(function(old, cur) {
+			return n.childNodes.reduce(function (old, cur) {
 				return old + handlers[cur.nodeName](cur);
 			}, '');
 		}, 
@@ -613,8 +613,8 @@ static variables = {};
 // ### MathML.write()
 // Writes MathML to an element.
 //
-// *@param{string}* The id of the element in which the MathML should be inserted.  
-// *@param{string}* The MathML to be inserted.
+// *@param {string}* The id of the element in which the MathML should be inserted.  
+// *@param {string}* The MathML to be inserted.
 static write(id : string, math : string) : void {
 	var formula;
 	document.getElementById(id).innerHTML = '<math>' + math + '</math>';
@@ -634,7 +634,7 @@ static write(id : string, math : string) : void {
 // 'Functn'.  
 // More improvements to the module coming soon.
 
-var functnPrototype:any = {};
+var functnPrototype : any = {};
 
 MathLib.Functn = function (f, options) {
 	options = options || {};
@@ -648,13 +648,13 @@ MathLib.Functn = function (f, options) {
 					innerVar = x.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML,
 					innerStr = x.contentMathML.childNodes[0].childNodes[2].outerMathML.replace('<bvar>' + innerVar + '</bvar>', ''), 
 					outerStr = functn.contentMathML.childNodes[0].childNodes[2].outerMathML.replace(outerVar, innerStr),
-					res = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><reals/></domainofapplication>' + outerStr + '</lambda></math>';
-			return new MathLib.Functn(function (y) {return f(x(y));}, {contentMathMLString: res});
+					contentMathMLString = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><reals/></domainofapplication>' + outerStr + '</lambda></math>';
+			return new MathLib.Functn(function (y) {return f(x(y));}, {contentMathMLString: contentMathMLString});
 		}
 		else if (typeof x === 'function') {
 			return function (y) {return f(x(y));};
 		}
-		else if(x.type === 'complex') {
+		else if (x.type === 'complex') {
 			return x[options.name].apply(x, Array.prototype.slice.call(arguments, 1));
 		}
 		else {
@@ -686,10 +686,10 @@ MathLib.Functn = function (f, options) {
 // ### [Functn.prototype.draw()](http://mathlib.de/en/docs/Functn/draw)
 // Draws the function on the screen
 //
-// *@param {screen}* The screen to draw the function onto.  
+// *@param {Screen}* The screen to draw the function onto.  
 // *@param {object}* [options] Optional drawing options.  
-// *@returns {functn}*
-functnPrototype.draw = function(screen, options:any = {}) : number {
+// *@return {Functn}*
+functnPrototype.draw = function (screen, options : any = {}) : number {
 	var functn = this;
 	if (Array.isArray(screen)) {
 		screen.forEach(function (x) {
@@ -709,9 +709,9 @@ functnPrototype.draw = function(screen, options:any = {}) : number {
 // 
 // *@param {number}* The point  
 // *@param {number}* Optional step size  
-// *@returns {number}*
-functnPrototype.diff = function(x: number, h = 1e-5) : number {
-	return (this(x+h) - this(x-h)) / (2*h);
+// *@return {number}*
+functnPrototype.diff = function (x: number, h = 1e-5) : number {
+	return (this(x + h) - this(x - h)) / (2 * h);
 };
 
 
@@ -724,8 +724,8 @@ functnPrototype.diff = function(x: number, h = 1e-5) : number {
 // *@param {number}* The starting point  
 // *@param {number}* The end point  
 // *@param {number}* The tolerance  
-// *@returns {number}*
-functnPrototype.quad = function(a, b, options:any = {}) : number {
+// *@return {number}*
+functnPrototype.quad = function (a, b, options : any = {}) : number {
 	
 	var f = this,
 			warnMessage = [
@@ -760,7 +760,7 @@ functnPrototype.quad = function(a, b, options:any = {}) : number {
 		options.tolerance = 1e-5;
 	}
 
-	Q = quadstep(f, a, b, f(a), f((a+b)/2), f(b), options);
+	Q = quadstep(f, a, b, f(a), f((a + b) / 2), f(b), options);
 
 	options.warnMessage = warnMessage[options.warn];
 
@@ -773,18 +773,18 @@ functnPrototype.quad = function(a, b, options:any = {}) : number {
 var quadstep = function  (f, a, b, fa, fc, fb, options) {
 
 	var h = b - a,
-			c = (a + b)/2,
-			fd = f((a + c)/2),
-			fe = f((c + b)/2),
+			c = (a + b) / 2,
+			fd = f((a + c) / 2),
+			fe = f((c + b) / 2),
 
 			// Three point Simpson's rule
-			Q1 = (h/6)*(fa + 4*fc + fb),
+			Q1 = (h / 6) * (fa + 4 * fc + fb),
 
 			// Five point double Simpson's rule
-			Q2 = (h/12)*(fa + 4*fd + 2*fc + 4*fe + fb),
+			Q2 = (h / 12) * (fa + 4 * fd + 2 * fc + 4 * fe + fb),
 
 			// Romberg extrapolation
-			Q = Q2 + (Q2 - Q1)/15;
+			Q = Q2 + (Q2 - Q1) / 15;
 
 			options.calls = options.calls + 2;
 
@@ -813,16 +813,16 @@ var quadstep = function  (f, a, b, fa, fc, fb, options) {
 	}
 
 	// Otherwise, divide the interval into two subintervals
-	return quadstep(f, a, c, fa, fd, fc, options)
-				+ quadstep(f, c, b, fc, fe, fb, options);
+	return quadstep(f, a, c, fa, fd, fc, options) +
+					quadstep(f, c, b, fc, fe, fb, options);
 }
 
 
 // ### Functn.prototype.toContentMathML()
 // Returns a content MathML representation of the function
 //
-// *@returns {MathML}*
-functnPrototype.toContentMathML = function() {
+// *@return {MathML}*
+functnPrototype.toContentMathML = function () {
 	return this.contentMathML;
 };
 
@@ -830,8 +830,8 @@ functnPrototype.toContentMathML = function() {
 // ### [Functn.prototype.toContentMathMLString()](http://mathlib.de/en/docs/Functn/toContentMathMLString)
 // Returns a content MathML representation of the function
 //
-// *@returns {string}*
-functnPrototype.toContentMathMLString = function(bvar = '') {
+// *@return {string}*
+functnPrototype.toContentMathMLString = function (bvar = '') {
 	return this.contentMathML.outerMathML;
 };
 
@@ -840,14 +840,14 @@ functnPrototype.toContentMathMLString = function(bvar = '') {
 // Returns a LaTeX representation of the function
 //
 // *@param {string}* Optional: custom name for the bound variable (default: x)  
-// *@returns {string}*
-functnPrototype.toLaTeX = function(bvar = '') {
+// *@return {string}*
+functnPrototype.toLaTeX = function (bvar = '') {
 
 	// List of functions to be executed on the specified node type
 	var handlers = {
 		apply: function (n) {
 			var f = n.childNodes[0],
-					args = n.childNodes.slice(1).map(function(x) {
+					args = n.childNodes.slice(1).map(function (x) {
 						return handlers[x.nodeName](x);
 					}),
 					str = '';
@@ -863,7 +863,7 @@ functnPrototype.toLaTeX = function(bvar = '') {
 			}
 			else {
 				// TODO: not all functions can be written like \sin some have to be written like \operatorname{argmax}
-				str = '\\' +f.nodeName + '(' + args.join(', ') + ')';
+				str = '\\' + f.nodeName + '(' + args.join(', ') + ')';
 			}
 			return str;
 		},
@@ -873,7 +873,7 @@ functnPrototype.toLaTeX = function(bvar = '') {
 		cs: function (n) {return n.innerMathML;},
 		domainofapplication: function () {return '';},
 		lambda: function (n) {
-			return n.childNodes.reduce(function(old, cur) {
+			return n.childNodes.reduce(function (old, cur) {
 				return old + handlers[cur.nodeName](cur);
 			}, '');
 		},
@@ -888,8 +888,8 @@ functnPrototype.toLaTeX = function(bvar = '') {
 // ### Functn.prototype.toMathML()
 // Returns a MathML representation of the function
 //
-// *@returns {string}*
-/*functnPrototype.toMathML = function() {
+// *@return {string}*
+/*functnPrototype.toMathML = function () {
 	Get the content MathML and convert it to presentation MathML
 	return this.contentMathML.toMathML();
 };*/
@@ -898,8 +898,8 @@ functnPrototype.toLaTeX = function(bvar = '') {
 // ### [Functn.prototype.toMathMLString()](http://mathlib.de/en/docs/Functn/toMathMLString)
 // Returns a MathML representation of the function
 //
-// *@returns {string}*
-functnPrototype.toMathMLString = function() {
+// *@return {string}*
+functnPrototype.toMathMLString = function () {
 	return this.contentMathML.toMathMLString();
 };
 
@@ -908,15 +908,15 @@ functnPrototype.toMathMLString = function() {
 // Returns a string representation of the function
 //
 // *@param {string}* Optional: custom name for the bound variable (default: x)  
-// *@returns {string}*
+// *@return {string}*
 
-functnPrototype.toString = function(bvar = '') {
+functnPrototype.toString = function (bvar = '') {
 
 	// List of functions to be executed on the specified node type
 	var handlers = {
 		apply: function (n) {
 			var f = n.childNodes[0],
-					args = n.childNodes.slice(1).map(function(x) {
+					args = n.childNodes.slice(1).map(function (x) {
 						return handlers[x.nodeName](x);
 					}),
 					str = '';
@@ -941,7 +941,7 @@ functnPrototype.toString = function(bvar = '') {
 		cs: function (n) {return n.innerMathML;},
 		domainofapplication: function () {return '';},
 		lambda: function (n) {
-			return n.childNodes.reduce(function(old, cur) {
+			return n.childNodes.reduce(function (old, cur) {
 				return old + handlers[cur.nodeName](cur);
 			}, '');
 		}, 
@@ -968,22 +968,22 @@ var unaryFunctions = {
 	arccsc: function (x) {
 		return Math.asin(1 / x);
 	},
-	arcosh: (<any>Math).acosh || function (x){
+	arcosh: (<any>Math).acosh || function (x) {
 		return Math.log(x + Math.sqrt(x * x - 1));
 	},
 	arcoth: function (x) {
 		// Handle ±∞
 		if (!MathLib.isFinite(x)) {
-			return 1/x;
+			return 1 / x;
 		}
 		return 0.5 * Math.log((x + 1) / (x - 1));
 	},
 	arcsch: function (x) {
 		// Handle ±0 and ±∞ separately
 		if (x === 0 || !MathLib.isFinite(x)) {
-			return 1/x;
+			return 1 / x;
 		}
-		return Math.log(1/x + Math.sqrt(1/(x*x) +1));
+		return Math.log(1 / x + Math.sqrt(1 / (x * x) + 1));
 	},
 	arcsec: function (x) {
 		return Math.acos(1 / x);
@@ -991,7 +991,7 @@ var unaryFunctions = {
 	arcsin: Math.asin,
 	arctan: Math.atan,
 	arsech: function (x) {
-		return Math.log((1 + Math.sqrt(1 - x * x)) / (x));
+		return Math.log((1 + Math.sqrt(1 - x * x)) / x);
 	},
 	arsinh: (<any>Math).asinh || function (x) {
 		// Handle ±0 and ±∞ separately
@@ -1022,7 +1022,7 @@ var unaryFunctions = {
 	cot: function (x) {
 		// Handle ±0 separate, because tan(pi/2 ± 0) is not ±∞
 		if (x === 0) {
-			return 1/x;
+			return 1 / x;
 		}
 		// cot(x) = tan(pi/2 - x) is better than 1/tan(x)
 		return Math.tan(1.5707963267948966 - x);
@@ -1030,7 +1030,7 @@ var unaryFunctions = {
 	coth: function (x) {
 		// Handle ±0
 		if (x === 0) {
-			return 1/x;
+			return 1 / x;
 		}
 
 		// Handle ±∞
@@ -1046,7 +1046,7 @@ var unaryFunctions = {
 	csch: function (x) {
 		// csch(-0) should be -∞ not ∞
 		if (x === 0) {
-			return 1/x;
+			return 1 / x;
 		}
 		return 2 / (Math.exp(x) - Math.exp(-x));
 	},
@@ -1054,7 +1054,7 @@ var unaryFunctions = {
 		return Math.exp(x);
 	},
 	inverse: function (x) {
-		return 1/x;
+		return 1 / x;
 	},
 	sec: function (x) {
 		return 1 / Math.cos(x);
@@ -1081,7 +1081,7 @@ var unaryFunctions = {
 		}
 
 		p = Math.exp(x);
-		return (p*p - 1) / (p*p + 1);
+		return (p * p - 1) / (p * p + 1);
 	}
 };
 
@@ -1096,7 +1096,7 @@ for (var elemfn in unaryFunctions) {
 }
 
 
-MathLib.identity = new MathLib.Functn(function identity(x){
+MathLib.identity = new MathLib.Functn(function identity(x) {
 		return x;
 	}, {contentMathMLString: mathStart + 'ident' + mathEnd}
 );
@@ -1107,7 +1107,7 @@ MathLib.identity = new MathLib.Functn(function identity(x){
 var functionList1 = {
 	arctan2: Math.atan2,
 	binomial: function (n, k) {
-				var res = 1, i;
+				var binomial = 1, i;
 
 				// or k > n > 0
 				if (k < 0 || (n > 0 && k > n)) {
@@ -1117,17 +1117,17 @@ var functionList1 = {
 				// Optimizing n and k are integers
 				// if (n % 1 === 0 && k % 1 === 0) {
 				// TODO: is this formula working if n is not an integer?
-					if (n<0) {
-						res = Math.pow(-1, k);
+					if (n < 0) {
+						binomial = Math.pow(-1, k);
 						n = k - n - 1;
 					}
-					if (k > n/2) {
-						k = n-k;
+					if (k > n / 2) {
+						k = n - k;
 					}
-					for (i=1; i<=k; i++) {
-						res *= (n+1-i)/i;
+					for (i = 1; i <= k; i++) {
+						binomial *= (n + 1 - i) / i;
 					}
-					return res;
+					return binomial;
 			},
 	cbrt: function (x) {
 					var a3, a3x, an, a;
@@ -1138,7 +1138,7 @@ var functionList1 = {
 					}
 					
 					// Get an approximation
-					a = MathLib.sign(x) * Math.pow(Math.abs(x), 1/3);
+					a = MathLib.sign(x) * Math.pow(Math.abs(x), 1 / 3);
 
 					// Halley's method
 					while (true) {
@@ -1174,37 +1174,37 @@ var functionList1 = {
 				return MathLib.times(a, MathLib.inverse(b));
 			},
 	divisors: function (x) {
-				var res = x===1 ? [] : [1],
+				var divisors = x === 1 ? [] : [1],
 						i, ii;
-				for (i=2, ii=x/2; i<=ii; i++) {
-					if (x%i === 0) {
-						res.push(i);
+				for (i = 2, ii = x / 2; i <= ii; i++) {
+					if (x % i === 0) {
+						divisors.push(i);
 					}
 				}
-				res.push(x);
-				return MathLib.set(res);
+				divisors.push(x);
+				return MathLib.set(divisors);
 			},
 	factor: function (n) {
-				var res = [],
+				var factors = [],
 						i;
 				n = Math.abs(n);
-				while (n%2 === 0) {
-					n = n/2;
-					res.push(2);
+				while (n % 2 === 0) {
+					n = n / 2;
+					factors.push(2);
 				}
 
 				i = 3;
-				while(n !== 1) {
-					while (n%i === 0) {
-						n = n/i;
-						res.push(i);
+				while (n !== 1) {
+					while (n % i === 0) {
+						n = n / i;
+						factors.push(i);
 					}
 					i += 2;
 				}
-				return new MathLib.Set(res, true);
+				return new MathLib.Set(factors, true);
 			},
 	factorial: function (x) {
-				var out = 1, i;
+				var factorial = 1, i;
 				if ((x > 170 && MathLib.isInt(x)) || x === Infinity ) {
 					return Infinity;
 				}
@@ -1212,18 +1212,18 @@ var functionList1 = {
 					return NaN;
 				}
 				for (i = 1; i <= x; i++) {
-					out *= i;
+					factorial *= i;
 				}
-				return out;
+				return factorial;
 			},
 	fallingFactorial: function (n, m, s) {
-				var res = 1, j;
+				var factorial = 1, j;
 				s = s || 1;
 
 				for (j = 0; j < m; j++) {
-					res  *= (n - j * s);
+					factorial  *= (n - j * s);
 				}
-				return res;
+				return factorial;
 			},
 	fibonacci: function (n) {
 				return Math.floor(Math.pow(MathLib.goldenRatio, n) / Math.sqrt(5));
@@ -1257,7 +1257,7 @@ var functionList1 = {
 				x = Math.max(a, b);
 				y = Math.min(a, b);
 
-				return x * Math.sqrt(1 + Math.pow(y/x, 2));
+				return x * Math.sqrt(1 + Math.pow(y / x, 2));
 			},
 	hypot2: function () {
 				var args = Array.prototype.slice.call(arguments);
@@ -1268,7 +1268,7 @@ var functionList1 = {
 					return Infinity;
 				}
 				return args.reduce(function (old, cur) {
-					return old + cur*cur;
+					return old + cur * cur;
 				}, 0);
 			},
 	isFinite: function (x) {
@@ -1281,13 +1281,13 @@ var functionList1 = {
 				return x !== x;
 			},
 	isNegZero: function (x) {
-				return 1/x === -Infinity;
+				return 1 / x === -Infinity;
 			},
 	isOne: function (a)    {
 				return Math.abs(a - 1) < MathLib.epsilon;
 			},
 	isPosZero: function (x) {
-				return 1/x === Infinity;
+				return 1 / x === Infinity;
 			},
 	isPrime: function (x) {
 				var sqrt = Math.sqrt(x), i;
@@ -1328,7 +1328,7 @@ var functionList1 = {
 				return MathLib.plus(a, MathLib.negative(b));
 			},
 	mod: function (n, m) {
-				var nm = n%m;
+				var nm = n % m;
 				return nm >= 0 ? nm : nm + m;
 			},
 	negative: function (x) {
@@ -1342,17 +1342,17 @@ var functionList1 = {
 			},
 	radToDeg: function (x) {
 				// 180 / Math.PI = 57.29577951308232
-				return x*57.29577951308232;
+				return x * 57.29577951308232;
 			},
 	random: Math.random,
 	risingFactorial: function (n, m, s) {
-				var res = 1, j;
+				var factorial = 1, j;
 				s = s || 1;
 
 				for (j = 0; j < m; j++) {
-					res  *= (n + j * s);
+					factorial  *= (n + j * s);
 				}
-				return res;
+				return factorial;
 			},
 	round: function (x) {
 				// Some implementations have a bug where Math.round(-0) = +0 (instead of -0).
@@ -1368,7 +1368,7 @@ var functionList1 = {
 				return Math.pow(x, 1 / root);
 			},
 	sign: function (x) {
-				return x && (x<0 ? -1 : 1);
+				return x && (x < 0 ? -1 : 1);
 			},
 	sqrt: Math.sqrt,
 	trunc: function (x, n) {
@@ -1376,32 +1376,32 @@ var functionList1 = {
 			},
 	toLaTeX: function (x, plus) {
 				if (plus) {
-					return (x<0 ? '-' : '+') + Math.abs(x);
+					return (x < 0 ? '-' : '+') + Math.abs(x);
 				}
 				else {
-					return (x<0 ? '-' : '') + Math.abs(x);
+					return (x < 0 ? '-' : '') + Math.abs(x);
 				}
 			},
 	toMathMLString: function (x, plus) {
 				if (plus) {
-					return '<mo>' + (x<0 ? '-' : '+') + '</mo><mn>' + Math.abs(x) + '</mn>';
+					return '<mo>' + (x < 0 ? '-' : '+') + '</mo><mn>' + Math.abs(x) + '</mn>';
 				}
 				else {
-					return (x<0 ? '<mo>-</mo>': '') + '<mn>' + Math.abs(x) + '</mn>';
+					return (x < 0 ? '<mo>-</mo>': '') + '<mn>' + Math.abs(x) + '</mn>';
 				}
 			},
 	toString: function (x, plus) {
 				if (plus) {
-					return (x<0 ? '-' : '+') + Math.abs(x);
+					return (x < 0 ? '-' : '+') + Math.abs(x);
 				}
 				else {
-					return (x<0 ? '-' : '') + Math.abs(x);
+					return (x < 0 ? '-' : '') + Math.abs(x);
 				}
 			}
 };
 
 MathLib.toContentMathMLString = function (x) {
-	if (typeof x === 'number'){
+	if (typeof x === 'number') {
 		return '<cn>' + x + '</cn>';
 	}
 	else {
@@ -1416,7 +1416,7 @@ MathLib.toContentMathMLString = function (x) {
 // Negates the argument.
 // 
 // *@param {boolean}* Expects one boolean argument  
-// *@returns {boolean}*
+// *@return {boolean}*
 MathLib.not = function (x) {
 	return !x;
 };
@@ -1424,13 +1424,13 @@ MathLib.not = function (x) {
 
 
 MathLib.compare = function (a, b) {
-	if(MathLib.type(a) !== MathLib.type(b)) {
+	if (MathLib.type(a) !== MathLib.type(b)) {
 		return MathLib.sign(MathLib.type(a).localeCompare(MathLib.type(b)));
 	}
-	else if(typeof a === 'number') {
-		return MathLib.sign(a-b);
+	else if (typeof a === 'number') {
+		return MathLib.sign(a - b);
 	}
-	else if(typeof a === 'string') {
+	else if (typeof a === 'string') {
 		return a.localeCompare(b);
 	}
 	return a.compare(b);
@@ -1471,7 +1471,7 @@ var nAryFunctions = {
 	// Returns true iff all arguments are true.
 	// 
 	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-	// *@returns {boolean}*
+	// *@return {boolean}*
 	and: function (n) {
 		return n.every(function (x) {return !!x;});
 	},
@@ -1481,7 +1481,7 @@ var nAryFunctions = {
 	gcd: function (a) {
 		var min,
 				reduction = function (x) {
-					return x !== min ? x%min : x;
+					return x !== min ? x % min : x;
 				},
 				isntZero = function (x) {
 					return x !== 0;
@@ -1494,7 +1494,7 @@ var nAryFunctions = {
 			return 0;
 		}
 
-		while(a.length > 1) {
+		while (a.length > 1) {
 			min = MathLib.min(a);
 			a = a.map(reduction).filter(isntZero);
 		}
@@ -1510,22 +1510,16 @@ var nAryFunctions = {
 		return MathLib.times(n) / MathLib.gcd(n);
 	},
 	max: function (n) {
-		/*if (n) {
-			return this.sort(MathLib.compare)[this.length-n];
-		}*/
 		return Math.max.apply(null, n);
 	},
 	min: function (n) {
-		/*if (n) {
-			return this.sort(MathLib.compare)[n-1];
-		}*/
 		return Math.min.apply(null, n);
 	},
 	// ### MathLib.or()
 	// Returns true iff at least one argument is true.
 	// 
 	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-	// *@returns {boolean}*
+	// *@return {boolean}*
 	or: function (n) {
 		return n.some(function (x) {return !!x;});
 	},
@@ -1548,7 +1542,7 @@ var nAryFunctions = {
 						return a;
 					};
 				}
-				else if(b.type !== 'functn') {
+				else if (b.type !== 'functn') {
 					f2 = function () {
 						return b;
 					};
@@ -1588,7 +1582,7 @@ var nAryFunctions = {
 						return a;
 					};
 				}
-				else if(b.type !== 'functn') {
+				else if (b.type !== 'functn') {
 					f2 = function () {
 						return b;
 					};
@@ -1613,7 +1607,7 @@ var nAryFunctions = {
 	// Returns true iff an odd number of the arguments is true.
 	// 
 	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-	// *@returns {boolean}*
+	// *@return {boolean}*
 	xor: function (n) {
 		return n.reduce(function (x, y) {return x + !!y;}, 0) % 2 !== 0;
 	}	
@@ -1625,7 +1619,7 @@ var nAryFunctions = {
 // Returns the sum of all arguments.
 // 
 // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
-// *@returns {number, MathLib object}*
+// *@return {number, MathLib object}*
 /*MathLib.plus = function (n) {
 	return n.reduce(function (a, b) {
 		var f1, f2, astr, bstr;
@@ -1642,7 +1636,7 @@ var nAryFunctions = {
 					return a;
 				};
 			}
-			else if(b.type !== 'functn') {
+			else if (b.type !== 'functn') {
 				f2 = function () {
 					return b;
 				};
@@ -1670,20 +1664,20 @@ var nAryFunctions = {
 // Determines if all arguments are equal.
 // 
 // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
-// *@returns {boolean}*
+// *@return {boolean}*
 MathLib.isEqual = function () {
-	return flatten(Array.prototype.slice.apply(arguments)).every(function (a, i, arr) {
-		if (a === arr[0]) {
+	return flatten(Array.prototype.slice.apply(arguments)).every(function (a, i, args) {
+		if (a === args[0]) {
 			return true;
 		}
-		else if (typeof a === 'number' && typeof arr[0] === 'number') {
-			return Math.abs(a - arr[0]) <= 3e-15;
+		else if (typeof a === 'number' && typeof args[0] === 'number') {
+			return Math.abs(a - args[0]) <= 3e-15;
 		}
 		else if (typeof a === 'object') {
-			return a.isEqual(arr[0]);
+			return a.isEqual(args[0]);
 		}
-		else if (typeof arr[0] === 'object') {
-			return arr[0].isEqual(a);
+		else if (typeof args[0] === 'object') {
+			return args[0].isEqual(a);
 		}
 		return false;
 	});
@@ -1695,7 +1689,7 @@ MathLib.isEqual = function () {
 // Returns the product of all arguments.
 // 
 // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
-// *@returns {boolean}*
+// *@return {boolean}*
 /*MathLib.times = function () {
 	return Array.prototype.slice.apply(arguments).reduce(function (a, b) {
 		var f1, f2, astr, bstr;
@@ -1712,7 +1706,7 @@ MathLib.isEqual = function () {
 					return a;
 				};
 			}
-			else if(b.type !== 'functn') {
+			else if (b.type !== 'functn') {
 				f2 = function () {
 					return b;
 				};
@@ -1747,7 +1741,7 @@ var createFunction1 = function (f, name) {
 		else if (x.type === 'set') {
 			return new MathLib.Set( x.map(f) );
 		}
-		else if(x.type === 'complex') {
+		else if (x.type === 'complex') {
 			return x[name].apply(x, Array.prototype.slice.call(arguments, 1));
 		}
 		else if (Array.isArray(x)) {
@@ -1762,10 +1756,10 @@ var createFunction1 = function (f, name) {
 
 var createFunction3 = function (f, name) {
 	return function (n) {
-		if(MathLib.type(n) === 'set') {
+		if (MathLib.type(n) === 'set') {
 			return f(n.slice());
 		}
-		else if(MathLib.type(n) !== 'array') {
+		else if (MathLib.type(n) !== 'array') {
 			n = Array.prototype.slice.apply(arguments);
 		}
 		return f(n);
@@ -1931,13 +1925,13 @@ export class Screen {
 					'<figure class="MathLib_figure">',
 
 						// The canvas or SVG element will be inserted here
-						'<div class="MathLib_wrapper" style="width: '+opts.width+'px; height: '+opts.height+'px">',
+						'<div class="MathLib_wrapper" style="width: ' + opts.width + 'px; height: ' + opts.height + 'px">',
 			 			'<div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>',
 			 			'Please update your browser to see the plot.</div>',
 						'</div>',
 
 						// Add the optional figcaption
-						(<any>opts).figcaption ? '<figcaption class="MathLib_figcaption">'+(<any>opts).figcaption+'</figcaption>' : '',
+						(<any>opts).figcaption ? '<figcaption class="MathLib_figcaption">' + (<any>opts).figcaption + '</figcaption>' : '',
 
 					'</figure>',
 
@@ -1986,26 +1980,26 @@ export class Screen {
 						ctx.drawImage((<any>_this).layer.main.element, 0, 0);
 
 
-						dataURI = (<any>canvas).toDataURL("image/png");
+						dataURI = (<any>canvas).toDataURL('image/png');
 						if ('download' in a) {
 							(<any>a).href = dataURI;
 							(<any>a).download = 'plot.png';
 							(<any>a).click();
 						}
 						else {
-							window.location.href = dataURI.replace("image/png", "image/octet-stream");
+							window.location.href = dataURI.replace('image/png', 'image/octet-stream');
 						}
 					}
 
 					if (_this.options.renderer === 'WebGL' && _this.type === 'screen3D') {
-						dataURI = _this.element.toDataURL("image/png");
+						dataURI = _this.element.toDataURL('image/png');
 						if ('download' in a) {
 							(<any>a).href = dataURI;
 							(<any>a).download = 'plot.png';
 							(<any>a).click();
 						}
 						else {
-							window.location.href = dataURI.replace("image/png", "image/octet-stream");
+							window.location.href = dataURI.replace('image/png', 'image/octet-stream');
 						}
 					}
 
@@ -2018,7 +2012,7 @@ export class Screen {
 							(<any>a).click();
 						}
 						else {
-							window.location.href = dataURI.replace("image/svg+xml", "image/octet-stream");
+							window.location.href = dataURI.replace('image/svg+xml', 'image/octet-stream');
 						}
 					}
 				}
@@ -2103,7 +2097,7 @@ oncontextmenu(evt) {
 	evt.returnValue = false;
 
 
-	menu.style.setProperty('top', (evt.clientY-20) + 'px');
+	menu.style.setProperty('top', (evt.clientY - 20) + 'px');
 	menu.style.setProperty('left', evt.clientX + 'px');
 	overlay.style.setProperty('display', 'block');
 	
@@ -2195,9 +2189,9 @@ export class Layer {
 
 					// Draw the background
 					this.ctx.fillStyle = colorConvert(screen.options.background);
-					this.ctx.fillRect(left, bottom, right-left, top-bottom);
+					this.ctx.fillRect(left, bottom, right - left, top - bottom);
 
-					this.stack.forEach(function(x,i){
+					this.stack.forEach(function (x, i) {
 						if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
@@ -2212,31 +2206,30 @@ export class Layer {
 			}
 			else if (id === 'grid') {
 				this.ctx.strokeStyle = colorConvert(screen.options.grid.color) || '#cccccc';
-				this.ctx.fillStyle = 'rgba(255,255,255,0)';
+				this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
 				
-				this.draw = function (){
-					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
+				this.draw = function () {
+					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 					_this.screen.drawGrid();
 				}
 			}
 			else if (id === 'axis') {
-				console.log(screen.options.axis.color);
 				this.ctx.strokeStyle = colorConvert(screen.options.axis.color) || '#000000';
 				
-				this.draw = function (){
-					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
+				this.draw = function () {
+					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 					_this.screen.drawAxis();
 				}
 			}
 			else {
 				this.ctx.strokeStyle = '#000000';
-				this.ctx.fillStyle = 'rgba(255,255,255,0)';
+				this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
-				this.draw = function (){
-					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
+				this.draw = function () {
+					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 
-					this.stack.forEach(function(x,i){
+					this.stack.forEach(function (x, i) {
 						if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
@@ -2261,10 +2254,10 @@ export class Layer {
 
 		}
 		else if (screen.options.renderer === 'SVG') {
-			var ctx = document.createElementNS('http://www.w3.org/2000/svg','g'),
+			var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g'),
 					m = screen.transformation;
 			ctx.setAttribute('transform',
-				'matrix(' + m[0][0]+ ',' + m[1][0]+ ',' + m[0][1]+ ',' + m[1][1]+ ',' + m[0][2]+ ',' + m[1][2] + ')' );
+				'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')' );
 			screen.element.appendChild(ctx);
 			this.ctx = ctx;
 
@@ -2277,7 +2270,7 @@ export class Layer {
 							left    = (              - screen.translation.x) / screen.scale.x,
 							right   = (screen.width  - screen.translation.x) / screen.scale.x;
 
-					this.stack.forEach(function(x,i){
+					this.stack.forEach(function (x, i) {
 						if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
@@ -2293,8 +2286,8 @@ export class Layer {
 			else if (id === 'grid') {
 				ctx.setAttribute('stroke', colorConvert(screen.options.grid.color) || '#cccccc');
 
-				this.draw = function (){
-					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
+				this.draw = function () {
+					ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
 					_this.screen.drawGrid();
 				};
 
@@ -2302,15 +2295,15 @@ export class Layer {
 			else if (id === 'axis') {
 				ctx.setAttribute('stroke', colorConvert(screen.options.axis.color) || '#000000');
 				
-				this.draw = function (){
-					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
+				this.draw = function () {
+					ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
 					_this.screen.drawAxis();
 				}
 			}
 			else {
-				this.draw = function() {
+				this.draw = function () {
 
-					this.stack.forEach(function(x,i){
+					this.stack.forEach(function (x, i) {
 						if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
@@ -2363,25 +2356,25 @@ MathLib.Canvas = {
 // ### Canvas.applyTransformation
 // Applies the current transformations to the screen
 //
-applyTransformation: function() {
+applyTransformation: function () {
 	var m = this.transformation;
-	this.layer.forEach(function(l){l.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2])});
+	this.layer.forEach(function (l) {l.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2])});
 },
 
 
 // ### Canvas.circle
 // Draws a circle on the screen.
 //
-// *@param {circle}* The circle to be drawn  
+// *@param {Circle}* The circle to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
-circle: function(circle, options = {}, redraw = false) {
+// *@return {Screen}* Returns the screen
+circle: function (circle, options = {}, redraw = false) {
 	var screen = this.screen,
 			ctx = this.ctx,
 			prop, opts;
 
 	ctx.save();
-	ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
+	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 
 	// Set the drawing options
 	if (options) {
@@ -2392,7 +2385,7 @@ circle: function(circle, options = {}, redraw = false) {
 			}
 		}
 
-		if('setLineDash' in ctx) {
+		if ('setLineDash' in ctx) {
 			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 		}
 		if ('lineDashOffset' in ctx) {
@@ -2402,7 +2395,7 @@ circle: function(circle, options = {}, redraw = false) {
 
 	// Draw the circle
 	ctx.beginPath();
-	ctx.arc(circle.center[0], circle.center[1], circle.radius, 0, 2*Math.PI);
+	ctx.arc(circle.center[0], circle.center[1], circle.radius, 0, 2 * Math.PI);
 	ctx.closePath();
 	ctx.fill();
 	ctx.stroke();
@@ -2431,7 +2424,6 @@ clear: function (layer) {
 			width  =  screen.width         / screen.scale.x,
 			height =  screen.height        / screen.scale.y;
 
-			console.dir(layer);
 	layer.ctx.clearRect(left, top, width, height);
 },
 
@@ -2440,44 +2432,44 @@ clear: function (layer) {
 // Converts the options to the Canvas options format
 //
 // *@param {object}* The drawing options  
-// *@returns {object}* The converted options
-convertOptions: function(opt) {
-	var res:any = {};
+// *@return {object}* The converted options
+convertOptions: function (opt) {
+	var convertedOptions : any = {};
 	if ('fillColor' in opt) {
-		res.fillStyle = colorConvert(opt.fillColor);
+		convertedOptions.fillStyle = colorConvert(opt.fillColor);
 	}
 	else if ('color' in opt) {
-		res.fillStyle = colorConvert(opt.color);
+		convertedOptions.fillStyle = colorConvert(opt.color);
 	}
 
 
 	if ('font' in opt) {
-		res['font-family'] = opt.font;
+		convertedOptions['font-family'] = opt.font;
 	}
 
 	if ('fontSize' in opt) {
-		res['font-size'] = opt.fontSize;
+		convertedOptions['font-size'] = opt.fontSize;
 	}
 
 
 	if ('lineColor' in opt) {
-		res.strokeStyle = colorConvert(opt.lineColor);
+		convertedOptions.strokeStyle = colorConvert(opt.lineColor);
 	}
 	else if ('color' in opt) {
-		res.strokeStyle = colorConvert(opt.color);
+		convertedOptions.strokeStyle = colorConvert(opt.color);
 	}
 
-	return res;
+	return convertedOptions;
 },
 
 
 // ### Canvas.line
 // Draws a line on the screen.
 //
-// *@param {line}* The line to be drawn  
+// *@param {Line}* The line to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
-line: function(line, options = {}, redraw = false) {
+// *@return {Screen}* Returns the screen
+line: function (line, options = {}, redraw = false) {
 	var screen = this.screen,
 			points = this.screen.getLineEndPoints(line),
 			ctx = this.ctx,
@@ -2528,10 +2520,10 @@ line: function(line, options = {}, redraw = false) {
 // ### Canvas.path
 // Draws a path on the screen.
 //
-// *@param {path}* The path to be drawn  
+// *@param {Path}* The path to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the scren
-path: function(curve, options = {}, redraw = false) {
+// *@return {Screen}* Returns the scren
+path: function (curve, options = {}, redraw = false) {
 	var screen = this.screen,
 			ctx = this.ctx,
 			prop, opts, path, x, y, i,
@@ -2555,7 +2547,7 @@ path: function(curve, options = {}, redraw = false) {
 			}
 		}
 
-		if('setLineDash' in ctx) {
+		if ('setLineDash' in ctx) {
 			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 		}
 		if ('lineDashOffset' in ctx) {
@@ -2567,7 +2559,7 @@ path: function(curve, options = {}, redraw = false) {
 	// If curve is a function f, the path will be (x, f(x))
 	if (typeof curve === 'function') {
 		path = [];
-		for (i = from; i <= to; i+=step) {
+		for (i = from; i <= to; i += step) {
 			path.push([i, curve(i)]);
 		}
 	}
@@ -2613,10 +2605,14 @@ path: function(curve, options = {}, redraw = false) {
 // ### Canvas.pixel
 // Draws pixel on the screen.
 //
-// *@param {path}* The path to be drawn  
+// *@param {function}* The pixel function  
+// *@param {number}* The top coordinate of the draw rectangle  
+// *@param {number}* The right coordinate of the draw rectangle  
+// *@param {number}* The bottom coordinate of the draw rectangle  
+// *@param {number}* The left coordinate of the draw rectangle  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
-pixel: function(f, t, r, b, l, options = {}, redraw = false) {
+// *@return {Screen}* Returns the screen
+pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 	var screen = this.screen,
 			top     = (              - screen.translation.y) / screen.scale.y,
 			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
@@ -2644,10 +2640,10 @@ pixel: function(f, t, r, b, l, options = {}, redraw = false) {
 	for (y = tPxl, i = 0; y > bPxl; y--) {
 		for (x = lPxl; x < rPxl; x++, i++) {
 			pxl = f(x / screen.scale.x, y / screen.scale.y);
-			imgData.data[4*i]   = pxl[0];
-			imgData.data[4*i+1] = pxl[1];
-			imgData.data[4*i+2] = pxl[2];
-			imgData.data[4*i+3] = pxl[3];
+			imgData.data[4 * i]     = pxl[0];
+			imgData.data[4 * i + 1] = pxl[1];
+			imgData.data[4 * i + 2] = pxl[2];
+			imgData.data[4 * i + 3] = pxl[3];
 		}
 	}
 
@@ -2673,16 +2669,16 @@ pixel: function(f, t, r, b, l, options = {}, redraw = false) {
 // ### Canvas.point
 // Draws a point on the screen.
 //
-// *@param {point}* The point to be drawn  
+// *@param {Point}* The point to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
-point: function(point, options = {}, redraw = false) {
+// *@return {Screen}* Returns the screen
+point: function (point, options = {}, redraw = false) {
 	var screen = this.screen,
 			ctx = this.ctx,
 			prop, opts, dist, textOptions;
 
 	ctx.save();
-	ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
+	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 
 	// Set the drawing options
 	if (options) {
@@ -2698,7 +2694,7 @@ point: function(point, options = {}, redraw = false) {
 			}
 		}
 
-		if('setLineDash' in ctx) {
+		if ('setLineDash' in ctx) {
 			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 		}
 		if ('lineDashOffset' in ctx) {
@@ -2709,7 +2705,7 @@ point: function(point, options = {}, redraw = false) {
 
 	// Draw the point
 	ctx.beginPath();
-	ctx.arc(point[0]/point[2], point[1]/point[2], ((<any>options).size || 10)/(screen.scale.x - screen.scale.y), 0, 2*Math.PI);
+	ctx.arc(point[0] / point[2], point[1] / point[2], ((<any>options).size || 10) / (screen.scale.x - screen.scale.y), 0, 2 * Math.PI);
 	ctx.closePath();
 	ctx.fill();
 	ctx.stroke();
@@ -2719,8 +2715,8 @@ point: function(point, options = {}, redraw = false) {
 	if ((<any>options).label) {
 		dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
 		screen.text((<any>options).label,
-			point[0]/point[2]+dist/(screen.scale.x - screen.scale.y),
-			point[1]/point[2]+dist/(screen.scale.x - screen.scale.y), {}, true);
+			point[0] / point[2] + dist / (screen.scale.x - screen.scale.y),
+			point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), {}, true);
 	}
 
 
@@ -2743,8 +2739,8 @@ point: function(point, options = {}, redraw = false) {
 // *@param {x}* The x coordinate  
 // *@param {y}* The y coordinate  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
-text: function(str, x, y, options = {}, redraw = false) {
+// *@return {Screen}* Returns the screen
+text: function (str, x, y, options = {}, redraw = false) {
 	var defaults = {
 				font:       'Helvetica',
 				fontSize:   10,
@@ -2775,8 +2771,8 @@ text: function(str, x, y, options = {}, redraw = false) {
 	var tf = this.screen.transformation;
 
 	ctx.save();
-		ctx.transform(1/tf[0][0],0,0,1/tf[1][1],0,0);
-		ctx.fillText(str, tf[0][0]*x, tf[1][1]*y);
+		ctx.transform(1 / tf[0][0], 0, 0, 1 / tf[1][1], 0, 0);
+		ctx.fillText(str, tf[0][0] * x, tf[1][1] * y);
 	ctx.restore();
 
 
@@ -2808,18 +2804,18 @@ MathLib.SVG = {
 //
 applyTransformation: function () {
 	var m = this.transformation;
-	this.layer.forEach(function(l){
+	this.layer.forEach(function (l) {
 		l.ctx.setAttribute('transform',
-			'matrix(' + m[0][0]+ ',' + m[1][0]+ ',' + m[0][1]+ ',' + m[1][1]+ ',' + m[0][2]+ ',' + m[1][2] + ')' )});
+			'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')' )});
 },
 
 
 // ### SVG circle
 // Draws a circle on the screen.
 //
-// *@param {circle}* The circle to be drawn  
+// *@param {Circle}* The circle to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
+// *@return {Screen}* Returns the screen
 circle: function (circle, options = {}, redraw = false) {
 	var screen = this.screen,
 			prop, opts,
@@ -2830,7 +2826,7 @@ circle: function (circle, options = {}, redraw = false) {
 	svgCircle.setAttribute('r', circle.radius);
 
 	if (options) {
-		svgCircle.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+		svgCircle.setAttribute('stroke-width', ((<any>options).lineWidth || 4 ) / (screen.scale.x - screen.scale.y) + '');
 		opts = MathLib.SVG.convertOptions(options);
 		for (prop in opts) {
 			if (opts.hasOwnProperty(prop)) {
@@ -2866,57 +2862,57 @@ clear: function (layer) {
 // Converts the options to the SVG options format
 //
 // *@param {object}* The drawing options  
-// *@returns {object}* The converted options
+// *@return {object}* The converted options
 convertOptions: function (opt) {
-	var res:any = {};
+	var convertedOptions : any = {};
 	if ('fillColor' in opt) {
-		res.fill = colorConvert(opt.fillColor);
+		convertedOptions.fill = colorConvert(opt.fillColor);
 	}
 	else if ('color' in opt) {
-		res.fill = colorConvert(opt.color);
+		convertedOptions.fill = colorConvert(opt.color);
 	}
 
 
 	if ('font' in opt) {
-		res['font-family'] = opt.font;
+		convertedOptions['font-family'] = opt.font;
 	}
 
 	if ('fontSize' in opt) {
-		res['font-size'] = opt.fontSize;
+		convertedOptions['font-size'] = opt.fontSize;
 	}
 
 	if ('size' in opt) {
-		res.size = opt.size;
+		convertedOptions.size = opt.size;
 	}
 
 
 	if ('lineColor' in opt) {
-		res.stroke = colorConvert(opt.lineColor);
+		convertedOptions.stroke = colorConvert(opt.lineColor);
 	}
 	else if ('color' in opt) {
-		res.stroke = colorConvert(opt.color);
+		convertedOptions.stroke = colorConvert(opt.color);
 	}
 
 
 	if ('dash' in opt && opt.dash.length !== 0) {
-		res['stroke-dasharray'] = opt.dash;
+		convertedOptions['stroke-dasharray'] = opt.dash;
 	}
 
 	if ('dashOffset' in opt && opt.dashOffset !== 0) {
-		res['stroke-dashoffset'] = opt.dashOffset;
+		convertedOptions['stroke-dashoffset'] = opt.dashOffset;
 	}
 
 
-	return res;
+	return convertedOptions;
 },
 
 
 // ### SVG line
 // Draws a line on the screen.
 //
-// *@param {line}* The line to be drawn  
+// *@param {Line}* The line to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {canvas}* Returns the screen
+// *@return {Canvas}* Returns the screen
 line: function (line, options = {}, redraw = false) {
 	var screen = this.screen,
 			points = this.screen.getLineEndPoints(line),
@@ -2929,7 +2925,7 @@ line: function (line, options = {}, redraw = false) {
 	svgLine.setAttribute('y2', points[1][1]);
 
 	if (options) {
-		svgLine.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+		svgLine.setAttribute('stroke-width', ((<any>options).lineWidth || 4 ) / (screen.scale.x - screen.scale.y) + '');
 		opts = MathLib.SVG.convertOptions(options);
 		for (prop in opts) {
 			if (opts.hasOwnProperty(prop)) {
@@ -2957,11 +2953,11 @@ line: function (line, options = {}, redraw = false) {
 //
 // *@param {curve}* The path to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
+// *@return {Screen}* Returns the screen
 path: function (curve, options = {}, redraw = false) {
 	var screen = this.screen,
 			svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
-			step = 2/(screen.scale.x - screen.scale.y),
+			step = 2 / (screen.scale.x - screen.scale.y),
 			pathString, from, to, prop, opts, x, y, i, path;
 
 	from = ('from' in options ? (<any>options).from :         - screen.translation.x  / screen.scale.x) - step;
@@ -2971,7 +2967,7 @@ path: function (curve, options = {}, redraw = false) {
 	// If curve is a function f, the path will be (x, f(x))
 	if (typeof curve === 'function') {
 		path = [];
-		for (i = from; i <= to; i+=step) {
+		for (i = from; i <= to; i += step) {
 			path.push([i, curve(i)]);
 		}
 	}
@@ -2982,7 +2978,7 @@ path: function (curve, options = {}, redraw = false) {
 		path = [];
 		x = curve[0];
 		y = curve[1];
-		for (i = from; i <= to; i+=step) {
+		for (i = from; i <= to; i += step) {
 			path.push([x(i), y(i)]);
 		}
 	}
@@ -2990,12 +2986,12 @@ path: function (curve, options = {}, redraw = false) {
 		path = curve;
 	}
 
-	pathString = 'M' + path.reduce(function(prev, cur) {
+	pathString = 'M' + path.reduce(function (prev, cur) {
 		return prev + ' L' + cur.join(' ');
 	});
 	svgPath.setAttribute('d', pathString);
 
-	svgPath.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+	svgPath.setAttribute('stroke-width', ((<any>options).lineWidth || 4 ) / (screen.scale.x - screen.scale.y) + '');
 
 
 	if (options) {
@@ -3024,13 +3020,13 @@ path: function (curve, options = {}, redraw = false) {
 // ### SVG pixel
 // Draws pixel on the screen.
 //
-// *@param {path}* The path to be drawn  
-// *@param {top}* The top coordinate of the draw rectangle  
-// *@param {right}* The right coordinate of the draw rectangle  
-// *@param {bottom}* The bottom coordinate of the draw rectangle  
-// *@param {left}* The left coordinate of the draw rectangle  
+// *@param {function}* The pixel function  
+// *@param {number}* The top coordinate of the draw rectangle  
+// *@param {number}* The right coordinate of the draw rectangle  
+// *@param {number}* The bottom coordinate of the draw rectangle  
+// *@param {number}* The left coordinate of the draw rectangle  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
+// *@return {Screen}* Returns the screen
 pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 	var screen = this.screen,
 			top     = (              - screen.translation.y) / screen.scale.y,
@@ -3051,9 +3047,9 @@ pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 
 
 
-	svgContainer.setAttribute('transform', 'matrix('+1/m[0][0]+',0,0,'+1/m[1][1]+',-'+m[0][2]/m[0][0]+','+-m[1][2]/m[1][1]+')');
-	svgImage.setAttribute('width', screen.width+'px');
-	svgImage.setAttribute('height', screen.height+'px');
+	svgContainer.setAttribute('transform', 'matrix(' + 1 / m[0][0] + ', 0, 0, ' + 1 / m[1][1] + ', -' + m[0][2] / m[0][0] + ', ' + -m[1][2] / m[1][1] + ')');
+	svgImage.setAttribute('width', screen.width + 'px');
+	svgImage.setAttribute('height', screen.height + 'px');
 	svgImage.setAttribute('x', '0');
 	svgImage.setAttribute('y', '0');
 
@@ -3065,27 +3061,27 @@ pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 	l = Math.max(left, l);
 
 
-	var tPxl = Math.floor(-t*screen.scale.y),
-			rPxl = Math.floor(r*screen.scale.x),
-			bPxl = Math.floor(-b*screen.scale.y),
-			lPxl = Math.floor(l*screen.scale.x),
-			w = (rPxl-lPxl),
-			h = (tPxl-bPxl),
+	var tPxl = Math.floor(-t * screen.scale.y),
+			rPxl = Math.floor(r * screen.scale.x),
+			bPxl = Math.floor(-b * screen.scale.y),
+			lPxl = Math.floor(l * screen.scale.x),
+			w = (rPxl - lPxl),
+			h = (tPxl - bPxl),
 			imgData = canvasCtx.createImageData(w, h);
 
 
 
 	for (y = tPxl, i = 0; y > bPxl; y--) {
 		for (x = lPxl; x < rPxl; x++, i++) {
-			pxl = f(x/screen.scale.x, y/screen.scale.y);
-			imgData.data[4*i]   = pxl[0];
-			imgData.data[4*i+1] = pxl[1];
-			imgData.data[4*i+2] = pxl[2];
-			imgData.data[4*i+3] = pxl[3];
+			pxl = f(x / screen.scale.x, y / screen.scale.y);
+			imgData.data[4 * i]     = pxl[0];
+			imgData.data[4 * i + 1] = pxl[1];
+			imgData.data[4 * i + 2] = pxl[2];
+			imgData.data[4 * i + 3] = pxl[3];
 		}
 	}
 
-	canvasCtx.putImageData(imgData, 0,0);
+	canvasCtx.putImageData(imgData, 0, 0);
 
 	svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', canvas.toDataURL());
 
@@ -3111,21 +3107,21 @@ pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 // ### SVG point
 // Draws a point on the screen.
 //
-// *@param {point}* The point to be drawn  
+// *@param {Point}* The point to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
+// *@return {Screen}* Returns the screen
 point: function (point, options = {}, redraw = false) {
 	var screen = this.screen,
 			prop, opts, dist,
 			svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
-	svgPoint.setAttribute('cx', point[0]/point[2] + '');
-	svgPoint.setAttribute('cy', point[1]/point[2] + '');
-	svgPoint.setAttribute('r', ((<any>options).size || 10)/(screen.scale.x - screen.scale.y) + '');
+	svgPoint.setAttribute('cx', point[0] / point[2] + '');
+	svgPoint.setAttribute('cy', point[1] / point[2] + '');
+	svgPoint.setAttribute('r', ((<any>options).size || 10) / (screen.scale.x - screen.scale.y) + '');
 
 
 	if (options) {
-		svgPoint.setAttribute('stroke-width', ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y) + '');
+		svgPoint.setAttribute('stroke-width', ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
 		opts = MathLib.SVG.convertOptions(options);
 
 		if (!('fillOpacity' in options)) {
@@ -3185,8 +3181,8 @@ point: function (point, options = {}, redraw = false) {
 	if ((<any>options).label) {
 		dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
 		screen.text((<any>options).label,
-			point[0]/point[2]+dist/(screen.scale.x - screen.scale.y),
-			point[1]/point[2]+dist/(screen.scale.x - screen.scale.y), {}, true);
+			point[0] / point[2] + dist / (screen.scale.x - screen.scale.y),
+			point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), {}, true);
 	}
 
 
@@ -3243,7 +3239,7 @@ point: function (point, options = {}, redraw = false) {
 // *@param {x}* The x coordinate  
 // *@param {y}* The y coordinate  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
+// *@return {Screen}* Returns the screen
 text: function (str, x, y, options = {}, redraw = false) {
 	var screen = this.screen,
 			svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
@@ -3252,9 +3248,9 @@ text: function (str, x, y, options = {}, redraw = false) {
 	var tf = this.screen.transformation;
 
 	svgText.textContent = str;
-	svgText.setAttribute('x', x*screen.scale.x + '');
-	svgText.setAttribute('y', y*screen.scale.y + '');
-	svgText.setAttribute('transform', 'matrix(' + 1/screen.scale.x + ', 0, 0, ' + 1/screen.scale.y + ', 0, 0)');
+	svgText.setAttribute('x', x * screen.scale.x + '');
+	svgText.setAttribute('y', y * screen.scale.y + '');
+	svgText.setAttribute('transform', 'matrix(' + 1 / screen.scale.x + ', 0, 0, ' + 1 / screen.scale.y + ', 0, 0)');
 	svgText.setAttribute('font-family', 'Helvetica');
 	svgText.setAttribute('fill', colorConvert((<any>options).color) || '#000000');
 	svgText.setAttribute('fill-opacity', '1');
@@ -3393,23 +3389,23 @@ export class Screen2D extends Screen {
 		this.transformation = transformation;
 
 		Object.defineProperty(this.translation, 'x', {
-			get: function (){return _this.transformation[0][2];},
-			set: function (x){_this.transformation[0][2] = x; _this.applyTransformation();}
+			get: function () {return _this.transformation[0][2];},
+			set: function (x) {_this.transformation[0][2] = x; _this.applyTransformation();}
 		});
 
 		Object.defineProperty(this.translation, 'y', {
-			get: function (){return _this.transformation[1][2];},
-			set: function (y){_this.transformation[1][2] = y; _this.applyTransformation();}
+			get: function () {return _this.transformation[1][2];},
+			set: function (y) {_this.transformation[1][2] = y; _this.applyTransformation();}
 		});
 
 		Object.defineProperty(this.scale, 'x', {
-			get: function (){return _this.transformation[0][0];},
-			set: function (x){_this.transformation[0][0] = x; _this.applyTransformation();}
+			get: function () {return _this.transformation[0][0];},
+			set: function (x) {_this.transformation[0][0] = x; _this.applyTransformation();}
 		});
 
 		Object.defineProperty(this.scale, 'y', {
-			get: function (){return _this.transformation[1][1];},
-			set: function (y){_this.transformation[1][1] = y; _this.applyTransformation();}
+			get: function () {return _this.transformation[1][1];},
+			set: function (y) {_this.transformation[1][1] = y; _this.applyTransformation();}
 		});
 
 
@@ -3417,23 +3413,23 @@ export class Screen2D extends Screen {
 		this.lookAt = {};
 		this.range = {};
 		Object.defineProperty(this.lookAt, 'x', {
-			get: function (){return (_this.width/2 - _this.transformation[0][2])/_this.transformation[0][0];},
-			set: function (x){_this.transformation[0][2] = _this.width/2 - x*_this.transformation[0][0]; _this.applyTransformation();}
+			get: function () {return (_this.width / 2 - _this.transformation[0][2]) / _this.transformation[0][0];},
+			set: function (x) {_this.transformation[0][2] = _this.width / 2 - x * _this.transformation[0][0]; _this.applyTransformation();}
 		});
 
 		Object.defineProperty(this.lookAt, 'y', {
-			get: function (){return (_this.height/2 - _this.transformation[1][2])/_this.transformation[1][1];},
-			set: function (y){_this.transformation[1][2] = _this.height/2 - y*_this.transformation[1][1]; _this.applyTransformation();}
+			get: function () {return (_this.height / 2 - _this.transformation[1][2]) / _this.transformation[1][1];},
+			set: function (y) {_this.transformation[1][2] = _this.height / 2 - y * _this.transformation[1][1]; _this.applyTransformation();}
 		});
 
 		Object.defineProperty(this.range, 'x', {
-			get: function (){return _this.width/(2*_this.transformation[0][0]);},
-			set: function (x){_this.transformation[0][0] = 0.5*_this.width/x; _this.applyTransformation();}
+			get: function () {return _this.width / (2 * _this.transformation[0][0]);},
+			set: function (x) {_this.transformation[0][0] = 0.5 * _this.width / x; _this.applyTransformation();}
 		});
 
 		Object.defineProperty(this.range, 'y', {
-			get: function (){return -_this.height/(2*_this.transformation[1][1]);},
-			set: function (y){_this.transformation[1][1] = -0.5*_this.height/y; _this.applyTransformation();}
+			get: function () {return -_this.height / (2 * _this.transformation[1][1]);},
+			set: function (y) {_this.transformation[1][1] = -0.5 * _this.height / y; _this.applyTransformation();}
 		});
 
 
@@ -3535,7 +3531,7 @@ export class Screen2D extends Screen {
 //
 // *@param {number}* The new width  
 // *@param {number}* The new height  
-// *@returns {Screen2D}*
+// *@return {Screen2D}*
 resize(width : number, height : number) : Screen2D {
 	this.height = height;
 	this.width = width;
@@ -3555,8 +3551,6 @@ resize(width : number, height : number) : Screen2D {
 		this.layer.axis.element.height = height;
 		this.layer.axis.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 		this.layer.axis.ctx.strokeStyle = colorConvert(this.options.axis.color) || '#000000';
-
-		//'rgba(255, 255, 255, 0)';
 
 		this.layer.main.element.width = width;
 		this.layer.main.element.height = height;
@@ -3580,7 +3574,7 @@ resize(width : number, height : number) : Screen2D {
 // Creates a point based on the coordinates of an event.
 //
 // *@param {event}*  
-// *@returns {point}*
+// *@return {Point}*
 getEventPoint(evt) {
 	var x, y;
 	if (evt.offsetX) {
@@ -3599,33 +3593,33 @@ getEventPoint(evt) {
 // Calculates the both endpoints for the line
 // for drawing purposes
 //
-// *@param {line|array}*  
-// *@returns {array}* The array has the format [[x1, y1], [x2, y2]]
+// *@param {Line|array}*  
+// *@return {array}* The array has the format [[x1, y1], [x2, y2]]
 getLineEndPoints (l) {
 	if (l.type === 'line') {
 		var top    = (            - this.translation.y) / this.scale.y,
 				bottom = (this.height - this.translation.y) / this.scale.y,
 				left   = (            - this.translation.x) / this.scale.x,
 				right  = (this.width  - this.translation.x) / this.scale.x,
-				lineRight  = -(l[2] + l[0]* right)  / l[1],
-				lineTop    = -(l[2] + l[1]* top)    / l[0],
-				lineLeft   = -(l[2] + l[0]* left)   / l[1],
-				lineBottom = -(l[2] + l[1]* bottom) / l[0],
-				res = [];
+				lineRight  = -(l[2] + l[0] * right)  / l[1],
+				lineTop    = -(l[2] + l[1] * top)    / l[0],
+				lineLeft   = -(l[2] + l[0] * left)   / l[1],
+				lineBottom = -(l[2] + l[1] * bottom) / l[0],
+				points = [];
 
-		if (lineRight<=top && lineRight>=bottom) {
-			res.push([right, lineRight]);
+		if (lineRight <= top && lineRight >= bottom) {
+			points.push([right, lineRight]);
 		}
-		if (lineLeft<=top && lineLeft>=bottom) {
-			res.push([left, lineLeft]);
+		if (lineLeft <= top && lineLeft >= bottom) {
+			points.push([left, lineLeft]);
 		}
-		if (lineTop<right && lineTop>left) {
-			res.push([lineTop, top]);
+		if (lineTop < right && lineTop > left) {
+			points.push([lineTop, top]);
 		}
-		if (lineBottom<right && lineBottom>left) {
-			res.push([lineBottom, bottom]);
+		if (lineBottom < right && lineBottom > left) {
+			points.push([lineBottom, bottom]);
 		}
-		return res;
+		return points;
 	}
 	else {
 		return l;
@@ -3636,7 +3630,7 @@ getLineEndPoints (l) {
 // ### Screen2D.prototype.drawGrid
 // Draws the grid.
 //
-// *@returns {Screen2D}*
+// *@return {Screen2D}*
 drawGrid() {
 
 	if (!this.options.grid) {
@@ -3650,8 +3644,8 @@ drawGrid() {
 			left   = (            - this.translation.x) / this.scale.x,
 			right  = (this.width  - this.translation.x) / this.scale.x,
 			yTick  = Math.pow(10, 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3)),
-			xTick  = Math.pow(10, 1 - Math.floor(Math.log(+this.transformation[0][0]) / Math.LN10 - 0.3)),
-			i;
+			xTick  = Math.pow(10, 1 - Math.floor(Math.log( this.transformation[0][0]) / Math.LN10 - 0.3)),
+			i, ii;
 
 
 	if (this.options.grid.type === 'cartesian') {
@@ -3669,20 +3663,20 @@ drawGrid() {
 
 
 		// Test for logarithmic plots
-		/*for (i = left-(left%this.axis.tick.x); i <= right; i += this.axis.tick.x) {
-			for (var j = 1 ; j <=10; j++ ) {
-				this.line([[i*Math.log(10)+ Math.log(j), bottom], [i*Math.log(10)+Math.log(j), top]], options);
+		/*for (i = left - (left % this.axis.tick.x); i <= right; i += this.axis.tick.x) {
+			for (var j = 1; j <= 10; j++ ) {
+				this.line([[i * Math.log(10) + Math.log(j), bottom], [i * Math.log(10) + Math.log(j), top]], options);
 			}
 		}*/
 
 
 	}
 	else if (this.options.grid.type === 'polar') {
-		var max = Math.sqrt(Math.max(top*top, bottom*bottom) + Math.max(left*left, right*right)),
+		var max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right)),
 				min = 0; // TODO: improve this estimate
 
-		for (i = 0; i < 2*Math.PI; i += this.options.grid.angle) {
-			line([[0, 0], [max*Math.cos(i), max*Math.sin(i)]], false, true);
+		for (i = 0, ii = 2 * Math.PI; i < ii; i += this.options.grid.angle) {
+			line([[0, 0], [max * Math.cos(i), max * Math.sin(i)]], false, true);
 		}
 
 		for (i = min; i <= max; i += Math.min(xTick, yTick)) {
@@ -3697,7 +3691,7 @@ drawGrid() {
 // ### Screen.prototype.drawAxis
 // Draws the axis.
 //
-// *@returns {screen}*
+// *@return {Screen2D}*
 drawAxis() {
 
 	var line = (...args : any[]) => this.renderer.line.apply(this.layer.axis, args),
@@ -3714,11 +3708,11 @@ drawAxis() {
 			bottom  = (this.height - this.translation.y) / this.scale.y,
 			left    = (            - this.translation.x) / this.scale.x,
 			right   = (this.width  - this.translation.x) / this.scale.x,
-			lengthX = +10 / this.transformation[0][0],
+			lengthX =  10 / this.transformation[0][0],
 			lengthY = -10 / this.transformation[1][1],
 
 			yExp = 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3),
-			xExp = 1 - Math.floor(Math.log(+this.transformation[0][0]) / Math.LN10 - 0.3),
+			xExp = 1 - Math.floor(Math.log( this.transformation[0][0]) / Math.LN10 - 0.3),
 			yTick = Math.pow(10, yExp),
 			xTick = Math.pow(10, xExp),
 			i;
@@ -3735,7 +3729,7 @@ drawAxis() {
 
 	// The ticks on the axes
 	// The x axis
-	if(this.options.grid.tick) {
+	if (this.options.grid.tick) {
 		for (i = -yTick; i >= left; i -= yTick) {
 			line([[i, -lengthY], [i, lengthY]], options, true);
 		}
@@ -3761,19 +3755,19 @@ drawAxis() {
 			yLen = Math.max(0, Math.min(20, -yExp));
 
 	for (i = -yTick; i >= left; i -= yTick) {
-		text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
+		text(i.toFixed(yLen), i, -2 * lengthY, textOptions, true);
 	}
 	for (i = yTick; i <= right; i += yTick) {
-		text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
+		text(i.toFixed(yLen), i, -2 * lengthY, textOptions, true);
 	}
 
 
 	// The y axis
 	for (i = -xTick; i >= bottom; i -= xTick) {
-		text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
+		text(i.toFixed(xLen), -2 * lengthX, i, textOptions, true);
 	}
 	for (i = xTick; i <= top; i += xTick) {
-		text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
+		text(i.toFixed(xLen), -2 * lengthX, i, textOptions, true);
 	}
 
 	return this;
@@ -3821,7 +3815,7 @@ onmousemove(evt) {
 	
 
 	// Pan mode
-	if(this.options.interaction.type === 'pan') {
+	if (this.options.interaction.type === 'pan') {
 		p = this.getEventPoint(evt).minus(this.options.interaction.startPoint);
 		this.translation.x = this.options.interaction.startTransformation[0][2] + p[0];
 		this.translation.y = this.options.interaction.startTransformation[1][2] + p[1];
@@ -3842,7 +3836,7 @@ onmouseup(evt) {
 	evt.returnValue = false;
 
 	// Go back to normal mode
-	if(this.options.interaction.type === 'pan') {
+	if (this.options.interaction.type === 'pan') {
 		delete this.options.interaction.type;
 		delete this.options.interaction.startPoint;
 		delete this.options.interaction.startTransformation;
@@ -3885,7 +3879,7 @@ onmousewheel(evt) {
 
 
 		// Compute new scale matrix in current mouse position
-		s = new MathLib.Matrix([[z, 0, p[0] - p[0]*z], [0, z, p[1] - p[1]*z ], [0, 0, 1]]);
+		s = new MathLib.Matrix([[z, 0, p[0] - p[0] * z], [0, z, p[1] - p[1] * z], [0, 0, 1]]);
 
 		this.transformation = this.transformation.times(s);
 
@@ -3926,19 +3920,19 @@ export class Screen3D extends Screen {
 					controls: 'Trackball',
 					grid: {
 						xy: {
-							angle: Math.PI/8,
+							angle: Math.PI / 8,
 							color: 0xcccccc,
 							type: 'none',
 							tick: {x: 1, y: 1, r: 1}
 						},
 						xz: {
-							angle: Math.PI/8,
+							angle: Math.PI / 8,
 							color: 0xcccccc,
 							type: 'none',
 							tick: {x: 1, z: 1, r: 1}
 						},
 						yz: {
-							angle: Math.PI/8,
+							angle: Math.PI / 8,
 							color: 0xcccccc,
 							type: 'none',
 							tick: {y: 1, z: 1, r: 1}
@@ -3974,7 +3968,7 @@ export class Screen3D extends Screen {
 
 		// Renderer
 		// ========
-		renderer = new THREE[opts.renderer + 'Renderer']( {antialias:true, preserveDrawingBuffer: true} );
+		renderer = new THREE[opts.renderer + 'Renderer']( {antialias: true, preserveDrawingBuffer: true} );
 		// Remove the warning message.
 		this.wrapper.innerHTML = '';
 		this.wrapper.appendChild(renderer.domElement);
@@ -4000,14 +3994,14 @@ export class Screen3D extends Screen {
 		// move mouse and left   click (or hold 'A') to rotate
 		//                middle click (or hold 'S') to zoom
 		//                right  click (or hold 'D') to pan
-		if(opts.controls) {
-			controls = new THREE[opts.controls+'Controls'](camera, renderer.domElement);
+		if (opts.controls) {
+			controls = new THREE[opts.controls + 'Controls'](camera, renderer.domElement);
 		}
 		// A update function for the controls doing nothing.
 		// The function is called in the update function.
 		else {
 			controls = {
-				update: function (){}
+				update: function () {}
 			};
 		}
 		
@@ -4017,10 +4011,10 @@ export class Screen3D extends Screen {
 		// Light
 		// =====
 		var light1 = new THREE.PointLight(0xffffff);
-		light1.position.set(0,0,200);
+		light1.position.set(0, 0, 200);
 		scene.add(light1);
 		var light2 = new THREE.PointLight(0xffffff);
-		light2.position.set(0,0,-200);
+		light2.position.set(0, 0, -200);
 		scene.add(light2);
 
 
@@ -4082,7 +4076,7 @@ export class Screen3D extends Screen {
 // ### Screen3D.prototype.drawGrid
 // Draws the grid.
 //
-// *@returns {Screen3D}*
+// *@return {Screen3D}*
 drawGrid() {
 	if (!this.options.grid) {
 		return this;
@@ -4093,7 +4087,7 @@ drawGrid() {
 				var size = 10,
 						grid = new THREE.Object3D(),
 						color = new THREE.Color(opts.color),
-						i;
+						i, ii;
 
 				if (opts.type === 'cartesian') {
 					var tickX = 'x' in opts.tick ? opts.tick.x : opts.tick.y,
@@ -4118,7 +4112,7 @@ drawGrid() {
 					_this.scene.add(grid);
 				}
 
-				else if(opts.type === 'polar') {
+				else if (opts.type === 'polar') {
 
 					var circles = new THREE.Shape(),
 							rays = new THREE.Shape(),
@@ -4127,14 +4121,14 @@ drawGrid() {
 
 					for (i = 0; i <= size; i += opts.tick.r) {
 						circles.moveTo(i, 0)
-						circles.absarc(0, 0, i, 0, 2*Math.PI + 0.001, false);
+						circles.absarc(0, 0, i, 0, 2 * Math.PI + 0.001, false);
 					}
 					grid.add(new THREE.Line(circles.createPointsGeometry(),
 											new THREE.LineBasicMaterial({color: color})));
 
-					for (i = 0; i <= 2*Math.PI; i += opts.angle) {
+					for (i = 0, ii = 2 * Math.PI; i < ii; i += opts.angle) {
 						rays.moveTo(0, 0);
-						rays.lineTo(size*Math.cos(i), size*Math.sin(i));
+						rays.lineTo(size * Math.cos(i), size * Math.sin(i));
 					}
 
 					grid.add(new THREE.Line(rays.createPointsGeometry(), new THREE.LineBasicMaterial({color: color})));
@@ -4149,8 +4143,8 @@ drawGrid() {
 
 
 	gridDrawer(this.options.grid.xy, 0, 0);
-	gridDrawer(this.options.grid.xz, Math.PI/2, 0);
-	gridDrawer(this.options.grid.yz, 0, Math.PI/2);
+	gridDrawer(this.options.grid.xz, Math.PI / 2, 0);
+	gridDrawer(this.options.grid.yz, 0, Math.PI / 2);
 
 	return this;
 }
@@ -4160,7 +4154,7 @@ drawGrid() {
 // 
 //
 // *@param {function}* The function which is called on every argument  
-// *@returns {screen3D}*
+// *@return {Screen3D}*
 parametricPlot3D(f, options) : Screen3D {
 
 	var defaults = {
@@ -4179,11 +4173,11 @@ parametricPlot3D(f, options) : Screen3D {
 
 
 			curve = THREE.Curve.create(
-				function() {},
-				function(t) {
+				function () {},
+				function (t) {
 					t = (opts.max - opts.min) * t + opts.min;
-					var res = f(t);
-					return new THREE.Vector3(res[0], res[1], res[2]);
+					var ft = f(t);
+					return new THREE.Vector3(ft[0], ft[1], ft[2]);
 				}
 			),
 		
@@ -4206,7 +4200,7 @@ parametricPlot3D(f, options) : Screen3D {
 	var folder = _3D.datGUI.addFolder(options.name);
 	folder.add(mesh, 'visible');
 	folder.addColor(guiObj, 'color')
-		.onChange(function(value){mesh.material.color.setRGB(value[0]/255, value[1]/255, value[2]/255);});
+		.onChange(function (value) {mesh.material.color.setRGB(value[0] / 255, value[1] / 255, value[2] / 255);});
 	*/
 
 	return this;
@@ -4218,10 +4212,10 @@ parametricPlot3D(f, options) : Screen3D {
 //
 // *@param {function}* The map for the height  
 // *@param {object}* Options  
-// *@returns {screen3D}*
+// *@return {Screen3D}*
 plot3D(f, options) : Screen3D {
-	return this.surfacePlot3D(function (u, v){
-		return [u,v,f(u,v)];
+	return this.surfacePlot3D(function (u, v) {
+		return [u, v, f(u, v)];
 	},
 	options);
 }
@@ -4232,7 +4226,7 @@ plot3D(f, options) : Screen3D {
 //
 // *@param {number}* The new width  
 // *@param {number}* The new height  
-// *@returns {Screen3D}*
+// *@return {Screen3D}*
 resize(width : number, height : number) : Screen3D {
 	this.renderer.setSize(width, height);
 	this.camera.aspect = width / height;
@@ -4247,7 +4241,7 @@ resize(width : number, height : number) : Screen3D {
 //
 // *@param {function}* The map for the surface    
 // *@param {object}* Options  
-// *@returns {screen3D}*
+// *@return {Screen3D}*
 surfacePlot3D(f, options) : Screen3D {
 	var defaults = {
 				material: {
@@ -4264,8 +4258,8 @@ surfacePlot3D(f, options) : Screen3D {
 			map = function (u, v) {
 				u = (opts.xmax - opts.xmin) * u + opts.xmin;
 				v = (opts.ymax - opts.ymin) * v + opts.ymin;
-				var res = f(u, v);
-				return new THREE.Vector3(res[0], res[1], res[2]);
+				var fuv = f(u, v);
+				return new THREE.Vector3(fuv[0], fuv[1], fuv[2]);
 			},
 			material = new THREE[opts.material.type + 'Material'](opts.material),
 			mesh;
@@ -4301,7 +4295,7 @@ surfacePlot3D(f, options) : Screen3D {
 	//     };
 
 	//     folder.addColor(guiObj, 'color').name('color')
-	//       .onChange(function(value){mesh.material.color = new THREE.Color(value);});
+	//       .onChange(function (value) {mesh.material.color = new THREE.Color(value);});
 	//   }
 	// }
 
@@ -4330,7 +4324,7 @@ export class Vector {
 	length: number;
 
 	constructor (coords: number[]) {
-		coords.forEach((x,i)=>{this[i] = x;});
+		coords.forEach((x, i) => {this[i] = x;});
 		this.length = coords.length;
 	}
 
@@ -4339,7 +4333,7 @@ export class Vector {
 // Checks if the vectors are linear independent.
 //
 // *@param {array}* An array containing the vectors.  
-// *@returns {boolean}*
+// *@return {boolean}*
 static areLinearIndependent = function (v : Vector[]) : bool {
 	var n = v.length,
 			m = v[0].length;
@@ -4348,7 +4342,7 @@ static areLinearIndependent = function (v : Vector[]) : bool {
 		return false;
 	}
 
-	if (! v.every(function (x){
+	if (! v.every(function (x) {
 		return x.length === m;
 		}) ) {
 		return undefined;
@@ -4358,10 +4352,32 @@ static areLinearIndependent = function (v : Vector[]) : bool {
 };
 
 
+// ### [Vector.prototype.compare()](http://mathlib.de/en/docs/Vector/compare)
+// Compares two vectors.
+//
+// *@param {Vector}* The vector to compare  
+// *@return {number}*
+compare(v : Vector) : number {
+	var i, ii;
+
+	if (this.length !== v.length) {
+		return MathLib.sign(this.length - v.length);
+	}
+
+	for (i = 0, ii = this.length; i < ii; i++) {
+		if (v[i] - this[i]) {
+			return MathLib.sign(this[i] - v[i]);
+		}
+	}
+
+	return 0;
+}
+
+
 // ### [Vector.prototype.every()](http://mathlib.de/en/docs/Vector/every)
 // Works like Array.prototype.every.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 every(f : (value : any, index : number, vector : Vector ) => bool) : bool {
 	return Array.prototype.every.call(this, f);
 }
@@ -4379,9 +4395,9 @@ forEach(f : (value : any, index : number, vector : Vector ) => void) : void {
 // Determines if two vectors are equal
 //
 // *@param {Vector}* v The vector to compare  
-// *@returns {boolean}*
+// *@return {boolean}*
 isEqual(v : Vector) : bool {
-	if(this.length !== v.length) {
+	if (this.length !== v.length) {
 		return false;
 	}
 
@@ -4394,7 +4410,7 @@ isEqual(v : Vector) : bool {
 // ### [Vector.prototype.isZero()](http://mathlib.de/en/docs/Vector/isZero)
 // Determines if the vector is the zero vector.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isZero() : bool {
 	return this.every(MathLib.isZero);
 }
@@ -4404,7 +4420,7 @@ isZero() : bool {
 // Works like Array.prototype.map.
 //
 // *@param {function}*  
-// *@returns {Vector}*
+// *@return {Vector}*
 map(f : (value : any, index : number, vector : Vector ) => any) : any {
 	return new this['constructor'](Array.prototype.map.call(this, f));
 }
@@ -4414,7 +4430,7 @@ map(f : (value : any, index : number, vector : Vector ) => any) : any {
 // Calculates the difference of two vectors.
 //
 // *@param {Vector}* The vector to be subtracted.  
-// *@returns {Vector}*
+// *@return {Vector}*
 minus(v : Vector) {
 	if (this.length === v.length) {
 		return this.plus(v.negative());
@@ -4425,7 +4441,7 @@ minus(v : Vector) {
 // ### [Vector.prototype.negative()](http://mathlib.de/en/docs/Vector/negative)
 // Returns the negative vector.
 //
-// *@returns {Vector}*
+// *@return {Vector}*
 negative() : Vector {
 	return this.map(MathLib.negative);
 }
@@ -4435,7 +4451,7 @@ negative() : Vector {
 // Calcultes the norm of the vector.
 //
 // *@param {number}* [default=2] The p for the p-norm
-// *@returns {number}*
+// *@return {number}*
 norm(p = 2) : number {
 	if (p === 2) {
 		return MathLib.hypot.apply(null, this.toArray());
@@ -4444,8 +4460,8 @@ norm(p = 2) : number {
 		return Math.max.apply(null, this.map(Math.abs).toArray());
 	}
 	else {
-		return MathLib.root(this.reduce(function(prev, curr){
-			return prev + Math.pow(Math.abs(curr),p);
+		return MathLib.root(this.reduce(function (prev, curr) {
+			return prev + Math.pow(Math.abs(curr), p);
 		}, 0), p);
 	}
 }
@@ -4455,7 +4471,7 @@ norm(p = 2) : number {
 // Calculates the outer product of two vectors.
 //
 // *@param {Vector}*  
-// *@returns {Matrix}*
+// *@return {Matrix}*
 outerProduct(v : Vector) : Matrix {
 	return new MathLib.Matrix(this.map(function (x) {
 		return v.map(function (y) {
@@ -4469,7 +4485,7 @@ outerProduct(v : Vector) : Matrix {
 // Calculates the sum of two vectors.
 //
 // *@param {Vector}*  
-// *@returns {Vector}*
+// *@return {Vector}*
 plus(v : Vector) : Vector {
 	if (this.length === v.length) {
 		return new MathLib.Vector(this.map(function (x, i) {
@@ -4482,7 +4498,7 @@ plus(v : Vector) : Vector {
 // ### [Vector.prototype.reduce()](http://mathlib.de/en/docs/Vector/reduce)
 // Works like Array.prototype.reduce.
 //
-// *@returns {any}*
+// *@return {any}*
 reduce(...args : any[]) : any {
 	return Array.prototype.reduce.apply(this, args);
 }
@@ -4491,8 +4507,8 @@ reduce(...args : any[]) : any {
 // ### [Vector.prototype.scalarProduct()](http://mathlib.de/en/docs/Vector/scalarProduct)
 // Calculates the scalar product of two vectors.
 //
-// *@param {vector}*  
-// *@returns {number|complex}*
+// *@param {Vector}*  
+// *@return {number|Complex}*
 scalarProduct(v : Vector) : any {
 	if (this.length === v.length) {
 		return this.reduce(function (old, cur, i, w) {
@@ -4505,7 +4521,7 @@ scalarProduct(v : Vector) : any {
 // ### [Vector.prototype.slice()](http://mathlib.de/en/docs/Vector/slice)
 // Works like the Array.prototype.slice function
 //
-// *@returns {array}*
+// *@return {array}*
 slice(...args : any[]) : any[] {
 	return Array.prototype.slice.apply(this, args);
 }
@@ -4517,11 +4533,12 @@ slice(...args : any[]) : any[] {
 // If you want to multiply it from the right use
 // matrix.times(vector) instead of vector.times(matrix)
 //
-// *@param {number|complex|matrix}*  
-// *@returns {vector}*
+// *@param {number|Complex|Matrix}*  
+// *@return {Vector}*
 times(n : any) : any {
-	var res = [], i, ii;
-	if(n.type === 'rational') {
+	var i, ii, colVectors,
+			product = [];
+	if (n.type === 'rational') {
 		n = n.toNumber(); 
 	}
 	if (typeof n === 'number' || n.type === 'complex') {
@@ -4530,11 +4547,11 @@ times(n : any) : any {
 		});
 	}
 	if (n.type === 'matrix') {
-		res = n.toColVectors();
-		for (i = 0, ii = res.length; i < ii; i++) {
-			res[i] = this.scalarProduct(res[i]);
+		colVectors = n.toColVectors();
+		for (i = 0, ii = colVectors.length; i < ii; i++) {
+			product[i] = this.scalarProduct(colVectors[i]);
 		}
-		return new MathLib.Vector(res);
+		return new MathLib.Vector(product);
 	}
 }
 
@@ -4542,7 +4559,7 @@ times(n : any) : any {
 // ### [Vector.prototype.toArray()](http://mathlib.de/en/docs/Vector/toArray)
 // Converts the vector to an array.
 //
-// *@returns {array}*
+// *@return {array}*
 toArray() : any[] {
 	return Array.prototype.slice.call(this);
 }
@@ -4551,7 +4568,7 @@ toArray() : any[] {
 // ### [Vector.prototype.toContentMathMLString()](http://mathlib.de/en/docs/Vector/toContentMathMLString)
 // Returns the content MathML representation of the vector.
 //
-// *@returns {string}*
+// *@return {string}*
 toContentMathMLString() : string {
 	return this.reduce(function (old, cur) {
 		return old + MathLib.toContentMathMLString(cur);
@@ -4562,7 +4579,7 @@ toContentMathMLString() : string {
 // ### [Vector.prototype.toLaTeX()](http://mathlib.de/en/docs/Vector/toLaTeX)
 // Returns a LaTeX representation of the vector.
 //
-// *@returns {string}*
+// *@return {string}*
 toLaTeX() : string {
 	return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
 		return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
@@ -4573,7 +4590,7 @@ toLaTeX() : string {
 // ### [Vector.prototype.toMathMLString()](http://mathlib.de/en/docs/Vector/toMathMLString)
 // Returns the (presentation) MathML representation of the vector.
 //
-// *@returns {string}*
+// *@return {string}*
 toMathMLString() : string {
 	return this.reduce(function (old, cur) {
 		return old + '<mtr><mtd>' + MathLib.toMathMLString(cur) + '</mtd></mtr>';
@@ -4584,7 +4601,7 @@ toMathMLString() : string {
 // ### [Vector.prototype.toString()](http://mathlib.de/en/docs/Vector/toString)
 // Returns a string representation of the vector.
 //
-// *@returns {string}*
+// *@return {string}*
 toString() : string {
 	return '(' + this.reduce(function (old, cur) {
 		return old + ', ' + MathLib.toString(cur);
@@ -4596,7 +4613,7 @@ toString() : string {
 // Calculates the vector product of two vectors.
 //
 // *@param {Vector}*  
-// *@returns {Vector}*
+// *@return {Vector}*
 vectorProduct(v : Vector) : Vector {
 	/* TODO: Implement vectorproduct for non three-dimensional vectors */
 	if (this.length === 3 && v.length === 3) {
@@ -4613,13 +4630,13 @@ vectorProduct(v : Vector) : Vector {
 // Returns a zero vector of given size.
 //
 // *@param {number}* The number of entries in the vector.  
-// *@returns {Vector}*
+// *@return {Vector}*
 static zero = function (n : number) : Vector {
-	var res = [], i;
-	for (i=0; i<n; i++) {
-		res.push(0); 
+	var vector = [], i;
+	for (i = 0; i < n; i++) {
+		vector.push(0); 
 	}
-	return new MathLib.Vector(res);
+	return new MathLib.Vector(vector);
 }
 
 
@@ -4661,7 +4678,7 @@ export class Circle {
 // ### [Circle.prototype.area()](http://mathlib.de/en/docs/Circle/area)
 // Calculates the area of the circle.
 //
-// *@param {number}* The area of the circle
+// *@return {number}* The area of the circle
 area() : number {
 	return this.radius * this.radius * Math.PI;
 }
@@ -4670,18 +4687,28 @@ area() : number {
 // ### [Circle.prototype.circumference()](http://mathlib.de/en/docs/Circle/circumference)
 // Calculates the circumference of the circle.
 //
-// *@param {number}* The circumference of the circle
+// *@return {number}* The circumference of the circle
 circumference() : number {
 	return 2 * this.radius * Math.PI;
+}
+
+
+// ### [Circle.prototype.compare()](http://mathlib.de/en/docs/Circle/compare)
+// Compares two circles
+//
+// *@param {Circle}* The circle to compare
+// *@return {number}*
+compare(c : Circle) : number {
+	return MathLib.sign(this.center.compare(c.center)) || MathLib.sign(this.radius - c.radius);
 }
 
 
 // ### [Circle.prototype.draw()](http://mathlib.de/en/docs/Circle/draw)
 // Draw the circle onto the screen.
 //
-// *@param {screen}* The screen to draw onto.  
-// *@param {options}* Optional drawing options  
-// *@return {circle}* Returns the circle for chaining
+// *@param {Screen}* The screen to draw onto.  
+// *@param {object}* Optional drawing options  
+// *@return {Circle}* Returns the circle for chaining
 draw(screen, options) {
 	if (Array.isArray(screen)) {
 		var circle = this;
@@ -4752,7 +4779,7 @@ toMatrix() : Matrix {
 	var x = this.center[0] / this.center[2],
 			y = this.center[1] / this.center[2],
 			r = this.radius;
-	return new MathLib.Matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x*x + y*y - r*r]]);
+	return new MathLib.Matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x * x + y * y - r * r]]);
 }
 
 
@@ -4794,7 +4821,7 @@ static infinity = 'complexInfinity';
 // ### Complex.prototype.abs()
 // Returns the absolute value of the number.
 //
-// *@returns {number}*
+// *@return {number}*
 abs() : number {
 	return MathLib.hypot(this.re, this.im);
 }
@@ -4803,25 +4830,25 @@ abs() : number {
 // ### Complex.prototype.arccos()
 // Returns the inverse cosine of the number.
 //
-// *@returns {Complex}*
+// *@return {Complex}*
 arccos() : Complex {
-	return MathLib.minus(Math.PI/2, this.arcsin());
+	return MathLib.minus(Math.PI / 2, this.arcsin());
 }
 
 
 // ### Complex.prototype.arccot()
 // Returns the inverse cotangent of the number.
 //
-// *@returns {Complex}*
+// *@return {Complex}*
 arccot() : Complex {
-	return MathLib.minus(Math.PI/2, this.arctan());
+	return MathLib.minus(Math.PI / 2, this.arctan());
 }
 
 
 // ### Complex.prototype.arccsc()
 // Returns the inverse cosecant of the number
 //
-// *@returns {Complex}*
+// *@return {Complex}*
 arccsc() : Complex {
 	return MathLib.times(new MathLib.Complex(0, 1), MathLib.ln(MathLib.plus(MathLib.sqrt(MathLib.minus(1, MathLib.divide(1, MathLib.times(this, this)))) , MathLib.divide(new MathLib.Complex(0, 1), this))));
 }
@@ -4830,12 +4857,14 @@ arccsc() : Complex {
 // ### Complex.prototype.arcsin()
 // Returns the inverse sine of the number
 //
-// *@returns {Complex}*
+// *@return {Complex}*
 arcsin() : Complex {
-	var a = this.re, b = this.im;
+	var a = this.re, b = this.im,
+			aa = a * a,
+			bb = b * b;
 	return new MathLib.Complex(
-			MathLib.sign(a)/2 * MathLib.arccos(Math.sqrt(Math.pow(a*a + b*b - 1, 2) +4*b*b) - (a*a + b*b)),
-			MathLib.sign(b)/2 * MathLib.arcosh(Math.sqrt(Math.pow(a*a + b*b - 1, 2) +4*b*b) + (a*a + b*b))
+			MathLib.sign(a) / 2 * MathLib.arccos(Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb) - (aa + bb)),
+			MathLib.sign(b) / 2 * MathLib.arcosh(Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb) + (aa + bb))
 		);
 }
 
@@ -4843,7 +4872,7 @@ arcsin() : Complex {
 // ### Complex.prototype.arctan()
 // Returns the inverse tangent of the number
 //
-// *@returns {Complex}*
+// *@return {Complex}*
 arctan() : Complex {
 	var iz = new MathLib.Complex(-this.im, this.re);
 	return MathLib.times(new MathLib.Complex(0, 0.5), MathLib.ln(MathLib.divide( MathLib.plus(1, iz), MathLib.minus(1, iz))));
@@ -4853,7 +4882,7 @@ arctan() : Complex {
 // ### Complex.prototype.arg()
 // Returns the argument (= the angle) of the complex number
 //
-// *@returns {number}*
+// *@return {number}*
 arg() : number {
 	return Math.atan2(this.im, this.re);
 }
@@ -4862,7 +4891,7 @@ arg() : number {
 // ### Complex.prototype.artanh()
 // Returns the inverse hyperbolic tangent of the number
 //
-// *@returns {Complex}*
+// *@return {Complex}*
 artanh() : Complex {
 	return MathLib.times(0.5, MathLib.minus(MathLib.ln(MathLib.plus(1, this)), MathLib.ln(MathLib.minus(1, this))));
 }
@@ -4871,7 +4900,7 @@ artanh() : Complex {
 // ### Complex.prototype.compare()
 // Compares two complex numbers
 //
-// *@returns {number}*
+// *@return {number}*
 compare(x) : number {
 	var a = MathLib.sign(this.abs() - x.abs());
 	return a ? a : MathLib.sign(this.arg() - x.arg());
@@ -4881,7 +4910,7 @@ compare(x) : number {
 // ### Complex.prototype.conjugate()
 // Calculates the conjugate of a complex number
 //
-// *@returns {Complex}*
+// *@return {Complex}*
 conjugate() : Complex {
 	return new MathLib.Complex(this.re, MathLib.negative(this.im));
 }
@@ -4890,7 +4919,7 @@ conjugate() : Complex {
 // ### Complex.prototype.copy()
 // Copies the complex number
 //
-// *@returns {Complex}*
+// *@return {Complex}*
 copy() : Complex {
 	return new MathLib.Complex(MathLib.copy(this.re), MathLib.copy(this.im));
 }
@@ -4899,26 +4928,26 @@ copy() : Complex {
 // ### Complex.prototype.cos()
 // Calculates the cosine of a complex number
 //
-// *@returns {Complex}*
+// *@return {Complex}*
 cos() : Complex {
-	return new MathLib.Complex(MathLib.cos(this.re) * MathLib.cosh(this.im), -MathLib.sin(this.re)*MathLib.sinh(this.im));
+	return new MathLib.Complex(MathLib.cos(this.re) * MathLib.cosh(this.im), -MathLib.sin(this.re) * MathLib.sinh(this.im));
 }
 
 
 // ### Complex.prototype.cosh()
 // Calculates the hyperbolic cosine of a complex number
 //
-// *@returns {Complex}*
+// *@return {Complex}*
 cosh() : Complex {
-	return new MathLib.Complex(MathLib.cos(this.im) * MathLib.cosh(this.re), MathLib.sin(this.im)*MathLib.sinh(this.re));
+	return new MathLib.Complex(MathLib.cos(this.im) * MathLib.cosh(this.re), MathLib.sin(this.im) * MathLib.sinh(this.re));
 }
 
 
 // ### Complex.prototype.divide()
 // Divides a complex number by an other
 //
-// *@param {number|complex}* The divisor  
-// *@returns {complex}*
+// *@param {number|Complex}* The divisor  
+// *@return {Complex}*
 divide(c) : Complex {
 	return this.times(MathLib.inverse(c));
 }
@@ -4927,16 +4956,16 @@ divide(c) : Complex {
 // ### Complex.prototype.exp()
 // Evaluates the exponential function with a complex argument
 //
-// *@returns {complex}*
+// *@return {Complex}*
 exp() : Complex {
-	return new MathLib.Complex(MathLib.exp(this.re) * MathLib.cos(this.im), MathLib.exp(this.re)*MathLib.sin(this.im));
+	return new MathLib.Complex(MathLib.exp(this.re) * MathLib.cos(this.im), MathLib.exp(this.re) * MathLib.sin(this.im));
 }
 
 
 // ### Complex.prototype.inverse()
 // Calculates the inverse of a complex number
 //
-// *@returns {complex}*
+// *@return {Complex}*
 inverse() : Complex {
 	return new MathLib.Complex(MathLib.divide(this.re, MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2))),
 		MathLib.divide(MathLib.negative(this.im), MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2))));
@@ -4946,7 +4975,7 @@ inverse() : Complex {
 // ### Complex.prototype.isEqual()
 // Determines if the complex number is equal to another number.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isEqual(n) : bool {
 	if (typeof n === 'number') {
 		return MathLib.isEqual(this.re, n) && MathLib.isZero(this.im);
@@ -4961,7 +4990,7 @@ isEqual(n) : bool {
 // ### Complex.prototype.isFinite()
 // Determines if the complex number is finite.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isFinite() : bool {
 	return MathLib.isFinite(this.re) && MathLib.isFinite(this.im);
 }
@@ -4970,7 +4999,7 @@ isFinite() : bool {
 // ### Complex.prototype.isOne()
 // Determines if the complex number is equal to 1.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isOne() : bool {
 	return MathLib.isOne(this.re) && MathLib.isZero(this.im);
 }
@@ -4979,7 +5008,7 @@ isOne() : bool {
 // ### Complex.prototype.isReal()
 // Determines if the complex number is real.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isReal() : bool {
 	return MathLib.isZero(this.im);
 }
@@ -4988,7 +5017,7 @@ isReal() : bool {
 // ### Complex.prototype.isZero()
 // Determines if the complex number is equal to 0.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isZero() : bool {
 	return MathLib.isZero(this.re) && MathLib.isZero(this.im);
 }
@@ -4997,7 +5026,7 @@ isZero() : bool {
 // ### Complex.prototype.ln()
 // Evaluates the natural logarithm with complex arguments
 //
-// *@returns {complex}*
+// *@return {Complex}*
 ln() : Complex {
 	return new MathLib.Complex(MathLib.ln(this.abs()), this.arg());
 }
@@ -5006,8 +5035,8 @@ ln() : Complex {
 // ### Complex.prototype.minus()
 // Calculates the difference of two complex numbers
 //
-// *@param {number|complex}* The subtrahend  
-// *@returns {complex}*
+// *@param {number|Complex}* The subtrahend  
+// *@return {Complex}*
 minus(c) : Complex {
 	return this.plus(MathLib.negative(c));
 }
@@ -5016,7 +5045,7 @@ minus(c) : Complex {
 // ### Complex.prototype.negative()
 // Calculates the negative of the complex number
 //
-// *@returns {complex}*
+// *@return {Complex}*
 negative() : Complex {
 	return new MathLib.Complex(MathLib.negative(this.re), MathLib.negative(this.im));
 }
@@ -5025,15 +5054,15 @@ negative() : Complex {
 // ### Complex.one()
 // Complex representation of 1.
 //
-// *@returns {complex}*
+// *@return {Complex}*
 static one = new Complex(1, 0);
 
 
 // ### Complex.prototype.plus()
 // Add complex numbers
 //
-// *@param {complex|number|rational}* The number to be added  
-// *@returns {complex}*
+// *@param {Complex|number|Rational}* The number to be added  
+// *@return {Complex}*
 plus(c) : Complex {
 	if (c.type === 'complex') {
 		return new MathLib.Complex(MathLib.plus(this.re, c.re), MathLib.plus(this.im, c.im));
@@ -5050,7 +5079,7 @@ plus(c) : Complex {
 // ### Complex.polar()
 // Construct a complex number out of the absolute value and the argument
 //
-// *@returns {complex}*
+// *@return {Complex}*
 static polar = function (abs, arg) : Complex {
 	return new MathLib.Complex(abs * Math.cos(arg), abs * Math.sin(arg));
 };
@@ -5060,7 +5089,7 @@ static polar = function (abs, arg) : Complex {
 // Calculates the n-th pow of the complex number
 //
 // *@param {number}* The pow to which the complex number should be raised   
-// *@returns {complex}*
+// *@return {Complex}*
 pow(n) : Complex {
 	return new MathLib.Complex(Math.pow(this.abs(), n), n * this.arg());
 }
@@ -5069,7 +5098,7 @@ pow(n) : Complex {
 // ### Complex.prototype.sign()
 // Calculates the signum of a complex number
 //
-// *@returns {complex}*
+// *@return {Complex}*
 sign() : Complex {
 	return MathLib.Complex.polar(1, this.arg());
 }
@@ -5078,35 +5107,35 @@ sign() : Complex {
 // ### Complex.prototype.sin()
 // Calculates the sine of a complex number
 //
-// *@returns {complex}*
+// *@return {Complex}*
 sin() : Complex {
-	return new MathLib.Complex(MathLib.sin(this.re) * MathLib.cosh(this.im), MathLib.cos(this.re)*MathLib.sinh(this.im));
+	return new MathLib.Complex(MathLib.sin(this.re) * MathLib.cosh(this.im), MathLib.cos(this.re) * MathLib.sinh(this.im));
 }
 
 
 // ### Complex.prototype.sinh()
 // Calculates the hyperbolic sine of a complex number
 //
-// *@returns {complex}*
+// *@return {Complex}*
 sinh() : Complex {
-	return new MathLib.Complex(MathLib.cos(this.im) * MathLib.sinh(this.re), MathLib.sin(this.im)*MathLib.cosh(this.re));
+	return new MathLib.Complex(MathLib.cos(this.im) * MathLib.sinh(this.re), MathLib.sin(this.im) * MathLib.cosh(this.re));
 }
 
 
 // ### Complex.prototype.sqrt()
 // Takes the square root of a complex number
 //
-// *@returns {complex}*
+// *@return {Complex}*
 sqrt() : Complex {
-	return MathLib.Complex.polar(Math.sqrt(this.abs()), this.arg()/2);
+	return MathLib.Complex.polar(Math.sqrt(this.abs()), this.arg() / 2);
 }
 
 
 // ### Complex.prototype.times()
 // Multiplies complex numbers
 //
-// *@param {complex|number|rational}* The number to be multiplied  
-// *@returns {complex}*
+// *@param {Complex|number|Rational}* The number to be multiplied  
+// *@return {Complex}*
 times(c) : Complex {
 	if (c.type === 'complex') {
 		return new MathLib.Complex(MathLib.minus(MathLib.times(this.re, c.re), MathLib.times(this.im, c.im)),
@@ -5124,7 +5153,7 @@ times(c) : Complex {
 // ### Complex.prototype.toContentMathMLString()
 // Returns the content MathML representation of the number
 //
-// *@returns {string}*
+// *@return {string}*
 toContentMathMLString() : String {
 	return '<cn type="complex-cartesian">' + this.re + '<sep/>' + this.im + '</cn>';
 }
@@ -5133,7 +5162,7 @@ toContentMathMLString() : String {
 // ### Complex.prototype.toLaTeX()
 // Returns the LaTeX representation of the complex number
 //
-// *@returns {string}*
+// *@return {string}*
 toLaTeX() : string {
 	var str = '',
 			reFlag = false;
@@ -5155,7 +5184,7 @@ toLaTeX() : string {
 // ### Complex.prototype.toMathMLString()
 // Returns the (presentation) MathML representation of the number
 //
-// *@returns {string}*
+// *@return {string}*
 toMathMLString() : string {
 	var str = '', reFlag = false;
 
@@ -5176,7 +5205,7 @@ toMathMLString() : string {
 // ### Complex.prototype.toMatrix()
 // Transforms the complex number to a 2x2 matrix
 //
-// *@returns {matrix}*
+// *@return {Matrix}*
 toMatrix() : Matrix {
 	return new MathLib.Matrix([[this.re, MathLib.negative(this.im)], [this.im, this.re]]);
 }
@@ -5185,7 +5214,7 @@ toMatrix() : Matrix {
 // ### Complex.prototype.toPoint()
 // Interprets the complex number as point in the two dimensional plane
 //
-// *@returns {point}*
+// *@return {Point}*
 toPoint() : Point {
 	return new MathLib.Point(this.re, this.im);
 }
@@ -5194,7 +5223,7 @@ toPoint() : Point {
 // ### Complex.prototype.toString()
 // Custom toString function
 //
-// *@returns {string}*
+// *@return {string}*
 toString() : string {
 	var str = '';
 
@@ -5202,7 +5231,7 @@ toString() : string {
 		str = MathLib.toString(this.re);
 	}
 	if (!MathLib.isZero(this.im)) {
-		str +=  (this.im > 0 ? (str.length ? '+' : '') : '-') + MathLib.toString(Math.abs(this.im)) + 'i';
+		str += (this.im > 0 ? (str.length ? '+' : '') : '-') + MathLib.toString(Math.abs(this.im)) + 'i';
 	}
 	if (str.length === 0) {
 		str = '0';
@@ -5214,7 +5243,7 @@ toString() : string {
 // ### Complex.zero()
 // Complex representation of 0.
 //
-// *@returns {complex}*
+// *@return {Complex}*
 static zero = new Complex(0, 0);
 
 
@@ -5246,10 +5275,20 @@ export class Expression {
 	}
 
 
+// ### [Expression.prototype.compare()](http://mathlib.de/en/docs/expression/compare)
+// Compares two expressions
+//
+// *@param {Expression}* The expression to compare  
+// *@return {number}*
+compare(e) {
+	return this.toString().localeCompare(e.toString());
+}
+
+
 // ### <a href="http://mathlib.de/en/docs/Expression/numericallyEvaluate">Expression.prototype.numericallyEvaluate</a>
 // Evaluates the symbolic expression numerically
 //
-// *@returns {any}*
+// *@return {any}*
 numericallyEvaluate() : any {
 	if (this.subtype === 'brackets') {
 		return this.content.numericallyEvaluate();
@@ -5280,7 +5319,7 @@ numericallyEvaluate() : any {
 // [Part 2: parser](http://ariya.ofilabs.com/2011/08/math-evaluator-in-javascript-part-2.html)  
 // [Part 3: interpreter](http://ariya.ofilabs.com/2011/08/math-expression-evaluator-in-javascript-part-3.html)  
 //
-// *@returns {Expression}*
+// *@return {Expression}*
 static parse = function (str) {
 
 	var Token, Lexer, Parser;
@@ -5779,7 +5818,7 @@ static parse = function (str) {
 // ### <a href="http://mathlib.de/en/docs/Expression/toLaTeX">Expression.prototype.toLaTeX</a>
 // Convert the expression to a LaTeX string
 //
-// *@returns {string}*
+// *@return {string}*
 toLaTeX() : string {
 	var op;
 
@@ -5827,7 +5866,7 @@ toLaTeX() : string {
 // ### <a href="http://mathlib.de/en/docs/Expression/toString">Expression.prototype.toString</a>
 // A custom toString function
 //
-// *@returns {string}*
+// *@return {string}*
 toString() : string {
 	if (this.subtype === 'brackets') {
 		return '(' + this.content.toString() + ')';
@@ -5871,9 +5910,9 @@ export class Line extends Vector {
 // ### Line.prototype.draw()
 // Draws the line on one or more screens
 //
-// *@param {screen}* The screen to draw onto.  
+// *@param {Screen}* The screen to draw onto.  
 // *@param {object}* [options] Drawing options  
-// *@returns {boolean}*
+// *@return {boolean}*
 draw(screen, options) {
 	if (Array.isArray(screen)) {
 		var line = this;
@@ -5891,13 +5930,13 @@ draw(screen, options) {
 // ### Line.prototype.isEqual()
 // Determines if two lines are equal.
 //
-// *@param {line}*  
-// *@returns {boolean}*
+// *@param {Line}*  
+// *@return {boolean}*
 isEqual(q : Line) : bool {
 	var p = this.normalize();
 			q = q.normalize();
 
-	if(this.length !== q.length) {
+	if (this.length !== q.length) {
 		return false;
 	}
 
@@ -5910,7 +5949,7 @@ isEqual(q : Line) : bool {
 // ### Line.prototype.isFinite()
 // Determines if the line is finite
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isFinite() : bool {
 	return !MathLib.isZero(this[this.length - 1]);
 }
@@ -5919,13 +5958,13 @@ isFinite() : bool {
 // ### Line.prototype.isOrthogonalTo()
 // Determines if two lines are orthogonal.
 //
-// *@param {line}*  
-// *@returns {boolean}*
+// *@param {Line}*  
+// *@return {boolean}*
 isOrthogonalTo(l : Line) : Line {
 	return MathLib.isEqual(
-		new MathLib.Point([0,0,1]).crossRatio(
-			this.meet(new MathLib.Line([0,0,1])),
-			l.meet(new MathLib.Line([0,0,1])), 
+		new MathLib.Point([0, 0, 1]).crossRatio(
+			this.meet(new MathLib.Line([0, 0, 1])),
+			l.meet(new MathLib.Line([0, 0, 1])), 
 			MathLib.Point.I,
 			MathLib.Point.J
 		), -1);
@@ -5935,8 +5974,8 @@ isOrthogonalTo(l : Line) : Line {
 // ### Line.prototype.isParallelTo()
 // Determines if two lines are parallel.
 //
-// *@param {line}*  
-// *@returns {boolean}*
+// *@param {Line}*  
+// *@return {boolean}*
 isParallelTo(l : Line) : bool {
 	return this.every(function (x, i) {
 		return MathLib.isEqual(x, l[i]) || i === l.length - 1;
@@ -5947,8 +5986,8 @@ isParallelTo(l : Line) : bool {
 // ### Line.prototype.meet()
 // Calculates the meeting point of two lines
 //
-// *@param {line}*  
-// *@returns {point}*
+// *@param {Line}*  
+// *@return {Point}*
 meet(l : Line, dyn = false) : Point {
 	var point,
 			k = this;
@@ -5958,21 +5997,21 @@ meet(l : Line, dyn = false) : Point {
 
 		if (dyn) {
 			Object.defineProperties(point, {
-				"0": {
-					get : function(){ return k[1]*l[2]-k[2]*l[1]; },
-					set : function(){},
+				'0': {
+					get : function () { return k[1] * l[2] - k[2] * l[1]; },
+					set : function () {},
 					enumerable : true,
 					configurable : true
 				},
-				"1": {
-					get : function(){ return k[2]*l[0]-k[0]*l[2]; },
-					set : function(){},
+				'1': {
+					get : function () { return k[2] * l[0] - k[0] * l[2]; },
+					set : function () {},
 					enumerable : true,
 					configurable : true
 				},
-				"2": {
-					get : function(){ return k[0]*l[1]-k[1]*l[0]; },
-					set : function(){},
+				'2': {
+					get : function () { return k[0] * l[1] - k[1] * l[0]; },
+					set : function () {},
 					enumerable : true,
 					configurable : true
 				}
@@ -5987,7 +6026,7 @@ meet(l : Line, dyn = false) : Point {
 // ### Line.prototype.normalize()
 // Normalizes the line.
 //
-// *@returns {line}*
+// *@return {Line}*
 normalize() : Line {
 	var h = MathLib.hypot(this[0], this[1]);
 	return this.map(function (x) {
@@ -6033,7 +6072,7 @@ export class Matrix {
 				matrix = JSON.parse('[[' + matrix + ']]');
 			}
 		}
-		matrix.forEach((x,i)=>{this[i] = x;});
+		matrix.forEach((x, i) => {this[i] = x;});
 		this.length = matrix.length;
 		this.cols = matrix[0].length;
 		this.rows = matrix.length;
@@ -6045,8 +6084,8 @@ export class Matrix {
 // Calculates the LU decomposition of a matrix
 // The result is cached.
 //
-// *@returns {matrix}*
-LU(dontSwapPivot? : bool) {
+// *@return {Matrix}*
+LU() {
 	var i, j, k, t, p,
 			LU = this.toArray(),
 			m = this.rows,
@@ -6055,25 +6094,24 @@ LU(dontSwapPivot? : bool) {
 
 	for (k = 0; k < n; k++) {
 		// Find the pivot
-		if (!dontSwapPivot) {
-			p = k;
-			for (i = k+1; i < m; i++) {
-				if (Math.abs(LU[i][k]) > Math.abs(LU[p][k])) {
-					p = i;
-				}
-			}
-			// Exchange if necessary
-			if (p !== k) {
-				permutation.unshift([p, k]);
-				t = LU[p]; LU[p] = LU[k]; LU[k] = t;
+		p = k;
+		for (i = k + 1; i < m; i++) {
+			if (Math.abs(LU[i][k]) > Math.abs(LU[p][k])) {
+				p = i;
 			}
 		}
+		// Exchange if necessary
+		if (p !== k) {
+			permutation.unshift([p, k]);
+			t = LU[p]; LU[p] = LU[k]; LU[k] = t;
+		}
+
 
 		// The elimination
 		if (LU[k][k] !== 0) {
-			for (i = k+1; i < m; i++) {
+			for (i = k + 1; i < m; i++) {
 				LU[i][k] = MathLib.divide(LU[i][k], LU[k][k]);
-				for (j = k+1; j < n; j++) {
+				for (j = k + 1; j < n; j++) {
 					LU[i][j] = MathLib.minus(LU[i][j], MathLib.times(LU[i][k], LU[k][j]));
 				}
 			}
@@ -6091,7 +6129,7 @@ LU(dontSwapPivot? : bool) {
 // ### Matrix.prototype.adjoint()
 // Calculates the adjoint matrix
 //
-// *@returns {Matrix}*
+// *@return {Matrix}*
 adjoint() : Matrix {
 	return this.map(MathLib.conjugate).transpose();
 }
@@ -6100,10 +6138,10 @@ adjoint() : Matrix {
 // ### Matrix.prototype.adjugate()
 // Calculates the adjugate matrix
 //
-// *@returns {Matrix}*
+// *@return {Matrix}*
 adjugate() : Matrix {
 	return this.map(function (x, r, c, m) {
-		return MathLib.times(m.remove(c, r).determinant(), 1 - ((r+c)%2) * 2);
+		return MathLib.times(m.remove(c, r).determinant(), 1 - ((r + c) % 2) * 2);
 	});
 }
 
@@ -6114,47 +6152,76 @@ adjugate() : Matrix {
 // Does not change the current matrix, but returns a new one.
 // The result is cached.
 //
-// *@returns {Matrix}*
+// *@return {Matrix}*
 cholesky() : Matrix {
-	var r, rr, temp = [], k, kk, sum, c, cholesky;
+	var i, ii, j, jj, k, kk, sum, choleskyMatrix,
+			cholesky = [];
 
-	for (r = 0, rr = this.rows; r < rr; r++) {
-		temp.push([]);
+	for (i = 0, ii = this.rows; i < ii; i++) {
+		cholesky.push([]);
 	}
 
-	for (r = 0, rr = this.rows; r < rr; r++) {
-		for (c=0; c<r; c++) {
+	for (i = 0, ii = this.rows; i < ii; i++) {
+		for (j = 0; j < i; j++) {
 			sum = 0;
-			for (k = 0, kk = c; k < kk; k++) {
-				sum = MathLib.plus(sum, MathLib.times(temp[r][k], temp[c][k]));
+			for (k = 0, kk = j; k < kk; k++) {
+				sum = MathLib.plus(sum, MathLib.times(cholesky[i][k], cholesky[j][k]));
 			}
-			temp[r][c] = (this[r][c] - sum)/temp[c][c];
+			cholesky[i][j] = (this[i][j] - sum) / cholesky[j][j];
 		}
 
 		sum = 0;
-		for (k = 0, kk = c; k < kk; k++) {
-			sum = MathLib.plus(sum, MathLib.times(temp[r][k], temp[r][k]));
+		for (k = 0, kk = j; k < kk; k++) {
+			sum = MathLib.plus(sum, MathLib.times(cholesky[i][k], cholesky[i][k]));
 		}
-		temp[r][c] = Math.sqrt(this[c][c] - sum);
+		cholesky[i][j] = Math.sqrt(this[j][j] - sum);
 
-		for (c++; c < this.cols; c++) {
-			temp[r][c] = 0;
+		for (j++, jj = this.cols; j < jj; j++) {
+			cholesky[i][j] = 0;
 		}
 
 	}
-	cholesky = new MathLib.Matrix(temp);
+	choleskyMatrix = new MathLib.Matrix(cholesky);
 
 	this.cholesky = function () {
-		return cholesky;
+		return choleskyMatrix;
 	};
-	return cholesky;
+	return choleskyMatrix;
+}
+
+
+// ### Matrix.prototype.compare()
+// Compares the matrix to an other matrix.
+//
+// *@param {Matrix}* The matrix to compare.  
+// *@return {number}*
+compare(m : Matrix) : number {
+	var i, ii, j, jj; 
+
+	if (this.rows !== m.rows) {
+		return MathLib.sign(this.rows - m.rows);
+	}
+
+	if (this.cols !== m.cols) {
+		return MathLib.sign(this.cols - m.cols);
+	}
+
+	for (i = 0, ii = this.rows; i < ii; i++) {
+		for (j = 0, jj = this.cols; j < jj; j++) {
+			if (this[i][j] - m[i][j]) {
+				return MathLib.sign(this[i][j] - m[i][j]);
+			}
+		}
+	}
+
+	return 0;
 }
 
 
 // ### Matrix.prototype.copy()
 // Copies the matrix
 //
-// *@returns {Matrix}*
+// *@return {Matrix}*
 copy() : Matrix {
 	return this.map(MathLib.copy);
 }
@@ -6164,16 +6231,17 @@ copy() : Matrix {
 // Calculates the determinant of the matrix via the LU decomposition.
 // The result is cached.
 //
-// *@returns {number|complex}*
+// *@return {number|Complex}*
 determinant() : any {
+	var LU, determinant;
+
 	if (this.isSquare()) {
-		var arr, determinant;
-		if(this.rank() < this.rows) {
+		if (this.rank() < this.rows) {
 			determinant = 0;
 		}
 		else {
-			arr = this.LU();
-			determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, arr.diag()));
+			LU = this.LU();
+			determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, LU.diag()));
 		}
 
 		this.determinant = function () {
@@ -6187,20 +6255,21 @@ determinant() : any {
 // ### Matrix.prototype.diag()
 // Returns the entries on the diagonal in an array
 //
-// *@returns {array}*
+// *@return {array}*
 diag() : any[] {
-	var arr = [], i, ii;
-	for (i = 0, ii = Math.min(this.rows, this.cols); i<ii; i++) {
-		arr.push(this[i][i]);
+	var diagonal = [],
+			i, ii;
+	for (i = 0, ii = Math.min(this.rows, this.cols); i < ii; i++) {
+		diagonal.push(this[i][i]);
 	}
-	return arr;
+	return diagonal;
 }
 
 
 // ### Matrix.prototype.divide()
 // Multiplies the matrix by the inverse of a number or a matrix
 //
-// *@returns {Matrix}*
+// *@return {Matrix}*
 divide(n : any) : Matrix {
 	return this.times(MathLib.inverse(n));
 }
@@ -6214,7 +6283,7 @@ divide(n : any) : Matrix {
 // the number of the column and the complete matrix
 //
 // *@param {function}* The function which is called on every argument  
-// *@returns {boolean}*
+// *@return {boolean}*
 every(f) {
 	return Array.prototype.every.call(this, function (x, i) {
 		return Array.prototype.every.call(x, function (y, j) {
@@ -6244,20 +6313,20 @@ forEach(f) {
 // ### Matrix.prototype.gershgorin()
 // Returns the Gershgorin circles of the matrix.
 //
-// *@returns {array}* Returns an array of circles
+// *@return {array}* Returns an array of circles
 gershgorin() {
 	var c = [],
 			rc = [],
 			rr = [],
-			res = [],
+			circles = [],
 			i, ii;
 
-	for (i=0, ii=this.rows; i<ii; i++) {
+	for (i = 0, ii = this.rows; i < ii; i++) {
 		rc.push(0);
 		rr.push(0);
 	}
 
-	this.forEach(function(x, i, j) {
+	this.forEach(function (x, i, j) {
 		if (i === j) {
 			if (MathLib.is(x, 'complex')) {
 				c.push(x.toPoint());
@@ -6272,32 +6341,32 @@ gershgorin() {
 		}
 	});
 
-	for (i=0, ii=this.rows; i<ii; i++) {
-		res.push(new MathLib.Circle(c[i], Math.min(rc[i], rr[i])));
+	for (i = 0, ii = this.rows; i < ii; i++) {
+		circles.push(new MathLib.Circle(c[i], Math.min(rc[i], rr[i])));
 	}
 
-	return res;
+	return circles;
 }
 
 
 // ### Matrix.prototype.givens()
 // QR decomposition with the givens method.
 //
-// *@returns {[matrix, matrix]}*
-givens(){
+// *@return {[Matrix, Matrix]}*
+givens() {
 	var rows = this.rows,
 			cols = this.cols,
 			R = this.copy(),
 			Q = MathLib.Matrix.identity(rows),
 			c, s, rho, i, j, k, ri, rj, qi, qj; 
 			
-	for (i=0; i<cols; i++) {
-		for (j=i+1; j<rows; j++) {
+	for (i = 0; i < cols; i++) {
+		for (j = i + 1; j < rows; j++) {
 
 			if (!MathLib.isZero(R[j][i])) {
 				// We can't use the sign function here, because we want the factor 
 				// to be 1 if A[i][i] is zero.
-				rho = (R[i][i]<0 ? -1 : 1) * MathLib.hypot(R[i][i],  R[j][i]);
+				rho = (R[i][i] < 0 ? -1 : 1) * MathLib.hypot(R[i][i],  R[j][i]);
 				c   = R[i][i] / rho;
 				s   = R[j][i] / rho;
 
@@ -6308,21 +6377,21 @@ givens(){
 				qj = [];
 				
 				// Multiply to R
-				for (k=0; k<cols; k++) {
+				for (k = 0; k < cols; k++) {
 					ri.push(R[i][k]);
 					rj.push(R[j][k]);
 				}
-				for (k=0; k<cols; k++) {
+				for (k = 0; k < cols; k++) {
 					R[i][k] = rj[k] * s + ri[k] * c;
 					R[j][k] = rj[k] * c - ri[k] * s;
 				}
 
 				// Multiply to Q
-				for (k=0; k<rows; k++) {
+				for (k = 0; k < rows; k++) {
 					qi.push(Q[k][i]);
 					qj.push(Q[k][j]);
 				}
-				for (k=0; k<rows; k++) {
+				for (k = 0; k < rows; k++) {
 					Q[k][i] =  qi[k] * c + qj[k] * s;
 					Q[k][j] = -qi[k] * s + qj[k] * c;
 				}
@@ -6341,10 +6410,10 @@ givens(){
 // *@param {number}* The first row/column.  
 // *@param {number}* The second row/column.  
 // *@param {number}* The angle (in radians).  
-// *@returns {matrix}*
+// *@return {Matrix}*
 static givensMatrix = function (n, i, k, phi) {
 	var givens = MathLib.Matrix.identity(n);
-	givens[k][k] = givens[i][i]=Math.cos(phi);
+	givens[k][k] = givens[i][i] = Math.cos(phi);
 	givens[i][k] = Math.sin(phi);
 	givens[k][i] = -givens[i][k];
 	return givens;
@@ -6355,31 +6424,32 @@ static givensMatrix = function (n, i, k, phi) {
 // Returns the identity matrix.
 //
 // *@param {number}* The number of rows and columns.  
-// *@returns {matrix}*
+// *@return {Matrix}*
 static identity = function (n) {
-	var temp = [], arr = [],
+	var row = [],
+			matrix = [],
 			i, ii;
 	n = n || 1;
 
-	for (i=0, ii=n-1; i<ii; i++) {
-		temp.push(0);
+	for (i = 0, ii = n - 1; i < ii; i++) {
+		row.push(0);
 	}
-	temp.push(1);
-	temp = temp.concat(temp);
-	temp = temp.slice(0, -1);
+	row.push(1);
+	row = row.concat(row);
+	row = row.slice(0, -1);
 
-	for (i=0, ii=n; i<ii; i++) {
-		arr.push(temp.slice(n-i-1, 2*n-i- 1));
+	for (i = 0, ii = n; i < ii; i++) {
+		matrix.push(row.slice(n - i - 1, 2 * n - i - 1));
 	}
 
-	return new MathLib.Matrix(arr);
+	return new MathLib.Matrix(matrix);
 };
 
 
 // ### Matrix.prototype.inverse()
 // Calculates the inverse matrix.
 //
-// *@returns {matrix}*
+// *@return {Matrix}*
 // TODO: optimize this calculation. But hey, you shouldn't use inverse anyway ;-)
 inverse() {
 	if (!this.isSquare() && this.determinant()) {
@@ -6394,7 +6464,7 @@ inverse() {
 //
 // *@param {number}*  
 // *@param {number}*   
-// *@returns {boolean}*
+// *@return {boolean}*
 isBandMatrix(l, u) {
 	var i, j, ii, jj;
 	
@@ -6403,7 +6473,7 @@ isBandMatrix(l, u) {
 	}
 
 	return this.every(function (x, i, j) {
-		return (i-l <= j && i+u >= j) || MathLib.isZero(x);
+		return (i - l <= j && i + u >= j) || MathLib.isZero(x);
 	});
 
 
@@ -6421,10 +6491,12 @@ isBandMatrix(l, u) {
 // ### Matrix.prototype.isDiag()
 // Determines if the matrix is a diagonal matrix.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isDiag() {
 	var i, j, ii, jj;
-	if ((this.hasOwnProperty('isUpper') && this.isUpper()) + (+(this.hasOwnProperty('isLower') && this.isLower())) + (+(this.hasOwnProperty('isSymmetric') && this.isSymmetric())) > 1) {
+	if ((this.hasOwnProperty('isUpper') && this.isUpper()) + 
+			(this.hasOwnProperty('isLower') && this.isLower()) + 
+			(this.hasOwnProperty('isSymmetric') && this.isSymmetric()) > 1) {
 		return true;
 	}
 	for (i = 0, ii = this.rows; i < ii; i++) {
@@ -6441,8 +6513,8 @@ isDiag() {
 // ### Matrix.prototype.isEqual()
 // Determines if the matrix is equal to an other matrix.
 //
-// *@param {matrix}* the matrix to compare with  
-// *@returns {boolean}*
+// *@param {Matrix}* the matrix to compare with  
+// *@return {boolean}*
 isEqual(x) {
 	var i, j, ii, jj;
 	if (this === x) {
@@ -6465,7 +6537,7 @@ isEqual(x) {
 // ### Matrix.prototype.isIdentity()
 // Determines if the matrix is a identity matrix.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isIdentity() {
 	if (!this.isSquare()) {
 		return false;
@@ -6485,7 +6557,7 @@ isIdentity() {
 // ### Matrix.prototype.isInvertible()
 // Determines if the matrix is invertible.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isInvertible() {
 	return this.isSquare() && this.rank() === this.rows;
 }
@@ -6494,10 +6566,10 @@ isInvertible() {
 // ### Matrix.prototype.isLower()
 // Determines if the matrix is a lower triangular matrix.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isLower() {
 	return this.slice(0, -1).every(function (x, i) {
-		return x.slice(i+1).every(MathLib.isZero);
+		return x.slice(i + 1).every(MathLib.isZero);
 	});
 }
 
@@ -6505,7 +6577,7 @@ isLower() {
 // ### Matrix.prototype.isNegDefinite()
 // Determines if the matrix is negative definite
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isNegDefinite() {
 	if (!this.isSquare()) {
 		return;
@@ -6515,10 +6587,10 @@ isNegDefinite() {
 	}
 	// Sylvester's criterion
 	if (this.rows % 2 === 0) {
-		return this.determinant() > 0 && this.remove(this.rows-1, this.cols-1).isNegDefinite();
+		return this.determinant() > 0 && this.remove(this.rows - 1, this.cols - 1).isNegDefinite();
 	}
 	else {
-		return this.determinant() < 0 && this.remove(this.rows-1, this.cols-1).isNegDefinite();
+		return this.determinant() < 0 && this.remove(this.rows - 1, this.cols - 1).isNegDefinite();
 	}
 }
 
@@ -6526,7 +6598,7 @@ isNegDefinite() {
 // ### Matrix.prototype.isOrthogonal()
 // Determines if the matrix is a orthogonal.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isOrthogonal() {
 	return this.transpose().times(this).isIdentity();
 }
@@ -6535,7 +6607,7 @@ isOrthogonal() {
 // ### Matrix.prototype.isPermutation()
 // Determines if the matrix is a permutation matrix
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isPermutation() {
 	var rows = [],
 			cols = [];
@@ -6551,7 +6623,7 @@ isPermutation() {
 				return true;
 			}
 		}
-		else if(MathLib.isZero(x)) {
+		else if (MathLib.isZero(x)) {
 			return true;
 		}
 		return false;
@@ -6562,7 +6634,7 @@ isPermutation() {
 // ### Matrix.prototype.isPosDefinite()
 // Determines if the matrix is positive definite
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isPosDefinite() {
 	if (!this.isSquare()) {
 		return;
@@ -6571,14 +6643,14 @@ isPosDefinite() {
 		return this[0][0] > 0;
 	}
 	// Sylvester's criterion
-	return this.determinant() > 0 && this.remove(this.rows-1, this.cols-1).isPosDefinite();
+	return this.determinant() > 0 && this.remove(this.rows - 1, this.cols - 1).isPosDefinite();
 }
 
 
 // ### Matrix.prototype.isReal()
 // Determines if the matrix has only real entries
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isReal() {
 	return this.every(MathLib.isReal);
 }
@@ -6588,11 +6660,10 @@ isReal() {
 // Determines if the matrix is a scalar matrix
 // (that is a multiple of the identity matrix)
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isScalar() {
-	var n = this.rows,
-			diag = this.diag,
-			i;
+	var i, ii,
+			diag = this.diag;
 	if (this.hasOwnProperty('isIdentity') && this.hasOwnProperty('isZero')) {
 		if (this.isIdentity() || this.isZero()) {
 			return true;
@@ -6602,7 +6673,7 @@ isScalar() {
 		}
 	}
 	if (this.isDiag()) {
-		for (i = 1; i < n; i++) {
+		for (i = 1, ii = this.rows; i < ii; i++) {
 			if (!MathLib.isEqual(diag[0], diag[i])) {
 				return false;
 			}
@@ -6616,7 +6687,7 @@ isScalar() {
 // ### Matrix.prototype.isSquare()
 // Determines if the matrix is a square matrix
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isSquare() {
 	return this.cols === this.rows;
 }
@@ -6625,17 +6696,19 @@ isSquare() {
 // ### Matrix.prototype.isSymmetric()
 // Determines if the matrix is symmetric
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isSymmetric() {
-	var i, j, bool = true;
+	var i, ii, j, jj,
+			isSymmetric = true;
+
 	if (!this.isSquare()) {
-		bool = false;
+		isSymmetric = false;
 	}
 	else {
-lp: for (i = 0; i < this.rows; i++) {
-			for (j = i + 1; j < this.cols; j++) {
+lp: for (i = 0, ii = this.rows; i < ii; i++) {
+			for (j = i + 1, jj = this.cols; j < jj; j++) {
 				if (!MathLib.isEqual(this[i][j], this[j][i])) {
-					bool = false;
+					isSymmetric = false;
 					break lp;
 				}
 			}
@@ -6643,19 +6716,19 @@ lp: for (i = 0; i < this.rows; i++) {
 	}
 
 	this.isSymmetric = function () {
-		return bool;
+		return isSymmetric;
 	};
-	return bool;
+	return isSymmetric;
 }
 
 
 // ### Matrix.prototype.isUpper()
 // Determines if the matrix is a upper triangular matrix
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isUpper() {
 	return this.slice(1).every(function (x, i) {
-		return x.slice(0, i+1).every(MathLib.isZero);
+		return x.slice(0, i + 1).every(MathLib.isZero);
 	});
 }
 
@@ -6664,7 +6737,7 @@ isUpper() {
 // Determines if the matrix is a vector
 // (only one row or one column)
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isVector() {
 	return (this.rows === 1) || (this.cols === 1);
 }
@@ -6674,7 +6747,7 @@ isVector() {
 // Determines if the matrix the zero matrix
 // The result is cached.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isZero() {
 	var isZero = this.every(MathLib.isZero);
 
@@ -6693,7 +6766,7 @@ isZero() {
 // the number of the column and the complete matrix
 //
 // *@param {function}* The function which is called on every argument  
-// *@returns {matrix}*
+// *@return {Matrix}*
 map(f) {
 	var m = this;
 	return new MathLib.Matrix(
@@ -6711,7 +6784,7 @@ map(f) {
 //
 // *@param {number}* The row to be removed.  
 // *@param {number}* The column to be removed.  
-// *@returns {matrix}*
+// *@return {Matrix}*
 minor(r, c) {
 	return this.remove(r, c).determinant();
 }
@@ -6720,8 +6793,8 @@ minor(r, c) {
 // ### Matrix.prototype.minus()
 // Calculates the difference of two matrices
 //
-// *@param {matrix}* The matrix to be subtracted.  
-// *@returns {matrix}*
+// *@param {Matrix}* The matrix to be subtracted.  
+// *@return {Matrix}*
 minus(m) {
 	return this.plus(m.negative());
 }
@@ -6730,15 +6803,15 @@ minus(m) {
 // ### Matrix.prototype.negative()
 // Returns the negative matrix
 //
-// *@returns {matrix}*
+// *@return {Matrix}*
 negative() {
-	var res = [],
-			i, ii;
-
+	var i, ii,
+			negative = [];
+			
 	for (i = 0, ii = this.rows; i < ii; i++) {
-		res.push(this[i].map(MathLib.negative));
+		negative.push(this[i].map(MathLib.negative));
 	}
-	return new MathLib.Matrix(res);
+	return new MathLib.Matrix(negative);
 }
 
 
@@ -6748,17 +6821,19 @@ negative() {
 // *@param {number}* The number.  
 // *@param {number}* The number of rows.  
 // *@param {number}* The number of columns.  
-// *@returns {matrix}*
-static numbers = function(n, r, c) {
-	var help = [], res = [],
-			i, ii;
+// *@return {Matrix}*
+static numbers = function (n, r, c) {
+	var i, ii,
+			row = [],
+			matrix = [];
+			
 	for (i = 0, ii = c || r || 1; i < ii; i++) {
-		help.push(n);
+		row.push(n);
 	}
 	for (i = 0, ii = r || 1; i < ii ; i++) {
-		res.push(help.slice(0));
+		matrix.push(row.slice(0));
 	}
-	return new MathLib.Matrix(res);
+	return new MathLib.Matrix(matrix);
 };
 
 
@@ -6767,7 +6842,7 @@ static numbers = function(n, r, c) {
 //
 // *@param {number}* The number of rows.  
 // *@param {number}* The number of columns.  
-// *@returns {matrix}*
+// *@return {Matrix}*
 static one = function (r, c) {
 	r = r || 1;
 	c = c || 1;
@@ -6779,54 +6854,53 @@ static one = function (r, c) {
 // This function adds a matrix to the current matrix
 // and returns the result as a new matrix.
 //
-// *@param {matrix}* The matrix to be added.  
-// *@returns {matrix}*
+// *@param {Matrix}* The matrix to be added.  
+// *@return {Matrix}*
 plus(m) {
-	var res = [],
-			r = this.rows,
-			c = this.cols,
-			i, j;
+	var i, ii, j, jj,
+			sum = [];
 
-	for (i = 0; i < r; i++) {
-		res[i] = [];
-		for (j = 0; j < c; j++) {
-			res[i][j] = MathLib.plus(this[i][j], m[i][j]);
+	for (i = 0, ii = this.rows; i < ii; i++) {
+		sum[i] = [];
+		for (j = 0, jj = this.cols ; j < jj; j++) {
+			sum[i][j] = MathLib.plus(this[i][j], m[i][j]);
 		}
 	}
-	return new MathLib.Matrix(res);
+	return new MathLib.Matrix(sum);
 }
 
 
 // ### Matrix.random()
 // Returns a matrix consisting completely of random numbers between 0 and 1
 //
-// *@param {number}* The number of rows.
-// *@param {number}* The number of columns.
-// *@returns {matrix}*
+// *@param {number}* The number of rows.  
+// *@param {number}* The number of columns.  
+// *@return {Matrix}*
 static random = function (r, c) {
-	var temp, arr = [],
+	var row,
+			matrix = [],
 			i, j, ii, jj;
 	for (i = 0, ii = r || 1; i < ii; i++) {
-		temp = [];
+		row = [];
 		for (j = 0, jj = c || r || 1; j < jj; j++) {
-			temp.push(Math.random());
+			row.push(Math.random());
 		}
-		arr.push(temp);
+		matrix.push(row);
 	}
-	return new MathLib.Matrix(arr);
+	return new MathLib.Matrix(matrix);
 };
 
 
 // ### Matrix.prototype.rank()
 // Determines the rank of the matrix
 //
-// *@returns {number}*
+// *@return {number}*
 rank() {
 	var rank = 0, mat, i, ii, j;
 	mat = this.rref();
 
-	label: for (i = Math.min(this.rows, this.cols)-1; i>=0; i--) {
-		for (j=this.cols-1; j>=i; j--) {
+	label: for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
+		for (j = this.cols - 1; j >= i; j--) {
 			if (!MathLib.isZero(mat[i][j])) {
 				rank = i + 1;
 				break label;
@@ -6844,7 +6918,7 @@ rank() {
 // ### Matrix.prototype.reduce()
 // This function works like the Array.prototype.reduce function.
 //
-// *@returns {any}*
+// *@return {any}*
 reduce(...args : any[]) {
 	return Array.prototype.reduce.apply(this, args);
 }
@@ -6855,15 +6929,15 @@ reduce(...args : any[]) {
 //
 // *@param {number|array}* The row(s) to be removed.  
 // *@param {number|array}* The column(s) to be removed.  
-// *@returns {matrix}*
+// *@return {Matrix}*
 remove(row, col) {
-	var res = this.toArray();
+	var rest = this.toArray();
 
 	if (row || row === 0) {
 		if (typeof row === 'number') {
 			row = [row];
 		}
-		res = res.filter(function (x, i, arr) {
+		rest = rest.filter(function (x, i) {
 			return row.indexOf(i) === -1;
 		});
 	}
@@ -6874,33 +6948,37 @@ remove(row, col) {
 		}
 		col = col.sort().reverse();
 		col.forEach(function (n) {
-			res = res.map(function (x) {
+			rest = rest.map(function (x) {
 				x.splice(n, 1);
 				return x;
 			});
 		});
 	}
 
-	return new MathLib.Matrix(res);
+	return new MathLib.Matrix(rest);
 }
 
 
 // ### Matrix.prototype.rref()
 // Calculate the reduced row echelon form (rref) of a matrix.
 //
-// *@returns {matrix}*
+// *@return {Matrix}*
 rref() {
-	var lead = 0, rref = this.toArray(),
-			i, j, r, temp, val;
-	for (r = 0; r < this.rows; r++) {
+	var i, ii, j, jj, k, kk, pivot, factor, swap,
+			lead = 0,
+			rref = this.toArray();
+
+	for (i = 0, ii = this.rows; i < ii; i++) {
 		if (this.cols <= lead) {
 			return new MathLib.Matrix(rref);
 		}
-		i = r;
-		while (rref[i][lead] === 0) {
-			i++;
-			if (this.rows === i) {
-				i = r;
+
+		// Find the row with the biggest pivot element
+		j = i;
+		while (rref[j][lead] === 0) {
+			j++;
+			if (this.rows === j) {
+				j = i;
 				lead++;
 				if (this.cols === lead) {
 					return new MathLib.Matrix(rref);
@@ -6908,23 +6986,28 @@ rref() {
 			}
 		}
 
-		// Switch the lines
-		var tmp = rref[i];
-		rref[i] = rref[r];
-		rref[r] = tmp;
-
-		val = rref[r][lead];
-		for (j = 0; j < this.cols; j++) {
-			rref[r][j] /= val;
+		// Swap the pivot row to the top 
+		if (i !== j) {
+			swap = rref[j];
+			rref[j] = rref[i];
+			rref[i] = swap;
 		}
 
-		for (i = 0; i < this.rows; i++) {
-			if (i === r) {
+		pivot = rref[i][lead];
+
+		// Divide the pivot row by the pivot element
+		for (j = lead, jj = this.cols; j < jj; j++) {
+			rref[i][j] /= pivot;
+		}
+
+		// Reduce the other rows with the pivot row
+		for (j = 0, jj = this.rows; j < jj; j++) {
+			if (j === i) {
 				continue;
 			}
-			val = rref[i][lead];
-			for (j = 0; j < this.cols; j++) {
-				rref[i][j] = MathLib.minus(rref[i][j], MathLib.times(val, rref[r][j]));
+			factor = rref[j][lead];
+			for (k = 0, kk = this.cols; k < kk; k++) {
+				rref[j][k] = MathLib.minus(rref[j][k], MathLib.times(factor, rref[i][k]));
 			}
 		}
 		lead++;
@@ -6936,7 +7019,7 @@ rref() {
 // ### Matrix.prototype.slice()
 // This function works like the Array.prototype.slice function.
 //
-// *@returns {array}*
+// *@return {array}*
 slice(...args : any[]) {
 	return Array.prototype.slice.apply(this, args);
 }
@@ -6946,8 +7029,8 @@ slice(...args : any[]) {
 // Solves the system of linear equations Ax = b
 // given by the matrix A and a vector or point b.
 //
-// *@param {vector|point}* The b in Ax = b  
-// *@returns {vector|point}*
+// *@param {Vector|Point}* The b in Ax = b  
+// *@return {Vector|Point}*
 solve(b) {
 	// Ax = b -> LUx = b. Then y is defined to be Ux
 	var LU = this.LU(),
@@ -6989,7 +7072,7 @@ solve(b) {
 // the number of the column and the complete matrix
 //
 // *@param {function}* The function which is called on every argument  
-// *@returns {boolean}*
+// *@return {boolean}*
 some(f) : bool {
 	return Array.prototype.some.call(this, function (x, i) {
 		return Array.prototype.some.call(x, function (y, j) {
@@ -7002,46 +7085,48 @@ some(f) : bool {
 // ### Matrix.prototype.times()
 // Multiplies the current matrix with a number, a matrix, a point or a vector.
 //
-// *@param {number|matrix|point|rational|vector}*  
-// *@returns {matrix|point|vector}*
+// *@param {number|Matrix|Point|Rational|Vector}*  
+// *@return {Matrix|Point|Vector}*
 times(a) {
-	var res = [], temp, i, j, k;
-	if(a.type === 'rational') {
+	var i, ii, j, jj, k, kk,
+			product = [], entry;
+
+	if (a.type === 'rational') {
 		a = a.toNumber(); 
 	}
 	if (typeof a === 'number' || a.type === 'complex') {
-		return this.map(function(x) {
+		return this.map(function (x) {
 			return MathLib.times(x, a);
 		});
 	}
 
 	else if (a.type === 'matrix') {
 		if (this.cols === a.rows) {
-			for (i = 0; i < this.rows; i++) {
-				res[i] = [];
-				for (j = 0; j < a.cols; j++) {
-					temp = 0;
+			for (i = 0, ii = this.rows; i < ii; i++) {
+				product[i] = [];
+				for (j = 0, jj = a.cols; j < jj; j++) {
+					entry = 0;
 
-					for (k = 0; k < this.cols; k++) {
-						temp = MathLib.plus(temp, MathLib.times(this[i][k], a[k][j]));
+					for (k = 0, kk = this.cols; k < kk; k++) {
+						entry = MathLib.plus(entry, MathLib.times(this[i][k], a[k][j]));
 					}
-					res[i][j] = temp;
+					product[i][j] = entry;
 				}
 			}
-			return new MathLib.Matrix(res);
+			return new MathLib.Matrix(product);
 		}
 	}
 
 	else if (a.type === 'point' || a.type === 'vector') {
 		if (this.cols === a.length) {
-			for (j = 0; j < this.rows; j++) {
-				temp = 0;
-				for (k = 0; k < this.cols; k++) {
-					temp = MathLib.plus(temp, MathLib.times(this[j][k], a[k]));
+			for (i = 0, ii = this.rows; i < ii; i++) {
+				entry = 0;
+				for (j = 0, jj = this.cols; j < jj; j++) {
+					entry = MathLib.plus(entry, MathLib.times(this[i][j], a[j]));
 				}
-				res.push(temp);
+				product.push(entry);
 			}
-			return new a.constructor(res);
+			return new a.constructor(product);
 		}
 	}
 }
@@ -7050,7 +7135,7 @@ times(a) {
 // ### Matrix.prototype.toArray()
 // Converts the matrix to a two-dimensional array
 //
-// *@returns {array}*
+// *@return {array}*
 toArray() {
 	return Array.prototype.map.call(this, function (x) {
 		return Array.prototype.map.call(x, function (y) {
@@ -7063,7 +7148,7 @@ toArray() {
 // ### Matrix.prototype.toColVectors()
 // Converts the columns of the matrix to vectors
 //
-// *@returns {array}*
+// *@return {array}*
 toColVectors() {
 	return this.transpose().toRowVectors();
 }
@@ -7073,7 +7158,7 @@ toColVectors() {
 // Transforms a 2x2 matrix into the corresponding complex number
 // (if the entries allow the transformation)
 //
-// *@returns {complex}*
+// *@return {Complex}*
 toComplex() : Complex {
 	if (this.rows !== 2 || this.cols !== 2 || this[0][0] !== this[1][1] || this[0][1] !== MathLib.negative(this[1][0])) {
 		return;
@@ -7085,10 +7170,10 @@ toComplex() : Complex {
 // ### Matrix.prototype.toContentMathMLString()
 // converting the matrix to content MathML
 //
-// *@returns {string}*
+// *@return {string}*
 toContentMathMLString() : string {
 	return this.reduce(function (str, x) {
-		return str + x.reduce(function(prev, cur) {
+		return str + x.reduce(function (prev, cur) {
 			return prev + MathLib.toContentMathMLString(cur);
 		}, '<matrixrow>') + '</matrixrow>';
 	}, '<matrix>') + '</matrix>';
@@ -7098,10 +7183,10 @@ toContentMathMLString() : string {
 // ### Matrix.prototype.toLaTeX()
 // Converting the matrix to LaTeX
 //
-// *@returns {string}*
+// *@return {string}*
 toLaTeX() : string {
 	return '\\begin{pmatrix}\n' + this.reduce(function (str, x) {
-		return str + x.reduce(function(prev, cur) {
+		return str + x.reduce(function (prev, cur) {
 			return prev + ' & ' + MathLib.toLaTeX(cur);
 		}) + '\\\n';
 	}, '').slice(0, -2) + '\n\\end{pmatrix}';
@@ -7111,10 +7196,10 @@ toLaTeX() : string {
 // ### Matrix.prototype.toMathMLString()
 // converting the matrix to (presentation) MathML
 //
-// *@returns {string}*
+// *@return {string}*
 toMathMLString() : string {
 	return this.reduce(function (str, x) {
-		return str + x.reduce(function(prev, cur) {
+		return str + x.reduce(function (prev, cur) {
 			return prev + '<mtd>' + MathLib.toMathMLString(cur) + '</mtd>';
 		}, '<mtr>') + '</mtr>';
 	}, '<mrow><mo> ( </mo><mtable>') + '</mtable><mo> ) </mo></mrow>';
@@ -7124,7 +7209,7 @@ toMathMLString() : string {
 // ### Matrix.prototype.toRowVectors()
 // Converts the rows of the matrix to vectors
 //
-// *@returns {array}*
+// *@return {array}*
 toRowVectors() : string {
 	return this.toArray().map(function (v) {return new MathLib.Vector(v);});
 }
@@ -7133,10 +7218,10 @@ toRowVectors() : string {
 // ### Matrix.prototype.toString()
 // Creating a custom .toString() function
 //
-// *@returns {string}*
+// *@return {string}*
 toString() : string {
 	return this.reduce(function (str, x) {
-		return str + x.reduce(function(prev, cur) {
+		return str + x.reduce(function (prev, cur) {
 			return prev + '\t' + MathLib.toString(cur);
 		}) + '\n';
 	}, '').slice(0, -1);
@@ -7146,7 +7231,7 @@ toString() : string {
 // ### Matrix.prototype.trace()
 // Calculating the trace of the matrix
 //
-// *@returns {number|complex}*
+// *@return {number|Complex}*
 trace() {
 	var trace = MathLib.plus.apply(null, this.diag());
 
@@ -7161,26 +7246,24 @@ trace() {
 // Calculating the transpose of the matrix
 // The result is cached.
 //
-// *@returns {Matrix}*
+// *@return {Matrix}*
 transpose() : Matrix {
-	var temp = [],
-			transpose,
-			help,
-			i, j, ii, jj;
+	var transposedMatrix, row, i, j, ii, jj,
+			transpose = [];
 
-	for (i = 0, ii = this.cols; i<ii; i++) {
-		help = [];
-		for (j = 0, jj = this.rows; j<jj; j++) {
-			help.push(this[j][i]);
+	for (i = 0, ii = this.cols; i < ii; i++) {
+		row = [];
+		for (j = 0, jj = this.rows; j < jj; j++) {
+			row.push(this[j][i]);
 		}
-		temp.push(help);
+		transpose.push(row);
 	}
 
-	transpose = new MathLib.Matrix(temp);
+	transposedMatrix = new MathLib.Matrix(transpose);
 	this.transpose = function () {
-		return transpose;
+		return transposedMatrix;
 	};
-	return transpose;
+	return transposedMatrix;
 }
 
 
@@ -7189,7 +7272,7 @@ transpose() : Matrix {
 //
 // *@param {number}* The number of rows.  
 // *@param {number}* The number of columns.  
-// *@returns {matrix}*
+// *@return {Matrix}*
 static zero = function (r, c) {
 	r = r || 1;
 	c = c || 1;
@@ -7222,7 +7305,7 @@ export class Permutation {
 			cycle = Permutation.listToCycle(permutation);
 		}
 
-		permutation.forEach((x,i)=>{this[i] = x;});
+		permutation.forEach((x, i) => {this[i] = x;});
 		this.length = permutation.length;
 		this.cycle = cycle;
 
@@ -7232,10 +7315,10 @@ export class Permutation {
 // ### Permutation.prototype.applyTo()
 // Applies the permutation to a number or a array/matrix/point/vector
 //
-// *@param {number|array|matrix|point|vector}*  
-// *@returns {number|array|matrix|point|vector}*
+// *@param {number|array|Matrix|Point|Vector}*  
+// *@return {number|array|Matrix|Point|Vector}*
 applyTo(n : any) : any {
-	var p, res;
+	var p, permutatedObj;
 	if (typeof n === 'number') {
 		if (n >= this.length) {
 			return n;
@@ -7244,22 +7327,44 @@ applyTo(n : any) : any {
 	}
 	else {
 		p = this;
-		res = n.map(function (x, i) {
+		permutatedObj = n.map(function (x, i) {
 			return n[p.applyTo(i)];
 		});
 
-		return (n.type === undefined ? res : new n.constructor(res));
+		return (n.type === undefined ? permutatedObj : new n.constructor(permutatedObj));
 	}
+}
+
+
+// ### Permutation.prototype.compare()
+// Compares two permutations.
+//
+// *@param {Permutation}* The permutation to compare  
+// *@return {number}*
+compare(p : Permutation) : number {
+	var i, ii;
+
+	if (this.length !== p.length) {
+		return MathLib.sign(this.length - p.length);
+	}
+
+	for (i = 0, ii = this.length; i < ii; i++) {
+		if (p[i] - this[i]) {
+			return MathLib.sign(this[i] - p[i]);
+		}
+	}
+
+	return 0;
 }
 
 
 // ### Permutation.cycleToList()
 // Converts a cycle representation to a list representation
 // 
-// *@param{array}* cycle The cycle to be converted  
-// *@returns {array}*
+// *@param {array}* cycle The cycle to be converted  
+// *@return {array}*
 static cycleToList(cycle : any) : number[] {
-	var index, res = [],
+	var index, list = [],
 			cur, i, ii, j, jj, max;
 
 	max = cycle.map(function (b) {
@@ -7267,7 +7372,7 @@ static cycleToList(cycle : any) : number[] {
 	});
 	max = Math.max.apply(null, max);
 
-	for (i=0, ii=max; i<=ii; i++) {
+	for (i = 0, ii = max; i <= ii; i++) {
 		cur = i;
 		for (j = 0, jj = cycle.length; j < jj; j++) {
 			index = cycle[j].indexOf(cur);
@@ -7275,23 +7380,23 @@ static cycleToList(cycle : any) : number[] {
 				cur = cycle[j][index % cycle[j].length];
 			}
 		}
-		res.push(cur);
+		list.push(cur);
 	}
-	return res;
+	return list;
 }
 
 
 // ### Permutation.id()
 // The id permutation
 // 
-// *@returns {permutation}*
+// *@return {Permutation}*
 static id = new Permutation([[]]);
 
 
 // ### Permutation.prototype.inverse()
 // Calculates the inverse of the permutation
 //
-// *@returns {permutation}*
+// *@return {Permutation}*
 inverse() : Permutation {
 	var cycle = this.cycle.slice(0);
 	cycle.reverse().forEach(function (e) {
@@ -7304,32 +7409,32 @@ inverse() : Permutation {
 // ### Permutation.listToCycle()
 // Converts a list representation to a cycle representation
 // 
-// *@param{array}* list The list to be converted  
-// *@returns {array}*
+// *@param {array}* list The list to be converted  
+// *@return {array}*
 static listToCycle(list : number[]) : any {
 	var finished = [],
-			cur, i, ii, temp, res = [];
+			cur, i, ii, cycle, cycles = [];
 
-	for (i=0, ii=list.length; i<ii; i++) {
+	for (i = 0, ii = list.length; i < ii; i++) {
 		cur = i;
-		temp = [];
-		while(!finished[cur]) {
+		cycle = [];
+		while (!finished[cur]) {
 			finished[cur] = true;
-			temp.push(cur);
+			cycle.push(cur);
 			cur = list[cur];
 		}
-		if (temp.length) {
-			res.push(temp);
+		if (cycle.length) {
+			cycles.push(cycle);
 		}
 	}
-	return res;
+	return cycles;
 }
 
 
 // ### Permutation.prototype.map()
 // Works like Array.prototype.map.
 //
-// *@returns {permutation}*
+// *@return {Permutation}*
 map(...args: any[]) : Permutation {
 	return new MathLib.Permutation(Array.prototype.map.apply(this, args));
 }
@@ -7338,10 +7443,12 @@ map(...args: any[]) : Permutation {
 // ### Permutation.prototype.sgn()
 // Calculates the signum of the permutation
 //
-// *@returns {number}*
+// *@return {number}*
 sgn() : number {
-	var count = 0, i;
-	for (i = 0; i < this.cycle.length; i++) {
+	var i, ii,
+			count = 0;
+			
+	for (i = 0, ii = this.cycle.length; i < ii; i++) {
 		count += this.cycle[i].length;
 	}
 	count += this.cycle.length;
@@ -7352,7 +7459,7 @@ sgn() : number {
 // ### Permutation.prototype.times()
 // Multiplies two permutations
 //
-// *@returns {permutation}*
+// *@return {Permutation}*
 times(p : Permutation) : Permutation {
 	var a = this;
 	return p.map(function (x) {
@@ -7361,33 +7468,33 @@ times(p : Permutation) : Permutation {
 }
 
 
-// ### Permutation.prototype.times()
-// Multiplies two permutations
+// ### Permutation.prototype.toMatrix()
+// Converts the permuatation to a matrix.
 //
-// *@param{number}* [size] The size of the matrix  
-// *@returns {matrix}*
+// *@param {number}* [size] The size of the matrix  
+// *@return {Matrix}*
 toMatrix(n : number) : Matrix {
-	var arr = [],
-			res = [],
-			temp, i, ii;
+	var row = [],
+			matrix = [],
+			index, i, ii;
 			n = n || this.length;
 
 	for (i = 0, ii = n - 1; i < ii; i++) {
-		arr.push(0);
+		row.push(0);
 	}
-	arr = arr.concat([1]).concat(arr);
+	row = row.concat([1]).concat(row);
 	for (i = 0, ii = n; i < ii; i++) {
-		temp = n - this.applyTo(i) - 1;
-		res.push(arr.slice(temp, temp + n));
+		index = n - this.applyTo(i) - 1;
+		matrix.push(row.slice(index, index + n));
 	}
-	return new MathLib.Matrix(res);
+	return new MathLib.Matrix(matrix);
 }
 
 
 // ### Permutation.prototype.toString()
 // String representation of the permutation. 
 //
-// *@returns {string}*
+// *@return {string}*
 toString() : string {
 	var str = '';
 	this.cycle.forEach(function (elem) {
@@ -7430,14 +7537,14 @@ export class Point extends Vector {
 // The Point I = (-i, 0, 1).
 // This is NOT the complex number i.
 //
-// *@returns {point}*
+// *@return {Point}*
 static I = new Point([new MathLib.Complex(0, -1), 0, 1]);
 
 
 // ### Point.J
 // The Point J = (i, 0, 1).
 //
-// *@returns {point}*
+// *@return {Point}*
 static J = new Point([new MathLib.Complex(0, 1), 0, 1]);
 
 
@@ -7445,16 +7552,16 @@ static J = new Point([new MathLib.Complex(0, 1), 0, 1]);
 // Calculates the distance crossratio (A,B,C,D) of four points
 // as seen from the current point.
 //
-// *@param {point}* a The point A  
-// *@param {point}* b The point B  
-// *@param {point}* c The point C  
-// *@param {point}* d The point D  
-// *@returns {number}*
+// *@param {Point}* a The point A  
+// *@param {Point}* b The point B  
+// *@param {Point}* c The point C  
+// *@param {Point}* d The point D  
+// *@return {number}*
 crossRatio(a : Point, b : Point, c : Point, d : Point) : number {
 	var xa = this.vectorProduct(a),
 			xb = this.vectorProduct(b);
 
-	return xa.scalarProduct(c)*xb.scalarProduct(d) / (xa.scalarProduct(d)* xb.scalarProduct(c));
+	return xa.scalarProduct(c) * xb.scalarProduct(d) / (xa.scalarProduct(d) * xb.scalarProduct(c));
 }
 
 
@@ -7462,8 +7569,8 @@ crossRatio(a : Point, b : Point, c : Point, d : Point) : number {
 // Calculates the distance to an other point.
 // If no other point is provided, it calculates the distance to the origin.
 //
-// *@param {point}* [point] The point to calculate the distance to  
-// *@returns {number}*
+// *@param {Point}* [point] The point to calculate the distance to  
+// *@return {number}*
 distanceTo(point : Point) : number {
 	if (arguments.length === 0) {
 		return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
@@ -7478,9 +7585,9 @@ distanceTo(point : Point) : number {
 // ### Point.prototype.draw()
 // Draws the point on a canvas or svg element.
 //
-// *@param {MathLib.screen object}* screen The screen to draw onto  
+// *@param {Screen}* screen The screen to draw onto  
 // *@param {object}* [options] Drawing options  
-// *@returns {point}* The current point
+// *@return {Point}* The current point
 draw(screen, options) {
 	if (Array.isArray(screen)) {
 		var point = this;
@@ -7499,13 +7606,13 @@ draw(screen, options) {
 // ### Point.prototype.isEqual()
 // Determines if the point has the same coordinates as an other point
 //
-// *@param {point}* The point to compare
-// *@returns {boolean}*
+// *@param {Point}* The point to compare  
+// *@return {boolean}*
 isEqual(q : Point) : bool {
 	var p = this.normalize();
 	q = q.normalize();
 
-	if(this.length !== q.length) {
+	if (this.length !== q.length) {
 		return false;
 	}
 
@@ -7518,7 +7625,7 @@ isEqual(q : Point) : bool {
 // ### Point.prototype.isFinite()
 // Determines if the point is finite
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isFinite() : bool {
 	return !MathLib.isZero(this[this.length - 1]);
 }
@@ -7527,8 +7634,8 @@ isFinite() : bool {
 // ### Point.prototype.isInside()
 // Determines wether a point is inside a circle
 //
-// *@param {circle}*
-// *@returns {boolean}*
+// *@param {Circle}*  
+// *@return {boolean}*
 isInside(a : Circle) : bool {
 	if (a.type === 'circle') {
 		return this.distanceTo(a.center) < a.radius;
@@ -7539,8 +7646,8 @@ isInside(a : Circle) : bool {
 // ### Point.prototype.isOn()
 // Determines wether a point is on a line or circle
 //
-// *@param {line|point}*
-// *@returns {boolean}*
+// *@param {Line|Point}*  
+// *@return {boolean}*
 isOn(a : Circle) : bool {
 	if (a.type === 'line') {
 		return this.distanceTo(a.center) === a.radius;
@@ -7554,8 +7661,8 @@ isOn(a : Circle) : bool {
 // ### Point.prototype.isOutside()
 // Determines wether a point is outside a circle
 //
-// *@param {circle}*
-// *@returns {boolean}*
+// *@param {Circle}*  
+// *@return {boolean}*
 isOutside(a : Circle) : bool {
 	if (a.type === 'circle') {
 		return this.distanceTo(a.center) > a.radius;
@@ -7566,8 +7673,8 @@ isOutside(a : Circle) : bool {
 // ### Point.prototype.lineTo()
 // Calculates a line connecting two points
 //
-// *@param {point}* The point to calculate the line to
-// *@returns {line}*
+// *@param {Point}* The point to calculate the line to  
+// *@return {Line}*
 lineTo(q : Point, dyn = false) : Line {
 	var line,
 			p = this;
@@ -7577,21 +7684,21 @@ lineTo(q : Point, dyn = false) : Line {
 
 		if (dyn) {
 			Object.defineProperties(line, {
-				"0": {
-					get : function(){ return p[1]*q[2]-p[2]*q[1]; },
-					set : function(){},
+				'0': {
+					get : function () { return p[1] * q[2] - p[2] * q[1]; },
+					set : function () {},
 					enumerable : true,
 					configurable : true
 				},
-				"1": {
-					get : function(){ return p[2]*q[0]-p[0]*q[2]; },
-					set : function(){},
+				'1': {
+					get : function () { return p[2] * q[0] - p[0] * q[2]; },
+					set : function () {},
 					enumerable : true,
 					configurable : true
 				},
-				"2": {
-					get : function(){ return p[0]*q[1]-p[1]*q[0]; },
-					set : function(){},
+				'2': {
+					get : function () { return p[0] * q[1] - p[1] * q[0]; },
+					set : function () {},
 					enumerable : true,
 					configurable : true
 				}
@@ -7606,7 +7713,7 @@ lineTo(q : Point, dyn = false) : Line {
 // ### Point.prototype.normalize()
 // Normalizes the point.
 //
-// *@returns {point}*
+// *@return {Point}*
 normalize() : Point {
 	var last = this[this.dimension] || 1;
 	return this.map(function (x) {
@@ -7618,18 +7725,20 @@ normalize() : Point {
 // ### Point.prototype.reflectAt()
 // Reflects the point at an other point
 //
-// *@returns {point}*
+// *@return {Point}*
 reflectAt(a : Point) : Point {
+	var i, ii,
+			reflectedPoint = [],
+			p = this.normalize();
+
 	if (a.type === 'point') {
 		if (this.dimension === a.dimension) {
-			var arr = [], i,
-					p = this.normalize();
 			a = a.normalize();
-			for (i = 0; i < this.dimension; i++) {
-				arr.push(2 * a[i] - p[i]);
+			for (i = 0, ii = this.dimension; i < ii; i++) {
+				reflectedPoint.push(2 * a[i] - p[i]);
 			}
-			arr.push(1);
-			return new MathLib.Point(arr);
+			reflectedPoint.push(1);
+			return new MathLib.Point(reflectedPoint);
 		}
 	}
 }
@@ -7638,13 +7747,13 @@ reflectAt(a : Point) : Point {
 // ### Point.prototype.toComplex()
 // Converts a two dimensional point to the corresponding complex number.
 //
-// *@returns {complex}*
+// *@return {Complex}*
 toComplex() : Complex {
 	if (this.dimension === 2) {
 		if (MathLib.isZero(this[2])) {
 			return MathLib.Complex.infinity;
 		}
-		return new MathLib.Complex(this[0]/this[2], this[1]/this[2]);
+		return new MathLib.Complex(this[0] / this[2], this[1] / this[2]);
 	}
 }
 
@@ -7652,7 +7761,7 @@ toComplex() : Complex {
 // ### Point.prototype.toContentMathMLString()
 // Returns content MathML representation of the point
 //
-// *@returns {string}*
+// *@return {string}*
 /* toContentMathMLString(opt) { */
 /* } */
 
@@ -7660,8 +7769,8 @@ toComplex() : Complex {
 // ### Point.prototype.toLaTeX()
 // Returns LaTeX representation of the point
 //
-// *@returns {boolean}* Optional parameter to indicate if the output should be projective.
-// *@returns {string}*
+// *@param {boolean}* Optional parameter to indicate if the output should be projective.  
+// *@return {string}*
 toLaTeX(opt = false) : string {
 	var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
@@ -7674,8 +7783,8 @@ toLaTeX(opt = false) : string {
 // ### Point.prototype.toMathMLString()
 // Returns (presentation) MathML representation of the point
 //
-// *@returns {boolean}* Optional parameter to indicate if the output should be projective.
-// *@returns {string}*
+// *@param {boolean}* Optional parameter to indicate if the output should be projective.  
+// *@return {string}*
 toMathMLString(opt = false) : string {
 	var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
@@ -7688,8 +7797,8 @@ toMathMLString(opt = false) : string {
 // ### Point.prototype.toString()
 // Returns string representation of the point
 //
-// *@returns {boolean}* Optional parameter to indicate if the output should be projective.
-// *@returns {string}*
+// *@param {boolean}* Optional parameter to indicate if the output should be projective.  
+// *@return {string}*
 toString(opt = false) : string {
 	var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
@@ -7729,26 +7838,26 @@ export class Polynomial {
 	subdeg: number;
 
 	constructor (polynomial) {
-		var temp = [];
+		var coefficients = [];
 
 		if (polynomial === undefined || polynomial.length === 0) {
 			polynomial = [0];
 		}
 		else if (typeof polynomial === 'number') {
 			while (polynomial--) {
-				temp.push(0);
+				coefficients.push(0);
 			}
-			temp.push(1);
-			polynomial = temp;
+			coefficients.push(1);
+			polynomial = coefficients;
 		}
 
-		polynomial.forEach((x,i)=>{this[i] = x});
+		polynomial.forEach((x, i) => {this[i] = x});
 		this.length = polynomial.length;
 		this.deg = polynomial.length - 1;
 		this.subdeg = (function (a) {
 				var i = 0;
 				if (a.length > 1 || a[0]) {
-					while(i < a.length && MathLib.isZero(a[i])) {
+					while (i < a.length && MathLib.isZero(a[i])) {
 						i++;
 					}
 					return i;
@@ -7759,32 +7868,54 @@ export class Polynomial {
 	}
 
 
+// ### Polynomial.prototype.compare()
+// Compares two polynomials.
+//
+// *@param {Polynomial}* The polynomial to compare  
+// *@return {number}*
+compare(p : Polynomial) : number {
+	var i, ii;
+
+	if (this.length !== p.length) {
+		return MathLib.sign(this.length - p.length);
+	}
+
+	for (i = 0, ii = this.length; i < ii; i++) {
+		if (p[i] - this[i]) {
+			return MathLib.sign(this[i] - p[i]);
+		}
+	}
+
+	return 0;
+}
+
+
 // ### Polynomial.prototype.differentiate()
 // Differentiates the polynomial
 //
 // *@param {number}* [n] the number of times to differentiate the polynomial.  
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 differentiate(n = 1) : Polynomial {
-	var temparr = [],
-		i;
+	var i, ii,
+			derivative = [];
 
 	if (n === 0) {
 		return this;
 	}
 
-	for (i = 0; i <= this.deg - n; i++) {
-		temparr[i] = MathLib.times(this[i + n], MathLib.fallingFactorial(i + n, n));
+	for (i = 0, ii = this.deg - n; i <= ii; i++) {
+		derivative[i] = MathLib.times(this[i + n], MathLib.fallingFactorial(i + n, n));
 	}
-	return new MathLib.Polynomial(temparr);
+	return new MathLib.Polynomial(derivative);
 }
 
 
 // ### Polynomial.prototype.draw()
 // Draws the polynomial on the screen
 //
-// *@param {screen}* The screen to draw the polynomial onto.  
+// *@param {Screen}* The screen to draw the polynomial onto.  
 // *@param {object}* [options] Optional drawing options.  
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 draw(screen, options) {
 	var path = [], i,
 			line = this;
@@ -7821,7 +7952,7 @@ draw(screen, options) {
 // ### Polynomial.prototype.every()
 // Works like Array.prototype.every.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 every(f : (value : any, index : number, vector : Vector ) => bool) : bool {
 	return Array.prototype.every.call(this, f);
 }
@@ -7839,66 +7970,66 @@ forEach() : void {
 // Integrates the polynomial
 //
 // *@param {number}* [n] the number of times to integrate the polynomial.  
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 integrate(n = 1) : Polynomial {
-	var temparr = [],
-			i;
+	var i, ii, 
+			antiderivative = [];
 
 	if (MathLib.isZero(n)) {
 		return this;
 	}
 
 	for (i = 0; i < n; i++) {
-		temparr.push(0);
+		antiderivative.push(0);
 	}
 
-	for (i = 0; i <= this.deg; i++) {
-		temparr[i + n] = this[i] / MathLib.fallingFactorial(i + n, n);
+	for (i = 0, ii = this.deg; i <= ii; i++) {
+		antiderivative[i + n] = this[i] / MathLib.fallingFactorial(i + n, n);
 	}
-	return new MathLib.Polynomial(temparr);
+	return new MathLib.Polynomial(antiderivative);
 }
 
 
 // ### Polynomial.interpolation
 // Interpolates points.
 //
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 interpolation(a, b) {
-	var temp,
-			res = new MathLib.Polynomial([0]),
+	var basisPolynomial,
+			interpolant = new MathLib.Polynomial([0]),
 			n = a.length,
-			i, j, x, y;
+			i, j, x;
 
-	if(arguments.length === 2) {
+	if (arguments.length === 2) {
 		a = a.map(function (x, i) {
 			return [x, b[i]];
 		});
 	}
 
 	for (i = 0; i < n; i++) {
-		temp = new MathLib.Polynomial([1]);
+		basisPolynomial = new MathLib.Polynomial([1]);
 		for (j = 0; j < n; j++) {
 			if (i !== j) {
-				temp = temp.times(new MathLib.Polynomial([-a[j][0] / (a[i][0] - a[j][0]), 1 / (a[i][0] - a[j][0])]));
+				basisPolynomial = basisPolynomial.times(new MathLib.Polynomial([-a[j][0] / (a[i][0] - a[j][0]), 1 / (a[i][0] - a[j][0])]));
 			}
 		}
-		res = res.plus(temp.times(a[i][1]));
+		interpolant = interpolant.plus(basisPolynomial.times(a[i][1]));
 	}
-	return res;
+	return interpolant;
 }
 
 
 // ### Polynomial.prototype.isEqual()
 // Decides if two polynomials are equal.
 //
-// *@param {polynomial}*  
-// *@returns {boolean}*
+// *@param {Polynomial}*  
+// *@return {boolean}*
 isEqual(p : Polynomial) : bool {
 	var i, ii;
 	if (this.deg !== p.deg || this.subdeg !== p.subdeg) {
 		return false;
 	}
-	for (i=0, ii=this.deg; i<=ii; i++) {
+	for (i = 0, ii = this.deg; i <= ii; i++) {
 		if (!MathLib.isEqual(this[i], p[i])) {
 			return false;
 		}
@@ -7910,7 +8041,7 @@ isEqual(p : Polynomial) : bool {
 // ### Polynomial.prototype.map()
 // Works like the Array.prototype.map function
 //
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 map(f) : Polynomial {
 	return new MathLib.Polynomial(Array.prototype.map.call(this, f));
 }
@@ -7919,7 +8050,7 @@ map(f) : Polynomial {
 // ### Polynomial.prototype.negative()
 // Returns the negative polynomial
 //
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 negative() : Polynomial {
 	return new MathLib.Polynomial(this.map(MathLib.negative));
 }
@@ -7928,35 +8059,35 @@ negative() : Polynomial {
 // ### Polynomial.one
 // Returns the one polynomial
 //
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 static one = new Polynomial([1]);
 
 
 // ### Polynomial.prototype.plus()
 // Adds a number or a polynomial
 //
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 plus(a) : Polynomial {
-	var temparr = [],
+	var plus = [],
 			i;
 	if (typeof a === 'number') {
-		temparr = this.slice();
-		temparr[0] = MathLib.plus(temparr[0], a);
+		plus = this.slice();
+		plus[0] = MathLib.plus(plus[0], a);
 	}
 	else if (a.type === 'polynomial') {
 		for (i = 0; i <= Math.min(this.deg, a.deg); i++) {
-			temparr[i] = MathLib.plus(this[i],	a[i]);
+			plus[i] = MathLib.plus(this[i], a[i]);
 		}
-		temparr = temparr.concat((this.deg > a.deg ? this : a).slice(i));
+		plus = plus.concat((this.deg > a.deg ? this : a).slice(i));
 	}
-	return new MathLib.Polynomial(temparr);
+	return new MathLib.Polynomial(plus);
 }
 
 
 // ### Polynomial.regression
 // Calculates the regression line for some points
 //
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 static regression(x, y) : Polynomial {
 	var length = x.length,
 			xy = 0,
@@ -7991,25 +8122,25 @@ static regression(x, y) : Polynomial {
 // ### Polynomial.roots
 // Returns a polynomial with the specified roots
 //
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 static roots(zeros) : Polynomial {
-	var temp, coef = [], i, ii;
+	var elemSymPoly, coef = [], i, ii;
 	if (MathLib.type(zeros) === 'array') {
 		zeros = MathLib.set(zeros, true);
 	}
 
-	temp = zeros.powerset();
-	for (i=0, ii=zeros.card; i<ii; i++) {
+	elemSymPoly = zeros.powerset();
+	for (i = 0, ii = zeros.card; i < ii; i++) {
 		coef[i] = 0; 
 	}
 
 	// Vieta's theorem
-	temp.slice(1).forEach(function (x, i) {
-		coef[ii-x.card] = MathLib.plus(coef[ii-x.card], x.times());
+	elemSymPoly.slice(1).forEach(function (x, i) {
+		coef[ii - x.card] = MathLib.plus(coef[ii - x.card], x.times());
 	});
 
 	coef = coef.map(function (x, i) {
-		if((ii-i)%2) {
+		if ((ii - i) % 2) {
 			return MathLib.negative(x);
 		}
 		return x;
@@ -8023,7 +8154,7 @@ static roots(zeros) : Polynomial {
 // ### Polynomial.prototype.slice()
 // Works like the Array.prototype.slice function
 //
-// *@returns {array}*
+// *@return {array}*
 slice(...args : any[]) : any[] {
 	return Array.prototype.slice.apply(this, args);
 }
@@ -8032,22 +8163,22 @@ slice(...args : any[]) : any[] {
 // ### Polynomial.prototype.times()
 // Multiplies the polynomial by a number or an other polynomial  
 //
-// *@param{number|Polynomial}* The multiplicator  
-// *@returns {Polynomial}*
+// *@param {number|Polynomial}* The multiplicator  
+// *@return {Polynomial}*
 times(a) : Polynomial {
-	var temparr = [],
-			i, j;
+	var i, ii, j, jj,
+			product = [];
 			
-	if(a.type === 'rational') {
+	if (a.type === 'rational') {
 		a = a.toNumber(); 
 	}
 	if (a.type === 'polynomial') {
-		for (i = 0; i <= this.deg; i++) {
-			for (j = 0; j <= a.deg; j++) {
-				temparr[i + j] = MathLib.plus((temparr[i + j] ? temparr[i + j] : 0), MathLib.times(this[i], a[j]));
+		for (i = 0, ii = this.deg; i <= ii; i++) {
+			for (j = 0, jj = a.deg; j <= jj; j++) {
+				product[i + j] = MathLib.plus((product[i + j] ? product[i + j] : 0), MathLib.times(this[i], a[j]));
 			}
 		}
-		return new MathLib.Polynomial(temparr);
+		return new MathLib.Polynomial(product);
 	}
 	else {  // we we multiply it to every coefficient
 		return this.map(function (b) {
@@ -8060,12 +8191,12 @@ times(a) : Polynomial {
 // ### Polynomial.prototype.toContentMathMLString()
 // Returns a content MathML representation of the polynomial
 //
-// *@returns {string}*
+// *@return {string}*
 toContentMathMLString(math) : string {
 	var str = '<apply><plus/>', i;
-	for (i=this.deg; i>=0; i--) {
+	for (i = this.deg; i >= 0; i--) {
 		if (!MathLib.isZero(this[i])) {
-			if(i === 0) {
+			if (i === 0) {
 				str += MathLib.toContentMathMLString(this[i]);
 			}
 			else {
@@ -8094,12 +8225,12 @@ toContentMathMLString(math) : string {
 // ### Polynomial.prototype.toFunctn()
 // Converts the polynomial to a functn
 //
-// *@returns {Functn}*
+// *@return {Functn}*
 toFunctn() {
 	var str = '', i, ii;
-	for (i=0, ii=this.deg; i<=ii; i++) {
+	for (i = 0, ii = this.deg; i <= ii; i++) {
 		if (!MathLib.isZero(this[i])) {
-			if(i === 0) {
+			if (i === 0) {
 				str += MathLib.toString(this[i]);
 			}
 			else {
@@ -8107,10 +8238,10 @@ toFunctn() {
 			}
 
 			if (i > 1) {
-				str += '* Math.pow(x,' + MathLib.toString(i) + ')';
+				str += ' * Math.pow(x, ' + MathLib.toString(i) + ')';
 			}
 			else if (i === 1) {
-				str += '*x';
+				str += ' * x';
 			}
 		}
 	}
@@ -8122,14 +8253,14 @@ toFunctn() {
 // ### Polynomial.prototype.toLaTeX()
 // Returns a LaTeX representation of the polynomial
 //
-// *@returns {string}*
+// *@return {string}*
 toLaTeX() : string {
 	var str = MathLib.toString(this[this.deg]) + 'x^{' + this.deg + '}',
 			i;
 
-	for (i=this.deg-1; i>=0; i--) {
+	for (i = this.deg - 1; i >= 0; i--) {
 		if (!MathLib.isZero(this[i])) {
-			// if(i === 0) {
+			// if (i === 0) {
 			//   str += MathLib.toLaTeX(this[i]);
 			// }
 			// else {
@@ -8151,13 +8282,13 @@ toLaTeX() : string {
 // ### Polynomial.prototype.toMathMLString()
 // Returns a MathML representation of the polynomial
 //
-// *@returns {string}*
-toMathMLString(math) :string {
+// *@return {string}*
+toMathMLString(math) : string {
 	var str = '<mrow>' + MathLib.toMathMLString(this[this.deg]) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathMLString(this.deg) + '</msup>',
 			i;
-	for (i=this.deg-1; i>=0; i--) {
+	for (i = this.deg - 1; i >= 0; i--) {
 		if (!MathLib.isZero(this[i])) {
-			// if(i === 0) {
+			// if (i === 0) {
 			//   str += MathLib.toMathML(this[i]);
 			// }
 			// else {
@@ -8186,11 +8317,11 @@ toMathMLString(math) :string {
 // ### Polynomial.prototype.toString()
 // Custom toString function
 //
-// *@returns {string}*
+// *@return {string}*
 toString(opt) : string {
 	var str = MathLib.toString(this[this.deg]) + '*x^' + this.deg,
 			i;
-	for (i=this.deg-1; i>=0; i--) {
+	for (i = this.deg - 1; i >= 0; i--) {
 		if (!MathLib.isZero(this[i])) {
 
 			str += MathLib.toString(this[i], true);
@@ -8210,25 +8341,25 @@ toString(opt) : string {
 // ### Polynomial.prototype.valueAt()
 // Evaluates the polynomial at a given point 
 //
-// *@param {number|complex|matrix}*  
-// *@returns {number|complex|matrix}*
+// *@param {number|Complex|Matrix}*  
+// *@return {number|Complex|Matrix}*
 valueAt(x) {
 	var pot = MathLib.is(x, 'matrix') ? MathLib.Matrix.identity(x.rows, x.cols) : 1,
-			res = MathLib.is(x, 'matrix') ? MathLib.Matrix.zero(x.rows, x.cols) : 0,
+			value = MathLib.is(x, 'matrix') ? MathLib.Matrix.zero(x.rows, x.cols) : 0,
 			i, ii;
 	
-	for (i=0, ii=this.deg; i<=ii; i++) {
-		res = MathLib.plus(res, MathLib.times(this[i], pot));
+	for (i = 0, ii = this.deg; i <= ii; i++) {
+		value = MathLib.plus(value, MathLib.times(this[i], pot));
 		pot = MathLib.times(pot, x);
 	}
-	return res;
+	return value;
 }
 
 
 // ### Polynomial.zero
 // Returns the zero polynomial
 //
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 static zero = new Polynomial([0]);
 
 
@@ -8261,11 +8392,21 @@ export class Rational {
 	}
 
 
+// ### [Rational.prototype.compare()](http://mathlib.de/en/docs/rational/compare)
+// Compares two rational numbers
+//
+// *@param {Rational}* The number to compare  
+// *@return {number}*
+compare(r) {
+	return MathLib.sign(this.numerator * r.denominator - this.denominator * r.numerator);
+}
+
+
 // ### [Rational.prototype.divide()](http://mathlib.de/en/docs/rational/divide)
 // Divides rational numbers
 //
-// *@param {Rational, number}* The divisor  
-// *@returns {Rational}*
+// *@param {Rational|number}* The divisor  
+// *@return {Rational}*
 divide(r) {
 	if (r.type === 'rational') {
 		return new MathLib.Rational(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));
@@ -8283,7 +8424,7 @@ divide(r) {
 // ### [Rational.prototype.inverse()](http://mathlib.de/en/docs/rational/inverse)
 // Calculates the inverse of a rational number
 //
-// *@returns {Rational}*
+// *@return {Rational}*
 inverse() : Rational {
 	if (!MathLib.isZero(this.numerator)) {
 		return new MathLib.Rational(this.denominator, this.numerator);
@@ -8294,7 +8435,7 @@ inverse() : Rational {
 // ### [Rational.prototype.isEqual()](http://mathlib.de/en/docs/rational/isEqual)
 // Checks if the rational number is equal to an other number
 //
-// *@returns {bool}*
+// *@return {boolean}*
 isEqual(r) : bool {
 	return MathLib.isEqual(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));
 }
@@ -8303,7 +8444,7 @@ isEqual(r) : bool {
 // ### [Rational.prototype.isZero()](http://mathlib.de/en/docs/rational/isZero)
 // Checks if the rational number is zero
 //
-// *@returns {bool}*
+// *@return {boolean}*
 isZero() : bool {
 	return MathLib.isZero(this.numerator);
 }
@@ -8313,7 +8454,7 @@ isZero() : bool {
 // Subtracts rational numbers
 //
 // *@param {Rational|number}* The number to be subtracted  
-// *@returns {Rational}*
+// *@return {Rational}*
 minus(r) {
 	var n = this.numerator,
 			d = this.denominator;
@@ -8335,7 +8476,7 @@ minus(r) {
 // ### [Rational.prototype.negative()](http://mathlib.de/en/docs/rational/negative)
 // Calculates the negative of a rational number
 //
-// *@returns {Rational}*
+// *@return {Rational}*
 negative() : Rational {
 	return new MathLib.Rational(-this.numerator, this.denominator);
 }
@@ -8344,8 +8485,8 @@ negative() : Rational {
 // ### [Rational.prototype.plus()](http://mathlib.de/en/docs/rational/plus)
 // Adds rational numbers
 //
-// *@param {Rational, number}* The number to be added  
-// *@returns {Rational}*
+// *@param {Rational|number}* The number to be added  
+// *@return {Rational}*
 plus(r) {
 	var n = this.numerator,
 			d = this.denominator;
@@ -8367,18 +8508,18 @@ plus(r) {
 // ### [Rational.prototype.reduce()](http://mathlib.de/en/docs/rational/reduce)
 // Reduces the rational number
 //
-// *@returns {Rational}*
+// *@return {Rational}*
 reduce() : Rational {
 	var gcd = MathLib.sign(this.denominator) * MathLib.gcd([this.numerator, this.denominator]);
-	return new MathLib.Rational(this.numerator/gcd, this.denominator/gcd);
+	return new MathLib.Rational(this.numerator / gcd, this.denominator / gcd);
 }
 
 
 // ### [Rational.prototype.times()](http://mathlib.de/en/docs/rational/times)
 // Multiplies rational numbers
 //
-// *@param {Rational, number}* The number to be multiplied  
-// *@returns {Rational}*
+// *@param {Rational|number}* The number to be multiplied  
+// *@return {Rational}*
 times(r) {
 	if (r.type === 'rational') {
 		return new MathLib.Rational(MathLib.times(this.numerator, r.numerator), MathLib.times(this.denominator, r.denominator));
@@ -8396,7 +8537,7 @@ times(r) {
 // ### [Rational.prototype.toContentMathMLString()](http://mathlib.de/en/docs/rational/toContentMathMLString)
 // Returns the Content MathML representation of the rational number
 //
-// *@returns {string}*
+// *@return {string}*
 toContentMathMLString() : String {
 	return '<cn type="rational">' + this.numerator + '<sep/>' + this.denominator + '</cn>';
 }
@@ -8405,7 +8546,7 @@ toContentMathMLString() : String {
 // ### [Rational.prototype.toLaTeX()](http://mathlib.de/en/docs/rational/toLaTeX)
 // Returns the LaTeX representation of the rational number
 //
-// *@returns {string}*
+// *@return {string}*
 toLaTeX() : String {
 	return '\\frac{' + MathLib.toLaTeX(this.numerator) + '}{' + MathLib.toLaTeX(this.denominator) + '}';
 }
@@ -8414,7 +8555,7 @@ toLaTeX() : String {
 // ### [Rational.prototype.toMathMLString()](http://mathlib.de/en/docs/rational/toMathMLString)
 // Returns the MathML representation of the rational number
 //
-// *@returns {string}*
+// *@return {string}*
 toMathMLString() : String {
 	return '<mfrac>' + MathLib.toMathMLString(this.numerator) + MathLib.toMathMLString(this.denominator) + '</mfrac>';
 }
@@ -8423,7 +8564,7 @@ toMathMLString() : String {
 // ### [Rational.prototype.toNumber()](http://mathlib.de/en/docs/rational/toNumber)
 // Returns the number represented by the rational number
 //
-// *@returns {number}*
+// *@return {number}*
 toNumber() : number {
 	return this.numerator / this.denominator;
 }
@@ -8432,7 +8573,7 @@ toNumber() : number {
 // ### [Rational.prototype.toString()](http://mathlib.de/en/docs/rational/toString)
 // Custom toString function
 //
-// *@returns {string}*
+// *@return {string}*
 toString() : String {
 	return MathLib.toString(this.numerator) + '/' + MathLib.toString(this.denominator);
 }
@@ -8458,13 +8599,13 @@ export class Set {
 		if (!elements) {
 			elements = [];
 		}
-		elements = elements.sort(MathLib.compare);
-		
-		elements = elements.filter(function (x, i, a) {
-			return x !== a[i + 1];
+
+		elements = elements.sort(MathLib.compare)
+		.filter(function (x, i, a) {
+			return (a.length === i + 1) || !MathLib.isEqual(x, a[i + 1]);
 		});
 
-		elements.forEach((x,i)=>{this[i] = x;});
+		elements.forEach((x, i) => {this[i] = x;});
 		this.length = elements.length;
 		this.card = elements.length;
 	}
@@ -8473,23 +8614,21 @@ export class Set {
 // ### Set.prototype.compare()
 // Compare function for sets
 //
-// *@returns {number}*
+// *@return {number}*
 compare(x : any) : number {
+	var a, i, ii;
+
 	if (this.card !== x.card) {
 		return MathLib.sign(this.card - x.card);
 	}
 	else {
-		var res = 0, stop = false;
-		this.forEach(function (y, i) {
-			if(!stop) {
-				var a = MathLib.compare(y, x[i]);
-				if(a !== 0) {
-					res = a;
-					stop = true;
-				}
+		for (i = 0, ii = this.card; i < ii; i++) {
+			a = MathLib.compare(this[i], x[i])
+			if (a !== 0) {
+				return a;
 			}
-		});
-		return res;
+		}
+		return 0;
 	}
 }
 
@@ -8497,7 +8636,7 @@ compare(x : any) : number {
 // ### Set.prototype.every()
 // Works like the Array.prototype.every function
 //  
-// *@returns {boolean}*
+// *@return {boolean}*
 every(...args : any[]) : bool {
 	return Array.prototype.every.apply(this, args);
 }
@@ -8506,7 +8645,7 @@ every(...args : any[]) : bool {
 // ### Set.prototype.filter()
 // Works like the Array.prototype.filter function
 //
-// *@returns {set}*
+// *@return {Set}*
 filter(...args : any[]) : Set {
 	return new MathLib.Set(Array.prototype.filter.apply(this, args));
 }
@@ -8514,6 +8653,8 @@ filter(...args : any[]) : Set {
 
 // ### Set.prototype.forEach()
 // Works like the Array.prototype.forEach function
+// 
+// 
 forEach(...args : any[]) : void {
 	Array.prototype.forEach.apply(this, args);
 }
@@ -8525,14 +8666,14 @@ forEach(...args : any[]) : void {
 // *@param {number}* The number to start from  
 // *@param {number}* The number to end with  
 // *@param {number}* The stepsize (default = 1)  
-// *@returns {set}*
-static fromTo = function(f : number, t : number, s : number = 1) : Set {
-	var i, arr = [];
+// *@return {Set}*
+static fromTo = function (f : number, t : number, s : number = 1) : Set {
+	var i, set = [];
 	if (f <= t) {
 		for (i = f; i <= t; i += s) {
-			arr.push(i);
+			set.push(i);
 		}
-		return new MathLib.Set(arr);
+		return new MathLib.Set(set);
 	}
 };
 
@@ -8540,7 +8681,7 @@ static fromTo = function(f : number, t : number, s : number = 1) : Set {
 // ### Set.prototype.indexOf()
 // Works like the Array.prototype.indexOf function
 //  
-// *@returns {number}*
+// *@return {number}*
 indexOf(...args : any[]) : number {
 	return Array.prototype.indexOf.apply(this, args);
 }
@@ -8549,7 +8690,7 @@ indexOf(...args : any[]) : number {
 // ### Set.prototype.insert()
 // Inserts an element into the set.
 //
-// *@returns {set}* Returns the current set
+// *@return {Set}* Returns the current set
 insert(x : any) : Set {
 	var i = this.locate(x);
 	if (this[i] !== x) {
@@ -8560,10 +8701,18 @@ insert(x : any) : Set {
 }
 
 
+// ### Set.prototype.intersect()
+// Returns the intersection of two sets.
+//
+// *@param {Set}*  
+// *@return {Set}*
+intersect = Set.createSetOperation(false, true, false);
+
+
 // ### Set.prototype.isEmpty()
 // Determines if the set is empty.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isEmpty() : bool {
 	return this.card === 0;
 }
@@ -8572,8 +8721,8 @@ isEmpty() : bool {
 // ### Set.prototype.isEqual()
 // Determines if the set is equal to an other set.
 //
-// *@param {set}* The set to compare  
-// *@returns {boolean}*
+// *@param {Set}* The set to compare  
+// *@return {boolean}*
 isEqual(x : Set) : bool {
 	if (this.card !== x.card) {
 		return false;
@@ -8589,8 +8738,8 @@ isEqual(x : Set) : bool {
 // ### Set.prototype.isSubsetOf()
 // Determines if the set is a subset of an other set.
 //
-// *@param {set}* The potential superset  
-// *@returns {boolean}*
+// *@param {Set}* The potential superset  
+// *@return {boolean}*
 isSubsetOf(a : Set) : bool {
 	return this.every(function (x) {
 		return a.indexOf(x) !== -1;
@@ -8602,8 +8751,8 @@ isSubsetOf(a : Set) : bool {
 // Array.prototype.indexOf() returns only the position of an element in the
 // array and not the position where one should be inserted.
 //
-// *@param {set}* The element to locate  
-// *@returns {number}*
+// *@param {Set}* The element to locate  
+// *@return {number}*
 locate(x : any) : number {
 	var left = 0,
 			right = this.card - 1,
@@ -8632,25 +8781,31 @@ locate(x : any) : number {
 // Works like the Array.prototype.map function
 //
 // *@param {function}* The mapping function  
-// *@returns {set}*
+// *@return {Set}*
 map(...args : any[]) : any {
 	return new MathLib.Set(Array.prototype.map.apply(this, args));
 }
 
 
+// ### Set.prototype.plus()
+// Adds the argument to all elements in the set,  
+// or if no argument is provided adds up all the elements in the set.
+//
+// *@param {number|MathLib object}*  
+// *@return {Set|any}*
 plus(n : any) : any {
-	var res = [];
+	var sum = [];
 	if (!arguments.length) {
 		return MathLib.plus.apply(null, this.toArray());
 	}
 	else if (n.type === 'set') {
 		this.forEach(function (x) {
 				n.forEach(function (y) {
-					res.push(MathLib.plus(x, y));
+					sum.push(MathLib.plus(x, y));
 				});
 			});
 
-		return new MathLib.Set(res);
+		return new MathLib.Set(sum);
 	}
 	else {
 		return this.map(function (x) {
@@ -8663,27 +8818,29 @@ plus(n : any) : any {
 // ### Set.prototype.powerset()
 // Returns the powerset
 //
-// *@returns {set}*
+// *@return {Set}*
 powerset() : Set {
-	var res = [], arr, temp, i, ii, j, jj;
+	var flag, subset, i, ii, j, jj,
+			powerset = [];
+
 	for (i = 0, ii = Math.pow(2, this.card); i < ii; i++) {
-		arr = i.toString(2).split('').reverse();
-		temp = [];
+		flag = i.toString(2).split('').reverse();
+		subset = [];
 		for (j = 0, jj = this.card; j < jj; j++) {
-			if (arr[j] === '1') {
-				temp.push(this[j]);
+			if (flag[j] === '1') {
+				subset.push(this[j]);
 			}
 		}
-		res.push(new MathLib.Set(temp));
+		powerset.push(new MathLib.Set(subset));
 	}
-	return new MathLib.Set(res);
+	return new MathLib.Set(powerset);
 }
 
 
 // ### Set.prototype.reduce()
 // Works like the Array.prototype.reduce function
 //  
-// *@returns {any}*
+// *@return {any}*
 reduce(...args : any[]) : any {
 	return Array.prototype.reduce.apply(this, arguments);
 }
@@ -8692,7 +8849,7 @@ reduce(...args : any[]) : any {
 // ### Set.prototype.remove()
 // Removes a element from a set
 //
-// *@returns {set}*
+// *@return {Set}*
 remove(a : any) : Set {
 	var i = this.indexOf(a);
 	if (i !== -1) {
@@ -8703,32 +8860,32 @@ remove(a : any) : Set {
 }
 
 
-static createSetOperation = function(left, both, right) {
+static createSetOperation = function (left, both, right) {
 	return function (a) {
-		var res = [],
+		var set = [],
 				i = 0,
 				j = 0,
 				tl = this.card,
 				al = a.card;
 
 		while (i < tl && j < al) {
-			if (this[i] < a[j]) {
+			if (MathLib.compare(this[i], a[j]) < 0) {
 				if (left) {
-					res.push(this[i]);
+					set.push(this[i]);
 				}
 				i++;
 				continue;
 			}
-			if (this[i] > a[j]) {
+			if (MathLib.compare(this[i], a[j]) > 0) {
 				if (right) {
-					res.push(a[j]);
+					set.push(a[j]);
 				}
 				j++;
 				continue;
 			}
-			if (this[i] === a[j]) {
+			if (MathLib.isEqual(this[i], a[j])) {
 				if (both) {
-					res.push(this[i]);
+					set.push(this[i]);
 				}
 				i++;
 				j++;
@@ -8736,34 +8893,38 @@ static createSetOperation = function(left, both, right) {
 			}
 		}
 		if (left && j === al) {
-			res = res.concat(this.slice(i));
+			set = set.concat(this.slice(i));
 		}
 		else if (right && i === tl) {
-			res = res.concat(a.slice(j));
+			set = set.concat(a.slice(j));
 		}
-		return new MathLib.Set(res);
+		return new MathLib.Set(set);
 	};
 };
-
-union = Set.createSetOperation(true, true, true);
-intersect = Set.createSetOperation(false, true, false);
-without = Set.createSetOperation(true, false, false);
-xor = Set.createSetOperation(true, false, true);
 
 
 // ### Set.prototype.slice()
 // Works like the Array.prototype.slice function
 //
-// *@returns {array}*
+// *@return {array}*
 slice(...args : any[]) : any {
 	return Array.prototype.slice.apply(this, args);
+}
+
+
+// ### Set.prototype.some()
+// Works like the Array.prototype.some function
+//  
+// *@return {boolean}*
+some(...args : any[]) : bool {
+	return Array.prototype.some.apply(this, args);
 }
 
 
 // ### Set.prototype.splice()
 // Works like the Array.prototype.splice function
 //
-// *@returns {set}*
+// *@return {Set}*
 splice(...args : any[]) : any {
 	return Array.prototype.splice.apply(this, args);
 }
@@ -8774,7 +8935,7 @@ splice(...args : any[]) : any {
 // Multiplies all elements by a argument if one is passed.
 //
 // *@param {number|MathLib object}*  
-// *@returns {set}*
+// *@return {Set}*
 times(n : any) : any {
 	if (!arguments.length) {
 		return MathLib.times.apply(null, this.toArray());
@@ -8790,7 +8951,7 @@ times(n : any) : any {
 // ### Set.prototype.toArray()
 // Converts the set to an array
 //
-// *@returns {array}*
+// *@return {array}*
 toArray() : any[] {
 	return Array.prototype.slice.call(this);
 }
@@ -8799,13 +8960,13 @@ toArray() : any[] {
 // ### Set.prototype.toContentMathMLString()
 // Returns the content MathML representation of the set
 //
-// *@returns {string}*
+// *@return {string}*
 toContentMathMLString() : string {
 	if (this.isEmpty()) {
 		return '<emptyset/>';
 	}
 	else {
-		return this.reduce(function(old, cur) {
+		return this.reduce(function (old, cur) {
 			return old + MathLib.toContentMathMLString(cur);
 		}, '<set>') + '</set>';
 	}
@@ -8815,13 +8976,13 @@ toContentMathMLString() : string {
 // ### Set.prototype.toLaTeX()
 // Returns the LaTeX representation of the set
 //
-// *@returns {string}*
+// *@return {string}*
 toLaTeX() : string {
 	if (this.isEmpty()) {
 		return '\\emptyset';
 	}
 	else {
-		return this.reduce(function(old, cur) {
+		return this.reduce(function (old, cur) {
 			return old + MathLib.toLaTeX(cur) + ', ';
 		}, '\\{').slice(0, -2) + '\\}';
 	}
@@ -8831,13 +8992,13 @@ toLaTeX() : string {
 // ### Set.prototype.toMathMLString()
 // Returns the (presentation) MathML representation of the set
 //
-// *@returns {string}*
+// *@return {string}*
 toMathMLString() : string {
 	if (this.isEmpty()) {
 		return '<mi>&#x2205;</mi>';
 	}
 	else {
-		return this.reduce(function(old, cur) {
+		return this.reduce(function (old, cur) {
 			return old + MathLib.toMathMLString(cur) + '<mo>,</mo>';
 		}, '<mrow><mo>{</mo>').slice(0, -10) + '<mo>}</mo></mrow>';
 	}
@@ -8847,13 +9008,37 @@ toMathMLString() : string {
 // ### Set.prototype.toString()
 // Returns a string representation of the set
 //
-// *@returns {string}*
+// *@return {string}*
 toString() : string {
 	if (this.isEmpty()) {
 		return '∅';
 	}
-	return '(' + Array.prototype.join.call(this, ', ') + ')';
+	return '{' + Array.prototype.join.call(this, ', ') + '}';
 }
+
+
+// ### Set.prototype.union()
+// Returns the union of two sets.
+//
+// *@param {Set}*  
+// *@return {Set}*
+union = Set.createSetOperation(true, true, true);
+
+
+// ### Set.prototype.without()
+// Returns all elements, which are in the first set, but not in the second.
+//
+// *@param {Set}*  
+// *@return {Set}*
+without = Set.createSetOperation(true, false, false);
+
+
+// ### Set.prototype.xor()
+// Returns all elements which are in either the first or the second set.
+//
+// *@param {Set}*  
+// *@return {Set}*
+xor = Set.createSetOperation(true, false, true);
 
 
 }
@@ -8862,7 +9047,7 @@ toString() : string {
 	// ### MathLib.noConflict
 	// Restores the original value of MathLib in the global namespace
 	//
-	// *@returns {object}* Returns a reference to this MathLib library
+	// *@return {object}* Returns a reference to this MathLib library
 	/*
 	MathLib.noConflict = function () {
 		global.MathLib = oldMathLib;
@@ -8909,45 +9094,46 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-(function(global) {
-	"use strict";
+(function (global) {
+	'use strict';
 
-	var elementPrototype = (global.HTMLElement || global.Element)["prototype"];
+	var elementPrototype = (global.HTMLElement || global.Element)['prototype'];
 	var getter;
 
 
 	// document.fullscreenEnabled
-	if(!document.hasOwnProperty("fullscreenEnabled")) {
-		getter = (function() {
+	if (!document.hasOwnProperty('fullscreenEnabled')) {
+		getter = (function () {
 			// These are the functions that match the spec, and should be preferred
-			if("webkitIsFullScreen" in document) {
-				return function() { return (<any>document).webkitFullscreenEnabled; };
+			if ('webkitIsFullScreen' in document) {
+				return function () { return (<any>document).webkitFullscreenEnabled; };
 			}
-			if("mozFullScreenEnabled" in document) {
-				return function() { return (<any>document).mozFullScreenEnabled; };
+			if ('mozFullScreenEnabled' in document) {
+				return function () { return (<any>document).mozFullScreenEnabled; };
 			}
 
-			return function() { return false; }; // not supported, never fullscreen
+			return function () { return false; }; // not supported, never fullscreen
 		})();
 
 
 	}
 
-	if(!document.hasOwnProperty("fullscreenElement")) {
-		getter = (function() {
+	if (!document.hasOwnProperty('fullscreenElement')) {
+		getter = (function () {
 			// These are the functions that match the spec, and should be preferred
-			var i=0, name=["webkitCurrentFullScreenElement", "webkitFullscreenElement", "mozFullScreenElement"];
-			for (; i<name.length; i++)
+			var i, ii,
+					name = ['webkitCurrentFullScreenElement', 'webkitFullscreenElement', 'mozFullScreenElement'];
+			for (i = 0, ii = name.length; i < ii; i++)
 			{
 				if (name[i] in document)
 				{
-					return function() { return document[name[i]]; };
+					return function () { return document[name[i]]; };
 				}
 			}
-			return function() { return null; }; // not supported
+			return function () { return null; }; // not supported
 		})();
 
-		Object.defineProperty(document, "fullscreenElement", {
+		Object.defineProperty(document, 'fullscreenElement', {
 			enumerable: true, configurable: false, writeable: false,
 			get: getter
 		});
@@ -8955,49 +9141,49 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 	// Document event: fullscreenchange
 	function fullscreenchange(oldEvent) {
-		var newEvent = document.createEvent("CustomEvent");
-		(<any>newEvent).initCustomEvent("fullscreenchange", true, false, null);
+		var newEvent = document.createEvent('CustomEvent');
+		(<any>newEvent).initCustomEvent('fullscreenchange', true, false, null);
 		// TODO: Any need for variable copy?
 		document.dispatchEvent(newEvent);
 	}
-	document.addEventListener("webkitfullscreenchange", fullscreenchange, false);
-	document.addEventListener("mozfullscreenchange", fullscreenchange, false);
+	document.addEventListener('webkitfullscreenchange', fullscreenchange, false);
+	document.addEventListener('mozfullscreenchange', fullscreenchange, false);
 
 	// Document event: fullscreenerror
 	function fullscreenerror(oldEvent) {
-		var newEvent = document.createEvent("CustomEvent");
-		(<any>newEvent).initCustomEvent("fullscreenerror", true, false, null);
+		var newEvent = document.createEvent('CustomEvent');
+		(<any>newEvent).initCustomEvent('fullscreenerror', true, false, null);
 		// TODO: Any need for variable copy?
 		document.dispatchEvent(newEvent);
 	}
-	document.addEventListener("webkitfullscreenerror", fullscreenerror, false);
-	document.addEventListener("mozfullscreenerror", fullscreenerror, false);
+	document.addEventListener('webkitfullscreenerror', fullscreenerror, false);
+	document.addEventListener('mozfullscreenerror', fullscreenerror, false);
 
 	// element.requestFullScreen
-	if(!elementPrototype.requestFullScreen) {
-		elementPrototype.requestFullScreen = (function() {
-			if(elementPrototype.webkitRequestFullScreen) {
-				return function() {
+	if (!elementPrototype.requestFullScreen) {
+		elementPrototype.requestFullScreen = (function () {
+			if (elementPrototype.webkitRequestFullScreen) {
+				return function () {
 					this.webkitRequestFullScreen((<any>Element).ALLOW_KEYBOARD_INPUT);
 				};
 			}
 
-			if(elementPrototype.mozRequestFullScreen) {
-				return function() {
+			if (elementPrototype.mozRequestFullScreen) {
+				return function () {
 					this.mozRequestFullScreen();
 				};
 			}
 
-			return function(){};
+			return function () {};
 		})();
 	}
 
 	// document.exitFullScreen
-	if(!(<any>document).exitFullScreen) {
-		(<any>document).exitFullScreen = (function() {
+	if (!(<any>document).exitFullScreen) {
+		(<any>document).exitFullScreen = (function () {
 			return  (<any>document).webkitCancelFullScreen ||
 					(<any>document).mozCancelFullScreen ||
-					function(){};
+					function () {};
 		})();
 	}
 
@@ -9036,7 +9222,7 @@ if (!('setLineDash' in CanvasRenderingContext2D.prototype)) {
 	// Additionally extending the CanvasRenderingContext2D.prototype is only possible with a weird hack.
 	/*
 	else if ('webkitLineDash' in CanvasRenderingContext2D.prototype) {
-		prototype	= document.createElement('canvas').getContext('2d').__proto__;
+		prototype = document.createElement('canvas').getContext('2d').__proto__;
 		setLineDash = function (dash) {
 			this.webkitLineDash = dash;
 		};

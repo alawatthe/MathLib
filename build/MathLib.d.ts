@@ -112,6 +112,7 @@ module MathLib {
 		public length: number;
 		constructor(coords: number[]);
 		static areLinearIndependent: (v: Vector[]) => bool;
+		public compare(v: Vector): number;
 		public every(f: (value: any, index: number, vector: Vector) => bool): bool;
 		public forEach(f: (value: any, index: number, vector: Vector) => void): void;
 		public isEqual(v: Vector): bool;
@@ -141,6 +142,7 @@ module MathLib {
 		constructor(center: any, radius: number);
 		public area(): number;
 		public circumference(): number;
+		public compare(c: Circle): number;
 		public draw(screen, options): Circle;
 		public isEqual(c: Circle): bool;
 		public positionOf(p): string;
@@ -202,6 +204,7 @@ module MathLib {
 		public value: any;
 		public content: any;
 		constructor(expr?: {});
+		public compare(e): number;
 		public numericallyEvaluate(): any;
 		static parse: (str: any) => any;
 		public toLaTeX(): string;
@@ -226,10 +229,11 @@ module MathLib {
 		public rows: number;
 		public LUpermutation: Permutation;
 		constructor(matrix);
-		public LU(dontSwapPivot?: bool);
+		public LU();
 		public adjoint(): Matrix;
 		public adjugate(): Matrix;
 		public cholesky(): Matrix;
+		public compare(m: Matrix): number;
 		public copy(): Matrix;
 		public determinant(): any;
 		public diag(): any[];
@@ -292,6 +296,7 @@ module MathLib {
 		public cycle: any[];
 		constructor(p);
 		public applyTo(n: any): any;
+		public compare(p: Permutation): number;
 		static cycleToList(cycle: any): number[];
 		static id: Permutation;
 		public inverse(): Permutation;
@@ -329,6 +334,7 @@ module MathLib {
 		public length: number;
 		public subdeg: number;
 		constructor(polynomial);
+		public compare(p: Polynomial): number;
 		public differentiate(n?: number): Polynomial;
 		public draw(screen, options): Polynomial;
 		public every(f: (value: any, index: number, vector: Vector) => bool): bool;
@@ -357,6 +363,7 @@ module MathLib {
 		public numerator: number;
 		public denominator: number;
 		constructor(numerator: number, denominator?: number);
+		public compare(r);
 		public divide(r);
 		public inverse(): Rational;
 		public isEqual(r): bool;
@@ -384,6 +391,7 @@ module MathLib {
 		static fromTo: (f: number, t: number, s: number) => Set;
 		public indexOf(...args: any[]): number;
 		public insert(x: any): Set;
+		public intersect: (a: any) => any;
 		public isEmpty(): bool;
 		public isEqual(x: Set): bool;
 		public isSubsetOf(a: Set): bool;
@@ -394,11 +402,8 @@ module MathLib {
 		public reduce(...args: any[]): any;
 		public remove(a: any): Set;
 		static createSetOperation: (left: any, both: any, right: any) => (a: any) => any;
-		public union: (a: any) => any;
-		public intersect: (a: any) => any;
-		public without: (a: any) => any;
-		public xor: (a: any) => any;
 		public slice(...args: any[]): any;
+		public some(...args: any[]): bool;
 		public splice(...args: any[]): any;
 		public times(n: any): any;
 		public toArray(): any[];
@@ -406,5 +411,8 @@ module MathLib {
 		public toLaTeX(): string;
 		public toMathMLString(): string;
 		public toString(): string;
+		public union: (a: any) => any;
+		public without: (a: any) => any;
+		public xor: (a: any) => any;
 	}
 }

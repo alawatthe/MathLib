@@ -25,19 +25,19 @@ export class Screen3D extends Screen {
 					controls: 'Trackball',
 					grid: {
 						xy: {
-							angle: Math.PI/8,
+							angle: Math.PI / 8,
 							color: 0xcccccc,
 							type: 'none',
 							tick: {x: 1, y: 1, r: 1}
 						},
 						xz: {
-							angle: Math.PI/8,
+							angle: Math.PI / 8,
 							color: 0xcccccc,
 							type: 'none',
 							tick: {x: 1, z: 1, r: 1}
 						},
 						yz: {
-							angle: Math.PI/8,
+							angle: Math.PI / 8,
 							color: 0xcccccc,
 							type: 'none',
 							tick: {y: 1, z: 1, r: 1}
@@ -73,7 +73,7 @@ export class Screen3D extends Screen {
 
 		// Renderer
 		// ========
-		renderer = new THREE[opts.renderer + 'Renderer']( {antialias:true, preserveDrawingBuffer: true} );
+		renderer = new THREE[opts.renderer + 'Renderer']( {antialias: true, preserveDrawingBuffer: true} );
 		// Remove the warning message.
 		this.wrapper.innerHTML = '';
 		this.wrapper.appendChild(renderer.domElement);
@@ -99,14 +99,14 @@ export class Screen3D extends Screen {
 		// move mouse and left   click (or hold 'A') to rotate
 		//                middle click (or hold 'S') to zoom
 		//                right  click (or hold 'D') to pan
-		if(opts.controls) {
-			controls = new THREE[opts.controls+'Controls'](camera, renderer.domElement);
+		if (opts.controls) {
+			controls = new THREE[opts.controls + 'Controls'](camera, renderer.domElement);
 		}
 		// A update function for the controls doing nothing.
 		// The function is called in the update function.
 		else {
 			controls = {
-				update: function (){}
+				update: function () {}
 			};
 		}
 		
@@ -116,10 +116,10 @@ export class Screen3D extends Screen {
 		// Light
 		// =====
 		var light1 = new THREE.PointLight(0xffffff);
-		light1.position.set(0,0,200);
+		light1.position.set(0, 0, 200);
 		scene.add(light1);
 		var light2 = new THREE.PointLight(0xffffff);
-		light2.position.set(0,0,-200);
+		light2.position.set(0, 0, -200);
 		scene.add(light2);
 
 

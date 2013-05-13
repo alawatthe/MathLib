@@ -2,16 +2,17 @@
 // Calculates the determinant of the matrix via the LU decomposition.
 // The result is cached.
 //
-// *@returns {number|complex}*
+// *@return {number|Complex}*
 determinant() : any {
+	var LU, determinant;
+
 	if (this.isSquare()) {
-		var arr, determinant;
-		if(this.rank() < this.rows) {
+		if (this.rank() < this.rows) {
 			determinant = 0;
 		}
 		else {
-			arr = this.LU();
-			determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, arr.diag()));
+			LU = this.LU();
+			determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, LU.diag()));
 		}
 
 		this.determinant = function () {

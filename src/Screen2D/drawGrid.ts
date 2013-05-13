@@ -1,7 +1,7 @@
 // ### Screen2D.prototype.drawGrid
 // Draws the grid.
 //
-// *@returns {Screen2D}*
+// *@return {Screen2D}*
 drawGrid() {
 
 	if (!this.options.grid) {
@@ -15,8 +15,8 @@ drawGrid() {
 			left   = (            - this.translation.x) / this.scale.x,
 			right  = (this.width  - this.translation.x) / this.scale.x,
 			yTick  = Math.pow(10, 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3)),
-			xTick  = Math.pow(10, 1 - Math.floor(Math.log(+this.transformation[0][0]) / Math.LN10 - 0.3)),
-			i;
+			xTick  = Math.pow(10, 1 - Math.floor(Math.log( this.transformation[0][0]) / Math.LN10 - 0.3)),
+			i, ii;
 
 
 	if (this.options.grid.type === 'cartesian') {
@@ -34,20 +34,20 @@ drawGrid() {
 
 
 		// Test for logarithmic plots
-		/*for (i = left-(left%this.axis.tick.x); i <= right; i += this.axis.tick.x) {
-			for (var j = 1 ; j <=10; j++ ) {
-				this.line([[i*Math.log(10)+ Math.log(j), bottom], [i*Math.log(10)+Math.log(j), top]], options);
+		/*for (i = left - (left % this.axis.tick.x); i <= right; i += this.axis.tick.x) {
+			for (var j = 1; j <= 10; j++ ) {
+				this.line([[i * Math.log(10) + Math.log(j), bottom], [i * Math.log(10) + Math.log(j), top]], options);
 			}
 		}*/
 
 
 	}
 	else if (this.options.grid.type === 'polar') {
-		var max = Math.sqrt(Math.max(top*top, bottom*bottom) + Math.max(left*left, right*right)),
+		var max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right)),
 				min = 0; // TODO: improve this estimate
 
-		for (i = 0; i < 2*Math.PI; i += this.options.grid.angle) {
-			line([[0, 0], [max*Math.cos(i), max*Math.sin(i)]], false, true);
+		for (i = 0, ii = 2 * Math.PI; i < ii; i += this.options.grid.angle) {
+			line([[0, 0], [max * Math.cos(i), max * Math.sin(i)]], false, true);
 		}
 
 		for (i = min; i <= max; i += Math.min(xTick, yTick)) {

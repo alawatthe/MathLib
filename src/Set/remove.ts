@@ -1,7 +1,7 @@
 // ### Set.prototype.remove()
 // Removes a element from a set
 //
-// *@returns {set}*
+// *@return {Set}*
 remove(a : any) : Set {
 	var i = this.indexOf(a);
 	if (i !== -1) {

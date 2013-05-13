@@ -6,7 +6,7 @@ toMathMLString() : string {
 	var handlers = {
 		apply: function (n) {
 			var f = n.childNodes[0],
-					args = n.childNodes.slice(1).map(function(x) {
+					args = n.childNodes.slice(1).map(function (x) {
 						return handlers[x.nodeName](x);
 					}),
 					str = '';
@@ -31,7 +31,7 @@ toMathMLString() : string {
 		cs: function (n) {return '<ms>' + n.innerMathML + '</ms>';},
 		domainofapplication: function () {return '';},
 		lambda: function (n) {
-			return n.childNodes.reduce(function(old, cur) {
+			return n.childNodes.reduce(function (old, cur) {
 				return old + handlers[cur.nodeName](cur);
 			}, '');
 		}, 

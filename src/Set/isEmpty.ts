@@ -1,7 +1,7 @@
 // ### Set.prototype.isEmpty()
 // Determines if the set is empty.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isEmpty() : bool {
 	return this.card === 0;
 }

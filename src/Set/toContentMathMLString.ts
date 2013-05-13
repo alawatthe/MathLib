@@ -1,13 +1,13 @@
 // ### Set.prototype.toContentMathMLString()
 // Returns the content MathML representation of the set
 //
-// *@returns {string}*
+// *@return {string}*
 toContentMathMLString() : string {
 	if (this.isEmpty()) {
 		return '<emptyset/>';
 	}
 	else {
-		return this.reduce(function(old, cur) {
+		return this.reduce(function (old, cur) {
 			return old + MathLib.toContentMathMLString(cur);
 		}, '<set>') + '</set>';
 	}

@@ -2,8 +2,8 @@
 // Calculates the distance to an other point.
 // If no other point is provided, it calculates the distance to the origin.
 //
-// *@param {point}* [point] The point to calculate the distance to  
-// *@returns {number}*
+// *@param {Point}* [point] The point to calculate the distance to  
+// *@return {number}*
 distanceTo(point : Point) : number {
 	if (arguments.length === 0) {
 		return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);

@@ -3,7 +3,7 @@
 //
 // *@param {number}* The number of rows.  
 // *@param {number}* The number of columns.  
-// *@returns {matrix}*
+// *@return {Matrix}*
 static zero = function (r, c) {
 	r = r || 1;
 	c = c || 1;

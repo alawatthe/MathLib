@@ -2,9 +2,9 @@
 // Determines if two vectors are equal
 //
 // *@param {Vector}* v The vector to compare  
-// *@returns {boolean}*
+// *@return {boolean}*
 isEqual(v : Vector) : bool {
-	if(this.length !== v.length) {
+	if (this.length !== v.length) {
 		return false;
 	}
 

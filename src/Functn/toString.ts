@@ -2,15 +2,15 @@
 // Returns a string representation of the function
 //
 // *@param {string}* Optional: custom name for the bound variable (default: x)  
-// *@returns {string}*
+// *@return {string}*
 
-functnPrototype.toString = function(bvar = '') {
+functnPrototype.toString = function (bvar = '') {
 
 	// List of functions to be executed on the specified node type
 	var handlers = {
 		apply: function (n) {
 			var f = n.childNodes[0],
-					args = n.childNodes.slice(1).map(function(x) {
+					args = n.childNodes.slice(1).map(function (x) {
 						return handlers[x.nodeName](x);
 					}),
 					str = '';
@@ -35,7 +35,7 @@ functnPrototype.toString = function(bvar = '') {
 		cs: function (n) {return n.innerMathML;},
 		domainofapplication: function () {return '';},
 		lambda: function (n) {
-			return n.childNodes.reduce(function(old, cur) {
+			return n.childNodes.reduce(function (old, cur) {
 				return old + handlers[cur.nodeName](cur);
 			}, '');
 		}, 

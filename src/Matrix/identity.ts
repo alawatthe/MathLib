@@ -2,22 +2,23 @@
 // Returns the identity matrix.
 //
 // *@param {number}* The number of rows and columns.  
-// *@returns {matrix}*
+// *@return {Matrix}*
 static identity = function (n) {
-	var temp = [], arr = [],
+	var row = [],
+			matrix = [],
 			i, ii;
 	n = n || 1;
 
-	for (i=0, ii=n-1; i<ii; i++) {
-		temp.push(0);
+	for (i = 0, ii = n - 1; i < ii; i++) {
+		row.push(0);
 	}
-	temp.push(1);
-	temp = temp.concat(temp);
-	temp = temp.slice(0, -1);
+	row.push(1);
+	row = row.concat(row);
+	row = row.slice(0, -1);
 
-	for (i=0, ii=n; i<ii; i++) {
-		arr.push(temp.slice(n-i-1, 2*n-i- 1));
+	for (i = 0, ii = n; i < ii; i++) {
+		matrix.push(row.slice(n - i - 1, 2 * n - i - 1));
 	}
 
-	return new MathLib.Matrix(arr);
+	return new MathLib.Matrix(matrix);
 };

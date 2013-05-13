@@ -33,45 +33,46 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-(function(global) {
-	"use strict";
+(function (global) {
+	'use strict';
 
-	var elementPrototype = (global.HTMLElement || global.Element)["prototype"];
+	var elementPrototype = (global.HTMLElement || global.Element)['prototype'];
 	var getter;
 
 
 	// document.fullscreenEnabled
-	if(!document.hasOwnProperty("fullscreenEnabled")) {
-		getter = (function() {
+	if (!document.hasOwnProperty('fullscreenEnabled')) {
+		getter = (function () {
 			// These are the functions that match the spec, and should be preferred
-			if("webkitIsFullScreen" in document) {
-				return function() { return (<any>document).webkitFullscreenEnabled; };
+			if ('webkitIsFullScreen' in document) {
+				return function () { return (<any>document).webkitFullscreenEnabled; };
 			}
-			if("mozFullScreenEnabled" in document) {
-				return function() { return (<any>document).mozFullScreenEnabled; };
+			if ('mozFullScreenEnabled' in document) {
+				return function () { return (<any>document).mozFullScreenEnabled; };
 			}
 
-			return function() { return false; }; // not supported, never fullscreen
+			return function () { return false; }; // not supported, never fullscreen
 		})();
 
 
 	}
 
-	if(!document.hasOwnProperty("fullscreenElement")) {
-		getter = (function() {
+	if (!document.hasOwnProperty('fullscreenElement')) {
+		getter = (function () {
 			// These are the functions that match the spec, and should be preferred
-			var i=0, name=["webkitCurrentFullScreenElement", "webkitFullscreenElement", "mozFullScreenElement"];
-			for (; i<name.length; i++)
+			var i, ii,
+					name = ['webkitCurrentFullScreenElement', 'webkitFullscreenElement', 'mozFullScreenElement'];
+			for (i = 0, ii = name.length; i < ii; i++)
 			{
 				if (name[i] in document)
 				{
-					return function() { return document[name[i]]; };
+					return function () { return document[name[i]]; };
 				}
 			}
-			return function() { return null; }; // not supported
+			return function () { return null; }; // not supported
 		})();
 
-		Object.defineProperty(document, "fullscreenElement", {
+		Object.defineProperty(document, 'fullscreenElement', {
 			enumerable: true, configurable: false, writeable: false,
 			get: getter
 		});
@@ -79,49 +80,49 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 	// Document event: fullscreenchange
 	function fullscreenchange(oldEvent) {
-		var newEvent = document.createEvent("CustomEvent");
-		(<any>newEvent).initCustomEvent("fullscreenchange", true, false, null);
+		var newEvent = document.createEvent('CustomEvent');
+		(<any>newEvent).initCustomEvent('fullscreenchange', true, false, null);
 		// TODO: Any need for variable copy?
 		document.dispatchEvent(newEvent);
 	}
-	document.addEventListener("webkitfullscreenchange", fullscreenchange, false);
-	document.addEventListener("mozfullscreenchange", fullscreenchange, false);
+	document.addEventListener('webkitfullscreenchange', fullscreenchange, false);
+	document.addEventListener('mozfullscreenchange', fullscreenchange, false);
 
 	// Document event: fullscreenerror
 	function fullscreenerror(oldEvent) {
-		var newEvent = document.createEvent("CustomEvent");
-		(<any>newEvent).initCustomEvent("fullscreenerror", true, false, null);
+		var newEvent = document.createEvent('CustomEvent');
+		(<any>newEvent).initCustomEvent('fullscreenerror', true, false, null);
 		// TODO: Any need for variable copy?
 		document.dispatchEvent(newEvent);
 	}
-	document.addEventListener("webkitfullscreenerror", fullscreenerror, false);
-	document.addEventListener("mozfullscreenerror", fullscreenerror, false);
+	document.addEventListener('webkitfullscreenerror', fullscreenerror, false);
+	document.addEventListener('mozfullscreenerror', fullscreenerror, false);
 
 	// element.requestFullScreen
-	if(!elementPrototype.requestFullScreen) {
-		elementPrototype.requestFullScreen = (function() {
-			if(elementPrototype.webkitRequestFullScreen) {
-				return function() {
+	if (!elementPrototype.requestFullScreen) {
+		elementPrototype.requestFullScreen = (function () {
+			if (elementPrototype.webkitRequestFullScreen) {
+				return function () {
 					this.webkitRequestFullScreen((<any>Element).ALLOW_KEYBOARD_INPUT);
 				};
 			}
 
-			if(elementPrototype.mozRequestFullScreen) {
-				return function() {
+			if (elementPrototype.mozRequestFullScreen) {
+				return function () {
 					this.mozRequestFullScreen();
 				};
 			}
 
-			return function(){};
+			return function () {};
 		})();
 	}
 
 	// document.exitFullScreen
-	if(!(<any>document).exitFullScreen) {
-		(<any>document).exitFullScreen = (function() {
+	if (!(<any>document).exitFullScreen) {
+		(<any>document).exitFullScreen = (function () {
 			return  (<any>document).webkitCancelFullScreen ||
 					(<any>document).mozCancelFullScreen ||
-					function(){};
+					function () {};
 		})();
 	}
 

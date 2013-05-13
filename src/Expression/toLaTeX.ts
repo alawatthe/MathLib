@@ -1,7 +1,7 @@
 // ### <a href="http://mathlib.de/en/docs/Expression/toLaTeX">Expression.prototype.toLaTeX</a>
 // Convert the expression to a LaTeX string
 //
-// *@returns {string}*
+// *@return {string}*
 toLaTeX() : string {
 	var op;
 

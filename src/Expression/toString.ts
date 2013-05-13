@@ -1,7 +1,7 @@
 // ### <a href="http://mathlib.de/en/docs/Expression/toString">Expression.prototype.toString</a>
 // A custom toString function
 //
-// *@returns {string}*
+// *@return {string}*
 toString() : string {
 	if (this.subtype === 'brackets') {
 		return '(' + this.content.toString() + ')';

@@ -15,7 +15,7 @@ oncontextmenu(evt) {
 	evt.returnValue = false;
 
 
-	menu.style.setProperty('top', (evt.clientY-20) + 'px');
+	menu.style.setProperty('top', (evt.clientY - 20) + 'px');
 	menu.style.setProperty('left', evt.clientX + 'px');
 	overlay.style.setProperty('display', 'block');
 	

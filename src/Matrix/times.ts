@@ -1,46 +1,48 @@
 // ### Matrix.prototype.times()
 // Multiplies the current matrix with a number, a matrix, a point or a vector.
 //
-// *@param {number|matrix|point|rational|vector}*  
-// *@returns {matrix|point|vector}*
+// *@param {number|Matrix|Point|Rational|Vector}*  
+// *@return {Matrix|Point|Vector}*
 times(a) {
-	var res = [], temp, i, j, k;
-	if(a.type === 'rational') {
+	var i, ii, j, jj, k, kk,
+			product = [], entry;
+
+	if (a.type === 'rational') {
 		a = a.toNumber(); 
 	}
 	if (typeof a === 'number' || a.type === 'complex') {
-		return this.map(function(x) {
+		return this.map(function (x) {
 			return MathLib.times(x, a);
 		});
 	}
 
 	else if (a.type === 'matrix') {
 		if (this.cols === a.rows) {
-			for (i = 0; i < this.rows; i++) {
-				res[i] = [];
-				for (j = 0; j < a.cols; j++) {
-					temp = 0;
+			for (i = 0, ii = this.rows; i < ii; i++) {
+				product[i] = [];
+				for (j = 0, jj = a.cols; j < jj; j++) {
+					entry = 0;
 
-					for (k = 0; k < this.cols; k++) {
-						temp = MathLib.plus(temp, MathLib.times(this[i][k], a[k][j]));
+					for (k = 0, kk = this.cols; k < kk; k++) {
+						entry = MathLib.plus(entry, MathLib.times(this[i][k], a[k][j]));
 					}
-					res[i][j] = temp;
+					product[i][j] = entry;
 				}
 			}
-			return new MathLib.Matrix(res);
+			return new MathLib.Matrix(product);
 		}
 	}
 
 	else if (a.type === 'point' || a.type === 'vector') {
 		if (this.cols === a.length) {
-			for (j = 0; j < this.rows; j++) {
-				temp = 0;
-				for (k = 0; k < this.cols; k++) {
-					temp = MathLib.plus(temp, MathLib.times(this[j][k], a[k]));
+			for (i = 0, ii = this.rows; i < ii; i++) {
+				entry = 0;
+				for (j = 0, jj = this.cols; j < jj; j++) {
+					entry = MathLib.plus(entry, MathLib.times(this[i][j], a[j]));
 				}
-				res.push(temp);
+				product.push(entry);
 			}
-			return new a.constructor(res);
+			return new a.constructor(product);
 		}
 	}
 }

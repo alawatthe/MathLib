@@ -1,18 +1,20 @@
 // ### Set.prototype.powerset()
 // Returns the powerset
 //
-// *@returns {set}*
+// *@return {Set}*
 powerset() : Set {
-	var res = [], arr, temp, i, ii, j, jj;
+	var flag, subset, i, ii, j, jj,
+			powerset = [];
+
 	for (i = 0, ii = Math.pow(2, this.card); i < ii; i++) {
-		arr = i.toString(2).split('').reverse();
-		temp = [];
+		flag = i.toString(2).split('').reverse();
+		subset = [];
 		for (j = 0, jj = this.card; j < jj; j++) {
-			if (arr[j] === '1') {
-				temp.push(this[j]);
+			if (flag[j] === '1') {
+				subset.push(this[j]);
 			}
 		}
-		res.push(new MathLib.Set(temp));
+		powerset.push(new MathLib.Set(subset));
 	}
-	return new MathLib.Set(res);
+	return new MathLib.Set(powerset);
 }

@@ -1,12 +1,12 @@
 // ### Polynomial.prototype.toContentMathMLString()
 // Returns a content MathML representation of the polynomial
 //
-// *@returns {string}*
+// *@return {string}*
 toContentMathMLString(math) : string {
 	var str = '<apply><plus/>', i;
-	for (i=this.deg; i>=0; i--) {
+	for (i = this.deg; i >= 0; i--) {
 		if (!MathLib.isZero(this[i])) {
-			if(i === 0) {
+			if (i === 0) {
 				str += MathLib.toContentMathMLString(this[i]);
 			}
 			else {

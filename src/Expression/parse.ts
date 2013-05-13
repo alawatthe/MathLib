@@ -6,7 +6,7 @@
 // [Part 2: parser](http://ariya.ofilabs.com/2011/08/math-evaluator-in-javascript-part-2.html)  
 // [Part 3: interpreter](http://ariya.ofilabs.com/2011/08/math-expression-evaluator-in-javascript-part-3.html)  
 //
-// *@returns {Expression}*
+// *@return {Expression}*
 static parse = function (str) {
 
 	var Token, Lexer, Parser;

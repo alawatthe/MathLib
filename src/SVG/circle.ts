@@ -1,9 +1,9 @@
 // ### SVG circle
 // Draws a circle on the screen.
 //
-// *@param {circle}* The circle to be drawn  
+// *@param {Circle}* The circle to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
+// *@return {Screen}* Returns the screen
 circle: function (circle, options = {}, redraw = false) {
 	var screen = this.screen,
 			prop, opts,
@@ -14,7 +14,7 @@ circle: function (circle, options = {}, redraw = false) {
 	svgCircle.setAttribute('r', circle.radius);
 
 	if (options) {
-		svgCircle.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+		svgCircle.setAttribute('stroke-width', ((<any>options).lineWidth || 4 ) / (screen.scale.x - screen.scale.y) + '');
 		opts = MathLib.SVG.convertOptions(options);
 		for (prop in opts) {
 			if (opts.hasOwnProperty(prop)) {

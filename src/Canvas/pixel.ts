@@ -1,10 +1,14 @@
 // ### Canvas.pixel
 // Draws pixel on the screen.
 //
-// *@param {path}* The path to be drawn  
+// *@param {function}* The pixel function  
+// *@param {number}* The top coordinate of the draw rectangle  
+// *@param {number}* The right coordinate of the draw rectangle  
+// *@param {number}* The bottom coordinate of the draw rectangle  
+// *@param {number}* The left coordinate of the draw rectangle  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
-pixel: function(f, t, r, b, l, options = {}, redraw = false) {
+// *@return {Screen}* Returns the screen
+pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 	var screen = this.screen,
 			top     = (              - screen.translation.y) / screen.scale.y,
 			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
@@ -32,10 +36,10 @@ pixel: function(f, t, r, b, l, options = {}, redraw = false) {
 	for (y = tPxl, i = 0; y > bPxl; y--) {
 		for (x = lPxl; x < rPxl; x++, i++) {
 			pxl = f(x / screen.scale.x, y / screen.scale.y);
-			imgData.data[4*i]   = pxl[0];
-			imgData.data[4*i+1] = pxl[1];
-			imgData.data[4*i+2] = pxl[2];
-			imgData.data[4*i+3] = pxl[3];
+			imgData.data[4 * i]     = pxl[0];
+			imgData.data[4 * i + 1] = pxl[1];
+			imgData.data[4 * i + 2] = pxl[2];
+			imgData.data[4 * i + 3] = pxl[3];
 		}
 	}
 

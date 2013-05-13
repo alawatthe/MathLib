@@ -1,7 +1,7 @@
 // ### <a href="http://mathlib.de/en/docs/Expression/numericallyEvaluate">Expression.prototype.numericallyEvaluate</a>
 // Evaluates the symbolic expression numerically
 //
-// *@returns {any}*
+// *@return {any}*
 numericallyEvaluate() : any {
 	if (this.subtype === 'brackets') {
 		return this.content.numericallyEvaluate();

@@ -1,12 +1,12 @@
 // ### Polynomial.prototype.toFunctn()
 // Converts the polynomial to a functn
 //
-// *@returns {Functn}*
+// *@return {Functn}*
 toFunctn() {
 	var str = '', i, ii;
-	for (i=0, ii=this.deg; i<=ii; i++) {
+	for (i = 0, ii = this.deg; i <= ii; i++) {
 		if (!MathLib.isZero(this[i])) {
-			if(i === 0) {
+			if (i === 0) {
 				str += MathLib.toString(this[i]);
 			}
 			else {
@@ -14,10 +14,10 @@ toFunctn() {
 			}
 
 			if (i > 1) {
-				str += '* Math.pow(x,' + MathLib.toString(i) + ')';
+				str += ' * Math.pow(x, ' + MathLib.toString(i) + ')';
 			}
 			else if (i === 1) {
-				str += '*x';
+				str += ' * x';
 			}
 		}
 	}

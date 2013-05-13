@@ -5,8 +5,8 @@
 // *@param {x}* The x coordinate  
 // *@param {y}* The y coordinate  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
-text: function(str, x, y, options = {}, redraw = false) {
+// *@return {Screen}* Returns the screen
+text: function (str, x, y, options = {}, redraw = false) {
 	var defaults = {
 				font:       'Helvetica',
 				fontSize:   10,
@@ -37,8 +37,8 @@ text: function(str, x, y, options = {}, redraw = false) {
 	var tf = this.screen.transformation;
 
 	ctx.save();
-		ctx.transform(1/tf[0][0],0,0,1/tf[1][1],0,0);
-		ctx.fillText(str, tf[0][0]*x, tf[1][1]*y);
+		ctx.transform(1 / tf[0][0], 0, 0, 1 / tf[1][1], 0, 0);
+		ctx.fillText(str, tf[0][0] * x, tf[1][1] * y);
 	ctx.restore();
 
 

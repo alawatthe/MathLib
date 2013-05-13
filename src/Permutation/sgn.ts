@@ -1,10 +1,12 @@
 // ### Permutation.prototype.sgn()
 // Calculates the signum of the permutation
 //
-// *@returns {number}*
+// *@return {number}*
 sgn() : number {
-	var count = 0, i;
-	for (i = 0; i < this.cycle.length; i++) {
+	var i, ii,
+			count = 0;
+			
+	for (i = 0, ii = this.cycle.length; i < ii; i++) {
 		count += this.cycle[i].length;
 	}
 	count += this.cycle.length;

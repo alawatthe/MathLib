@@ -1,7 +1,7 @@
 // ### MathML.loadMathJax()
 // Loads MathJax dynamically.
 //
-// *@param{string}* [config] Optional config options
+// *@param {string}* [config] Optional config options
 loadMathJax(config : string) : void {
 	var script = <HTMLScriptElement>document.createElement('script');
 	script.type = 'text/javascript';
@@ -9,10 +9,10 @@ loadMathJax(config : string) : void {
 
 	config = config ||	'MathJax.Hub.Config({' +
 												'config: ["MMLorHTML.js"],' +
-												'jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],' +
-												'extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js"],' +
+												'jax: ["input/TeX", "input/MathML", "output/HTML-CSS", "output/NativeMML"],' +
+												'extensions: ["tex2jax.js", "mml2jax.js", "MathMenu.js", "MathZoom.js"],' +
 												'TeX: {' +
-													'extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]' +
+													'extensions: ["AMSmath.js", "AMSsymbols.js", "noErrors.js", "noUndefined.js"]' +
 												'}' +
 										 	'});';
 

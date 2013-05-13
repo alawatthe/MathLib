@@ -2,7 +2,7 @@
 // Calculates the outer product of two vectors.
 //
 // *@param {Vector}*  
-// *@returns {Matrix}*
+// *@return {Matrix}*
 outerProduct(v : Vector) : Matrix {
 	return new MathLib.Matrix(this.map(function (x) {
 		return v.map(function (y) {

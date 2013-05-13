@@ -129,13 +129,13 @@ export class Screen {
 					'<figure class="MathLib_figure">',
 
 						// The canvas or SVG element will be inserted here
-						'<div class="MathLib_wrapper" style="width: '+opts.width+'px; height: '+opts.height+'px">',
+						'<div class="MathLib_wrapper" style="width: ' + opts.width + 'px; height: ' + opts.height + 'px">',
 			 			'<div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>',
 			 			'Please update your browser to see the plot.</div>',
 						'</div>',
 
 						// Add the optional figcaption
-						(<any>opts).figcaption ? '<figcaption class="MathLib_figcaption">'+(<any>opts).figcaption+'</figcaption>' : '',
+						(<any>opts).figcaption ? '<figcaption class="MathLib_figcaption">' + (<any>opts).figcaption + '</figcaption>' : '',
 
 					'</figure>',
 
@@ -184,26 +184,26 @@ export class Screen {
 						ctx.drawImage((<any>_this).layer.main.element, 0, 0);
 
 
-						dataURI = (<any>canvas).toDataURL("image/png");
+						dataURI = (<any>canvas).toDataURL('image/png');
 						if ('download' in a) {
 							(<any>a).href = dataURI;
 							(<any>a).download = 'plot.png';
 							(<any>a).click();
 						}
 						else {
-							window.location.href = dataURI.replace("image/png", "image/octet-stream");
+							window.location.href = dataURI.replace('image/png', 'image/octet-stream');
 						}
 					}
 
 					if (_this.options.renderer === 'WebGL' && _this.type === 'screen3D') {
-						dataURI = _this.element.toDataURL("image/png");
+						dataURI = _this.element.toDataURL('image/png');
 						if ('download' in a) {
 							(<any>a).href = dataURI;
 							(<any>a).download = 'plot.png';
 							(<any>a).click();
 						}
 						else {
-							window.location.href = dataURI.replace("image/png", "image/octet-stream");
+							window.location.href = dataURI.replace('image/png', 'image/octet-stream');
 						}
 					}
 
@@ -216,7 +216,7 @@ export class Screen {
 							(<any>a).click();
 						}
 						else {
-							window.location.href = dataURI.replace("image/svg+xml", "image/octet-stream");
+							window.location.href = dataURI.replace('image/svg+xml', 'image/octet-stream');
 						}
 					}
 				}

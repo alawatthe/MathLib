@@ -1,13 +1,13 @@
 // ### Polynomial.prototype.toMathMLString()
 // Returns a MathML representation of the polynomial
 //
-// *@returns {string}*
-toMathMLString(math) :string {
+// *@return {string}*
+toMathMLString(math) : string {
 	var str = '<mrow>' + MathLib.toMathMLString(this[this.deg]) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathMLString(this.deg) + '</msup>',
 			i;
-	for (i=this.deg-1; i>=0; i--) {
+	for (i = this.deg - 1; i >= 0; i--) {
 		if (!MathLib.isZero(this[i])) {
-			// if(i === 0) {
+			// if (i === 0) {
 			//   str += MathLib.toMathML(this[i]);
 			// }
 			// else {

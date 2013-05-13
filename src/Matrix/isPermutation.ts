@@ -1,7 +1,7 @@
 // ### Matrix.prototype.isPermutation()
 // Determines if the matrix is a permutation matrix
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isPermutation() {
 	var rows = [],
 			cols = [];
@@ -17,7 +17,7 @@ isPermutation() {
 				return true;
 			}
 		}
-		else if(MathLib.isZero(x)) {
+		else if (MathLib.isZero(x)) {
 			return true;
 		}
 		return false;

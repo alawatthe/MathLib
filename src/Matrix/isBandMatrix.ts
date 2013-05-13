@@ -3,7 +3,7 @@
 //
 // *@param {number}*  
 // *@param {number}*   
-// *@returns {boolean}*
+// *@return {boolean}*
 isBandMatrix(l, u) {
 	var i, j, ii, jj;
 	
@@ -12,7 +12,7 @@ isBandMatrix(l, u) {
 	}
 
 	return this.every(function (x, i, j) {
-		return (i-l <= j && i+u >= j) || MathLib.isZero(x);
+		return (i - l <= j && i + u >= j) || MathLib.isZero(x);
 	});
 
 

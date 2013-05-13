@@ -2,7 +2,7 @@
 // Calculates the difference of two vectors.
 //
 // *@param {Vector}* The vector to be subtracted.  
-// *@returns {Vector}*
+// *@return {Vector}*
 minus(v : Vector) {
 	if (this.length === v.length) {
 		return this.plus(v.negative());

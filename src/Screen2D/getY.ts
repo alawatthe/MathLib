@@ -2,7 +2,7 @@
 // Returns the y coordinate of the event.
 //
 // *@param {event}*  
-// *@returns {number}*
+// *@return {number}*
 getY (evt) {
 	var osY;
 	if (evt.offsetY) {

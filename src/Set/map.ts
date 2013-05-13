@@ -2,7 +2,7 @@
 // Works like the Array.prototype.map function
 //
 // *@param {function}* The mapping function  
-// *@returns {set}*
+// *@return {Set}*
 map(...args : any[]) : any {
 	return new MathLib.Set(Array.prototype.map.apply(this, args));
 }

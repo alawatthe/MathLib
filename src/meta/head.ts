@@ -1,10 +1,10 @@
 // The MathLib module which wraps everything
- module MathLib {
+module MathLib {
 
 
 	// Typescript is throwing the following error otherwise:
 	// The property 'methodname' does not exist on value of type 'MathLib'
-	// see http://typescript.codeplex.com/discussions/397908
+	// see [http://typescript.codeplex.com/discussions/397908](http://typescript.codeplex.com/discussions/397908)
 	declare var MathLib : any;
 	declare var MathJax : any;
 	declare var THREE : any;
@@ -33,23 +33,23 @@
 
 	var prototypes = {
 				array: Object.getPrototypeOf([]),
-				func: Object.getPrototypeOf(function (){}),
+				func: Object.getPrototypeOf(function () {}),
 				object: Object.getPrototypeOf({}),
-				functn: function(){}
+				functn: function () {}
 			},
 			flatten = function (a) {
-				var res = [];
+				var flattendArray = [];
 				a.forEach(function (x) {
 					if (Array.isArray(x)) {
-						res = res.concat(flatten(x));
+						flattendArray = flattendArray.concat(flatten(x));
 					}
 					else {
-						res.push(x);
+						flattendArray.push(x);
 					}
 				});
-				return res;
+				return flattendArray;
 			},
-			extendObject = function(dest, src) {
+			extendObject = function (dest, src) {
 				for (var prop in src) {
 					if (typeof dest[prop] === 'object' && typeof src[prop] === 'object') {
 						dest[prop] = extendObject(dest[prop], src[prop]);
@@ -74,7 +74,7 @@
 			colorConvert = function (n) {
 				if (typeof n === 'number') {
 					n = Math.max(Math.min(Math.floor(n), 0xffffff), 0);
-					return '#' + ('00000'+n.toString(16)).slice(-6); 
+					return '#' + ('00000' + n.toString(16)).slice(-6); 
 				}
 				return n;
 			};

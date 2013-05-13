@@ -6,7 +6,7 @@
 // the number of the column and the complete matrix
 //
 // *@param {function}* The function which is called on every argument  
-// *@returns {matrix}*
+// *@return {Matrix}*
 map(f) {
 	var m = this;
 	return new MathLib.Matrix(

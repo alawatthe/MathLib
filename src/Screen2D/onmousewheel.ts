@@ -32,7 +32,7 @@ onmousewheel(evt) {
 
 
 		// Compute new scale matrix in current mouse position
-		s = new MathLib.Matrix([[z, 0, p[0] - p[0]*z], [0, z, p[1] - p[1]*z ], [0, 0, 1]]);
+		s = new MathLib.Matrix([[z, 0, p[0] - p[0] * z], [0, z, p[1] - p[1] * z], [0, 0, 1]]);
 
 		this.transformation = this.transformation.times(s);
 

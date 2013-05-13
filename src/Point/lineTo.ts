@@ -1,8 +1,8 @@
 // ### Point.prototype.lineTo()
 // Calculates a line connecting two points
 //
-// *@param {point}* The point to calculate the line to
-// *@returns {line}*
+// *@param {Point}* The point to calculate the line to  
+// *@return {Line}*
 lineTo(q : Point, dyn = false) : Line {
 	var line,
 			p = this;
@@ -12,21 +12,21 @@ lineTo(q : Point, dyn = false) : Line {
 
 		if (dyn) {
 			Object.defineProperties(line, {
-				"0": {
-					get : function(){ return p[1]*q[2]-p[2]*q[1]; },
-					set : function(){},
+				'0': {
+					get : function () { return p[1] * q[2] - p[2] * q[1]; },
+					set : function () {},
 					enumerable : true,
 					configurable : true
 				},
-				"1": {
-					get : function(){ return p[2]*q[0]-p[0]*q[2]; },
-					set : function(){},
+				'1': {
+					get : function () { return p[2] * q[0] - p[0] * q[2]; },
+					set : function () {},
 					enumerable : true,
 					configurable : true
 				},
-				"2": {
-					get : function(){ return p[0]*q[1]-p[1]*q[0]; },
-					set : function(){},
+				'2': {
+					get : function () { return p[0] * q[1] - p[1] * q[0]; },
+					set : function () {},
 					enumerable : true,
 					configurable : true
 				}

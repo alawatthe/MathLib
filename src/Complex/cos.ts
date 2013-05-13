@@ -1,7 +1,7 @@
 // ### Complex.prototype.cos()
 // Calculates the cosine of a complex number
 //
-// *@returns {Complex}*
+// *@return {Complex}*
 cos() : Complex {
-	return new MathLib.Complex(MathLib.cos(this.re) * MathLib.cosh(this.im), -MathLib.sin(this.re)*MathLib.sinh(this.im));
+	return new MathLib.Complex(MathLib.cos(this.re) * MathLib.cosh(this.im), -MathLib.sin(this.re) * MathLib.sinh(this.im));
 }

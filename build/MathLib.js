@@ -30,15 +30,15 @@ var MathLib;
 		functn: function () {
 		}
 	}, flatten = function (a) {
-		var res = [];
+		var flattendArray = [];
 		a.forEach(function (x) {
 			if (Array.isArray(x)) {
-				res = res.concat(flatten(x));
+				flattendArray = flattendArray.concat(flatten(x));
 			} else {
-				res.push(x);
+				flattendArray.push(x);
 			}
 		});
-		return res;
+		return flattendArray;
 	}, extendObject = function (dest, src) {
 		for (var prop in src) {
 			if (typeof dest[prop] === 'object' && typeof src[prop] === 'object') {
@@ -195,7 +195,7 @@ var MathLib;
 			var script = document.createElement('script');
 			script.type = 'text/javascript';
 			script.src = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js';
-			config = config || 'MathJax.Hub.Config({' + 'config: ["MMLorHTML.js"],' + 'jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],' + 'extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js"],' + 'TeX: {' + 'extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]' + '}' + '});';
+			config = config || 'MathJax.Hub.Config({' + 'config: ["MMLorHTML.js"],' + 'jax: ["input/TeX", "input/MathML", "output/HTML-CSS", "output/NativeMML"],' + 'extensions: ["tex2jax.js", "mml2jax.js", "MathMenu.js", "MathZoom.js"],' + 'TeX: {' + 'extensions: ["AMSmath.js", "AMSsymbols.js", "noErrors.js", "noUndefined.js"]' + '}' + '});';
 			if ((window).opera) {
 				script.innerHTML = config;
 			} else {
@@ -429,11 +429,11 @@ var MathLib;
 			if (typeof x === 'number') {
 				return f.apply('', arguments);
 			} else if (x.type === 'functn') {
-				var outerVar = functn.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML, innerVar = x.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML, innerStr = x.contentMathML.childNodes[0].childNodes[2].outerMathML.replace('<bvar>' + innerVar + '</bvar>', ''), outerStr = functn.contentMathML.childNodes[0].childNodes[2].outerMathML.replace(outerVar, innerStr), res = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><reals/></domainofapplication>' + outerStr + '</lambda></math>';
+				var outerVar = functn.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML, innerVar = x.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML, innerStr = x.contentMathML.childNodes[0].childNodes[2].outerMathML.replace('<bvar>' + innerVar + '</bvar>', ''), outerStr = functn.contentMathML.childNodes[0].childNodes[2].outerMathML.replace(outerVar, innerStr), contentMathMLString = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><reals/></domainofapplication>' + outerStr + '</lambda></math>';
 				return new MathLib.Functn(function (y) {
 					return f(x(y));
 				}, {
-					contentMathMLString: res
+					contentMathMLString: contentMathMLString
 				});
 			} else if (typeof x === 'function') {
 				return function (y) {
@@ -671,7 +671,7 @@ var MathLib;
 		arcsin: Math.asin,
 		arctan: Math.atan,
 		arsech: function (x) {
-			return Math.log((1 + Math.sqrt(1 - x * x)) / (x));
+			return Math.log((1 + Math.sqrt(1 - x * x)) / x);
 		},
 		arsinh: (Math).asinh || function (x) {
 			if (x === 0 || !MathLib.isFinite(x)) {
@@ -765,21 +765,21 @@ var MathLib;
 	var functionList1 = {
 		arctan2: Math.atan2,
 		binomial: function (n, k) {
-			var res = 1, i;
+			var binomial = 1, i;
 			if (k < 0 || (n > 0 && k > n)) {
 				return 0;
 			}
 			if (n < 0) {
-				res = Math.pow(-1, k);
+				binomial = Math.pow(-1, k);
 				n = k - n - 1;
 			}
 			if (k > n / 2) {
 				k = n - k;
 			}
 			for (i = 1; i <= k; i++) {
-				res *= (n + 1 - i) / i;
+				binomial *= (n + 1 - i) / i;
 			}
-			return res;
+			return binomial;
 		},
 		cbrt: function (x) {
 			var a3, a3x, an, a;
@@ -819,36 +819,36 @@ var MathLib;
 			return MathLib.times(a, MathLib.inverse(b));
 		},
 		divisors: function (x) {
-			var res = x === 1 ? [] : [
+			var divisors = x === 1 ? [] : [
 				1
 			], i, ii;
 			for (i = 2 , ii = x / 2; i <= ii; i++) {
 				if (x % i === 0) {
-					res.push(i);
+					divisors.push(i);
 				}
 			}
-			res.push(x);
-			return MathLib.set(res);
+			divisors.push(x);
+			return MathLib.set(divisors);
 		},
 		factor: function (n) {
-			var res = [], i;
+			var factors = [], i;
 			n = Math.abs(n);
 			while (n % 2 === 0) {
 				n = n / 2;
-				res.push(2);
+				factors.push(2);
 			}
 			i = 3;
 			while (n !== 1) {
 				while (n % i === 0) {
 					n = n / i;
-					res.push(i);
+					factors.push(i);
 				}
 				i += 2;
 			}
-			return new MathLib.Set(res, true);
+			return new MathLib.Set(factors, true);
 		},
 		factorial: function (x) {
-			var out = 1, i;
+			var factorial = 1, i;
 			if ((x > 170 && MathLib.isInt(x)) || x === Infinity) {
 				return Infinity;
 			}
@@ -856,17 +856,17 @@ var MathLib;
 				return NaN;
 			}
 			for (i = 1; i <= x; i++) {
-				out *= i;
+				factorial *= i;
 			}
-			return out;
+			return factorial;
 		},
 		fallingFactorial: function (n, m, s) {
-			var res = 1, j;
+			var factorial = 1, j;
 			s = s || 1;
 			for (j = 0; j < m; j++) {
-				res *= (n - j * s);
+				factorial *= (n - j * s);
 			}
-			return res;
+			return factorial;
 		},
 		fibonacci: function (n) {
 			return Math.floor(Math.pow(MathLib.goldenRatio, n) / Math.sqrt(5));
@@ -978,12 +978,12 @@ var MathLib;
 		},
 		random: Math.random,
 		risingFactorial: function (n, m, s) {
-			var res = 1, j;
+			var factorial = 1, j;
 			s = s || 1;
 			for (j = 0; j < m; j++) {
-				res *= (n + j * s);
+				factorial *= (n + j * s);
 			}
-			return res;
+			return factorial;
 		},
 		round: function (x) {
 			if (x === 0) {
@@ -1186,15 +1186,15 @@ var MathLib;
 		}
 	};
 	MathLib.isEqual = function () {
-		return flatten(Array.prototype.slice.apply(arguments)).every(function (a, i, arr) {
-			if (a === arr[0]) {
+		return flatten(Array.prototype.slice.apply(arguments)).every(function (a, i, args) {
+			if (a === args[0]) {
 				return true;
-			} else if (typeof a === 'number' && typeof arr[0] === 'number') {
-				return Math.abs(a - arr[0]) <= 3e-15;
+			} else if (typeof a === 'number' && typeof args[0] === 'number') {
+				return Math.abs(a - args[0]) <= 3e-15;
 			} else if (typeof a === 'object') {
-				return a.isEqual(arr[0]);
-			} else if (typeof arr[0] === 'object') {
-				return arr[0].isEqual(a);
+				return a.isEqual(args[0]);
+			} else if (typeof args[0] === 'object') {
+				return args[0].isEqual(a);
 			}
 			return false;
 		});
@@ -1331,23 +1331,23 @@ var MathLib;
 							ctx.drawImage((_this).layer.grid.element, 0, 0);
 							ctx.drawImage((_this).layer.axis.element, 0, 0);
 							ctx.drawImage((_this).layer.main.element, 0, 0);
-							dataURI = (canvas).toDataURL("image/png");
+							dataURI = (canvas).toDataURL('image/png');
 							if ('download' in a) {
 								(a).href = dataURI;
 								(a).download = 'plot.png';
 								(a).click();
 							} else {
-								window.location.href = dataURI.replace("image/png", "image/octet-stream");
+								window.location.href = dataURI.replace('image/png', 'image/octet-stream');
 							}
 						}
 						if (_this.options.renderer === 'WebGL' && _this.type === 'screen3D') {
-							dataURI = _this.element.toDataURL("image/png");
+							dataURI = _this.element.toDataURL('image/png');
 							if ('download' in a) {
 								(a).href = dataURI;
 								(a).download = 'plot.png';
 								(a).click();
 							} else {
-								window.location.href = dataURI.replace("image/png", "image/octet-stream");
+								window.location.href = dataURI.replace('image/png', 'image/octet-stream');
 							}
 						} else if (_this.options.renderer === 'SVG') {
 							dataURI = 'data:image/svg+xml,' + _this.element.parentElement.innerHTML;
@@ -1356,7 +1356,7 @@ var MathLib;
 								(a).download = 'plot.svg';
 								(a).click();
 							} else {
-								window.location.href = dataURI.replace("image/svg+xml", "image/octet-stream");
+								window.location.href = dataURI.replace('image/svg+xml', 'image/octet-stream');
 							}
 						}
 					};
@@ -1465,13 +1465,12 @@ var MathLib;
 					};
 				} else if (id === 'grid') {
 					this.ctx.strokeStyle = colorConvert(screen.options.grid.color) || '#cccccc';
-					this.ctx.fillStyle = 'rgba(255,255,255,0)';
+					this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 					this.draw = function () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 						_this.screen.drawGrid();
 					};
 				} else if (id === 'axis') {
-					console.log(screen.options.axis.color);
 					this.ctx.strokeStyle = colorConvert(screen.options.axis.color) || '#000000';
 					this.draw = function () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
@@ -1479,7 +1478,7 @@ var MathLib;
 					};
 				} else {
 					this.ctx.strokeStyle = '#000000';
-					this.ctx.fillStyle = 'rgba(255,255,255,0)';
+					this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 					this.draw = function () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 						this.stack.forEach(function (x, i) {
@@ -1502,7 +1501,7 @@ var MathLib;
 				this.text = MathLib.Canvas.text;
 			} else if (screen.options.renderer === 'SVG') {
 				var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g'), m = screen.transformation;
-				ctx.setAttribute('transform', 'matrix(' + m[0][0] + ',' + m[1][0] + ',' + m[0][1] + ',' + m[1][1] + ',' + m[0][2] + ',' + m[1][2] + ')');
+				ctx.setAttribute('transform', 'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')');
 				screen.element.appendChild(ctx);
 				this.ctx = ctx;
 				if (id === 'back') {
@@ -1610,29 +1609,28 @@ var MathLib;
 		},
 		clear: function (layer) {
 			var screen = layer.screen, left = -screen.translation.x / screen.scale.x, top = -screen.translation.y / screen.scale.y, width = screen.width / screen.scale.x, height = screen.height / screen.scale.y;
-			console.dir(layer);
 			layer.ctx.clearRect(left, top, width, height);
 		},
 		convertOptions: function (opt) {
-			var res = {
+			var convertedOptions = {
 			};
 			if ('fillColor' in opt) {
-				res.fillStyle = colorConvert(opt.fillColor);
+				convertedOptions.fillStyle = colorConvert(opt.fillColor);
 			} else if ('color' in opt) {
-				res.fillStyle = colorConvert(opt.color);
+				convertedOptions.fillStyle = colorConvert(opt.color);
 			}
 			if ('font' in opt) {
-				res['font-family'] = opt.font;
+				convertedOptions['font-family'] = opt.font;
 			}
 			if ('fontSize' in opt) {
-				res['font-size'] = opt.fontSize;
+				convertedOptions['font-size'] = opt.fontSize;
 			}
 			if ('lineColor' in opt) {
-				res.strokeStyle = colorConvert(opt.lineColor);
+				convertedOptions.strokeStyle = colorConvert(opt.lineColor);
 			} else if ('color' in opt) {
-				res.strokeStyle = colorConvert(opt.color);
+				convertedOptions.strokeStyle = colorConvert(opt.color);
 			}
-			return res;
+			return convertedOptions;
 		},
 		line: function (line, options, redraw) {
 			if (typeof options === 'undefined') {
@@ -1870,7 +1868,7 @@ var MathLib;
 		applyTransformation: function () {
 			var m = this.transformation;
 			this.layer.forEach(function (l) {
-				l.ctx.setAttribute('transform', 'matrix(' + m[0][0] + ',' + m[1][0] + ',' + m[0][1] + ',' + m[1][1] + ',' + m[0][2] + ',' + m[1][2] + ')');
+				l.ctx.setAttribute('transform', 'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')');
 			});
 		},
 		circle: function (circle, options, redraw) {
@@ -1908,34 +1906,34 @@ var MathLib;
 			layer.ctx.textContent = '';
 		},
 		convertOptions: function (opt) {
-			var res = {
+			var convertedOptions = {
 			};
 			if ('fillColor' in opt) {
-				res.fill = colorConvert(opt.fillColor);
+				convertedOptions.fill = colorConvert(opt.fillColor);
 			} else if ('color' in opt) {
-				res.fill = colorConvert(opt.color);
+				convertedOptions.fill = colorConvert(opt.color);
 			}
 			if ('font' in opt) {
-				res['font-family'] = opt.font;
+				convertedOptions['font-family'] = opt.font;
 			}
 			if ('fontSize' in opt) {
-				res['font-size'] = opt.fontSize;
+				convertedOptions['font-size'] = opt.fontSize;
 			}
 			if ('size' in opt) {
-				res.size = opt.size;
+				convertedOptions.size = opt.size;
 			}
 			if ('lineColor' in opt) {
-				res.stroke = colorConvert(opt.lineColor);
+				convertedOptions.stroke = colorConvert(opt.lineColor);
 			} else if ('color' in opt) {
-				res.stroke = colorConvert(opt.color);
+				convertedOptions.stroke = colorConvert(opt.color);
 			}
 			if ('dash' in opt && opt.dash.length !== 0) {
-				res['stroke-dasharray'] = opt.dash;
+				convertedOptions['stroke-dasharray'] = opt.dash;
 			}
 			if ('dashOffset' in opt && opt.dashOffset !== 0) {
-				res['stroke-dashoffset'] = opt.dashOffset;
+				convertedOptions['stroke-dashoffset'] = opt.dashOffset;
 			}
-			return res;
+			return convertedOptions;
 		},
 		line: function (line, options, redraw) {
 			if (typeof options === 'undefined') {
@@ -2036,7 +2034,7 @@ var MathLib;
 			canvas.width = screen.width;
 			canvas.height = screen.height;
 			canvasCtx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
-			svgContainer.setAttribute('transform', 'matrix(' + 1 / m[0][0] + ',0,0,' + 1 / m[1][1] + ',-' + m[0][2] / m[0][0] + ',' + -m[1][2] / m[1][1] + ')');
+			svgContainer.setAttribute('transform', 'matrix(' + 1 / m[0][0] + ', 0, 0, ' + 1 / m[1][1] + ', -' + m[0][2] / m[0][0] + ', ' + -m[1][2] / m[1][1] + ')');
 			svgImage.setAttribute('width', screen.width + 'px');
 			svgImage.setAttribute('height', screen.height + 'px');
 			svgImage.setAttribute('x', '0');
@@ -2483,32 +2481,32 @@ var MathLib;
 		};
 		Screen2D.prototype.getLineEndPoints = function (l) {
 			if (l.type === 'line') {
-				var top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lineRight = -(l[2] + l[0] * right) / l[1], lineTop = -(l[2] + l[1] * top) / l[0], lineLeft = -(l[2] + l[0] * left) / l[1], lineBottom = -(l[2] + l[1] * bottom) / l[0], res = [];
+				var top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lineRight = -(l[2] + l[0] * right) / l[1], lineTop = -(l[2] + l[1] * top) / l[0], lineLeft = -(l[2] + l[0] * left) / l[1], lineBottom = -(l[2] + l[1] * bottom) / l[0], points = [];
 				if (lineRight <= top && lineRight >= bottom) {
-					res.push([
+					points.push([
 						right, 
 						lineRight
 					]);
 				}
 				if (lineLeft <= top && lineLeft >= bottom) {
-					res.push([
+					points.push([
 						left, 
 						lineLeft
 					]);
 				}
 				if (lineTop < right && lineTop > left) {
-					res.push([
+					points.push([
 						lineTop, 
 						top
 					]);
 				}
 				if (lineBottom < right && lineBottom > left) {
-					res.push([
+					points.push([
 						lineBottom, 
 						bottom
 					]);
 				}
-				return res;
+				return points;
 			} else {
 				return l;
 			}
@@ -2530,7 +2528,7 @@ var MathLib;
 					args[_i] = arguments[_i + 0];
 				}
 				return _this.renderer.circle.apply(_this.layer.grid, args);
-			}, top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, yTick = Math.pow(10, 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3)), xTick = Math.pow(10, 1 - Math.floor(Math.log(+this.transformation[0][0]) / Math.LN10 - 0.3)), i;
+			}, top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, yTick = Math.pow(10, 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3)), xTick = Math.pow(10, 1 - Math.floor(Math.log(this.transformation[0][0]) / Math.LN10 - 0.3)), i, ii;
 			if (this.options.grid.type === 'cartesian') {
 				for (i = bottom - (bottom % yTick); i <= top; i += yTick) {
 					line([
@@ -2558,7 +2556,7 @@ var MathLib;
 				}
 			} else if (this.options.grid.type === 'polar') {
 				var max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right)), min = 0;
-				for (i = 0; i < 2 * Math.PI; i += this.options.grid.angle) {
+				for (i = 0 , ii = 2 * Math.PI; i < ii; i += this.options.grid.angle) {
 					line([
 						[
 							0, 
@@ -2600,7 +2598,7 @@ var MathLib;
 			}, textOptions = {
 				strokeStyle: colorConvert(this.options.axis.textColor),
 				fillStyle: colorConvert(this.options.axis.textColor)
-			}, top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lengthX = +10 / this.transformation[0][0], lengthY = -10 / this.transformation[1][1], yExp = 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3), xExp = 1 - Math.floor(Math.log(+this.transformation[0][0]) / Math.LN10 - 0.3), yTick = Math.pow(10, yExp), xTick = Math.pow(10, xExp), i;
+			}, top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lengthX = 10 / this.transformation[0][0], lengthY = -10 / this.transformation[1][1], yExp = 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3), xExp = 1 - Math.floor(Math.log(this.transformation[0][0]) / Math.LN10 - 0.3), yTick = Math.pow(10, yExp), xTick = Math.pow(10, xExp), i;
 			if (!this.options.axis) {
 				return this;
 			}
@@ -2893,7 +2891,7 @@ function render() {
 				return this;
 			}
 			var _this = this, gridDrawer = function (opts, rotX, rotY) {
-				var size = 10, grid = new THREE.Object3D(), color = new THREE.Color(opts.color), i;
+				var size = 10, grid = new THREE.Object3D(), color = new THREE.Color(opts.color), i, ii;
 				if (opts.type === 'cartesian') {
 					var tickX = 'x' in opts.tick ? opts.tick.x : opts.tick.y, tickY = 'z' in opts.tick ? opts.tick.z : opts.tick.y, lines = new THREE.Shape();
 					for (i = -size; i <= size; i += tickX) {
@@ -2919,7 +2917,7 @@ function render() {
 					grid.add(new THREE.Line(circles.createPointsGeometry(), new THREE.LineBasicMaterial({
 						color: color
 					})));
-					for (i = 0; i <= 2 * Math.PI; i += opts.angle) {
+					for (i = 0 , ii = 2 * Math.PI; i < ii; i += opts.angle) {
 						rays.moveTo(0, 0);
 						rays.lineTo(size * Math.cos(i), size * Math.sin(i));
 					}
@@ -2951,8 +2949,8 @@ function render() {
 			}, opts = extendObject(defaults, options), curve = THREE.Curve.create(function () {
 			}, function (t) {
 				t = (opts.max - opts.min) * t + opts.min;
-				var res = f(t);
-				return new THREE.Vector3(res[0], res[1], res[2]);
+				var ft = f(t);
+				return new THREE.Vector3(ft[0], ft[1], ft[2]);
 			}), mesh = new THREE.Mesh(new THREE.TubeGeometry(new curve(), opts.pointNum, opts.radius, opts.segmentsRadius, opts.closed, opts.debug), new THREE[opts.material.type + 'Material'](opts.material));
 			this.scene.add(mesh);
 			return this;
@@ -2986,8 +2984,8 @@ function render() {
 			}, opts = extendObject(defaults, options), map = function (u, v) {
 				u = (opts.xmax - opts.xmin) * u + opts.xmin;
 				v = (opts.ymax - opts.ymin) * v + opts.ymin;
-				var res = f(u, v);
-				return new THREE.Vector3(res[0], res[1], res[2]);
+				var fuv = f(u, v);
+				return new THREE.Vector3(fuv[0], fuv[1], fuv[2]);
 			}, material = new THREE[opts.material.type + 'Material'](opts.material), mesh;
 			material.side = THREE.DoubleSide;
 			mesh = new THREE.Mesh(new THREE.ParametricGeometry(map, opts.pointNumX, opts.pointNumY, false), material);
@@ -3017,6 +3015,18 @@ function render() {
 				return undefined;
 			}
 			return (new MathLib.Matrix(v)).rank() === n;
+		};
+		Vector.prototype.compare = function (v) {
+			var i, ii;
+			if (this.length !== v.length) {
+				return MathLib.sign(this.length - v.length);
+			}
+			for (i = 0 , ii = this.length; i < ii; i++) {
+				if (v[i] - this[i]) {
+					return MathLib.sign(this[i] - v[i]);
+				}
+			}
+			return 0;
 		};
 		Vector.prototype.every = function (f) {
 			return Array.prototype.every.call(this, f);
@@ -3096,7 +3106,7 @@ function render() {
 			return Array.prototype.slice.apply(this, args);
 		};
 		Vector.prototype.times = function (n) {
-			var res = [], i, ii;
+			var i, ii, colVectors, product = [];
 			if (n.type === 'rational') {
 				n = n.toNumber();
 			}
@@ -3106,11 +3116,11 @@ function render() {
 				});
 			}
 			if (n.type === 'matrix') {
-				res = n.toColVectors();
-				for (i = 0 , ii = res.length; i < ii; i++) {
-					res[i] = this.scalarProduct(res[i]);
+				colVectors = n.toColVectors();
+				for (i = 0 , ii = colVectors.length; i < ii; i++) {
+					product[i] = this.scalarProduct(colVectors[i]);
 				}
-				return new MathLib.Vector(res);
+				return new MathLib.Vector(product);
 			}
 		};
 		Vector.prototype.toArray = function () {
@@ -3146,11 +3156,11 @@ function render() {
 			}
 		};
 		Vector.zero = function (n) {
-			var res = [], i;
+			var vector = [], i;
 			for (i = 0; i < n; i++) {
-				res.push(0);
+				vector.push(0);
 			}
-			return new MathLib.Vector(res);
+			return new MathLib.Vector(vector);
 		};
 		return Vector;
 	})();
@@ -3169,6 +3179,9 @@ function render() {
 		};
 		Circle.prototype.circumference = function () {
 			return 2 * this.radius * Math.PI;
+		};
+		Circle.prototype.compare = function (c) {
+			return MathLib.sign(this.center.compare(c.center)) || MathLib.sign(this.radius - c.radius);
 		};
 		Circle.prototype.draw = function (screen, options) {
 			if (Array.isArray(screen)) {
@@ -3249,8 +3262,8 @@ function render() {
 			return MathLib.times(new MathLib.Complex(0, 1), MathLib.ln(MathLib.plus(MathLib.sqrt(MathLib.minus(1, MathLib.divide(1, MathLib.times(this, this)))), MathLib.divide(new MathLib.Complex(0, 1), this))));
 		};
 		Complex.prototype.arcsin = function () {
-			var a = this.re, b = this.im;
-			return new MathLib.Complex(MathLib.sign(a) / 2 * MathLib.arccos(Math.sqrt(Math.pow(a * a + b * b - 1, 2) + 4 * b * b) - (a * a + b * b)), MathLib.sign(b) / 2 * MathLib.arcosh(Math.sqrt(Math.pow(a * a + b * b - 1, 2) + 4 * b * b) + (a * a + b * b)));
+			var a = this.re, b = this.im, aa = a * a, bb = b * b;
+			return new MathLib.Complex(MathLib.sign(a) / 2 * MathLib.arccos(Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb) - (aa + bb)), MathLib.sign(b) / 2 * MathLib.arcosh(Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb) + (aa + bb)));
 		};
 		Complex.prototype.arctan = function () {
 			var iz = new MathLib.Complex(-this.im, this.re);
@@ -3434,6 +3447,9 @@ function render() {
 				this[prop] = expr[prop];
 			}
 		}
+		Expression.prototype.compare = function (e) {
+			return this.toString().localeCompare(e.toString());
+		};
 		Expression.prototype.numericallyEvaluate = function () {
 			if (this.subtype === 'brackets') {
 				return this.content.numericallyEvaluate();
@@ -3974,7 +3990,7 @@ function render() {
 				point = new MathLib.Point(this.vectorProduct(l));
 				if (dyn) {
 					Object.defineProperties(point, {
-						"0": {
+						'0': {
 							get: function () {
 								return k[1] * l[2] - k[2] * l[1];
 							},
@@ -3983,7 +3999,7 @@ function render() {
 							enumerable: true,
 							configurable: true
 						},
-						"1": {
+						'1': {
 							get: function () {
 								return k[2] * l[0] - k[0] * l[2];
 							},
@@ -3992,7 +4008,7 @@ function render() {
 							enumerable: true,
 							configurable: true
 						},
-						"2": {
+						'2': {
 							get: function () {
 								return k[0] * l[1] - k[1] * l[0];
 							},
@@ -4034,25 +4050,23 @@ function render() {
 			this.cols = matrix[0].length;
 			this.rows = matrix.length;
 		}
-		Matrix.prototype.LU = function (dontSwapPivot) {
+		Matrix.prototype.LU = function () {
 			var i, j, k, t, p, LU = this.toArray(), m = this.rows, n = this.cols, permutation = [];
 			for (k = 0; k < n; k++) {
-				if (!dontSwapPivot) {
-					p = k;
-					for (i = k + 1; i < m; i++) {
-						if (Math.abs(LU[i][k]) > Math.abs(LU[p][k])) {
-							p = i;
-						}
+				p = k;
+				for (i = k + 1; i < m; i++) {
+					if (Math.abs(LU[i][k]) > Math.abs(LU[p][k])) {
+						p = i;
 					}
-					if (p !== k) {
-						permutation.unshift([
-							p, 
-							k
-						]);
-						t = LU[p];
-						LU[p] = LU[k];
-						LU[k] = t;
-					}
+				}
+				if (p !== k) {
+					permutation.unshift([
+						p, 
+						k
+					]);
+					t = LU[p];
+					LU[p] = LU[k];
+					LU[k] = t;
 				}
 				if (LU[k][k] !== 0) {
 					for (i = k + 1; i < m; i++) {
@@ -4079,44 +4093,61 @@ function render() {
 			});
 		};
 		Matrix.prototype.cholesky = function () {
-			var r, rr, temp = [], k, kk, sum, c, cholesky;
-			for (r = 0 , rr = this.rows; r < rr; r++) {
-				temp.push([]);
+			var i, ii, j, jj, k, kk, sum, choleskyMatrix, cholesky = [];
+			for (i = 0 , ii = this.rows; i < ii; i++) {
+				cholesky.push([]);
 			}
-			for (r = 0 , rr = this.rows; r < rr; r++) {
-				for (c = 0; c < r; c++) {
+			for (i = 0 , ii = this.rows; i < ii; i++) {
+				for (j = 0; j < i; j++) {
 					sum = 0;
-					for (k = 0 , kk = c; k < kk; k++) {
-						sum = MathLib.plus(sum, MathLib.times(temp[r][k], temp[c][k]));
+					for (k = 0 , kk = j; k < kk; k++) {
+						sum = MathLib.plus(sum, MathLib.times(cholesky[i][k], cholesky[j][k]));
 					}
-					temp[r][c] = (this[r][c] - sum) / temp[c][c];
+					cholesky[i][j] = (this[i][j] - sum) / cholesky[j][j];
 				}
 				sum = 0;
-				for (k = 0 , kk = c; k < kk; k++) {
-					sum = MathLib.plus(sum, MathLib.times(temp[r][k], temp[r][k]));
+				for (k = 0 , kk = j; k < kk; k++) {
+					sum = MathLib.plus(sum, MathLib.times(cholesky[i][k], cholesky[i][k]));
 				}
-				temp[r][c] = Math.sqrt(this[c][c] - sum);
-				for (c++; c < this.cols; c++) {
-					temp[r][c] = 0;
+				cholesky[i][j] = Math.sqrt(this[j][j] - sum);
+				for (j++ , jj = this.cols; j < jj; j++) {
+					cholesky[i][j] = 0;
 				}
 			}
-			cholesky = new MathLib.Matrix(temp);
+			choleskyMatrix = new MathLib.Matrix(cholesky);
 			this.cholesky = function () {
-				return cholesky;
+				return choleskyMatrix;
 			};
-			return cholesky;
+			return choleskyMatrix;
+		};
+		Matrix.prototype.compare = function (m) {
+			var i, ii, j, jj;
+			if (this.rows !== m.rows) {
+				return MathLib.sign(this.rows - m.rows);
+			}
+			if (this.cols !== m.cols) {
+				return MathLib.sign(this.cols - m.cols);
+			}
+			for (i = 0 , ii = this.rows; i < ii; i++) {
+				for (j = 0 , jj = this.cols; j < jj; j++) {
+					if (this[i][j] - m[i][j]) {
+						return MathLib.sign(this[i][j] - m[i][j]);
+					}
+				}
+			}
+			return 0;
 		};
 		Matrix.prototype.copy = function () {
 			return this.map(MathLib.copy);
 		};
 		Matrix.prototype.determinant = function () {
+			var LU, determinant;
 			if (this.isSquare()) {
-				var arr, determinant;
 				if (this.rank() < this.rows) {
 					determinant = 0;
 				} else {
-					arr = this.LU();
-					determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, arr.diag()));
+					LU = this.LU();
+					determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, LU.diag()));
 				}
 				this.determinant = function () {
 					return determinant;
@@ -4125,11 +4156,11 @@ function render() {
 			}
 		};
 		Matrix.prototype.diag = function () {
-			var arr = [], i, ii;
+			var diagonal = [], i, ii;
 			for (i = 0 , ii = Math.min(this.rows, this.cols); i < ii; i++) {
-				arr.push(this[i][i]);
+				diagonal.push(this[i][i]);
 			}
-			return arr;
+			return diagonal;
 		};
 		Matrix.prototype.divide = function (n) {
 			return this.times(MathLib.inverse(n));
@@ -4149,7 +4180,7 @@ function render() {
 			});
 		};
 		Matrix.prototype.gershgorin = function () {
-			var c = [], rc = [], rr = [], res = [], i, ii;
+			var c = [], rc = [], rr = [], circles = [], i, ii;
 			for (i = 0 , ii = this.rows; i < ii; i++) {
 				rc.push(0);
 				rr.push(0);
@@ -4171,9 +4202,9 @@ function render() {
 				}
 			});
 			for (i = 0 , ii = this.rows; i < ii; i++) {
-				res.push(new MathLib.Circle(c[i], Math.min(rc[i], rr[i])));
+				circles.push(new MathLib.Circle(c[i], Math.min(rc[i], rr[i])));
 			}
-			return res;
+			return circles;
 		};
 		Matrix.prototype.givens = function () {
 			var rows = this.rows, cols = this.cols, R = this.copy(), Q = MathLib.Matrix.identity(rows), c, s, rho, i, j, k, ri, rj, qi, qj;
@@ -4219,18 +4250,18 @@ function render() {
 			return givens;
 		};
 		Matrix.identity = function (n) {
-			var temp = [], arr = [], i, ii;
+			var row = [], matrix = [], i, ii;
 			n = n || 1;
 			for (i = 0 , ii = n - 1; i < ii; i++) {
-				temp.push(0);
+				row.push(0);
 			}
-			temp.push(1);
-			temp = temp.concat(temp);
-			temp = temp.slice(0, -1);
+			row.push(1);
+			row = row.concat(row);
+			row = row.slice(0, -1);
 			for (i = 0 , ii = n; i < ii; i++) {
-				arr.push(temp.slice(n - i - 1, 2 * n - i - 1));
+				matrix.push(row.slice(n - i - 1, 2 * n - i - 1));
 			}
-			return new MathLib.Matrix(arr);
+			return new MathLib.Matrix(matrix);
 		};
 		Matrix.prototype.inverse = function () {
 			if (!this.isSquare() && this.determinant()) {
@@ -4249,7 +4280,7 @@ function render() {
 		};
 		Matrix.prototype.isDiag = function () {
 			var i, j, ii, jj;
-			if ((this.hasOwnProperty('isUpper') && this.isUpper()) + (+(this.hasOwnProperty('isLower') && this.isLower())) + (+(this.hasOwnProperty('isSymmetric') && this.isSymmetric())) > 1) {
+			if ((this.hasOwnProperty('isUpper') && this.isUpper()) + (this.hasOwnProperty('isLower') && this.isLower()) + (this.hasOwnProperty('isSymmetric') && this.isSymmetric()) > 1) {
 				return true;
 			}
 			for (i = 0 , ii = this.rows; i < ii; i++) {
@@ -4344,7 +4375,7 @@ function render() {
 			return this.every(MathLib.isReal);
 		};
 		Matrix.prototype.isScalar = function () {
-			var n = this.rows, diag = this.diag, i;
+			var i, ii, diag = this.diag;
 			if (this.hasOwnProperty('isIdentity') && this.hasOwnProperty('isZero')) {
 				if (this.isIdentity() || this.isZero()) {
 					return true;
@@ -4353,7 +4384,7 @@ function render() {
 				}
 			}
 			if (this.isDiag()) {
-				for (i = 1; i < n; i++) {
+				for (i = 1 , ii = this.rows; i < ii; i++) {
 					if (!MathLib.isEqual(diag[0], diag[i])) {
 						return false;
 					}
@@ -4366,24 +4397,24 @@ function render() {
 			return this.cols === this.rows;
 		};
 		Matrix.prototype.isSymmetric = function () {
-			var i, j, bool = true;
+			var i, ii, j, jj, isSymmetric = true;
 			if (!this.isSquare()) {
-				bool = false;
+				isSymmetric = false;
 			} else {
 				lp:
-for (i = 0; i < this.rows; i++) {
-					for (j = i + 1; j < this.cols; j++) {
+for (i = 0 , ii = this.rows; i < ii; i++) {
+					for (j = i + 1 , jj = this.cols; j < jj; j++) {
 						if (!MathLib.isEqual(this[i][j], this[j][i])) {
-							bool = false;
+							isSymmetric = false;
 							break lp;
 						}
 					}
 				}
 			}
 			this.isSymmetric = function () {
-				return bool;
+				return isSymmetric;
 			};
-			return bool;
+			return isSymmetric;
 		};
 		Matrix.prototype.isUpper = function () {
 			return this.slice(1).every(function (x, i) {
@@ -4415,21 +4446,21 @@ for (i = 0; i < this.rows; i++) {
 			return this.plus(m.negative());
 		};
 		Matrix.prototype.negative = function () {
-			var res = [], i, ii;
+			var i, ii, negative = [];
 			for (i = 0 , ii = this.rows; i < ii; i++) {
-				res.push(this[i].map(MathLib.negative));
+				negative.push(this[i].map(MathLib.negative));
 			}
-			return new MathLib.Matrix(res);
+			return new MathLib.Matrix(negative);
 		};
 		Matrix.numbers = function (n, r, c) {
-			var help = [], res = [], i, ii;
+			var i, ii, row = [], matrix = [];
 			for (i = 0 , ii = c || r || 1; i < ii; i++) {
-				help.push(n);
+				row.push(n);
 			}
 			for (i = 0 , ii = r || 1; i < ii; i++) {
-				res.push(help.slice(0));
+				matrix.push(row.slice(0));
 			}
-			return new MathLib.Matrix(res);
+			return new MathLib.Matrix(matrix);
 		};
 		Matrix.one = function (r, c) {
 			r = r || 1;
@@ -4437,25 +4468,25 @@ for (i = 0; i < this.rows; i++) {
 			return MathLib.Matrix.numbers(1, r, c);
 		};
 		Matrix.prototype.plus = function (m) {
-			var res = [], r = this.rows, c = this.cols, i, j;
-			for (i = 0; i < r; i++) {
-				res[i] = [];
-				for (j = 0; j < c; j++) {
-					res[i][j] = MathLib.plus(this[i][j], m[i][j]);
+			var i, ii, j, jj, sum = [];
+			for (i = 0 , ii = this.rows; i < ii; i++) {
+				sum[i] = [];
+				for (j = 0 , jj = this.cols; j < jj; j++) {
+					sum[i][j] = MathLib.plus(this[i][j], m[i][j]);
 				}
 			}
-			return new MathLib.Matrix(res);
+			return new MathLib.Matrix(sum);
 		};
 		Matrix.random = function (r, c) {
-			var temp, arr = [], i, j, ii, jj;
+			var row, matrix = [], i, j, ii, jj;
 			for (i = 0 , ii = r || 1; i < ii; i++) {
-				temp = [];
+				row = [];
 				for (j = 0 , jj = c || r || 1; j < jj; j++) {
-					temp.push(Math.random());
+					row.push(Math.random());
 				}
-				arr.push(temp);
+				matrix.push(row);
 			}
-			return new MathLib.Matrix(arr);
+			return new MathLib.Matrix(matrix);
 		};
 		Matrix.prototype.rank = function () {
 			var rank = 0, mat, i, ii, j;
@@ -4482,14 +4513,14 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			return Array.prototype.reduce.apply(this, args);
 		};
 		Matrix.prototype.remove = function (row, col) {
-			var res = this.toArray();
+			var rest = this.toArray();
 			if (row || row === 0) {
 				if (typeof row === 'number') {
 					row = [
 						row
 					];
 				}
-				res = res.filter(function (x, i, arr) {
+				rest = rest.filter(function (x, i) {
 					return row.indexOf(i) === -1;
 				});
 			}
@@ -4501,45 +4532,47 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				}
 				col = col.sort().reverse();
 				col.forEach(function (n) {
-					res = res.map(function (x) {
+					rest = rest.map(function (x) {
 						x.splice(n, 1);
 						return x;
 					});
 				});
 			}
-			return new MathLib.Matrix(res);
+			return new MathLib.Matrix(rest);
 		};
 		Matrix.prototype.rref = function () {
-			var lead = 0, rref = this.toArray(), i, j, r, temp, val;
-			for (r = 0; r < this.rows; r++) {
+			var i, ii, j, jj, k, kk, pivot, factor, swap, lead = 0, rref = this.toArray();
+			for (i = 0 , ii = this.rows; i < ii; i++) {
 				if (this.cols <= lead) {
 					return new MathLib.Matrix(rref);
 				}
-				i = r;
-				while (rref[i][lead] === 0) {
-					i++;
-					if (this.rows === i) {
-						i = r;
+				j = i;
+				while (rref[j][lead] === 0) {
+					j++;
+					if (this.rows === j) {
+						j = i;
 						lead++;
 						if (this.cols === lead) {
 							return new MathLib.Matrix(rref);
 						}
 					}
 				}
-				var tmp = rref[i];
-				rref[i] = rref[r];
-				rref[r] = tmp;
-				val = rref[r][lead];
-				for (j = 0; j < this.cols; j++) {
-					rref[r][j] /= val;
+				if (i !== j) {
+					swap = rref[j];
+					rref[j] = rref[i];
+					rref[i] = swap;
 				}
-				for (i = 0; i < this.rows; i++) {
-					if (i === r) {
+				pivot = rref[i][lead];
+				for (j = lead , jj = this.cols; j < jj; j++) {
+					rref[i][j] /= pivot;
+				}
+				for (j = 0 , jj = this.rows; j < jj; j++) {
+					if (j === i) {
 						continue;
 					}
-					val = rref[i][lead];
-					for (j = 0; j < this.cols; j++) {
-						rref[i][j] = MathLib.minus(rref[i][j], MathLib.times(val, rref[r][j]));
+					factor = rref[j][lead];
+					for (k = 0 , kk = this.cols; k < kk; k++) {
+						rref[j][k] = MathLib.minus(rref[j][k], MathLib.times(factor, rref[i][k]));
 					}
 				}
 				lead++;
@@ -4579,7 +4612,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			});
 		};
 		Matrix.prototype.times = function (a) {
-			var res = [], temp, i, j, k;
+			var i, ii, j, jj, k, kk, product = [], entry;
 			if (a.type === 'rational') {
 				a = a.toNumber();
 			}
@@ -4589,28 +4622,28 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				});
 			} else if (a.type === 'matrix') {
 				if (this.cols === a.rows) {
-					for (i = 0; i < this.rows; i++) {
-						res[i] = [];
-						for (j = 0; j < a.cols; j++) {
-							temp = 0;
-							for (k = 0; k < this.cols; k++) {
-								temp = MathLib.plus(temp, MathLib.times(this[i][k], a[k][j]));
+					for (i = 0 , ii = this.rows; i < ii; i++) {
+						product[i] = [];
+						for (j = 0 , jj = a.cols; j < jj; j++) {
+							entry = 0;
+							for (k = 0 , kk = this.cols; k < kk; k++) {
+								entry = MathLib.plus(entry, MathLib.times(this[i][k], a[k][j]));
 							}
-							res[i][j] = temp;
+							product[i][j] = entry;
 						}
 					}
-					return new MathLib.Matrix(res);
+					return new MathLib.Matrix(product);
 				}
 			} else if (a.type === 'point' || a.type === 'vector') {
 				if (this.cols === a.length) {
-					for (j = 0; j < this.rows; j++) {
-						temp = 0;
-						for (k = 0; k < this.cols; k++) {
-							temp = MathLib.plus(temp, MathLib.times(this[j][k], a[k]));
+					for (i = 0 , ii = this.rows; i < ii; i++) {
+						entry = 0;
+						for (j = 0 , jj = this.cols; j < jj; j++) {
+							entry = MathLib.plus(entry, MathLib.times(this[i][j], a[j]));
 						}
-						res.push(temp);
+						product.push(entry);
 					}
-					return new a.constructor(res);
+					return new a.constructor(product);
 				}
 			}
 		};
@@ -4671,19 +4704,19 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			return trace;
 		};
 		Matrix.prototype.transpose = function () {
-			var temp = [], transpose, help, i, j, ii, jj;
+			var transposedMatrix, row, i, j, ii, jj, transpose = [];
 			for (i = 0 , ii = this.cols; i < ii; i++) {
-				help = [];
+				row = [];
 				for (j = 0 , jj = this.rows; j < jj; j++) {
-					help.push(this[j][i]);
+					row.push(this[j][i]);
 				}
-				temp.push(help);
+				transpose.push(row);
 			}
-			transpose = new MathLib.Matrix(temp);
+			transposedMatrix = new MathLib.Matrix(transpose);
 			this.transpose = function () {
-				return transpose;
+				return transposedMatrix;
 			};
-			return transpose;
+			return transposedMatrix;
 		};
 		Matrix.zero = function (r, c) {
 			r = r || 1;
@@ -4712,7 +4745,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			this.cycle = cycle;
 		}
 		Permutation.prototype.applyTo = function (n) {
-			var p, res;
+			var p, permutatedObj;
 			if (typeof n === 'number') {
 				if (n >= this.length) {
 					return n;
@@ -4720,14 +4753,26 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				return this[n];
 			} else {
 				p = this;
-				res = n.map(function (x, i) {
+				permutatedObj = n.map(function (x, i) {
 					return n[p.applyTo(i)];
 				});
-				return (n.type === undefined ? res : new n.constructor(res));
+				return (n.type === undefined ? permutatedObj : new n.constructor(permutatedObj));
 			}
 		};
+		Permutation.prototype.compare = function (p) {
+			var i, ii;
+			if (this.length !== p.length) {
+				return MathLib.sign(this.length - p.length);
+			}
+			for (i = 0 , ii = this.length; i < ii; i++) {
+				if (p[i] - this[i]) {
+					return MathLib.sign(this[i] - p[i]);
+				}
+			}
+			return 0;
+		};
 		Permutation.cycleToList = function cycleToList(cycle) {
-			var index, res = [], cur, i, ii, j, jj, max;
+			var index, list = [], cur, i, ii, j, jj, max;
 			max = cycle.map(function (b) {
 				return Math.max.apply(null, b);
 			});
@@ -4740,9 +4785,9 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 						cur = cycle[j][index % cycle[j].length];
 					}
 				}
-				res.push(cur);
+				list.push(cur);
 			}
-			return res;
+			return list;
 		};
 		Permutation.id = new Permutation([
 			[]
@@ -4755,20 +4800,20 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			return new MathLib.Permutation(cycle);
 		};
 		Permutation.listToCycle = function listToCycle(list) {
-			var finished = [], cur, i, ii, temp, res = [];
+			var finished = [], cur, i, ii, cycle, cycles = [];
 			for (i = 0 , ii = list.length; i < ii; i++) {
 				cur = i;
-				temp = [];
+				cycle = [];
 				while (!finished[cur]) {
 					finished[cur] = true;
-					temp.push(cur);
+					cycle.push(cur);
 					cur = list[cur];
 				}
-				if (temp.length) {
-					res.push(temp);
+				if (cycle.length) {
+					cycles.push(cycle);
 				}
 			}
-			return res;
+			return cycles;
 		};
 		Permutation.prototype.map = function () {
 			var args = [];
@@ -4778,8 +4823,8 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			return new MathLib.Permutation(Array.prototype.map.apply(this, args));
 		};
 		Permutation.prototype.sgn = function () {
-			var count = 0, i;
-			for (i = 0; i < this.cycle.length; i++) {
+			var i, ii, count = 0;
+			for (i = 0 , ii = this.cycle.length; i < ii; i++) {
 				count += this.cycle[i].length;
 			}
 			count += this.cycle.length;
@@ -4792,19 +4837,19 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			});
 		};
 		Permutation.prototype.toMatrix = function (n) {
-			var arr = [], res = [], temp, i, ii;
+			var row = [], matrix = [], index, i, ii;
 			n = n || this.length;
 			for (i = 0 , ii = n - 1; i < ii; i++) {
-				arr.push(0);
+				row.push(0);
 			}
-			arr = arr.concat([
+			row = row.concat([
 				1
-			]).concat(arr);
+			]).concat(row);
 			for (i = 0 , ii = n; i < ii; i++) {
-				temp = n - this.applyTo(i) - 1;
-				res.push(arr.slice(temp, temp + n));
+				index = n - this.applyTo(i) - 1;
+				matrix.push(row.slice(index, index + n));
 			}
-			return new MathLib.Matrix(res);
+			return new MathLib.Matrix(matrix);
 		};
 		Permutation.prototype.toString = function () {
 			var str = '';
@@ -4895,7 +4940,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				line = new MathLib.Line(this.vectorProduct(q));
 				if (dyn) {
 					Object.defineProperties(line, {
-						"0": {
+						'0': {
 							get: function () {
 								return p[1] * q[2] - p[2] * q[1];
 							},
@@ -4904,7 +4949,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 							enumerable: true,
 							configurable: true
 						},
-						"1": {
+						'1': {
 							get: function () {
 								return p[2] * q[0] - p[0] * q[2];
 							},
@@ -4913,7 +4958,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 							enumerable: true,
 							configurable: true
 						},
-						"2": {
+						'2': {
 							get: function () {
 								return p[0] * q[1] - p[1] * q[0];
 							},
@@ -4934,15 +4979,15 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			});
 		};
 		Point.prototype.reflectAt = function (a) {
+			var i, ii, reflectedPoint = [], p = this.normalize();
 			if (a.type === 'point') {
 				if (this.dimension === a.dimension) {
-					var arr = [], i, p = this.normalize();
 					a = a.normalize();
-					for (i = 0; i < this.dimension; i++) {
-						arr.push(2 * a[i] - p[i]);
+					for (i = 0 , ii = this.dimension; i < ii; i++) {
+						reflectedPoint.push(2 * a[i] - p[i]);
 					}
-					arr.push(1);
-					return new MathLib.Point(arr);
+					reflectedPoint.push(1);
+					return new MathLib.Point(reflectedPoint);
 				}
 			}
 		};
@@ -4988,17 +5033,17 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		function Polynomial(polynomial) {
 			var _this = this;
 			this.type = 'polynomial';
-			var temp = [];
+			var coefficients = [];
 			if (polynomial === undefined || polynomial.length === 0) {
 				polynomial = [
 					0
 				];
 			} else if (typeof polynomial === 'number') {
 				while (polynomial--) {
-					temp.push(0);
+					coefficients.push(0);
 				}
-				temp.push(1);
-				polynomial = temp;
+				coefficients.push(1);
+				polynomial = coefficients;
 			}
 			polynomial.forEach(function (x, i) {
 				_this[i] = x;
@@ -5016,18 +5061,30 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				return Infinity;
 			})(polynomial));
 		}
+		Polynomial.prototype.compare = function (p) {
+			var i, ii;
+			if (this.length !== p.length) {
+				return MathLib.sign(this.length - p.length);
+			}
+			for (i = 0 , ii = this.length; i < ii; i++) {
+				if (p[i] - this[i]) {
+					return MathLib.sign(this[i] - p[i]);
+				}
+			}
+			return 0;
+		};
 		Polynomial.prototype.differentiate = function (n) {
 			if (typeof n === 'undefined') {
 				n = 1;
 			}
-			var temparr = [], i;
+			var i, ii, derivative = [];
 			if (n === 0) {
 				return this;
 			}
-			for (i = 0; i <= this.deg - n; i++) {
-				temparr[i] = MathLib.times(this[i + n], MathLib.fallingFactorial(i + n, n));
+			for (i = 0 , ii = this.deg - n; i <= ii; i++) {
+				derivative[i] = MathLib.times(this[i + n], MathLib.fallingFactorial(i + n, n));
 			}
-			return new MathLib.Polynomial(temparr);
+			return new MathLib.Polynomial(derivative);
 		};
 		Polynomial.prototype.draw = function (screen, options) {
 			var path = [], i, line = this;
@@ -5084,22 +5141,22 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			if (typeof n === 'undefined') {
 				n = 1;
 			}
-			var temparr = [], i;
+			var i, ii, antiderivative = [];
 			if (MathLib.isZero(n)) {
 				return this;
 			}
 			for (i = 0; i < n; i++) {
-				temparr.push(0);
+				antiderivative.push(0);
 			}
-			for (i = 0; i <= this.deg; i++) {
-				temparr[i + n] = this[i] / MathLib.fallingFactorial(i + n, n);
+			for (i = 0 , ii = this.deg; i <= ii; i++) {
+				antiderivative[i + n] = this[i] / MathLib.fallingFactorial(i + n, n);
 			}
-			return new MathLib.Polynomial(temparr);
+			return new MathLib.Polynomial(antiderivative);
 		};
 		Polynomial.prototype.interpolation = function (a, b) {
-			var temp, res = new MathLib.Polynomial([
+			var basisPolynomial, interpolant = new MathLib.Polynomial([
 				0
-			]), n = a.length, i, j, x, y;
+			]), n = a.length, i, j, x;
 			if (arguments.length === 2) {
 				a = a.map(function (x, i) {
 					return [
@@ -5109,20 +5166,20 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				});
 			}
 			for (i = 0; i < n; i++) {
-				temp = new MathLib.Polynomial([
+				basisPolynomial = new MathLib.Polynomial([
 					1
 				]);
 				for (j = 0; j < n; j++) {
 					if (i !== j) {
-						temp = temp.times(new MathLib.Polynomial([
+						basisPolynomial = basisPolynomial.times(new MathLib.Polynomial([
 							-a[j][0] / (a[i][0] - a[j][0]), 
 							1 / (a[i][0] - a[j][0])
 						]));
 					}
 				}
-				res = res.plus(temp.times(a[i][1]));
+				interpolant = interpolant.plus(basisPolynomial.times(a[i][1]));
 			}
-			return res;
+			return interpolant;
 		};
 		Polynomial.prototype.isEqual = function (p) {
 			var i, ii;
@@ -5146,17 +5203,17 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			1
 		]);
 		Polynomial.prototype.plus = function (a) {
-			var temparr = [], i;
+			var plus = [], i;
 			if (typeof a === 'number') {
-				temparr = this.slice();
-				temparr[0] = MathLib.plus(temparr[0], a);
+				plus = this.slice();
+				plus[0] = MathLib.plus(plus[0], a);
 			} else if (a.type === 'polynomial') {
 				for (i = 0; i <= Math.min(this.deg, a.deg); i++) {
-					temparr[i] = MathLib.plus(this[i], a[i]);
+					plus[i] = MathLib.plus(this[i], a[i]);
 				}
-				temparr = temparr.concat((this.deg > a.deg ? this : a).slice(i));
+				plus = plus.concat((this.deg > a.deg ? this : a).slice(i));
 			}
-			return new MathLib.Polynomial(temparr);
+			return new MathLib.Polynomial(plus);
 		};
 		Polynomial.regression = function regression(x, y) {
 			var length = x.length, xy = 0, xi = 0, yi = 0, x2 = 0, m, c, i;
@@ -5183,15 +5240,15 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			]);
 		};
 		Polynomial.roots = function roots(zeros) {
-			var temp, coef = [], i, ii;
+			var elemSymPoly, coef = [], i, ii;
 			if (MathLib.type(zeros) === 'array') {
 				zeros = MathLib.set(zeros, true);
 			}
-			temp = zeros.powerset();
+			elemSymPoly = zeros.powerset();
 			for (i = 0 , ii = zeros.card; i < ii; i++) {
 				coef[i] = 0;
 			}
-			temp.slice(1).forEach(function (x, i) {
+			elemSymPoly.slice(1).forEach(function (x, i) {
 				coef[ii - x.card] = MathLib.plus(coef[ii - x.card], x.times());
 			});
 			coef = coef.map(function (x, i) {
@@ -5211,17 +5268,17 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			return Array.prototype.slice.apply(this, args);
 		};
 		Polynomial.prototype.times = function (a) {
-			var temparr = [], i, j;
+			var i, ii, j, jj, product = [];
 			if (a.type === 'rational') {
 				a = a.toNumber();
 			}
 			if (a.type === 'polynomial') {
-				for (i = 0; i <= this.deg; i++) {
-					for (j = 0; j <= a.deg; j++) {
-						temparr[i + j] = MathLib.plus((temparr[i + j] ? temparr[i + j] : 0), MathLib.times(this[i], a[j]));
+				for (i = 0 , ii = this.deg; i <= ii; i++) {
+					for (j = 0 , jj = a.deg; j <= jj; j++) {
+						product[i + j] = MathLib.plus((product[i + j] ? product[i + j] : 0), MathLib.times(this[i], a[j]));
 					}
 				}
-				return new MathLib.Polynomial(temparr);
+				return new MathLib.Polynomial(product);
 			} else {
 				return this.map(function (b) {
 					return MathLib.times(a, b);
@@ -5260,9 +5317,9 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 						str += MathLib.toString(this[i], true);
 					}
 					if (i > 1) {
-						str += '* Math.pow(x,' + MathLib.toString(i) + ')';
+						str += ' * Math.pow(x, ' + MathLib.toString(i) + ')';
 					} else if (i === 1) {
-						str += '*x';
+						str += ' * x';
 					}
 				}
 			}
@@ -5317,12 +5374,12 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			return str;
 		};
 		Polynomial.prototype.valueAt = function (x) {
-			var pot = MathLib.is(x, 'matrix') ? MathLib.Matrix.identity(x.rows, x.cols) : 1, res = MathLib.is(x, 'matrix') ? MathLib.Matrix.zero(x.rows, x.cols) : 0, i, ii;
+			var pot = MathLib.is(x, 'matrix') ? MathLib.Matrix.identity(x.rows, x.cols) : 1, value = MathLib.is(x, 'matrix') ? MathLib.Matrix.zero(x.rows, x.cols) : 0, i, ii;
 			for (i = 0 , ii = this.deg; i <= ii; i++) {
-				res = MathLib.plus(res, MathLib.times(this[i], pot));
+				value = MathLib.plus(value, MathLib.times(this[i], pot));
 				pot = MathLib.times(pot, x);
 			}
-			return res;
+			return value;
 		};
 		Polynomial.zero = new Polynomial([
 			0
@@ -5342,6 +5399,9 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			this.numerator = numerator;
 			this.denominator = denominator;
 		}
+		Rational.prototype.compare = function (r) {
+			return MathLib.sign(this.numerator * r.denominator - this.denominator * r.numerator);
+		};
 		Rational.prototype.divide = function (r) {
 			if (r.type === 'rational') {
 				return new MathLib.Rational(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));
@@ -5423,16 +5483,15 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		function Set(elements) {
 			var _this = this;
 			this.type = 'set';
-			this.union = Set.createSetOperation(true, true, true);
 			this.intersect = Set.createSetOperation(false, true, false);
+			this.union = Set.createSetOperation(true, true, true);
 			this.without = Set.createSetOperation(true, false, false);
 			this.xor = Set.createSetOperation(true, false, true);
 			if (!elements) {
 				elements = [];
 			}
-			elements = elements.sort(MathLib.compare);
-			elements = elements.filter(function (x, i, a) {
-				return x !== a[i + 1];
+			elements = elements.sort(MathLib.compare).filter(function (x, i, a) {
+				return (a.length === i + 1) || !MathLib.isEqual(x, a[i + 1]);
 			});
 			elements.forEach(function (x, i) {
 				_this[i] = x;
@@ -5441,20 +5500,17 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			this.card = elements.length;
 		}
 		Set.prototype.compare = function (x) {
+			var a, i, ii;
 			if (this.card !== x.card) {
 				return MathLib.sign(this.card - x.card);
 			} else {
-				var res = 0, stop = false;
-				this.forEach(function (y, i) {
-					if (!stop) {
-						var a = MathLib.compare(y, x[i]);
-						if (a !== 0) {
-							res = a;
-							stop = true;
-						}
+				for (i = 0 , ii = this.card; i < ii; i++) {
+					a = MathLib.compare(this[i], x[i]);
+					if (a !== 0) {
+						return a;
 					}
-				});
-				return res;
+				}
+				return 0;
 			}
 		};
 		Set.prototype.every = function () {
@@ -5482,12 +5538,12 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			if (typeof s === 'undefined') {
 				s = 1;
 			}
-			var i, arr = [];
+			var i, set = [];
 			if (f <= t) {
 				for (i = f; i <= t; i += s) {
-					arr.push(i);
+					set.push(i);
 				}
-				return new MathLib.Set(arr);
+				return new MathLib.Set(set);
 			}
 		};
 		Set.prototype.indexOf = function () {
@@ -5547,16 +5603,16 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			return new MathLib.Set(Array.prototype.map.apply(this, args));
 		};
 		Set.prototype.plus = function (n) {
-			var res = [];
+			var sum = [];
 			if (!arguments.length) {
 				return MathLib.plus.apply(null, this.toArray());
 			} else if (n.type === 'set') {
 				this.forEach(function (x) {
 					n.forEach(function (y) {
-						res.push(MathLib.plus(x, y));
+						sum.push(MathLib.plus(x, y));
 					});
 				});
-				return new MathLib.Set(res);
+				return new MathLib.Set(sum);
 			} else {
 				return this.map(function (x) {
 					return MathLib.plus(x, n);
@@ -5564,18 +5620,18 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			}
 		};
 		Set.prototype.powerset = function () {
-			var res = [], arr, temp, i, ii, j, jj;
+			var flag, subset, i, ii, j, jj, powerset = [];
 			for (i = 0 , ii = Math.pow(2, this.card); i < ii; i++) {
-				arr = i.toString(2).split('').reverse();
-				temp = [];
+				flag = i.toString(2).split('').reverse();
+				subset = [];
 				for (j = 0 , jj = this.card; j < jj; j++) {
-					if (arr[j] === '1') {
-						temp.push(this[j]);
+					if (flag[j] === '1') {
+						subset.push(this[j]);
 					}
 				}
-				res.push(new MathLib.Set(temp));
+				powerset.push(new MathLib.Set(subset));
 			}
-			return new MathLib.Set(res);
+			return new MathLib.Set(powerset);
 		};
 		Set.prototype.reduce = function () {
 			var args = [];
@@ -5594,25 +5650,25 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		};
 		Set.createSetOperation = function (left, both, right) {
 			return function (a) {
-				var res = [], i = 0, j = 0, tl = this.card, al = a.card;
+				var set = [], i = 0, j = 0, tl = this.card, al = a.card;
 				while (i < tl && j < al) {
-					if (this[i] < a[j]) {
+					if (MathLib.compare(this[i], a[j]) < 0) {
 						if (left) {
-							res.push(this[i]);
+							set.push(this[i]);
 						}
 						i++;
 						continue;
 					}
-					if (this[i] > a[j]) {
+					if (MathLib.compare(this[i], a[j]) > 0) {
 						if (right) {
-							res.push(a[j]);
+							set.push(a[j]);
 						}
 						j++;
 						continue;
 					}
-					if (this[i] === a[j]) {
+					if (MathLib.isEqual(this[i], a[j])) {
 						if (both) {
-							res.push(this[i]);
+							set.push(this[i]);
 						}
 						i++;
 						j++;
@@ -5620,11 +5676,11 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 					}
 				}
 				if (left && j === al) {
-					res = res.concat(this.slice(i));
+					set = set.concat(this.slice(i));
 				} else if (right && i === tl) {
-					res = res.concat(a.slice(j));
+					set = set.concat(a.slice(j));
 				}
-				return new MathLib.Set(res);
+				return new MathLib.Set(set);
 			};
 		};
 		Set.prototype.slice = function () {
@@ -5633,6 +5689,13 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				args[_i] = arguments[_i + 0];
 			}
 			return Array.prototype.slice.apply(this, args);
+		};
+		Set.prototype.some = function () {
+			var args = [];
+			for (var _i = 0; _i < (arguments.length - 0); _i++) {
+				args[_i] = arguments[_i + 0];
+			}
+			return Array.prototype.some.apply(this, args);
 		};
 		Set.prototype.splice = function () {
 			var args = [];
@@ -5684,24 +5747,24 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			if (this.isEmpty()) {
 				return '∅';
 			}
-			return '(' + Array.prototype.join.call(this, ', ') + ')';
+			return '{' + Array.prototype.join.call(this, ', ') + '}';
 		};
 		return Set;
 	})();
 	MathLib.Set = Set;	
 })(MathLib || (MathLib = {}));
 (function (global) {
-	"use strict";
-	var elementPrototype = (global.HTMLElement || global.Element)["prototype"];
+	'use strict';
+	var elementPrototype = (global.HTMLElement || global.Element)['prototype'];
 	var getter;
-	if (!document.hasOwnProperty("fullscreenEnabled")) {
+	if (!document.hasOwnProperty('fullscreenEnabled')) {
 		getter = (function () {
-			if ("webkitIsFullScreen" in document) {
+			if ('webkitIsFullScreen' in document) {
 				return function () {
 					return (document).webkitFullscreenEnabled;
 				};
 			}
-			if ("mozFullScreenEnabled" in document) {
+			if ('mozFullScreenEnabled' in document) {
 				return function () {
 					return (document).mozFullScreenEnabled;
 				};
@@ -5711,14 +5774,14 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 			};
 		})();
 	}
-	if (!document.hasOwnProperty("fullscreenElement")) {
+	if (!document.hasOwnProperty('fullscreenElement')) {
 		getter = (function () {
-			var i = 0, name = [
-				"webkitCurrentFullScreenElement", 
-				"webkitFullscreenElement", 
-				"mozFullScreenElement"
+			var i, ii, name = [
+				'webkitCurrentFullScreenElement', 
+				'webkitFullscreenElement', 
+				'mozFullScreenElement'
 			];
-			for (; i < name.length; i++) {
+			for (i = 0 , ii = name.length; i < ii; i++) {
 				if (name[i] in document) {
 					return function () {
 						return document[name[i]];
@@ -5729,7 +5792,7 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 				return null;
 			};
 		})();
-		Object.defineProperty(document, "fullscreenElement", {
+		Object.defineProperty(document, 'fullscreenElement', {
 			enumerable: true,
 			configurable: false,
 			writeable: false,
@@ -5737,19 +5800,19 @@ for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		});
 	}
 	function fullscreenchange(oldEvent) {
-		var newEvent = document.createEvent("CustomEvent");
-		(newEvent).initCustomEvent("fullscreenchange", true, false, null);
+		var newEvent = document.createEvent('CustomEvent');
+		(newEvent).initCustomEvent('fullscreenchange', true, false, null);
 		document.dispatchEvent(newEvent);
 	}
-	document.addEventListener("webkitfullscreenchange", fullscreenchange, false);
-	document.addEventListener("mozfullscreenchange", fullscreenchange, false);
+	document.addEventListener('webkitfullscreenchange', fullscreenchange, false);
+	document.addEventListener('mozfullscreenchange', fullscreenchange, false);
 	function fullscreenerror(oldEvent) {
-		var newEvent = document.createEvent("CustomEvent");
-		(newEvent).initCustomEvent("fullscreenerror", true, false, null);
+		var newEvent = document.createEvent('CustomEvent');
+		(newEvent).initCustomEvent('fullscreenerror', true, false, null);
 		document.dispatchEvent(newEvent);
 	}
-	document.addEventListener("webkitfullscreenerror", fullscreenerror, false);
-	document.addEventListener("mozfullscreenerror", fullscreenerror, false);
+	document.addEventListener('webkitfullscreenerror', fullscreenerror, false);
+	document.addEventListener('mozfullscreenerror', fullscreenerror, false);
 	if (!elementPrototype.requestFullScreen) {
 		elementPrototype.requestFullScreen = (function () {
 			if (elementPrototype.webkitRequestFullScreen) {

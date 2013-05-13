@@ -1,7 +1,7 @@
 // ### Screen.prototype.drawAxis
 // Draws the axis.
 //
-// *@returns {screen}*
+// *@return {Screen2D}*
 drawAxis() {
 
 	var line = (...args : any[]) => this.renderer.line.apply(this.layer.axis, args),
@@ -18,11 +18,11 @@ drawAxis() {
 			bottom  = (this.height - this.translation.y) / this.scale.y,
 			left    = (            - this.translation.x) / this.scale.x,
 			right   = (this.width  - this.translation.x) / this.scale.x,
-			lengthX = +10 / this.transformation[0][0],
+			lengthX =  10 / this.transformation[0][0],
 			lengthY = -10 / this.transformation[1][1],
 
 			yExp = 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3),
-			xExp = 1 - Math.floor(Math.log(+this.transformation[0][0]) / Math.LN10 - 0.3),
+			xExp = 1 - Math.floor(Math.log( this.transformation[0][0]) / Math.LN10 - 0.3),
 			yTick = Math.pow(10, yExp),
 			xTick = Math.pow(10, xExp),
 			i;
@@ -39,7 +39,7 @@ drawAxis() {
 
 	// The ticks on the axes
 	// The x axis
-	if(this.options.grid.tick) {
+	if (this.options.grid.tick) {
 		for (i = -yTick; i >= left; i -= yTick) {
 			line([[i, -lengthY], [i, lengthY]], options, true);
 		}
@@ -65,19 +65,19 @@ drawAxis() {
 			yLen = Math.max(0, Math.min(20, -yExp));
 
 	for (i = -yTick; i >= left; i -= yTick) {
-		text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
+		text(i.toFixed(yLen), i, -2 * lengthY, textOptions, true);
 	}
 	for (i = yTick; i <= right; i += yTick) {
-		text(i.toFixed(yLen), i, -2*lengthY, textOptions, true);
+		text(i.toFixed(yLen), i, -2 * lengthY, textOptions, true);
 	}
 
 
 	// The y axis
 	for (i = -xTick; i >= bottom; i -= xTick) {
-		text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
+		text(i.toFixed(xLen), -2 * lengthX, i, textOptions, true);
 	}
 	for (i = xTick; i <= top; i += xTick) {
-		text(i.toFixed(xLen), -2*lengthX, i, textOptions, true);
+		text(i.toFixed(xLen), -2 * lengthX, i, textOptions, true);
 	}
 
 	return this;

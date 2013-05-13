@@ -2,7 +2,7 @@
 // Creates a point based on the coordinates of an event.
 //
 // *@param {event}*  
-// *@returns {point}*
+// *@return {Point}*
 getEventPoint(evt) {
 	var x, y;
 	if (evt.offsetX) {

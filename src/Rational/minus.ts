@@ -2,7 +2,7 @@
 // Subtracts rational numbers
 //
 // *@param {Rational|number}* The number to be subtracted  
-// *@returns {Rational}*
+// *@return {Rational}*
 minus(r) {
 	var n = this.numerator,
 			d = this.denominator;

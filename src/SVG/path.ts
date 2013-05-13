@@ -3,11 +3,11 @@
 //
 // *@param {curve}* The path to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
+// *@return {Screen}* Returns the screen
 path: function (curve, options = {}, redraw = false) {
 	var screen = this.screen,
 			svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
-			step = 2/(screen.scale.x - screen.scale.y),
+			step = 2 / (screen.scale.x - screen.scale.y),
 			pathString, from, to, prop, opts, x, y, i, path;
 
 	from = ('from' in options ? (<any>options).from :         - screen.translation.x  / screen.scale.x) - step;
@@ -17,7 +17,7 @@ path: function (curve, options = {}, redraw = false) {
 	// If curve is a function f, the path will be (x, f(x))
 	if (typeof curve === 'function') {
 		path = [];
-		for (i = from; i <= to; i+=step) {
+		for (i = from; i <= to; i += step) {
 			path.push([i, curve(i)]);
 		}
 	}
@@ -28,7 +28,7 @@ path: function (curve, options = {}, redraw = false) {
 		path = [];
 		x = curve[0];
 		y = curve[1];
-		for (i = from; i <= to; i+=step) {
+		for (i = from; i <= to; i += step) {
 			path.push([x(i), y(i)]);
 		}
 	}
@@ -36,12 +36,12 @@ path: function (curve, options = {}, redraw = false) {
 		path = curve;
 	}
 
-	pathString = 'M' + path.reduce(function(prev, cur) {
+	pathString = 'M' + path.reduce(function (prev, cur) {
 		return prev + ' L' + cur.join(' ');
 	});
 	svgPath.setAttribute('d', pathString);
 
-	svgPath.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+	svgPath.setAttribute('stroke-width', ((<any>options).lineWidth || 4 ) / (screen.scale.x - screen.scale.y) + '');
 
 
 	if (options) {

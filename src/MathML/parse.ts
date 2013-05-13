@@ -44,7 +44,7 @@ parse() : any {
 				
 			}
 			else {
-				if(funcName in MathLib) {
+				if (funcName in MathLib) {
 					if (children.length === 1) {
 						return MathLib[funcName](parser(children[0]));
 					}
@@ -76,7 +76,7 @@ parse() : any {
 		cn: function (node) {
 			var type = node.attributes.type ? node.attributes.type : 'number';
 
-			if(type === 'number') {
+			if (type === 'number') {
 				/* TODO: base conversions
 				var base = node.getAttribute('base') !== null ? node.getAttributes('base') : '10'; */
 				return +node.innerMathML;
@@ -122,7 +122,7 @@ parse() : any {
 				});
 			}
 			else {
-				return new MathLib.Functn(function (x) {return MathLib[funcName].apply(null, innerFunc.map(function (f){
+				return new MathLib.Functn(function (x) {return MathLib[funcName].apply(null, innerFunc.map(function (f) {
 					return typeof f === 'function' ? f(x) : f;
 				}));}, {
 					contentMathMLString: node.outerMathML,
@@ -158,7 +158,7 @@ parse() : any {
 			return MathLib.e;
 		},
 		imaginaryi: function () {
-			return new MathLib.Complex(0,1);
+			return new MathLib.Complex(0, 1);
 		},
 		notanumber: function () {
 			return NaN;

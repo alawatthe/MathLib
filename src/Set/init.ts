@@ -15,13 +15,13 @@ export class Set {
 		if (!elements) {
 			elements = [];
 		}
-		elements = elements.sort(MathLib.compare);
-		
-		elements = elements.filter(function (x, i, a) {
-			return x !== a[i + 1];
+
+		elements = elements.sort(MathLib.compare)
+		.filter(function (x, i, a) {
+			return (a.length === i + 1) || !MathLib.isEqual(x, a[i + 1]);
 		});
 
-		elements.forEach((x,i)=>{this[i] = x;});
+		elements.forEach((x, i) => {this[i] = x;});
 		this.length = elements.length;
 		this.card = elements.length;
 	}

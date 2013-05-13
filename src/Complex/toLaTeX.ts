@@ -1,7 +1,7 @@
 // ### Complex.prototype.toLaTeX()
 // Returns the LaTeX representation of the complex number
 //
-// *@returns {string}*
+// *@return {string}*
 toLaTeX() : string {
 	var str = '',
 			reFlag = false;

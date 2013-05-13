@@ -1,8 +1,8 @@
 // ### [Vector.prototype.norm()](http://mathlib.de/en/docs/Vector/norm)
 // Calcultes the norm of the vector.
 //
-// *@param {number}* [default=2] The p for the p-norm
-// *@returns {number}*
+// *@param {number}* [default=2] The p for the p-norm  
+// *@return {number}*
 norm(p = 2) : number {
 	if (p === 2) {
 		return MathLib.hypot.apply(null, this.toArray());
@@ -11,8 +11,8 @@ norm(p = 2) : number {
 		return Math.max.apply(null, this.map(Math.abs).toArray());
 	}
 	else {
-		return MathLib.root(this.reduce(function(prev, curr){
-			return prev + Math.pow(Math.abs(curr),p);
+		return MathLib.root(this.reduce(function (prev, curr) {
+			return prev + Math.pow(Math.abs(curr), p);
 		}, 0), p);
 	}
 }

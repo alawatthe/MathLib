@@ -1,7 +1,7 @@
 // ### Matrix.prototype.copy()
 // Copies the matrix
 //
-// *@returns {Matrix}*
+// *@return {Matrix}*
 copy() : Matrix {
 	return this.map(MathLib.copy);
 }

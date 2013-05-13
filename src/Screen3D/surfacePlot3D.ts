@@ -3,7 +3,7 @@
 //
 // *@param {function}* The map for the surface    
 // *@param {object}* Options  
-// *@returns {screen3D}*
+// *@return {Screen3D}*
 surfacePlot3D(f, options) : Screen3D {
 	var defaults = {
 				material: {
@@ -20,8 +20,8 @@ surfacePlot3D(f, options) : Screen3D {
 			map = function (u, v) {
 				u = (opts.xmax - opts.xmin) * u + opts.xmin;
 				v = (opts.ymax - opts.ymin) * v + opts.ymin;
-				var res = f(u, v);
-				return new THREE.Vector3(res[0], res[1], res[2]);
+				var fuv = f(u, v);
+				return new THREE.Vector3(fuv[0], fuv[1], fuv[2]);
 			},
 			material = new THREE[opts.material.type + 'Material'](opts.material),
 			mesh;
@@ -57,7 +57,7 @@ surfacePlot3D(f, options) : Screen3D {
 	//     };
 
 	//     folder.addColor(guiObj, 'color').name('color')
-	//       .onChange(function(value){mesh.material.color = new THREE.Color(value);});
+	//       .onChange(function (value) {mesh.material.color = new THREE.Color(value);});
 	//   }
 	// }
 

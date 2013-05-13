@@ -1,9 +1,9 @@
 // ### SVG line
 // Draws a line on the screen.
 //
-// *@param {line}* The line to be drawn  
+// *@param {Line}* The line to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {canvas}* Returns the screen
+// *@return {Canvas}* Returns the screen
 line: function (line, options = {}, redraw = false) {
 	var screen = this.screen,
 			points = this.screen.getLineEndPoints(line),
@@ -16,7 +16,7 @@ line: function (line, options = {}, redraw = false) {
 	svgLine.setAttribute('y2', points[1][1]);
 
 	if (options) {
-		svgLine.setAttribute('stroke-width', ((<any>options).lineWidth || 4 )/(screen.scale.x - screen.scale.y) + '');
+		svgLine.setAttribute('stroke-width', ((<any>options).lineWidth || 4 ) / (screen.scale.x - screen.scale.y) + '');
 		opts = MathLib.SVG.convertOptions(options);
 		for (prop in opts) {
 			if (opts.hasOwnProperty(prop)) {

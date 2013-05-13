@@ -1,5 +1,5 @@
 // ### Polynomial.one
 // Returns the one polynomial
 //
-// *@returns {polynomial}*
+// *@return {Polynomial}*
 static one = new Polynomial([1]);

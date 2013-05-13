@@ -1,5 +1,5 @@
 // ### Complex.zero()
 // Complex representation of 0.
 //
-// *@returns {complex}*
+// *@return {Complex}*
 static zero = new Complex(0, 0);

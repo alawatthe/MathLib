@@ -2,7 +2,7 @@
 // Returns the x coordinate of the event.
 //
 // *@param {event}*  
-// *@returns {number}*
+// *@return {number}*
 getX (evt) {
 	var osX;
 	if (evt.offsetX) {

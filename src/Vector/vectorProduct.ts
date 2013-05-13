@@ -2,7 +2,7 @@
 // Calculates the vector product of two vectors.
 //
 // *@param {Vector}*  
-// *@returns {Vector}*
+// *@return {Vector}*
 vectorProduct(v : Vector) : Vector {
 	/* TODO: Implement vectorproduct for non three-dimensional vectors */
 	if (this.length === 3 && v.length === 3) {

@@ -47,6 +47,18 @@ test('.cholesky()', 1, function () {
 });
 
 
+test('.compare()', 3, function () {
+	var m1 = new MathLib.Matrix([[1, 2], [3, 4]]),
+			m2 = new MathLib.Matrix([[1, 2, 3], [4, 5, 6]]),
+			m3 = new MathLib.Matrix([[1, 2, 3], [4, 5, 6]]),
+			m4 = new MathLib.Matrix([[1, 1, 2], [3, 5, 8]]);
+
+	equal(m1.compare(m2), -1);
+	equal(m2.compare(m3), 0);
+	equal(m3.compare(m4), 1);
+});
+
+
 test('.determinant()', 3, function () {
 	var m = new MathLib.Matrix([[0, 1, 2], [3, 2, 1], [1, 1, 0]]),
 			n = new MathLib.Matrix([[42]]),
@@ -221,12 +233,12 @@ test('.isZero()', 2, function () {
 
 
 test('.LU()', 2, function () {
-	var m = new MathLib.Matrix([[1, 2, 3], [1, 1, 1], [3, 3, 1]]),
+	var m = new MathLib.Matrix([[4, 3], [8, 3]]),
 			n = new MathLib.Matrix([[1, 3, 5], [2, 4, 7], [1, 1, 0]]),
-			res1 = new MathLib.Matrix([[1, 2, 3], [1, -1, -2], [3, 3, -2]]),
+			res1 = new MathLib.Matrix([[8, 3], [0.5, 1.5]]),
 			res2 = new MathLib.Matrix([[2, 4, 7], [0.5, 1, 1.5], [0.5, -1, -2]]);
 
-	deepEqual(m.LU(true), res1, 'LU decomposition');
+	deepEqual(m.LU(), res1, 'LU decomposition');
 	deepEqual(n.LU(), res2, 'LU decomposition');
 });
 

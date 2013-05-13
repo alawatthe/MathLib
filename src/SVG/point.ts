@@ -1,21 +1,21 @@
 // ### SVG point
 // Draws a point on the screen.
 //
-// *@param {point}* The point to be drawn  
+// *@param {Point}* The point to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
+// *@return {Screen}* Returns the screen
 point: function (point, options = {}, redraw = false) {
 	var screen = this.screen,
 			prop, opts, dist,
 			svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
-	svgPoint.setAttribute('cx', point[0]/point[2] + '');
-	svgPoint.setAttribute('cy', point[1]/point[2] + '');
-	svgPoint.setAttribute('r', ((<any>options).size || 10)/(screen.scale.x - screen.scale.y) + '');
+	svgPoint.setAttribute('cx', point[0] / point[2] + '');
+	svgPoint.setAttribute('cy', point[1] / point[2] + '');
+	svgPoint.setAttribute('r', ((<any>options).size || 10) / (screen.scale.x - screen.scale.y) + '');
 
 
 	if (options) {
-		svgPoint.setAttribute('stroke-width', ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y) + '');
+		svgPoint.setAttribute('stroke-width', ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
 		opts = MathLib.SVG.convertOptions(options);
 
 		if (!('fillOpacity' in options)) {
@@ -75,8 +75,8 @@ point: function (point, options = {}, redraw = false) {
 	if ((<any>options).label) {
 		dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
 		screen.text((<any>options).label,
-			point[0]/point[2]+dist/(screen.scale.x - screen.scale.y),
-			point[1]/point[2]+dist/(screen.scale.x - screen.scale.y), {}, true);
+			point[0] / point[2] + dist / (screen.scale.x - screen.scale.y),
+			point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), {}, true);
 	}
 
 

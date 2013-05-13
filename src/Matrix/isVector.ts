@@ -2,7 +2,7 @@
 // Determines if the matrix is a vector
 // (only one row or one column)
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isVector() {
 	return (this.rows === 1) || (this.cols === 1);
 }

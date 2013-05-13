@@ -4,15 +4,17 @@
 // *@param {number}* The number.  
 // *@param {number}* The number of rows.  
 // *@param {number}* The number of columns.  
-// *@returns {matrix}*
-static numbers = function(n, r, c) {
-	var help = [], res = [],
-			i, ii;
+// *@return {Matrix}*
+static numbers = function (n, r, c) {
+	var i, ii,
+			row = [],
+			matrix = [];
+			
 	for (i = 0, ii = c || r || 1; i < ii; i++) {
-		help.push(n);
+		row.push(n);
 	}
 	for (i = 0, ii = r || 1; i < ii ; i++) {
-		res.push(help.slice(0));
+		matrix.push(row.slice(0));
 	}
-	return new MathLib.Matrix(res);
+	return new MathLib.Matrix(matrix);
 };

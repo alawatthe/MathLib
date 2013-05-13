@@ -1,22 +1,20 @@
 // ### Set.prototype.compare()
 // Compare function for sets
 //
-// *@returns {number}*
+// *@return {number}*
 compare(x : any) : number {
+	var a, i, ii;
+
 	if (this.card !== x.card) {
 		return MathLib.sign(this.card - x.card);
 	}
 	else {
-		var res = 0, stop = false;
-		this.forEach(function (y, i) {
-			if(!stop) {
-				var a = MathLib.compare(y, x[i]);
-				if(a !== 0) {
-					res = a;
-					stop = true;
-				}
+		for (i = 0, ii = this.card; i < ii; i++) {
+			a = MathLib.compare(this[i], x[i])
+			if (a !== 0) {
+				return a;
 			}
-		});
-		return res;
+		}
+		return 0;
 	}
 }

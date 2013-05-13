@@ -103,6 +103,16 @@ test('.circumference()', 5, function () {
 	// Spec. 5: otherwise c.circumference() = 2 π r
 	equal(c5.circumference(), 4 * MathLib.pi, 'Spec. 5: otherwise c.circumference() = 2 π r');
 });
+test('.compare()', 3, function () {
+	var c1 = new MathLib.Circle(new MathLib.Point(1, 2), 3),
+			c2 = new MathLib.Circle(new MathLib.Point(1, 2), 3),
+			c3 = new MathLib.Circle(new MathLib.Point(1, 2), 2),
+			c4 = new MathLib.Circle(new MathLib.Point(2, 2), 3);
+
+	equal(c1.compare(c2), 0, '.compare()');
+	equal(c1.compare(c3), 1, '.compare()');
+	equal(c1.compare(c4), -1, '.compare()');
+});
 test('.draw()', 2, function () {
 	var screenSVG, screenCanvas,
 			divSVG = document.createElement('div'),
@@ -426,6 +436,15 @@ test('.constructor', 1, function () {
 test('.type', 1, function () {
 	var e = new MathLib.Expression();
 	equal(e.type, 'expression', 'Testing .type');
+});
+test('.compare()', 3, function () {
+	var e1 = new MathLib.Expression('sin(42)'),
+			e2 = new MathLib.Expression('sin(42)'),
+			e3 = new MathLib.Expression('cos(42)'),
+			e4 = new MathLib.Expression('tan(42)');
+	equal(e1.compare(e2), 0, '.compare()');
+	equal(e1.compare(e3), 1, '.compare()');
+	equal(e1.compare(e4), -1,  '.compare()');
 });
 test('.parse (Number)', 11, function () {
 	equal(MathLib.Expression.parse('123').value, 123, '.parse("123")');
@@ -1921,6 +1940,18 @@ test('.cholesky()', 1, function () {
 });
 
 
+test('.compare()', 3, function () {
+	var m1 = new MathLib.Matrix([[1, 2], [3, 4]]),
+			m2 = new MathLib.Matrix([[1, 2, 3], [4, 5, 6]]),
+			m3 = new MathLib.Matrix([[1, 2, 3], [4, 5, 6]]),
+			m4 = new MathLib.Matrix([[1, 1, 2], [3, 5, 8]]);
+
+	equal(m1.compare(m2), -1);
+	equal(m2.compare(m3), 0);
+	equal(m3.compare(m4), 1);
+});
+
+
 test('.determinant()', 3, function () {
 	var m = new MathLib.Matrix([[0, 1, 2], [3, 2, 1], [1, 1, 0]]),
 			n = new MathLib.Matrix([[42]]),
@@ -2095,12 +2126,12 @@ test('.isZero()', 2, function () {
 
 
 test('.LU()', 2, function () {
-	var m = new MathLib.Matrix([[1, 2, 3], [1, 1, 1], [3, 3, 1]]),
+	var m = new MathLib.Matrix([[4, 3], [8, 3]]),
 			n = new MathLib.Matrix([[1, 3, 5], [2, 4, 7], [1, 1, 0]]),
-			res1 = new MathLib.Matrix([[1, 2, 3], [1, -1, -2], [3, 3, -2]]),
+			res1 = new MathLib.Matrix([[8, 3], [0.5, 1.5]]),
 			res2 = new MathLib.Matrix([[2, 4, 7], [0.5, 1, 1.5], [0.5, -1, -2]]);
 
-	deepEqual(m.LU(true), res1, 'LU decomposition');
+	deepEqual(m.LU(), res1, 'LU decomposition');
 	deepEqual(n.LU(), res2, 'LU decomposition');
 });
 
@@ -2319,10 +2350,6 @@ test('.type', 1, function () {
 	var p = new MathLib.Permutation([[0, 1], [2, 3]]);
 	equal(p.type, 'permutation', 'Testing .type');
 });
-
-
-
-// Methods
 test('.applyTo()', 6, function () {
 	var p = new MathLib.Permutation([[0, 1, 2], [0, 1, 2]]),
 			r = new MathLib.Permutation([0, 2, 1]),
@@ -2336,8 +2363,26 @@ test('.applyTo()', 6, function () {
 	deepEqual(r.applyTo([1, 2, 3]), [1, 3, 2], 'Testing .applyTo()');
 	equal(q.applyTo(1), 1, 'Testing .applyTo() with id');
 });
+test('.compare()', 3, function () {
+	var p1 = new MathLib.Permutation([1, 2]),
+			p2 = new MathLib.Permutation([1, 2, 3]),
+			p3 = new MathLib.Permutation([1, 2, 3]),
+			p4 = new MathLib.Permutation([1, 2, 1]);
 
-
+	equal(p1.compare(p2), -1);
+	equal(p2.compare(p3), 0);
+	equal(p3.compare(p4), 1);
+});
+test('cycleToList()', 2, function () {
+	var p = [[0, 1, 2], [3, 4]],
+			q = [[0, 1], [2, 3]];
+	deepEqual(new MathLib.Permutation.cycleToList(p), [1, 2, 0, 4, 3], 'Testing .cycleToList()');
+	deepEqual(new MathLib.Permutation.cycleToList(q), [1, 0, 3, 2], 'Testing .cycleToList()');
+});
+test('listToCycle()', 1, function () {
+	var p = [1, 2, 0, 4, 3];
+	deepEqual(new MathLib.Permutation.listToCycle(p), [[0, 1, 2], [3, 4]], 'Testing .listToCycle()');
+});
 test('.map()', 2, function () {
 	var p = new MathLib.Permutation([1, 2, 3]),
 			q = new MathLib.Permutation([2, 4, 6]),
@@ -2349,23 +2394,17 @@ test('.map()', 2, function () {
 	deepEqual(res, q, '.map()');
 	equal(res.type, 'permutation', '.type should be permutation');
 });
-
-
-test('.times()', 1, function () {
-	var p = new MathLib.Permutation([2, 0, 1]),
-			q = new MathLib.Permutation([0, 2, 1]);
-	deepEqual(p.times(q), new MathLib.Permutation([2, 1, 0]), 'Testing .times()');
-});
-
-
 test('.sgn()', 2, function () {
 	var p = new MathLib.Permutation([[0, 1], [1, 2]]),
 			q = new MathLib.Permutation([[0, 1], [1, 2, 3]]);
 	equal(p.sgn(), 1, 'Testing .sgn()');
 	equal(q.sgn(), -1, 'Testing .sgn()');
 });
-
-
+test('.times()', 1, function () {
+	var p = new MathLib.Permutation([2, 0, 1]),
+			q = new MathLib.Permutation([0, 2, 1]);
+	deepEqual(p.times(q), new MathLib.Permutation([2, 1, 0]), 'Testing .times()');
+});
 test('.toMatrix()', 2, function () {
 	var p = new MathLib.Permutation([[0, 1], [2, 3]]),
 			q = new MathLib.Permutation([]),
@@ -2374,31 +2413,12 @@ test('.toMatrix()', 2, function () {
 	deepEqual(p.toMatrix(), pm, 'Testing .toMatrix()');
 	deepEqual(q.toMatrix(4), qm, 'Testing .toMatrix() with id permutation');
 });
-
-
 test('.toString()', 2, function () {
 	var p = new MathLib.Permutation([[0, 1], [2, 3]]),
 			q = new MathLib.Permutation([]);
 	equal(p.toString(), '(0,1)(2,3)', 'Testing .toString()');
 	equal(q.toString(), '', 'Testing .toString() with id permutation');
 });
-
-
-
-// Static Methods
-test('cycleToList()', 2, function () {
-	var p = [[0, 1, 2], [3, 4]],
-			q = [[0, 1], [2, 3]];
-	deepEqual(new MathLib.Permutation.cycleToList(p), [1, 2, 0, 4, 3], 'Testing .cycleToList()');
-	deepEqual(new MathLib.Permutation.cycleToList(q), [1, 0, 3, 2], 'Testing .cycleToList()');
-});
-
-
-test('listToCycle()', 1, function () {
-	var p = [1, 2, 0, 4, 3];
-	deepEqual(new MathLib.Permutation.listToCycle(p), [[0, 1, 2], [3, 4]], 'Testing .listToCycle()');
-});
-
 module('Point');
 test('init', 1, function () {
 	var point = new MathLib.Point([3, 2, 1]);
@@ -2568,6 +2588,16 @@ test('.type', 1, function () {
 	var p = new MathLib.Polynomial([1, 2, 3]);
 	equal(p.type, 'polynomial', 'Testing .type');
 });
+test('.compare()', 3, function () {
+	var p1 = new MathLib.Polynomial([1, 2]),
+			p2 = new MathLib.Polynomial([1, 2, 3]),
+			p3 = new MathLib.Polynomial([1, 2, 3]),
+			p4 = new MathLib.Polynomial([1, 2, 1]);
+
+	equal(p1.compare(p2), -1);
+	equal(p2.compare(p3), 0);
+	equal(p3.compare(p4), 1);
+});
 test('.differentiate()', 3, function () {
 	var p = new MathLib.Polynomial(3);
 	deepEqual(p.differentiate(), new MathLib.Polynomial([0, 0, 3]), '.differentiate()');
@@ -2690,6 +2720,15 @@ test('.constructor', 1, function () {
 test('.type', 1, function () {
 	var r = new MathLib.Rational(2, 3);
 	equal(r.type, 'rational', 'Testing .type');
+});
+test('.compare()', 3, function () {
+	var r1 = new MathLib.Rational(3, 2),
+			r2 = new MathLib.Rational(6, 4),
+			r3 = new MathLib.Rational(1, 1),
+			r4 = new MathLib.Rational(7, 2);
+	equal(r1.compare(r2), 0, '.compare()');
+	equal(r1.compare(r3), 1, '.compare()');
+	equal(r1.compare(r4), -1,  '.compare()');
 });
 test('.divide()', 2, function () {
 	var r = new MathLib.Rational(1, 2),
@@ -2814,9 +2853,11 @@ test('.type', 1, function () {
 	equal(screen.type, 'screen', 'Testing .type');
 });
 module('Set');
-test('init', 1, function () {
-	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
-	equal(s.card, 5, 'Testing the cardinality');
+test('init', 2, function () {
+	var s1 = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
+			s2 = new MathLib.Set([3, new MathLib.Complex(1, 1), 3, new MathLib.Complex(1, 1)]);
+	equal(s1.card, 5, 'Testing the cardinality');
+	equal(s2.card, 2, 'Testing the cardinality');
 });
 
 
@@ -2832,10 +2873,6 @@ test('.type', 1, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]);
 	equal(s.type, 'set', 'Testing .type');
 });
-
-
-
-// Methods
 test('.compare()', 3, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]),
 			m = new MathLib.Set([1, 3, 5, 7]),
@@ -2844,8 +2881,42 @@ test('.compare()', 3, function () {
 	deepEqual(s.compare(m), -1, '.compare()');
 	deepEqual(m.compare(n), -1, '.compare()');
 });
+test('.every()', 2, function () {
+	var s1 = new MathLib.Set([1, 2, 3, 4]),
+			s2 = new MathLib.Set([1, 3, 5, 7]);
+	equal(s1.every(function (x) {
+		return x % 2;
+	}), false, '.every()');
+	equal(s2.every(function (x) {
+		return x % 2;
+	}), true, '.every()');
+});
+test('.filter()', 1, function () {
+	var s1 = new MathLib.Set([1, 2, 3, 4]),
+			s2 = new MathLib.Set([1, 3]);
 
+	deepEqual(s1.filter(function (x) {
+		return x % 2;
+	}), s2, '.filter()');
+});
+test('.forEach()', 1, function () {
+	var s = new MathLib.Set([1, 2, 3, 4]),
+			arr = [];
+	s.forEach(function (x) {
+		arr.push(x);
+	});
+	
+	deepEqual(arr, [1, 2, 3, 4], '.forEach()');
+});
+test('fromTo()', 1, function () {
+	deepEqual(new MathLib.Set.fromTo(1, 5, 2), new MathLib.Set([1, 3, 5]), 'Testing new MathLib.Set.fromTo()');
+});
+test('.indexOf()', 2, function () {
+	var s = new MathLib.Set([1, 2, 3, 4]);
 
+	deepEqual(s.indexOf(3), 2, '.indexOf()');
+	deepEqual(s.indexOf(5), -1, '.indexOf()');
+});
 test('.insert()', 4, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
 	deepEqual(s.insert(1), new MathLib.Set([1, 2, 3, 4, 8, 9]), 'Testing .locate() (set, front)');
@@ -2853,15 +2924,15 @@ test('.insert()', 4, function () {
 	deepEqual(s.insert(5), new MathLib.Set([1, 2, 3, 4, 5, 8, 9]), 'Testing .locate() (set, not existing)');
 	deepEqual(s.insert(10), new MathLib.Set([1, 2, 3, 4, 5, 8, 9, 10]), 'Testing .locate() (set, back)');
 });
-
-
-test('.intersect()', 1, function () {
+test('.intersect()', 2, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]),
-			m = new MathLib.Set([1, 3, 5, 7]);
-	deepEqual(s.intersect(m), new MathLib.Set([1, 3]), 'Testing .intersect() (set)');
+			m = new MathLib.Set([1, 3, 5, 7]),
+			c1 = new MathLib.Set([1, new MathLib.Complex(1, 1), new MathLib.Complex(0, 1), 2]),
+			c2 = new MathLib.Set([1, new MathLib.Complex(1, 1), new MathLib.Complex(0, 2), 3]);
+
+	deepEqual(s.intersect(m), new MathLib.Set([1, 3]), '.intersect()');
+	deepEqual(c1.intersect(c2), new MathLib.Set([1, new MathLib.Complex(1, 1)]), '.intersect()');
 });
-
-
 test('.isEmpty()', 3, function () {
 	var m = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
 			n = new MathLib.Set(),
@@ -2870,8 +2941,6 @@ test('.isEmpty()', 3, function () {
 	equal(n.isEmpty(), true, 'Testing .min(3)');
 	equal(o.isEmpty(), true, 'Testing .min(3)');
 });
-
-
 test('.isEqual()', 3, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]),
 			m = new MathLib.Set([1, 3, 5, 7]),
@@ -2880,8 +2949,6 @@ test('.isEqual()', 3, function () {
 	deepEqual(s.isEqual(m), false, '.isEqual()');
 	deepEqual(s.isEqual(n), false, '.isEqual()');
 });
-
-
 test('.isSubsetOf()', 2, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
 			m = new MathLib.Set([3, 8, 2]),
@@ -2890,8 +2957,6 @@ test('.isSubsetOf()', 2, function () {
 	equal(m.isSubsetOf(s), true, 'Testing .isSubsetOf()');
 	equal(n.isSubsetOf(s), false, 'Testing .isSubsetOf()');
 });
-
-
 test('.locate()', 4, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
 	equal(s.locate(1), 0, 'Testing .locate()');
@@ -2899,8 +2964,6 @@ test('.locate()', 4, function () {
 	equal(s.locate(5), 3, 'Testing .locate()');
 	equal(s.locate(10), 5, 'Testing .locate()');
 });
-
-
 test('.map()', 2, function () {
 	var p = new MathLib.Set([1, 2, 3]),
 			q = new MathLib.Set([2, 4, 6]),
@@ -2912,8 +2975,6 @@ test('.map()', 2, function () {
 	deepEqual(res, q, '.map()');
 	equal(res.type, 'set', '.type should be set');
 });
-
-
 test('.plus()', 3, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]),
 			m = new MathLib.Set([1, 2, 3, 4, 5, 6]);
@@ -2921,96 +2982,96 @@ test('.plus()', 3, function () {
 	deepEqual(s.plus(2), new MathLib.Set([3, 4, 5, 6]), 'Testing .plus(int) (set)');
 	deepEqual(s.plus(m), new MathLib.Set([2, 3, 4, 5, 6, 7, 8, 9, 10]), 'Testing .plus(set) (set)');
 });
-
-
 test('.powerset()', 1, function () {
 	var s = MathLib.Set,
 			m = new MathLib.Set([1, 2, 3]),
-			n = new MathLib.Set([new s(), new s([1]), new s([2]), new s([3]), new s([1, 2]), new s([1, 3]), new s([2, 3]), new s([1, 2, 3])]);
+			n = new MathLib.Set([new s([]), new s([1]), new s([2]), new s([3]), new s([1, 2]), new s([1, 3]), new s([2, 3]), new s([1, 2, 3])]);
 	deepEqual(m.powerset(), n, '.powerset()');
 });
+test('.reduce()', 1, function () {
+	var s = new MathLib.Set([1, 2, 3, 4]);
 
-
+	equal(s.reduce(function (old, cur) {
+		return old * cur;
+	}), 24, '.reduce()');
+});
 test('.remove()', 1, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
 	deepEqual(s.remove(3), new MathLib.Set([2, 4, 8, 9]), 'Testing .toArray()');
 });
 
+test('.some()', 2, function () {
+	var s1 = new MathLib.Set([1, 2, 3, 4]),
+			s2 = new MathLib.Set([2, 4, 6, 8]);
+	equal(s1.some(function (x) {
+		return x % 2;
+	}), true, '.some()');
+	equal(s2.some(function (x) {
+		return x % 2;
+	}), false, '.some()');
+});
 
 test('.times()', 2, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]);
 	equal(s.times(), 24, 'Testing .times() (set)');
 	deepEqual(s.times(2), new MathLib.Set([2, 4, 6, 8]), 'Testing .times(int) (set)');
 });
-
-
 test('.toArray()', 2, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
 			n = new MathLib.Set();
 	deepEqual(s.toArray(), [2, 3, 4, 8, 9], 'Testing .toArray() (set)');
 	deepEqual(n.toArray(), [], 'Testing .toArray() (empty set)');
 });
-
-
 test('.toContentMathMLString()', 2, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
 			e = new MathLib.Set();
 	equal(s.toContentMathMLString(), '<set><cn>2</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathMLString() (set)');
 	equal(e.toContentMathMLString(), '<emptyset/>', 'Testing .toContentMathMLString() (empty set)');
 });
-
-
 test('.toLaTeX()', 2, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
 			e = new MathLib.Set();
 	equal(s.toLaTeX(), '\\{2, 3, 4, 8, 9\\}', 'Testing .toLaTeX() (set)');
 	equal(e.toLaTeX(), '\\emptyset', 'Testing .toLaTeX() (empty set)');
 });
-
-
 test('.toMathMLString()', 2, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
 			e = new MathLib.Set();
 	equal(s.toMathMLString(), '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>', 'Testing .toMathMLString() (set)');
 	equal(e.toMathMLString(), '<mi>&#x2205;</mi>', 'Testing .toMathMLString() (empty set)');
 });
-
-
 test('.toString()', 2, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
 			e = new MathLib.Set();
-	equal(s.toString(), '(2, 3, 4, 8, 9)', 'Testing .toString() (set)');
+	equal(s.toString(), '{2, 3, 4, 8, 9}', 'Testing .toString() (set)');
 	equal(e.toString(), '∅', 'Testing .toString() (empty set)');
 });
-
-
-test('.union()', 1, function () {
+test('.union()', 2, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]),
-			m = new MathLib.Set([1, 3, 5, 7]);
-	deepEqual(s.union(m), new MathLib.Set([1, 2, 3, 4, 5, 7]), 'Testing .union() (set)');
+			m = new MathLib.Set([1, 3, 5, 7]),
+			c = new MathLib.Set([1, new MathLib.Complex(1, 1), new MathLib.Complex(0, 1), 3]);
+
+	deepEqual(s.union(m), new MathLib.Set([1, 2, 3, 4, 5, 7]), '.union()');
+	deepEqual(s.union(c), new MathLib.Set([1, 2, 3, 4, new MathLib.Complex(0, 1), new MathLib.Complex(1, 1)]), '.union()');
 });
-
-
-test('.without()', 1, function () {
+test('.without()', 2, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]),
-			m = new MathLib.Set([1, 3, 5, 7]);
-	deepEqual(s.without(m), new MathLib.Set([2, 4]), 'Testing .without() (set)');
+			m = new MathLib.Set([1, 3, 5, 7]),
+			c1 = new MathLib.Set([1, new MathLib.Complex(1, 1), new MathLib.Complex(0, 1), 2]),
+			c2 = new MathLib.Set([1, new MathLib.Complex(1, 1), new MathLib.Complex(0, 2), 3]);
+
+	deepEqual(s.without(m), new MathLib.Set([2, 4]), '.without()');
+	deepEqual(c1.without(c2), new MathLib.Set([2, new MathLib.Complex(0, 1)]), '.without()');
 });
-
-
-test('.xor()', 1, function () {
+test('.xor()', 2, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]),
-			m = new MathLib.Set([1, 3, 5, 7]);
-	deepEqual(s.xor(m), new MathLib.Set([2, 4, 5, 7]), 'Testing .xor() (set)');
+			m = new MathLib.Set([1, 3, 5, 7]),
+			c1 = new MathLib.Set([1, new MathLib.Complex(1, 1), new MathLib.Complex(0, 1), 2]),
+			c2 = new MathLib.Set([1, new MathLib.Complex(1, 1), new MathLib.Complex(0, 2), 3]);
+
+	deepEqual(s.xor(m), new MathLib.Set([2, 4, 5, 7]), '.xor()');
+	deepEqual(c1.xor(c2), new MathLib.Set([2, 3, new MathLib.Complex(0, 1), new MathLib.Complex(0, 2)]), '.xor()');
 });
-
-
-
-// Static methods
-test('fromTo()', 1, function () {
-	deepEqual(new MathLib.Set.fromTo(1, 5, 2), new MathLib.Set([1, 3, 5]), 'Testing new MathLib.Set.fromTo()');
-});
-
 module('Vector');
 test('init', 4, function () {
 	var vector = new MathLib.Vector([1, 2, 3]);
@@ -3044,6 +3105,16 @@ test('.areLinearIndependent()', 4, function () {
 	equal(MathLib.Vector.areLinearIndependent([v2, v3]), false, '.areLinearIndependent()');
 	equal(MathLib.Vector.areLinearIndependent([v2, v4, v5]), true, '.areLinearIndependent()');
 	equal(MathLib.Vector.areLinearIndependent([v5, v6]), undefined, '.areLinearIndependent()');
+});
+test('.compare()', 3, function () {
+	var v1 = new MathLib.Vector([1, 2]),
+			v2 = new MathLib.Vector([1, 2, 3]),
+			v3 = new MathLib.Vector([1, 2, 3]),
+			v4 = new MathLib.Vector([1, 2, 1]);
+
+	equal(v1.compare(v2), -1);
+	equal(v2.compare(v3), 0);
+	equal(v3.compare(v4), 1);
 });
 test('.every()', 2, function () {
 	var p = new MathLib.Vector([1, 2, 3]);

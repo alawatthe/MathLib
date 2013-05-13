@@ -1,14 +1,14 @@
 // ### Polynomial.prototype.toLaTeX()
 // Returns a LaTeX representation of the polynomial
 //
-// *@returns {string}*
+// *@return {string}*
 toLaTeX() : string {
 	var str = MathLib.toString(this[this.deg]) + 'x^{' + this.deg + '}',
 			i;
 
-	for (i=this.deg-1; i>=0; i--) {
+	for (i = this.deg - 1; i >= 0; i--) {
 		if (!MathLib.isZero(this[i])) {
-			// if(i === 0) {
+			// if (i === 0) {
 			//   str += MathLib.toLaTeX(this[i]);
 			// }
 			// else {

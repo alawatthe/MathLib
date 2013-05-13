@@ -188,7 +188,9 @@ module.exports = function (grunt) {
 							'test/Line/line.js',
 							'test/MathML/MathML.js',
 							'test/Matrix/matrix.js',
-							'test/Permutation/permutation.js',
+
+							'test/Permutation/init.js',
+							'test/Permutation/!(init).js',
 
 							'test/Point/init.js',
 							'test/Point/!(init).js',
@@ -202,7 +204,8 @@ module.exports = function (grunt) {
 							'test/Screen/init.js',
 							'test/Screen/!(init).js',
 
-							'test/Set/set.js',
+							'test/Set/init.js',
+							'test/Set/!(init).js',
 							
 							'test/Vector/init.js',
 							'test/Vector/!(init).js'

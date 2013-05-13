@@ -9,6 +9,5 @@ clear: function (layer) {
 			width  =  screen.width         / screen.scale.x,
 			height =  screen.height        / screen.scale.y;
 
-			console.dir(layer);
 	layer.ctx.clearRect(left, top, width, height);
 },

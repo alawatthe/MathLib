@@ -7,8 +7,8 @@
 // *@param {number}* The starting point  
 // *@param {number}* The end point  
 // *@param {number}* The tolerance  
-// *@returns {number}*
-functnPrototype.quad = function(a, b, options:any = {}) : number {
+// *@return {number}*
+functnPrototype.quad = function (a, b, options : any = {}) : number {
 	
 	var f = this,
 			warnMessage = [
@@ -43,7 +43,7 @@ functnPrototype.quad = function(a, b, options:any = {}) : number {
 		options.tolerance = 1e-5;
 	}
 
-	Q = quadstep(f, a, b, f(a), f((a+b)/2), f(b), options);
+	Q = quadstep(f, a, b, f(a), f((a + b) / 2), f(b), options);
 
 	options.warnMessage = warnMessage[options.warn];
 
@@ -56,18 +56,18 @@ functnPrototype.quad = function(a, b, options:any = {}) : number {
 var quadstep = function  (f, a, b, fa, fc, fb, options) {
 
 	var h = b - a,
-			c = (a + b)/2,
-			fd = f((a + c)/2),
-			fe = f((c + b)/2),
+			c = (a + b) / 2,
+			fd = f((a + c) / 2),
+			fe = f((c + b) / 2),
 
 			// Three point Simpson's rule
-			Q1 = (h/6)*(fa + 4*fc + fb),
+			Q1 = (h / 6) * (fa + 4 * fc + fb),
 
 			// Five point double Simpson's rule
-			Q2 = (h/12)*(fa + 4*fd + 2*fc + 4*fe + fb),
+			Q2 = (h / 12) * (fa + 4 * fd + 2 * fc + 4 * fe + fb),
 
 			// Romberg extrapolation
-			Q = Q2 + (Q2 - Q1)/15;
+			Q = Q2 + (Q2 - Q1) / 15;
 
 			options.calls = options.calls + 2;
 
@@ -96,6 +96,6 @@ var quadstep = function  (f, a, b, fa, fc, fb, options) {
 	}
 
 	// Otherwise, divide the interval into two subintervals
-	return quadstep(f, a, c, fa, fd, fc, options)
-				+ quadstep(f, c, b, fc, fe, fb, options);
+	return quadstep(f, a, c, fa, fd, fc, options) +
+					quadstep(f, c, b, fc, fe, fb, options);
 }

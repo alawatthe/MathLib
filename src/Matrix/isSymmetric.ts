@@ -1,17 +1,19 @@
 // ### Matrix.prototype.isSymmetric()
 // Determines if the matrix is symmetric
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isSymmetric() {
-	var i, j, bool = true;
+	var i, ii, j, jj,
+			isSymmetric = true;
+
 	if (!this.isSquare()) {
-		bool = false;
+		isSymmetric = false;
 	}
 	else {
-lp: for (i = 0; i < this.rows; i++) {
-			for (j = i + 1; j < this.cols; j++) {
+lp: for (i = 0, ii = this.rows; i < ii; i++) {
+			for (j = i + 1, jj = this.cols; j < jj; j++) {
 				if (!MathLib.isEqual(this[i][j], this[j][i])) {
-					bool = false;
+					isSymmetric = false;
 					break lp;
 				}
 			}
@@ -19,7 +21,7 @@ lp: for (i = 0; i < this.rows; i++) {
 	}
 
 	this.isSymmetric = function () {
-		return bool;
+		return isSymmetric;
 	};
-	return bool;
+	return isSymmetric;
 }

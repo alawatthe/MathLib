@@ -1,8 +1,8 @@
 // ### Matrix.prototype.minus()
 // Calculates the difference of two matrices
 //
-// *@param {matrix}* The matrix to be subtracted.  
-// *@returns {matrix}*
+// *@param {Matrix}* The matrix to be subtracted.  
+// *@return {Matrix}*
 minus(m) {
 	return this.plus(m.negative());
 }

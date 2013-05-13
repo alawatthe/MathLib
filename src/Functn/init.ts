@@ -4,7 +4,7 @@
 // 'Functn'.  
 // More improvements to the module coming soon.
 
-var functnPrototype:any = {};
+var functnPrototype : any = {};
 
 MathLib.Functn = function (f, options) {
 	options = options || {};
@@ -18,13 +18,13 @@ MathLib.Functn = function (f, options) {
 					innerVar = x.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML,
 					innerStr = x.contentMathML.childNodes[0].childNodes[2].outerMathML.replace('<bvar>' + innerVar + '</bvar>', ''), 
 					outerStr = functn.contentMathML.childNodes[0].childNodes[2].outerMathML.replace(outerVar, innerStr),
-					res = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><reals/></domainofapplication>' + outerStr + '</lambda></math>';
-			return new MathLib.Functn(function (y) {return f(x(y));}, {contentMathMLString: res});
+					contentMathMLString = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><reals/></domainofapplication>' + outerStr + '</lambda></math>';
+			return new MathLib.Functn(function (y) {return f(x(y));}, {contentMathMLString: contentMathMLString});
 		}
 		else if (typeof x === 'function') {
 			return function (y) {return f(x(y));};
 		}
-		else if(x.type === 'complex') {
+		else if (x.type === 'complex') {
 			return x[options.name].apply(x, Array.prototype.slice.call(arguments, 1));
 		}
 		else {

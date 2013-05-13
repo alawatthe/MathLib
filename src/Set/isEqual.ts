@@ -1,8 +1,8 @@
 // ### Set.prototype.isEqual()
 // Determines if the set is equal to an other set.
 //
-// *@param {set}* The set to compare  
-// *@returns {boolean}*
+// *@param {Set}* The set to compare  
+// *@return {boolean}*
 isEqual(x : Set) : bool {
 	if (this.card !== x.card) {
 		return false;

@@ -1,5 +1,5 @@
 // ### Permutation.id()
 // The id permutation
 // 
-// *@returns {permutation}*
+// *@return {Permutation}*
 static id = new Permutation([[]]);

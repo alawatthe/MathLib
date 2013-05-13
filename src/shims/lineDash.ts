@@ -30,7 +30,7 @@ if (!('setLineDash' in CanvasRenderingContext2D.prototype)) {
 	// Additionally extending the CanvasRenderingContext2D.prototype is only possible with a weird hack.
 	/*
 	else if ('webkitLineDash' in CanvasRenderingContext2D.prototype) {
-		prototype	= document.createElement('canvas').getContext('2d').__proto__;
+		prototype = document.createElement('canvas').getContext('2d').__proto__;
 		setLineDash = function (dash) {
 			this.webkitLineDash = dash;
 		};

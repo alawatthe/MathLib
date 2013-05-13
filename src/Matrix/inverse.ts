@@ -1,7 +1,7 @@
 // ### Matrix.prototype.inverse()
 // Calculates the inverse matrix.
 //
-// *@returns {matrix}*
+// *@return {Matrix}*
 // TODO: optimize this calculation. But hey, you shouldn't use inverse anyway ;-)
 inverse() {
 	if (!this.isSquare() && this.determinant()) {

@@ -1,8 +1,8 @@
 // ### Point.prototype.isOn()
 // Determines wether a point is on a line or circle
 //
-// *@param {line|point}*
-// *@returns {boolean}*
+// *@param {Line|Point}*  
+// *@return {boolean}*
 isOn(a : Circle) : bool {
 	if (a.type === 'line') {
 		return this.distanceTo(a.center) === a.radius;

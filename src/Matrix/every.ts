@@ -6,7 +6,7 @@
 // the number of the column and the complete matrix
 //
 // *@param {function}* The function which is called on every argument  
-// *@returns {boolean}*
+// *@return {boolean}*
 every(f) {
 	return Array.prototype.every.call(this, function (x, i) {
 		return Array.prototype.every.call(x, function (y, j) {

@@ -66,9 +66,9 @@ export class Layer {
 
 					// Draw the background
 					this.ctx.fillStyle = colorConvert(screen.options.background);
-					this.ctx.fillRect(left, bottom, right-left, top-bottom);
+					this.ctx.fillRect(left, bottom, right - left, top - bottom);
 
-					this.stack.forEach(function(x,i){
+					this.stack.forEach(function (x, i) {
 						if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
@@ -83,31 +83,30 @@ export class Layer {
 			}
 			else if (id === 'grid') {
 				this.ctx.strokeStyle = colorConvert(screen.options.grid.color) || '#cccccc';
-				this.ctx.fillStyle = 'rgba(255,255,255,0)';
+				this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
 				
-				this.draw = function (){
-					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
+				this.draw = function () {
+					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 					_this.screen.drawGrid();
 				}
 			}
 			else if (id === 'axis') {
-				console.log(screen.options.axis.color);
 				this.ctx.strokeStyle = colorConvert(screen.options.axis.color) || '#000000';
 				
-				this.draw = function (){
-					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
+				this.draw = function () {
+					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 					_this.screen.drawAxis();
 				}
 			}
 			else {
 				this.ctx.strokeStyle = '#000000';
-				this.ctx.fillStyle = 'rgba(255,255,255,0)';
+				this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
-				this.draw = function (){
-					_this.ctx.lineWidth = 4/(screen.scale.x - screen.scale.y);
+				this.draw = function () {
+					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 
-					this.stack.forEach(function(x,i){
+					this.stack.forEach(function (x, i) {
 						if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
@@ -132,10 +131,10 @@ export class Layer {
 
 		}
 		else if (screen.options.renderer === 'SVG') {
-			var ctx = document.createElementNS('http://www.w3.org/2000/svg','g'),
+			var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g'),
 					m = screen.transformation;
 			ctx.setAttribute('transform',
-				'matrix(' + m[0][0]+ ',' + m[1][0]+ ',' + m[0][1]+ ',' + m[1][1]+ ',' + m[0][2]+ ',' + m[1][2] + ')' );
+				'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')' );
 			screen.element.appendChild(ctx);
 			this.ctx = ctx;
 
@@ -148,7 +147,7 @@ export class Layer {
 							left    = (              - screen.translation.x) / screen.scale.x,
 							right   = (screen.width  - screen.translation.x) / screen.scale.x;
 
-					this.stack.forEach(function(x,i){
+					this.stack.forEach(function (x, i) {
 						if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
@@ -164,8 +163,8 @@ export class Layer {
 			else if (id === 'grid') {
 				ctx.setAttribute('stroke', colorConvert(screen.options.grid.color) || '#cccccc');
 
-				this.draw = function (){
-					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
+				this.draw = function () {
+					ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
 					_this.screen.drawGrid();
 				};
 
@@ -173,15 +172,15 @@ export class Layer {
 			else if (id === 'axis') {
 				ctx.setAttribute('stroke', colorConvert(screen.options.axis.color) || '#000000');
 				
-				this.draw = function (){
-					ctx.setAttribute('stroke-width', 4/(screen.scale.x - screen.scale.y)+'');
+				this.draw = function () {
+					ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
 					_this.screen.drawAxis();
 				}
 			}
 			else {
-				this.draw = function() {
+				this.draw = function () {
 
-					this.stack.forEach(function(x,i){
+					this.stack.forEach(function (x, i) {
 						if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}

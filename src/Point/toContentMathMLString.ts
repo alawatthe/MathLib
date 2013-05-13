@@ -1,6 +1,6 @@
 // ### Point.prototype.toContentMathMLString()
 // Returns content MathML representation of the point
 //
-// *@returns {string}*
+// *@return {string}*
 /* toContentMathMLString(opt) { */
 /* } */

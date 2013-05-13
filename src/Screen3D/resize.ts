@@ -3,7 +3,7 @@
 //
 // *@param {number}* The new width  
 // *@param {number}* The new height  
-// *@returns {Screen3D}*
+// *@return {Screen3D}*
 resize(width : number, height : number) : Screen3D {
 	this.renderer.setSize(width, height);
 	this.camera.aspect = width / height;

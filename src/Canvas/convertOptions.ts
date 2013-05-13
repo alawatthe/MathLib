@@ -2,32 +2,32 @@
 // Converts the options to the Canvas options format
 //
 // *@param {object}* The drawing options  
-// *@returns {object}* The converted options
-convertOptions: function(opt) {
-	var res:any = {};
+// *@return {object}* The converted options
+convertOptions: function (opt) {
+	var convertedOptions : any = {};
 	if ('fillColor' in opt) {
-		res.fillStyle = colorConvert(opt.fillColor);
+		convertedOptions.fillStyle = colorConvert(opt.fillColor);
 	}
 	else if ('color' in opt) {
-		res.fillStyle = colorConvert(opt.color);
+		convertedOptions.fillStyle = colorConvert(opt.color);
 	}
 
 
 	if ('font' in opt) {
-		res['font-family'] = opt.font;
+		convertedOptions['font-family'] = opt.font;
 	}
 
 	if ('fontSize' in opt) {
-		res['font-size'] = opt.fontSize;
+		convertedOptions['font-size'] = opt.fontSize;
 	}
 
 
 	if ('lineColor' in opt) {
-		res.strokeStyle = colorConvert(opt.lineColor);
+		convertedOptions.strokeStyle = colorConvert(opt.lineColor);
 	}
 	else if ('color' in opt) {
-		res.strokeStyle = colorConvert(opt.color);
+		convertedOptions.strokeStyle = colorConvert(opt.color);
 	}
 
-	return res;
+	return convertedOptions;
 },

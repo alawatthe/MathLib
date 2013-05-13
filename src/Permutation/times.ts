@@ -1,7 +1,7 @@
 // ### Permutation.prototype.times()
 // Multiplies two permutations
 //
-// *@returns {permutation}*
+// *@return {Permutation}*
 times(p : Permutation) : Permutation {
 	var a = this;
 	return p.map(function (x) {

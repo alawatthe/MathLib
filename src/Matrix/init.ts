@@ -32,7 +32,7 @@ export class Matrix {
 				matrix = JSON.parse('[[' + matrix + ']]');
 			}
 		}
-		matrix.forEach((x,i)=>{this[i] = x;});
+		matrix.forEach((x, i) => {this[i] = x;});
 		this.length = matrix.length;
 		this.cols = matrix[0].length;
 		this.rows = matrix.length;

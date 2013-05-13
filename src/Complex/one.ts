@@ -1,5 +1,5 @@
 // ### Complex.one()
 // Complex representation of 1.
 //
-// *@returns {complex}*
+// *@return {Complex}*
 static one = new Complex(1, 0);

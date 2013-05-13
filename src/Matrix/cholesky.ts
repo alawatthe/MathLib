@@ -4,38 +4,39 @@
 // Does not change the current matrix, but returns a new one.
 // The result is cached.
 //
-// *@returns {Matrix}*
+// *@return {Matrix}*
 cholesky() : Matrix {
-	var r, rr, temp = [], k, kk, sum, c, cholesky;
+	var i, ii, j, jj, k, kk, sum, choleskyMatrix,
+			cholesky = [];
 
-	for (r = 0, rr = this.rows; r < rr; r++) {
-		temp.push([]);
+	for (i = 0, ii = this.rows; i < ii; i++) {
+		cholesky.push([]);
 	}
 
-	for (r = 0, rr = this.rows; r < rr; r++) {
-		for (c=0; c<r; c++) {
+	for (i = 0, ii = this.rows; i < ii; i++) {
+		for (j = 0; j < i; j++) {
 			sum = 0;
-			for (k = 0, kk = c; k < kk; k++) {
-				sum = MathLib.plus(sum, MathLib.times(temp[r][k], temp[c][k]));
+			for (k = 0, kk = j; k < kk; k++) {
+				sum = MathLib.plus(sum, MathLib.times(cholesky[i][k], cholesky[j][k]));
 			}
-			temp[r][c] = (this[r][c] - sum)/temp[c][c];
+			cholesky[i][j] = (this[i][j] - sum) / cholesky[j][j];
 		}
 
 		sum = 0;
-		for (k = 0, kk = c; k < kk; k++) {
-			sum = MathLib.plus(sum, MathLib.times(temp[r][k], temp[r][k]));
+		for (k = 0, kk = j; k < kk; k++) {
+			sum = MathLib.plus(sum, MathLib.times(cholesky[i][k], cholesky[i][k]));
 		}
-		temp[r][c] = Math.sqrt(this[c][c] - sum);
+		cholesky[i][j] = Math.sqrt(this[j][j] - sum);
 
-		for (c++; c < this.cols; c++) {
-			temp[r][c] = 0;
+		for (j++, jj = this.cols; j < jj; j++) {
+			cholesky[i][j] = 0;
 		}
 
 	}
-	cholesky = new MathLib.Matrix(temp);
+	choleskyMatrix = new MathLib.Matrix(cholesky);
 
 	this.cholesky = function () {
-		return cholesky;
+		return choleskyMatrix;
 	};
-	return cholesky;
+	return choleskyMatrix;
 }

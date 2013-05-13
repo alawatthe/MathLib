@@ -1,10 +1,12 @@
 // ### Matrix.prototype.isDiag()
 // Determines if the matrix is a diagonal matrix.
 //
-// *@returns {boolean}*
+// *@return {boolean}*
 isDiag() {
 	var i, j, ii, jj;
-	if ((this.hasOwnProperty('isUpper') && this.isUpper()) + (+(this.hasOwnProperty('isLower') && this.isLower())) + (+(this.hasOwnProperty('isSymmetric') && this.isSymmetric())) > 1) {
+	if ((this.hasOwnProperty('isUpper') && this.isUpper()) + 
+			(this.hasOwnProperty('isLower') && this.isLower()) + 
+			(this.hasOwnProperty('isSymmetric') && this.isSymmetric()) > 1) {
 		return true;
 	}
 	for (i = 0, ii = this.rows; i < ii; i++) {

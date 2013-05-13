@@ -1,10 +1,10 @@
 // ### Canvas.path
 // Draws a path on the screen.
 //
-// *@param {path}* The path to be drawn  
+// *@param {Path}* The path to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the scren
-path: function(curve, options = {}, redraw = false) {
+// *@return {Screen}* Returns the scren
+path: function (curve, options = {}, redraw = false) {
 	var screen = this.screen,
 			ctx = this.ctx,
 			prop, opts, path, x, y, i,
@@ -28,7 +28,7 @@ path: function(curve, options = {}, redraw = false) {
 			}
 		}
 
-		if('setLineDash' in ctx) {
+		if ('setLineDash' in ctx) {
 			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 		}
 		if ('lineDashOffset' in ctx) {
@@ -40,7 +40,7 @@ path: function(curve, options = {}, redraw = false) {
 	// If curve is a function f, the path will be (x, f(x))
 	if (typeof curve === 'function') {
 		path = [];
-		for (i = from; i <= to; i+=step) {
+		for (i = from; i <= to; i += step) {
 			path.push([i, curve(i)]);
 		}
 	}

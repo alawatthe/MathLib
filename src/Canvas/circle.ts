@@ -1,16 +1,16 @@
 // ### Canvas.circle
 // Draws a circle on the screen.
 //
-// *@param {circle}* The circle to be drawn  
+// *@param {Circle}* The circle to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
-circle: function(circle, options = {}, redraw = false) {
+// *@return {Screen}* Returns the screen
+circle: function (circle, options = {}, redraw = false) {
 	var screen = this.screen,
 			ctx = this.ctx,
 			prop, opts;
 
 	ctx.save();
-	ctx.lineWidth = ((<any>options).lineWidth || 4)/(screen.scale.x - screen.scale.y);
+	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 
 	// Set the drawing options
 	if (options) {
@@ -21,7 +21,7 @@ circle: function(circle, options = {}, redraw = false) {
 			}
 		}
 
-		if('setLineDash' in ctx) {
+		if ('setLineDash' in ctx) {
 			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
 		}
 		if ('lineDashOffset' in ctx) {
@@ -31,7 +31,7 @@ circle: function(circle, options = {}, redraw = false) {
 
 	// Draw the circle
 	ctx.beginPath();
-	ctx.arc(circle.center[0], circle.center[1], circle.radius, 0, 2*Math.PI);
+	ctx.arc(circle.center[0], circle.center[1], circle.radius, 0, 2 * Math.PI);
 	ctx.closePath();
 	ctx.fill();
 	ctx.stroke();

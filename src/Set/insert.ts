@@ -1,7 +1,7 @@
 // ### Set.prototype.insert()
 // Inserts an element into the set.
 //
-// *@returns {set}* Returns the current set
+// *@return {Set}* Returns the current set
 insert(x : any) : Set {
 	var i = this.locate(x);
 	if (this[i] !== x) {

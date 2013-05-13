@@ -3,7 +3,7 @@
 //
 // *@param {number}* The row to be removed.  
 // *@param {number}* The column to be removed.  
-// *@returns {matrix}*
+// *@return {Matrix}*
 minor(r, c) {
 	return this.remove(r, c).determinant();
 }

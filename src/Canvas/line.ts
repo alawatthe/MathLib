@@ -1,10 +1,10 @@
 // ### Canvas.line
 // Draws a line on the screen.
 //
-// *@param {line}* The line to be drawn  
+// *@param {Line}* The line to be drawn  
 // *@param {object}* [options] Optional drawing options  
-// *@returns {screen}* Returns the screen
-line: function(line, options = {}, redraw = false) {
+// *@return {Screen}* Returns the screen
+line: function (line, options = {}, redraw = false) {
 	var screen = this.screen,
 			points = this.screen.getLineEndPoints(line),
 			ctx = this.ctx,

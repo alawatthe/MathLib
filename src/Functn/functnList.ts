@@ -13,22 +13,22 @@ var unaryFunctions = {
 	arccsc: function (x) {
 		return Math.asin(1 / x);
 	},
-	arcosh: (<any>Math).acosh || function (x){
+	arcosh: (<any>Math).acosh || function (x) {
 		return Math.log(x + Math.sqrt(x * x - 1));
 	},
 	arcoth: function (x) {
 		// Handle ±∞
 		if (!MathLib.isFinite(x)) {
-			return 1/x;
+			return 1 / x;
 		}
 		return 0.5 * Math.log((x + 1) / (x - 1));
 	},
 	arcsch: function (x) {
 		// Handle ±0 and ±∞ separately
 		if (x === 0 || !MathLib.isFinite(x)) {
-			return 1/x;
+			return 1 / x;
 		}
-		return Math.log(1/x + Math.sqrt(1/(x*x) +1));
+		return Math.log(1 / x + Math.sqrt(1 / (x * x) + 1));
 	},
 	arcsec: function (x) {
 		return Math.acos(1 / x);
@@ -36,7 +36,7 @@ var unaryFunctions = {
 	arcsin: Math.asin,
 	arctan: Math.atan,
 	arsech: function (x) {
-		return Math.log((1 + Math.sqrt(1 - x * x)) / (x));
+		return Math.log((1 + Math.sqrt(1 - x * x)) / x);
 	},
 	arsinh: (<any>Math).asinh || function (x) {
 		// Handle ±0 and ±∞ separately
@@ -67,7 +67,7 @@ var unaryFunctions = {
 	cot: function (x) {
 		// Handle ±0 separate, because tan(pi/2 ± 0) is not ±∞
 		if (x === 0) {
-			return 1/x;
+			return 1 / x;
 		}
 		// cot(x) = tan(pi/2 - x) is better than 1/tan(x)
 		return Math.tan(1.5707963267948966 - x);
@@ -75,7 +75,7 @@ var unaryFunctions = {
 	coth: function (x) {
 		// Handle ±0
 		if (x === 0) {
-			return 1/x;
+			return 1 / x;
 		}
 
 		// Handle ±∞
@@ -91,7 +91,7 @@ var unaryFunctions = {
 	csch: function (x) {
 		// csch(-0) should be -∞ not ∞
 		if (x === 0) {
-			return 1/x;
+			return 1 / x;
 		}
 		return 2 / (Math.exp(x) - Math.exp(-x));
 	},
@@ -99,7 +99,7 @@ var unaryFunctions = {
 		return Math.exp(x);
 	},
 	inverse: function (x) {
-		return 1/x;
+		return 1 / x;
 	},
 	sec: function (x) {
 		return 1 / Math.cos(x);
@@ -126,7 +126,7 @@ var unaryFunctions = {
 		}
 
 		p = Math.exp(x);
-		return (p*p - 1) / (p*p + 1);
+		return (p * p - 1) / (p * p + 1);
 	}
 };
 
@@ -141,7 +141,7 @@ for (var elemfn in unaryFunctions) {
 }
 
 
-MathLib.identity = new MathLib.Functn(function identity(x){
+MathLib.identity = new MathLib.Functn(function identity(x) {
 		return x;
 	}, {contentMathMLString: mathStart + 'ident' + mathEnd}
 );
@@ -152,7 +152,7 @@ MathLib.identity = new MathLib.Functn(function identity(x){
 var functionList1 = {
 	arctan2: Math.atan2,
 	binomial: function (n, k) {
-				var res = 1, i;
+				var binomial = 1, i;
 
 				// or k > n > 0
 				if (k < 0 || (n > 0 && k > n)) {
@@ -162,17 +162,17 @@ var functionList1 = {
 				// Optimizing n and k are integers
 				// if (n % 1 === 0 && k % 1 === 0) {
 				// TODO: is this formula working if n is not an integer?
-					if (n<0) {
-						res = Math.pow(-1, k);
+					if (n < 0) {
+						binomial = Math.pow(-1, k);
 						n = k - n - 1;
 					}
-					if (k > n/2) {
-						k = n-k;
+					if (k > n / 2) {
+						k = n - k;
 					}
-					for (i=1; i<=k; i++) {
-						res *= (n+1-i)/i;
+					for (i = 1; i <= k; i++) {
+						binomial *= (n + 1 - i) / i;
 					}
-					return res;
+					return binomial;
 			},
 	cbrt: function (x) {
 					var a3, a3x, an, a;
@@ -183,7 +183,7 @@ var functionList1 = {
 					}
 					
 					// Get an approximation
-					a = MathLib.sign(x) * Math.pow(Math.abs(x), 1/3);
+					a = MathLib.sign(x) * Math.pow(Math.abs(x), 1 / 3);
 
 					// Halley's method
 					while (true) {
@@ -219,37 +219,37 @@ var functionList1 = {
 				return MathLib.times(a, MathLib.inverse(b));
 			},
 	divisors: function (x) {
-				var res = x===1 ? [] : [1],
+				var divisors = x === 1 ? [] : [1],
 						i, ii;
-				for (i=2, ii=x/2; i<=ii; i++) {
-					if (x%i === 0) {
-						res.push(i);
+				for (i = 2, ii = x / 2; i <= ii; i++) {
+					if (x % i === 0) {
+						divisors.push(i);
 					}
 				}
-				res.push(x);
-				return MathLib.set(res);
+				divisors.push(x);
+				return MathLib.set(divisors);
 			},
 	factor: function (n) {
-				var res = [],
+				var factors = [],
 						i;
 				n = Math.abs(n);
-				while (n%2 === 0) {
-					n = n/2;
-					res.push(2);
+				while (n % 2 === 0) {
+					n = n / 2;
+					factors.push(2);
 				}
 
 				i = 3;
-				while(n !== 1) {
-					while (n%i === 0) {
-						n = n/i;
-						res.push(i);
+				while (n !== 1) {
+					while (n % i === 0) {
+						n = n / i;
+						factors.push(i);
 					}
 					i += 2;
 				}
-				return new MathLib.Set(res, true);
+				return new MathLib.Set(factors, true);
 			},
 	factorial: function (x) {
-				var out = 1, i;
+				var factorial = 1, i;
 				if ((x > 170 && MathLib.isInt(x)) || x === Infinity ) {
 					return Infinity;
 				}
@@ -257,18 +257,18 @@ var functionList1 = {
 					return NaN;
 				}
 				for (i = 1; i <= x; i++) {
-					out *= i;
+					factorial *= i;
 				}
-				return out;
+				return factorial;
 			},
 	fallingFactorial: function (n, m, s) {
-				var res = 1, j;
+				var factorial = 1, j;
 				s = s || 1;
 
 				for (j = 0; j < m; j++) {
-					res  *= (n - j * s);
+					factorial  *= (n - j * s);
 				}
-				return res;
+				return factorial;
 			},
 	fibonacci: function (n) {
 				return Math.floor(Math.pow(MathLib.goldenRatio, n) / Math.sqrt(5));
@@ -302,7 +302,7 @@ var functionList1 = {
 				x = Math.max(a, b);
 				y = Math.min(a, b);
 
-				return x * Math.sqrt(1 + Math.pow(y/x, 2));
+				return x * Math.sqrt(1 + Math.pow(y / x, 2));
 			},
 	hypot2: function () {
 				var args = Array.prototype.slice.call(arguments);
@@ -313,7 +313,7 @@ var functionList1 = {
 					return Infinity;
 				}
 				return args.reduce(function (old, cur) {
-					return old + cur*cur;
+					return old + cur * cur;
 				}, 0);
 			},
 	isFinite: function (x) {
@@ -326,13 +326,13 @@ var functionList1 = {
 				return x !== x;
 			},
 	isNegZero: function (x) {
-				return 1/x === -Infinity;
+				return 1 / x === -Infinity;
 			},
 	isOne: function (a)    {
 				return Math.abs(a - 1) < MathLib.epsilon;
 			},
 	isPosZero: function (x) {
-				return 1/x === Infinity;
+				return 1 / x === Infinity;
 			},
 	isPrime: function (x) {
 				var sqrt = Math.sqrt(x), i;
@@ -373,7 +373,7 @@ var functionList1 = {
 				return MathLib.plus(a, MathLib.negative(b));
 			},
 	mod: function (n, m) {
-				var nm = n%m;
+				var nm = n % m;
 				return nm >= 0 ? nm : nm + m;
 			},
 	negative: function (x) {
@@ -387,17 +387,17 @@ var functionList1 = {
 			},
 	radToDeg: function (x) {
 				// 180 / Math.PI = 57.29577951308232
-				return x*57.29577951308232;
+				return x * 57.29577951308232;
 			},
 	random: Math.random,
 	risingFactorial: function (n, m, s) {
-				var res = 1, j;
+				var factorial = 1, j;
 				s = s || 1;
 
 				for (j = 0; j < m; j++) {
-					res  *= (n + j * s);
+					factorial  *= (n + j * s);
 				}
-				return res;
+				return factorial;
 			},
 	round: function (x) {
 				// Some implementations have a bug where Math.round(-0) = +0 (instead of -0).
@@ -413,7 +413,7 @@ var functionList1 = {
 				return Math.pow(x, 1 / root);
 			},
 	sign: function (x) {
-				return x && (x<0 ? -1 : 1);
+				return x && (x < 0 ? -1 : 1);
 			},
 	sqrt: Math.sqrt,
 	trunc: function (x, n) {
@@ -421,32 +421,32 @@ var functionList1 = {
 			},
 	toLaTeX: function (x, plus) {
 				if (plus) {
-					return (x<0 ? '-' : '+') + Math.abs(x);
+					return (x < 0 ? '-' : '+') + Math.abs(x);
 				}
 				else {
-					return (x<0 ? '-' : '') + Math.abs(x);
+					return (x < 0 ? '-' : '') + Math.abs(x);
 				}
 			},
 	toMathMLString: function (x, plus) {
 				if (plus) {
-					return '<mo>' + (x<0 ? '-' : '+') + '</mo><mn>' + Math.abs(x) + '</mn>';
+					return '<mo>' + (x < 0 ? '-' : '+') + '</mo><mn>' + Math.abs(x) + '</mn>';
 				}
 				else {
-					return (x<0 ? '<mo>-</mo>': '') + '<mn>' + Math.abs(x) + '</mn>';
+					return (x < 0 ? '<mo>-</mo>': '') + '<mn>' + Math.abs(x) + '</mn>';
 				}
 			},
 	toString: function (x, plus) {
 				if (plus) {
-					return (x<0 ? '-' : '+') + Math.abs(x);
+					return (x < 0 ? '-' : '+') + Math.abs(x);
 				}
 				else {
-					return (x<0 ? '-' : '') + Math.abs(x);
+					return (x < 0 ? '-' : '') + Math.abs(x);
 				}
 			}
 };
 
 MathLib.toContentMathMLString = function (x) {
-	if (typeof x === 'number'){
+	if (typeof x === 'number') {
 		return '<cn>' + x + '</cn>';
 	}
 	else {
@@ -461,7 +461,7 @@ MathLib.toContentMathMLString = function (x) {
 // Negates the argument.
 // 
 // *@param {boolean}* Expects one boolean argument  
-// *@returns {boolean}*
+// *@return {boolean}*
 MathLib.not = function (x) {
 	return !x;
 };
@@ -469,13 +469,13 @@ MathLib.not = function (x) {
 
 
 MathLib.compare = function (a, b) {
-	if(MathLib.type(a) !== MathLib.type(b)) {
+	if (MathLib.type(a) !== MathLib.type(b)) {
 		return MathLib.sign(MathLib.type(a).localeCompare(MathLib.type(b)));
 	}
-	else if(typeof a === 'number') {
-		return MathLib.sign(a-b);
+	else if (typeof a === 'number') {
+		return MathLib.sign(a - b);
 	}
-	else if(typeof a === 'string') {
+	else if (typeof a === 'string') {
 		return a.localeCompare(b);
 	}
 	return a.compare(b);
@@ -516,7 +516,7 @@ var nAryFunctions = {
 	// Returns true iff all arguments are true.
 	// 
 	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-	// *@returns {boolean}*
+	// *@return {boolean}*
 	and: function (n) {
 		return n.every(function (x) {return !!x;});
 	},
@@ -526,7 +526,7 @@ var nAryFunctions = {
 	gcd: function (a) {
 		var min,
 				reduction = function (x) {
-					return x !== min ? x%min : x;
+					return x !== min ? x % min : x;
 				},
 				isntZero = function (x) {
 					return x !== 0;
@@ -539,7 +539,7 @@ var nAryFunctions = {
 			return 0;
 		}
 
-		while(a.length > 1) {
+		while (a.length > 1) {
 			min = MathLib.min(a);
 			a = a.map(reduction).filter(isntZero);
 		}
@@ -555,22 +555,16 @@ var nAryFunctions = {
 		return MathLib.times(n) / MathLib.gcd(n);
 	},
 	max: function (n) {
-		/*if (n) {
-			return this.sort(MathLib.compare)[this.length-n];
-		}*/
 		return Math.max.apply(null, n);
 	},
 	min: function (n) {
-		/*if (n) {
-			return this.sort(MathLib.compare)[n-1];
-		}*/
 		return Math.min.apply(null, n);
 	},
 	// ### MathLib.or()
 	// Returns true iff at least one argument is true.
 	// 
 	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-	// *@returns {boolean}*
+	// *@return {boolean}*
 	or: function (n) {
 		return n.some(function (x) {return !!x;});
 	},
@@ -593,7 +587,7 @@ var nAryFunctions = {
 						return a;
 					};
 				}
-				else if(b.type !== 'functn') {
+				else if (b.type !== 'functn') {
 					f2 = function () {
 						return b;
 					};
@@ -633,7 +627,7 @@ var nAryFunctions = {
 						return a;
 					};
 				}
-				else if(b.type !== 'functn') {
+				else if (b.type !== 'functn') {
 					f2 = function () {
 						return b;
 					};
@@ -658,7 +652,7 @@ var nAryFunctions = {
 	// Returns true iff an odd number of the arguments is true.
 	// 
 	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-	// *@returns {boolean}*
+	// *@return {boolean}*
 	xor: function (n) {
 		return n.reduce(function (x, y) {return x + !!y;}, 0) % 2 !== 0;
 	}	
@@ -670,7 +664,7 @@ var nAryFunctions = {
 // Returns the sum of all arguments.
 // 
 // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
-// *@returns {number, MathLib object}*
+// *@return {number, MathLib object}*
 /*MathLib.plus = function (n) {
 	return n.reduce(function (a, b) {
 		var f1, f2, astr, bstr;
@@ -687,7 +681,7 @@ var nAryFunctions = {
 					return a;
 				};
 			}
-			else if(b.type !== 'functn') {
+			else if (b.type !== 'functn') {
 				f2 = function () {
 					return b;
 				};
@@ -715,20 +709,20 @@ var nAryFunctions = {
 // Determines if all arguments are equal.
 // 
 // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
-// *@returns {boolean}*
+// *@return {boolean}*
 MathLib.isEqual = function () {
-	return flatten(Array.prototype.slice.apply(arguments)).every(function (a, i, arr) {
-		if (a === arr[0]) {
+	return flatten(Array.prototype.slice.apply(arguments)).every(function (a, i, args) {
+		if (a === args[0]) {
 			return true;
 		}
-		else if (typeof a === 'number' && typeof arr[0] === 'number') {
-			return Math.abs(a - arr[0]) <= 3e-15;
+		else if (typeof a === 'number' && typeof args[0] === 'number') {
+			return Math.abs(a - args[0]) <= 3e-15;
 		}
 		else if (typeof a === 'object') {
-			return a.isEqual(arr[0]);
+			return a.isEqual(args[0]);
 		}
-		else if (typeof arr[0] === 'object') {
-			return arr[0].isEqual(a);
+		else if (typeof args[0] === 'object') {
+			return args[0].isEqual(a);
 		}
 		return false;
 	});
@@ -740,7 +734,7 @@ MathLib.isEqual = function () {
 // Returns the product of all arguments.
 // 
 // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
-// *@returns {boolean}*
+// *@return {boolean}*
 /*MathLib.times = function () {
 	return Array.prototype.slice.apply(arguments).reduce(function (a, b) {
 		var f1, f2, astr, bstr;
@@ -757,7 +751,7 @@ MathLib.isEqual = function () {
 					return a;
 				};
 			}
-			else if(b.type !== 'functn') {
+			else if (b.type !== 'functn') {
 				f2 = function () {
 					return b;
 				};
@@ -792,7 +786,7 @@ var createFunction1 = function (f, name) {
 		else if (x.type === 'set') {
 			return new MathLib.Set( x.map(f) );
 		}
-		else if(x.type === 'complex') {
+		else if (x.type === 'complex') {
 			return x[name].apply(x, Array.prototype.slice.call(arguments, 1));
 		}
 		else if (Array.isArray(x)) {
@@ -807,10 +801,10 @@ var createFunction1 = function (f, name) {
 
 var createFunction3 = function (f, name) {
 	return function (n) {
-		if(MathLib.type(n) === 'set') {
+		if (MathLib.type(n) === 'set') {
 			return f(n.slice());
 		}
-		else if(MathLib.type(n) !== 'array') {
+		else if (MathLib.type(n) !== 'array') {
 			n = Array.prototype.slice.apply(arguments);
 		}
 		return f(n);

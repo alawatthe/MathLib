@@ -2,7 +2,7 @@
 // 
 //
 // *@param {function}* The function which is called on every argument  
-// *@returns {screen3D}*
+// *@return {Screen3D}*
 parametricPlot3D(f, options) : Screen3D {
 
 	var defaults = {
@@ -21,11 +21,11 @@ parametricPlot3D(f, options) : Screen3D {
 
 
 			curve = THREE.Curve.create(
-				function() {},
-				function(t) {
+				function () {},
+				function (t) {
 					t = (opts.max - opts.min) * t + opts.min;
-					var res = f(t);
-					return new THREE.Vector3(res[0], res[1], res[2]);
+					var ft = f(t);
+					return new THREE.Vector3(ft[0], ft[1], ft[2]);
 				}
 			),
 		
@@ -48,7 +48,7 @@ parametricPlot3D(f, options) : Screen3D {
 	var folder = _3D.datGUI.addFolder(options.name);
 	folder.add(mesh, 'visible');
 	folder.addColor(guiObj, 'color')
-		.onChange(function(value){mesh.material.color.setRGB(value[0]/255, value[1]/255, value[2]/255);});
+		.onChange(function (value) {mesh.material.color.setRGB(value[0] / 255, value[1] / 255, value[2] / 255);});
 	*/
 
 	return this;
