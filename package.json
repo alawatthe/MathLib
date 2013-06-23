@@ -1,7 +1,7 @@
 {
 	"name": "MathLib",
 	"description": "JavaScript library for mathematical computations.",
-	"version": "0.4.0",
+	"version": "0.5.0",
 	"homepage": "http://MathLib.de",
 	"author": {
 		"name": "Alexander Zeilmann"
@@ -31,6 +31,7 @@
 		"grunt-contrib-uglify": "~0.1.2",
 		"grunt-contrib-watch": "~0.3.1",
 		"grunt-docco": "~0.2.0",
+		"grunt-notify": "~0.2.3",
 		"grunt-typescript": "~0.1.0"
 	},
 	"keywords": []

@@ -60,6 +60,7 @@
 
 	"maxerr"        : 100,
 	"globals"       : {
+			"asyncTest"	: true,
 			"deepEqual" : true,
 			"DOMParser" : true,
 			"equal"     : true,

@@ -20,26 +20,26 @@ test('.parse (unaryOperator)', 4, function () {
 	equal(unary.subtype, 'unaryOperator');
 	equal(unary.value, '-');
 
-	equal(MathLib.Expression.parse('+12').numericallyEvaluate(), +12, '.parse("12+34")');
-	equal(MathLib.Expression.parse('-12').numericallyEvaluate(), -12, '.parse("12*34")');
+	equal(MathLib.Expression.parse('+12').evaluate(), +12, '.parse("12+34")');
+	equal(MathLib.Expression.parse('-12').evaluate(), -12, '.parse("12*34")');
 });
 
 
 
 test('.parse (binaryOperator)', 10, function () {
-	equal(MathLib.Expression.parse('12+34').numericallyEvaluate(), 12 + 34, '.parse("12+34")');
-	equal(MathLib.Expression.parse('12*34').numericallyEvaluate(), 12 * 34, '.parse("12*34")');
+	equal(MathLib.Expression.parse('12+34').evaluate(), 12 + 34, '.parse("12+34")');
+	equal(MathLib.Expression.parse('12*34').evaluate(), 12 * 34, '.parse("12*34")');
 
-	equal(MathLib.Expression.parse('65-43-21').numericallyEvaluate(), 65 - 43 - 21, '.parse("65-43-21")');
+	equal(MathLib.Expression.parse('65-43-21').evaluate(), 65 - 43 - 21, '.parse("65-43-21")');
 
 
-	equal(MathLib.Expression.parse('12*34+56').numericallyEvaluate(), 12 * 34 + 56, '.parse("12*34+56")');
-	equal(MathLib.Expression.parse('12+34*56').numericallyEvaluate(), 12 + 34 * 56, '.parse("12+34*56")');
-	equal(MathLib.Expression.parse('12*34/6').numericallyEvaluate(), 12 * 34 / 6, '.parse("12*34/6")');
-	equal(MathLib.Expression.parse('12/3*4').numericallyEvaluate(), 12 / 3 * 4, '.parse("12/3*4")');
-	equal(MathLib.Expression.parse('12/3/4').numericallyEvaluate(), 12 / 3 / 4, '.parse("12/3/4")');
-	equal(MathLib.Expression.parse('36/2/3/6').numericallyEvaluate(), 36 / 2 / 3 / 6, '.parse("36/2/3/6")');
-	equal(MathLib.Expression.parse('36/2/3/2/3').numericallyEvaluate(), 36 / 2 / 3 / 2 / 3, '.parse("36/2/3/2/3")');
+	equal(MathLib.Expression.parse('12*34+56').evaluate(), 12 * 34 + 56, '.parse("12*34+56")');
+	equal(MathLib.Expression.parse('12+34*56').evaluate(), 12 + 34 * 56, '.parse("12+34*56")');
+	equal(MathLib.Expression.parse('12*34/6').evaluate(), 12 * 34 / 6, '.parse("12*34/6")');
+	equal(MathLib.Expression.parse('12/3*4').evaluate(), 12 / 3 * 4, '.parse("12/3*4")');
+	equal(MathLib.Expression.parse('12/3/4').evaluate(), 12 / 3 / 4, '.parse("12/3/4")');
+	equal(MathLib.Expression.parse('36/2/3/6').evaluate(), 36 / 2 / 3 / 6, '.parse("36/2/3/6")');
+	equal(MathLib.Expression.parse('36/2/3/2/3').evaluate(), 36 / 2 / 3 / 2 / 3, '.parse("36/2/3/2/3")');
 });
 
 

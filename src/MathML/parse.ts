@@ -30,7 +30,7 @@ parse() : any {
 				// funcName = func.childNodes[0].nodeName;
 				innerFunc = parser(children[0]);
 
-				
+
 				if (innerFunc === undefined) {
 					return new MathLib.Functn(function (x) {return MathLib[funcName](x);}, {
 						contentMathMLString: '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><reals/></domainofapplication>' + node.outerMathML + '</lambda></math>'

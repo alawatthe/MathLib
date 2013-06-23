@@ -25,7 +25,7 @@ In your web page:
 </script>
 ```
 
-If you want to use the plotting funtionality you also need to download the [MathLib.css](https://raw.github.com/alawatthe/MathLib/master/build/MathLib.css) or the [MathLib.min.css](https://raw.github.com/alawatthe/MathLib/master/build/MathLib.min.css) file and link to it in the head of your document:
+If you want to use the plotting functionality you also need to download the [MathLib.css](https://raw.github.com/alawatthe/MathLib/master/build/MathLib.css) or the [MathLib.min.css](https://raw.github.com/alawatthe/MathLib/master/build/MathLib.min.css) file and link to it in the head of your document:
 ```
 <link rel="stylesheet" href="path/to/MathLib.min.css" charset="utf-8">
 ```
@@ -41,7 +41,7 @@ Open your Terminal, clone MathLib
 git clone git://github.com/alawatthe/MathLib.git
 ```
 
-Enter the directoy
+Enter the directory
 ```
 cd MathLib
 ```
@@ -69,6 +69,7 @@ New functionality should always be added with proper testing and documentation.
 
 
 ## Release History
+* v0.5.0: removed MathML module and improved Expression module
 * v0.4.0: Typescript, better plotting
 * v0.3.0: grunt integration
 * v0.2.0: Improved function and MathML modules

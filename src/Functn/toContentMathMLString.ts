@@ -2,6 +2,6 @@
 // Returns a content MathML representation of the function
 //
 // *@return {string}*
-functnPrototype.toContentMathMLString = function (bvar = '') {
+/*functnPrototype.toContentMathMLString = function (bvar = '') {
 	return this.contentMathML.outerMathML;
-};
+};*/

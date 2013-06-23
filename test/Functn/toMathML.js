@@ -1,0 +1,9 @@
+test('.toMathML()', 6, function () {
+	equal(MathLib.sin.toMathML(), '<mrow><mi>x</mi><mo>&#x27FC;</mo><mrow><mi>sin</mi><mo>&af;</mo><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></mrow>', 'MathLib.sin.toMathML()');
+	equal(MathLib.exp(MathLib.sin).toMathML(), '<mrow><mi>x</mi><mo>&#x27FC;</mo><mrow><mi>exp</mi><mo>&af;</mo><mrow><mo>(</mo><mrow><mi>sin</mi><mo>&af;</mo><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow><mo>)</mo></mrow></mrow></mrow>', 'MathLib.exp(MathLib.sin).toMathML()');
+	// equal(MathLib.pow(MathLib.sin, 2).toMathML(), '<mrow><msup><mrow><mi>sin</mi><mo>&af;</mo><mfenced><mi>x</mi></mfenced></mrow><mn>2</mn></msup></mrow>', 'MathLib.pow(MathLib.sin, 2).toMathML()');
+	equal(MathLib.plus(MathLib.sin, 2).toMathML(), '<mrow><mi>x</mi><mo>&#x27FC;</mo><mrow><mrow><mi>sin</mi><mo>&af;</mo><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow><mo>+</mo><mn>2</mn></mrow></mrow>', 'MathLib.plus(MathLib.sin, 2).toMathML()');
+	equal(MathLib.plus(2, MathLib.sin).toMathML(), '<mrow><mi>x</mi><mo>&#x27FC;</mo><mrow><mn>2</mn><mo>+</mo><mrow><mi>sin</mi><mo>&af;</mo><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></mrow></mrow>', 'MathLib.plus(2, MathLib.sin).toMathML()');
+	equal(MathLib.times(2, MathLib.sin).toMathML(), '<mrow><mi>x</mi><mo>&#x27FC;</mo><mrow><mn>2</mn><mo>&middot;</mo><mrow><mi>sin</mi><mo>&af;</mo><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></mrow></mrow>', 'MathLib.times(2, MathLib.sin).toMathML()');
+	equal(MathLib.plus(MathLib.sin, MathLib.cos).toMathML(), '<mrow><mi>x</mi><mo>&#x27FC;</mo><mrow><mrow><mi>sin</mi><mo>&af;</mo><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow><mo>+</mo><mrow><mi>cos</mi><mo>&af;</mo><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></mrow></mrow>', 'MathLib.plus(MathLib.sin, MathLib.cos).toMathML()');
+});

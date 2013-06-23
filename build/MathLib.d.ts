@@ -10,13 +10,32 @@ module MathLib {
 		public parentNode: any;
 		public prevNode: any;
 		constructor(MathMLString);
-		static isSupported: () => bool;
-		public loadMathJax(config: string): void;
 		public parse(): any;
 		public toMathMLString(): string;
+	}
+	class Expression {
+		public type: string;
+		public arguments: string[];
+		public content: any;
+		public isMethod: bool;
+		public mode: string;
+		public name: string;
+		public subtype: string;
+		public value: any;
+		constructor(expr?: {});
+		public compare(e);
+		static constant(n): Expression;
+		public evaluate(): any;
+		public map(f): Expression;
+		static number(n): Expression;
+		static parse: (str: any) => any;
+		static parseContentMathML(MathMLString): Expression;
+		public toContentMathML(): string;
+		public toLaTeX(opts?: {}): string;
+		public toMathML(): string;
 		public toString(): string;
+		static variable(n): Expression;
 		static variables: {};
-		static write(id: string, math: string): void;
 	}
 	class Screen {
 		public type: string;
@@ -128,9 +147,9 @@ module MathLib {
 		public slice(...args: any[]): any[];
 		public times(n: any): any;
 		public toArray(): any[];
-		public toContentMathMLString(): string;
+		public toContentMathML(): string;
 		public toLaTeX(): string;
-		public toMathMLString(): string;
+		public toMathML(): string;
 		public toString(): string;
 		public vectorProduct(v: Vector): Vector;
 		static zero: (n: number) => Vector;
@@ -189,26 +208,13 @@ module MathLib {
 		public sinh(): Complex;
 		public sqrt(): Complex;
 		public times(c): Complex;
-		public toContentMathMLString(): String;
+		public toContentMathML(): String;
 		public toLaTeX(): string;
-		public toMathMLString(): string;
+		public toMathML(): string;
 		public toMatrix(): Matrix;
 		public toPoint(): Point;
 		public toString(): string;
 		static zero: Complex;
-	}
-	class Expression {
-		public type: string;
-		public subtype: string;
-		public name: string;
-		public value: any;
-		public content: any;
-		constructor(expr?: {});
-		public compare(e): number;
-		public numericallyEvaluate(): any;
-		static parse: (str: any) => any;
-		public toLaTeX(): string;
-		public toString(): string;
 	}
 	class Line extends Vector {
 		public type: string;
@@ -281,9 +287,9 @@ module MathLib {
 		public toArray();
 		public toColVectors(): string;
 		public toComplex(): Complex;
-		public toContentMathMLString(): string;
+		public toContentMathML(): string;
 		public toLaTeX(): string;
-		public toMathMLString(): string;
+		public toMathML(): string;
 		public toRowVectors(): string;
 		public toString(): string;
 		public trace();
@@ -325,7 +331,7 @@ module MathLib {
 		public reflectAt(a: Point): Point;
 		public toComplex(): Complex;
 		public toLaTeX(opt?: bool): string;
-		public toMathMLString(opt?: bool): string;
+		public toMathML(opt?: bool): string;
 		public toString(opt?: bool): string;
 	}
 	class Polynomial {
@@ -340,7 +346,7 @@ module MathLib {
 		public every(f: (value: any, index: number, vector: Vector) => bool): bool;
 		public forEach(): void;
 		public integrate(n?: number): Polynomial;
-		public interpolation(a, b);
+		static interpolation(a, b);
 		public isEqual(p: Polynomial): bool;
 		public map(f): Polynomial;
 		public negative(): Polynomial;
@@ -350,10 +356,11 @@ module MathLib {
 		static roots(zeros): Polynomial;
 		public slice(...args: any[]): any[];
 		public times(a): Polynomial;
-		public toContentMathMLString(math): string;
+		public toContentMathML(math): string;
+		public toExpression(): Expression;
 		public toFunctn();
 		public toLaTeX(): string;
-		public toMathMLString(math): string;
+		public toMathML(math): string;
 		public toString(opt): string;
 		public valueAt(x);
 		static zero: Polynomial;
@@ -373,9 +380,9 @@ module MathLib {
 		public plus(r);
 		public reduce(): Rational;
 		public times(r);
-		public toContentMathMLString(): String;
+		public toContentMathML(): String;
 		public toLaTeX(): String;
-		public toMathMLString(): String;
+		public toMathML(): String;
 		public toNumber(): number;
 		public toString(): String;
 	}
@@ -407,9 +414,9 @@ module MathLib {
 		public splice(...args: any[]): any;
 		public times(n: any): any;
 		public toArray(): any[];
-		public toContentMathMLString(): string;
+		public toContentMathML(): string;
 		public toLaTeX(): string;
-		public toMathMLString(): string;
+		public toMathML(): string;
 		public toString(): string;
 		public union: (a: any) => any;
 		public without: (a: any) => any;

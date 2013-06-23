@@ -2,7 +2,7 @@
 // Interpolates points.
 //
 // *@return {Polynomial}*
-interpolation(a, b) {
+static interpolation(a, b) {
 	var basisPolynomial,
 			interpolant = new MathLib.Polynomial([0]),
 			n = a.length,

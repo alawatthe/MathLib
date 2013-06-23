@@ -3,7 +3,7 @@
 
 export class Screen3D extends Screen {
 	type = 'screen3D';
- 
+
  	grid: any;
  	axis: any;
  	render: any;

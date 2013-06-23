@@ -10,4 +10,6 @@
 	*/
 
 }
+/*
 //@ sourceMappingURL=MathLib.js.map
+*/

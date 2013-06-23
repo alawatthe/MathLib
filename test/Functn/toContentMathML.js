@@ -1,3 +1,9 @@
-test('.toContentMathML()', 1, function () {
-	equal(MathLib.sin.toContentMathML().type, 'MathML', 'type of MathLib.sin.toContentMathML() should be MathML');
+test('.toContentMathML()', 6, function () {
+	equal(MathLib.sin.toContentMathML(), '<lambda><bvar><ci>x</ci></bvar><apply><csymbol cd=\"transc1\">sin</csymbol><ci>x</ci></apply></lambda>', 'MathLib.sin.toContentMathML()');
+	equal(MathLib.exp(MathLib.sin).toContentMathML(), '<lambda><bvar><ci>x</ci></bvar><apply><csymbol cd=\"transc1\">exp</csymbol><apply><csymbol cd=\"transc1\">sin</csymbol><ci>x</ci></apply></apply></lambda>', 'MathLib.exp(MathLib.sin).toContentMathML()');
+// equal(MathLib.pow(MathLib.sin, 2).toContentMathML(), '<lambda><bvar><ci>x</ci></bvar><apply><power/><apply><csymbol cd=\"transc1\">sin</csymbol><ci>x</ci></apply><cn>2</cn></apply></lambda>', 'MathLib.pow(MathLib.sin, 2).toContentMathML()');
+	equal(MathLib.plus(MathLib.sin, 2).toContentMathML(), '<lambda><bvar><ci>x</ci></bvar><apply><csymbol cd="arith1">plus</csymbol><apply><csymbol cd=\"transc1\">sin</csymbol><ci>x</ci></apply><cn>2</cn></apply></lambda>', 'MathLib.plus(MathLib.sin, 2).toContentMathML()');
+	equal(MathLib.plus(2, MathLib.sin).toContentMathML(), '<lambda><bvar><ci>x</ci></bvar><apply><csymbol cd="arith1">plus</csymbol><cn>2</cn><apply><csymbol cd=\"transc1\">sin</csymbol><ci>x</ci></apply></apply></lambda>', 'MathLib.plus(2, MathLib.sin).toContentMathML()');
+	equal(MathLib.times(2, MathLib.sin).toContentMathML(), '<lambda><bvar><ci>x</ci></bvar><apply><csymbol cd="arith1">times</csymbol><cn>2</cn><apply><csymbol cd=\"transc1\">sin</csymbol><ci>x</ci></apply></apply></lambda>', 'MathLib.times(2, MathLib.sin).toContentMathML()');
+	equal(MathLib.plus(MathLib.sin, MathLib.cos).toContentMathML(), '<lambda><bvar><ci>x</ci></bvar><apply><csymbol cd="arith1">plus</csymbol><apply><csymbol cd=\"transc1\">sin</csymbol><ci>x</ci></apply><apply><csymbol cd=\"transc1\">cos</csymbol><ci>x</ci></apply></apply></lambda>', 'MathLib.plus(MathLib.sin, MathLib.cos).toContentMathML()');
 });

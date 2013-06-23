@@ -12,6 +12,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	grunt.loadNpmTasks('grunt-docco');
+	grunt.loadNpmTasks('grunt-notify');
 	grunt.loadNpmTasks('grunt-typescript');
 
 	var banner = '/*! MathLib v<%= pkg.version %> MathLib.de | MathLib.de/en/license */';
@@ -29,6 +30,10 @@ module.exports = function (grunt) {
 							'src/MathML/!(init).ts',
 							'src/meta/bracket1.ts',
 
+							'src/Expression/init.ts',
+							'src/Expression/!(init).ts',
+							'src/meta/bracket11.ts',
+
 							'src/Functn/init.ts',
 							'src/Functn/draw.ts',
 							'src/Functn/diff.ts',
@@ -39,7 +44,10 @@ module.exports = function (grunt) {
 							'src/Functn/toMathML.ts',
 							'src/Functn/toMathMLString.ts',
 							'src/Functn/toString.ts',
+							'src/Functn/unaryFunctions.ts',
+							'src/Functn/binaryFunctions.ts',
 							'src/Functn/functnList.ts',
+							'src/Functn/nAryFunctions.ts',
 
 							'src/Screen/init.ts',
 							'src/screen/!(init).ts',
@@ -84,10 +92,6 @@ module.exports = function (grunt) {
 							'src/Complex/init.ts',
 							'src/Complex/!(init).ts',
 							'src/meta/bracket10.ts',
-
-							'src/Expression/init.ts',
-							'src/Expression/!(init).ts',
-							'src/meta/bracket11.ts',
 
 							'src/Line/init.ts',
 							'src/Line/!(init).ts',
@@ -145,7 +149,7 @@ module.exports = function (grunt) {
 							'// The first module contains some internal functions\n' +
 							'//\n' +
 							'// Next is the [MathML](#MathML "Jump to the MathML implementation") module \n' +
-							'// and the [functions](#Functions "Jump to the function implementation") module.\n' +
+							'// and the [functions](#Functn "Jump to the function implementation") module.\n' +
 							'//\n' +
 							'// Then drawing modules:\n' +
 							'//\n' +
@@ -219,13 +223,17 @@ module.exports = function (grunt) {
 
 	
 		watch: {
-			concat: {
+			src: {
 				files: ['src/*/*.ts'],
-				tasks: ['concat', 'typescript', 'uglify']
+				tasks: ['concat:MathLib', 'typescript', 'uglify:MathLib']
 			},
-			compass: {
+			tests: {
+				files: ['test/*/*.js'],
+				tasks: ['concat:tests', 'uglify:tests']
+			},
+			scss: {
 				files: ['src/scss/MathLib.scss'],
-				tasks: ['compass']
+				tasks: ['compass', 'cssmin']
 			}
 		},
 		
@@ -256,7 +264,7 @@ module.exports = function (grunt) {
 					'build/MathLib.min.js': ['build/MathLib.js']
 				}
 			},
-			testing: {
+			tests: {
 				options: {
 					mangle: false,
 					banner: banner

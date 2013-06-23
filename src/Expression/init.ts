@@ -5,10 +5,13 @@ export class Expression {
 
 	type = 'expression';
 
-	subtype: string;
-	name: string;
-	value: any;
+	arguments: string[];
 	content: any;
+	isMethod: bool;
+	mode: string;
+	name: string;
+	subtype: string;
+	value: any;
 
 
 	constructor(expr = {}) {

@@ -4,5 +4,5 @@
 // *@param {Expression}* The expression to compare  
 // *@return {number}*
 compare(e) {
-	return this.toString().localeCompare(e.toString());
+	return MathLib.sign(this.toString().localeCompare(e.toString()));
 }

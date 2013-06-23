@@ -1,10 +1,10 @@
 // ### [Functn.prototype.toLaTeX()](http://mathlib.de/en/docs/Functn/toLaTeX)
 // Returns a LaTeX representation of the function
 //
-// *@param {string}* Optional: custom name for the bound variable (default: x)  
 // *@return {string}*
-functnPrototype.toLaTeX = function (bvar = '') {
-
+functnPrototype.toLaTeX = function () {
+	return this.expression.toLaTeX();
+/*
 	// List of functions to be executed on the specified node type
 	var handlers = {
 		apply: function (n) {
@@ -44,4 +44,5 @@ functnPrototype.toLaTeX = function (bvar = '') {
 
 	// Start the node handling with the first real element (not the <math> element)
 	return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
+	*/
 };

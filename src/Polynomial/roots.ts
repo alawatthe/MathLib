@@ -5,7 +5,7 @@
 static roots(zeros) : Polynomial {
 	var elemSymPoly, coef = [], i, ii;
 	if (MathLib.type(zeros) === 'array') {
-		zeros = MathLib.set(zeros, true);
+		zeros = new MathLib.Set(zeros);
 	}
 
 	elemSymPoly = zeros.powerset();

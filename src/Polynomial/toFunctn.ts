@@ -22,5 +22,7 @@ toFunctn() {
 		}
 	}
 
-	return new MathLib.Functn(new Function('x', 'return ' + str), {contentMathMLString: this.toContentMathMLString(true)});
+	return new MathLib.Functn(new Function('x', 'return ' + str), {
+		expression: this.toExpression()
+	});
 }

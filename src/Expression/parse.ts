@@ -318,10 +318,7 @@ static parse = function (str) {
 
 			if (token.type === T.Number) {
 				token = lexer.next();
-				return new MathLib.Expression({
-					value: token.value,
-					subtype: 'number'
-				});
+				return MathLib.Expression.number(token.value);
 			}
 
 			if (matchOp(token, '(')) {
@@ -360,13 +357,41 @@ static parse = function (str) {
 			return parsePrimary();
 		}
 
-		// Multiplicative ::= Unary |
-		//                    Multiplicative '*' Unary |
-		//                    Multiplicative '/' Unary
-		function parseMultiplicative() {
+
+		// Exponentiation ::= Unary |
+		//                    Exponentiation '^' Unary |
+		function parseExponentiation() {
 			var token, left, right, r;
 
 			left = parseUnary();
+			token = lexer.peek();
+			if (matchOp(token, '^')) {
+				token = lexer.next();
+
+				right = parseExponentiation();
+
+
+				// Exponentiation is right associative
+				// a/b/c should be a^(b^c) and not (a^b)^c
+				return new MathLib.Expression({
+					subtype: 'naryOperator',
+					value: '^',
+					content: [left, right],
+					name: 'pow'
+				});
+				
+			}
+			return left;
+		}
+
+
+		// Multiplicative ::= Exponentiation |
+		//                    Multiplicative '*' Exponentiation |
+		//                    Multiplicative '/' Exponentiation
+		function parseMultiplicative() {
+			var token, left, right, r;
+
+			left = parseExponentiation();
 			token = lexer.peek();
 			if (matchOp(token, '*') || matchOp(token, '/')) {
 				token = lexer.next();
@@ -374,6 +399,7 @@ static parse = function (str) {
 				right = parseMultiplicative();
 
 
+				// Multiplication and division is left associative:
 				// a/b/c should be (a/b)/c and not a/(b/c)
 				if (right.subtype === 'naryOperator') {
 					r = right;
@@ -417,6 +443,7 @@ static parse = function (str) {
 
 
 
+				// Addition and subtractio is left associative:
 				// a-b-c should be (a-b)-c and not a-(b-c)
 				if (right.value === '+' || right.value === '-') {
 					r = right;

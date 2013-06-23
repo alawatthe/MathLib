@@ -1,8 +1,7 @@
-// ## <a id="Functions"></a>Functions
+// ## <a id="Functn"></a>Functn
 //
-// Because 'Function' is a reserved word in JavaScript the module is called 
-// 'Functn'.  
-// More improvements to the module coming soon.
+// Because 'Function' is a reserved word in JavaScript,
+// the module is called 'Functn'.  
 
 var functnPrototype : any = {};
 
@@ -10,16 +9,38 @@ MathLib.Functn = function (f, options) {
 	options = options || {};
 
 	var functn = function (x) {
-		if (typeof x === 'number') {
+		if (typeof x === 'number' || typeof x === 'boolean') {
 			return f.apply('', arguments);
 		}
 		else if (x.type === 'functn') {
-			var outerVar = functn.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML,
-					innerVar = x.contentMathML.childNodes[0].childNodes[0].childNodes[0].outerMathML,
-					innerStr = x.contentMathML.childNodes[0].childNodes[2].outerMathML.replace('<bvar>' + innerVar + '</bvar>', ''), 
-					outerStr = functn.contentMathML.childNodes[0].childNodes[2].outerMathML.replace(outerVar, innerStr),
-					contentMathMLString = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>' + innerVar + '</bvar><domainofapplication><reals/></domainofapplication>' + outerStr + '</lambda></math>';
-			return new MathLib.Functn(function (y) {return f(x(y));}, {contentMathMLString: contentMathMLString});
+			
+			// x -> f(x)
+			// y -> g(y)
+			// y -> f(g(y))
+			var bvar = options.expression.arguments[0].value,
+					composition = options.expression.map(function (expr) {
+						if (expr.subtype === 'variable' && expr.value === bvar) {
+							expr = x.expression.content[0];
+						}
+						return expr;
+					});
+
+			return new MathLib.Functn(function (y) {return f(x(y));}, {
+					expression: new MathLib.Expression({
+						subtype: 'functionDefinition',
+						arguments: x.expression.arguments,
+						content: composition.content
+					})
+				});
+		}
+		else if (x.type === 'expression' && x.subtype === 'variable') {
+			return new MathLib.Functn(f, {
+					expression: new MathLib.Expression({
+						subtype: 'functionDefinition',
+						arguments: x,
+						content: x
+					})
+				});
 		}
 		else if (typeof x === 'function') {
 			return function (y) {return f(x(y));};
@@ -27,26 +48,32 @@ MathLib.Functn = function (f, options) {
 		else if (x.type === 'complex') {
 			return x[options.name].apply(x, Array.prototype.slice.call(arguments, 1));
 		}
+		else if (x.type === 'rational') {
+			return f(x.toNumber());
+		}
+		else if (x.type === 'set') {
+			return x.map(f);
+		}
+		else if (MathLib.type(x) === 'array') {
+			return x.map(f);
+		}
 		else {
 			return x[options.name]();
 		}
 	};
 
-	//functn[proto] = prototypes.functn;
 	for (var name in functnPrototype) {
 		if (functnPrototype.hasOwnProperty(name)) {
 			functn[name] = functnPrototype[name];
 		}
 	}
-	functn.type = 'functn';
-	functn.constructor = MathLib.Functn;
+	(<any>functn).type = 'functn';
+	(<any>functn).constructor = MathLib.Functn;
 
 
-	var contentMathML = options.contentMathMLString || '';
-	
 	Object.defineProperties(functn, {
 		id: { value: options.name},
-		contentMathML: { value: new MathLib.MathML(contentMathML) }
+		expression: {value: options.expression}
 	});
 
 	return functn;

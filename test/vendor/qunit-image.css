@@ -1,42 +1,43 @@
-.qunit-figure {
-	float: left;
-	margin: 10px;
+.qunit-image-wrapper {
+  white-space: normal;
 }
 
-.qunit-figcaption {
-	text-align: center;
-	margin-bottom: 10px; 
+.qunit-image-figure {
+  float: left;
+  margin: 10px 10px 30px 10px;
 }
 
- 
-/*
- * Clearfix: contain floats
- * (https://github.com/h5bp/html5-boilerplate/blob/master/css/main.css)
- *
- * For modern browsers
- * 1. The space content is one way to avoid an Opera bug when the
- *    `contenteditable` attribute is included anywhere else in the document.
- *    Otherwise it causes space to appear at the top and bottom of elements
- *    that receive the `clearfix` class.
- * 2. The use of `table` rather than `block` is only necessary if using
- *    `:before` to contain the top-margins of child elements.
- */
-
-.qunit-clearfix:before,
-.qunit-clearfix:after {
-    content: " "; /* 1 */
-    display: table; /* 2 */
+.qunit-image-figcaption {
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-.qunit-clearfix:after {
-    clear: both;
+.qunit-image-img {
+  cursor: crosshair;
+  position: absolute;
 }
 
-/*
- * For IE 6/7 only
- * Include this rule to trigger hasLayout and contain floats.
- */
+.qunit-image-comparisonImage {
+  display: none;
+}
+.qunit-image-comparisonImage.qunit-image-isVisible {
+  display: block;
+}
 
-.qunit-clearfix {
-    *zoom: 1;
+.qunit-image-absoluteContainer {
+  position: relative;
+}
+.qunit-image-absoluteContainer > img {
+  position: absolute;
+  top: 0;
+}
+
+.qunit-image-clearfix:before,
+.qunit-image-clearfix:after {
+  content: " ";
+  display: table;
+}
+
+.qunit-image-clearfix:after {
+  clear: both;
 }

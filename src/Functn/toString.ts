@@ -1,11 +1,11 @@
 // ### [Functn.prototype.toString()](http://mathlib.de/en/docs/Functn/toString)
 // Returns a string representation of the function
 //
-// *@param {string}* Optional: custom name for the bound variable (default: x)  
 // *@return {string}*
+functnPrototype.toString = function () {
+	return this.expression.toString();
 
-functnPrototype.toString = function (bvar = '') {
-
+/*
 	// List of functions to be executed on the specified node type
 	var handlers = {
 		apply: function (n) {
@@ -44,4 +44,5 @@ functnPrototype.toString = function (bvar = '') {
 
 	// Start the node handling with the first real element (not the <math> element)
 	return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
+	*/
 }
