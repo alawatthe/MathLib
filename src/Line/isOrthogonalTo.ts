@@ -3,7 +3,7 @@
 //
 // *@param {Line}*  
 // *@return {boolean}*
-isOrthogonalTo(l : Line) : Line {
+isOrthogonalTo(l : Line) : boolean {
 	return MathLib.isEqual(
 		new MathLib.Point([0, 0, 1]).crossRatio(
 			this.meet(new MathLib.Line([0, 0, 1])),

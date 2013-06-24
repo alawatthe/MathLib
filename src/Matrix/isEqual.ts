@@ -3,7 +3,7 @@
 //
 // *@param {Matrix}* the matrix to compare with  
 // *@return {boolean}*
-isEqual(x) {
+isEqual(x) : boolean {
 	var i, j, ii, jj;
 	if (this === x) {
 		return true;

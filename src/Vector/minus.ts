@@ -3,7 +3,7 @@
 //
 // *@param {Vector}* The vector to be subtracted.  
 // *@return {Vector}*
-minus(v : Vector) {
+minus(v : Vector) : Vector {
 	if (this.length === v.length) {
 		return this.plus(v.negative());
 	}

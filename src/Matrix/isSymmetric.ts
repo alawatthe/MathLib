@@ -2,7 +2,7 @@
 // Determines if the matrix is symmetric
 //
 // *@return {boolean}*
-isSymmetric() {
+isSymmetric() : boolean {
 	var i, ii, j, jj,
 			isSymmetric = true;
 

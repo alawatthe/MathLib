@@ -2,7 +2,7 @@
 // Determines if the matrix is positive definite
 //
 // *@return {boolean}*
-isPosDefinite() {
+isPosDefinite() : boolean {
 	if (!this.isSquare()) {
 		return;
 	}

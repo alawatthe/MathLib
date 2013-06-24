@@ -3,7 +3,7 @@
 //
 // *@param {Set}* The set to compare  
 // *@return {boolean}*
-isEqual(x : Set) : bool {
+isEqual(x : Set) : boolean {
 	if (this.card !== x.card) {
 		return false;
 	}

@@ -3,7 +3,7 @@
 //
 // *@param {Vector}* v The vector to compare  
 // *@return {boolean}*
-isEqual(v : Vector) : bool {
+isEqual(v : Vector) : boolean {
 	if (this.length !== v.length) {
 		return false;
 	}

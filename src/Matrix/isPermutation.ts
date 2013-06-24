@@ -2,7 +2,7 @@
 // Determines if the matrix is a permutation matrix
 //
 // *@return {boolean}*
-isPermutation() {
+isPermutation() : boolean {
 	var rows = [],
 			cols = [];
 

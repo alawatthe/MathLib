@@ -2,6 +2,6 @@
 // Determines if the line is finite
 //
 // *@return {boolean}*
-isFinite() : bool {
+isFinite() : boolean {
 	return !MathLib.isZero(this[this.length - 1]);
 }

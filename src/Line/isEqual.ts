@@ -3,7 +3,7 @@
 //
 // *@param {Line}*  
 // *@return {boolean}*
-isEqual(q : Line) : bool {
+isEqual(q : Line) : boolean {
 	var p = this.normalize();
 			q = q.normalize();
 

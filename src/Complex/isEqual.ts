@@ -2,7 +2,7 @@
 // Determines if the complex number is equal to another number.
 //
 // *@return {boolean}*
-isEqual(n) : bool {
+isEqual(n) : boolean {
 	if (typeof n === 'number') {
 		return MathLib.isEqual(this.re, n) && MathLib.isZero(this.im);
 	}

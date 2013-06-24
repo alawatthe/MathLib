@@ -2,6 +2,6 @@
 // Determines if the vector is the zero vector.
 //
 // *@return {boolean}*
-isZero() : bool {
+isZero() : boolean {
 	return this.every(MathLib.isZero);
 }

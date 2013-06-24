@@ -3,7 +3,7 @@
 //
 // *@param {array}* An array containing the vectors.  
 // *@return {boolean}*
-static areLinearIndependent = function (v : Vector[]) : bool {
+static areLinearIndependent = function (v : Vector[]) : boolean {
 	var n = v.length,
 			m = v[0].length;
 

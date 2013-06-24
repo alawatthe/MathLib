@@ -2,6 +2,6 @@
 // Returns the LaTeX representation of the rational number
 //
 // *@return {string}*
-toLaTeX() : String {
+toLaTeX() : string {
 	return '\\frac{' + MathLib.toLaTeX(this.numerator) + '}{' + MathLib.toLaTeX(this.denominator) + '}';
 }

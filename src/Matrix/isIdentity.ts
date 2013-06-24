@@ -2,7 +2,7 @@
 // Determines if the matrix is a identity matrix.
 //
 // *@return {boolean}*
-isIdentity() {
+isIdentity() : boolean {
 	if (!this.isSquare()) {
 		return false;
 	}

@@ -2,11 +2,11 @@
 // Determines if the matrix is a diagonal matrix.
 //
 // *@return {boolean}*
-isDiag() {
+isDiag() : boolean {
 	var i, j, ii, jj;
-	if ((this.hasOwnProperty('isUpper') && this.isUpper()) + 
-			(this.hasOwnProperty('isLower') && this.isLower()) + 
-			(this.hasOwnProperty('isSymmetric') && this.isSymmetric()) > 1) {
+	if (+(this.hasOwnProperty('isUpper') && this.isUpper()) + 
+			+(this.hasOwnProperty('isLower') && this.isLower()) + 
+			+(this.hasOwnProperty('isSymmetric') && this.isSymmetric()) > 1) {
 		return true;
 	}
 	for (i = 0, ii = this.rows; i < ii; i++) {

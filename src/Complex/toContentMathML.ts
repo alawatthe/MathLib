@@ -2,6 +2,6 @@
 // Returns the content MathML representation of the number
 //
 // *@return {string}*
-toContentMathML() : String {
+toContentMathML() : string {
 	return '<cn type="complex-cartesian">' + this.re + '<sep/>' + this.im + '</cn>';
 }

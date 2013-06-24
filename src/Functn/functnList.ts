@@ -188,7 +188,7 @@ MathLib.is = function (obj, type) {
 // Code stolen from [Modernizr](http://www.modernizr.com/)
 //
 // *@return {boolean}*
-MathLib.isMathMLSupported = function () : bool {
+MathLib.isMathMLSupported = function () : boolean {
 	var hasMathML = false,
 			ns, div, mfrac;
 	if (document.createElementNS) {

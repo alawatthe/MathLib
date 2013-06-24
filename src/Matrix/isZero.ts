@@ -3,7 +3,7 @@
 // The result is cached.
 //
 // *@return {boolean}*
-isZero() {
+isZero() : boolean {
 	var isZero = this.every(MathLib.isZero);
 
 	this.isZero = function () {

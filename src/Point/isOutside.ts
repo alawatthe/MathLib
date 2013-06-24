@@ -3,7 +3,7 @@
 //
 // *@param {Circle}*  
 // *@return {boolean}*
-isOutside(a : Circle) : bool {
+isOutside(a : Circle) : boolean {
 	if (a.type === 'circle') {
 		return this.distanceTo(a.center) > a.radius;
 	}

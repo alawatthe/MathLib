@@ -25,9 +25,5 @@ toMathML(math) : string {
 
 	str += '</mrow>';
 
-	if (math) {
-		str = '<math xmlns="http://www.w3.org/1998/Math/MathML">' + str + '</math>';
-	}
-
 	return str;
 }

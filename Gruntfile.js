@@ -26,13 +26,9 @@ module.exports = function (grunt) {
 			MathLib: {
 				src: ['src/meta/head.ts',
 
-							'src/MathML/init.ts',
-							'src/MathML/!(init).ts',
-							'src/meta/bracket1.ts',
-
 							'src/Expression/init.ts',
 							'src/Expression/!(init).ts',
-							'src/meta/bracket11.ts',
+							'src/meta/bracket1.ts',
 
 							'src/Functn/init.ts',
 							'src/Functn/draw.ts',
@@ -95,33 +91,33 @@ module.exports = function (grunt) {
 
 							'src/Line/init.ts',
 							'src/Line/!(init).ts',
-							'src/meta/bracket12.ts',
+							'src/meta/bracket11.ts',
 
 							'src/Matrix/init.ts',
 							'src/Matrix/!(init).ts',
-							'src/meta/bracket13.ts',
+							'src/meta/bracket12.ts',
 
 							'src/Permutation/init.ts',
 							'src/Permutation/!(init).ts',
-							'src/meta/bracket14.ts',
+							'src/meta/bracket13.ts',
 
 							'src/Point/init.ts',
 							'src/Point/!(init).ts',
-							'src/meta/bracket15.ts',
+							'src/meta/bracket14.ts',
 
 							'src/Polynomial/init.ts',
 							'src/Polynomial/!(init).ts',
-							'src/meta/bracket16.ts',
+							'src/meta/bracket15.ts',
 
 							'src/Rational/init.ts',
 							'src/Rational/!(init).ts',
-							'src/meta/bracket17.ts',
+							'src/meta/bracket16.ts',
 
 							'src/Set/init.ts',
 							'src/Set/!(init).ts',
-							'src/meta/bracket18.ts',
+							'src/meta/bracket17.ts',
 
-							'src/meta/foot.ts',
+							'src/meta/bracket18.ts',
 							'src/shims/*.ts'
 							],
 				dest: 'build/MathLib.ts',

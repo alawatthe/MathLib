@@ -3,7 +3,7 @@
 //
 // *@param {Line}*  
 // *@return {boolean}*
-isParallelTo(l : Line) : bool {
+isParallelTo(l : Line) : boolean {
 	return this.every(function (x, i) {
 		return MathLib.isEqual(x, l[i]) || i === l.length - 1;
 	});

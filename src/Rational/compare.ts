@@ -3,6 +3,6 @@
 //
 // *@param {Rational}* The number to compare  
 // *@return {number}*
-compare(r) {
+compare(r : Rational) : number {
 	return MathLib.sign(this.numerator * r.denominator - this.denominator * r.numerator);
 }

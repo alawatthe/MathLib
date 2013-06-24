@@ -3,11 +3,8 @@
 //
 // *@return {Expression}*
 toExpression() : Expression {
-
-
 	var content = [],
 			sum, i;
-
 
 	for (i = this.deg; i >= 0; i--) {
 		if (!MathLib.isZero(this[i])) {

@@ -2,6 +2,6 @@
 // Determines if the matrix is a orthogonal.
 //
 // *@return {boolean}*
-isOrthogonal() {
+isOrthogonal() : boolean {
 	return this.transpose().times(this).isIdentity();
 }

@@ -2,6 +2,6 @@
 // Custom toString function
 //
 // *@return {string}*
-toString() : String {
+toString() : string {
 	return MathLib.toString(this.numerator) + '/' + MathLib.toString(this.denominator);
 }

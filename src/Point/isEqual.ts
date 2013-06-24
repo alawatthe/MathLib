@@ -3,7 +3,7 @@
 //
 // *@param {Point}* The point to compare  
 // *@return {boolean}*
-isEqual(q : Point) : bool {
+isEqual(q : Point) : boolean {
 	var p = this.normalize();
 	q = q.normalize();
 

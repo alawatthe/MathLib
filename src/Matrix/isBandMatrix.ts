@@ -4,7 +4,7 @@
 // *@param {number}*  
 // *@param {number}*   
 // *@return {boolean}*
-isBandMatrix(l, u) {
+isBandMatrix(l, u) : boolean {
 	var i, j, ii, jj;
 	
 	if (arguments.length === 1) {

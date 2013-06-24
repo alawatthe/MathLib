@@ -2,6 +2,6 @@
 // Determines if the matrix is a square matrix
 //
 // *@return {boolean}*
-isSquare() {
+isSquare() : boolean {
 	return this.cols === this.rows;
 }

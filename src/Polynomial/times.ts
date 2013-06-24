@@ -7,9 +7,6 @@ times(a) : Polynomial {
 	var i, ii, j, jj,
 			product = [];
 			
-	if (a.type === 'rational') {
-		a = a.toNumber(); 
-	}
 	if (a.type === 'polynomial') {
 		for (i = 0, ii = this.deg; i <= ii; i++) {
 			for (j = 0, jj = a.deg; j <= jj; j++) {
@@ -18,9 +15,11 @@ times(a) : Polynomial {
 		}
 		return new MathLib.Polynomial(product);
 	}
-	else {  // we we multiply it to every coefficient
-		return this.map(function (b) {
-												return MathLib.times(a, b);
-											});
+	else if (a.type === 'rational') {
+		a = a.toNumber(); 
 	}
+  // we we multiply it to every coefficient
+	return this.map(function (b) {
+											return MathLib.times(a, b);
+										});
 }

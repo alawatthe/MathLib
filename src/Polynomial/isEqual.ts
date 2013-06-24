@@ -3,7 +3,7 @@
 //
 // *@param {Polynomial}*  
 // *@return {boolean}*
-isEqual(p : Polynomial) : bool {
+isEqual(p : Polynomial) : boolean {
 	var i, ii;
 	if (this.deg !== p.deg || this.subdeg !== p.subdeg) {
 		return false;

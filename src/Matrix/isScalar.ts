@@ -3,7 +3,7 @@
 // (that is a multiple of the identity matrix)
 //
 // *@return {boolean}*
-isScalar() {
+isScalar() : boolean {
 	var i, ii,
 			diag = this.diag;
 	if (this.hasOwnProperty('isIdentity') && this.hasOwnProperty('isZero')) {
