@@ -4,22 +4,24 @@ module.exports = function (grunt) {
 	
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-compass');
-	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-connect');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	grunt.loadNpmTasks('grunt-docco');
 	grunt.loadNpmTasks('grunt-notify');
+	grunt.loadNpmTasks('grunt-saucelabs');
 	grunt.loadNpmTasks('grunt-typescript');
 
 	var banner = '/*! MathLib v<%= pkg.version %> MathLib.de | MathLib.de/en/license */';
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		
+		saucelabs: grunt.file.readJSON('saucelab.json'),
 
 		// This is a nasty hack with all the bracket files.
 		concat: {
@@ -31,19 +33,7 @@ module.exports = function (grunt) {
 							'src/meta/bracket1.ts',
 
 							'src/Functn/init.ts',
-							'src/Functn/draw.ts',
-							'src/Functn/diff.ts',
-							'src/Functn/quad.ts',
-							'src/Functn/toContentMathML.ts',
-							'src/Functn/toContentMathMLString.ts',
-							'src/Functn/toLaTeX.ts',
-							'src/Functn/toMathML.ts',
-							'src/Functn/toMathMLString.ts',
-							'src/Functn/toString.ts',
-							'src/Functn/unaryFunctions.ts',
-							'src/Functn/binaryFunctions.ts',
-							'src/Functn/functnList.ts',
-							'src/Functn/nAryFunctions.ts',
+							'src/Functn/!(init).ts',
 
 							'src/Screen/init.ts',
 							'src/screen/!(init).ts',
@@ -62,15 +52,7 @@ module.exports = function (grunt) {
 							'src/meta/bracket5.ts',
 
 							'src/Screen2D/init.ts',
-							'src/Screen2D/resize.ts',
-							'src/Screen2D/getEventPoint.ts',
-							'src/Screen2D/getLineEndPoints.ts',
-							'src/Screen2D/drawGrid.ts',
-							'src/Screen2D/drawAxis.ts',
-							'src/Screen2D/onmousedown.ts',
-							'src/Screen2D/onmousemove.ts',
-							'src/Screen2D/onmouseup.ts',
-							'src/Screen2D/onmousewheel.ts',
+							'src/Screen2D/!(init).ts',
 							'src/meta/bracket6.ts',
 
 							'src/Screen3D/init.ts',
@@ -239,6 +221,164 @@ module.exports = function (grunt) {
 			index: ['test/test.html', 'test/test.min.html']
 		},
 
+
+		connect: {
+			server: {
+				options: {
+					base: '.',
+					port: 9999
+				}
+			}
+		},
+
+		// Sauce Labs cross browser testing
+		'saucelabs-qunit': {
+			MathLib: {
+				options: {
+					username: '<%= saucelabs.username %>',
+					key: '<%= saucelabs.key %>',
+					urls: ['http://localhost:9999/test/test.html'],
+					concurrency: 3,
+					detailedError: true,
+					passed: true,
+					build: 51,
+					testReadyTimeout: 10000,
+					testname: 'MathLib QUnit test suite',
+					tags: ['MathLib', 'v<%= pkg.version %>'],
+					browsers: [
+						// Chrome
+						// ======
+						{
+							browserName: 'chrome',
+							version: '27',
+							platform: 'OS X 10.8'
+						},
+						{
+							browserName: 'chrome',
+							version: '27',
+							platform: 'XP'
+						},
+						{
+							browserName: 'chrome',
+							version: '27',
+							platform: 'Linux'
+						},
+						
+
+						// Firefox
+						// =======
+						{
+							browserName: 'firefox',
+							version: '19',
+							platform: 'OS X 10.6'
+						},
+						{
+							browserName: 'firefox',
+							version: '20',
+							platform: 'OS X 10.6'
+						},
+						{
+							browserName: 'firefox',
+							version: '21',
+							platform: 'OS X 10.6'
+						},
+
+						{
+							browserName: 'firefox',
+							version: '19',
+							platform: 'XP'
+						},
+						{
+							browserName: 'firefox',
+							version: '20',
+							platform: 'XP'
+						},
+						{
+							browserName: 'firefox',
+							version: '21',
+							platform: 'XP'
+						},
+
+
+						// Safari
+						// ======
+						{
+							browserName: 'safari',
+							version: '5',
+							platform: 'OS X 10.6'
+						},
+						{
+							browserName: 'safari',
+							version: '6',
+							platform: 'OS X 10.8'
+						},
+
+
+						// Opera
+						// =====
+						{
+							browserName: 'opera',
+							version: '11',
+							platform: 'Windows 7'
+						},
+						{
+							browserName: 'opera',
+							version: '12',
+							platform: 'Windows 7'
+						},
+
+						{
+							browserName: 'opera',
+							version: '12',
+							platform: 'Linux'
+						},
+
+
+						// Internet Explorer
+						// =================
+						{
+							browserName: 'internet explorer',
+							version: '9',
+							platform: 'Windows 7'
+						},
+						{
+							browserName: 'internet explorer',
+							version: '10',
+							platform: 'Windows 8'
+						},
+
+
+						// Android
+						// =======
+						{
+							browserName: 'android',
+							version: '4.0',
+							platform: 'Linux'
+						},
+
+
+						// iPhone
+						// ======
+						{
+							browserName: 'iphone',
+							version: '4.3',
+							platform: 'OS X 10.6'
+						},
+						{
+							browserName: 'iphone',
+							version: '5.1',
+							platform: 'OS X 10.8'
+						},
+						{
+							browserName: 'iphone',
+							version: '6',
+							platform: 'OS X 10.8'
+						}
+					]
+				}
+			}
+		},
+
 		
 		// Linting
 		jshint: {
@@ -323,4 +463,5 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('default', ['concat', 'typescript', 'uglify', 'qunit']);
 	grunt.registerTask('release', ['default', 'cssmin', 'docco']);
+	grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);
 };

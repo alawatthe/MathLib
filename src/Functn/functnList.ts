@@ -154,6 +154,7 @@ MathLib.compare = function (a, b) {
 	return a.compare(b);
 };
 
+
 MathLib.type = function (x) {
 	if (x === null) {
 		return 'null';
@@ -161,26 +162,26 @@ MathLib.type = function (x) {
 	if (x === undefined) {
 		return 'undefined';
 	}
-	// The name property for DOM objects is undefined in Firefox.
 	return x.type ? x.type : (x.constructor.name || Object.prototype.toString.call(x).slice(8, -1)).toLowerCase();
 };
 
+
 MathLib.is = function (obj, type) {
-	// if (MathLib.type(obj) === type) {
-	//   return true;
-	// }
-	// return prototypes[type] ? prototypes[type].isPrototypeOf(obj) : typeof obj === type;
+	var ucfirst = function (str) {
+		return str.slice(0,1).toUpperCase() + str.slice(1);
+	};
 
-	do {
-		if (MathLib.type(obj) === type) {
-			return true;
-		}
-		obj = Object.getPrototypeOf(Object(obj));
+	if (MathLib.type(obj) === type) {
+		return true;
 	}
-	while (obj);
-
-	return false;
-};
+	else if (['circle', 'complex', 'expression', 'functn', 'line', 'matrix', 'permutation', 'point',
+			'polynomial', 'rational', 'screen', 'screen2d', 'screen3d', 'set', 'vector'].indexOf(type) !== -1) {
+		return obj instanceof MathLib[ucfirst(type)];
+	}
+	else {
+		return obj instanceof window[ucfirst(type)];
+	}
+}
 
 
 // ### .isMathMLSupported()

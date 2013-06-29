@@ -6,7 +6,7 @@ var __extends = this.__extends || function (d, b) {
 };
 var MathLib;
 (function (MathLib) {
-    MathLib.version = '0.5.0';
+    MathLib.version = '0.5.1';
     MathLib.apery = 1.2020569031595942;
     MathLib.e = Math.E;
 
@@ -1188,6 +1188,107 @@ var MathLib;
         return functn;
     };
 
+    var binaryFunctions = {
+        arctan2: Math.atan2,
+        binomial: function (n, k) {
+            var binomial = 1, i, sign;
+
+            if (MathLib.isNaN(n) || !MathLib.isFinite(k)) {
+                return NaN;
+            }
+
+            if ((n >= 0 && k <= -1) || (n >= 0 && k > n) || (k < 0 && k > n)) {
+                return 0;
+            }
+
+            if (n < 0) {
+                if (k < 0) {
+                    return ((n + k) % 2 * 2 + 1) * MathLib.binomial(-k - 1, -n - 1);
+                } else {
+                    if (k === 0) {
+                        sign = 1;
+                    } else {
+                        sign = -(k % 2 * 2 - 1);
+                    }
+                    binomial = sign * MathLib.binomial(k - n - 1, k);
+                }
+            }
+
+            if (k > n / 2) {
+                k = n - k;
+            }
+
+            for (i = 1; i <= k; i++) {
+                binomial *= (n + 1 - i) / i;
+            }
+            return binomial;
+        },
+        divide: function (a, b) {
+            return MathLib.times(a, MathLib.inverse(b));
+        },
+        log: function (base, x) {
+            if (arguments.length === 1) {
+                x = base;
+                base = 10;
+            }
+            return Math.log(x) / Math.log(base);
+        },
+        minus: function (a, b) {
+            return MathLib.plus(a, MathLib.negative(b));
+        },
+        mod: function (n, m) {
+            var nm = n % m;
+            return nm >= 0 ? nm : nm + m;
+        },
+        pow: function (x, y) {
+            if (x === 1 || (x === -1 && (y === Infinity || y === -Infinity))) {
+                return 1;
+            }
+            return Math.pow(x, y);
+        },
+        root: function (x, root) {
+            if (arguments.length === 1) {
+                return Math.sqrt(x);
+            }
+            return Math.pow(x, 1 / root);
+        }
+    };
+
+    var createBinaryFunction = function (f, name) {
+        return function (x) {
+            if (typeof x === 'number') {
+                return f.apply('', arguments);
+            } else if (typeof x === 'function') {
+                return function (y) {
+                    return f(x(y));
+                };
+            } else if (x.type === 'set') {
+                return new MathLib.Set(x.map(f));
+            } else if (x.type === 'complex') {
+                return x[name].apply(x, Array.prototype.slice.call(arguments, 1));
+            } else if (Array.isArray(x)) {
+                return x.map(f);
+            } else {
+                return x[name]();
+            }
+        };
+    };
+
+    var func, cur;
+    for (func in binaryFunctions) {
+        if (binaryFunctions.hasOwnProperty(func)) {
+            cur = binaryFunctions[func];
+            Object.defineProperty(MathLib, func, {
+                value: createBinaryFunction(binaryFunctions[func], func)
+            });
+        }
+    }
+
+    functnPrototype.diff = function (x, h) {
+        if (typeof h === "undefined") { h = 1e-5; }
+        return (this(x + h) - this(x - h)) / (2 * h);
+    };
+
     functnPrototype.draw = function (screen, options) {
         if (typeof options === "undefined") { options = {}; }
         var functn = this;
@@ -1202,10 +1303,462 @@ var MathLib;
         return this;
     };
 
-    functnPrototype.diff = function (x, h) {
-        if (typeof h === "undefined") { h = 1e-5; }
-        return (this(x + h) - this(x - h)) / (2 * h);
+    var functionList1 = {
+        divisors: function (x) {
+            var divisors = x === 1 ? [] : [1], i, ii;
+            for (i = 2, ii = x / 2; i <= ii; i++) {
+                if (x % i === 0) {
+                    divisors.push(i);
+                }
+            }
+            divisors.push(x);
+            return MathLib.set(divisors);
+        },
+        factor: function (n) {
+            var factors = [], i;
+            n = Math.abs(n);
+            while (n % 2 === 0) {
+                n = n / 2;
+                factors.push(2);
+            }
+
+            i = 3;
+            while (n !== 1) {
+                while (n % i === 0) {
+                    n = n / i;
+                    factors.push(i);
+                }
+                i += 2;
+            }
+            return new MathLib.Set(factors, true);
+        },
+        fallingFactorial: function (n, m, s) {
+            var factorial = 1, j;
+            s = s || 1;
+
+            for (j = 0; j < m; j++) {
+                factorial *= (n - j * s);
+            }
+            return factorial;
+        },
+        fibonacci: function (n) {
+            return Math.floor(Math.pow(MathLib.goldenRatio, n) / Math.sqrt(5));
+        },
+        random: Math.random,
+        risingFactorial: function (n, m, s) {
+            var factorial = 1, j;
+            s = s || 1;
+
+            for (j = 0; j < m; j++) {
+                factorial *= (n + j * s);
+            }
+            return factorial;
+        },
+        round: function (x) {
+            if (x === 0) {
+                return x;
+            }
+            return Math.round(x);
+        },
+        trunc: function (x, n) {
+            return x.toFixed(n || 0);
+        },
+        toContentMathML: function (x) {
+            if (typeof x === 'number') {
+                return '<cn>' + x + '</cn>';
+            } else {
+                return x.toContentMathML();
+            }
+        },
+        toLaTeX: function (x, plus) {
+            if (plus) {
+                return (x < 0 ? '-' : '+') + Math.abs(x);
+            } else {
+                return (x < 0 ? '-' : '') + Math.abs(x);
+            }
+        },
+        toMathML: function (x, plus) {
+            if (plus) {
+                return '<mo>' + (x < 0 ? '-' : '+') + '</mo><mn>' + Math.abs(x) + '</mn>';
+            } else {
+                return (x < 0 ? '<mo>-</mo>' : '') + '<mn>' + Math.abs(x) + '</mn>';
+            }
+        },
+        toString: function (x, plus) {
+            if (plus) {
+                return (x < 0 ? '-' : '+') + Math.abs(x);
+            } else {
+                return (x < 0 ? '-' : '') + Math.abs(x);
+            }
+        }
     };
+
+    var createFunction1 = function (f, name) {
+        return function (x) {
+            if (typeof x === 'number') {
+                return f.apply('', arguments);
+            } else if (typeof x === 'function') {
+                return function (y) {
+                    return f(x(y));
+                };
+            } else if (x.type === 'set') {
+                return new MathLib.Set(x.map(f));
+            } else if (x.type === 'complex') {
+                return x[name].apply(x, Array.prototype.slice.call(arguments, 1));
+            } else if (Array.isArray(x)) {
+                return x.map(f);
+            } else {
+                return x[name]();
+            }
+        };
+    };
+
+    for (func in functionList1) {
+        if (functionList1.hasOwnProperty(func)) {
+            cur = functionList1[func];
+            Object.defineProperty(MathLib, func, {
+                value: createFunction1(functionList1[func], func)
+            });
+        }
+    }
+
+    MathLib.compare = function (a, b) {
+        if (MathLib.type(a) !== MathLib.type(b)) {
+            return MathLib.sign(MathLib.type(a).localeCompare(MathLib.type(b)));
+        } else if (typeof a === 'number') {
+            return MathLib.sign(a - b);
+        } else if (typeof a === 'string') {
+            return a.localeCompare(b);
+        }
+        return a.compare(b);
+    };
+
+    MathLib.type = function (x) {
+        if (x === null) {
+            return 'null';
+        }
+        if (x === undefined) {
+            return 'undefined';
+        }
+        return x.type ? x.type : (x.constructor.name || Object.prototype.toString.call(x).slice(8, -1)).toLowerCase();
+    };
+
+    MathLib.is = function (obj, type) {
+        var ucfirst = function (str) {
+            return str.slice(0, 1).toUpperCase() + str.slice(1);
+        };
+
+        if (MathLib.type(obj) === type) {
+            return true;
+        } else if ([
+            'circle',
+            'complex',
+            'expression',
+            'functn',
+            'line',
+            'matrix',
+            'permutation',
+            'point',
+            'polynomial',
+            'rational',
+            'screen',
+            'screen2d',
+            'screen3d',
+            'set',
+            'vector'
+        ].indexOf(type) !== -1) {
+            return obj instanceof MathLib[ucfirst(type)];
+        } else {
+            return obj instanceof window[ucfirst(type)];
+        }
+    };
+
+    MathLib.isMathMLSupported = function () {
+        var hasMathML = false, ns, div, mfrac;
+        if (document.createElementNS) {
+            ns = 'http://www.w3.org/1998/Math/MathML';
+            div = document.createElement('div');
+            div.style.position = 'absolute';
+            mfrac = div.appendChild(document.createElementNS(ns, 'math')).appendChild(document.createElementNS(ns, 'mfrac'));
+            mfrac.appendChild(document.createElementNS(ns, 'mi')).appendChild(document.createTextNode('xx'));
+            mfrac.appendChild(document.createElementNS(ns, 'mi')).appendChild(document.createTextNode('yy'));
+            document.body.appendChild(div);
+            hasMathML = div.offsetHeight > div.offsetWidth;
+            document.body.removeChild(div);
+        }
+        return hasMathML;
+    };
+
+    MathLib.writeMathML = function (id, math) {
+        var formula;
+        document.getElementById(id).innerHTML = '<math>' + math + '</math>';
+        if (typeof MathJax !== 'undefined') {
+            formula = MathJax.Hub.getAllJax(id)[0];
+            MathJax.Hub.Queue(['Typeset', MathJax.Hub, id]);
+        }
+    };
+
+    MathLib.loadMathJax = function (config) {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js';
+
+        config = config || 'MathJax.Hub.Config({' + 'config: ["MMLorHTML.js"],' + 'jax: ["input/TeX", "input/MathML", "output/HTML-CSS", "output/NativeMML"],' + 'extensions: ["tex2jax.js", "mml2jax.js", "MathMenu.js", "MathZoom.js"],' + 'TeX: {' + 'extensions: ["AMSmath.js", "AMSsymbols.js", "noErrors.js", "noUndefined.js"]' + '}' + '});';
+
+        if ((window).opera) {
+            script.innerHTML = config;
+        } else {
+            script.text = config;
+        }
+
+        document.getElementsByTagName('head')[0].appendChild(script);
+    };
+
+    var nAryFunctions = {
+        and: function (n) {
+            return n.every(function (x) {
+                return !!x;
+            });
+        },
+        arithMean: function (n) {
+            return MathLib.plus(n) / n.length;
+        },
+        gcd: function (a) {
+            var min, reduction = function (x) {
+                return x !== min ? x % min : x;
+            }, isntZero = function (x) {
+                return x !== 0;
+            };
+
+            a = a.filter(isntZero).map(Math.abs);
+
+            if (a.length === 0) {
+                return 0;
+            }
+
+            while (a.length > 1) {
+                min = MathLib.min(a);
+                a = a.map(reduction).filter(isntZero);
+            }
+            return a[0] || min;
+        },
+        geoMean: function (n) {
+            return MathLib.root(MathLib.times(n), n.length);
+        },
+        harmonicMean: function (n) {
+            return n.length / MathLib.plus(n.map(MathLib.inverse));
+        },
+        hypot: function (n) {
+            var a, b, max, min;
+
+            if (n.length === 1) {
+                return Math.abs(n[0]);
+            }
+
+            if (n.length > 2) {
+                return n.reduce(function (a, b) {
+                    return MathLib.hypot(a, b);
+                });
+            }
+
+            a = MathLib.abs(n[0]);
+            b = MathLib.abs(n[1]);
+
+            if (a === Infinity || b === Infinity) {
+                return Infinity;
+            }
+
+            if (a === 0 && b === 0) {
+                return 0;
+            }
+
+            max = Math.max(a, b);
+            min = Math.min(a, b);
+
+            return max * Math.sqrt(1 + Math.pow(min / max, 2));
+        },
+        hypot2: function (n) {
+            if (n.some(function (x) {
+                return x === Infinity || x === -Infinity;
+            })) {
+                return Infinity;
+            }
+            return n.reduce(function (old, cur) {
+                return old + cur * cur;
+            }, 0);
+        },
+        isEqual: function (n) {
+            return n.every(function (a, i, args) {
+                if (a === args[0]) {
+                    return true;
+                } else if (typeof a === 'number' && typeof args[0] === 'number') {
+                    return Math.abs(a - args[0]) <= 3e-15;
+                } else if (typeof a === 'object') {
+                    return a.isEqual(args[0]);
+                } else if (typeof args[0] === 'object') {
+                    return args[0].isEqual(a);
+                }
+                return false;
+            });
+        },
+        lcm: function (n) {
+            if (n.length === 0) {
+                return 0;
+            }
+            if (n.length === 1) {
+                return n[0];
+            } else if (n.length === 2) {
+                return MathLib.times(n) / MathLib.gcd(n);
+            } else if (n.length > 2) {
+                return n.reduce(function (x, y) {
+                    return MathLib.lcm(x, y);
+                });
+            }
+        },
+        max: function (n) {
+            return Math.max.apply(null, n);
+        },
+        min: function (n) {
+            return Math.min.apply(null, n);
+        },
+        or: function (n) {
+            return n.some(function (x) {
+                return !!x;
+            });
+        },
+        plus: function (n) {
+            if (n.length === 0) {
+                return 0;
+            }
+            return n.reduce(function (a, b) {
+                var f1, f2, aExpr, bExpr;
+                if (typeof a === 'number' && typeof b === 'number') {
+                    return a + b;
+                } else if (a.type === 'functn' || b.type === 'functn') {
+                    f1 = a;
+                    f2 = b;
+                    aExpr = a.expression ? a.expression.content[0] : {};
+                    bExpr = b.expression ? b.expression.content[0] : {};
+
+                    if (a.type !== 'functn') {
+                        f1 = function () {
+                            return a;
+                        };
+                        aExpr = new MathLib.Expression({
+                            value: a,
+                            subtype: 'number'
+                        });
+                    } else if (b.type !== 'functn') {
+                        f2 = function () {
+                            return b;
+                        };
+                        bExpr = new MathLib.Expression({
+                            value: b,
+                            subtype: 'number'
+                        });
+                    }
+                    return new MathLib.Functn(function (x) {
+                        return MathLib.plus(f1(x), f2(x));
+                    }, {
+                        expression: new MathLib.Expression({
+                            subtype: 'functionDefinition',
+                            arguments: ['x'],
+                            content: [
+                                new MathLib.Expression({
+                                    content: [aExpr, bExpr],
+                                    subtype: 'naryOperator',
+                                    value: '+',
+                                    name: 'plus'
+                                })
+                            ]
+                        })
+                    });
+                } else if (typeof a === 'object') {
+                    return a.plus(b);
+                } else if (typeof b === 'object') {
+                    return b.plus(a);
+                }
+            });
+        },
+        times: function (n) {
+            if (n.length === 0) {
+                return 1;
+            }
+            return n.reduce(function (a, b) {
+                var f1, f2, aExpr, bExpr;
+                if (typeof a === 'number' && typeof b === 'number') {
+                    return a * b;
+                } else if (a.type === 'functn' || b.type === 'functn') {
+                    f1 = a;
+                    f2 = b;
+                    aExpr = a.expression ? a.expression.content[0] : {};
+                    bExpr = b.expression ? b.expression.content[0] : {};
+
+                    if (a.type !== 'functn') {
+                        f1 = function () {
+                            return a;
+                        };
+                        aExpr = new MathLib.Expression({
+                            value: a,
+                            subtype: 'number'
+                        });
+                    } else if (b.type !== 'functn') {
+                        f2 = function () {
+                            return b;
+                        };
+                        bExpr = new MathLib.Expression({
+                            value: b,
+                            subtype: 'number'
+                        });
+                    }
+                    return new MathLib.Functn(function (x) {
+                        return MathLib.times(f1(x), f2(x));
+                    }, {
+                        expression: new MathLib.Expression({
+                            subtype: 'functionDefinition',
+                            arguments: ['x'],
+                            content: [
+                                new MathLib.Expression({
+                                    content: [aExpr, bExpr],
+                                    subtype: 'naryOperator',
+                                    value: '*',
+                                    name: 'times'
+                                })
+                            ]
+                        })
+                    });
+                } else if (typeof a === 'object') {
+                    return a.times(b);
+                } else if (typeof b === 'object') {
+                    return b.times(a);
+                }
+            });
+        },
+        xor: function (n) {
+            return n.reduce(function (x, y) {
+                return x + !!y;
+            }, 0) % 2 !== 0;
+        }
+    };
+
+    var createNaryFunction = function (f, name) {
+        return function (n) {
+            if (MathLib.type(n) === 'set') {
+                return f(n.slice());
+            } else if (MathLib.type(n) !== 'array') {
+                n = Array.prototype.slice.apply(arguments);
+            }
+            return f(n);
+        };
+    };
+
+    for (func in nAryFunctions) {
+        if (nAryFunctions.hasOwnProperty(func)) {
+            Object.defineProperty(MathLib, func, {
+                value: createNaryFunction(nAryFunctions[func], func)
+            });
+        }
+    }
 
     functnPrototype.quad = function (a, b, options) {
         if (typeof options === "undefined") { options = {}; }
@@ -1570,541 +2123,6 @@ var MathLib;
                 writable: true,
                 enumerable: true,
                 configurable: true
-            });
-        }
-    }
-
-    var binaryFunctions = {
-        arctan2: Math.atan2,
-        binomial: function (n, k) {
-            var binomial = 1, i, sign;
-
-            if (MathLib.isNaN(n) || !MathLib.isFinite(k)) {
-                return NaN;
-            }
-
-            if ((n >= 0 && k <= -1) || (n >= 0 && k > n) || (k < 0 && k > n)) {
-                return 0;
-            }
-
-            if (n < 0) {
-                if (k < 0) {
-                    return ((n + k) % 2 * 2 + 1) * MathLib.binomial(-k - 1, -n - 1);
-                } else {
-                    if (k === 0) {
-                        sign = 1;
-                    } else {
-                        sign = -(k % 2 * 2 - 1);
-                    }
-                    binomial = sign * MathLib.binomial(k - n - 1, k);
-                }
-            }
-
-            if (k > n / 2) {
-                k = n - k;
-            }
-
-            for (i = 1; i <= k; i++) {
-                binomial *= (n + 1 - i) / i;
-            }
-            return binomial;
-        },
-        divide: function (a, b) {
-            return MathLib.times(a, MathLib.inverse(b));
-        },
-        log: function (base, x) {
-            if (arguments.length === 1) {
-                x = base;
-                base = 10;
-            }
-            return Math.log(x) / Math.log(base);
-        },
-        minus: function (a, b) {
-            return MathLib.plus(a, MathLib.negative(b));
-        },
-        mod: function (n, m) {
-            var nm = n % m;
-            return nm >= 0 ? nm : nm + m;
-        },
-        pow: function (x, y) {
-            if (x === 1 || (x === -1 && (y === Infinity || y === -Infinity))) {
-                return 1;
-            }
-            return Math.pow(x, y);
-        },
-        root: function (x, root) {
-            if (arguments.length === 1) {
-                return Math.sqrt(x);
-            }
-            return Math.pow(x, 1 / root);
-        }
-    };
-
-    var createBinaryFunction = function (f, name) {
-        return function (x) {
-            if (typeof x === 'number') {
-                return f.apply('', arguments);
-            } else if (typeof x === 'function') {
-                return function (y) {
-                    return f(x(y));
-                };
-            } else if (x.type === 'set') {
-                return new MathLib.Set(x.map(f));
-            } else if (x.type === 'complex') {
-                return x[name].apply(x, Array.prototype.slice.call(arguments, 1));
-            } else if (Array.isArray(x)) {
-                return x.map(f);
-            } else {
-                return x[name]();
-            }
-        };
-    };
-
-    var func, cur;
-    for (func in binaryFunctions) {
-        if (binaryFunctions.hasOwnProperty(func)) {
-            cur = binaryFunctions[func];
-            Object.defineProperty(MathLib, func, {
-                value: createBinaryFunction(binaryFunctions[func], func)
-            });
-        }
-    }
-
-    var functionList1 = {
-        divisors: function (x) {
-            var divisors = x === 1 ? [] : [1], i, ii;
-            for (i = 2, ii = x / 2; i <= ii; i++) {
-                if (x % i === 0) {
-                    divisors.push(i);
-                }
-            }
-            divisors.push(x);
-            return MathLib.set(divisors);
-        },
-        factor: function (n) {
-            var factors = [], i;
-            n = Math.abs(n);
-            while (n % 2 === 0) {
-                n = n / 2;
-                factors.push(2);
-            }
-
-            i = 3;
-            while (n !== 1) {
-                while (n % i === 0) {
-                    n = n / i;
-                    factors.push(i);
-                }
-                i += 2;
-            }
-            return new MathLib.Set(factors, true);
-        },
-        fallingFactorial: function (n, m, s) {
-            var factorial = 1, j;
-            s = s || 1;
-
-            for (j = 0; j < m; j++) {
-                factorial *= (n - j * s);
-            }
-            return factorial;
-        },
-        fibonacci: function (n) {
-            return Math.floor(Math.pow(MathLib.goldenRatio, n) / Math.sqrt(5));
-        },
-        random: Math.random,
-        risingFactorial: function (n, m, s) {
-            var factorial = 1, j;
-            s = s || 1;
-
-            for (j = 0; j < m; j++) {
-                factorial *= (n + j * s);
-            }
-            return factorial;
-        },
-        round: function (x) {
-            if (x === 0) {
-                return x;
-            }
-            return Math.round(x);
-        },
-        trunc: function (x, n) {
-            return x.toFixed(n || 0);
-        },
-        toContentMathML: function (x) {
-            if (typeof x === 'number') {
-                return '<cn>' + x + '</cn>';
-            } else {
-                return x.toContentMathML();
-            }
-        },
-        toLaTeX: function (x, plus) {
-            if (plus) {
-                return (x < 0 ? '-' : '+') + Math.abs(x);
-            } else {
-                return (x < 0 ? '-' : '') + Math.abs(x);
-            }
-        },
-        toMathML: function (x, plus) {
-            if (plus) {
-                return '<mo>' + (x < 0 ? '-' : '+') + '</mo><mn>' + Math.abs(x) + '</mn>';
-            } else {
-                return (x < 0 ? '<mo>-</mo>' : '') + '<mn>' + Math.abs(x) + '</mn>';
-            }
-        },
-        toString: function (x, plus) {
-            if (plus) {
-                return (x < 0 ? '-' : '+') + Math.abs(x);
-            } else {
-                return (x < 0 ? '-' : '') + Math.abs(x);
-            }
-        }
-    };
-
-    var createFunction1 = function (f, name) {
-        return function (x) {
-            if (typeof x === 'number') {
-                return f.apply('', arguments);
-            } else if (typeof x === 'function') {
-                return function (y) {
-                    return f(x(y));
-                };
-            } else if (x.type === 'set') {
-                return new MathLib.Set(x.map(f));
-            } else if (x.type === 'complex') {
-                return x[name].apply(x, Array.prototype.slice.call(arguments, 1));
-            } else if (Array.isArray(x)) {
-                return x.map(f);
-            } else {
-                return x[name]();
-            }
-        };
-    };
-
-    for (func in functionList1) {
-        if (functionList1.hasOwnProperty(func)) {
-            cur = functionList1[func];
-            Object.defineProperty(MathLib, func, {
-                value: createFunction1(functionList1[func], func)
-            });
-        }
-    }
-
-    MathLib.compare = function (a, b) {
-        if (MathLib.type(a) !== MathLib.type(b)) {
-            return MathLib.sign(MathLib.type(a).localeCompare(MathLib.type(b)));
-        } else if (typeof a === 'number') {
-            return MathLib.sign(a - b);
-        } else if (typeof a === 'string') {
-            return a.localeCompare(b);
-        }
-        return a.compare(b);
-    };
-
-    MathLib.type = function (x) {
-        if (x === null) {
-            return 'null';
-        }
-        if (x === undefined) {
-            return 'undefined';
-        }
-
-        return x.type ? x.type : (x.constructor.name || Object.prototype.toString.call(x).slice(8, -1)).toLowerCase();
-    };
-
-    MathLib.is = function (obj, type) {
-        do {
-            if (MathLib.type(obj) === type) {
-                return true;
-            }
-            obj = Object.getPrototypeOf(Object(obj));
-        } while(obj);
-
-        return false;
-    };
-
-    MathLib.isMathMLSupported = function () {
-        var hasMathML = false, ns, div, mfrac;
-        if (document.createElementNS) {
-            ns = 'http://www.w3.org/1998/Math/MathML';
-            div = document.createElement('div');
-            div.style.position = 'absolute';
-            mfrac = div.appendChild(document.createElementNS(ns, 'math')).appendChild(document.createElementNS(ns, 'mfrac'));
-            mfrac.appendChild(document.createElementNS(ns, 'mi')).appendChild(document.createTextNode('xx'));
-            mfrac.appendChild(document.createElementNS(ns, 'mi')).appendChild(document.createTextNode('yy'));
-            document.body.appendChild(div);
-            hasMathML = div.offsetHeight > div.offsetWidth;
-            document.body.removeChild(div);
-        }
-        return hasMathML;
-    };
-
-    MathLib.writeMathML = function (id, math) {
-        var formula;
-        document.getElementById(id).innerHTML = '<math>' + math + '</math>';
-        if (typeof MathJax !== 'undefined') {
-            formula = MathJax.Hub.getAllJax(id)[0];
-            MathJax.Hub.Queue(['Typeset', MathJax.Hub, id]);
-        }
-    };
-
-    MathLib.loadMathJax = function (config) {
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js';
-
-        config = config || 'MathJax.Hub.Config({' + 'config: ["MMLorHTML.js"],' + 'jax: ["input/TeX", "input/MathML", "output/HTML-CSS", "output/NativeMML"],' + 'extensions: ["tex2jax.js", "mml2jax.js", "MathMenu.js", "MathZoom.js"],' + 'TeX: {' + 'extensions: ["AMSmath.js", "AMSsymbols.js", "noErrors.js", "noUndefined.js"]' + '}' + '});';
-
-        if ((window).opera) {
-            script.innerHTML = config;
-        } else {
-            script.text = config;
-        }
-
-        document.getElementsByTagName('head')[0].appendChild(script);
-    };
-
-    var nAryFunctions = {
-        and: function (n) {
-            return n.every(function (x) {
-                return !!x;
-            });
-        },
-        arithMean: function (n) {
-            return MathLib.plus(n) / n.length;
-        },
-        gcd: function (a) {
-            var min, reduction = function (x) {
-                return x !== min ? x % min : x;
-            }, isntZero = function (x) {
-                return x !== 0;
-            };
-
-            a = a.filter(isntZero).map(Math.abs);
-
-            if (a.length === 0) {
-                return 0;
-            }
-
-            while (a.length > 1) {
-                min = MathLib.min(a);
-                a = a.map(reduction).filter(isntZero);
-            }
-            return a[0] || min;
-        },
-        geoMean: function (n) {
-            return MathLib.root(MathLib.times(n), n.length);
-        },
-        harmonicMean: function (n) {
-            return n.length / MathLib.plus(n.map(MathLib.inverse));
-        },
-        hypot: function (n) {
-            var a, b, max, min;
-
-            if (n.length === 1) {
-                return Math.abs(n[0]);
-            }
-
-            if (n.length > 2) {
-                return n.reduce(function (a, b) {
-                    return MathLib.hypot(a, b);
-                });
-            }
-
-            a = MathLib.abs(n[0]);
-            b = MathLib.abs(n[1]);
-
-            if (a === Infinity || b === Infinity) {
-                return Infinity;
-            }
-
-            if (a === 0 && b === 0) {
-                return 0;
-            }
-
-            max = Math.max(a, b);
-            min = Math.min(a, b);
-
-            return max * Math.sqrt(1 + Math.pow(min / max, 2));
-        },
-        hypot2: function (n) {
-            if (n.some(function (x) {
-                return x === Infinity || x === -Infinity;
-            })) {
-                return Infinity;
-            }
-            return n.reduce(function (old, cur) {
-                return old + cur * cur;
-            }, 0);
-        },
-        isEqual: function (n) {
-            return n.every(function (a, i, args) {
-                if (a === args[0]) {
-                    return true;
-                } else if (typeof a === 'number' && typeof args[0] === 'number') {
-                    return Math.abs(a - args[0]) <= 3e-15;
-                } else if (typeof a === 'object') {
-                    return a.isEqual(args[0]);
-                } else if (typeof args[0] === 'object') {
-                    return args[0].isEqual(a);
-                }
-                return false;
-            });
-        },
-        lcm: function (n) {
-            if (n.length === 0) {
-                return 0;
-            }
-            if (n.length === 1) {
-                return n[0];
-            } else if (n.length === 2) {
-                return MathLib.times(n) / MathLib.gcd(n);
-            } else if (n.length > 2) {
-                return n.reduce(function (x, y) {
-                    return MathLib.lcm(x, y);
-                });
-            }
-        },
-        max: function (n) {
-            return Math.max.apply(null, n);
-        },
-        min: function (n) {
-            return Math.min.apply(null, n);
-        },
-        or: function (n) {
-            return n.some(function (x) {
-                return !!x;
-            });
-        },
-        plus: function (n) {
-            if (n.length === 0) {
-                return 0;
-            }
-            return n.reduce(function (a, b) {
-                var f1, f2, aExpr, bExpr;
-                if (typeof a === 'number' && typeof b === 'number') {
-                    return a + b;
-                } else if (a.type === 'functn' || b.type === 'functn') {
-                    f1 = a;
-                    f2 = b;
-                    aExpr = a.expression ? a.expression.content[0] : {};
-                    bExpr = b.expression ? b.expression.content[0] : {};
-
-                    if (a.type !== 'functn') {
-                        f1 = function () {
-                            return a;
-                        };
-                        aExpr = new MathLib.Expression({
-                            value: a,
-                            subtype: 'number'
-                        });
-                    } else if (b.type !== 'functn') {
-                        f2 = function () {
-                            return b;
-                        };
-                        bExpr = new MathLib.Expression({
-                            value: b,
-                            subtype: 'number'
-                        });
-                    }
-                    return new MathLib.Functn(function (x) {
-                        return MathLib.plus(f1(x), f2(x));
-                    }, {
-                        expression: new MathLib.Expression({
-                            subtype: 'functionDefinition',
-                            arguments: ['x'],
-                            content: [
-                                new MathLib.Expression({
-                                    content: [aExpr, bExpr],
-                                    subtype: 'naryOperator',
-                                    value: '+',
-                                    name: 'plus'
-                                })
-                            ]
-                        })
-                    });
-                } else if (typeof a === 'object') {
-                    return a.plus(b);
-                } else if (typeof b === 'object') {
-                    return b.plus(a);
-                }
-            });
-        },
-        times: function (n) {
-            if (n.length === 0) {
-                return 1;
-            }
-            return n.reduce(function (a, b) {
-                var f1, f2, aExpr, bExpr;
-                if (typeof a === 'number' && typeof b === 'number') {
-                    return a * b;
-                } else if (a.type === 'functn' || b.type === 'functn') {
-                    f1 = a;
-                    f2 = b;
-                    aExpr = a.expression ? a.expression.content[0] : {};
-                    bExpr = b.expression ? b.expression.content[0] : {};
-
-                    if (a.type !== 'functn') {
-                        f1 = function () {
-                            return a;
-                        };
-                        aExpr = new MathLib.Expression({
-                            value: a,
-                            subtype: 'number'
-                        });
-                    } else if (b.type !== 'functn') {
-                        f2 = function () {
-                            return b;
-                        };
-                        bExpr = new MathLib.Expression({
-                            value: b,
-                            subtype: 'number'
-                        });
-                    }
-                    return new MathLib.Functn(function (x) {
-                        return MathLib.times(f1(x), f2(x));
-                    }, {
-                        expression: new MathLib.Expression({
-                            subtype: 'functionDefinition',
-                            arguments: ['x'],
-                            content: [
-                                new MathLib.Expression({
-                                    content: [aExpr, bExpr],
-                                    subtype: 'naryOperator',
-                                    value: '*',
-                                    name: 'times'
-                                })
-                            ]
-                        })
-                    });
-                } else if (typeof a === 'object') {
-                    return a.times(b);
-                } else if (typeof b === 'object') {
-                    return b.times(a);
-                }
-            });
-        },
-        xor: function (n) {
-            return n.reduce(function (x, y) {
-                return x + !!y;
-            }, 0) % 2 !== 0;
-        }
-    };
-
-    var createNaryFunction = function (f, name) {
-        return function (n) {
-            if (MathLib.type(n) === 'set') {
-                return f(n.slice());
-            } else if (MathLib.type(n) !== 'array') {
-                n = Array.prototype.slice.apply(arguments);
-            }
-            return f(n);
-        };
-    };
-
-    for (func in nAryFunctions) {
-        if (nAryFunctions.hasOwnProperty(func)) {
-            Object.defineProperty(MathLib, func, {
-                value: createNaryFunction(nAryFunctions[func], func)
             });
         }
     }
@@ -3371,116 +3389,6 @@ var MathLib;
 
             this.draw();
         }
-        Screen2D.prototype.resize = function (width, height) {
-            this.height = height;
-            this.width = width;
-
-            if (this.options.renderer === 'Canvas') {
-                this.layer.back.element.width = width;
-                this.layer.back.element.height = height;
-                this.layer.back.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-
-                this.layer.grid.element.width = width;
-                this.layer.grid.element.height = height;
-                this.layer.grid.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-                this.layer.grid.ctx.strokeStyle = colorConvert(this.options.grid.color) || '#cccccc';
-
-                this.layer.axis.element.width = width;
-                this.layer.axis.element.height = height;
-                this.layer.axis.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-                this.layer.axis.ctx.strokeStyle = colorConvert(this.options.axis.color) || '#000000';
-
-                this.layer.main.element.width = width;
-                this.layer.main.element.height = height;
-                this.layer.main.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-            } else if (this.options.renderer === 'SVG') {
-                this.element.setAttribute('width', width + 'px');
-                this.element.setAttribute('height', height + 'px');
-            }
-
-            this.applyTransformation();
-            this.draw();
-
-            return this;
-        };
-
-        Screen2D.prototype.getEventPoint = function (evt) {
-            var x, y;
-            if (evt.offsetX) {
-                x = evt.offsetX;
-                y = evt.offsetY;
-            } else {
-                x = evt.layerX;
-                y = evt.layerY;
-            }
-            return new MathLib.Point([x, y, 1]);
-        };
-
-        Screen2D.prototype.getLineEndPoints = function (l) {
-            if (l.type === 'line') {
-                var top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lineRight = -(l[2] + l[0] * right) / l[1], lineTop = -(l[2] + l[1] * top) / l[0], lineLeft = -(l[2] + l[0] * left) / l[1], lineBottom = -(l[2] + l[1] * bottom) / l[0], points = [];
-
-                if (lineRight <= top && lineRight >= bottom) {
-                    points.push([right, lineRight]);
-                }
-                if (lineLeft <= top && lineLeft >= bottom) {
-                    points.push([left, lineLeft]);
-                }
-                if (lineTop < right && lineTop > left) {
-                    points.push([lineTop, top]);
-                }
-                if (lineBottom < right && lineBottom > left) {
-                    points.push([lineBottom, bottom]);
-                }
-                return points;
-            } else {
-                return l;
-            }
-        };
-
-        Screen2D.prototype.drawGrid = function () {
-            var _this = this;
-            if (!this.options.grid) {
-                return this;
-            }
-
-            var line = function () {
-                var args = [];
-                for (var _i = 0; _i < (arguments.length - 0); _i++) {
-                    args[_i] = arguments[_i + 0];
-                }
-                return _this.renderer.line.apply(_this.layer.grid, args);
-            }, circle = function () {
-                var args = [];
-                for (var _i = 0; _i < (arguments.length - 0); _i++) {
-                    args[_i] = arguments[_i + 0];
-                }
-                return _this.renderer.circle.apply(_this.layer.grid, args);
-            }, top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, yTick = Math.pow(10, 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3)), xTick = Math.pow(10, 1 - Math.floor(Math.log(this.transformation[0][0]) / Math.LN10 - 0.3)), i, ii;
-
-            if (this.options.grid.type === 'cartesian') {
-                for (i = bottom - (bottom % yTick); i <= top; i += yTick) {
-                    line([[left, i], [right, i]], false, true);
-                }
-
-                for (i = left - (left % xTick); i <= right; i += xTick) {
-                    line([[i, bottom], [i, top]], false, true);
-                }
-            } else if (this.options.grid.type === 'polar') {
-                var max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right)), min = 0;
-
-                for (i = 0, ii = 2 * Math.PI; i < ii; i += this.options.grid.angle) {
-                    line([[0, 0], [max * Math.cos(i), max * Math.sin(i)]], false, true);
-                }
-
-                for (i = min; i <= max; i += Math.min(xTick, yTick)) {
-                    circle(new MathLib.Circle([0, 0, 1], i), false, true);
-                }
-            }
-
-            return this;
-        };
-
         Screen2D.prototype.drawAxis = function () {
             var _this = this;
             var line = function () {
@@ -3543,6 +3451,83 @@ var MathLib;
             }
 
             return this;
+        };
+
+        Screen2D.prototype.drawGrid = function () {
+            var _this = this;
+            if (!this.options.grid) {
+                return this;
+            }
+
+            var line = function () {
+                var args = [];
+                for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                    args[_i] = arguments[_i + 0];
+                }
+                return _this.renderer.line.apply(_this.layer.grid, args);
+            }, circle = function () {
+                var args = [];
+                for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                    args[_i] = arguments[_i + 0];
+                }
+                return _this.renderer.circle.apply(_this.layer.grid, args);
+            }, top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, yTick = Math.pow(10, 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3)), xTick = Math.pow(10, 1 - Math.floor(Math.log(this.transformation[0][0]) / Math.LN10 - 0.3)), i, ii;
+
+            if (this.options.grid.type === 'cartesian') {
+                for (i = bottom - (bottom % yTick); i <= top; i += yTick) {
+                    line([[left, i], [right, i]], false, true);
+                }
+
+                for (i = left - (left % xTick); i <= right; i += xTick) {
+                    line([[i, bottom], [i, top]], false, true);
+                }
+            } else if (this.options.grid.type === 'polar') {
+                var max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right)), min = 0;
+
+                for (i = 0, ii = 2 * Math.PI; i < ii; i += this.options.grid.angle) {
+                    line([[0, 0], [max * Math.cos(i), max * Math.sin(i)]], false, true);
+                }
+
+                for (i = min; i <= max; i += Math.min(xTick, yTick)) {
+                    circle(new MathLib.Circle([0, 0, 1], i), false, true);
+                }
+            }
+
+            return this;
+        };
+
+        Screen2D.prototype.getEventPoint = function (evt) {
+            var x, y;
+            if (evt.offsetX) {
+                x = evt.offsetX;
+                y = evt.offsetY;
+            } else {
+                x = evt.layerX;
+                y = evt.layerY;
+            }
+            return new MathLib.Point([x, y, 1]);
+        };
+
+        Screen2D.prototype.getLineEndPoints = function (l) {
+            if (l.type === 'line') {
+                var top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lineRight = -(l[2] + l[0] * right) / l[1], lineTop = -(l[2] + l[1] * top) / l[0], lineLeft = -(l[2] + l[0] * left) / l[1], lineBottom = -(l[2] + l[1] * bottom) / l[0], points = [];
+
+                if (lineRight <= top && lineRight >= bottom) {
+                    points.push([right, lineRight]);
+                }
+                if (lineLeft <= top && lineLeft >= bottom) {
+                    points.push([left, lineLeft]);
+                }
+                if (lineTop < right && lineTop > left) {
+                    points.push([lineTop, top]);
+                }
+                if (lineBottom < right && lineBottom > left) {
+                    points.push([lineBottom, bottom]);
+                }
+                return points;
+            } else {
+                return l;
+            }
         };
 
         Screen2D.prototype.onmousedown = function (evt) {
@@ -3620,6 +3605,39 @@ var MathLib;
                 this.applyTransformation();
                 this.draw();
             }
+        };
+
+        Screen2D.prototype.resize = function (width, height) {
+            this.height = height;
+            this.width = width;
+
+            if (this.options.renderer === 'Canvas') {
+                this.layer.back.element.width = width;
+                this.layer.back.element.height = height;
+                this.layer.back.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
+
+                this.layer.grid.element.width = width;
+                this.layer.grid.element.height = height;
+                this.layer.grid.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
+                this.layer.grid.ctx.strokeStyle = colorConvert(this.options.grid.color) || '#cccccc';
+
+                this.layer.axis.element.width = width;
+                this.layer.axis.element.height = height;
+                this.layer.axis.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
+                this.layer.axis.ctx.strokeStyle = colorConvert(this.options.axis.color) || '#000000';
+
+                this.layer.main.element.width = width;
+                this.layer.main.element.height = height;
+                this.layer.main.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
+            } else if (this.options.renderer === 'SVG') {
+                this.element.setAttribute('width', width + 'px');
+                this.element.setAttribute('height', height + 'px');
+            }
+
+            this.applyTransformation();
+            this.draw();
+
+            return this;
         };
         return Screen2D;
     })(Screen);

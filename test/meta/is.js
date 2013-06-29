@@ -10,7 +10,7 @@ test('.is()', 12, function () {
 	equal(MathLib.is(v, 'point'), false);
 	equal(MathLib.is([], 'array'), true);
 	equal(MathLib.is(function () {}, 'function'), true);
-	equal(MathLib.is({}, 'null'), false);
+	equal(MathLib.is(MathLib.sin, 'functn'), true);
 	equal(MathLib.is(null, 'null'), true);
 	equal(MathLib.is(undefined, 'undefined'), true);
 });

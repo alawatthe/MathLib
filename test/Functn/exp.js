@@ -11,5 +11,5 @@ test('.exp()', 6, function () {
 	// Spec. 4: otherwise MathLib.exp(x) = e^x
 	equal(MathLib.exp(+0), 1, 'Spec. 4: otherwise MathLib.exp(x) = e^x');
 	equal(MathLib.exp(-0), 1, 'Spec. 4: otherwise MathLib.exp(x) = e^x');
-	equal(MathLib.exp(1), Math.E, 'Spec. 4: otherwise MathLib.exp(x) = e^x');
+	equal(MathLib.isEqual(MathLib.exp(1), Math.E), true, 'Spec. 4: otherwise MathLib.exp(x) = e^x');
 });

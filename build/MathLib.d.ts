@@ -87,15 +87,15 @@ declare module MathLib {
         public interaction: any;
         public zoomSpeed: any;
         constructor(id: string, options?: {});
-        public resize(width: number, height: number): Screen2D;
+        public drawAxis(): Screen2D;
+        public drawGrid(): Screen2D;
         public getEventPoint(evt);
         public getLineEndPoints(l);
-        public drawGrid(): Screen2D;
-        public drawAxis(): Screen2D;
         public onmousedown(evt): void;
         public onmousemove(evt): void;
         public onmouseup(evt): void;
         public onmousewheel(evt): void;
+        public resize(width: number, height: number): Screen2D;
     }
     class Screen3D extends Screen {
         public type: string;
