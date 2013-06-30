@@ -1,5 +1,5 @@
 # MathLib
- 
+[![Dependency Status](https://gemnasium.com/alawatthe/MathLib.png)](https://gemnasium.com/alawatthe/MathLib)
 
 MathLib.js is a JavaScript library for mathematical computations. It can handle circles, complex numbers, expressions, functions, lines, matrices, permutations, points, polynomials, rational numbers, sets, and vectors.
 

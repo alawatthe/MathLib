@@ -316,22 +316,23 @@ module.exports = function (grunt) {
 
 						// Opera
 						// =====
-						{
-							browserName: 'opera',
-							version: '11',
-							platform: 'Windows 7'
-						},
-						{
-							browserName: 'opera',
-							version: '12',
-							platform: 'Windows 7'
-						},
+						// Opera does not work with the automated tests.
+						// {
+						// 	browserName: 'opera',
+						// 	version: '11',
+						// 	platform: 'Windows 7'
+						// },
+						// {
+						// 	browserName: 'opera',
+						// 	version: '12',
+						// 	platform: 'Windows 7'
+						// },
 
-						{
-							browserName: 'opera',
-							version: '12',
-							platform: 'Linux'
-						},
+						// {
+						// 	browserName: 'opera',
+						// 	version: '12',
+						// 	platform: 'Linux'
+						// },
 
 
 						// Internet Explorer
@@ -350,20 +351,16 @@ module.exports = function (grunt) {
 
 						// Android
 						// =======
-						{
-							browserName: 'android',
-							version: '4.0',
-							platform: 'Linux'
-						},
+						// Android does not work with the automated tests.
+						// {
+						// 	browserName: 'android',
+						// 	version: '4.0',
+						// 	platform: 'Linux'
+						// },
 
 
 						// iPhone
 						// ======
-						{
-							browserName: 'iphone',
-							version: '4.3',
-							platform: 'OS X 10.6'
-						},
 						{
 							browserName: 'iphone',
 							version: '5.1',
@@ -371,6 +368,20 @@ module.exports = function (grunt) {
 						},
 						{
 							browserName: 'iphone',
+							version: '6',
+							platform: 'OS X 10.8'
+						},
+
+
+						// iPad
+						// ====
+						{
+							browserName: 'ipad',
+							version: '5.1',
+							platform: 'OS X 10.8'
+						},
+						{
+							browserName: 'ipad',
 							version: '6',
 							platform: 'OS X 10.8'
 						}
