@@ -1,4 +1,6 @@
 # MathLib
+[Homepage](http://mathlib.de/en/) - [Download](http://mathlib.de/en/download) - [Demonstrations](http://mathlib.de/en/demos) - [Documentation](http://mathlib.de/en/docs)
+
 [![Dependency Status](https://gemnasium.com/alawatthe/MathLib.png)](https://gemnasium.com/alawatthe/MathLib)
 
 MathLib.js is a JavaScript library for mathematical computations. It can handle circles, complex numbers, expressions, functions, lines, matrices, permutations, points, polynomials, rational numbers, sets, and vectors.
@@ -6,8 +8,6 @@ MathLib.js is a JavaScript library for mathematical computations. It can handle 
 There is a SVG and Canvas renderer for 2D plotting. 3D plotting is supported with [Three.js](https://github.com/mrdoob/three.js).
 
 Further it can parse Content MathML and write Content MathML, Presentation MathML and LaTeX.
-
-[Homepage](http://mathlib.de/en/) - [Download](http://mathlib.de/en/download) - [Demonstrations](http://mathlib.de/en/demos) - [Documentation](http://mathlib.de/en/docs)
 
 
 ## Test Suite
