@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.5.1 - 2013-06-30  
+// v0.5.1 - 2013-07-05  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -19,7 +19,7 @@
 // The code is separated into several modules.
 // The first module contains some internal functions
 //
-// Next is the [MathML](#MathML "Jump to the MathML implementation") module 
+// Next is the [Expression](#Expression "Jump to the Expression implementation") module 
 // and the [functions](#Functn "Jump to the function implementation") module.
 //
 // Then drawing modules:
@@ -1218,7 +1218,7 @@ toMathML() : string {
 	}
 	if (this.subtype === 'complexNumber') {
 		if (this.mode === 'cartesian') {
-			return this.value[0].toMathML() + '+' + this.value[1].toMathML() + 'i';
+			return  '<mrow>' + this.value[0].toMathML() + '<mo>+</mo>' + this.value[1].toMathML() + '<mi>i</mi></mrow>';
 		}
 		else if (this.mode === 'polar') {
 			return this.value[0].toMathML() + '<msup><mi>e</mi><mrow>' 
@@ -6312,7 +6312,7 @@ export class Matrix {
 		if (typeof matrix === 'string') {
 			// If there is a < in the string we assume it's MathML
 			if (matrix.indexOf('<') > -1) {
-				return new MathLib.MathML(matrix).parse();
+				return new MathLib.Expression.parseMathML(matrix).evaluate();
 			}
 			// else we assume it's MatLab notation
 			else {
@@ -6698,12 +6698,43 @@ static identity = function (n) {
 // Calculates the inverse matrix.
 //
 // *@return {Matrix}*
-// TODO: optimize this calculation. But hey, you shouldn't use inverse anyway ;-)
 inverse() {
-	if (!this.isSquare() && this.determinant()) {
+	var i, ii, res, inverse,
+			col = [],
+			matrix = [],
+			n = this.rows;
+
+	if (!this.isSquare()) {
 		return;
 	}
-	return this.adjugate().divide(this.determinant());
+
+	for (i = 0, ii = n - 1; i < ii; i++) {
+		matrix.push([]);
+		col.push(0);
+	}
+
+	matrix.push([]);
+
+	col.push(1);
+	col = col.concat(col).slice(0, -1);
+
+	for (i = 0, ii = n; i < ii; i++) {
+		res = this.solve(col.slice(n - i - 1, 2 * n - i - 1))
+
+		if (res === undefined) {
+			return;
+		}
+		
+		res.forEach(function (x, i) {
+			matrix[i].push(x);
+		});
+	}
+
+	inverse = new MathLib.Matrix(matrix);
+	this.inverse = function () {
+		return inverse;
+	};
+	return inverse;
 }
 
 
@@ -7305,10 +7336,26 @@ solve(b) {
 		for (j = i + 1; j < n; j++) {
 			x[i] = MathLib.minus(x[i], MathLib.times(LU[i][j], x[j]));
 		}
-		x[i] = MathLib.divide(x[i], LU[i][i]);
+
+		if (LU[i][i] === 0) {
+			if (x[i] !== 0) {
+				return undefined;
+			}
+			else {
+				x[i] = x[i];
+			}
+		}
+		else {
+			x[i] = MathLib.divide(x[i], LU[i][i]);
+		}
 	}
 
-	return new b.constructor(x);
+	if (MathLib.type(b) === 'array') {
+		return x;
+	}
+	else {
+		return new b.constructor(x);
+	}
 }
 
 
@@ -7399,19 +7446,6 @@ toArray() {
 // *@return {array}*
 toColVectors() {
 	return this.transpose().toRowVectors();
-}
-
-
-// ### Matrix.prototype.toComplex()
-// Transforms a 2x2 matrix into the corresponding complex number
-// (if the entries allow the transformation)
-//
-// *@return {Complex}*
-toComplex() : Complex {
-	if (this.rows !== 2 || this.cols !== 2 || this[0][0] !== this[1][1] || this[0][1] !== MathLib.negative(this[1][0])) {
-		return;
-	}
-	return new MathLib.Complex(this[0][0], this[1][0]);
 }
 
 

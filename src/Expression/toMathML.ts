@@ -8,7 +8,7 @@ toMathML() : string {
 	}
 	if (this.subtype === 'complexNumber') {
 		if (this.mode === 'cartesian') {
-			return this.value[0].toMathML() + '+' + this.value[1].toMathML() + 'i';
+			return  '<mrow>' + this.value[0].toMathML() + '<mo>+</mo>' + this.value[1].toMathML() + '<mi>i</mi></mrow>';
 		}
 		else if (this.mode === 'polar') {
 			return this.value[0].toMathML() + '<msup><mi>e</mi><mrow>' 

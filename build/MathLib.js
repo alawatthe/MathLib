@@ -528,7 +528,7 @@ var MathLib;
             }
             if (this.subtype === 'complexNumber') {
                 if (this.mode === 'cartesian') {
-                    return this.value[0].toMathML() + '+' + this.value[1].toMathML() + 'i';
+                    return '<mrow>' + this.value[0].toMathML() + '<mo>+</mo>' + this.value[1].toMathML() + '<mi>i</mi></mrow>';
                 } else if (this.mode === 'polar') {
                     return this.value[0].toMathML() + '<msup><mi>e</mi><mrow>' + this.value[1].toMathML() + '<mi>i</mi></mrow></msup>';
                 }
@@ -4479,7 +4479,7 @@ var MathLib;
             this.type = 'matrix';
             if (typeof matrix === 'string') {
                 if (matrix.indexOf('<') > -1) {
-                    return new MathLib.MathML(matrix).parse();
+                    return new MathLib.Expression.parseMathML(matrix).evaluate();
                 } else {
                     matrix = matrix.trim().replace(/;?\n/g, '],[');
                     matrix = JSON.parse('[[' + matrix + ']]');
@@ -4711,10 +4711,39 @@ var MathLib;
         };
 
         Matrix.prototype.inverse = function () {
-            if (!this.isSquare() && this.determinant()) {
+            var i, ii, res, inverse, col = [], matrix = [], n = this.rows;
+
+            if (!this.isSquare()) {
                 return;
             }
-            return this.adjugate().divide(this.determinant());
+
+            for (i = 0, ii = n - 1; i < ii; i++) {
+                matrix.push([]);
+                col.push(0);
+            }
+
+            matrix.push([]);
+
+            col.push(1);
+            col = col.concat(col).slice(0, -1);
+
+            for (i = 0, ii = n; i < ii; i++) {
+                res = this.solve(col.slice(n - i - 1, 2 * n - i - 1));
+
+                if (res === undefined) {
+                    return;
+                }
+
+                res.forEach(function (x, i) {
+                    matrix[i].push(x);
+                });
+            }
+
+            inverse = new MathLib.Matrix(matrix);
+            this.inverse = function () {
+                return inverse;
+            };
+            return inverse;
         };
 
         Matrix.prototype.isBandMatrix = function (l, u) {
@@ -5071,10 +5100,23 @@ var MathLib;
                 for (j = i + 1; j < n; j++) {
                     x[i] = MathLib.minus(x[i], MathLib.times(LU[i][j], x[j]));
                 }
-                x[i] = MathLib.divide(x[i], LU[i][i]);
+
+                if (LU[i][i] === 0) {
+                    if (x[i] !== 0) {
+                        return undefined;
+                    } else {
+                        x[i] = x[i];
+                    }
+                } else {
+                    x[i] = MathLib.divide(x[i], LU[i][i]);
+                }
             }
 
-            return new b.constructor(x);
+            if (MathLib.type(b) === 'array') {
+                return x;
+            } else {
+                return new b.constructor(x);
+            }
         };
 
         Matrix.prototype.some = function (f) {
@@ -5134,13 +5176,6 @@ var MathLib;
 
         Matrix.prototype.toColVectors = function () {
             return this.transpose().toRowVectors();
-        };
-
-        Matrix.prototype.toComplex = function () {
-            if (this.rows !== 2 || this.cols !== 2 || this[0][0] !== this[1][1] || this[0][1] !== MathLib.negative(this[1][0])) {
-                return;
-            }
-            return new MathLib.Complex(this[0][0], this[1][0]);
         };
 
         Matrix.prototype.toContentMathML = function () {

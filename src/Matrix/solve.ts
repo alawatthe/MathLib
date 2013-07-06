@@ -30,8 +30,24 @@ solve(b) {
 		for (j = i + 1; j < n; j++) {
 			x[i] = MathLib.minus(x[i], MathLib.times(LU[i][j], x[j]));
 		}
-		x[i] = MathLib.divide(x[i], LU[i][i]);
+
+		if (LU[i][i] === 0) {
+			if (x[i] !== 0) {
+				return undefined;
+			}
+			else {
+				x[i] = x[i];
+			}
+		}
+		else {
+			x[i] = MathLib.divide(x[i], LU[i][i]);
+		}
 	}
 
-	return new b.constructor(x);
+	if (MathLib.type(b) === 'array') {
+		return x;
+	}
+	else {
+		return new b.constructor(x);
+	}
 }

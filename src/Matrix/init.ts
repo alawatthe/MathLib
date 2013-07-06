@@ -24,7 +24,7 @@ export class Matrix {
 		if (typeof matrix === 'string') {
 			// If there is a < in the string we assume it's MathML
 			if (matrix.indexOf('<') > -1) {
-				return new MathLib.MathML(matrix).parse();
+				return new MathLib.Expression.parseMathML(matrix).evaluate();
 			}
 			// else we assume it's MatLab notation
 			else {

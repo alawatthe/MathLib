@@ -236,7 +236,7 @@ declare module MathLib {
         public givens(): any[];
         static givensMatrix: (n: any, i: any, k: any, phi: any) => any;
         static identity: (n: any) => any;
-        public inverse(): Matrix;
+        public inverse();
         public isBandMatrix(l, u): boolean;
         public isDiag(): boolean;
         public isEqual(x): boolean;
@@ -272,7 +272,6 @@ declare module MathLib {
         public times(a);
         public toArray();
         public toColVectors(): string;
-        public toComplex(): Complex;
         public toContentMathML(): string;
         public toLaTeX(): string;
         public toMathML(): string;

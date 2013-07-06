@@ -126,7 +126,7 @@ module.exports = function (grunt) {
 							'// The code is separated into several modules.\n' +
 							'// The first module contains some internal functions\n' +
 							'//\n' +
-							'// Next is the [MathML](#MathML "Jump to the MathML implementation") module \n' +
+							'// Next is the [Expression](#Expression "Jump to the Expression implementation") module \n' +
 							'// and the [functions](#Functn "Jump to the function implementation") module.\n' +
 							'//\n' +
 							'// Then drawing modules:\n' +
@@ -168,8 +168,9 @@ module.exports = function (grunt) {
 							'test/Functn/!(init).js',
 
 							'test/Line/line.js',
-							'test/MathML/MathML.js',
-							'test/Matrix/matrix.js',
+
+							'test/Matrix/init.js',
+							'test/Matrix/!(init).js',
 
 							'test/Permutation/init.js',
 							'test/Permutation/!(init).js',
