@@ -25,6 +25,10 @@ var MathLib;
         return typeof x === 'object' && 'length' in x;
     };
 
+    MathLib.isNative = function (fn) {
+        return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
+    };
+
     var prototypes = {
         array: Object.getPrototypeOf([]),
         func: Object.getPrototypeOf(function () {
@@ -1851,7 +1855,7 @@ var MathLib;
         arccsc: function (x) {
             return Math.asin(1 / x);
         },
-        arcosh: (Math).acosh || function (x) {
+        arcosh: MathLib.isNative((Math).acosh) || function (x) {
             return Math.log(x + Math.sqrt(x * x - 1));
         },
         arcoth: function (x) {
@@ -1874,13 +1878,13 @@ var MathLib;
         arsech: function (x) {
             return Math.log((1 + Math.sqrt(1 - x * x)) / x);
         },
-        arsinh: (Math).asinh || function (x) {
+        arsinh: MathLib.isNative((Math).asinh) || function (x) {
             if (x === 0 || !MathLib.isFinite(x)) {
                 return x;
             }
             return Math.log(x + Math.sqrt(x * x + 1));
         },
-        artanh: (Math).atanh || function (x) {
+        artanh: MathLib.isNative((Math).atanh) || function (x) {
             if (x === 0) {
                 return x;
             }
@@ -1919,7 +1923,7 @@ var MathLib;
             return x;
         },
         cos: Math.cos,
-        cosh: (Math).cosh || function (x) {
+        cosh: MathLib.isNative((Math).cosh) || function (x) {
             return (Math.exp(x) + Math.exp(-x)) / 2;
         },
         cot: function (x) {
@@ -2073,7 +2077,7 @@ var MathLib;
             return x && (x < 0 ? -1 : 1);
         },
         sin: Math.sin,
-        sinh: (Math).sinh || function (x) {
+        sinh: MathLib.isNative((Math).sinh) || function (x) {
             if (x === 0) {
                 return x;
             }
@@ -2081,7 +2085,7 @@ var MathLib;
         },
         sqrt: Math.sqrt,
         tan: Math.tan,
-        tanh: (Math).tanh || function (x) {
+        tanh: MathLib.isNative((Math).tanh) || function (x) {
             var n, p;
 
             if (x === 0 || !MathLib.isFinite(x)) {

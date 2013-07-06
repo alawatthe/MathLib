@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.5.1 - 2013-07-05  
+// v0.5.1 - 2013-07-06  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -74,6 +74,10 @@ module MathLib {
 	MathLib.isArrayLike = function (x) {
 		return typeof x === 'object' && 'length' in x;
 	};
+
+	MathLib.isNative = function (fn) {
+		return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
+	}
 
 	var prototypes = {
 				array: Object.getPrototypeOf([]),
@@ -2398,7 +2402,7 @@ var unaryFunctions = {
 	arccsc: function (x) {
 		return Math.asin(1 / x);
 	},
-	arcosh: (<any>Math).acosh || function (x) {
+	arcosh: MathLib.isNative((<any>Math).acosh) || function (x) {
 		return Math.log(x + Math.sqrt(x * x - 1));
 	},
 	arcoth: function (x) {
@@ -2423,14 +2427,14 @@ var unaryFunctions = {
 	arsech: function (x) {
 		return Math.log((1 + Math.sqrt(1 - x * x)) / x);
 	},
-	arsinh: (<any>Math).asinh || function (x) {
+	arsinh: MathLib.isNative((<any>Math).asinh) || function (x) {
 		// Handle ±0 and ±∞ separately
 		if (x === 0 || !MathLib.isFinite(x)) {
 			return x;
 		}
 		return Math.log(x + Math.sqrt(x * x + 1));
 	},
-	artanh: (<any>Math).atanh || function (x) {
+	artanh: MathLib.isNative((<any>Math).atanh) || function (x) {
 		// Handle ±0
 		if (x === 0) {
 			return x;
@@ -2474,7 +2478,7 @@ var unaryFunctions = {
 		return x;
 	},
 	cos: Math.cos,
-	cosh: (<any>Math).cosh || function (x) {
+	cosh: MathLib.isNative((<any>Math).cosh) || function (x) {
 		return (Math.exp(x) + Math.exp(-x)) / 2;
 	},
 	cot: function (x) {
@@ -2624,7 +2628,7 @@ var unaryFunctions = {
 		return x && (x < 0 ? -1 : 1);
 	},
 	sin: Math.sin,
-	sinh: (<any>Math).sinh || function (x) {
+	sinh: MathLib.isNative((<any>Math).sinh) || function (x) {
 		// sinh(-0) should be -0
 		if (x === 0) {
 			return x;
@@ -2633,7 +2637,7 @@ var unaryFunctions = {
 	},
 	sqrt: Math.sqrt,
 	tan: Math.tan,
-	tanh: (<any>Math).tanh || function (x) {
+	tanh: MathLib.isNative((<any>Math).tanh) || function (x) {
 		var n, p;
 
 		// Handle ±0 and ±∞ separately

@@ -31,6 +31,10 @@ module MathLib {
 		return typeof x === 'object' && 'length' in x;
 	};
 
+	MathLib.isNative = function (fn) {
+		return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
+	}
+
 	var prototypes = {
 				array: Object.getPrototypeOf([]),
 				func: Object.getPrototypeOf(function () {}),
