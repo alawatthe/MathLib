@@ -35,13 +35,7 @@ module MathLib {
 		return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
 	}
 
-	var prototypes = {
-				array: Object.getPrototypeOf([]),
-				func: Object.getPrototypeOf(function () {}),
-				object: Object.getPrototypeOf({}),
-				functn: function () {}
-			},
-			flatten = function (a) {
+	var flatten = function (a) {
 				var flattendArray = [];
 				a.forEach(function (x) {
 					if (Array.isArray(x)) {
@@ -82,49 +76,3 @@ module MathLib {
 				}
 				return n;
 			};
-
-
-
-
-	MathLib.prototypes = prototypes;
-
-// ### MathLib.extend
-// Extends a MathLib object with custom properties or methods
-//
-// *@param {string}* obj The name of the object be extended  
-// *@param {string}* name The name of the new property of function  
-// *@param {function|...}* prop The new function or property  
-// *@param {object}* [options]  
-// TODO: allow get & set
-	MathLib.extend = function (obj, name, prop, options) {
-		options = options || {enumerable: true};
-		var o = MathLib[obj] || MathLib;
-
-		Object.defineProperty(o, name, {
-			value: prop,
-			writable: options.writable,
-			enumerable: options.enumerable,
-			configurable: options.configurable
-		});
-	};
-
-
-// ### MathLib.extendPrototype
-// Extends the prototype of a MathLib object with custom properties or methods
-//
-// *@param {string}* obj The name of the object be extended  
-// *@param {string}* name The name of the new property of function  
-// *@param {function|...}* prop The new function or property  
-// *@param {object}* [options]  
-// TODO: allow get & set
-	MathLib.extendPrototype = function (obj, name, prop, options) {
-		options = options || {enumerable: true};
-
-		Object.defineProperty(prototypes[obj], name, {
-			value: prop,
-			writable: options.writable,
-			enumerable: options.enumerable,
-			configurable: options.configurable
-		});
-
-	};

@@ -29,14 +29,7 @@ var MathLib;
         return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
     };
 
-    var prototypes = {
-        array: Object.getPrototypeOf([]),
-        func: Object.getPrototypeOf(function () {
-        }),
-        object: Object.getPrototypeOf({}),
-        functn: function () {
-        }
-    }, flatten = function (a) {
+    var flatten = function (a) {
         var flattendArray = [];
         a.forEach(function (x) {
             if (Array.isArray(x)) {
@@ -67,31 +60,6 @@ var MathLib;
             return '#' + ('00000' + n.toString(16)).slice(-6);
         }
         return n;
-    };
-
-    MathLib.prototypes = prototypes;
-
-    MathLib.extend = function (obj, name, prop, options) {
-        options = options || { enumerable: true };
-        var o = MathLib[obj] || MathLib;
-
-        Object.defineProperty(o, name, {
-            value: prop,
-            writable: options.writable,
-            enumerable: options.enumerable,
-            configurable: options.configurable
-        });
-    };
-
-    MathLib.extendPrototype = function (obj, name, prop, options) {
-        options = options || { enumerable: true };
-
-        Object.defineProperty(prototypes[obj], name, {
-            value: prop,
-            writable: options.writable,
-            enumerable: options.enumerable,
-            configurable: options.configurable
-        });
     };
 
     var errors = [], warnings = [];
