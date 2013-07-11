@@ -6,7 +6,7 @@ var __extends = this.__extends || function (d, b) {
 };
 var MathLib;
 (function (MathLib) {
-    MathLib.version = '0.5.1';
+    MathLib.version = '0.5.2';
     MathLib.apery = 1.2020569031595942;
     MathLib.e = Math.E;
 
@@ -91,6 +91,40 @@ var MathLib;
             writable: options.writable,
             enumerable: options.enumerable,
             configurable: options.configurable
+        });
+    };
+
+    var errors = [], warnings = [];
+
+    MathLib.on = function (type, callback) {
+        if (type === 'error') {
+            errors.push(callback);
+        } else if (type === 'warning') {
+            warnings.push(callback);
+        }
+    };
+
+    MathLib.off = function (type, callback) {
+        if (type === 'error') {
+            errors = errors.filter(function (x) {
+                return x !== callback;
+            });
+        } else if (type === 'warning') {
+            warnings = warnings.filter(function (x) {
+                return x !== callback;
+            });
+        }
+    };
+
+    MathLib.error = function (details) {
+        errors.forEach(function (cb) {
+            cb(details);
+        });
+    };
+
+    MathLib.warning = function (details) {
+        warnings.forEach(function (cb) {
+            cb(details);
         });
     };
 
@@ -3942,6 +3976,9 @@ var MathLib;
         Vector.prototype.minus = function (v) {
             if (this.length === v.length) {
                 return this.plus(v.negative());
+            } else {
+                MathLib.error({ message: 'Vector sizes not matching', method: 'Vector#minus' });
+                return;
             }
         };
 
@@ -3975,6 +4012,9 @@ var MathLib;
                 return new MathLib.Vector(this.map(function (x, i) {
                     return MathLib.plus(x, v[i]);
                 }));
+            } else {
+                MathLib.error({ message: 'Vector sizes not matching', method: 'Vector#plus' });
+                return;
             }
         };
 
@@ -3991,6 +4031,9 @@ var MathLib;
                 return this.reduce(function (old, cur, i, w) {
                     return MathLib.plus(old, MathLib.times(w[i], v[i]));
                 }, 0);
+            } else {
+                MathLib.error({ message: 'Vector sizes not matching', method: 'Vector#scalarProduct' });
+                return;
             }
         };
 
@@ -4013,11 +4056,16 @@ var MathLib;
                 });
             }
             if (n.type === 'matrix') {
-                colVectors = n.toColVectors();
-                for (i = 0, ii = colVectors.length; i < ii; i++) {
-                    product[i] = this.scalarProduct(colVectors[i]);
+                if (this.length == n.rows) {
+                    colVectors = n.toColVectors();
+                    for (i = 0, ii = colVectors.length; i < ii; i++) {
+                        product[i] = this.scalarProduct(colVectors[i]);
+                    }
+                    return new MathLib.Vector(product);
+                } else {
+                    MathLib.error({ message: 'Vector/Matrix sizes not matching', method: 'Vector#times' });
+                    return;
                 }
-                return new MathLib.Vector(product);
             }
         };
 
@@ -4056,6 +4104,9 @@ var MathLib;
                     MathLib.minus(MathLib.times(this[2], v[0]), MathLib.times(this[0], v[2])),
                     MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0]))
                 ]);
+            } else {
+                MathLib.error({ message: 'Vectors are not three-dimensional', method: 'Vector#vectorProduct' });
+                return;
             }
         };
         Vector.areLinearIndependent = function (v) {
@@ -4604,19 +4655,22 @@ var MathLib;
         Matrix.prototype.determinant = function () {
             var LU, determinant;
 
-            if (this.isSquare()) {
-                if (this.rank() < this.rows) {
-                    determinant = 0;
-                } else {
-                    LU = this.LU();
-                    determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, LU.diag()));
-                }
-
-                this.determinant = function () {
-                    return determinant;
-                };
-                return determinant;
+            if (!this.isSquare()) {
+                MathLib.error({ message: 'Determinant of non square matrix', method: 'Matrix#determinant' });
+                return;
             }
+
+            if (this.rank() < this.rows) {
+                determinant = 0;
+            } else {
+                LU = this.LU();
+                determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, LU.diag()));
+            }
+
+            this.determinant = function () {
+                return determinant;
+            };
+            return determinant;
         };
 
         Matrix.prototype.diag = function () {
@@ -4718,6 +4772,7 @@ var MathLib;
             var i, ii, res, inverse, col = [], matrix = [], n = this.rows;
 
             if (!this.isSquare()) {
+                MathLib.error({ message: 'Inverse of non square matrix', method: 'Matrix#inverse' });
                 return;
             }
 
@@ -4953,7 +5008,12 @@ var MathLib;
         };
 
         Matrix.prototype.minus = function (m) {
-            return this.plus(m.negative());
+            if (this.rows === m.rows && this.cols === m.cols) {
+                return this.plus(m.negative());
+            } else {
+                MathLib.error({ message: 'Matrix sizes not matching', method: 'Matrix#minus' });
+                return;
+            }
         };
 
         Matrix.prototype.negative = function () {
@@ -4968,13 +5028,18 @@ var MathLib;
         Matrix.prototype.plus = function (m) {
             var i, ii, j, jj, sum = [];
 
-            for (i = 0, ii = this.rows; i < ii; i++) {
-                sum[i] = [];
-                for (j = 0, jj = this.cols; j < jj; j++) {
-                    sum[i][j] = MathLib.plus(this[i][j], m[i][j]);
+            if (this.rows === m.rows && this.cols === m.cols) {
+                for (i = 0, ii = this.rows; i < ii; i++) {
+                    sum[i] = [];
+                    for (j = 0, jj = this.cols; j < jj; j++) {
+                        sum[i][j] = MathLib.plus(this[i][j], m[i][j]);
+                    }
                 }
+                return new MathLib.Matrix(sum);
+            } else {
+                MathLib.error({ message: 'Matrix sizes not matching', method: 'Matrix#plus' });
+                return;
             }
-            return new MathLib.Matrix(sum);
         };
 
         Matrix.prototype.rank = function () {
@@ -5155,6 +5220,9 @@ var MathLib;
                         }
                     }
                     return new MathLib.Matrix(product);
+                } else {
+                    MathLib.error({ message: 'Matrix sizes not matching', method: 'Matrix#times' });
+                    return;
                 }
             } else if (a.type === 'point' || a.type === 'vector') {
                 if (this.cols === a.length) {
@@ -6090,6 +6158,7 @@ var MathLib;
             if (typeof denominator === "undefined") { denominator = 1; }
             this.type = 'rational';
             if (MathLib.isZero(denominator)) {
+                MathLib.error({ message: 'The denominator cannot be zero.', method: 'Rational.constructor' });
                 throw 'The denominator cannot be zero.';
             }
             this.numerator = numerator;
@@ -6639,4 +6708,4 @@ if (!('setLineDash' in CanvasRenderingContext2D.prototype)) {
         writeable: false
     });
 }
-//# sourceMappingURL=MathLib.js.map
+//@ sourceMappingURL=MathLib.js.map

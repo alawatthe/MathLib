@@ -18,10 +18,16 @@ times(n : any) : any {
 		});
 	}
 	if (n.type === 'matrix') {
-		colVectors = n.toColVectors();
-		for (i = 0, ii = colVectors.length; i < ii; i++) {
-			product[i] = this.scalarProduct(colVectors[i]);
+		if (this.length == n.rows) {
+			colVectors = n.toColVectors();
+			for (i = 0, ii = colVectors.length; i < ii; i++) {
+				product[i] = this.scalarProduct(colVectors[i]);
+			}
+			return new MathLib.Vector(product);
 		}
-		return new MathLib.Vector(product);
+		else {
+			MathLib.error({message: 'Vector/Matrix sizes not matching', method: 'Vector#times'});
+			return;
+		}
 	}
 }

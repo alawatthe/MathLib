@@ -27,6 +27,7 @@ module.exports = function (grunt) {
 		concat: {
 			MathLib: {
 				src: ['src/meta/head.ts',
+							'src/meta/errorSystem.ts',
 
 							'src/Expression/init.ts',
 							'src/Expression/!(init).ts',
@@ -242,7 +243,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 51,
+					build: 53,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -338,11 +339,11 @@ module.exports = function (grunt) {
 
 						// Internet Explorer
 						// =================
-						{
-							browserName: 'internet explorer',
-							version: '9',
-							platform: 'Windows 7'
-						},
+						// {
+						// 	browserName: 'internet explorer',
+						// 	version: '9',
+						// 	platform: 'Windows 7'
+						// },
 						{
 							browserName: 'internet explorer',
 							version: '10',

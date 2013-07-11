@@ -13,7 +13,8 @@ Further it can parse Content MathML and write Content MathML, Presentation MathM
 ## Test Suite
 MathLib has an extensive QUnit test suite with more than 1000 tests. Crossbrowser tests are automated with Sauce Labs' Open Sauce.
 
-Android and Opera don't work with the automated test runner. Their passing of the test suite was confirmed using a manual testing session.
+IE9, Android and Opera don't work with the automated test runner. Their passing of the test suite was confirmed using a manual testing session.
+
 [![Selenium Test Status](https://saucelabs.com/browser-matrix/alawatthe.svg)](https://saucelabs.com/u/alawatthe)
 
 

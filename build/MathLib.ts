@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.5.1 - 2013-07-06  
+// v0.5.2 - 2013-07-11  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -55,7 +55,7 @@ module MathLib {
 
 
 
-	MathLib.version = '0.5.1';
+	MathLib.version = '0.5.2';
 	MathLib.apery = 1.2020569031595942;
 	MathLib.e = Math.E;
 	// Number.EPSILON is probably coming in ES6
@@ -173,6 +173,63 @@ module MathLib {
 
 	};
 
+
+
+var errors = [],
+		warnings = [];
+
+
+
+// ### [MathLib.on()](http://mathlib.de/en/docs/on)
+// Binds an event handler to an event.
+// 
+// *@param {string}* The name of the event.  
+// *@param {function}* The callback function.  
+MathLib.on = function (type, callback) {
+	if (type === 'error') {
+		errors.push(callback);
+	}
+	else if (type === 'warning') {
+		warnings.push(callback);
+	}
+}
+
+
+// ### [MathLib.off()](http://mathlib.de/en/docs/off)
+// Unbinds an event handler from an event.
+//
+// *@param {string}* The name of the event.  
+// *@param {function}* The callback function.  
+MathLib.off = function (type, callback) {
+	if (type === 'error') {
+		errors = errors.filter(x => x !== callback);
+	}
+	else if (type === 'warning') {
+		warnings = warnings.filter(x => x !== callback);
+	}
+}
+
+
+// ### [MathLib.error()](http://mathlib.de/en/docs/error)
+// Fires an error event.
+//
+// *@param {oject}* An object describing the error further.  
+MathLib.error = function (details) {
+	errors.forEach(function (cb) {
+		cb(details);
+	});
+};
+
+
+// ### [MathLib.warning()](http://mathlib.de/en/docs/warning)
+// Fires a waring event.
+//
+// *@param {object}* An object describing the warning further.  
+MathLib.warning = function (details) {
+	warnings.forEach(function (cb) {
+		cb(details);
+	});
+};
 
 
 // ## <a id="Expression" href="http://mathlib.de/en/docs/Expression">Expression</a>
@@ -5329,6 +5386,10 @@ minus(v : Vector) : Vector {
 	if (this.length === v.length) {
 		return this.plus(v.negative());
 	}
+	else {
+		MathLib.error({message: 'Vector sizes not matching', method: 'Vector#minus'});
+		return;
+	}
 }
 
 
@@ -5386,6 +5447,10 @@ plus(v : Vector) : Vector {
 			return MathLib.plus(x, v[i]);
 		}));
 	}
+	else {
+		MathLib.error({message: 'Vector sizes not matching', method: 'Vector#plus'});
+		return;
+	}
 }
 
 
@@ -5408,6 +5473,10 @@ scalarProduct(v : Vector) : any {
 		return this.reduce(function (old, cur, i, w) {
 			return MathLib.plus(old, MathLib.times(w[i], v[i]));
 		}, 0);
+	}
+	else {
+		MathLib.error({message: 'Vector sizes not matching', method: 'Vector#scalarProduct'});
+		return;
 	}
 }
 
@@ -5441,11 +5510,17 @@ times(n : any) : any {
 		});
 	}
 	if (n.type === 'matrix') {
-		colVectors = n.toColVectors();
-		for (i = 0, ii = colVectors.length; i < ii; i++) {
-			product[i] = this.scalarProduct(colVectors[i]);
+		if (this.length == n.rows) {
+			colVectors = n.toColVectors();
+			for (i = 0, ii = colVectors.length; i < ii; i++) {
+				product[i] = this.scalarProduct(colVectors[i]);
+			}
+			return new MathLib.Vector(product);
 		}
-		return new MathLib.Vector(product);
+		else {
+			MathLib.error({message: 'Vector/Matrix sizes not matching', method: 'Vector#times'});
+			return;
+		}
 	}
 }
 
@@ -5516,6 +5591,10 @@ vectorProduct(v : Vector) : Vector {
 			MathLib.minus(MathLib.times(this[2], v[0]), MathLib.times(this[0], v[2])),
 			MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0]))
 		]);
+	}
+	else {
+		MathLib.error({message: 'Vectors are not three-dimensional', method: 'Vector#vectorProduct'});
+		return;
 	}
 }
 
@@ -6486,21 +6565,25 @@ copy() : Matrix {
 // *@return {number|Complex}*
 determinant() : any {
 	var LU, determinant;
-
-	if (this.isSquare()) {
-		if (this.rank() < this.rows) {
-			determinant = 0;
-		}
-		else {
-			LU = this.LU();
-			determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, LU.diag()));
-		}
-
-		this.determinant = function () {
-			return determinant;
-		};
-		return determinant;
+	
+	if (!this.isSquare()) {
+		MathLib.error({message: 'Determinant of non square matrix', method: 'Matrix#determinant'});
+		return;
 	}
+
+	if (this.rank() < this.rows) {
+		determinant = 0;
+	}
+	else {
+		LU = this.LU();
+		determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, LU.diag()));
+	}
+
+	this.determinant = function () {
+		return determinant;
+	};
+	return determinant;
+
 }
 
 
@@ -6709,6 +6792,7 @@ inverse() {
 			n = this.rows;
 
 	if (!this.isSquare()) {
+		MathLib.error({message: 'Inverse of non square matrix', method: 'Matrix#inverse'});
 		return;
 	}
 
@@ -7079,7 +7163,13 @@ minor(r, c) {
 // *@param {Matrix}* The matrix to be subtracted.  
 // *@return {Matrix}*
 minus(m) {
-	return this.plus(m.negative());
+	if (this.rows === m.rows && this.cols === m.cols) {
+		return this.plus(m.negative());
+	}
+	else {
+		MathLib.error({message: 'Matrix sizes not matching', method: 'Matrix#minus'});
+		return;
+	}
 }
 
 
@@ -7143,13 +7233,19 @@ plus(m) {
 	var i, ii, j, jj,
 			sum = [];
 
-	for (i = 0, ii = this.rows; i < ii; i++) {
-		sum[i] = [];
-		for (j = 0, jj = this.cols ; j < jj; j++) {
-			sum[i][j] = MathLib.plus(this[i][j], m[i][j]);
+	if (this.rows === m.rows && this.cols === m.cols) {
+		for (i = 0, ii = this.rows; i < ii; i++) {
+			sum[i] = [];
+			for (j = 0, jj = this.cols ; j < jj; j++) {
+				sum[i][j] = MathLib.plus(this[i][j], m[i][j]);
+			}
 		}
+		return new MathLib.Matrix(sum);
 	}
-	return new MathLib.Matrix(sum);
+	else {
+		MathLib.error({message: 'Matrix sizes not matching', method: 'Matrix#plus'});
+		return;
+	}
 }
 
 
@@ -7413,6 +7509,10 @@ times(a) {
 				}
 			}
 			return new MathLib.Matrix(product);
+		}
+		else {
+			MathLib.error({message: 'Matrix sizes not matching', method: 'Matrix#times'});
+			return;
 		}
 	}
 
@@ -8752,6 +8852,7 @@ export class Rational {
 
 	constructor (numerator: number, denominator = 1) {
 		if (MathLib.isZero(denominator)) {
+			MathLib.error({message: 'The denominator cannot be zero.', method: 'Rational.constructor'});
 			throw 'The denominator cannot be zero.';
 		}
 		this.numerator = numerator;

@@ -1,0 +1,644 @@
+2013-07-11 20:42:29,898 - sauce_connect:558 - INFO - / Starting \
+2013-07-11 20:42:29,904 - sauce_connect:559 - INFO - Please wait for "You may start your tests" to start your tests.
+2013-07-11 20:42:29,911 - sauce_connect:571 - DEBUG - System is 2.0 hours off UTC
+2013-07-11 20:42:29,913 - sauce_connect:573 - DEBUG - options: {'user': 'alawatthe', 'ports': ['49820'], 'domains': None, 'debug_ssh': False, 'tunnel_ports': ['80'], 'allow_unclean_exit': False, 'rest_url': 'https://saucelabs.com/rest/v1', 'logfile': 'sauce_connect.log', 'squid_opts': '', 'ssh': False, 'se_port': '4445', 'readyfile': None, 'shared_tunnel': False, 'boost_mode': True, 'tunnel_identifier': '142800120', 'ssh_port': 443, 'fast_fail_regexps': '', 'direct_domains': '', 'host': '127.0.0.1', 'quiet': False, 'latency_log': 150, 'use_ssh_config': False}
+2013-07-11 20:42:29,914 - sauce_connect:574 - DEBUG - metadata: {'PythonVersion': '2.5.1', 'OwnerHost': '127.0.0.1', 'Release': '3.0-r27', 'OwnerPorts': ['49820'], 'Ports': ['80'], 'Platform': 'Java-1.6.0_45-Java_HotSpot-TM-_64-Bit_Server_VM,_20.45-b01-451,_Apple_Inc.-on-Mac_OS_X-10.8.4-x86_64', 'Build': '42', 'ScriptRelease': 42, 'ScriptName': 'sauce_connect'}
+2013-07-11 20:42:29,914 - sauce_connect:576 - INFO - Forwarding: None:['80'] -> 127.0.0.1:['49820']
+2013-07-11 20:42:29,928 - sauce_connect:375 - INFO - Succesfully connected to local server 127.0.0.1:49820 in 7ms
+2013-07-11 20:42:31,086 - sauce_connect:238 - INFO - {"squid_config":null,"use_caching_proxy":true,"metadata":{"PythonVersion":"2.5.1","OwnerHost":"127.0.0.1","Release":"3.0-r27","OwnerPorts":["49820"],"Ports":["80"],"Platform":"Java-1.6.0_45-Java_HotSpot-TM-_64-Bit_Server_VM,_20.45-b01-451,_Apple_Inc.-on-Mac_OS_X-10.8.4-x86_64","Build":"42","ScriptRelease":42,"ScriptName":"sauce_connect"},"use_kgp":true,"tunnel_identifier":"142800120","shared_tunnel":false,"fast_fail_regexps":null,"ssh_port":443,"direct_domains":null,"domain_names":[]}
+2013-07-11 20:42:35,710 - sauce_connect:250 - INFO - Tunnel remote VM is provisioned (2a0ee6e7dc6e4104bdbb05ba58017c08)
+2013-07-11 20:42:37,612 - sauce_connect:268 - INFO - Tunnel remote VM is booting ..
+2013-07-11 20:42:49,107 - sauce_connect:272 - INFO - Tunnel remote VM is running at maki11166.miso.saucelabs.com
+2013-07-11 20:42:49,206 - sauce_connect:375 - INFO - Succesfully connected to local server 127.0.0.1:49820 in 0ms
+2013-07-11 20:42:49,233 - sauce_connect:646 - INFO - Starting connection to tunnel host...
+2013-07-11 20:42:49,236 - sauce_connect:646 - INFO - Connecting to tunnel host maki11166.miso.saucelabs.com as alawatthe
+2013-07-11 20:42:49,887 - sauce_connect:646 - INFO - Forwarding Selenium with ephemeral port 49828
+2013-07-11 20:42:49,904 - sauce_connect:646 - INFO - Selenium HTTP proxy listening on port 4445
+2013-07-11 20:42:50,732 - sauce_connect:0 - INFO - Successful handshake with Sauce Connect server
+2013-07-11 20:42:50,956 - sauce_connect:0 - INFO - Tunnel host version: 0.1.0, remote endpoint ID: b0db3e9613fb46078abe375e15c0eadd
+2013-07-11 20:42:50,960 - sauce_connect:646 - INFO - Connected! You may start your tests.
+2013-07-11 20:42:56,638 - sauce_connect:0 - INFO - Request started: GET http://clients1.google.com/tools/pso/ping?as=chrome&brand=CHFX&pid=&hl=en&rep=2&rlz=C1:1C1CHFX_enUS502US502,C2:1C2CHFX_enUS502
+2013-07-11 20:42:56,767 - sauce_connect:0 - INFO - GET http://clients1.google.com/tools/pso/ping?as=chrome&brand=CHFX&pid=&hl=en&rep=2&rlz=C1:1C1CHFX_enUS502US502,C2:1C2CHFX_enUS502 -> 200 (129ms, 108 bytes)
+2013-07-11 20:42:57,142 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:42:57,147 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/test/test.html, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:42:57,418 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:42:57,423 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/favicon.ico, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:42:57,612 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:42:57,615 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/test/test.html, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:42:58,038 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:42:58,042 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/favicon.ico, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:13,530 - sauce_connect:0 - INFO - Request started: GET http://localhost:9222/json
+2013-07-11 20:43:13,536 - sauce_connect:0 - INFO - Could not proxy http://localhost:9222/json, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:14,388 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:43:14,392 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/test/test.html, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:14,852 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:43:14,858 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/favicon.ico, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:29,109 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:43:29,114 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/test/test.html, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:29,519 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:43:29,523 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/favicon.ico, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:29,721 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:43:29,726 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/favicon.ico, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:31,368 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:43:31,371 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/test/test.html, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:31,763 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:43:31,766 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/favicon.ico, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:32,197 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:43:32,201 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/favicon.ico, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:45,704 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:43:45,710 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/test/test.html, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:46,081 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:43:46,084 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/favicon.ico, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:46,279 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:43:46,282 - sauce_connect:0 - INFO - Could not proxy http://localhost:9999/favicon.ico, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:43:47,369 - sauce_connect:0 - INFO - received SIGINT
+2013-07-11 20:50:09,056 - sauce_connect:558 - INFO - / Starting \
+2013-07-11 20:50:09,082 - sauce_connect:559 - INFO - Please wait for "You may start your tests" to start your tests.
+2013-07-11 20:50:09,092 - sauce_connect:571 - DEBUG - System is 2.0 hours off UTC
+2013-07-11 20:50:09,095 - sauce_connect:573 - DEBUG - options: {'user': 'alawatthe', 'ports': ['50053'], 'domains': None, 'debug_ssh': False, 'tunnel_ports': ['80'], 'allow_unclean_exit': False, 'rest_url': 'https://saucelabs.com/rest/v1', 'logfile': 'sauce_connect.log', 'squid_opts': '', 'ssh': False, 'se_port': '4445', 'readyfile': None, 'shared_tunnel': False, 'boost_mode': True, 'tunnel_identifier': '142800596', 'ssh_port': 443, 'fast_fail_regexps': '', 'direct_domains': '', 'host': '127.0.0.1', 'quiet': False, 'latency_log': 150, 'use_ssh_config': False}
+2013-07-11 20:50:09,095 - sauce_connect:574 - DEBUG - metadata: {'PythonVersion': '2.5.1', 'OwnerHost': '127.0.0.1', 'Release': '3.0-r27', 'OwnerPorts': ['50053'], 'Ports': ['80'], 'Platform': 'Java-1.6.0_45-Java_HotSpot-TM-_64-Bit_Server_VM,_20.45-b01-451,_Apple_Inc.-on-Mac_OS_X-10.8.4-x86_64', 'Build': '42', 'ScriptRelease': 42, 'ScriptName': 'sauce_connect'}
+2013-07-11 20:50:09,096 - sauce_connect:576 - INFO - Forwarding: None:['80'] -> 127.0.0.1:['50053']
+2013-07-11 20:50:09,114 - sauce_connect:375 - INFO - Succesfully connected to local server 127.0.0.1:50053 in 7ms
+2013-07-11 20:50:10,239 - sauce_connect:238 - INFO - {"squid_config":null,"use_caching_proxy":true,"metadata":{"PythonVersion":"2.5.1","OwnerHost":"127.0.0.1","Release":"3.0-r27","OwnerPorts":["50053"],"Ports":["80"],"Platform":"Java-1.6.0_45-Java_HotSpot-TM-_64-Bit_Server_VM,_20.45-b01-451,_Apple_Inc.-on-Mac_OS_X-10.8.4-x86_64","Build":"42","ScriptRelease":42,"ScriptName":"sauce_connect"},"use_kgp":true,"tunnel_identifier":"142800596","shared_tunnel":false,"fast_fail_regexps":null,"ssh_port":443,"direct_domains":null,"domain_names":[]}
+2013-07-11 20:50:14,790 - sauce_connect:250 - INFO - Tunnel remote VM is provisioned (dada3b2bb70446f7acfebfb38d6ce32c)
+2013-07-11 20:50:15,171 - sauce_connect:268 - INFO - Tunnel remote VM is booting ..
+2013-07-11 20:50:28,747 - sauce_connect:272 - INFO - Tunnel remote VM is running at maki5129.miso.saucelabs.com
+2013-07-11 20:50:28,766 - sauce_connect:375 - INFO - Succesfully connected to local server 127.0.0.1:50053 in 2ms
+2013-07-11 20:50:28,772 - sauce_connect:646 - INFO - Starting connection to tunnel host...
+2013-07-11 20:50:28,773 - sauce_connect:646 - INFO - Connecting to tunnel host maki5129.miso.saucelabs.com as alawatthe
+2013-07-11 20:50:28,980 - sauce_connect:646 - INFO - Forwarding Selenium with ephemeral port 50060
+2013-07-11 20:50:28,987 - sauce_connect:646 - INFO - Selenium HTTP proxy listening on port 4445
+2013-07-11 20:50:29,854 - sauce_connect:0 - INFO - Successful handshake with Sauce Connect server
+2013-07-11 20:50:30,036 - sauce_connect:0 - INFO - Tunnel host version: 0.1.0, remote endpoint ID: 64c888fbd213432396b4fe364cc556fe
+2013-07-11 20:50:30,039 - sauce_connect:646 - INFO - Connected! You may start your tests.
+2013-07-11 20:50:39,513 - sauce_connect:0 - INFO - Request started: GET http://clients1.google.com/tools/pso/ping?as=chrome&brand=CHFX&pid=&hl=en&rep=2&rlz=C1:1C1CHFX_enUS502US502,C2:1C2CHFX_enUS502
+2013-07-11 20:50:39,591 - sauce_connect:0 - INFO - GET http://clients1.google.com/tools/pso/ping?as=chrome&brand=CHFX&pid=&hl=en&rep=2&rlz=C1:1C1CHFX_enUS502US502,C2:1C2CHFX_enUS502 -> 200 (78ms, 108 bytes)
+2013-07-11 20:50:40,605 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:50:40,638 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (33ms, 1534 bytes)
+2013-07-11 20:50:40,865 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:50:40,877 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:50:40,877 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:50:40,926 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (60ms, 4668 bytes)
+2013-07-11 20:50:40,941 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (65ms, 658 bytes)
+2013-07-11 20:50:40,943 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (67ms, 56908 bytes)
+2013-07-11 20:50:41,056 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:50:41,056 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:50:41,107 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (50ms, 157452 bytes)
+2013-07-11 20:50:41,111 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (55ms, 251615 bytes)
+2013-07-11 20:50:41,369 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:50:41,375 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (5ms, 1534 bytes)
+2013-07-11 20:50:42,513 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:50:42,513 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:50:42,520 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (8ms, 658 bytes)
+2013-07-11 20:50:42,522 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (9ms, 4668 bytes)
+2013-07-11 20:50:42,680 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:50:42,680 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:50:42,680 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:50:42,693 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (13ms, 56908 bytes)
+2013-07-11 20:50:42,698 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (18ms, 157452 bytes)
+2013-07-11 20:50:42,703 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (23ms, 251615 bytes)
+2013-07-11 20:50:43,230 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:50:43,239 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (8ms, 23 bytes)
+2013-07-11 20:50:44,469 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:50:44,476 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (7ms, 23 bytes)
+2013-07-11 20:50:54,755 - sauce_connect:0 - INFO - Request started: GET http://localhost:9222/json
+2013-07-11 20:50:54,759 - sauce_connect:0 - INFO - Could not proxy http://localhost:9222/json, exception: java.net.ConnectException: Connection refused
+2013-07-11 20:50:55,651 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:50:55,657 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (6ms, 1534 bytes)
+2013-07-11 20:50:55,888 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:50:55,888 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:50:55,895 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (8ms, 658 bytes)
+2013-07-11 20:50:55,897 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (8ms, 4668 bytes)
+2013-07-11 20:50:56,028 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:50:56,028 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:50:56,028 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:50:56,042 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (14ms, 251615 bytes)
+2013-07-11 20:50:56,042 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (14ms, 157452 bytes)
+2013-07-11 20:50:56,049 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (21ms, 56908 bytes)
+2013-07-11 20:50:59,430 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:50:59,434 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (5ms, 23 bytes)
+2013-07-11 20:51:01,832 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:51:01,835 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (5ms, 1534 bytes)
+2013-07-11 20:51:02,046 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:51:02,052 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (5ms, 4668 bytes)
+2013-07-11 20:51:02,229 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:51:02,230 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:51:02,229 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:51:02,229 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:51:02,236 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (8ms, 658 bytes)
+2013-07-11 20:51:02,253 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (23ms, 56908 bytes)
+2013-07-11 20:51:02,259 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (29ms, 157452 bytes)
+2013-07-11 20:51:02,263 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (33ms, 251615 bytes)
+2013-07-11 20:51:04,601 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:51:04,608 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (8ms, 23 bytes)
+2013-07-11 20:51:11,648 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:51:11,654 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (6ms, 1534 bytes)
+2013-07-11 20:51:11,894 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:51:11,900 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (6ms, 4668 bytes)
+2013-07-11 20:51:12,081 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:51:12,085 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (4ms, 658 bytes)
+2013-07-11 20:51:12,513 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:51:12,513 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:51:12,523 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (9ms, 56908 bytes)
+2013-07-11 20:51:12,530 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (17ms, 251615 bytes)
+2013-07-11 20:51:12,703 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:51:12,713 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (10ms, 157452 bytes)
+2013-07-11 20:51:16,630 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:51:16,635 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (5ms, 23 bytes)
+2013-07-11 20:51:16,842 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:51:16,848 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (6ms, 23 bytes)
+2013-07-11 20:51:24,434 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:51:24,438 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (5ms, 1534 bytes)
+2013-07-11 20:51:24,661 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:51:24,661 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:51:24,667 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (6ms, 658 bytes)
+2013-07-11 20:51:24,667 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (6ms, 4668 bytes)
+2013-07-11 20:51:24,815 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:51:24,815 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:51:24,816 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:51:24,836 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (21ms, 157452 bytes)
+2013-07-11 20:51:24,838 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (23ms, 56908 bytes)
+2013-07-11 20:51:24,845 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (28ms, 251615 bytes)
+2013-07-11 20:51:27,417 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:51:27,423 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (5ms, 23 bytes)
+2013-07-11 20:51:28,719 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:51:28,726 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (9ms, 1534 bytes)
+2013-07-11 20:51:29,134 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:51:29,134 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:51:29,142 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (9ms, 658 bytes)
+2013-07-11 20:51:29,142 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (9ms, 4668 bytes)
+2013-07-11 20:51:29,344 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:51:29,344 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:51:29,349 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (7ms, 56908 bytes)
+2013-07-11 20:51:29,355 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (12ms, 251615 bytes)
+2013-07-11 20:51:29,536 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:51:29,546 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (10ms, 157452 bytes)
+2013-07-11 20:51:31,806 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:51:31,812 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (4ms, 23 bytes)
+2013-07-11 20:51:35,733 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:51:35,739 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (7ms, 1534 bytes)
+2013-07-11 20:51:36,117 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:51:36,117 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:51:36,125 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (8ms, 4668 bytes)
+2013-07-11 20:51:36,125 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (9ms, 658 bytes)
+2013-07-11 20:51:36,323 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:51:36,323 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:51:36,332 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (8ms, 56908 bytes)
+2013-07-11 20:51:36,336 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (13ms, 251615 bytes)
+2013-07-11 20:51:36,512 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:51:36,519 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (7ms, 157452 bytes)
+2013-07-11 20:51:38,543 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:51:38,551 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (6ms, 23 bytes)
+2013-07-11 20:51:38,802 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:51:38,806 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (5ms, 23 bytes)
+2013-07-11 20:51:45,882 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:51:45,888 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (6ms, 1534 bytes)
+2013-07-11 20:51:46,259 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:51:46,263 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (6ms, 4668 bytes)
+2013-07-11 20:51:46,447 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:51:46,453 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (6ms, 658 bytes)
+2013-07-11 20:51:46,822 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:51:46,822 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:51:46,822 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:51:46,838 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (15ms, 56908 bytes)
+2013-07-11 20:51:46,838 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (16ms, 157452 bytes)
+2013-07-11 20:51:46,842 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (20ms, 251615 bytes)
+2013-07-11 20:51:50,227 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:51:50,233 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (6ms, 23 bytes)
+2013-07-11 20:51:50,467 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:51:50,474 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (6ms, 23 bytes)
+2013-07-11 20:51:51,078 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:51:51,099 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (21ms, 1534 bytes)
+2013-07-11 20:51:51,348 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:51:51,348 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:51:51,361 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (14ms, 157452 bytes)
+2013-07-11 20:51:51,365 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (16ms, 251615 bytes)
+2013-07-11 20:51:51,505 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:51:51,505 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:51:51,505 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:51:51,509 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (5ms, 4668 bytes)
+2013-07-11 20:51:51,509 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (6ms, 658 bytes)
+2013-07-11 20:51:51,513 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (9ms, 56908 bytes)
+2013-07-11 20:51:53,763 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:51:53,767 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (5ms, 23 bytes)
+2013-07-11 20:52:11,358 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:52:11,364 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (5ms, 1534 bytes)
+2013-07-11 20:52:11,595 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:52:11,601 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (6ms, 4668 bytes)
+2013-07-11 20:52:11,609 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:52:11,609 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:52:11,609 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:52:11,621 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (11ms, 658 bytes)
+2013-07-11 20:52:11,621 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (10ms, 56908 bytes)
+2013-07-11 20:52:11,625 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (15ms, 251615 bytes)
+2013-07-11 20:52:11,785 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:52:11,793 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (9ms, 157452 bytes)
+2013-07-11 20:52:13,295 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:52:13,299 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (6ms, 1534 bytes)
+2013-07-11 20:52:14,224 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:52:14,226 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:52:14,224 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:52:14,226 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:52:14,226 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:52:14,233 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (7ms, 4668 bytes)
+2013-07-11 20:52:14,236 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (11ms, 658 bytes)
+2013-07-11 20:52:14,243 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (16ms, 157452 bytes)
+2013-07-11 20:52:14,243 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (16ms, 56908 bytes)
+2013-07-11 20:52:14,250 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (23ms, 251615 bytes)
+2013-07-11 20:52:14,420 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:52:14,426 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (6ms, 23 bytes)
+2013-07-11 20:52:16,450 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:52:16,456 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (7ms, 23 bytes)
+2013-07-11 20:52:18,624 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:52:18,630 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (6ms, 1534 bytes)
+2013-07-11 20:52:18,885 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:52:18,895 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (6ms, 4668 bytes)
+2013-07-11 20:52:18,913 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:52:18,913 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:52:18,917 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (4ms, 658 bytes)
+2013-07-11 20:52:18,918 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (6ms, 56908 bytes)
+2013-07-11 20:52:19,075 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:52:19,075 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:52:19,096 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (22ms, 157452 bytes)
+2013-07-11 20:52:19,099 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (26ms, 251615 bytes)
+2013-07-11 20:52:23,243 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 20:52:23,247 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (5ms, 23 bytes)
+2013-07-11 20:52:55,226 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:52:55,230 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (6ms, 1534 bytes)
+2013-07-11 20:52:55,631 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:52:55,631 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:52:55,644 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (14ms, 4668 bytes)
+2013-07-11 20:52:55,644 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (14ms, 658 bytes)
+2013-07-11 20:52:55,859 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:52:55,865 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (7ms, 56908 bytes)
+2013-07-11 20:52:56,048 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:52:56,048 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:52:56,059 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (11ms, 157452 bytes)
+2013-07-11 20:52:56,062 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (14ms, 251615 bytes)
+2013-07-11 20:53:10,226 - sauce_connect:0 - INFO - Request started: GET http://ie9cvlist.ie.microsoft.com/IE9CompatViewList.xml
+2013-07-11 20:53:10,384 - sauce_connect:0 - INFO - GET http://ie9cvlist.ie.microsoft.com/IE9CompatViewList.xml -> 200 (158ms, 13850 bytes)
+2013-07-11 20:53:15,000 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:53:15,006 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (7ms, 1534 bytes)
+2013-07-11 20:53:15,398 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:53:15,398 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:53:15,407 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (10ms, 658 bytes)
+2013-07-11 20:53:15,408 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (10ms, 4668 bytes)
+2013-07-11 20:53:15,634 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:53:15,641 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (7ms, 56908 bytes)
+2013-07-11 20:53:15,822 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:53:15,822 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:53:15,834 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (11ms, 157452 bytes)
+2013-07-11 20:53:15,835 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (12ms, 251615 bytes)
+2013-07-11 20:53:40,242 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:53:40,250 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (9ms, 1534 bytes)
+2013-07-11 20:53:40,625 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:53:40,625 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:53:40,631 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (5ms, 658 bytes)
+2013-07-11 20:53:40,631 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (6ms, 4668 bytes)
+2013-07-11 20:53:40,844 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:53:40,851 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (8ms, 56908 bytes)
+2013-07-11 20:53:41,035 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:53:41,035 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:53:41,049 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (14ms, 157452 bytes)
+2013-07-11 20:53:41,053 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (19ms, 251615 bytes)
+2013-07-11 20:54:13,227 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 20:54:13,234 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (8ms, 1534 bytes)
+2013-07-11 20:54:13,453 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 20:54:13,459 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (6ms, 4668 bytes)
+2013-07-11 20:54:14,062 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 20:54:14,066 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (5ms, 658 bytes)
+2013-07-11 20:54:14,469 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 20:54:14,474 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (6ms, 56908 bytes)
+2013-07-11 20:54:14,657 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 20:54:14,657 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 20:54:14,700 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (44ms, 157452 bytes)
+2013-07-11 20:54:14,704 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (48ms, 251615 bytes)
+2013-07-11 20:57:53,983 - sauce_connect:0 - INFO - received SIGTERM
+2013-07-11 21:07:37,012 - sauce_connect:558 - INFO - / Starting \
+2013-07-11 21:07:37,039 - sauce_connect:559 - INFO - Please wait for "You may start your tests" to start your tests.
+2013-07-11 21:07:37,059 - sauce_connect:571 - DEBUG - System is 2.0 hours off UTC
+2013-07-11 21:07:37,059 - sauce_connect:573 - DEBUG - options: {'user': 'alawatthe', 'ports': ['50748'], 'domains': None, 'debug_ssh': False, 'tunnel_ports': ['80'], 'allow_unclean_exit': False, 'rest_url': 'https://saucelabs.com/rest/v1', 'logfile': 'sauce_connect.log', 'squid_opts': '', 'ssh': False, 'se_port': '4445', 'readyfile': None, 'shared_tunnel': False, 'boost_mode': True, 'tunnel_identifier': '142801628', 'ssh_port': 443, 'fast_fail_regexps': '', 'direct_domains': '', 'host': '127.0.0.1', 'quiet': False, 'latency_log': 150, 'use_ssh_config': False}
+2013-07-11 21:07:37,062 - sauce_connect:574 - DEBUG - metadata: {'PythonVersion': '2.5.1', 'OwnerHost': '127.0.0.1', 'Release': '3.0-r27', 'OwnerPorts': ['50748'], 'Ports': ['80'], 'Platform': 'Java-1.6.0_45-Java_HotSpot-TM-_64-Bit_Server_VM,_20.45-b01-451,_Apple_Inc.-on-Mac_OS_X-10.8.4-x86_64', 'Build': '42', 'ScriptRelease': 42, 'ScriptName': 'sauce_connect'}
+2013-07-11 21:07:37,062 - sauce_connect:576 - INFO - Forwarding: None:['80'] -> 127.0.0.1:['50748']
+2013-07-11 21:07:37,079 - sauce_connect:375 - INFO - Succesfully connected to local server 127.0.0.1:50748 in 6ms
+2013-07-11 21:07:38,253 - sauce_connect:238 - INFO - {"squid_config":null,"use_caching_proxy":true,"metadata":{"PythonVersion":"2.5.1","OwnerHost":"127.0.0.1","Release":"3.0-r27","OwnerPorts":["50748"],"Ports":["80"],"Platform":"Java-1.6.0_45-Java_HotSpot-TM-_64-Bit_Server_VM,_20.45-b01-451,_Apple_Inc.-on-Mac_OS_X-10.8.4-x86_64","Build":"42","ScriptRelease":42,"ScriptName":"sauce_connect"},"use_kgp":true,"tunnel_identifier":"142801628","shared_tunnel":false,"fast_fail_regexps":null,"ssh_port":443,"direct_domains":null,"domain_names":[]}
+2013-07-11 21:07:42,223 - sauce_connect:250 - INFO - Tunnel remote VM is provisioned (7e5be8a8e2be448ba038447002d674b2)
+2013-07-11 21:07:42,605 - sauce_connect:268 - INFO - Tunnel remote VM is booting ..
+2013-07-11 21:07:56,164 - sauce_connect:272 - INFO - Tunnel remote VM is running at maki8041.miso.saucelabs.com
+2013-07-11 21:07:56,226 - sauce_connect:375 - INFO - Succesfully connected to local server 127.0.0.1:50748 in 1ms
+2013-07-11 21:07:56,253 - sauce_connect:646 - INFO - Starting connection to tunnel host...
+2013-07-11 21:07:56,256 - sauce_connect:646 - INFO - Connecting to tunnel host maki8041.miso.saucelabs.com as alawatthe
+2013-07-11 21:07:56,665 - sauce_connect:646 - INFO - Forwarding Selenium with ephemeral port 50753
+2013-07-11 21:07:56,673 - sauce_connect:646 - INFO - Selenium HTTP proxy listening on port 4445
+2013-07-11 21:07:57,558 - sauce_connect:0 - INFO - Successful handshake with Sauce Connect server
+2013-07-11 21:07:57,720 - sauce_connect:0 - INFO - Tunnel host version: 0.1.0, remote endpoint ID: 7a8f59bf6a344864b3685afca505eb47
+2013-07-11 21:07:57,723 - sauce_connect:646 - INFO - Connected! You may start your tests.
+2013-07-11 21:08:05,532 - sauce_connect:0 - INFO - Request started: GET http://clients1.google.com/tools/pso/ping?as=chrome&brand=CHFX&pid=&hl=en&rep=2&rlz=C1:1C1CHFX_enUS502US502,C2:1C2CHFX_enUS502
+2013-07-11 21:08:05,670 - sauce_connect:0 - INFO - GET http://clients1.google.com/tools/pso/ping?as=chrome&brand=CHFX&pid=&hl=en&rep=2&rlz=C1:1C1CHFX_enUS502US502,C2:1C2CHFX_enUS502 -> 200 (138ms, 108 bytes)
+2013-07-11 21:08:06,522 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:08:06,533 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (13ms, 1534 bytes)
+2013-07-11 21:08:06,710 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:08:06,719 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (10ms, 1534 bytes)
+2013-07-11 21:08:06,753 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:08:06,759 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (5ms, 4668 bytes)
+2013-07-11 21:08:06,898 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:08:06,898 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:08:06,917 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (17ms, 658 bytes)
+2013-07-11 21:08:06,921 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (21ms, 56908 bytes)
+2013-07-11 21:08:06,947 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:08:06,950 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:08:06,957 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:08:06,960 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:08:06,973 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (15ms, 4668 bytes)
+2013-07-11 21:08:06,983 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (24ms, 658 bytes)
+2013-07-11 21:08:06,990 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (40ms, 157452 bytes)
+2013-07-11 21:08:06,997 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (51ms, 251615 bytes)
+2013-07-11 21:08:07,092 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:08:07,092 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:08:07,092 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:08:07,105 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (13ms, 56908 bytes)
+2013-07-11 21:08:07,117 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (24ms, 157452 bytes)
+2013-07-11 21:08:07,125 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (33ms, 251615 bytes)
+2013-07-11 21:08:09,045 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:08:09,052 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (9ms, 23 bytes)
+2013-07-11 21:08:10,592 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:08:10,598 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (7ms, 23 bytes)
+2013-07-11 21:08:22,471 - sauce_connect:0 - INFO - Request started: GET http://localhost:9222/json
+2013-07-11 21:08:22,476 - sauce_connect:0 - INFO - Could not proxy http://localhost:9222/json, exception: java.net.ConnectException: Connection refused
+2013-07-11 21:08:23,361 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:08:23,380 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (18ms, 1534 bytes)
+2013-07-11 21:08:23,618 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:08:23,618 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:08:23,641 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (23ms, 658 bytes)
+2013-07-11 21:08:23,668 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (51ms, 4668 bytes)
+2013-07-11 21:08:23,809 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:08:23,812 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:08:23,815 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:08:23,868 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (57ms, 56908 bytes)
+2013-07-11 21:08:23,871 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (63ms, 157452 bytes)
+2013-07-11 21:08:23,875 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (60ms, 251615 bytes)
+2013-07-11 21:08:26,434 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:08:26,438 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (6ms, 23 bytes)
+2013-07-11 21:08:33,108 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:08:33,115 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (8ms, 1534 bytes)
+2013-07-11 21:08:33,332 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:08:33,334 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:08:33,334 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:08:33,332 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:08:33,334 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:08:33,348 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (15ms, 658 bytes)
+2013-07-11 21:08:33,351 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (17ms, 4668 bytes)
+2013-07-11 21:08:33,352 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (20ms, 157452 bytes)
+2013-07-11 21:08:33,357 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (23ms, 56908 bytes)
+2013-07-11 21:08:33,361 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (29ms, 251615 bytes)
+2013-07-11 21:08:34,921 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:08:34,927 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (7ms, 1534 bytes)
+2013-07-11 21:08:35,108 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:08:35,115 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (6ms, 23 bytes)
+2013-07-11 21:08:35,299 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:08:35,299 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:08:35,306 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (8ms, 4668 bytes)
+2013-07-11 21:08:35,308 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (10ms, 658 bytes)
+2013-07-11 21:08:35,506 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:08:35,506 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:08:35,523 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (15ms, 56908 bytes)
+2013-07-11 21:08:35,529 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (23ms, 251615 bytes)
+2013-07-11 21:08:35,694 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:08:35,703 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (9ms, 157452 bytes)
+2013-07-11 21:08:37,551 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:08:37,558 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (7ms, 23 bytes)
+2013-07-11 21:08:37,937 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:08:37,944 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (6ms, 23 bytes)
+2013-07-11 21:08:47,917 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:08:47,947 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (30ms, 1534 bytes)
+2013-07-11 21:08:48,335 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:08:48,335 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:08:48,364 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (30ms, 658 bytes)
+2013-07-11 21:08:48,381 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (46ms, 4668 bytes)
+2013-07-11 21:08:48,611 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:08:48,611 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:08:48,609 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:08:48,703 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (93ms, 56908 bytes)
+2013-07-11 21:08:48,706 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (94ms, 251615 bytes)
+2013-07-11 21:08:48,709 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (98ms, 157452 bytes)
+2013-07-11 21:08:51,062 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:08:51,066 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (6ms, 23 bytes)
+2013-07-11 21:08:52,621 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:08:52,627 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (5ms, 1534 bytes)
+2013-07-11 21:08:52,842 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:08:52,848 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (4ms, 4668 bytes)
+2013-07-11 21:08:53,000 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:08:53,002 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:08:53,000 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:08:53,000 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:08:53,009 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (6ms, 658 bytes)
+2013-07-11 21:08:53,022 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (21ms, 56908 bytes)
+2013-07-11 21:08:53,026 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (25ms, 157452 bytes)
+2013-07-11 21:08:53,032 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (32ms, 251615 bytes)
+2013-07-11 21:08:54,674 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:08:54,677 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (5ms, 1534 bytes)
+2013-07-11 21:08:55,052 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:08:55,052 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:08:55,059 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (6ms, 4668 bytes)
+2013-07-11 21:08:55,063 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (11ms, 658 bytes)
+2013-07-11 21:08:55,259 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:08:55,259 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:08:55,266 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (7ms, 56908 bytes)
+2013-07-11 21:08:55,275 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (15ms, 251615 bytes)
+2013-07-11 21:08:55,447 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:08:55,457 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (11ms, 157452 bytes)
+2013-07-11 21:08:55,637 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:08:55,644 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (8ms, 23 bytes)
+2013-07-11 21:08:57,196 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:08:57,200 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (4ms, 23 bytes)
+2013-07-11 21:09:08,200 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:09:08,273 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (74ms, 1534 bytes)
+2013-07-11 21:09:08,559 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:09:08,581 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (21ms, 4668 bytes)
+2013-07-11 21:09:08,755 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:09:08,776 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (21ms, 658 bytes)
+2013-07-11 21:09:09,140 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:09:09,140 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:09:09,140 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:09:09,210 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (71ms, 56908 bytes)
+2013-07-11 21:09:09,217 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (78ms, 157452 bytes)
+2013-07-11 21:09:09,220 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (81ms, 251615 bytes)
+2013-07-11 21:09:12,644 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:09:12,654 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (11ms, 23 bytes)
+2013-07-11 21:09:13,049 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:09:13,055 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (5ms, 23 bytes)
+2013-07-11 21:09:15,980 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:09:15,986 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (7ms, 1534 bytes)
+2013-07-11 21:09:16,279 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:09:16,285 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (5ms, 4668 bytes)
+2013-07-11 21:09:16,311 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:09:16,312 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:09:16,313 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:09:16,319 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (8ms, 56908 bytes)
+2013-07-11 21:09:16,326 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (13ms, 658 bytes)
+2013-07-11 21:09:16,336 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (25ms, 251615 bytes)
+2013-07-11 21:09:16,489 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:09:16,496 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (7ms, 157452 bytes)
+2013-07-11 21:09:20,188 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:09:20,237 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (49ms, 23 bytes)
+2013-07-11 21:09:22,707 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:09:22,717 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (8ms, 1534 bytes)
+2013-07-11 21:09:22,993 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:09:22,996 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (5ms, 658 bytes)
+2013-07-11 21:09:23,155 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:09:23,155 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:09:23,157 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:09:23,155 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:09:23,170 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (14ms, 4668 bytes)
+2013-07-11 21:09:23,174 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (18ms, 56908 bytes)
+2013-07-11 21:09:23,198 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (41ms, 157452 bytes)
+2013-07-11 21:09:23,206 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (49ms, 251615 bytes)
+2013-07-11 21:09:26,716 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:09:26,721 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (6ms, 23 bytes)
+2013-07-11 21:09:34,109 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:09:34,135 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (26ms, 1534 bytes)
+2013-07-11 21:09:34,404 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:09:34,404 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:09:34,404 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:09:34,410 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (7ms, 4668 bytes)
+2013-07-11 21:09:34,414 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (11ms, 658 bytes)
+2013-07-11 21:09:34,426 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (23ms, 251615 bytes)
+2013-07-11 21:09:34,496 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:09:34,496 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:09:34,503 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (8ms, 56908 bytes)
+2013-07-11 21:09:34,506 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (11ms, 157452 bytes)
+2013-07-11 21:09:36,592 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:09:36,598 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (4ms, 1534 bytes)
+2013-07-11 21:09:37,338 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:09:37,341 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:09:37,348 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (9ms, 4668 bytes)
+2013-07-11 21:09:37,354 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (15ms, 56908 bytes)
+2013-07-11 21:09:37,510 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:09:37,510 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:09:37,512 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:09:37,513 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:09:37,525 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (12ms, 658 bytes)
+2013-07-11 21:09:37,530 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (17ms, 23 bytes)
+2013-07-11 21:09:37,532 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (22ms, 157452 bytes)
+2013-07-11 21:09:37,536 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (25ms, 251615 bytes)
+2013-07-11 21:09:39,802 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/favicon.ico
+2013-07-11 21:09:39,808 - sauce_connect:0 - INFO - GET http://localhost:9999/favicon.ico -> 404 (5ms, 23 bytes)
+2013-07-11 21:09:56,937 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:09:56,941 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (4ms, 1534 bytes)
+2013-07-11 21:09:57,348 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:09:57,348 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:09:57,358 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (9ms, 658 bytes)
+2013-07-11 21:09:57,362 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (13ms, 4668 bytes)
+2013-07-11 21:09:57,586 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:09:57,586 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:09:57,601 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (14ms, 56908 bytes)
+2013-07-11 21:09:57,621 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (34ms, 251615 bytes)
+2013-07-11 21:09:57,802 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:09:57,826 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (25ms, 157452 bytes)
+2013-07-11 21:10:24,329 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:10:24,348 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (20ms, 1534 bytes)
+2013-07-11 21:10:24,707 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:10:24,707 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:10:24,733 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (26ms, 658 bytes)
+2013-07-11 21:10:24,763 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (55ms, 4668 bytes)
+2013-07-11 21:10:25,084 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:10:25,084 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:10:25,085 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:10:25,128 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (45ms, 56908 bytes)
+2013-07-11 21:10:25,142 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (58ms, 157452 bytes)
+2013-07-11 21:10:25,148 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (62ms, 251615 bytes)
+2013-07-11 21:10:32,915 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:10:32,921 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (5ms, 1534 bytes)
+2013-07-11 21:10:33,105 - sauce_connect:0 - INFO - Request started: GET http://ie9cvlist.ie.microsoft.com/IE9CompatViewList.xml
+2013-07-11 21:10:33,243 - sauce_connect:0 - INFO - GET http://ie9cvlist.ie.microsoft.com/IE9CompatViewList.xml -> 200 (136ms, 13850 bytes)
+2013-07-11 21:10:33,293 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:10:33,293 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:10:33,301 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (8ms, 658 bytes)
+2013-07-11 21:10:33,301 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (7ms, 4668 bytes)
+2013-07-11 21:10:33,917 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:10:33,917 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:10:33,917 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:10:33,927 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (9ms, 56908 bytes)
+2013-07-11 21:10:33,933 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (16ms, 157452 bytes)
+2013-07-11 21:10:33,940 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (23ms, 251615 bytes)
+2013-07-11 21:11:16,519 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/test.html
+2013-07-11 21:11:16,539 - sauce_connect:0 - INFO - GET http://localhost:9999/test/test.html -> 200 (21ms, 1534 bytes)
+2013-07-11 21:11:16,914 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.css
+2013-07-11 21:11:16,914 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-image.css
+2013-07-11 21:11:16,956 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.css -> 200 (43ms, 4668 bytes)
+2013-07-11 21:11:16,957 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-image.css -> 200 (43ms, 658 bytes)
+2013-07-11 21:11:17,171 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/test/vendor/qunit-1.11.0.js
+2013-07-11 21:11:17,171 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.js
+2013-07-11 21:11:17,210 - sauce_connect:0 - INFO - GET http://localhost:9999/test/vendor/qunit-1.11.0.js -> 200 (39ms, 56908 bytes)
+2013-07-11 21:11:17,214 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.js -> 200 (45ms, 251615 bytes)
+2013-07-11 21:11:17,358 - sauce_connect:0 - INFO - Request started: GET http://localhost:9999/build/MathLib.test.js
+2013-07-11 21:11:17,374 - sauce_connect:0 - INFO - GET http://localhost:9999/build/MathLib.test.js -> 200 (15ms, 157452 bytes)
+2013-07-11 21:13:23,286 - sauce_connect:0 - INFO - Request started: GET http://swcatalog.apple.com/content/catalogs/others/index-windows-1.sucatalog
+2013-07-11 21:13:23,578 - sauce_connect:0 - INFO - GET http://swcatalog.apple.com/content/catalogs/others/index-windows-1.sucatalog -> 200 (292ms, 160990 bytes)
+2013-07-11 21:13:25,233 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/61/34/061-8153/WgWXrHyJVmFn9KrXRg3w2XPXNFXxhnZFS6/061-8153.English.dist
+2013-07-11 21:13:25,408 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/61/34/061-8153/WgWXrHyJVmFn9KrXRg3w2XPXNFXxhnZFS6/061-8153.English.dist -> 200 (177ms, 6091 bytes)
+2013-07-11 21:13:25,720 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/02/58/061-3418/n6BBhLszLr6SN3XDXWT9N3YgpfHChbQTgb/061-3418.English.dist
+2013-07-11 21:13:25,809 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/02/58/061-3418/n6BBhLszLr6SN3XDXWT9N3YgpfHChbQTgb/061-3418.English.dist -> 200 (91ms, 31164 bytes)
+2013-07-11 21:13:26,095 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/25/60/061-6867/WjSJ6JqjV34mZLtS944ndrx9RYQZJX6qHY/061-6867.English.dist
+2013-07-11 21:13:26,138 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/25/60/061-6867/WjSJ6JqjV34mZLtS944ndrx9RYQZJX6qHY/061-6867.English.dist -> 200 (45ms, 3343 bytes)
+2013-07-11 21:13:26,375 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/21/23/061-4512/BKYTZyKmtNr5wpxQCTy9f8xDSYPZ5MTGf4/061-4512.English.dist
+2013-07-11 21:13:26,417 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/21/23/061-4512/BKYTZyKmtNr5wpxQCTy9f8xDSYPZ5MTGf4/061-4512.English.dist -> 200 (43ms, 6760 bytes)
+2013-07-11 21:13:26,819 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/20/63/061-7511/XJqPCzWtXgkNgSZXp6DTn7gjNvHQVMZ4dP/061-7511.English.dist
+2013-07-11 21:13:26,864 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/20/63/061-7511/XJqPCzWtXgkNgSZXp6DTn7gjNvHQVMZ4dP/061-7511.English.dist -> 200 (45ms, 6915 bytes)
+2013-07-11 21:13:27,226 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/27/49/061-4514/Tcfqf4NdtQTpYj7Pn8qwLgWgj6kYcy26Zf/061-4514.English.dist
+2013-07-11 21:13:30,503 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/27/49/061-4514/Tcfqf4NdtQTpYj7Pn8qwLgWgj6kYcy26Zf/061-4514.English.dist -> 200 (3278ms, 6484 bytes)
+2013-07-11 21:13:30,951 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/57/25/061-7340/TJXt7nNzc4cS57fvwx8zg3GScrcLBWtdpR/061-7340.English.dist
+2013-07-11 21:13:31,036 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/57/25/061-7340/TJXt7nNzc4cS57fvwx8zg3GScrcLBWtdpR/061-7340.English.dist -> 200 (84ms, 4994 bytes)
+2013-07-11 21:13:31,325 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/56/25/041-3097/SrjbZVKzSxP5VNSHnnDMQrb78YZz66DYww/041-3097.English.dist
+2013-07-11 21:13:31,410 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/56/25/041-3097/SrjbZVKzSxP5VNSHnnDMQrb78YZz66DYww/041-3097.English.dist -> 200 (84ms, 17551 bytes)
+2013-07-11 21:13:31,910 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/51/48/061-9539/XzrZsqWRT9FLLVN6tBfk4mjVmtqvNDHwC7/061-9539.English.dist
+2013-07-11 21:13:31,951 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/51/48/061-9539/XzrZsqWRT9FLLVN6tBfk4mjVmtqvNDHwC7/061-9539.English.dist -> 200 (43ms, 6537 bytes)
+2013-07-11 21:13:32,332 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/51/08/zzz061-3452/5bxNyT8NCFYPz9qff69kBjH4y3zxqSFt5B/061-3452.English.dist
+2013-07-11 21:13:32,378 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/51/08/zzz061-3452/5bxNyT8NCFYPz9qff69kBjH4y3zxqSFt5B/061-3452.English.dist -> 200 (46ms, 3742 bytes)
+2013-07-11 21:13:32,588 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/28/51/041-0517/cvDMxJL5q6TQ2t8899HH8mvzjdHkDFwr99/041-0517.English.dist
+2013-07-11 21:13:32,713 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/28/51/041-0517/cvDMxJL5q6TQ2t8899HH8mvzjdHkDFwr99/041-0517.English.dist -> 200 (125ms, 18991 bytes)
+2013-07-11 21:13:32,967 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/28/43/061-7509/P7wtsjhJPsT9FM8Zff4FKg6FYM4W2yGP5B/061-7509.English.dist
+2013-07-11 21:13:33,013 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/28/43/061-7509/P7wtsjhJPsT9FM8Zff4FKg6FYM4W2yGP5B/061-7509.English.dist -> 200 (44ms, 6915 bytes)
+2013-07-11 21:13:33,420 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/01/21/041-1673/s6XjZyFGmdTf5YHq6C8CPWjJ4sWz9pz3vX/041-1673.English.dist
+2013-07-11 21:13:33,466 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/01/21/041-1673/s6XjZyFGmdTf5YHq6C8CPWjJ4sWz9pz3vX/041-1673.English.dist -> 200 (47ms, 4842 bytes)
+2013-07-11 21:13:33,713 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/12/45/061-4249/7ck27nGQBsHQNcnMMjtmLbDJm2zPbRxj4h/061-4249.English.dist
+2013-07-11 21:13:33,756 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/12/45/061-4249/7ck27nGQBsHQNcnMMjtmLbDJm2zPbRxj4h/061-4249.English.dist -> 200 (44ms, 6025 bytes)
+2013-07-11 21:13:34,088 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/54/37/061-5790/mxbPrKRvB9G6cvrjY2QPNVQPYj3nrjwbgX/061-5790.English.dist
+2013-07-11 21:13:34,170 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/54/37/061-5790/mxbPrKRvB9G6cvrjY2QPNVQPYj3nrjwbgX/061-5790.English.dist -> 200 (83ms, 17755 bytes)
+2013-07-11 21:13:34,552 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/26/11/061-8155/wdTHYKkFWMCC8dDLHkycj3BLMxvq2wjwYD/061-8155.English.dist
+2013-07-11 21:13:34,598 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/26/11/061-8155/wdTHYKkFWMCC8dDLHkycj3BLMxvq2wjwYD/061-8155.English.dist -> 200 (45ms, 6069 bytes)
+2013-07-11 21:13:34,928 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/59/27/041-0516/rRmQxLKryPBcF33yFvzhw7SYLDRntjXj9K/041-0516.English.dist
+2013-07-11 21:13:35,013 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/59/27/041-0516/rRmQxLKryPBcF33yFvzhw7SYLDRntjXj9K/041-0516.English.dist -> 200 (83ms, 19000 bytes)
+2013-07-11 21:13:35,230 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/50/36/061-9848/kJvM5Qq2gBCSHSrxsdNfyn7NPjVYNHX7ZR/061-9848.English.dist
+2013-07-11 21:13:35,315 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/50/36/061-9848/kJvM5Qq2gBCSHSrxsdNfyn7NPjVYNHX7ZR/061-9848.English.dist -> 200 (85ms, 17585 bytes)
+2013-07-11 21:13:35,621 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/45/03/041-1676/ZMjp6WLTqS9GDRdnzdLqHXgS838bwRNVn6/041-1676.English.dist
+2013-07-11 21:13:35,707 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/45/03/041-1676/ZMjp6WLTqS9GDRdnzdLqHXgS838bwRNVn6/041-1676.English.dist -> 200 (86ms, 17118 bytes)
+2013-07-11 21:13:36,013 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/03/00/061-9537/xkqVg9ZybxffPsFvSjqgxnHK7HGJ4b9zLy/061-9537.English.dist
+2013-07-11 21:13:36,055 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/03/00/061-9537/xkqVg9ZybxffPsFvSjqgxnHK7HGJ4b9zLy/061-9537.English.dist -> 200 (42ms, 6536 bytes)
+2013-07-11 21:13:36,336 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/10/51/061-5850/6T9D3ShR4mRKT3YgFK7JG5sDytGYDYCJ3L/061-5850.English.dist
+2013-07-11 21:13:36,427 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/10/51/061-5850/6T9D3ShR4mRKT3YgFK7JG5sDytGYDYCJ3L/061-5850.English.dist -> 200 (91ms, 17749 bytes)
+2013-07-11 21:13:36,713 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/10/26/061-4513/nY7s8PkHbJYHKKDtjh7FJQr7JYBTzHvnr2/061-4513.English.dist
+2013-07-11 21:13:36,756 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/10/26/061-4513/nY7s8PkHbJYHKKDtjh7FJQr7JYBTzHvnr2/061-4513.English.dist -> 200 (44ms, 6869 bytes)
+2013-07-11 21:13:37,091 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/29/33/061-7306/hwpP4sYb2wmfHdYHjsQ23VrSbXXGKCK378/061-7306.English.dist
+2013-07-11 21:13:37,137 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/29/33/061-7306/hwpP4sYb2wmfHdYHjsQ23VrSbXXGKCK378/061-7306.English.dist -> 200 (46ms, 6518 bytes)
+2013-07-11 21:13:37,351 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/07/44/061-4200/3DtF5LrT3BL2b86P57Kyrs5dH9NTs9ctNV/061-4200.English.dist
+2013-07-11 21:13:37,394 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/07/44/061-4200/3DtF5LrT3BL2b86P57Kyrs5dH9NTs9ctNV/061-4200.English.dist -> 200 (45ms, 6293 bytes)
+2013-07-11 21:13:37,726 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/37/12/041-0255/lfinb0xmk5ten4ojrimcebpl6561xez6xk/041-0255.English.dist
+2013-07-11 21:13:37,812 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/37/12/041-0255/lfinb0xmk5ten4ojrimcebpl6561xez6xk/041-0255.English.dist -> 200 (85ms, 19402 bytes)
+2013-07-11 21:13:38,023 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/06/39/041-0256/orwba7zrt5npsr5wvhsljprdyd1jtt62oz/041-0256.English.dist
+2013-07-11 21:13:38,177 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/06/39/041-0256/orwba7zrt5npsr5wvhsljprdyd1jtt62oz/041-0256.English.dist -> 200 (152ms, 19392 bytes)
+2013-07-11 21:13:38,398 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/32/19/041-6756/gntu51zjuiyzu4l94ezxy3g1tb3jfpaoit/041-6756.English.dist
+2013-07-11 21:13:38,493 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/32/19/041-6756/gntu51zjuiyzu4l94ezxy3g1tb3jfpaoit/041-6756.English.dist -> 200 (94ms, 37732 bytes)
+2013-07-11 21:13:38,966 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/10/45/041-8790/bd5dyv0yzdosgoqbtcifcp6p7fr367lfvd/041-8790.English.dist
+2013-07-11 21:13:39,052 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/10/45/041-8790/bd5dyv0yzdosgoqbtcifcp6p7fr367lfvd/041-8790.English.dist -> 200 (87ms, 22633 bytes)
+2013-07-11 21:13:39,265 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/56/08/041-9923/1kjogsm5zptb7byqemgzxjn8m45xvhuboy/041-9923.English.dist
+2013-07-11 21:13:39,358 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/56/08/041-9923/1kjogsm5zptb7byqemgzxjn8m45xvhuboy/041-9923.English.dist -> 200 (92ms, 30998 bytes)
+2013-07-11 21:13:39,608 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/39/15/041-9924/9501l6fws8h7nijy6jt29y55huh0i9vk9b/041-9924.English.dist
+2013-07-11 21:13:39,696 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/39/15/041-9924/9501l6fws8h7nijy6jt29y55huh0i9vk9b/041-9924.English.dist -> 200 (88ms, 31001 bytes)
+2013-07-11 21:13:39,983 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/08/09/041-9647/34oiqmla6y8ksr7jlr4wz50wzb8f924tjt/041-9647.English.dist
+2013-07-11 21:13:40,069 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/08/09/041-9647/34oiqmla6y8ksr7jlr4wz50wzb8f924tjt/041-9647.English.dist -> 200 (85ms, 25479 bytes)
+2013-07-11 21:13:40,513 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/07/55/091-6061/o80okn0wr7v8155yercoho485axbg9on83/091-6061.English.dist
+2013-07-11 21:13:40,559 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/07/55/091-6061/o80okn0wr7v8155yercoho485axbg9on83/091-6061.English.dist -> 200 (47ms, 9156 bytes)
+2013-07-11 21:13:40,940 - sauce_connect:0 - INFO - Request started: GET http://swcdn.apple.com/content/downloads/48/56/091-6062/wx34pzau298ddb2uj1tpws5bq6tqb65xaj/091-6062.English.dist
+2013-07-11 21:13:40,989 - sauce_connect:0 - INFO - GET http://swcdn.apple.com/content/downloads/48/56/091-6062/wx34pzau298ddb2uj1tpws5bq6tqb65xaj/091-6062.English.dist -> 200 (47ms, 8356 bytes)
+2013-07-11 21:15:16,381 - sauce_connect:0 - INFO - received SIGTERM

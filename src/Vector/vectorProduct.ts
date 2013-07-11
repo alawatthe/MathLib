@@ -12,4 +12,8 @@ vectorProduct(v : Vector) : Vector {
 			MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0]))
 		]);
 	}
+	else {
+		MathLib.error({message: 'Vectors are not three-dimensional', method: 'Vector#vectorProduct'});
+		return;
+	}
 }

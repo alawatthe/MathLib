@@ -9,6 +9,7 @@ inverse() {
 			n = this.rows;
 
 	if (!this.isSquare()) {
+		MathLib.error({message: 'Inverse of non square matrix', method: 'Matrix#inverse'});
 		return;
 	}
 

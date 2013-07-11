@@ -1,4 +1,4 @@
-/*! MathLib v0.5.1 MathLib.de | MathLib.de/en/license */
+/*! MathLib v0.5.2 MathLib.de | MathLib.de/en/license */
 module('MathLib');
 test('general', 1, function () {
 	equal(typeof MathLib, 'object', 'is MathLib defined');
@@ -23,6 +23,52 @@ test('.is()', 12, function () {
 	equal(MathLib.is(MathLib.sin, 'functn'), true);
 	equal(MathLib.is(null, 'null'), true);
 	equal(MathLib.is(undefined, 'undefined'), true);
+});
+test('.isNative()', 2, function () {
+	Math.isNativeCheck = function (x) {
+		return 42;
+	};
+	
+	equal(MathLib.isNative(Math.sin), Math.sin, 'isNative of native method');
+	equal(MathLib.isNative(Math.isNativeCheck), false, 'isNative of non native method');
+
+	delete Math.isNativeCheck;
+});
+test('.off()', 1, function () {
+	var i = 0,
+			callback = function () {
+				i++;
+			};
+	
+
+	MathLib.on('error', callback);
+	MathLib.on('warning', callback);
+
+	MathLib.off('error', callback);
+	MathLib.off('warning', callback);
+
+	MathLib.error({});
+	MathLib.warning({});
+
+	equal(i, 0, 'check if callbacks are unbound');
+});
+test('.on()', 1, function () {
+	var i = 0,
+			callback = function () {
+				i++;
+			};
+	
+
+	MathLib.on('error', callback);
+	MathLib.on('warning', callback);
+
+	MathLib.error({});
+	MathLib.warning({});
+
+	equal(i, 2, 'check if callbacks are getting called');
+
+	MathLib.off('error', callback);
+	MathLib.off('warning', callback);
 });
 test('.type()', 10, function () {
 	equal(MathLib.type(new MathLib.Complex([2, 3])), 'complex', 'MathLib.type(MathLib.complex([2, 3])) = "complex"');

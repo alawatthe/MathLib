@@ -8,11 +8,17 @@ plus(m) {
 	var i, ii, j, jj,
 			sum = [];
 
-	for (i = 0, ii = this.rows; i < ii; i++) {
-		sum[i] = [];
-		for (j = 0, jj = this.cols ; j < jj; j++) {
-			sum[i][j] = MathLib.plus(this[i][j], m[i][j]);
+	if (this.rows === m.rows && this.cols === m.cols) {
+		for (i = 0, ii = this.rows; i < ii; i++) {
+			sum[i] = [];
+			for (j = 0, jj = this.cols ; j < jj; j++) {
+				sum[i][j] = MathLib.plus(this[i][j], m[i][j]);
+			}
 		}
+		return new MathLib.Matrix(sum);
 	}
-	return new MathLib.Matrix(sum);
+	else {
+		MathLib.error({message: 'Matrix sizes not matching', method: 'Matrix#plus'});
+		return;
+	}
 }

@@ -7,4 +7,8 @@ minus(v : Vector) : Vector {
 	if (this.length === v.length) {
 		return this.plus(v.negative());
 	}
+	else {
+		MathLib.error({message: 'Vector sizes not matching', method: 'Vector#minus'});
+		return;
+	}
 }

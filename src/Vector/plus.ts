@@ -9,4 +9,8 @@ plus(v : Vector) : Vector {
 			return MathLib.plus(x, v[i]);
 		}));
 	}
+	else {
+		MathLib.error({message: 'Vector sizes not matching', method: 'Vector#plus'});
+		return;
+	}
 }

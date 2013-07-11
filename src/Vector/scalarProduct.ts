@@ -9,4 +9,8 @@ scalarProduct(v : Vector) : any {
 			return MathLib.plus(old, MathLib.times(w[i], v[i]));
 		}, 0);
 	}
+	else {
+		MathLib.error({message: 'Vector sizes not matching', method: 'Vector#scalarProduct'});
+		return;
+	}
 }
