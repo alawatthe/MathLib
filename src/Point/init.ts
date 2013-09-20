@@ -12,6 +12,7 @@
 
 
 export class Point extends Vector {
+	type = 'point';
 
 	dimension: number;
 
@@ -19,6 +20,5 @@ export class Point extends Vector {
 		super(arguments.length > 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
 
 		this.dimension = 2;
-		this.type = 'point';
 
 	}

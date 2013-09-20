@@ -1,4 +1,4 @@
-// ### [Rational.prototype.toContentMathML()](http://mathlib.de/en/docs/rational/toContentMathML)
+// ### [Rational.prototype.toContentMathML()](http://mathlib.de/en/docs/Rational/toContentMathML)
 // Returns the Content MathML representation of the rational number
 //
 // *@return {string}*

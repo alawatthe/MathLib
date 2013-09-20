@@ -6,7 +6,7 @@ var __extends = this.__extends || function (d, b) {
 };
 var MathLib;
 (function (MathLib) {
-    MathLib.version = '0.5.2';
+    MathLib.version = '0.6.0';
     MathLib.apery = 1.2020569031595942;
     MathLib.e = Math.E;
 
@@ -2372,10 +2372,11 @@ var MathLib;
                         this.ctx.fillRect(left, bottom, right - left, top - bottom);
 
                         this.stack.forEach(function (x, i) {
-                            if (x.type === 'text') {
+                            if (x.type === 'conic') {
+                                x.object.draw(_this, x.options, true);
+                            } else if (x.type === 'text') {
                                 _this.text(x.object, x.x, x.y, x.options, true);
-                            }
-                            if (x.type === 'pixel') {
+                            } else if (x.type === 'pixel') {
                                 _this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
                             } else {
                                 _this[x.type](x.object, x.options, true);
@@ -2405,10 +2406,11 @@ var MathLib;
                         _this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 
                         this.stack.forEach(function (x, i) {
-                            if (x.type === 'text') {
+                            if (x.type === 'conic') {
+                                x.object.draw(_this, x.options, true);
+                            } else if (x.type === 'text') {
                                 _this.text(x.object, x.x, x.y, x.options, true);
-                            }
-                            if (x.type === 'pixel') {
+                            } else if (x.type === 'pixel') {
                                 _this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
                             } else {
                                 _this[x.type](x.object, x.options, true);
@@ -2434,10 +2436,11 @@ var MathLib;
                         var top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x;
 
                         this.stack.forEach(function (x, i) {
-                            if (x.type === 'text') {
+                            if (x.type === 'conic') {
+                                x.object.draw(_this, x.options, true);
+                            } else if (x.type === 'text') {
                                 _this.text(x.object, x.x, x.y, x.options, true);
-                            }
-                            if (x.type === 'pixel') {
+                            } else if (x.type === 'pixel') {
                                 _this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
                             } else {
                                 _this[x.type](x.object, x.options, true);
@@ -2461,10 +2464,11 @@ var MathLib;
                 } else {
                     this.draw = function () {
                         this.stack.forEach(function (x, i) {
-                            if (x.type === 'text') {
+                            if (x.type === 'conic') {
+                                x.object.draw(_this, x.options, true);
+                            } else if (x.type === 'text') {
                                 _this.text(x.object, x.x, x.y, x.options, true);
-                            }
-                            if (x.type === 'pixel') {
+                            } else if (x.type === 'pixel') {
                                 _this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
                             } else {
                                 _this[x.type](x.object, x.options, true);
@@ -2662,11 +2666,19 @@ var MathLib;
             ctx.restore();
 
             if (!redraw) {
-                this.stack.push({
-                    type: 'path',
-                    object: curve,
-                    options: options
-                });
+                if (options.conic) {
+                    this.stack.push({
+                        type: 'conic',
+                        object: options.conic,
+                        options: options
+                    });
+                } else {
+                    this.stack.push({
+                        type: 'path',
+                        object: curve,
+                        options: options
+                    });
+                }
             }
 
             return this;
@@ -2958,11 +2970,19 @@ var MathLib;
             this.ctx.appendChild(svgPath);
 
             if (!redraw) {
-                this.stack.push({
-                    type: 'path',
-                    object: curve,
-                    options: options
-                });
+                if (options.conic) {
+                    this.stack.push({
+                        type: 'conic',
+                        object: options.conic,
+                        options: options
+                    });
+                } else {
+                    this.stack.push({
+                        type: 'path',
+                        object: curve,
+                        options: options
+                    });
+                }
             }
 
             return this;
@@ -4430,57 +4450,48 @@ var MathLib;
         };
 
         Line.prototype.isFinite = function () {
-            return !MathLib.isZero(this[this.length - 1]);
-        };
-
-        Line.prototype.isOrthogonalTo = function (l) {
-            return MathLib.isEqual(new MathLib.Point([0, 0, 1]).crossRatio(this.meet(new MathLib.Line([0, 0, 1])), l.meet(new MathLib.Line([0, 0, 1])), MathLib.Point.I, MathLib.Point.J), -1);
+            return !MathLib.isZero(this[0]) || !MathLib.isZero(this[1]);
         };
 
         Line.prototype.isParallelTo = function (l) {
-            return this.every(function (x, i) {
-                return MathLib.isEqual(x, l[i]) || i === l.length - 1;
-            });
+            return MathLib.isZero(this[0] * l[1] - this[1] * l[0]);
         };
 
-        Line.prototype.meet = function (l, dyn) {
-            if (typeof dyn === "undefined") { dyn = false; }
+        Line.prototype.meet = function (l) {
             var point, k = this;
 
             if (this.dimension === 2 && l.dimension === 2) {
                 point = new MathLib.Point(this.vectorProduct(l));
 
-                if (dyn) {
-                    Object.defineProperties(point, {
-                        '0': {
-                            get: function () {
-                                return k[1] * l[2] - k[2] * l[1];
-                            },
-                            set: function () {
-                            },
-                            enumerable: true,
-                            configurable: true
+                Object.defineProperties(point, {
+                    '0': {
+                        get: function () {
+                            return k[1] * l[2] - k[2] * l[1];
                         },
-                        '1': {
-                            get: function () {
-                                return k[2] * l[0] - k[0] * l[2];
-                            },
-                            set: function () {
-                            },
-                            enumerable: true,
-                            configurable: true
+                        set: function () {
+                            MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet' });
                         },
-                        '2': {
-                            get: function () {
-                                return k[0] * l[1] - k[1] * l[0];
-                            },
-                            set: function () {
-                            },
-                            enumerable: true,
-                            configurable: true
-                        }
-                    });
-                }
+                        enumerable: true
+                    },
+                    '1': {
+                        get: function () {
+                            return k[2] * l[0] - k[0] * l[2];
+                        },
+                        set: function () {
+                            MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet' });
+                        },
+                        enumerable: true
+                    },
+                    '2': {
+                        get: function () {
+                            return k[0] * l[1] - k[1] * l[0];
+                        },
+                        set: function () {
+                            MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet' });
+                        },
+                        enumerable: true
+                    }
+                });
 
                 return point;
             }
@@ -4488,9 +4499,50 @@ var MathLib;
 
         Line.prototype.normalize = function () {
             var h = MathLib.hypot(this[0], this[1]);
-            return this.map(function (x) {
-                return x / h;
+
+            if (h !== 0) {
+                return this.map(function (x) {
+                    return x / h;
+                });
+            } else {
+                return new MathLib.Line([0, 0, 1]);
+            }
+        };
+
+        Line.prototype.parallelThrough = function (p) {
+            var l = this, parallel = new MathLib.Line([0, 0, 0]);
+
+            Object.defineProperties(parallel, {
+                '0': {
+                    get: function () {
+                        return -l[0] * p[2];
+                    },
+                    set: function () {
+                        MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough' });
+                    },
+                    enumerable: true
+                },
+                '1': {
+                    get: function () {
+                        return -l[1] * p[2];
+                    },
+                    set: function () {
+                        MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough' });
+                    },
+                    enumerable: true
+                },
+                '2': {
+                    get: function () {
+                        return l[1] * p[1] + l[0] * p[0];
+                    },
+                    set: function () {
+                        MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough' });
+                    },
+                    enumerable: true
+                }
             });
+
+            return parallel;
         };
         return Line;
     })(Vector);
@@ -5499,13 +5551,445 @@ var MathLib;
     })();
     MathLib.Permutation = Permutation;
 
+    var Conic = (function () {
+        function Conic(primal, dual) {
+            this.type = 'conic';
+            if (primal.type !== 'matrix') {
+                primal = new MathLib.Matrix(primal);
+            }
+            this.primal = primal;
+
+            if (primal.rank() > 1) {
+                Object.defineProperties(this, {
+                    'dual': {
+                        get: function () {
+                            return this.primal.adjugate();
+                        },
+                        set: function () {
+                        },
+                        enumerable: true,
+                        configurable: true
+                    }
+                });
+            } else {
+                this.dual = dual;
+            }
+        }
+        Conic.prototype.draw = function (screen, options, redraw) {
+            if (typeof redraw === "undefined") { redraw = false; }
+            if (Array.isArray(screen)) {
+                var conic = this;
+                screen.forEach(function (x) {
+                    conic.draw(x, options);
+                });
+            } else {
+                options.from = 0;
+                options.to = 2 * Math.PI;
+                options.conic = this;
+
+                var i, j, lines, alpha, cos, sin, sgn, a = this.primal[0][0], b = this.primal[0][1] * 2, c = this.primal[1][1], d = this.primal[0][2] * 2, e = this.primal[1][2] * 2, f = this.primal[2][2], disc = 4 * a * c - b * b, r = this.primal.determinant() / disc, rank = this.primal.rank(), cx = (b * e - 2 * c * d) / (4 * a * c - b * b), cy = (b * d - 2 * a * e) / (4 * a * c - b * b), normalForm = this.normalize(), A = Math.sqrt(Math.abs(normalForm.primal[2][2] / normalForm.primal[0][0])), C = Math.sqrt(Math.abs(normalForm.primal[2][2] / normalForm.primal[1][1]));
+
+                if (rank === 3) {
+                    alpha = Math.atan2(b, a - c) / 2;
+                    cos = Math.cos(alpha);
+                    sin = Math.sin(alpha);
+
+                    if (disc === 0) {
+                        options.from = -10;
+                        options.to = 10;
+
+                        var param = -this.primal[1][2] / (2 * this.primal[0][0]);
+                        cx = 0;
+                        cy = this.primal[2][2] / this.primal[0][0];
+
+                        screen.path([
+                            function (t) {
+                                return cx + cos * param * t * t - sin * 2 * param * t;
+                            },
+                            function (t) {
+                                return cy + sin * param * t * t + cos * 2 * param * t;
+                            }
+                        ], options, redraw);
+                    } else if (disc > 0) {
+                        options.from = 0;
+                        options.to = 2 * Math.PI;
+
+                        screen.path([
+                            function (t) {
+                                return cx + cos * Math.cos(t) * A - sin * Math.sin(t) * C;
+                            },
+                            function (t) {
+                                return cy + sin * Math.cos(t) * A + cos * Math.sin(t) * C;
+                            }
+                        ], options, redraw);
+                    } else if (disc < 0) {
+                        options.from = 0;
+                        options.to = 2 * Math.PI;
+
+                        sgn = function (t) {
+                            return +((t + Math.PI / 2) % (2 * Math.PI) < Math.PI) * 2 - 1;
+                        };
+
+                        if (normalForm.primal[2][2] * normalForm.primal[0][0] > 0) {
+                            var swap = A;
+                            A = C;
+                            C = swap;
+
+                            cos = Math.cos(alpha + Math.PI / 2);
+                            sin = Math.sin(alpha + Math.PI / 2);
+                        } else {
+                            cos = Math.cos(alpha);
+                            sin = Math.sin(alpha);
+                        }
+
+                        screen.path([
+                            function (t) {
+                                return cx + cos * MathLib.sec(t) * A - sin * MathLib.tan(t) * C * sgn(t);
+                            },
+                            function (t) {
+                                return cy + sin * MathLib.sec(t) * A + cos * MathLib.tan(t) * C * sgn(t);
+                            }
+                        ], options, redraw);
+                    }
+                } else if (rank === 2) {
+                    lines = this.splitDegenerated();
+
+                    screen.line(lines[0], options);
+                    screen.line(lines[1], options);
+                } else if (rank === 1) {
+                    lines = this.splitDegenerated();
+
+                    screen.line(lines[0], options);
+                }
+            }
+            return this;
+        };
+
+        Conic.prototype.eccentricity = function () {
+            var min, max, normalform = this.normalize(), a = normalform.primal[0][0], c = normalform.primal[1][1];
+
+            if (!this.isDegenerated()) {
+                if (c === 0) {
+                    return 1;
+                }
+                if (c > 0) {
+                    return Math.sqrt(1 - c / a);
+                }
+                return Math.sqrt(1 - a / c);
+            }
+        };
+
+        Conic.prototype.isDegenerated = function () {
+            return this.primal.rank() !== 3;
+        };
+
+        Conic.prototype.isEqual = function (c) {
+            if (this === c) {
+                return true;
+            }
+
+            var compare = function (M, N) {
+                var i, j, m, n;
+
+                if (M === N) {
+                    return true;
+                }
+
+                nonZeroSearch:
+                for (i = 0; i < 3; i++) {
+                    for (j = 0; j < 3; j++) {
+                        if (M[i][j] !== 0) {
+                            break nonZeroSearch;
+                        }
+                    }
+                }
+
+                if (N[i][j] === 0) {
+                    return false;
+                }
+
+                m = M[i][j];
+                n = N[i][j];
+
+                for (i = 0; i < 3; i++) {
+                    for (j = 0; j < 3; j++) {
+                        if (n / m * M[i][j] !== N[i][j]) {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            };
+
+            return compare(this.primal, c.primal) && compare(this.dual, c.dual);
+        };
+
+        Conic.prototype.latusRectum = function () {
+            var normalForm = this.normalize(), a = normalForm.primal[0][0], c = normalForm.primal[1][1], min = Math.min(Math.abs(a), Math.abs(c)), max = Math.max(Math.abs(a), Math.abs(c));
+
+            if (!this.isDegenerated()) {
+                if (c === 0) {
+                    return -2 * normalForm.primal[1][2] / a;
+                }
+
+                return 2 * Math.sqrt(max) / min;
+            }
+        };
+
+        Conic.prototype.linearEccentricity = function () {
+            var normalForm = this.normalize(), a = normalForm.primal[0][0], c = normalForm.primal[1][1], max = Math.max(Math.abs(a), Math.abs(c)), min = Math.min(Math.abs(a), Math.abs(c));
+
+            if (!this.isDegenerated()) {
+                if (c === 0) {
+                    return normalForm.primal[1][2] / (-2 * a);
+                }
+
+                if (c > 0) {
+                    return Math.sqrt(1 / min - 1 / max);
+                }
+                return Math.sqrt(1 / max + 1 / min);
+            }
+        };
+
+        Conic.prototype.meet = function (x) {
+            if (x.type === 'line') {
+                var Ml, B, alpha, C, i, j, p1, p2, setter = function () {
+                    MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent point.', method: 'Conic#meet' });
+                }, conic = this, recalculate = function () {
+                    Ml = new MathLib.Matrix([[0, x[2], -x[1]], [-x[2], 0, x[0]], [x[1], -x[0], 0]]), B = Ml.transpose().times(conic.primal).times(Ml);
+
+                    if (!MathLib.isZero(x[0])) {
+                        alpha = 1 / x[0] * Math.sqrt(B[2][1] * B[1][2] - B[1][1] * B[2][2]);
+                    } else if (!MathLib.isZero(x[1])) {
+                        alpha = 1 / x[1] * Math.sqrt(B[0][2] * B[2][0] - B[2][2] * B[0][0]);
+                    } else {
+                        alpha = 1 / x[2] * Math.sqrt(B[1][0] * B[0][1] - B[0][0] * B[1][1]);
+                    }
+
+                    C = Ml.times(alpha).plus(B);
+
+                    nonZeroSearch:
+                    for (i = 0; i < 3; i++) {
+                        for (j = 0; j < 3; j++) {
+                            if (C[i][j] !== 0) {
+                                break nonZeroSearch;
+                            }
+                        }
+                    }
+                };
+
+                recalculate();
+
+                p1 = new MathLib.Point(C[i]);
+                Object.defineProperties(p1, {
+                    '0': {
+                        get: function () {
+                            recalculate();
+                            return C[i][0];
+                        },
+                        set: setter,
+                        enumerable: true
+                    },
+                    '1': {
+                        get: function () {
+                            recalculate();
+                            return C[i][1];
+                        },
+                        set: setter,
+                        enumerable: true
+                    },
+                    '2': {
+                        get: function () {
+                            recalculate();
+                            return C[i][2];
+                        },
+                        set: setter,
+                        enumerable: true
+                    }
+                });
+
+                p2 = new MathLib.Point([C[0][j], C[1][j], C[2][j]]);
+                Object.defineProperties(p2, {
+                    '0': {
+                        get: function () {
+                            recalculate();
+                            return C[0][j];
+                        },
+                        set: setter,
+                        enumerable: true
+                    },
+                    '1': {
+                        get: function () {
+                            recalculate();
+                            return C[1][j];
+                        },
+                        set: setter,
+                        enumerable: true
+                    },
+                    '2': {
+                        get: function () {
+                            recalculate();
+                            return C[2][j];
+                        },
+                        set: setter,
+                        enumerable: true
+                    }
+                });
+
+                return [p1, p2];
+            } else if (x.type === 'conic') {
+                var A = this.primal, B = x.primal, a = A.determinant(), b = (new MathLib.Matrix([A[0], A[1], B[2]])).plus(new MathLib.Matrix([A[0], B[1], A[2]])).plus(new MathLib.Matrix([B[0], A[1], A[2]])).determinant(), c = (new MathLib.Matrix([A[0], B[1], B[2]])).plus(new MathLib.Matrix([B[0], A[1], B[2]])).plus(new MathLib.Matrix([B[0], B[1], A[2]])).determinant(), d = B.determinant(), Delta0 = b * b - 3 * a * c, Delta1 = 2 * b * b * -9 * a * b * c + 27 * a * a * d, C = MathLib.cbrt((Delta1 + Math.sqrt(Math.pow(Delta1, 2) - 4 * Math.pow(Delta0, 3))) / 2), lambda = -1 / (3 * a) * (b + C + Delta0 / C), degenerated = new MathLib.Conic(B.times(lambda).plus(A)), lines;
+
+                lines = degenerated.splitDegenerated();
+
+                return this.meet(lines[0]).concat(this.meet(lines[1]));
+            }
+        };
+
+        Conic.prototype.normalize = function () {
+            var A = this.primal[0][0], B = this.primal[0][1] * 2, C = this.primal[1][1], D = this.primal[0][2] * 2, E = this.primal[1][2] * 2, F = this.primal[2][2], r = Math.atan2(B, A - C) / 2, cos = Math.cos(r), sin = Math.sin(r), a = A * cos * cos + B * sin * cos + C * sin * sin, c = A * sin * sin - B * sin * cos + C * cos * cos, d = D * cos + E * sin, e = E * cos - D * sin, f = F;
+
+            if (a !== 0) {
+                f += -d * d / (4 * a);
+                d = 0;
+            }
+
+            if (c !== 0) {
+                f += -e * e / (4 * c);
+                e = 0;
+            }
+
+            if (f !== 0) {
+                a = -a / f;
+                c = -c / f;
+                d = -d / f;
+                e = -e / f;
+                f = -1;
+            }
+
+            return new MathLib.Conic([[a, 0, d / 2], [0, c, e / 2], [d / 2, e / 2, f]]);
+        };
+
+        Conic.prototype.polarity = function (x) {
+            var object, m, c = this;
+
+            if (x.type === 'line') {
+                object = new MathLib.Point([0, 0, 0]);
+                m = 'dual';
+            } else if (x.type === 'point') {
+                object = new MathLib.Line([0, 0, 0]);
+                m = 'primal';
+            }
+
+            Object.defineProperties(object, {
+                '0': {
+                    get: function () {
+                        return c[m][0][0] * x[0] + c[m][0][1] * x[1] + c[m][0][2] * x[2];
+                    },
+                    set: function () {
+                        MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity' });
+                    },
+                    enumerable: true
+                },
+                '1': {
+                    get: function () {
+                        return c[m][1][0] * x[0] + c[m][1][1] * x[1] + c[m][1][2] * x[2];
+                    },
+                    set: function () {
+                        MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity' });
+                    },
+                    enumerable: true
+                },
+                '2': {
+                    get: function () {
+                        return c[m][2][0] * x[0] + c[m][2][1] * x[1] + c[m][2][2] * x[2];
+                    },
+                    set: function () {
+                        MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity' });
+                    },
+                    enumerable: true
+                }
+            });
+
+            return object;
+        };
+
+        Conic.prototype.splitDegenerated = function () {
+            var n, i, j, B, C, p0, p1, p2, rank = this.primal.rank();
+
+            if (rank === 2) {
+                if (this.dual[0][0] !== 0) {
+                    n = 0;
+                } else if (this.dual[1][1] !== 0) {
+                    n = 1;
+                } else {
+                    n = 2;
+                }
+
+                if (this.dual[n][n] < 0) {
+                    B = this.dual.negative();
+                } else {
+                    B = this.dual;
+                }
+
+                p0 = B[0][n] / Math.sqrt(B[n][n]);
+                p1 = B[1][n] / Math.sqrt(B[n][n]);
+                p2 = B[2][n] / Math.sqrt(B[n][n]);
+                C = this.primal.plus(new MathLib.Matrix([[0, p2, -p1], [-p2, 0, p0], [p1, -p0, 0]]));
+
+                nonZeroSearch:
+                for (i = 0; i < 3; i++) {
+                    for (j = 0; j < 3; j++) {
+                        if (C[i][j] !== 0) {
+                            break nonZeroSearch;
+                        }
+                    }
+                }
+
+                return [new MathLib.Line(C[i]), new MathLib.Line([C[0][j], C[1][j], C[2][j]])];
+            } else if (rank === 1) {
+                nonZeroSearch:
+                for (i = 0; i < 3; i++) {
+                    for (j = 0; j < 3; j++) {
+                        if (this.primal[i][j] !== 0) {
+                            break nonZeroSearch;
+                        }
+                    }
+                }
+                return [new MathLib.Line(this.primal[i]), new MathLib.Line(this.primal[i])];
+            }
+        };
+
+        Conic.throughFivePoints = function (p, q, r, s, t) {
+            var conic = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
+
+            Object.defineProperties(conic, {
+                'primal': {
+                    get: function () {
+                        var G = p.vectorProduct(r).outerProduct(q.vectorProduct(s)), H = p.vectorProduct(s).outerProduct(q.vectorProduct(r)), M = G.times(t.times(H).scalarProduct(t)).minus(H.times(t.times(G).scalarProduct(t)));
+                        return M.transpose().plus(M);
+                    },
+                    set: function () {
+                    },
+                    enumerable: true,
+                    configurable: true
+                }
+            });
+
+            return conic;
+        };
+        return Conic;
+    })();
+    MathLib.Conic = Conic;
+
     var Point = (function (_super) {
         __extends(Point, _super);
         function Point(coords) {
             _super.call(this, arguments.length > 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
+            this.type = 'point';
 
             this.dimension = 2;
-            this.type = 'point';
         }
         Point.prototype.crossRatio = function (a, b, c, d) {
             var xa = this.vectorProduct(a), xb = this.vectorProduct(b);
@@ -5513,13 +5997,13 @@ var MathLib;
             return xa.scalarProduct(c) * xb.scalarProduct(d) / (xa.scalarProduct(d) * xb.scalarProduct(c));
         };
 
-        Point.prototype.distanceTo = function (point) {
+        Point.prototype.distanceTo = function (p) {
             if (arguments.length === 0) {
                 return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
             }
 
-            if (point.type === 'point' && this.dimension === point.dimension) {
-                return MathLib.hypot.apply(null, this.normalize().minus(point.normalize()).slice(0, -1));
+            if (p.type === 'point' && this.dimension === p.dimension) {
+                return MathLib.hypot.apply(null, this.normalize().minus(p.normalize()).slice(0, -1));
             }
         };
 
@@ -5573,44 +6057,41 @@ var MathLib;
             }
         };
 
-        Point.prototype.lineTo = function (q, dyn) {
-            if (typeof dyn === "undefined") { dyn = false; }
+        Point.prototype.join = function (q) {
             var line, p = this;
 
             if (this.dimension === 2 && q.dimension === 2) {
                 line = new MathLib.Line(this.vectorProduct(q));
 
-                if (dyn) {
-                    Object.defineProperties(line, {
-                        '0': {
-                            get: function () {
-                                return p[1] * q[2] - p[2] * q[1];
-                            },
-                            set: function () {
-                            },
-                            enumerable: true,
-                            configurable: true
+                Object.defineProperties(line, {
+                    '0': {
+                        get: function () {
+                            return p[1] * q[2] - p[2] * q[1];
                         },
-                        '1': {
-                            get: function () {
-                                return p[2] * q[0] - p[0] * q[2];
-                            },
-                            set: function () {
-                            },
-                            enumerable: true,
-                            configurable: true
+                        set: function () {
+                            MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join' });
                         },
-                        '2': {
-                            get: function () {
-                                return p[0] * q[1] - p[1] * q[0];
-                            },
-                            set: function () {
-                            },
-                            enumerable: true,
-                            configurable: true
-                        }
-                    });
-                }
+                        enumerable: true
+                    },
+                    '1': {
+                        get: function () {
+                            return p[2] * q[0] - p[0] * q[2];
+                        },
+                        set: function () {
+                            MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join' });
+                        },
+                        enumerable: true
+                    },
+                    '2': {
+                        get: function () {
+                            return p[0] * q[1] - p[1] * q[0];
+                        },
+                        set: function () {
+                            MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join' });
+                        },
+                        enumerable: true
+                    }
+                });
 
                 return line;
             }
@@ -5636,6 +6117,43 @@ var MathLib;
                     return new MathLib.Point(reflectedPoint);
                 }
             }
+        };
+
+        Point.prototype.restrictTo = function (l) {
+            var p = this.slice();
+
+            Object.defineProperties(this, {
+                '0': {
+                    get: function () {
+                        return l[1] * l[1] * p[0] - l[0] * (l[1] * p[1] + l[2] * p[2]);
+                    },
+                    set: function (point) {
+                        p[0] = point;
+                    },
+                    enumerable: true,
+                    configurable: true
+                },
+                '1': {
+                    get: function () {
+                        return -l[1] * l[2] * p[2] + l[0] * (l[0] * p[1] - l[1] * p[0]);
+                    },
+                    set: function (point) {
+                        p[1] = point;
+                    },
+                    enumerable: true,
+                    configurable: true
+                },
+                '2': {
+                    get: function () {
+                        return l[1] * l[1] * p[2] + l[0] * l[0] * p[2];
+                    },
+                    set: function (point) {
+                        p[2] = point;
+                    },
+                    enumerable: true,
+                    configurable: true
+                }
+            });
         };
 
         Point.prototype.toComplex = function () {
@@ -6675,5 +7193,222 @@ if (!('setLineDash' in CanvasRenderingContext2D.prototype)) {
         configurable: false,
         writeable: false
     });
+}
+
+if ((Object).observe === undefined) {
+    (function (global) {
+        'use strict';
+
+        var setImmediate = global.setImmediate || global.msSetImmediate;
+        var clearImmediate = global.clearImmediate || global.msClearImmediate;
+        if (!setImmediate) {
+            setImmediate = function (func, args) {
+                return setTimeout(func, 0, args);
+            };
+            clearImmediate = function (id) {
+                clearTimeout(id);
+            };
+        }
+
+        var observerCallbacks = [];
+
+        var NotifierPrototype = Object.create(Object.prototype);
+        Object.defineProperty(NotifierPrototype, 'notify', {
+            value: function (changeRecord) {
+                var notifier = this;
+                if (Object(notifier) !== notifier) {
+                    throw new TypeError('this must be an Object, given ' + notifier);
+                }
+                if (Object(notifier) !== notifier) {
+                    throw new TypeError('changeRecord must be an Object, given ' + changeRecord);
+                }
+                if (!this.target) {
+                    return;
+                }
+
+                var type = changeRecord.type;
+                if (typeof type !== 'string') {
+                    throw new TypeError('changeRecord.type must be a string, given ' + type);
+                }
+
+                var changeObservers = notifier.changeObservers;
+                if (!changeObservers || changeObservers.length === 0) {
+                    return;
+                }
+                var target = notifier.target, newRecord = Object.create(Object.prototype);
+                Object.defineProperty(newRecord, 'object', {
+                    value: target,
+                    writable: false,
+                    enumerable: true,
+                    configurable: false
+                });
+                for (var prop in changeRecord) {
+                    if (prop !== 'object') {
+                        var value = changeRecord[prop];
+                        Object.defineProperty(newRecord, prop, {
+                            value: value,
+                            writable: false,
+                            enumerable: true,
+                            configurable: false
+                        });
+                    }
+                }
+                Object.preventExtensions(newRecord);
+                enqueueChangeRecord(newRecord, changeObservers);
+                setUpChangesDelivery();
+            },
+            writable: true,
+            enumerable: false,
+            configurable: true
+        });
+
+        var changeDeliveryImmediateUid;
+
+        function setUpChangesDelivery() {
+            clearImmediate(changeDeliveryImmediateUid);
+            changeDeliveryImmediateUid = setImmediate(deliverAllChangeRecords, 0);
+        }
+
+        var notifierProperty = '__notifier__';
+
+        function getNotifier(target) {
+            if (!target.hasOwnProperty(notifierProperty)) {
+                var notifier = Object.create(NotifierPrototype);
+                notifier.target = target;
+                notifier.changeObservers = [];
+
+                Object.defineProperty(target, notifierProperty, {
+                    value: notifier,
+                    enumerable: false,
+                    configurable: true,
+                    writable: true
+                });
+            }
+            return target[notifierProperty];
+        }
+
+        var pendingChangesProperty = '__pendingChangeRecords__';
+
+        function enqueueChangeRecord(newRecord, observers) {
+            for (var i = 0, l = observers.length; i < l; i++) {
+                var observer = observers[i];
+                if (!observer.hasOwnProperty(pendingChangesProperty)) {
+                    Object.defineProperty(observer, pendingChangesProperty, {
+                        value: null,
+                        enumerable: false,
+                        configurable: true,
+                        writable: true
+                    });
+                }
+                var pendingChangeRecords = observer[pendingChangesProperty] || (observer[pendingChangesProperty] = []);
+                pendingChangeRecords.push(newRecord);
+            }
+        }
+
+        var attachedNotifierCountProperty = '___attachedNotifierCount__';
+
+        function cleanObserver(observer) {
+            if (!observer[attachedNotifierCountProperty] && !observer[pendingChangesProperty]) {
+                var index = observerCallbacks.indexOf(observer);
+                if (index !== -1) {
+                    observerCallbacks.splice(index, 1);
+                }
+            }
+        }
+
+        function deliverChangeRecords(observer) {
+            var pendingChangeRecords = observer[pendingChangesProperty];
+            observer[pendingChangesProperty] = null;
+            if (!pendingChangeRecords || pendingChangeRecords.length === 0) {
+                return false;
+            }
+            try  {
+                observer.call(undefined, pendingChangeRecords);
+            } catch (e) {
+                console.log(e);
+            }
+
+            cleanObserver(observer);
+            return true;
+        }
+
+        function deliverAllChangeRecords() {
+            var observers = observerCallbacks.slice(0);
+            var anyWorkDone = false;
+            for (var i = 0, l = observers.length; i < l; i++) {
+                var observer = observers[i];
+                if (deliverChangeRecords(observer)) {
+                    anyWorkDone = true;
+                }
+            }
+            return anyWorkDone;
+        }
+
+        (Object).observe = function (target, observer) {
+            if (Object(target) !== target) {
+                throw new TypeError('target must be an Object, given ' + target);
+            }
+            if (typeof observer !== 'function') {
+                throw new TypeError('observerCallBack must be a function, given ' + observer);
+            }
+
+            if (Object.isFrozen(observer)) {
+                throw new TypeError('observer cannot be frozen');
+            }
+
+            var notifier = getNotifier(target), changeObservers = notifier.changeObservers;
+
+            if (changeObservers.indexOf(observer) === -1) {
+                changeObservers.push(observer);
+                if (observerCallbacks.indexOf(observer) === -1) {
+                    observerCallbacks.push(observer);
+                }
+                if (!observer.hasOwnProperty(attachedNotifierCountProperty)) {
+                    Object.defineProperty(observer, attachedNotifierCountProperty, {
+                        value: 0,
+                        enumerable: false,
+                        configurable: true,
+                        writable: true
+                    });
+                }
+                observer[attachedNotifierCountProperty]++;
+            }
+            return target;
+        };
+
+        (Object).unobserve = function (target, observer) {
+            if (Object(target) !== target) {
+                throw new TypeError('target must be an Object, given ' + target);
+            }
+            if (typeof observer !== 'function') {
+                throw new TypeError('observerCallBack must be a function, given ' + observer);
+            }
+            var notifier = getNotifier(target);
+            var changeObservers = notifier.changeObservers;
+            var index = notifier.changeObservers.indexOf(observer);
+            if (index !== -1) {
+                changeObservers.splice(index, 1);
+                observer[attachedNotifierCountProperty]--;
+                cleanObserver(observer);
+            }
+            return target;
+        };
+
+        (Object).deliverChangeRecords = function (observer) {
+            if (typeof observer !== 'function') {
+                throw new TypeError('callback must be a function, given ' + observer);
+            }
+            while (deliverChangeRecords(observer)) {
+            }
+            return;
+        };
+
+        (Object).getNotifier = function (target) {
+            if (Object(target) !== target) {
+                throw new TypeError('target must be an Object, given ' + target);
+            }
+            return getNotifier(target);
+        };
+    })(this);
 }
 //@ sourceMappingURL=MathLib.js.map

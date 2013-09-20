@@ -1,4 +1,4 @@
-// ### <a href="http://mathlib.de/en/docs/Expression/variable">Expression.variable</a>
+// ### Expression.variable
 // Constructs a variable expression.
 //
 // *@return {Expression}*

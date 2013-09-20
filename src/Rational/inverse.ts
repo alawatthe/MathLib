@@ -1,4 +1,4 @@
-// ### [Rational.prototype.inverse()](http://mathlib.de/en/docs/rational/inverse)
+// ### [Rational.prototype.inverse()](http://mathlib.de/en/docs/Rational/inverse)
 // Calculates the inverse of a rational number
 //
 // *@return {Rational}*

@@ -1,4 +1,4 @@
-// ### <a href="http://mathlib.de/en/docs/Expression/number">Expression.number</a>
+// ### Expression.number
 // Constructs a number expression.
 //
 // *@return {Expression}*

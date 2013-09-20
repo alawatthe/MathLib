@@ -1,4 +1,4 @@
-// ### <a href="http://mathlib.de/en/docs/Expression/parseContentMathML">Expression.prototype.parseContentMathML</a>
+// ### Expression.prototype.parseContentMathML
 // Parses a content MathML string and returns an Expression.
 //
 // *@return {Expression}*

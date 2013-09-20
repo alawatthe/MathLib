@@ -1,4 +1,4 @@
-// ### <a href="http://mathlib.de/en/docs/Expression/constant">Expression.constant</a>
+// ### Expression.constant
 // Constructs a constant expression.
 //
 // *@return {Expression}*

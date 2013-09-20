@@ -84,23 +84,27 @@ module.exports = function (grunt) {
 							'src/Permutation/!(init).ts',
 							'src/meta/bracket13.ts',
 
+							'src/Conic/init.ts',
+							'src/Conic/!(init).ts',
+							'src/meta/bracket14.ts',
+
 							'src/Point/init.ts',
 							'src/Point/!(init).ts',
-							'src/meta/bracket14.ts',
+							'src/meta/bracket15.ts',
 
 							'src/Polynomial/init.ts',
 							'src/Polynomial/!(init).ts',
-							'src/meta/bracket15.ts',
+							'src/meta/bracket16.ts',
 
 							'src/Rational/init.ts',
 							'src/Rational/!(init).ts',
-							'src/meta/bracket16.ts',
+							'src/meta/bracket17.ts',
 
 							'src/Set/init.ts',
 							'src/Set/!(init).ts',
-							'src/meta/bracket17.ts',
-
 							'src/meta/bracket18.ts',
+
+							'src/meta/bracket19.ts',
 							'src/shims/*.ts'
 							],
 				dest: 'build/MathLib.ts',
@@ -162,13 +166,17 @@ module.exports = function (grunt) {
 							'test/Complex/init.js',
 							'test/Complex/!(init).js',
 
+							'test/Conic/init.js',
+							'test/Conic/!(init).js',
+
 							'test/Expression/init.js',
 							'test/Expression/!(init).js',
 
 							'test/Functn/init.js',
 							'test/Functn/!(init).js',
 
-							'test/Line/line.js',
+							'test/Line/init.js',
+							'test/Line/!(init).js',
 
 							'test/Matrix/init.js',
 							'test/Matrix/!(init).js',

@@ -4,7 +4,5 @@
 // *@param {Line}*  
 // *@return {boolean}*
 isParallelTo(l : Line) : boolean {
-	return this.every(function (x, i) {
-		return MathLib.isEqual(x, l[i]) || i === l.length - 1;
-	});
+	return MathLib.isZero(this[0]*l[1] - this[1]*l[0]);
 }

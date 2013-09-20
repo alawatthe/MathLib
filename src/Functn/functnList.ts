@@ -184,7 +184,7 @@ MathLib.is = function (obj, type) {
 }
 
 
-// ### .isMathMLSupported()
+// ### MathLib.isMathMLSupported()
 // Checks if MathML is supported by the browser.  
 // Code stolen from [Modernizr](http://www.modernizr.com/)
 //

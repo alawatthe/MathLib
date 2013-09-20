@@ -69,10 +69,13 @@ export class Layer {
 					this.ctx.fillRect(left, bottom, right - left, top - bottom);
 
 					this.stack.forEach(function (x, i) {
-						if (x.type === 'text' ) {
+						if (x.type === 'conic' ) {
+							x.object.draw(_this, x.options, true);
+						}
+						else if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
-						if (x.type === 'pixel' ) {
+						else if (x.type === 'pixel' ) {
 							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
 						}
 						else {
@@ -107,10 +110,13 @@ export class Layer {
 					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 
 					this.stack.forEach(function (x, i) {
-						if (x.type === 'text' ) {
+						if (x.type === 'conic' ) {
+							x.object.draw(_this, x.options, true);
+						}
+						else if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
-						if (x.type === 'pixel' ) {
+						else if (x.type === 'pixel' ) {
 							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
 						}
 						else {
@@ -148,10 +154,13 @@ export class Layer {
 							right   = (screen.width  - screen.translation.x) / screen.scale.x;
 
 					this.stack.forEach(function (x, i) {
-						if (x.type === 'text' ) {
+						if (x.type === 'conic' ) {
+							x.object.draw(_this, x.options, true);
+						}
+						else if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
-						if (x.type === 'pixel' ) {
+						else if (x.type === 'pixel' ) {
 							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
 						}
 						else {
@@ -181,10 +190,13 @@ export class Layer {
 				this.draw = function () {
 
 					this.stack.forEach(function (x, i) {
-						if (x.type === 'text' ) {
+						if (x.type === 'conic' ) {
+							x.object.draw(_this, x.options, true);
+						}
+						else if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
-						if (x.type === 'pixel' ) {
+						else if (x.type === 'pixel' ) {
 							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
 						}
 						else {

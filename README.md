@@ -77,6 +77,7 @@ New functionality should always be added with proper testing and documentation.
 
 
 ## Release History
+* v0.6.0: Conics module
 * v0.5.0: removed MathML module and improved Expression module
 * v0.4.0: Typescript, better plotting
 * v0.3.0: grunt integration

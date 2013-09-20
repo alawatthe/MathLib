@@ -1,4 +1,4 @@
-// ### [Rational.prototype.divide()](http://mathlib.de/en/docs/rational/divide)
+// ### [Rational.prototype.divide()](http://mathlib.de/en/docs/Rational/divide)
 // Divides rational numbers
 //
 // *@param {Rational|number}* The divisor  

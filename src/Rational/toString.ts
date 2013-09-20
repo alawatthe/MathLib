@@ -1,4 +1,4 @@
-// ### [Rational.prototype.toString()](http://mathlib.de/en/docs/rational/toString)
+// ### [Rational.prototype.toString()](http://mathlib.de/en/docs/Rational/toString)
 // Custom toString function
 //
 // *@return {string}*

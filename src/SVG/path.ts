@@ -56,11 +56,20 @@ path: function (curve, options = {}, redraw = false) {
 	this.ctx.appendChild(svgPath);
 
 	if (!redraw) {
-		this.stack.push({
-			type: 'path',
-			object: curve,
-			options: options
-		});
+		if (options.conic) {
+			this.stack.push({
+				type: 'conic',
+				object: options.conic,
+				options: options
+			});
+		}
+		else {
+			this.stack.push({
+				type: 'path',
+				object: curve,
+				options: options
+			});
+		}
 	}
 
 	return this;

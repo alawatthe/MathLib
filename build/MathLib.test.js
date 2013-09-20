@@ -412,6 +412,270 @@ test('zero', 1, function () {
 	deepEqual(c, new MathLib.Complex(0, 0), '.zero');
 });
 
+module('Conic');
+test('init', 1, function () {
+	var p = new MathLib.Conic(new MathLib.Matrix([[0, 1], [2, 3]]));
+	equal(typeof p, 'object', 'Testing typeof');
+});
+
+
+
+// Properties
+test('.constructor', 1, function () {
+	var p = new MathLib.Conic(new MathLib.Matrix([[0, 1], [2, 3]]));
+	equal(p.constructor, MathLib.Conic, 'Testing .constructor');
+});
+
+
+test('.type', 1, function () {
+	var p = new MathLib.Conic(new MathLib.Matrix([[0, 1], [2, 3]]));
+	equal(p.type, 'conic', 'Testing .type');
+});
+test('.eccentricity()', 10, function () {
+	var c1 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, -1]]),
+			c2 = new MathLib.Conic([[2, 0, 0], [0, 2, 0], [0, 0, -2]]),
+
+			e1 = new MathLib.Conic([[4, 0, 0], [0, 3, 0], [0, 0, -1]]),
+			e2 = new MathLib.Conic([[8, 0, 0], [0, 6, 0], [0, 0, -2]]),
+
+			p1 = new MathLib.Conic([[1, 0, 0], [0, 0, -0.5], [0, -0.5, 0]]),
+			p2 = new MathLib.Conic([[2, 0, 0], [0, 0, -1], [0, -1, 0]]),
+
+			h1 = new MathLib.Conic([[4, 0, 0], [0, -3, 0], [0, 0, -1]]),
+			h2 = new MathLib.Conic([[8, 0, 0], [0, -6, 0], [0, 0, -2]]),
+
+			deg1 = new MathLib.Conic([[1, 1, 0], [1, 1, 0], [0, 0, -1]]),
+			deg2 = new MathLib.Conic([[1, 1, 0], [1, 2, 0], [0, 0, 0]]);
+
+	equal(c1.eccentricity(), 0, 'circle.eccentricity() = 0');
+	equal(c2.eccentricity(), 0, 'circle.eccentricity() = 0');
+	equal(e1.eccentricity(), 0.5, 'ellipse.eccentricity()');
+	equal(e2.eccentricity(), 0.5, 'ellipse.eccentricity()');
+	equal(p1.eccentricity(), 1, 'parabola.eccentricity() = 1');
+	equal(p2.eccentricity(), 1, 'parabola.eccentricity() = 1');
+	equal(h1.eccentricity(), Math.sqrt(1 + 4 / 3), 'hyperbola.eccentricity()');
+	equal(h2.eccentricity(), Math.sqrt(1 + 4 / 3), 'hyperbola.eccentricity()');
+	equal(deg1.eccentricity(), undefined, 'degeneratedConic.eccentricity() = undefined');
+	equal(deg2.eccentricity(), undefined, 'degeneratedConic.eccentricity() = undefined');
+});
+test('.isDegenerated()', 5, function () {
+	var c = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, -1]]),
+			e = new MathLib.Conic([[4, 0, 0], [0, 3, 0], [0, 0, -1]]),
+			p = new MathLib.Conic([[1, 0, 0], [0, 0, -0.5], [0, -0.5, 0]]),
+			h = new MathLib.Conic([[4, 0, 0], [0, -3, 0], [0, 0, -1]]),
+
+			deg = new MathLib.Conic([[1, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 1, 1], [0, 1, 1]]);
+
+	equal(c.isDegenerated(), false, '.isDegenerated(hyperbola) = false');
+	equal(e.isDegenerated(), false, '.isDegenerated(ellipse) = false');
+	equal(p.isDegenerated(), false, '.isDegenerated(parabola) = false');
+	equal(h.isDegenerated(), false, '.isDegenerated(hyperbola) = false');
+	equal(deg.isDegenerated(), true, '.isDegenerated(degenerated conic) = true');
+});
+test('.isEqual()', 4, function () {
+	var c1 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
+			c2 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
+			c3 = new MathLib.Conic([[2, 0, 0], [0, 2, 0], [0, 0, 2]]),
+			c4 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 2]]);
+
+
+	equal(c1.isEqual(c1), true, 'same variable');
+	equal(c1.isEqual(c2), true, 'identical conic');
+	equal(c1.isEqual(c3), true, 'scaled parameters');
+	equal(c1.isEqual(c4), false, 'different conic');
+});
+test('.latusRectum()', 10, function () {
+	var c1 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, -1]]),
+			c2 = new MathLib.Conic([[2, 0, 0], [0, 2, 0], [0, 0, -2]]),
+
+			e1 = new MathLib.Conic([[4, 0, 0], [0, 3, 0], [0, 0, -1]]),
+			e2 = new MathLib.Conic([[8, 0, 0], [0, 6, 0], [0, 0, -2]]),
+
+			p1 = new MathLib.Conic([[1, 0, 0], [0, 0, -0.5], [0, -0.5, 0]]),
+			p2 = new MathLib.Conic([[2, 0, 0], [0, 0, -1], [0, -1, 0]]),
+
+			h1 = new MathLib.Conic([[4, 0, 0], [0, -3, 0], [0, 0, -1]]),
+			h2 = new MathLib.Conic([[8, 0, 0], [0, -6, 0], [0, 0, -2]]),
+
+			deg1 = new MathLib.Conic([[1, 1, 0], [1, 1, 0], [0, 0, -1]]),
+			deg2 = new MathLib.Conic([[1, 1, 0], [1, 2, 0], [0, 0, 0]]);
+
+	equal(c1.latusRectum(), 2, 'circle.latusRectum()');
+	equal(c2.latusRectum(), 2, 'circle.latusRectum()');
+	equal(e1.latusRectum(), 4 / 3, 'ellipse.latusRectum()');
+	equal(e2.latusRectum(), 4 / 3, 'ellipse.latusRectum()');
+	equal(p1.latusRectum(), 1, 'parabola.latusRectum()');
+	equal(p2.latusRectum(), 1, 'parabola.latusRectum()');
+	equal(h1.latusRectum(), 4 / 3, 'hyperbola.latusRectum()');
+	equal(h2.latusRectum(), 4 / 3, 'hyperbola.latusRectum()');
+	equal(deg1.latusRectum(), undefined, 'degeneratedConic.latusRectum() = undefined');
+	equal(deg2.latusRectum(), undefined, 'degeneratedConic.latusRectum() = undefined');
+});
+test('.linearEccentricity()', 10, function () {
+	var c1 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, -1]]),
+			c2 = new MathLib.Conic([[2, 0, 0], [0, 2, 0], [0, 0, -2]]),
+
+			e1 = new MathLib.Conic([[4, 0, 0], [0, 3, 0], [0, 0, -1]]),
+			e2 = new MathLib.Conic([[8, 0, 0], [0, 6, 0], [0, 0, -2]]),
+
+			p1 = new MathLib.Conic([[1, 0, 0], [0, 0, -0.5], [0, -0.5, 0]]),
+			p2 = new MathLib.Conic([[2, 0, 0], [0, 0, -1], [0, -1, 0]]),
+
+			h1 = new MathLib.Conic([[4, 0, 0], [0, -3, 0], [0, 0, -1]]),
+			h2 = new MathLib.Conic([[8, 0, 0], [0, -6, 0], [0, 0, -2]]),
+
+			deg1 = new MathLib.Conic([[1, 1, 0], [1, 1, 0], [0, 0, -1]]),
+			deg2 = new MathLib.Conic([[1, 1, 0], [1, 2, 0], [0, 0, 0]]);
+
+	equal(c1.linearEccentricity(), 0, 'circle.linearEccentricity()');
+	equal(c2.linearEccentricity(), 0, 'circle.linearEccentricity()');
+	equal(e1.linearEccentricity(), 0.28867513459481287, 'ellipse.linearEccentricity()');
+	equal(e2.linearEccentricity(), 0.28867513459481287, 'ellipse.linearEccentricity()');
+	equal(p1.linearEccentricity(), 1 / 4, 'parabola.linearEccentricity()');
+	equal(p2.linearEccentricity(), 1 / 4, 'parabola.linearEccentricity()');
+	equal(h1.linearEccentricity(), Math.sqrt(1 / 3 + 1 / 4), 'hyperbola.linearEccentricity()');
+	equal(h2.linearEccentricity(), Math.sqrt(1 / 3 + 1 / 4), 'hyperbola.linearEccentricity()');
+	equal(deg1.linearEccentricity(), undefined, 'degeneratedConic.linearEccentricity() = undefined');
+	equal(deg2.linearEccentricity(), undefined, 'degeneratedConic.linearEccentricity() = undefined');
+});
+test('.meet()', 28, function () {
+	var i, ii, meetingPoints,
+			line = new MathLib.Line([-1, 1, 0]),
+			conics = [];
+
+			conics.push(new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, -1]]));
+			conics.push(new MathLib.Conic([[4, 0, 0], [0, 3, 0], [0, 0, -1]]));
+			conics.push(new MathLib.Conic([[1, 0, 0], [0, 0, -0.5], [0, -0.5, 0]]));
+			conics.push(new MathLib.Conic([[4, 0, 0], [0, -3, 0], [0, 0, -1]]));
+			conics.push(new MathLib.Conic([[1, 1, 0], [1, 1, 0], [0, 0, -1]]));
+			conics.push(new MathLib.Conic([[1, 1, 0], [1, 2, 0], [0, 0, 0]]));
+			conics.push(new MathLib.Conic([[1, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 1, 0], [0, 0, 1]]));
+
+
+	for (i = 0, ii = conics.length; i < ii; i++) {
+		meetingPoints = conics[i].meet(line);
+
+		ok(MathLib.isEqual(meetingPoints[0].scalarProduct(line), 0), 'line goes through first meeting point');
+		ok(MathLib.isEqual(meetingPoints[1].scalarProduct(line), 0), 'line goes through second meeting point');
+
+		ok(MathLib.isEqual(meetingPoints[0].times(conics[i].primal).scalarProduct(meetingPoints[0]), 0), 'conic goes through first meeting point');
+		ok(MathLib.isEqual(meetingPoints[1].times(conics[i].primal).scalarProduct(meetingPoints[1]), 0), 'conic goes through second meeting point');
+	}
+
+});
+test('.normalize()', 30, function () {
+	var C = [],
+			N = [],
+			c1 = new MathLib.Conic([[1, 1, 0], [1, 1, 0], [0, 0, -1]]),
+			n1 = c1.normalize(),
+			c2 = new MathLib.Conic([[4, 0, 0], [0, 3, 0], [0, 0, -1]]),
+			n2 = c2.normalize(),
+			c3 = new MathLib.Conic([[4, 0, 0], [0, 3, 0], [0, 0, -1]]),
+			n3 = c3.normalize(),
+			c4 = new MathLib.Conic([[-4, 0, 0], [0, 0, 2], [0, 2, 8]]),
+			n4 = c4.normalize(),
+
+			c1Deg = new MathLib.Conic([[0, 0, 0], [0, 0, 0], [0, 0, 1]], [[1,0,0],[0,1,0],[0,0,1]]),
+			n1Deg = c1Deg.normalize(),
+
+			i;
+			a = Math.random() - 0.5,
+			b = Math.random() - 0.5,
+			c = Math.random() - 0.5,
+			d = Math.random() - 0.5,
+			e = Math.random() - 0.5,
+			f = Math.random() - 0.5,
+			Conic = new MathLib.Conic([[a, b, d], [b, c, e], [d, e, f]]);
+
+
+	C.push(c1);
+	N.push(n1);
+	C.push(c2);
+	N.push(n2);
+	C.push(c3);
+	N.push(n3);
+	C.push(c4);
+	N.push(n4);
+	C.push(c1Deg);
+	N.push(n1Deg);
+	C.push(Conic);
+	N.push(Conic.normalize());
+
+
+	for (i = 0; i < C.length; i++) {
+		cp = C[i].primal;
+		np = N[i].primal;
+
+		equal(cp.rank(), np.rank(), true, 'rank is invariant')
+
+		equal(np[0][1], 0, 'b is 0');
+		equal(np[2][2] === 0 || np[2][2] === -1, true, 'f is 0 or -1');
+		equal(np[0][0] * np[0][2], 0, 'a or d is 0');
+		equal(np[1][1] * np[1][2], 0, 'c or e is 0');
+	}
+
+
+});
+test('.polarity()', 14, function () {
+	var q = new MathLib.Point([2, 1, 1]),
+			l = new MathLib.Line([1, 2, 1]),
+			c = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, -1]]),
+			e = new MathLib.Conic([[4, 0, 0], [0, 3, 0], [0, 0, -1]]),
+			p = new MathLib.Conic([[1, 0, 0], [0, 0, -0.5], [0, -0.5, 0]]),
+			h = new MathLib.Conic([[4, 0, 0], [0, -3, 0], [0, 0, -1]]),
+			deg1 = new MathLib.Conic([[1, 1, 0], [1, 1, 0], [0, 0, -1]]),
+			deg2 = new MathLib.Conic([[1, 1, 0], [1, 2, 0], [0, 0, 0]]),
+			deg3 = new MathLib.Conic([[1, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 1, 0], [0, 0, 1]]);
+
+
+	ok(MathLib.isEqual( c.polarity(q), new MathLib.Line([2, 1, -1])), 'circle.polarity()');
+	ok(MathLib.isEqual( c.polarity(l), new MathLib.Point([1, 2, -1])), 'circle.polarity()');
+
+	ok(MathLib.isEqual( e.polarity(q), new MathLib.Line([8, 3, -1])), 'ellipse.polarity()');
+	ok(MathLib.isEqual( e.polarity(l), new MathLib.Point([1 / 4, 2 / 3, -1])), 'ellipse.polarity()');
+
+	ok(MathLib.isEqual( p.polarity(q), new MathLib.Line([2, -0.5, -0.5])), 'parabola.polarity()');
+	ok(MathLib.isEqual( p.polarity(l), new MathLib.Point([-0.25, 0.5, 1])), 'parabola.polarity()');
+
+	ok(MathLib.isEqual( h.polarity(q), new MathLib.Line([8, -3, -1])), 'hyperbola.polarity()');
+	ok(MathLib.isEqual( h.polarity(l), new MathLib.Point([0.25, -2 / 3, -1])), 'hyperbola.polarity()');
+
+	ok(MathLib.isEqual( deg1.polarity(q), new MathLib.Line([3, 3, -1])), 'degeneratedConic.polarity()');
+	ok(MathLib.isEqual( deg1.polarity(l), new MathLib.Point([1, -1, 0])), 'degeneratedConic.polarity()');
+
+	ok(MathLib.isEqual( deg2.polarity(q), new MathLib.Line([3, 4, 0])), 'degeneratedConic.polarity()');
+	ok(MathLib.isEqual( deg2.polarity(l), new MathLib.Point([0, 0, 1])), 'degeneratedConic.polarity()');
+
+	ok(MathLib.isEqual( deg3.polarity(q), new MathLib.Line([2, 0, 0])), 'degeneratedConic.polarity()');
+	ok(MathLib.isEqual( deg3.polarity(l), new MathLib.Point([0, 2, 1])), 'degeneratedConic.polarity()');
+});
+test('.splitDegenerated()', 4, function () {
+	var c1 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
+			c2 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 0]]),
+			c3 = new MathLib.Conic([[1, 1, 0], [1, 1, 0], [0, 0, 0]]),
+			c4 = new MathLib.Conic([[1, 0, 0], [0, 0, 0], [0, 0, 0]]);
+
+
+	equal(c1.splitDegenerated(), undefined, 'rank 3 conic');
+	deepEqual(c2.splitDegenerated(), [new MathLib.Line([1, 1, 0]), new MathLib.Line([1, -1, 0])], 'rank 2 conic');
+	deepEqual(c3.splitDegenerated(), [new MathLib.Line([1, 1, 0]), new MathLib.Line([1, 1, 0])], 'rank 1 conic');
+	deepEqual(c4.splitDegenerated(), [new MathLib.Line([1, 0, 0]), new MathLib.Line([1, 0, 0])], 'rank 1 conic');
+});
+test('.throughFivePoints()', 5, function () {
+	var p1 = new MathLib.Point([Math.random(), Math.random(), 1]),
+			p2 = new MathLib.Point([Math.random(), Math.random(), 1]),
+			p3 = new MathLib.Point([Math.random(), Math.random(), 1]),
+			p4 = new MathLib.Point([Math.random(), Math.random(), 1]),
+			p5 = new MathLib.Point([Math.random(), Math.random(), 1]),
+			conic = MathLib.Conic.throughFivePoints(p1, p2, p3, p4, p5);
+
+
+	ok(MathLib.isEqual(p1.times(conic.primal).scalarProduct(p1), 0), 'conic goes through first point');
+	ok(MathLib.isEqual(p2.times(conic.primal).scalarProduct(p2), 0), 'conic goes through second point');
+	ok(MathLib.isEqual(p3.times(conic.primal).scalarProduct(p3), 0), 'conic goes through third point');
+	ok(MathLib.isEqual(p4.times(conic.primal).scalarProduct(p4), 0), 'conic goes through fourth point');
+	ok(MathLib.isEqual(p5.times(conic.primal).scalarProduct(p5), 0), 'conic goes through fifth point');
+});
 module('Expression');
 test('init', 2, function () {
 	var e1 = new MathLib.Expression('sin(1)'),
@@ -993,8 +1257,8 @@ test('.arsinh()', 7, function () {
 	equal(MathLib.arsinh(-Infinity), -Infinity, 'Spec. 5: MathLib.arsinh(-∞) = -∞');
 
 	// Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x
-	equal(MathLib.arsinh(1), 0.8813735870195429, 'Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x');
-	equal(MathLib.arsinh(10), 2.99822295029797, 'Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x');
+	equal(MathLib.isEqual(MathLib.arsinh(1), 0.8813735870195429), true, 'Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x');
+	equal(MathLib.isEqual(MathLib.arsinh(10), 2.99822295029797), true, 'Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x');
 });
 test('.artanh()', 11, function () {
 	// Spec. 1: MathLib.artanh(NaN) = NaN
@@ -1819,8 +2083,8 @@ test('.tanh()', 7, function () {
 	equal(MathLib.tanh(-Infinity), -1, 'Spec. 5: MathLib.tanh(-∞) = -1');
 
 	// Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x
-	equal(MathLib.tanh(1), 0.761594155955765, 'Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x');
-	equal(MathLib.tanh(10), 0.9999999958776927, 'Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x');
+	equal(MathLib.isEqual(MathLib.tanh(1), 0.761594155955765), true, 'Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x');
+	equal(MathLib.isEqual(MathLib.tanh(10), 0.9999999958776927), true, 'Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x');
 });
 test('.times()', 5, function () {
 	equal(MathLib.times(), 1, 'The empty product is one.');
@@ -1904,29 +2168,35 @@ test('.type', 1, function () {
 	var line = new MathLib.Line([3, 2, 1]);
 	equal(line.type, 'line', 'Testing .type');
 });
-
-
-
-// Methods
-test('.isEqual()', 3, function () {
+test('.isEqual()', 4, function () {
 	var line1 = new MathLib.Line([3, 2, 1]),
 			line2 = new MathLib.Line([6, 4, 2]),
 			line3 = new MathLib.Line([1, 1, 1]),
-			line4 = new MathLib.Line([1, 1, 1, 1]);
+			line4 = new MathLib.Line([1, 1, 1, 1]),
+			line5 = new MathLib.Line([0, 0, 1]),
+			line6 = new MathLib.Line([0, 0, 2]);
+
 	equal(line1.isEqual(line2), true, '.isEqual()');
 	equal(line1.isEqual(line3), false, '.isEqual()');
 	equal(line3.isEqual(line4), false, '.isEqual()');
+	equal(line5.isEqual(line6), true, '.isEqual() two representations of the infinite line');
 });
-
-
 test('.isFinite()', 2, function () {
 	var line1 = new MathLib.Line([3, 2, 1]),
-			line2 = new MathLib.Line([6, 4, 0]);
+			line2 = new MathLib.Line([0, 0, 1]);
 	equal(line1.isFinite(), true, '.isFinite()');
 	equal(line2.isFinite(), false, '.isFinite()');
 });
+test('.isParallelTo()', 3, function () {
+	var l1 = new MathLib.Line([3, 2, 1]),
+			l2 = new MathLib.Line([3, 2, 2]),
+			l3 = new MathLib.Line([6, 4, 1]),
+			l4 = new MathLib.Line([1, 4, 1]);
 
-
+	equal(l1.isParallelTo(l2), true, '.isParallelTo()');
+	equal(l1.isParallelTo(l3), true, '.isParallelTo()');
+	equal(l1.isParallelTo(l4), false, '.isParallelTo()');
+});
 test('.map()', 2, function () {
 	var p = new MathLib.Line([1, 2, 3]),
 			q = new MathLib.Line([2, 4, 6]),
@@ -1938,33 +2208,69 @@ test('.map()', 2, function () {
 	deepEqual(res, q, '.map()');
 	equal(res.type, 'line', '.type should be line');
 });
+test('.meet()', 5, function () {
+	var l1 = new MathLib.Line([1, 0, 1]),
+			l2 = new MathLib.Line([0, 1, 1]),
+			l3 = new MathLib.Line([1, 1, 0]),
+			p1 = l1.meet(l2),
+			i = 0,
+			f = function () {i++;}
 
+	deepEqual(p1, new MathLib.Point([-1, -1, 1]), '.meet()');
+	deepEqual(l1.meet(l3), new MathLib.Point([-1, 1, 1]), '.meet()');
 
-// TODO: implement
-// test('.toContentMathML', 2, function () {
-//   var point = MathLib.point([3, 2, 1]);
-//   equal(point.toContentMathML(), '', '.toContentMathML()');
-//   equal(point.toContentMathML(true), '', '.toContentMathML()');
-// });
+	l1[0] = 2;
+	deepEqual(p1, new MathLib.Point([-1, -2, 2]), 'The coordinates of the point should change if those of the line change.');
+	
 
+	MathLib.on('warning', f);
+	p1[0] = 42;
+	deepEqual(p1, new MathLib.Point([-1, -2, 2]), 'You should not be able to change the coordinates of the point.');
+	equal(i, 1, 'The attempt to change the coordinates should raise a warning.');
+	MathLib.off('warning', f);
+});
+test('.normalize()', 3, function () {
+	var l1 = new MathLib.Line([3, 4, 5]),
+			l2 = new MathLib.Line([0, 0, 1]),
+			l3 = new MathLib.Line([0, 0, 8]);
+	
+	deepEqual(l1.normalize(), new MathLib.Line([0.6, 0.8, 1]), '.normalize() of an finite line');
+	deepEqual(l2.normalize(), new MathLib.Line([0, 0, 1]), '.normalize() of the infinite line');
+	deepEqual(l3.normalize(), new MathLib.Line([0, 0, 1]), '.normalize() of the infinite line');
+});
+test('.parallelThrough()', 5, function () {
+	var l = new MathLib.Line([1, 0, 1]),
+			p = new MathLib.Point([1, 1, 1]),
+			parallel = l.parallelThrough(p),
+			i = 0,
+			f = function () {i++;}
 
+	deepEqual(parallel, new MathLib.Line([-1, 0, 1]), '.parallelThrough()');
+
+	l[0] = 2;
+	deepEqual(parallel, new MathLib.Line([-2, 0, 2]), 'The coordinates of the parallel should change if those of the line change.');
+	p[0] = 2;
+	deepEqual(parallel, new MathLib.Line([-2, 0, 4]), 'The coordinates of the parallel should change if those of the point change.');
+	
+
+	MathLib.on('warning', f);
+	parallel[0] = 42;
+	deepEqual(parallel, new MathLib.Line([-2, 0, 4]), 'You should not be able to change the coordinates of the parallel.');
+	equal(i, 1, 'The attempt to change the coordinates should raise a warning.');
+	MathLib.off('warning', f);
+});
 test('.toLaTeX()', 1, function () {
 	var line = new MathLib.Line([3, 2, 1]);
 	equal(line.toLaTeX(), '\\begin{pmatrix}\n\t3\\\\\n\t2\\\\\n\t1\n\\end{pmatrix}', '.toLaTeX()');
 });
-
-
 test('.toMathML()', 1, function () {
 	var line = new MathLib.Line([3, 2, 1]);
 	equal(line.toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>)</mo></mrow>', '.toMathML()');
 });
-
-
 test('.toString()', 1, function () {
 	var line = new MathLib.Line([3, 2, 1]);
 	equal(line.toString(), '(3, 2, 1)', '.toString()');
 });
-
 module('Matrix');
 test('init', 2, function () {
 	var m = new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
@@ -2496,13 +2802,26 @@ test('.isOutside()', 3, function () {
 	equal(p2.isOutside(c), false, '.isOutside()');
 	equal(p3.isOutside(c), true, '.isOutside()');
 });
-test('.lineTo()', 2, function () {
+test('.join()', 5, function () {
 	var p1 = new MathLib.Point([1, 0, 1]),
 			p2 = new MathLib.Point([0, 1, 1]),
-			p3 = new MathLib.Point([1, 1, 0]);
+			p3 = new MathLib.Point([1, 1, 0]),
+			l1 = p1.join(p2),
+			i = 0,
+			f = function () {i++;}
 
-	deepEqual(p1.lineTo(p2), new MathLib.Line([-1, -1, 1]), '.lineTo()');
-	deepEqual(p1.lineTo(p3), new MathLib.Line([-1, 1, 1]), '.lineTo()');
+	deepEqual(l1, new MathLib.Line([-1, -1, 1]), '.join()');
+	deepEqual(p1.join(p3), new MathLib.Line([-1, 1, 1]), '.join()');
+
+	p1[0] = 2;
+	deepEqual(l1, new MathLib.Line([-1, -2, 2]), 'The coordinates of the line should change if those of the point change.');
+	
+
+	MathLib.on('warning', f);
+	l1[0] = 42;
+	deepEqual(l1, new MathLib.Line([-1, -2, 2]), 'You should not be able to change the coordinates of the line.');
+	equal(i, 1, 'The attempt to change the coordinates should raise a warning.');
+	MathLib.off('warning', f);
 });
 test('.map()', 2, function () {
 	var p = new MathLib.Point([1, 2, 3]),

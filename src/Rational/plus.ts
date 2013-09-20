@@ -1,4 +1,4 @@
-// ### [Rational.prototype.plus()](http://mathlib.de/en/docs/rational/plus)
+// ### [Rational.prototype.plus()](http://mathlib.de/en/docs/Rational/plus)
 // Adds rational numbers
 //
 // *@param {Rational|number}* The number to be added  

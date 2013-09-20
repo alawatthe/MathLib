@@ -1,4 +1,4 @@
-// ### [Rational.prototype.times()](http://mathlib.de/en/docs/rational/times)
+// ### [Rational.prototype.times()](http://mathlib.de/en/docs/Rational/times)
 // Multiplies rational numbers
 //
 // *@param {Rational|number}* The number to be multiplied  

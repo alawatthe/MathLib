@@ -5,7 +5,7 @@
 functnPrototype.toLaTeX = function () {
 	return this.expression.toLaTeX();
 /*
-	// List of functions to be executed on the specified node type
+	/ / List of functions to be executed on the specified node type
 	var handlers = {
 		apply: function (n) {
 			var f = n.childNodes[0],
@@ -24,7 +24,7 @@ functnPrototype.toLaTeX = function () {
 				str = args[0] + '^{' + args[1] + '}';
 			}
 			else {
-				// TODO: not all functions can be written like \sin some have to be written like \operatorname{argmax}
+				/ / TODO: not all functions can be written like \sin some have to be written like \operatorname{argmax}
 				str = '\\' + f.nodeName + '(' + args.join(', ') + ')';
 			}
 			return str;
@@ -42,7 +42,7 @@ functnPrototype.toLaTeX = function () {
 		'#text': function (n) {return n.innerMathML;}
 	};
 
-	// Start the node handling with the first real element (not the <math> element)
+	/ / Start the node handling with the first real element (not the <math> element)
 	return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
 	*/
 };

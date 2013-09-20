@@ -11,11 +11,11 @@ module MathLib {
 
 
 
-	MathLib.version = '0.5.2';
+	MathLib.version = '0.6.0';
 	MathLib.apery = 1.2020569031595942;
 	MathLib.e = Math.E;
 	// Number.EPSILON is probably coming in ES6
-	// (see section 15.7.3.7 in the current draft)
+	// (see section 20.1.2.1 in the current draft)
 	MathLib.epsilon = (<any>Number).EPSILON || (function () {
 			var next, result;
 			for (next = 1; 1 + next !== 1; next = next / 2) {

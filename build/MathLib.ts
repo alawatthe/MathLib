@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.5.2 - 2013-07-12  
+// v0.5.2 - 2013-09-20  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -55,11 +55,11 @@ module MathLib {
 
 
 
-	MathLib.version = '0.5.2';
+	MathLib.version = '0.6.0';
 	MathLib.apery = 1.2020569031595942;
 	MathLib.e = Math.E;
 	// Number.EPSILON is probably coming in ES6
-	// (see section 15.7.3.7 in the current draft)
+	// (see section 20.1.2.1 in the current draft)
 	MathLib.epsilon = (<any>Number).EPSILON || (function () {
 			var next, result;
 			for (next = 1; 1 + next !== 1; next = next / 2) {
@@ -126,7 +126,6 @@ var errors = [],
 		warnings = [];
 
 
-
 // ### [MathLib.on()](http://mathlib.de/en/docs/on)
 // Binds an event handler to an event.
 // 
@@ -157,7 +156,7 @@ MathLib.off = function (type, callback) {
 }
 
 
-// ### [MathLib.error()](http://mathlib.de/en/docs/error)
+// ### MathLib.error()
 // Fires an error event.
 //
 // *@param {oject}* An object describing the error further.  
@@ -168,7 +167,7 @@ MathLib.error = function (details) {
 };
 
 
-// ### [MathLib.warning()](http://mathlib.de/en/docs/warning)
+// ### MathLib.warning()
 // Fires a waring event.
 //
 // *@param {object}* An object describing the warning further.  
@@ -207,7 +206,7 @@ export class Expression {
 	}
 
 
-// ### [Expression.prototype.compare()](http://mathlib.de/en/docs/expression/compare)
+// ### [Expression.prototype.compare()](http://mathlib.de/en/docs/Expression/compare)
 // Compares two expressions
 //
 // *@param {Expression}* The expression to compare  
@@ -217,7 +216,7 @@ compare(e) {
 }
 
 
-// ### <a href="http://mathlib.de/en/docs/Expression/constant">Expression.constant</a>
+// ### Expression.constant
 // Constructs a constant expression.
 //
 // *@return {Expression}*
@@ -310,7 +309,7 @@ evaluate() : any {
 }
 
 
-// ### <a href="http://mathlib.de/en/docs/Expression/map">Expression.prototype.map</a>
+// ### Expression.prototype.map
 // Maps the expression tree over to an other expression tree.
 //
 // *@return {Expression}*
@@ -337,7 +336,7 @@ map(f) : Expression {
 }
 
 
-// ### <a href="http://mathlib.de/en/docs/Expression/number">Expression.number</a>
+// ### Expression.number
 // Constructs a number expression.
 //
 // *@return {Expression}*
@@ -880,7 +879,7 @@ static parse = function (str) {
 };
 
 
-// ### <a href="http://mathlib.de/en/docs/Expression/parseContentMathML">Expression.prototype.parseContentMathML</a>
+// ### Expression.prototype.parseContentMathML
 // Parses a content MathML string and returns an Expression.
 //
 // *@return {Expression}*
@@ -1379,7 +1378,7 @@ toString() : string {
 }
 
 
-// ### <a href="http://mathlib.de/en/docs/Expression/variable">Expression.variable</a>
+// ### Expression.variable
 // Constructs a variable expression.
 //
 // *@return {Expression}*
@@ -1391,7 +1390,7 @@ static variable(n) : Expression {
 }
 
 
-// ### <a href="http://mathlib.de/en/docs/Expression/variables">Expression.variables</a>
+// ### Expression.variables
 // Stores all the values of variables in symbolic expressions.
 //
 // *@return {Expression}*
@@ -1401,7 +1400,7 @@ static variables = {};
 }
 
 
-// ## <a id="Functn"></a>Functn
+// ## <a id="Functn" href="http://mathlib.de/en/docs/Functn">Functn</a>
 //
 // Because 'Function' is a reserved word in JavaScript,
 // the module is called 'Functn'.  
@@ -1814,7 +1813,7 @@ MathLib.is = function (obj, type) {
 }
 
 
-// ### .isMathMLSupported()
+// ### MathLib.isMathMLSupported()
 // Checks if MathML is supported by the browser.  
 // Code stolen from [Modernizr](http://www.modernizr.com/)
 //
@@ -2284,7 +2283,7 @@ functnPrototype.toContentMathML = function () {
 functnPrototype.toLaTeX = function () {
 	return this.expression.toLaTeX();
 /*
-	// List of functions to be executed on the specified node type
+	/ / List of functions to be executed on the specified node type
 	var handlers = {
 		apply: function (n) {
 			var f = n.childNodes[0],
@@ -2303,7 +2302,7 @@ functnPrototype.toLaTeX = function () {
 				str = args[0] + '^{' + args[1] + '}';
 			}
 			else {
-				// TODO: not all functions can be written like \sin some have to be written like \operatorname{argmax}
+				/ / TODO: not all functions can be written like \sin some have to be written like \operatorname{argmax}
 				str = '\\' + f.nodeName + '(' + args.join(', ') + ')';
 			}
 			return str;
@@ -2321,7 +2320,7 @@ functnPrototype.toLaTeX = function () {
 		'#text': function (n) {return n.innerMathML;}
 	};
 
-	// Start the node handling with the first real element (not the <math> element)
+	/ / Start the node handling with the first real element (not the <math> element)
 	return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
 	*/
 };
@@ -2336,7 +2335,7 @@ functnPrototype.toMathML = function () {
 };
 
 
-// ### [Functn.prototype.toMathMLString()](http://mathlib.de/en/docs/Functn/toMathMLString)
+// ### Functn.prototype.toMathMLString
 // Returns a MathML representation of the function
 //
 // *@return {string}*
@@ -2353,7 +2352,7 @@ functnPrototype.toString = function () {
 	return this.expression.toString();
 
 /*
-	// List of functions to be executed on the specified node type
+	/ / List of functions to be executed on the specified node type
 	var handlers = {
 		apply: function (n) {
 			var f = n.childNodes[0],
@@ -2389,7 +2388,7 @@ functnPrototype.toString = function () {
 		'#text': function (n) {return n.innerMathML;}
 	};
 
-	// Start the node handling with the first real element (not the <math> element)
+	/ / Start the node handling with the first real element (not the <math> element)
 	return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
 	*/
 }
@@ -3090,10 +3089,13 @@ export class Layer {
 					this.ctx.fillRect(left, bottom, right - left, top - bottom);
 
 					this.stack.forEach(function (x, i) {
-						if (x.type === 'text' ) {
+						if (x.type === 'conic' ) {
+							x.object.draw(_this, x.options, true);
+						}
+						else if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
-						if (x.type === 'pixel' ) {
+						else if (x.type === 'pixel' ) {
 							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
 						}
 						else {
@@ -3128,10 +3130,13 @@ export class Layer {
 					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 
 					this.stack.forEach(function (x, i) {
-						if (x.type === 'text' ) {
+						if (x.type === 'conic' ) {
+							x.object.draw(_this, x.options, true);
+						}
+						else if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
-						if (x.type === 'pixel' ) {
+						else if (x.type === 'pixel' ) {
 							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
 						}
 						else {
@@ -3169,10 +3174,13 @@ export class Layer {
 							right   = (screen.width  - screen.translation.x) / screen.scale.x;
 
 					this.stack.forEach(function (x, i) {
-						if (x.type === 'text' ) {
+						if (x.type === 'conic' ) {
+							x.object.draw(_this, x.options, true);
+						}
+						else if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
-						if (x.type === 'pixel' ) {
+						else if (x.type === 'pixel' ) {
 							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
 						}
 						else {
@@ -3202,10 +3210,13 @@ export class Layer {
 				this.draw = function () {
 
 					this.stack.forEach(function (x, i) {
-						if (x.type === 'text' ) {
+						if (x.type === 'conic' ) {
+							x.object.draw(_this, x.options, true);
+						}
+						else if (x.type === 'text' ) {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
-						if (x.type === 'pixel' ) {
+						else if (x.type === 'pixel' ) {
 							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
 						}
 						else {
@@ -3489,11 +3500,20 @@ path: function (curve, options = {}, redraw = false) {
 
 
 	if (!redraw) {
-		this.stack.push({
-			type: 'path',
-			object: curve,
-			options: options
-		});
+		if (options.conic) {
+			this.stack.push({
+				type: 'conic',
+				object: options.conic,
+				options: options
+			});
+		}
+		else {
+			this.stack.push({
+				type: 'path',
+				object: curve,
+				options: options
+			});
+		}
 	}
 
 	return this;
@@ -3904,11 +3924,20 @@ path: function (curve, options = {}, redraw = false) {
 	this.ctx.appendChild(svgPath);
 
 	if (!redraw) {
-		this.stack.push({
-			type: 'path',
-			object: curve,
-			options: options
-		});
+		if (options.conic) {
+			this.stack.push({
+				type: 'conic',
+				object: options.conic,
+				options: options
+			});
+		}
+		else {
+			this.stack.push({
+				type: 'path',
+				object: curve,
+				options: options
+			});
+		}
 	}
 
 	return this;
@@ -6171,7 +6200,7 @@ static zero = new Complex(0, 0);
 
 
 // ## <a id="Line"></a>Line
-// The vector implementation of MathLib makes calculations with lines in the 
+// The line implementation of MathLib makes calculations with lines in the 
 // real plane possible. (Higher dimensions will be supported later)
 
 export class Line extends Vector {
@@ -6229,23 +6258,7 @@ isEqual(q : Line) : boolean {
 //
 // *@return {boolean}*
 isFinite() : boolean {
-	return !MathLib.isZero(this[this.length - 1]);
-}
-
-
-// ### Line.prototype.isOrthogonalTo()
-// Determines if two lines are orthogonal.
-//
-// *@param {Line}*  
-// *@return {boolean}*
-isOrthogonalTo(l : Line) : boolean {
-	return MathLib.isEqual(
-		new MathLib.Point([0, 0, 1]).crossRatio(
-			this.meet(new MathLib.Line([0, 0, 1])),
-			l.meet(new MathLib.Line([0, 0, 1])), 
-			MathLib.Point.I,
-			MathLib.Point.J
-		), -1);
+	return !MathLib.isZero(this[0]) || !MathLib.isZero(this[1]);
 }
 
 
@@ -6255,9 +6268,7 @@ isOrthogonalTo(l : Line) : boolean {
 // *@param {Line}*  
 // *@return {boolean}*
 isParallelTo(l : Line) : boolean {
-	return this.every(function (x, i) {
-		return MathLib.isEqual(x, l[i]) || i === l.length - 1;
-	});
+	return MathLib.isZero(this[0]*l[1] - this[1]*l[0]);
 }
 
 
@@ -6266,35 +6277,30 @@ isParallelTo(l : Line) : boolean {
 //
 // *@param {Line}*  
 // *@return {Point}*
-meet(l : Line, dyn = false) : Point {
+meet(l : Line) : Point {
 	var point,
 			k = this;
 
 	if (this.dimension === 2 && l.dimension === 2) {
 		point = new MathLib.Point(this.vectorProduct(l));
 
-		if (dyn) {
-			Object.defineProperties(point, {
-				'0': {
-					get : function () { return k[1] * l[2] - k[2] * l[1]; },
-					set : function () {},
-					enumerable : true,
-					configurable : true
-				},
-				'1': {
-					get : function () { return k[2] * l[0] - k[0] * l[2]; },
-					set : function () {},
-					enumerable : true,
-					configurable : true
-				},
-				'2': {
-					get : function () { return k[0] * l[1] - k[1] * l[0]; },
-					set : function () {},
-					enumerable : true,
-					configurable : true
-				}
-			});
-		}
+		Object.defineProperties(point, {
+			'0': {
+				get: function () { return k[1] * l[2] - k[2] * l[1]; },
+				set: function () { MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet'});},
+				enumerable: true
+			},
+			'1': {
+				get: function () { return k[2] * l[0] - k[0] * l[2]; },
+				set: function () { MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet'});},
+				enumerable: true
+			},
+			'2': {
+				get: function () { return k[0] * l[1] - k[1] * l[0]; },
+				set: function () { MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet'});},
+				enumerable: true
+			}
+		});
 		
 		return point;
 	}
@@ -6307,9 +6313,46 @@ meet(l : Line, dyn = false) : Point {
 // *@return {Line}*
 normalize() : Line {
 	var h = MathLib.hypot(this[0], this[1]);
-	return this.map(function (x) {
-		return x / h;
+
+	if (h !== 0){
+		return this.map(function (x) {
+			return x / h;
+		});
+	}
+	else {
+		return new MathLib.Line([0, 0, 1]);
+	}
+}
+
+
+// ### Line.prototype.parallelThrough()
+// Determines an parallel line through a given point.
+//
+// *@param {Point}*  
+// *@return {Line}*
+parallelThrough(p : Point) : Line {
+	var l = this,
+			parallel = new MathLib.Line([0,0,0]);
+
+	Object.defineProperties(parallel, {
+		'0': {
+			get: function () { return -l[0] * p[2]; },
+			set: function () {	MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough'});},
+			enumerable: true
+		},
+		'1': {
+			get: function () { return -l[1] * p[2]; },
+			set: function () {	MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough'});},
+			enumerable: true
+		},
+		'2': {
+			get: function () { return l[1] * p[1] + l[0] * p[0]; },
+			set: function () {	MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough'});},
+			enumerable: true
+		}
 	});
+
+	return parallel;
 }
 
 
@@ -7840,6 +7883,633 @@ toString() : string {
 }
 
 
+// ## <a id="Conic" href="http://mathlib.de/en/docs/Conic">Conic</a>
+// The conic implementation of MathLib makes calculations with conics possible.
+
+export class Conic {
+	type = 'conic';
+
+	primal: Matrix;
+	dual: Matrix;
+
+	constructor (primal: Matrix, dual?: Matrix) {
+		if (primal.type !== 'matrix') {
+			primal = new MathLib.Matrix(primal);
+		}
+		this.primal = primal;
+
+//		if (!dual) {
+//			dual = primal.adjugate();
+//		}
+		//else if (!primal.times(dual).isScalar()) {
+			// Throw error
+		//}
+
+
+		if (primal.rank() > 1) {
+			Object.defineProperties(this, {
+				'dual': {
+					get : function () { return this.primal.adjugate() },
+					set : function () {},
+					enumerable : true,
+					configurable : true
+				}
+			});
+		}
+		else {
+			this.dual = dual;
+		}
+
+	}
+
+
+// ### [Conic.prototype.draw()](http://mathlib.de/en/docs/Conic/draw)
+// Draws the conic on one or more screens
+//
+// *@param {Screen}* The screen to draw onto.  
+// *@param {object}* [options] Drawing options  
+// *@return {boolean}*
+draw(screen, options, redraw = false) {
+	if (Array.isArray(screen)) {
+		var conic = this;
+		screen.forEach(function (x) {
+			conic.draw(x, options);
+		});
+	}
+	else {
+		options.from = 0;
+		options.to = 2 * Math.PI;
+		options.conic = this;
+
+		var	i, j, lines, alpha, cos, sin, sgn,
+				a = this.primal[0][0],
+				b = this.primal[0][1] * 2,
+				c = this.primal[1][1],
+				d = this.primal[0][2] * 2,
+				e = this.primal[1][2] * 2,
+				f = this.primal[2][2],
+				disc = 4*a*c - b*b,	
+				r = this.primal.determinant() / disc,
+				rank = this.primal.rank(),
+				cx = (b*e - 2*c*d) / (4*a*c - b*b),
+				cy = (b*d - 2*a*e) / (4*a*c - b*b),
+
+				normalForm = this.normalize(),
+				A = Math.sqrt(Math.abs(normalForm.primal[2][2] / normalForm.primal[0][0])),
+				C = Math.sqrt(Math.abs(normalForm.primal[2][2] / normalForm.primal[1][1]));
+
+
+
+
+		if (rank === 3) {
+			alpha = Math.atan2(b, a - c) / 2;
+			cos = Math.cos(alpha);
+			sin = Math.sin(alpha);
+
+
+			// Parabola
+			if (disc === 0) {
+
+				options.from = -10;
+				options.to = 10;
+				
+				var param = -this.primal[1][2] / (2 * this.primal[0][0]);
+				cx = 0;
+				cy = this.primal[2][2] / this.primal[0][0];
+
+
+				screen.path([
+					t => cx + cos * param * t * t - sin * 2 * param * t,
+					t => cy + sin * param * t * t + cos * 2 * param * t
+				], options, redraw);				
+			}
+
+
+			// Ellipse
+			else if (disc > 0) {
+				options.from = 0;
+				options.to = 2 * Math.PI;
+
+				screen.path([
+					t => cx + cos * Math.cos(t) * A - sin * Math.sin(t) * C,
+					t => cy + sin * Math.cos(t) * A + cos * Math.sin(t) * C 
+				], options, redraw);
+			}
+
+
+			// Hyperbola
+			else if (disc < 0) {
+				options.from = 0;
+				options.to = 2 * Math.PI;
+				// This function changes the direction of the path for the second branch.
+				// Otherwise we get some lines which shouldn't be there.
+				sgn = function (t) {
+					return +((t + Math.PI / 2) % (2 * Math.PI) < Math.PI) * 2 - 1;
+				};
+
+
+
+				if (normalForm.primal[2][2] * normalForm.primal[0][0] > 0) {
+					var swap = A;
+					A = C;
+					C = swap;
+
+					cos = Math.cos(alpha + Math.PI / 2);
+					sin = Math.sin(alpha + Math.PI / 2);
+
+				}
+				else {
+					cos = Math.cos(alpha);
+					sin = Math.sin(alpha);
+				}
+
+				screen.path([
+					t => cx + cos * MathLib.sec(t) * A - sin * MathLib.tan(t) * C * sgn(t),
+					t => cy + sin * MathLib.sec(t) * A + cos * MathLib.tan(t) * C * sgn(t) 
+				], options, redraw);
+			}
+
+			
+		}
+
+		else if (rank === 2) {
+			lines = this.splitDegenerated();
+
+			screen.line(lines[0], options);
+			screen.line(lines[1], options);
+		}
+
+		else if (rank === 1) {
+			lines = this.splitDegenerated();
+
+			screen.line(lines[0], options);
+		}
+
+
+	}
+	return this;
+}
+
+
+// ### [Conic.prototype.eccentricity()](http://mathlib.de/en/docs/Conic/eccentricity)
+// Calculates the eccentricity of a conic.
+// 
+// *@return {number}*
+eccentricity() : number {
+	var min, max,
+			normalform = this.normalize(),
+			a = normalform.primal[0][0],
+			c = normalform.primal[1][1];
+
+	if (!this.isDegenerated()) {
+		// parabola
+		if (c === 0) {
+			return 1;
+		}
+		if (c > 0) {
+			return Math.sqrt(1 - c / a);
+		}
+		return Math.sqrt(1 - a / c);
+	}
+}
+
+
+// ### [Conic.prototype.isDegenerated()](http://mathlib.de/en/docs/Conic/isDegenerated)
+// Determines if a conic is degenerated.
+//
+// *@return {boolean}*
+isDegenerated() : boolean {
+	return this.primal.rank() !== 3;
+}
+
+
+// ### [Conic.prototype.isEqual()](http://mathlib.de/en/docs/Conic/isEqual)
+// Determines if two conics are equal.
+//
+// *@param {Conic}*  
+// *@return {boolean}*
+isEqual(c : Conic) : boolean {
+	if (this === c) {
+		return true;
+	}
+
+	var compare = function (M, N) {
+		var i, j, m, n;
+
+		if (M === N) {
+			return true;
+		}
+
+		nonZeroSearch: for (i = 0; i < 3; i++) {
+			for (j = 0; j < 3; j++) {
+				if (M[i][j] !== 0) {
+					break nonZeroSearch;
+				}
+			}
+		}
+
+		if (N[i][j] === 0) {
+			return false;
+		}
+
+		m = M[i][j];
+		n = N[i][j];
+
+		for (i = 0; i < 3; i++) {
+			for (j = 0; j < 3; j++) {
+				if (n / m * M[i][j] !== N[i][j]) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	return compare(this.primal, c.primal) && compare(this.dual, c.dual);
+}
+
+
+// ### [Conic.prototype.latusRectum()](http://mathlib.de/en/docs/Conic/latusRectum)
+// Calculates the latusRectum of a conic.
+// 
+// *@return {number}*
+latusRectum() : number {
+	var normalForm = this.normalize(),
+			a = normalForm.primal[0][0],
+			c = normalForm.primal[1][1],
+			min = Math.min(Math.abs(a), Math.abs(c)),
+			max = Math.max(Math.abs(a), Math.abs(c));
+
+	if (!this.isDegenerated()) {
+
+		// Parabola
+		if (c === 0) {
+			return -2 * normalForm.primal[1][2] / a;
+		}
+
+		return 2 * Math.sqrt(max) / min;
+	}
+}
+
+
+// ### [Conic.prototype.linearEccentricity()](http://mathlib.de/en/docs/Conic/linearEccentricity)
+// Calculates the linear eccentricity of a conic.
+// 
+// *@return {number}*
+linearEccentricity() : number {
+	var normalForm = this.normalize(),
+			a = normalForm.primal[0][0],
+			c = normalForm.primal[1][1],
+			max = Math.max(Math.abs(a), Math.abs(c)), 
+			min = Math.min(Math.abs(a), Math.abs(c));
+
+	if (!this.isDegenerated()) {
+		// parabola
+		if (c === 0) {
+			return normalForm.primal[1][2] / (-2 * a);
+		}
+
+		if (c > 0) {
+			return Math.sqrt(1 / min - 1 / max);
+		}
+		return Math.sqrt(1 / max + 1 / min);
+	}
+}
+
+
+// ### [Conic.prototype.meet()](http://mathlib.de/en/docs/Conic/meet)
+// Calculates the meet of the conic with a line or a conic.
+// 
+// *@return {Point[]}*
+meet(x) {
+	if (x.type === 'line') {
+		var Ml, B, alpha, C, i, j, p1, p2,
+				setter = function () {
+					MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Conic#meet'});
+				},
+				conic = this,
+				recalculate = function () {
+					Ml = new MathLib.Matrix([[0, x[2], -x[1]], [-x[2], 0, x[0]], [x[1], -x[0], 0]]),
+					B = Ml.transpose().times(conic.primal).times(Ml);
+
+					if (!MathLib.isZero(x[0])) {
+						alpha = 1 / x[0] * Math.sqrt(B[2][1] * B[1][2] - B[1][1] * B[2][2]);
+					}
+					else if (!MathLib.isZero(x[1])) {
+						alpha = 1 / x[1] * Math.sqrt(B[0][2] * B[2][0] - B[2][2] * B[0][0]);
+					}
+					else {
+						alpha = 1 / x[2] * Math.sqrt(B[1][0] * B[0][1] - B[0][0] * B[1][1]);
+					}
+
+					C = Ml.times(alpha).plus(B);
+
+
+					nonZeroSearch: for (i = 0; i < 3; i++) {
+						for (j = 0; j < 3; j++) {
+							if (C[i][j] !== 0) {
+								break nonZeroSearch;
+							}
+						}
+					}
+				};
+
+
+		recalculate();
+
+
+		p1 = new MathLib.Point(C[i]);
+		Object.defineProperties(p1, {
+			'0': {
+				get: function () {
+					recalculate();
+					return C[i][0];
+				},
+				set: setter,
+				enumerable: true
+			},
+			'1': {
+				get: function () {
+					recalculate();
+					return C[i][1];
+				},
+				set: setter,
+				enumerable: true
+			},
+			'2': {
+				get: function () {
+					recalculate();
+					return C[i][2];
+				},
+				set: setter,
+				enumerable: true
+			}
+		});
+
+
+
+		p2 = new MathLib.Point([C[0][j], C[1][j], C[2][j]]);
+		Object.defineProperties(p2, {
+			'0': {
+				get: function () {
+					recalculate();
+					return C[0][j];
+				},
+				set: setter,
+				enumerable: true
+			},
+			'1': {
+				get: function () {
+					recalculate();
+					return C[1][j];
+				},
+				set: setter,
+				enumerable: true
+			},
+			'2': {
+				get: function () {
+					recalculate();
+					return C[2][j];
+				},
+				set: setter,
+				enumerable: true
+			}
+		});
+
+
+		return [p1, p2];
+	}
+	else if (x.type === 'conic') {
+		var A = this.primal,
+				B = x.primal,
+				a = A.determinant(),
+				b = (new MathLib.Matrix([A[0], A[1], B[2]])).plus(new MathLib.Matrix([A[0], B[1], A[2]])).plus(new MathLib.Matrix([B[0], A[1], A[2]])).determinant(),
+				c = (new MathLib.Matrix([A[0], B[1], B[2]])).plus(new MathLib.Matrix([B[0], A[1], B[2]])).plus(new MathLib.Matrix([B[0], B[1], A[2]])).determinant(),
+				d = B.determinant(),
+				Delta0 = b*b - 3*a*c,
+				Delta1 = 2*b*b* - 9*a*b*c + 27*a*a*d,
+				C = MathLib.cbrt((Delta1 + Math.sqrt(Math.pow(Delta1, 2) - 4*Math.pow(Delta0, 3))) / 2),
+				lambda = -1/(3*a) * (b + C+ Delta0 / C),
+				degenerated = new MathLib.Conic(B.times(lambda).plus(A)),
+				lines;
+				
+		lines = degenerated.splitDegenerated();
+
+		return this.meet(lines[0]).concat(this.meet(lines[1]));
+	}
+}
+
+
+// ### [Conic.prototype.normalize()](http://mathlib.de/en/docs/Conic/normalize)
+// Calculates the normal form of a conic.
+// 
+// *@return {Conic}*
+normalize() : Conic {
+	var A = this.primal[0][0],
+			B = this.primal[0][1] * 2,
+			C = this.primal[1][1],
+			D = this.primal[0][2] * 2,
+			E = this.primal[1][2] * 2,
+			F = this.primal[2][2],
+
+			r = Math.atan2(B, A - C) / 2,
+			cos = Math.cos(r),
+			sin = Math.sin(r),
+
+			a = A * cos * cos + B * sin * cos + C * sin * sin,
+			c = A * sin * sin - B * sin * cos + C * cos * cos,
+			d = D * cos + E * sin,
+			e = E * cos - D * sin,
+			f = F;
+
+
+//*
+
+			if (a !== 0) {
+				f += -d * d / (4 * a);
+				d = 0;
+			}
+			
+			if (c !== 0) {
+				f += -e * e / (4 * c);
+				e = 0;
+			}
+
+			if (f !== 0) {
+				a = -a / f;
+				c = -c / f;
+				d = -d / f;
+				e = -e / f;
+				f = -1;
+			}
+
+
+			return new MathLib.Conic([[a, 0, d/2], [0, c, e/2], [d/2, e/2, f]]);
+
+
+	/*
+
+	if (a === 0) {
+		return new MathLib.Conic(new MathLib.Matrix([
+			[0, 0, Math.abs(d/c)], 
+			[0, 1, 0], 
+			[Math.abs(d/c), 0, 0]]));
+	}
+	else if (c === 0) {
+		return new MathLib.Conic(new MathLib.Matrix([
+			[0, 0, Math.abs(e/a)], 
+			[0, 1, 0], 
+			[Math.abs(e/a), 0, 0]]));
+	}
+	else {
+		f = d*d/a + e*e/c - F;
+
+		if (a*c < -1) {
+			var temp = a; 
+			a = c;
+			c = temp; 
+		}
+
+		return new MathLib.Conic(new MathLib.Matrix([
+			[c/f, 0, 0], 
+			[0, a/f, 0], 
+			[0, 0, -1]]));
+	}
+
+	*/
+
+}
+
+
+// ### [Conic.prototype.polarity()](http://mathlib.de/en/docs/Conic/polarity)
+// Calculates the four polarity of a conic.
+// 
+// *@return {Point[]}*
+polarity(x) {
+	var object, m,
+			c = this
+
+
+	if (x.type === 'line') {
+		object = new MathLib.Point([0, 0, 0]);
+		m = 'dual';
+	}
+	else if (x.type === 'point') {
+		object = new MathLib.Line([0, 0, 0]);
+		m = 'primal';
+	}
+
+
+
+	Object.defineProperties(object, {
+		'0': {
+			get: function () { return c[m][0][0] * x[0] + c[m][0][1] * x[1] + c[m][0][2] * x[2]; },
+			set: function () { MathLib.warning({message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity'});},
+			enumerable: true
+		},
+		'1': {
+			get: function () { return c[m][1][0] * x[0] + c[m][1][1] * x[1] + c[m][1][2] * x[2]; },
+			set: function () { MathLib.warning({message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity'});},
+			enumerable: true
+		},
+		'2': {
+			get: function () { return c[m][2][0] * x[0] + c[m][2][1] * x[1] + c[m][2][2] * x[2]; },
+			set: function () { MathLib.warning({message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity'});},
+			enumerable: true
+		}
+	});
+
+	return object;
+}
+
+
+// ### [Conic.prototype.splitDegenerated()](http://mathlib.de/en/docs/Conic/splitDegenerated)
+// Splits a conic into one or two lines if the conic is degenerated.
+//
+// *@return {boolean}*
+splitDegenerated() {
+	var n, i, j, B, C, p0, p1, p2,
+			rank = this.primal.rank();
+
+	if (rank === 2) {
+		if (this.dual[0][0] !== 0) {
+			n = 0;
+		}
+		else if (this.dual[1][1] !== 0) {
+			n = 1;
+		}
+		else {
+			n = 2;
+		}
+
+		if (this.dual[n][n] < 0) {
+			B = this.dual.negative();
+		}
+		else {
+			B = this.dual;
+		}
+
+		p0 = B[0][n] / Math.sqrt(B[n][n]);
+		p1 = B[1][n] / Math.sqrt(B[n][n]);
+		p2 = B[2][n] / Math.sqrt(B[n][n]);
+		C = this.primal.plus(new MathLib.Matrix([[0, p2, -p1], [-p2, 0, p0], [p1, -p0, 0]]));
+		
+
+		nonZeroSearch: for (i = 0; i < 3; i++) {
+			for (j = 0; j < 3; j++) {
+				if (C[i][j] !== 0) {
+					break nonZeroSearch;
+				}
+			}
+		}
+
+		return [new MathLib.Line(C[i]), new MathLib.Line([C[0][j], C[1][j], C[2][j]])];
+	}
+
+
+	else if (rank === 1) {
+		nonZeroSearch: for (i = 0; i < 3; i++) {
+			for (j = 0; j < 3; j++) {
+				if (this.primal[i][j] !== 0) {
+					break nonZeroSearch;
+				}
+			}
+		}
+		return [new MathLib.Line(this.primal[i]), new MathLib.Line(this.primal[i])];
+	}
+}
+
+
+// ### [Conic.prototype.throughFivePoints()](http://mathlib.de/en/docs/Conic/throughFivePoints)
+// Calculates the conic through five points.
+// 
+// *@return {Conic}*
+static throughFivePoints(p, q, r, s, t) : Conic {
+
+	var conic = new MathLib.Conic([[1,0,0], [0,1,0], [0,0,1]]);
+
+	Object.defineProperties(conic, {
+			'primal': {
+				get : function () {
+					var G = p.vectorProduct(r).outerProduct(q.vectorProduct(s)),
+							H = p.vectorProduct(s).outerProduct(q.vectorProduct(r)),
+							M = G.times(t.times(H).scalarProduct(t)).minus(H.times(t.times(G).scalarProduct(t)));
+					return M.transpose().plus(M);
+				},
+				set : function () {},
+				enumerable : true,
+				configurable : true
+			}
+		});
+
+	return conic;
+}
+
+
+}
+
+
 // ## <a id="Point"></a>Point
 // The point implementation of MathLib makes calculations with point in
 // arbitrary dimensions possible.
@@ -7854,6 +8524,7 @@ toString() : string {
 
 
 export class Point extends Vector {
+	type = 'point';
 
 	dimension: number;
 
@@ -7861,7 +8532,6 @@ export class Point extends Vector {
 		super(arguments.length > 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
 
 		this.dimension = 2;
-		this.type = 'point';
 
 	}
 
@@ -7904,14 +8574,23 @@ crossRatio(a : Point, b : Point, c : Point, d : Point) : number {
 //
 // *@param {Point}* [point] The point to calculate the distance to  
 // *@return {number}*
-distanceTo(point : Point) : number {
+distanceTo(p : Point /*, geom = MathLib.Geometry.active*/) : number {
 	if (arguments.length === 0) {
 		return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
 	}
 
-	if (point.type === 'point' && this.dimension === point.dimension) {
-		return MathLib.hypot.apply(null, this.normalize().minus(point.normalize()).slice(0, -1));
+	if (p.type === 'point' && this.dimension === p.dimension) {
+		return MathLib.hypot.apply(null, this.normalize().minus(p.normalize()).slice(0, -1));
 	}
+
+//	if (p.type === 'point' && this.dimension === p.dimension) {
+//		var Otp = this.times(geom.fundamentalConic.primal).times(p),
+//				Ott = this.times(geom.fundamentalConic.primal).times(this),
+//				Opp = p.times(geom.fundamentalConic.primal).times(p),
+//				Dtp = Math.sqrt(Otp * Otp - Ott * Opp);
+//
+//		return MathLib.Geometry.active.cDist * Math.log((Otp + Dtp) / (Otp - Dtp));
+//	}
 }
 
 
@@ -8003,40 +8682,35 @@ isOutside(a : Circle) : boolean {
 }
 
 
-// ### Point.prototype.lineTo()
+// ### Point.prototype.join()
 // Calculates a line connecting two points
 //
 // *@param {Point}* The point to calculate the line to  
 // *@return {Line}*
-lineTo(q : Point, dyn = false) : Line {
+join(q : Point) : Line {
 	var line,
 			p = this;
 
 	if (this.dimension === 2 && q.dimension === 2) {
 		line = new MathLib.Line(this.vectorProduct(q));
 
-		if (dyn) {
-			Object.defineProperties(line, {
-				'0': {
-					get : function () { return p[1] * q[2] - p[2] * q[1]; },
-					set : function () {},
-					enumerable : true,
-					configurable : true
-				},
-				'1': {
-					get : function () { return p[2] * q[0] - p[0] * q[2]; },
-					set : function () {},
-					enumerable : true,
-					configurable : true
-				},
-				'2': {
-					get : function () { return p[0] * q[1] - p[1] * q[0]; },
-					set : function () {},
-					enumerable : true,
-					configurable : true
-				}
-			});
-		}
+		Object.defineProperties(line, {
+			'0': {
+				get: function () { return p[1] * q[2] - p[2] * q[1]; },
+				set: function () {	MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join'});},
+				enumerable: true
+			},
+			'1': {
+				get: function () { return p[2] * q[0] - p[0] * q[2]; },
+				set: function () {	MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join'});},
+				enumerable : true
+			},
+			'2': {
+				get: function () { return p[0] * q[1] - p[1] * q[0]; },
+				set: function () {	MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join'});},
+				enumerable: true
+			}
+		});
 
 		return line;
 	}
@@ -8074,6 +8748,36 @@ reflectAt(a : Point) : Point {
 			return new MathLib.Point(reflectedPoint);
 		}
 	}
+}
+
+
+// ### Point.prototype.restrictTo()
+// Restricts the point to a line.
+//
+// *@param {Line}*
+restrictTo(l : Line) {
+	var p = this.slice();
+
+	Object.defineProperties(this, {
+		'0': {
+			get : function () { return l[1] * l[1] * p[0] - l[0] * (l[1] * p[1] + l[2] * p[2]); },
+			set : function (point) {p[0] = point},
+			enumerable : true,
+			configurable : true
+		},
+		'1': {
+			get : function () { return - l[1] * l[2] * p[2] + l[0] * (l[0] * p[1] - l[1] * p[0]); },
+			set : function (point) {p[1] = point},
+			enumerable : true,
+			configurable : true
+		},
+		'2': {
+			get : function () { return l[1] * l[1] * p[2] + l[0] * l[0] * p[2]; },
+			set : function (point) {p[2] = point},
+			enumerable : true,
+			configurable : true
+		}
+	});
 }
 
 
@@ -8807,7 +9511,7 @@ export class Rational {
 	}
 
 
-// ### [Rational.prototype.compare()](http://mathlib.de/en/docs/rational/compare)
+// ### [Rational.prototype.compare()](http://mathlib.de/en/docs/Rational/compare)
 // Compares two rational numbers
 //
 // *@param {Rational}* The number to compare  
@@ -8817,7 +9521,7 @@ compare(r : Rational) : number {
 }
 
 
-// ### [Rational.prototype.divide()](http://mathlib.de/en/docs/rational/divide)
+// ### [Rational.prototype.divide()](http://mathlib.de/en/docs/Rational/divide)
 // Divides rational numbers
 //
 // *@param {Rational|number}* The divisor  
@@ -8836,7 +9540,7 @@ divide(r) {
 }
 
 
-// ### [Rational.prototype.inverse()](http://mathlib.de/en/docs/rational/inverse)
+// ### [Rational.prototype.inverse()](http://mathlib.de/en/docs/Rational/inverse)
 // Calculates the inverse of a rational number
 //
 // *@return {Rational}*
@@ -8847,7 +9551,7 @@ inverse() : Rational {
 }
 
 
-// ### [Rational.prototype.isEqual()](http://mathlib.de/en/docs/rational/isEqual)
+// ### [Rational.prototype.isEqual()](http://mathlib.de/en/docs/Rational/isEqual)
 // Checks if the rational number is equal to an other number
 //
 // *@return {boolean}*
@@ -8856,7 +9560,7 @@ isEqual(r) : boolean {
 }
 
 
-// ### [Rational.prototype.isZero()](http://mathlib.de/en/docs/rational/isZero)
+// ### [Rational.prototype.isZero()](http://mathlib.de/en/docs/Rational/isZero)
 // Checks if the rational number is zero
 //
 // *@return {boolean}*
@@ -8865,7 +9569,7 @@ isZero() : boolean {
 }
 
 
-// ### [Rational.prototype.minus()](http://mathlib.de/en/docs/rational/minus)
+// ### [Rational.prototype.minus()](http://mathlib.de/en/docs/Rational/minus)
 // Subtracts rational numbers
 //
 // *@param {Rational|number}* The number to be subtracted  
@@ -8888,7 +9592,7 @@ minus(r) {
 }
 
 
-// ### [Rational.prototype.negative()](http://mathlib.de/en/docs/rational/negative)
+// ### [Rational.prototype.negative()](http://mathlib.de/en/docs/Rational/negative)
 // Calculates the negative of a rational number
 //
 // *@return {Rational}*
@@ -8897,7 +9601,7 @@ negative() : Rational {
 }
 
 
-// ### [Rational.prototype.plus()](http://mathlib.de/en/docs/rational/plus)
+// ### [Rational.prototype.plus()](http://mathlib.de/en/docs/Rational/plus)
 // Adds rational numbers
 //
 // *@param {Rational|number}* The number to be added  
@@ -8920,7 +9624,7 @@ plus(r) {
 }
 
 
-// ### [Rational.prototype.reduce()](http://mathlib.de/en/docs/rational/reduce)
+// ### [Rational.prototype.reduce()](http://mathlib.de/en/docs/Rational/reduce)
 // Reduces the rational number
 //
 // *@return {Rational}*
@@ -8930,7 +9634,7 @@ reduce() : Rational {
 }
 
 
-// ### [Rational.prototype.times()](http://mathlib.de/en/docs/rational/times)
+// ### [Rational.prototype.times()](http://mathlib.de/en/docs/Rational/times)
 // Multiplies rational numbers
 //
 // *@param {Rational|number}* The number to be multiplied  
@@ -8949,7 +9653,7 @@ times(r) {
 }
 
 
-// ### [Rational.prototype.toContentMathML()](http://mathlib.de/en/docs/rational/toContentMathML)
+// ### [Rational.prototype.toContentMathML()](http://mathlib.de/en/docs/Rational/toContentMathML)
 // Returns the Content MathML representation of the rational number
 //
 // *@return {string}*
@@ -8958,7 +9662,7 @@ toContentMathML() : string {
 }
 
 
-// ### [Rational.prototype.toLaTeX()](http://mathlib.de/en/docs/rational/toLaTeX)
+// ### [Rational.prototype.toLaTeX()](http://mathlib.de/en/docs/Rational/toLaTeX)
 // Returns the LaTeX representation of the rational number
 //
 // *@return {string}*
@@ -8967,7 +9671,7 @@ toLaTeX() : string {
 }
 
 
-// ### [Rational.prototype.toMathML()](http://mathlib.de/en/docs/rational/toMathML)
+// ### [Rational.prototype.toMathML()](http://mathlib.de/en/docs/Rational/toMathML)
 // Returns the MathML representation of the rational number
 //
 // *@return {string}*
@@ -8976,7 +9680,7 @@ toMathML() : string {
 }
 
 
-// ### [Rational.prototype.toNumber()](http://mathlib.de/en/docs/rational/toNumber)
+// ### [Rational.prototype.toNumber()](http://mathlib.de/en/docs/Rational/toNumber)
 // Returns the number represented by the rational number
 //
 // *@return {number}*
@@ -8985,7 +9689,7 @@ toNumber() : number {
 }
 
 
-// ### [Rational.prototype.toString()](http://mathlib.de/en/docs/rational/toString)
+// ### [Rational.prototype.toString()](http://mathlib.de/en/docs/Rational/toString)
 // Custom toString function
 //
 // *@return {string}*
@@ -9672,4 +10376,308 @@ if (!('setLineDash' in CanvasRenderingContext2D.prototype)) {
 		writeable: false
 	});
 		
+}
+
+
+// Copyright 2012 Kap IT (http://www.kapit.fr/)
+//
+// Licensed under the Apache License, Version 2.0 (the 'License');
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an 'AS IS' BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// Author : François de Campredon (http://francois.de-campredon.fr/),
+
+// Object.observe PolyFill
+// =======================
+
+// *See [The harmony proposal page](http://wiki.ecmascript.org/doku.php?id=harmony:observe)*
+if ((<any>Object).observe === undefined) {
+	
+	(function (global) {
+		'use strict';
+
+
+		// Utilities
+		// ---------
+
+
+
+		// setImmediate shim used to deliver changes records asynchronously
+
+		//use setImmediate if available
+		var setImmediate = global.setImmediate || global.msSetImmediate;
+		var clearImmediate = global.clearImmediate || global.msClearImmediate;
+		if (!setImmediate) {
+			// fallback on setTimeout if not
+			setImmediate = function (func, args) {
+				return setTimeout(func, 0, args);
+			};
+			clearImmediate = function (id) {
+				clearTimeout(id);
+			};
+		}
+
+
+
+		// Internal Properties
+		// -------------------
+
+		// An ordered list used to provide a deterministic ordering in which callbacks are called.
+		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#observercallbacks)
+		var observerCallbacks = [];
+
+		// This object is used as the prototype of all the notifiers that are returned by Object.getNotifier(O).
+		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#notifierprototype)
+		var NotifierPrototype = Object.create(Object.prototype);
+		Object.defineProperty(NotifierPrototype, 'notify', {
+			value: function (changeRecord) {
+				var notifier = this;
+				if (Object(notifier) !== notifier) {
+					throw new TypeError('this must be an Object, given ' + notifier);
+				}
+				if (Object(notifier) !== notifier) {
+					throw new TypeError('changeRecord must be an Object, given ' + changeRecord);
+				}
+				if (!this.target) {
+					return;
+				}
+
+				var type = changeRecord.type;
+				if (typeof type !== 'string') {
+					throw new TypeError('changeRecord.type must be a string, given ' + type);
+				}
+
+				var changeObservers = notifier.changeObservers;
+				if (!changeObservers || changeObservers.length === 0) {
+					return;
+				}
+				var target = notifier.target,
+					newRecord = Object.create(Object.prototype);
+				Object.defineProperty(newRecord, 'object', {
+					value: target,
+					writable : false,
+					enumerable : true,
+					configurable: false
+				});
+				for (var prop in changeRecord) {
+					if (prop !== 'object') {
+						var value = changeRecord[prop];
+						Object.defineProperty(newRecord, prop, {
+							value: value,
+							writable : false,
+							enumerable : true,
+							configurable: false
+						});
+					}
+				}
+				Object.preventExtensions(newRecord);
+				enqueueChangeRecord(newRecord, changeObservers);
+				setUpChangesDelivery();
+			},
+			writable: true,
+			enumerable: false,
+			configurable : true
+		});
+
+		// Used to store immediate uid reference
+		var changeDeliveryImmediateUid;
+
+		// Used to schedule a call to deliverAllChangeRecords
+		function setUpChangesDelivery() {
+			clearImmediate(changeDeliveryImmediateUid);
+			changeDeliveryImmediateUid = setImmediate(deliverAllChangeRecords, 0);
+		}
+
+
+
+		// Key used to store reference to notifier in objects
+		var notifierProperty = '__notifier__';
+
+		// Implementation of the internal algorithm 'GetNotifier'
+		// described in the proposal.
+		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#getnotifier)
+		function getNotifier(target) {
+			if (!target.hasOwnProperty(notifierProperty)) {
+				var notifier = Object.create(NotifierPrototype);
+				notifier.target = target;
+				notifier.changeObservers = [];
+
+				Object.defineProperty(target, notifierProperty, {
+					value : notifier,
+					enumerable: false,
+					configurable: true,
+					writable: true
+				});
+			}
+			return target[notifierProperty];
+		}
+
+
+
+		// Key used to store reference to a list of pending changeRecords
+		// in observer callback.
+		var pendingChangesProperty = '__pendingChangeRecords__';
+
+		// Implementation of the internal algorithm 'EnqueueChangeRecord'
+		// described in the proposal.
+		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#enqueuechangerecord)
+		function enqueueChangeRecord(newRecord, observers) {
+			for (var i = 0, l = observers.length; i < l; i++) {
+				var observer = observers[i];
+				if (!observer.hasOwnProperty(pendingChangesProperty)) {
+					Object.defineProperty(observer, pendingChangesProperty, {
+						value : null,
+						enumerable: false,
+						configurable: true,
+						writable: true
+					});
+				}
+				var pendingChangeRecords = observer[pendingChangesProperty] || (observer[pendingChangesProperty] = []);
+				pendingChangeRecords.push(newRecord);
+			}
+		}
+
+		// key used to store a count of associated notifier to a function
+		var attachedNotifierCountProperty = '___attachedNotifierCount__';
+
+		// Remove reference all reference to an observer callback,
+		// if this one is not used anymore.
+		// In the proposal the ObserverCallBack has a weak reference over observers,
+		// Without this possibility we need to clean this list to avoid memory leak
+		function cleanObserver(observer) {
+			if (!observer[attachedNotifierCountProperty] && !observer[pendingChangesProperty]) {
+				var index = observerCallbacks.indexOf(observer);
+				if (index !== -1) {
+					observerCallbacks.splice(index, 1);
+				}
+			}
+		}
+
+		// Implementation of the internal algorithm 'DeliverChangeRecords'
+		// described in the proposal.
+		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#deliverchangerecords)
+		function deliverChangeRecords(observer) {
+			var pendingChangeRecords = observer[pendingChangesProperty];
+			observer[pendingChangesProperty] = null;
+			if (!pendingChangeRecords || pendingChangeRecords.length === 0) {
+				return false;
+			}
+			try {
+				observer.call(undefined, pendingChangeRecords);
+			}
+			catch (e) {
+				//TODO examine this
+				console.log(e);
+			}
+
+			cleanObserver(observer);
+			return true;
+		}
+
+		// Implementation of the internal algorithm 'DeliverAllChangeRecords'
+		// described in the proposal.
+		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#deliverallchangerecords)
+		function deliverAllChangeRecords() {
+			var observers = observerCallbacks.slice(0);
+			var anyWorkDone = false;
+			for (var i = 0, l = observers.length; i < l; i++) {
+				var observer = observers[i];
+				if (deliverChangeRecords(observer)) {
+					anyWorkDone = true;
+				}
+			}
+			return anyWorkDone;
+		}
+
+
+
+
+		// Implementation of the public api 'Object.observe'
+		// described in the proposal.
+		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.observe)
+		(<any>Object).observe = function (target, observer) {
+			if (Object(target) !== target) {
+				throw new TypeError('target must be an Object, given ' + target);
+			}
+			if (typeof observer !== 'function') {
+				throw new TypeError('observerCallBack must be a function, given ' + observer);
+			}
+
+			if (Object.isFrozen(observer)) {
+				throw new TypeError('observer cannot be frozen');
+			}
+
+			var notifier = getNotifier(target),
+				changeObservers = notifier.changeObservers;
+
+			if (changeObservers.indexOf(observer) === -1) {
+				changeObservers.push(observer);
+				if (observerCallbacks.indexOf(observer) === -1) {
+					observerCallbacks.push(observer);
+				}
+				if (!observer.hasOwnProperty(attachedNotifierCountProperty)) {
+					Object.defineProperty(observer, attachedNotifierCountProperty, {
+						value : 0,
+						enumerable: false,
+						configurable: true,
+						writable: true
+					});
+				}
+				observer[attachedNotifierCountProperty]++;
+			}
+			return target;
+		};
+
+		// Implementation of the public api 'Object.unobseve'
+		// described in the proposal.
+		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.unobseve)
+		(<any>Object).unobserve = function (target, observer) {
+			if (Object(target) !== target) {
+				throw new TypeError('target must be an Object, given ' + target);
+			}
+			if (typeof observer !== 'function') {
+				throw new TypeError('observerCallBack must be a function, given ' + observer);
+			}
+			var notifier = getNotifier(target);
+			var changeObservers = notifier.changeObservers;
+			var index = notifier.changeObservers.indexOf(observer);
+			if (index !== -1) {
+				changeObservers.splice(index, 1);
+				observer[attachedNotifierCountProperty]--;
+				cleanObserver(observer);
+			}
+			return target;
+		};
+
+		// Implementation of the public api 'Object.deliverChangeRecords'
+		// described in the proposal.
+		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.deliverchangerecords)
+		(<any>Object).deliverChangeRecords = function (observer) {
+			if (typeof observer !== 'function') {
+				throw new TypeError('callback must be a function, given ' + observer);
+			}
+			while (deliverChangeRecords(observer)) {}
+			return;
+		};
+
+		// Implementation of the public api 'Object.getNotifier'
+		// described in the proposal.
+		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.getnotifier)
+		(<any>Object).getNotifier = function (target) {
+			if (Object(target) !== target) {
+				throw new TypeError('target must be an Object, given ' + target);
+			}
+			return getNotifier(target);
+		};
+
+
+	})(this);
+
 }

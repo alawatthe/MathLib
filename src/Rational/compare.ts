@@ -1,4 +1,4 @@
-// ### [Rational.prototype.compare()](http://mathlib.de/en/docs/rational/compare)
+// ### [Rational.prototype.compare()](http://mathlib.de/en/docs/Rational/compare)
 // Compares two rational numbers
 //
 // *@param {Rational}* The number to compare  

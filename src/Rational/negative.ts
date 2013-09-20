@@ -1,4 +1,4 @@
-// ### [Rational.prototype.negative()](http://mathlib.de/en/docs/rational/negative)
+// ### [Rational.prototype.negative()](http://mathlib.de/en/docs/Rational/negative)
 // Calculates the negative of a rational number
 //
 // *@return {Rational}*

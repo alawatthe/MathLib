@@ -1,4 +1,4 @@
-// ### [Rational.prototype.toNumber()](http://mathlib.de/en/docs/rational/toNumber)
+// ### [Rational.prototype.toNumber()](http://mathlib.de/en/docs/Rational/toNumber)
 // Returns the number represented by the rational number
 //
 // *@return {number}*

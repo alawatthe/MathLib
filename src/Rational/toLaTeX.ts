@@ -1,4 +1,4 @@
-// ### [Rational.prototype.toLaTeX()](http://mathlib.de/en/docs/rational/toLaTeX)
+// ### [Rational.prototype.toLaTeX()](http://mathlib.de/en/docs/Rational/toLaTeX)
 // Returns the LaTeX representation of the rational number
 //
 // *@return {string}*

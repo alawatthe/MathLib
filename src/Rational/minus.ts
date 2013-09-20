@@ -1,4 +1,4 @@
-// ### [Rational.prototype.minus()](http://mathlib.de/en/docs/rational/minus)
+// ### [Rational.prototype.minus()](http://mathlib.de/en/docs/Rational/minus)
 // Subtracts rational numbers
 //
 // *@param {Rational|number}* The number to be subtracted  

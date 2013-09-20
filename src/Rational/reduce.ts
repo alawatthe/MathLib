@@ -1,4 +1,4 @@
-// ### [Rational.prototype.reduce()](http://mathlib.de/en/docs/rational/reduce)
+// ### [Rational.prototype.reduce()](http://mathlib.de/en/docs/Rational/reduce)
 // Reduces the rational number
 //
 // *@return {Rational}*

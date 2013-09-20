@@ -2,7 +2,6 @@ var errors = [],
 		warnings = [];
 
 
-
 // ### [MathLib.on()](http://mathlib.de/en/docs/on)
 // Binds an event handler to an event.
 // 
@@ -33,7 +32,7 @@ MathLib.off = function (type, callback) {
 }
 
 
-// ### [MathLib.error()](http://mathlib.de/en/docs/error)
+// ### MathLib.error()
 // Fires an error event.
 //
 // *@param {oject}* An object describing the error further.  
@@ -44,7 +43,7 @@ MathLib.error = function (details) {
 };
 
 
-// ### [MathLib.warning()](http://mathlib.de/en/docs/warning)
+// ### MathLib.warning()
 // Fires a waring event.
 //
 // *@param {object}* An object describing the warning further.  

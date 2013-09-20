@@ -1,4 +1,4 @@
-// ## <a id="Functn"></a>Functn
+// ## <a id="Functn" href="http://mathlib.de/en/docs/Functn">Functn</a>
 //
 // Because 'Function' is a reserved word in JavaScript,
 // the module is called 'Functn'.  

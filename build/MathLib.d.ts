@@ -209,10 +209,10 @@ declare module MathLib {
         public draw(screen, options): Line;
         public isEqual(q: Line): boolean;
         public isFinite(): boolean;
-        public isOrthogonalTo(l: Line): boolean;
         public isParallelTo(l: Line): boolean;
-        public meet(l: Line, dyn?: boolean): Point;
+        public meet(l: Line): Point;
         public normalize(): Line;
+        public parallelThrough(p: Point): Line;
     }
     class Matrix {
         public type: string;
@@ -298,22 +298,41 @@ declare module MathLib {
         public toMatrix(n: number): Matrix;
         public toString(): string;
     }
+    class Conic {
+        public type: string;
+        public primal: Matrix;
+        public dual: Matrix;
+        constructor(primal: Matrix, dual?: Matrix);
+        public draw(screen, options, redraw?: boolean): Conic;
+        public eccentricity(): number;
+        public isDegenerated(): boolean;
+        public isEqual(c: Conic): boolean;
+        public latusRectum(): number;
+        public linearEccentricity(): number;
+        public meet(x);
+        public normalize(): Conic;
+        public polarity(x);
+        public splitDegenerated(): any[];
+        static throughFivePoints(p, q, r, s, t): Conic;
+    }
     class Point extends Vector {
+        public type: string;
         public dimension: number;
         constructor(coords: number[]);
         static I: Point;
         static J: Point;
         public crossRatio(a: Point, b: Point, c: Point, d: Point): number;
-        public distanceTo(point: Point): number;
+        public distanceTo(p: Point): number;
         public draw(screen, options): Point;
         public isEqual(q: Point): boolean;
         public isFinite(): boolean;
         public isInside(a: Circle): boolean;
         public isOn(a: Circle): boolean;
         public isOutside(a: Circle): boolean;
-        public lineTo(q: Point, dyn?: boolean): Line;
+        public join(q: Point): Line;
         public normalize(): Point;
         public reflectAt(a: Point): Point;
+        public restrictTo(l: Line): void;
         public toComplex(): Complex;
         public toLaTeX(opt?: boolean): string;
         public toMathML(opt?: boolean): string;

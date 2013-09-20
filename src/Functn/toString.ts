@@ -6,7 +6,7 @@ functnPrototype.toString = function () {
 	return this.expression.toString();
 
 /*
-	// List of functions to be executed on the specified node type
+	/ / List of functions to be executed on the specified node type
 	var handlers = {
 		apply: function (n) {
 			var f = n.childNodes[0],
@@ -42,7 +42,7 @@ functnPrototype.toString = function () {
 		'#text': function (n) {return n.innerMathML;}
 	};
 
-	// Start the node handling with the first real element (not the <math> element)
+	/ / Start the node handling with the first real element (not the <math> element)
 	return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
 	*/
 }

@@ -1,4 +1,4 @@
-// ### <a href="http://mathlib.de/en/docs/Expression/map">Expression.prototype.map</a>
+// ### Expression.prototype.map
 // Maps the expression tree over to an other expression tree.
 //
 // *@return {Expression}*
