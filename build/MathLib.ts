@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.5.2 - 2013-09-20  
+// v0.6.0 - 2013-09-23  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -187,7 +187,7 @@ export class Expression {
 
 	arguments: string[];
 	content: any;
-	isMethod: bool;
+	isMethod: boolean;
 	mode: string;
 	name: string;
 	subtype: string;
@@ -1397,10 +1397,7 @@ static variable(n) : Expression {
 static variables = {};
 
 
-}
-
-
-// ## <a id="Functn" href="http://mathlib.de/en/docs/Functn">Functn</a>
+}// ## <a id="Functn" href="http://mathlib.de/en/docs/Functn">Functn</a>
 //
 // Because 'Function' is a reserved word in JavaScript,
 // the module is called 'Functn'.  
@@ -3015,10 +3012,7 @@ oncontextmenu(evt) {
 }
 
 
-}
-
-
-// ## <a id="Layers"></a>Layers
+}// ## <a id="Layers"></a>Layers
 // Layers for two dimensional plotting
 
 export class Layer {
@@ -3253,10 +3247,7 @@ clear() {
 }
 
 
-}
-
-
-// ## Canvas
+}// ## Canvas
 // The Canvas renderer for 2D plotting
 //
 MathLib.Canvas = {
@@ -3708,10 +3699,7 @@ text: function (str, x, y, options = {}, redraw = false) {
 },
 
 
-};
-
-
-// ## SVG
+}// ## SVG
 // The SVG renderer for 2D plotting
 //
 MathLib.SVG = {
@@ -4207,10 +4195,7 @@ text: function (str, x, y, options = {}, redraw = false) {
 }
 
 
-};
-
-
-// ## <a id="Screen2D"></a>Screen2D
+}// ## <a id="Screen2D"></a>Screen2D
 // Two dimensional plotting
 
 
@@ -4817,10 +4802,7 @@ resize(width : number, height : number) : Screen2D {
 }
 
 
-}
-
-
-// ## <a id="Screen3D"></a>Screen3D
+}// ## <a id="Screen3D"></a>Screen3D
 // Two dimensional plotting
 
 export class Screen3D extends Screen {
@@ -5230,10 +5212,7 @@ surfacePlot3D(f, options) : Screen3D {
 }
 
 
-}
-
-
-// ## <a id="Vector" href="http://mathlib.de/en/docs/Vector">Vector</a>
+}// ## <a id="Vector" href="http://mathlib.de/en/docs/Vector">Vector</a>
 // The vector implementation of MathLib makes calculations with vectors of
 // arbitrary size possible. The entries of the vector can be numbers and complex
 // numbers.
@@ -5589,10 +5568,7 @@ static zero = function (n : number) : Vector {
 }
 
 
-}
-
-
-// ## <a id="Circle" href="http://mathlib.de/en/docs/Circle">Circle</a>
+}// ## <a id="Circle" href="http://mathlib.de/en/docs/Circle">Circle</a>
 // MathLib.Circle expects two arguments.
 // First the center in the form of an Array or a MathLib.point.
 // The second argument should be the radius of the circle.
@@ -5732,10 +5708,7 @@ toMatrix() : Matrix {
 }
 
 
-}
-
-
-// ## <a id="Complex"></a>Complex
+}// ## <a id="Complex"></a>Complex
 // MathLib.Complex is the MathLib implementation of complex numbers.
 //
 // There are two ways of defining complex numbers:
@@ -6196,10 +6169,7 @@ toString() : string {
 static zero = new Complex(0, 0);
 
 
-}
-
-
-// ## <a id="Line"></a>Line
+}// ## <a id="Line"></a>Line
 // The line implementation of MathLib makes calculations with lines in the 
 // real plane possible. (Higher dimensions will be supported later)
 
@@ -6356,10 +6326,7 @@ parallelThrough(p : Point) : Line {
 }
 
 
-}
-
-
-// ## <a id="Matrix"></a>Matrix
+}// ## <a id="Matrix"></a>Matrix
 // The matrix implementation of MathLib makes calculations with matrices of
 // arbitrary size possible. The entries of a matrix can be numbers and complex
 // numbers.
@@ -7656,10 +7623,7 @@ static zero = function (r, c) {
 };
 
 
-}
-
-
-// ## <a id="Permutation"></a>Permutation
+}// ## <a id="Permutation"></a>Permutation
 
 export class Permutation {
 
@@ -7880,10 +7844,7 @@ toString() : string {
 }
 
 
-}
-
-
-// ## <a id="Conic" href="http://mathlib.de/en/docs/Conic">Conic</a>
+}// ## <a id="Conic" href="http://mathlib.de/en/docs/Conic">Conic</a>
 // The conic implementation of MathLib makes calculations with conics possible.
 
 export class Conic {
@@ -7948,7 +7909,7 @@ draw(screen, options, redraw = false) {
 				d = this.primal[0][2] * 2,
 				e = this.primal[1][2] * 2,
 				f = this.primal[2][2],
-				disc = 4*a*c - b*b,	
+				disc = 4*a*c - b*b,
 				r = this.primal.determinant() / disc,
 				rank = this.primal.rank(),
 				cx = (b*e - 2*c*d) / (4*a*c - b*b),
@@ -7981,7 +7942,7 @@ draw(screen, options, redraw = false) {
 				screen.path([
 					t => cx + cos * param * t * t - sin * 2 * param * t,
 					t => cy + sin * param * t * t + cos * 2 * param * t
-				], options, redraw);				
+				], options, redraw);
 			}
 
 
@@ -7992,7 +7953,7 @@ draw(screen, options, redraw = false) {
 
 				screen.path([
 					t => cx + cos * Math.cos(t) * A - sin * Math.sin(t) * C,
-					t => cy + sin * Math.cos(t) * A + cos * Math.sin(t) * C 
+					t => cy + sin * Math.cos(t) * A + cos * Math.sin(t) * C
 				], options, redraw);
 			}
 
@@ -8507,10 +8468,7 @@ static throughFivePoints(p, q, r, s, t) : Conic {
 }
 
 
-}
-
-
-// ## <a id="Point"></a>Point
+}// ## <a id="Point"></a>Point
 // The point implementation of MathLib makes calculations with point in
 // arbitrary dimensions possible.
 //
@@ -8845,10 +8803,7 @@ toString(opt = false) : string {
 }
 
 
-}
-
-
-// ## <a id="Polynomial"></a>Polynomial
+}// ## <a id="Polynomial"></a>Polynomial
 // The polynomial implementation of MathLib makes calculations with polynomials.
 // Both the coefficients and the arguments of a polynomial can be numbers,
 // complex numbers and matrices.
@@ -9481,10 +9436,7 @@ valueAt(x) {
 static zero = new Polynomial([0]);
 
 
-}
-
-
-// ## <a id="Rational" href="http://mathlib.de/en/docs/Rational">Rational</a>
+}// ## <a id="Rational" href="http://mathlib.de/en/docs/Rational">Rational</a>
 // MathLib.Rational is the MathLib implementation of rational numbers.
 //
 //
@@ -9698,10 +9650,7 @@ toString() : string {
 }
 
 
-}
-
-
-// ## <a id="Set"></a>Set
+}// ## <a id="Set"></a>Set
 //
 // To generate the set {1, 2, 3, 4, 5} you simply need to type
 // ```
@@ -10161,8 +10110,6 @@ xor = Set.createSetOperation(true, false, true);
 
 
 }
-
-
 }
 
 

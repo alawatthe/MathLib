@@ -21,7 +21,7 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		saucelabs: grunt.file.readJSON('saucelab.json'),
+		saucelabs: grunt.file.exists('saucelab.json') ? grunt.file.readJSON('saucelab.json') : '{}',
 
 		// This is a nasty hack with all the bracket files.
 		concat: {
@@ -31,84 +31,73 @@ module.exports = function (grunt) {
 
 							'src/Expression/init.ts',
 							'src/Expression/!(init).ts',
-							'src/meta/bracket1.ts',
 
 							'src/Functn/init.ts',
 							'src/Functn/!(init).ts',
 
 							'src/Screen/init.ts',
 							'src/screen/!(init).ts',
-							'src/meta/bracket2.ts',
 
 							'src/Layer/init.ts',
 							'src/Layer/!(init).ts',
-							'src/meta/bracket3.ts',
 
 							'src/Canvas/init.ts',
 							'src/Canvas/!(init).ts',
-							'src/meta/bracket4.ts',
 
 							'src/SVG/init.ts',
 							'src/SVG/!(init).ts',
-							'src/meta/bracket5.ts',
 
 							'src/Screen2D/init.ts',
 							'src/Screen2D/!(init).ts',
-							'src/meta/bracket6.ts',
 
 							'src/Screen3D/init.ts',
 							'src/Screen3D/!(init).ts',
-							'src/meta/bracket7.ts',
 
 							'src/Vector/init.ts',
 							'src/Vector/!(init).ts',
-							'src/meta/bracket8.ts',
 
 							'src/Circle/init.ts',
 							'src/Circle/!(init).ts',
-							'src/meta/bracket9.ts',
 
 							'src/Complex/init.ts',
 							'src/Complex/!(init).ts',
-							'src/meta/bracket10.ts',
 
 							'src/Line/init.ts',
 							'src/Line/!(init).ts',
-							'src/meta/bracket11.ts',
 
 							'src/Matrix/init.ts',
 							'src/Matrix/!(init).ts',
-							'src/meta/bracket12.ts',
 
 							'src/Permutation/init.ts',
 							'src/Permutation/!(init).ts',
-							'src/meta/bracket13.ts',
 
 							'src/Conic/init.ts',
 							'src/Conic/!(init).ts',
-							'src/meta/bracket14.ts',
 
 							'src/Point/init.ts',
 							'src/Point/!(init).ts',
-							'src/meta/bracket15.ts',
 
 							'src/Polynomial/init.ts',
 							'src/Polynomial/!(init).ts',
-							'src/meta/bracket16.ts',
 
 							'src/Rational/init.ts',
 							'src/Rational/!(init).ts',
-							'src/meta/bracket17.ts',
 
 							'src/Set/init.ts',
 							'src/Set/!(init).ts',
-							'src/meta/bracket18.ts',
 
-							'src/meta/bracket19.ts',
+							'src/meta/foot.ts',
+							
 							'src/shims/*.ts'
 							],
 				dest: 'build/MathLib.ts',
 				options: {
+					process: function (src, filepath) {
+						if (filepath.indexOf('init.ts') !== -1 && filepath.indexOf('Expression') === -1 && filepath.indexOf('Screen/') === -1) {
+							return '}' + src;
+						}
+						return src;
+					},
 					separator: '\n\n\n',
 					banner: '// MathLib.js is a JavaScript library for mathematical computations.\n' +
 							'//\n' +
@@ -270,7 +259,7 @@ module.exports = function (grunt) {
 						},
 						{
 							browserName: 'chrome',
-							version: '27',
+							version: '28',
 							platform: 'Linux'
 						},
 						

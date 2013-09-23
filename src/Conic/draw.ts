@@ -23,7 +23,7 @@ draw(screen, options, redraw = false) {
 				d = this.primal[0][2] * 2,
 				e = this.primal[1][2] * 2,
 				f = this.primal[2][2],
-				disc = 4*a*c - b*b,	
+				disc = 4*a*c - b*b,
 				r = this.primal.determinant() / disc,
 				rank = this.primal.rank(),
 				cx = (b*e - 2*c*d) / (4*a*c - b*b),
@@ -56,7 +56,7 @@ draw(screen, options, redraw = false) {
 				screen.path([
 					t => cx + cos * param * t * t - sin * 2 * param * t,
 					t => cy + sin * param * t * t + cos * 2 * param * t
-				], options, redraw);				
+				], options, redraw);
 			}
 
 
@@ -67,7 +67,7 @@ draw(screen, options, redraw = false) {
 
 				screen.path([
 					t => cx + cos * Math.cos(t) * A - sin * Math.sin(t) * C,
-					t => cy + sin * Math.cos(t) * A + cos * Math.sin(t) * C 
+					t => cy + sin * Math.cos(t) * A + cos * Math.sin(t) * C
 				], options, redraw);
 			}
 

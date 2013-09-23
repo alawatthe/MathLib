@@ -7,7 +7,7 @@ export class Expression {
 
 	arguments: string[];
 	content: any;
-	isMethod: bool;
+	isMethod: boolean;
 	mode: string;
 	name: string;
 	subtype: string;

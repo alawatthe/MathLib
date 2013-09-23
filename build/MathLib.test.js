@@ -1,4 +1,4 @@
-/*! MathLib v0.5.2 MathLib.de | MathLib.de/en/license */
+/*! MathLib v0.6.0 MathLib.de | MathLib.de/en/license */
 module('MathLib');
 test('general', 1, function () {
 	equal(typeof MathLib, 'object', 'is MathLib defined');
