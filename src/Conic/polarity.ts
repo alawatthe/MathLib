@@ -1,6 +1,6 @@
 // ### [Conic.prototype.polarity()](http://mathlib.de/en/docs/Conic/polarity)
 // Calculates the four polarity of a conic.
-// 
+//
 // *@return {Point[]}*
 polarity(x) {
 	var object, m,
@@ -15,7 +15,6 @@ polarity(x) {
 		object = new MathLib.Line([0, 0, 0]);
 		m = 'primal';
 	}
-
 
 
 	Object.defineProperties(object, {

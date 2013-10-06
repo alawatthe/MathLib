@@ -8,10 +8,7 @@
 // *@return {Screen}* Returns the screen
 text: function (str, x, y, options = {}, redraw = false) {
 	var screen = this.screen,
-			svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
-			ctx = this.ctx,
-			prop, opts;
-	var tf = this.screen.transformation;
+			svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
 	svgText.textContent = str;
 	svgText.setAttribute('x', x * screen.scale.x + '');

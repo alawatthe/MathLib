@@ -79,7 +79,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	}
 
 	// Document event: fullscreenchange
-	function fullscreenchange(oldEvent) {
+	function fullscreenchange() {
 		var newEvent = document.createEvent('CustomEvent');
 		(<any>newEvent).initCustomEvent('fullscreenchange', true, false, null);
 		// TODO: Any need for variable copy?
@@ -89,7 +89,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	document.addEventListener('mozfullscreenchange', fullscreenchange, false);
 
 	// Document event: fullscreenerror
-	function fullscreenerror(oldEvent) {
+	function fullscreenerror() {
 		var newEvent = document.createEvent('CustomEvent');
 		(<any>newEvent).initCustomEvent('fullscreenerror', true, false, null);
 		// TODO: Any need for variable copy?

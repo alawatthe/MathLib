@@ -4,11 +4,11 @@
 export class Screen3D extends Screen {
 	type = 'screen3D';
 
- 	grid: any;
- 	axis: any;
- 	render: any;
- 	camera: any;
- 	element: any;
+	grid: any;
+	axis: any;
+	render: any;
+	camera: any;
+	element: any;
 	scene: any;
 
 	constructor (id: string, options = {}) {
@@ -58,9 +58,9 @@ export class Screen3D extends Screen {
 
 		// Camera
 		// ======
-		viewAngle = 45,
-		aspect = opts.width / opts.height,
-		near = 0.1,
+		viewAngle = 45;
+		aspect = opts.width / opts.height;
+		near = 0.1;
 		far = 20000;
 
 		camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
@@ -73,7 +73,7 @@ export class Screen3D extends Screen {
 
 		// Renderer
 		// ========
-		renderer = new THREE[opts.renderer + 'Renderer']( {antialias: true, preserveDrawingBuffer: true} );
+		renderer = new THREE[opts.renderer + 'Renderer']({antialias: true, preserveDrawingBuffer: true});
 		// Remove the warning message.
 		this.wrapper.innerHTML = '';
 		this.wrapper.appendChild(renderer.domElement);

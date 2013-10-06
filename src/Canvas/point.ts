@@ -7,7 +7,7 @@
 point: function (point, options = {}, redraw = false) {
 	var screen = this.screen,
 			ctx = this.ctx,
-			prop, opts, dist, textOptions;
+			prop, opts, dist;
 
 	ctx.save();
 	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
@@ -17,7 +17,7 @@ point: function (point, options = {}, redraw = false) {
 		opts = MathLib.Canvas.convertOptions(options);
 
 		if (!('fillColor' in options) && !('color' in options)) {
-			opts['fillStyle'] = 'black';
+			opts.fillStyle = 'black';
 		}
 
 		for (prop in opts) {

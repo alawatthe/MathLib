@@ -41,10 +41,9 @@ export class Screen {
 				opts = extendObject(defaults, options),
 				container = document.getElementById(id),
 				innerHTMLContextMenu = '',
-				id = +Date.now(),
+				uuid = +Date.now(),
 				fullscreenchange,
-				innerHTML,
-				screen;
+				innerHTML;
 
 
 
@@ -65,13 +64,13 @@ export class Screen {
 						innerHTMLContextMenu += [
 								'<div class="MathLib_needs2D">',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_' + id + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
+										'<input type="radio" name="MathLib_grid_type_' + uuid + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_' + id + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
+										'<input type="radio" name="MathLib_grid_type_' + uuid + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_' + id + '" class="MathLib_radio MathLib_grid_type" value="none">none',
+										'<input type="radio" name="MathLib_grid_type_' + uuid + '" class="MathLib_radio MathLib_grid_type" value="none">none',
 									'</label>',
 								'</div>'
 						].join('');
@@ -81,37 +80,37 @@ export class Screen {
 								'<div class="MathLib_needs3D">',
 									'<div class="MathLib_menuItem MathLib_is_disabled">xy-plane</div>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_xy' + id + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
+										'<input type="radio" name="MathLib_grid_type_xy' + uuid + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_xy' + id + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
+										'<input type="radio" name="MathLib_grid_type_xy' + uuid + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_xy' + id + '" class="MathLib_radio MathLib_grid_type" value="none">none',
+										'<input type="radio" name="MathLib_grid_type_xy' + uuid + '" class="MathLib_radio MathLib_grid_type" value="none">none',
 									'</label>'
 						].join('');
 						innerHTMLContextMenu += [
 									'<div class="MathLib_menuItem MathLib_is_disabled">xz-plane</div>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_xz' + id + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
+										'<input type="radio" name="MathLib_grid_type_xz' + uuid + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_xz' + id + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
+										'<input type="radio" name="MathLib_grid_type_xz' + uuid + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_xz' + id + '" class="MathLib_radio MathLib_grid_type" value="none">none',
+										'<input type="radio" name="MathLib_grid_type_xz' + uuid + '" class="MathLib_radio MathLib_grid_type" value="none">none',
 									'</label>'
 						].join('');
 						innerHTMLContextMenu += [
 									'<div class="MathLib_menuItem MathLib_is_disabled">yz-plane</div>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_yz' + id + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
+										'<input type="radio" name="MathLib_grid_type_yz' + uuid + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_yz' + id + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
+										'<input type="radio" name="MathLib_grid_type_yz' + uuid + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_yz' + id + '" class="MathLib_radio MathLib_grid_type" value="none">none',
+										'<input type="radio" name="MathLib_grid_type_yz' + uuid + '" class="MathLib_radio MathLib_grid_type" value="none">none',
 									'</label>',
 								'</div>'
 						].join('');
@@ -254,7 +253,7 @@ export class Screen {
 
 
 
-		fullscreenchange = function (evt) {
+		fullscreenchange = function () {
 			if ((<any>document).fullscreenElement) {
 				_this.origWidth = _this.width;
 				_this.origHeight = _this.height;

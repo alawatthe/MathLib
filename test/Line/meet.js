@@ -4,7 +4,9 @@ test('.meet()', 5, function () {
 			l3 = new MathLib.Line([1, 1, 0]),
 			p1 = l1.meet(l2),
 			i = 0,
-			f = function () {i++;}
+			f = function () {
+				i++;
+			};
 
 	deepEqual(p1, new MathLib.Point([-1, -1, 1]), '.meet()');
 	deepEqual(l1.meet(l3), new MathLib.Point([-1, 1, 1]), '.meet()');

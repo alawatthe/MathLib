@@ -1,9 +1,9 @@
-/*global module:true */
 module.exports = function (grunt) {
 	'use strict';
-	
+
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-compass');
+	grunt.loadNpmTasks('grunt-contrib-csslint');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-connect');
@@ -23,7 +23,6 @@ module.exports = function (grunt) {
 		pkg: grunt.file.readJSON('package.json'),
 		saucelabs: grunt.file.exists('saucelab.json') ? grunt.file.readJSON('saucelab.json') : '{}',
 
-		// This is a nasty hack with all the bracket files.
 		concat: {
 			MathLib: {
 				src: ['src/meta/head.ts',
@@ -317,30 +316,30 @@ module.exports = function (grunt) {
 						// =====
 						// Opera does not work with the automated tests.
 						// {
-						// 	browserName: 'opera',
-						// 	version: '11',
-						// 	platform: 'Windows 7'
-						// },
-						// {
-						// 	browserName: 'opera',
-						// 	version: '12',
-						// 	platform: 'Windows 7'
-						// },
+						//	browserName: 'opera',
+						//	version: '11',
+						//	platform: 'Windows 7'
+						//},
+						//{
+						//	browserName: 'opera',
+						//	version: '12',
+						//	platform: 'Windows 7'
+						//},
 
-						// {
-						// 	browserName: 'opera',
-						// 	version: '12',
-						// 	platform: 'Linux'
-						// },
+						//{
+						//	browserName: 'opera',
+						//	version: '12',
+						//	platform: 'Linux'
+						//},
 
 
 						// Internet Explorer
 						// =================
-						// {
-						// 	browserName: 'internet explorer',
-						// 	version: '9',
-						// 	platform: 'Windows 7'
-						// },
+						//{
+						//	browserName: 'internet explorer',
+						//	version: '9',
+						//	platform: 'Windows 7'
+						//},
 						{
 							browserName: 'internet explorer',
 							version: '10',
@@ -351,11 +350,11 @@ module.exports = function (grunt) {
 						// Android
 						// =======
 						// Android does not work with the automated tests.
-						// {
-						// 	browserName: 'android',
-						// 	version: '4.0',
-						// 	platform: 'Linux'
-						// },
+						//{
+						//	browserName: 'android',
+						//	version: '4.0',
+						//	platform: 'Linux'
+						//},
 
 
 						// iPhone
@@ -389,7 +388,7 @@ module.exports = function (grunt) {
 			}
 		},
 
-		
+
 		// Linting
 		jshint: {
 			all: ['Gruntfile.js', 'build/MathLib.js', 'build/MathLib.test.js'],

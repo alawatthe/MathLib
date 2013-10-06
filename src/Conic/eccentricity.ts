@@ -1,10 +1,9 @@
 // ### [Conic.prototype.eccentricity()](http://mathlib.de/en/docs/Conic/eccentricity)
 // Calculates the eccentricity of a conic.
-// 
+//
 // *@return {number}*
 eccentricity() : number {
-	var min, max,
-			normalform = this.normalize(),
+	var normalform = this.normalize(),
 			a = normalform.primal[0][0],
 			c = normalform.primal[1][1];
 

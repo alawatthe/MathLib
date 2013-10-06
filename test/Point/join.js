@@ -4,7 +4,9 @@ test('.join()', 5, function () {
 			p3 = new MathLib.Point([1, 1, 0]),
 			l1 = p1.join(p2),
 			i = 0,
-			f = function () {i++;}
+			f = function () {
+				i++;
+			};
 
 	deepEqual(l1, new MathLib.Line([-1, -1, 1]), '.join()');
 	deepEqual(p1.join(p3), new MathLib.Line([-1, 1, 1]), '.join()');

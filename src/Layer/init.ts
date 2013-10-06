@@ -56,7 +56,7 @@ export class Layer {
 			this.applyTransformation();
 
 
-			// Set the drawing functions      
+			// Set the drawing functions
 			if (id === 'back') {
 				this.draw = function () {
 					var top     = (              - screen.translation.y) / screen.scale.y,
@@ -68,14 +68,14 @@ export class Layer {
 					this.ctx.fillStyle = colorConvert(screen.options.background);
 					this.ctx.fillRect(left, bottom, right - left, top - bottom);
 
-					this.stack.forEach(function (x, i) {
-						if (x.type === 'conic' ) {
+					this.stack.forEach(function (x) {
+						if (x.type === 'conic') {
 							x.object.draw(_this, x.options, true);
 						}
-						else if (x.type === 'text' ) {
+						else if (x.type === 'text') {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
-						else if (x.type === 'pixel' ) {
+						else if (x.type === 'pixel') {
 							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
 						}
 						else {
@@ -109,7 +109,7 @@ export class Layer {
 				this.draw = function () {
 					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 
-					this.stack.forEach(function (x, i) {
+					this.stack.forEach(function (x) {
 						if (x.type === 'conic' ) {
 							x.object.draw(_this, x.options, true);
 						}
@@ -145,22 +145,17 @@ export class Layer {
 			this.ctx = ctx;
 
 
-			// Set the drawing functions      
+			// Set the drawing functions
 			if (id === 'back') {
 				this.draw = function () {
-					var top     = (              - screen.translation.y) / screen.scale.y,
-							bottom  = (screen.height - screen.translation.y) / screen.scale.y,
-							left    = (              - screen.translation.x) / screen.scale.x,
-							right   = (screen.width  - screen.translation.x) / screen.scale.x;
-
-					this.stack.forEach(function (x, i) {
-						if (x.type === 'conic' ) {
+					this.stack.forEach(function (x) {
+						if (x.type === 'conic') {
 							x.object.draw(_this, x.options, true);
 						}
-						else if (x.type === 'text' ) {
+						else if (x.type === 'text') {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
-						else if (x.type === 'pixel' ) {
+						else if (x.type === 'pixel') {
 							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
 						}
 						else {
@@ -189,7 +184,7 @@ export class Layer {
 			else {
 				this.draw = function () {
 
-					this.stack.forEach(function (x, i) {
+					this.stack.forEach(function (x) {
 						if (x.type === 'conic' ) {
 							x.object.draw(_this, x.options, true);
 						}

@@ -18,7 +18,7 @@ times(n : any) : any {
 		});
 	}
 	if (n.type === 'matrix') {
-		if (this.length == n.rows) {
+		if (this.length === n.rows) {
 			colVectors = n.toColVectors();
 			for (i = 0, ii = colVectors.length; i < ii; i++) {
 				product[i] = this.scalarProduct(colVectors[i]);

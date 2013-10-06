@@ -2,10 +2,10 @@
 // Determines if the matrix is a band matrix.
 //
 // *@param {number}*  
-// *@param {number}*   
+// *@param {number}*  
 // *@return {boolean}*
 isBandMatrix(l, u) : boolean {
-	var i, j, ii, jj;
+	// var i, j, ii, jj;
 	
 	if (arguments.length === 1) {
 		u = l;

@@ -23,7 +23,7 @@ point: function (point, options = {}, redraw = false) {
 		}
 
 		if (!('fillColor' in options) && !('color' in options)) {
-			opts['fill'] = 'black';
+			opts.fill = 'black';
 		}
 
 		for (prop in opts) {
@@ -38,7 +38,7 @@ point: function (point, options = {}, redraw = false) {
 		svgPoint.setAttribute('cursor', 'move');
 
 		// mousedown
-		svgPoint.addEventListener('mousedown', 
+		svgPoint.addEventListener('mousedown',
 			function () {
 				screen.options.interaction.type = 'move';
 				var invTransformation = screen.transformation.inverse();
@@ -49,7 +49,7 @@ point: function (point, options = {}, redraw = false) {
 							var evtPoint = invTransformation.times(screen.getEventPoint(evt));
 							point[0] = evtPoint[0];
 							point[1] = evtPoint[1];
-							screen.draw()
+							screen.draw();
 						},
 
 						up = function () {
@@ -80,7 +80,7 @@ point: function (point, options = {}, redraw = false) {
 	}
 
 
-	svgPoint.addEventListener('contextmenu', function (evt) {
+	svgPoint.addEventListener('contextmenu', function () {
 		screen.options.interaction.type = 'contextmenu';
 		var x = (<any>svgPoint).cx.baseVal.value,
 				y = (<any>svgPoint).cy.baseVal.value;

@@ -3,7 +3,9 @@ test('.parallelThrough()', 5, function () {
 			p = new MathLib.Point([1, 1, 1]),
 			parallel = l.parallelThrough(p),
 			i = 0,
-			f = function () {i++;}
+			f = function () {
+				i++;
+			};
 
 	deepEqual(parallel, new MathLib.Line([-1, 0, 1]), '.parallelThrough()');
 

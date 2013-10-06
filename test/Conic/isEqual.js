@@ -4,7 +4,6 @@ test('.isEqual()', 4, function () {
 			c3 = new MathLib.Conic([[2, 0, 0], [0, 2, 0], [0, 0, 2]]),
 			c4 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 2]]);
 
-
 	equal(c1.isEqual(c1), true, 'same variable');
 	equal(c1.isEqual(c2), true, 'identical conic');
 	equal(c1.isEqual(c3), true, 'scaled parameters');

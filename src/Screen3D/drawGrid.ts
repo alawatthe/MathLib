@@ -22,7 +22,7 @@ drawGrid() {
 					for (i = -size; i <= size; i += tickX) {
 						lines.moveTo(-size, i);
 						lines.lineTo(size, i);
-					}		
+					}
 
 					for (i = -size; i <= size; i += tickY) {
 						lines.moveTo(i, -size);
@@ -40,12 +40,10 @@ drawGrid() {
 				else if (opts.type === 'polar') {
 
 					var circles = new THREE.Shape(),
-							rays = new THREE.Shape(),
-							line;
-
+							rays = new THREE.Shape();
 
 					for (i = 0; i <= size; i += opts.tick.r) {
-						circles.moveTo(i, 0)
+						circles.moveTo(i, 0);
 						circles.absarc(0, 0, i, 0, 2 * Math.PI + 0.001, false);
 					}
 					grid.add(new THREE.Line(circles.createPointsGeometry(),

@@ -3,18 +3,20 @@
 //
 // *@return {Polynomial}*
 static roots(zeros) : Polynomial {
-	var elemSymPoly, coef = [], i, ii;
+	var elemSymPoly, i, ii,
+			coef = [];
+
 	if (MathLib.type(zeros) === 'array') {
 		zeros = new MathLib.Set(zeros);
 	}
 
 	elemSymPoly = zeros.powerset();
 	for (i = 0, ii = zeros.card; i < ii; i++) {
-		coef[i] = 0; 
+		coef[i] = 0;
 	}
 
 	// Vieta's theorem
-	elemSymPoly.slice(1).forEach(function (x, i) {
+	elemSymPoly.slice(1).forEach(function (x) {
 		coef[ii - x.card] = MathLib.plus(coef[ii - x.card], x.times());
 	});
 

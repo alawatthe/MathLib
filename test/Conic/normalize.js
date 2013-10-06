@@ -1,5 +1,6 @@
 test('.normalize()', 30, function () {
-	var C = [],
+	var i, cp, np,
+			C = [],
 			N = [],
 			c1 = new MathLib.Conic([[1, 1, 0], [1, 1, 0], [0, 0, -1]]),
 			n1 = c1.normalize(),
@@ -10,10 +11,9 @@ test('.normalize()', 30, function () {
 			c4 = new MathLib.Conic([[-4, 0, 0], [0, 0, 2], [0, 2, 8]]),
 			n4 = c4.normalize(),
 
-			c1Deg = new MathLib.Conic([[0, 0, 0], [0, 0, 0], [0, 0, 1]], [[1,0,0],[0,1,0],[0,0,1]]),
+			c1Deg = new MathLib.Conic([[0, 0, 0], [0, 0, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
 			n1Deg = c1Deg.normalize(),
 
-			i;
 			a = Math.random() - 0.5,
 			b = Math.random() - 0.5,
 			c = Math.random() - 0.5,
@@ -21,7 +21,6 @@ test('.normalize()', 30, function () {
 			e = Math.random() - 0.5,
 			f = Math.random() - 0.5,
 			Conic = new MathLib.Conic([[a, b, d], [b, c, e], [d, e, f]]);
-
 
 	C.push(c1);
 	N.push(n1);
@@ -41,7 +40,7 @@ test('.normalize()', 30, function () {
 		cp = C[i].primal;
 		np = N[i].primal;
 
-		equal(cp.rank(), np.rank(), true, 'rank is invariant')
+		equal(cp.rank(), np.rank(), true, 'rank is invariant');
 
 		equal(np[0][1], 0, 'b is 0');
 		equal(np[2][2] === 0 || np[2][2] === -1, true, 'f is 0 or -1');

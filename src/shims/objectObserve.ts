@@ -283,7 +283,6 @@ if ((<any>Object).observe === undefined) {
 				throw new TypeError('callback must be a function, given ' + observer);
 			}
 			while (deliverChangeRecords(observer)) {}
-			return;
 		};
 
 		// Implementation of the public api 'Object.getNotifier'

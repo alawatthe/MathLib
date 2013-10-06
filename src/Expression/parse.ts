@@ -361,7 +361,7 @@ static parse = function (str) {
 		// Exponentiation ::= Unary |
 		//                    Exponentiation '^' Unary |
 		function parseExponentiation() {
-			var token, left, right, r;
+			var token, left, right;
 
 			left = parseUnary();
 			token = lexer.peek();
@@ -476,7 +476,7 @@ static parse = function (str) {
 		// Assignment ::= Identifier '=' Assignment |
 		//                Additive
 		function parseAssignment() {
-			var token, expr;
+			var expr;
 
 			expr = parseAdditive();
 

@@ -25,7 +25,7 @@ test('.is()', 12, function () {
 	equal(MathLib.is(undefined, 'undefined'), true);
 });
 test('.isNative()', 2, function () {
-	Math.isNativeCheck = function (x) {
+	Math.isNativeCheck = function () {
 		return 42;
 	};
 	
@@ -312,7 +312,7 @@ test('.minus()', 1, function () {
 });
 test('.negative()', 2, function () {
 	var c = new MathLib.Complex(3, -4);
-	c = c.negative(); 
+	c = c.negative();
 	equal(c.re, -3, 'Checking the negative of a complex number');
 	equal(c.im, 4, 'Checking the negative of a complex number');
 });
@@ -478,7 +478,6 @@ test('.isEqual()', 4, function () {
 			c3 = new MathLib.Conic([[2, 0, 0], [0, 2, 0], [0, 0, 2]]),
 			c4 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 2]]);
 
-
 	equal(c1.isEqual(c1), true, 'same variable');
 	equal(c1.isEqual(c2), true, 'identical conic');
 	equal(c1.isEqual(c3), true, 'scaled parameters');
@@ -543,14 +542,13 @@ test('.meet()', 28, function () {
 			line = new MathLib.Line([-1, 1, 0]),
 			conics = [];
 
-			conics.push(new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, -1]]));
-			conics.push(new MathLib.Conic([[4, 0, 0], [0, 3, 0], [0, 0, -1]]));
-			conics.push(new MathLib.Conic([[1, 0, 0], [0, 0, -0.5], [0, -0.5, 0]]));
-			conics.push(new MathLib.Conic([[4, 0, 0], [0, -3, 0], [0, 0, -1]]));
-			conics.push(new MathLib.Conic([[1, 1, 0], [1, 1, 0], [0, 0, -1]]));
-			conics.push(new MathLib.Conic([[1, 1, 0], [1, 2, 0], [0, 0, 0]]));
-			conics.push(new MathLib.Conic([[1, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 1, 0], [0, 0, 1]]));
-
+	conics.push(new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, -1]]));
+	conics.push(new MathLib.Conic([[4, 0, 0], [0, 3, 0], [0, 0, -1]]));
+	conics.push(new MathLib.Conic([[1, 0, 0], [0, 0, -0.5], [0, -0.5, 0]]));
+	conics.push(new MathLib.Conic([[4, 0, 0], [0, -3, 0], [0, 0, -1]]));
+	conics.push(new MathLib.Conic([[1, 1, 0], [1, 1, 0], [0, 0, -1]]));
+	conics.push(new MathLib.Conic([[1, 1, 0], [1, 2, 0], [0, 0, 0]]));
+	conics.push(new MathLib.Conic([[1, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 1, 0], [0, 0, 1]]));
 
 	for (i = 0, ii = conics.length; i < ii; i++) {
 		meetingPoints = conics[i].meet(line);
@@ -564,7 +562,8 @@ test('.meet()', 28, function () {
 
 });
 test('.normalize()', 30, function () {
-	var C = [],
+	var i, cp, np,
+			C = [],
 			N = [],
 			c1 = new MathLib.Conic([[1, 1, 0], [1, 1, 0], [0, 0, -1]]),
 			n1 = c1.normalize(),
@@ -575,10 +574,9 @@ test('.normalize()', 30, function () {
 			c4 = new MathLib.Conic([[-4, 0, 0], [0, 0, 2], [0, 2, 8]]),
 			n4 = c4.normalize(),
 
-			c1Deg = new MathLib.Conic([[0, 0, 0], [0, 0, 0], [0, 0, 1]], [[1,0,0],[0,1,0],[0,0,1]]),
+			c1Deg = new MathLib.Conic([[0, 0, 0], [0, 0, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
 			n1Deg = c1Deg.normalize(),
 
-			i;
 			a = Math.random() - 0.5,
 			b = Math.random() - 0.5,
 			c = Math.random() - 0.5,
@@ -586,7 +584,6 @@ test('.normalize()', 30, function () {
 			e = Math.random() - 0.5,
 			f = Math.random() - 0.5,
 			Conic = new MathLib.Conic([[a, b, d], [b, c, e], [d, e, f]]);
-
 
 	C.push(c1);
 	N.push(n1);
@@ -606,7 +603,7 @@ test('.normalize()', 30, function () {
 		cp = C[i].primal;
 		np = N[i].primal;
 
-		equal(cp.rank(), np.rank(), true, 'rank is invariant')
+		equal(cp.rank(), np.rank(), true, 'rank is invariant');
 
 		equal(np[0][1], 0, 'b is 0');
 		equal(np[2][2] === 0 || np[2][2] === -1, true, 'f is 0 or -1');
@@ -628,33 +625,32 @@ test('.polarity()', 14, function () {
 			deg3 = new MathLib.Conic([[1, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 1, 0], [0, 0, 1]]);
 
 
-	ok(MathLib.isEqual( c.polarity(q), new MathLib.Line([2, 1, -1])), 'circle.polarity()');
-	ok(MathLib.isEqual( c.polarity(l), new MathLib.Point([1, 2, -1])), 'circle.polarity()');
+	ok(MathLib.isEqual(c.polarity(q), new MathLib.Line([2, 1, -1])), 'circle.polarity()');
+	ok(MathLib.isEqual(c.polarity(l), new MathLib.Point([1, 2, -1])), 'circle.polarity()');
 
-	ok(MathLib.isEqual( e.polarity(q), new MathLib.Line([8, 3, -1])), 'ellipse.polarity()');
-	ok(MathLib.isEqual( e.polarity(l), new MathLib.Point([1 / 4, 2 / 3, -1])), 'ellipse.polarity()');
+	ok(MathLib.isEqual(e.polarity(q), new MathLib.Line([8, 3, -1])), 'ellipse.polarity()');
+	ok(MathLib.isEqual(e.polarity(l), new MathLib.Point([1 / 4, 2 / 3, -1])), 'ellipse.polarity()');
 
-	ok(MathLib.isEqual( p.polarity(q), new MathLib.Line([2, -0.5, -0.5])), 'parabola.polarity()');
-	ok(MathLib.isEqual( p.polarity(l), new MathLib.Point([-0.25, 0.5, 1])), 'parabola.polarity()');
+	ok(MathLib.isEqual(p.polarity(q), new MathLib.Line([2, -0.5, -0.5])), 'parabola.polarity()');
+	ok(MathLib.isEqual(p.polarity(l), new MathLib.Point([-0.25, 0.5, 1])), 'parabola.polarity()');
 
-	ok(MathLib.isEqual( h.polarity(q), new MathLib.Line([8, -3, -1])), 'hyperbola.polarity()');
-	ok(MathLib.isEqual( h.polarity(l), new MathLib.Point([0.25, -2 / 3, -1])), 'hyperbola.polarity()');
+	ok(MathLib.isEqual(h.polarity(q), new MathLib.Line([8, -3, -1])), 'hyperbola.polarity()');
+	ok(MathLib.isEqual(h.polarity(l), new MathLib.Point([0.25, -2 / 3, -1])), 'hyperbola.polarity()');
 
-	ok(MathLib.isEqual( deg1.polarity(q), new MathLib.Line([3, 3, -1])), 'degeneratedConic.polarity()');
-	ok(MathLib.isEqual( deg1.polarity(l), new MathLib.Point([1, -1, 0])), 'degeneratedConic.polarity()');
+	ok(MathLib.isEqual(deg1.polarity(q), new MathLib.Line([3, 3, -1])), 'degeneratedConic.polarity()');
+	ok(MathLib.isEqual(deg1.polarity(l), new MathLib.Point([1, -1, 0])), 'degeneratedConic.polarity()');
 
-	ok(MathLib.isEqual( deg2.polarity(q), new MathLib.Line([3, 4, 0])), 'degeneratedConic.polarity()');
-	ok(MathLib.isEqual( deg2.polarity(l), new MathLib.Point([0, 0, 1])), 'degeneratedConic.polarity()');
+	ok(MathLib.isEqual(deg2.polarity(q), new MathLib.Line([3, 4, 0])), 'degeneratedConic.polarity()');
+	ok(MathLib.isEqual(deg2.polarity(l), new MathLib.Point([0, 0, 1])), 'degeneratedConic.polarity()');
 
-	ok(MathLib.isEqual( deg3.polarity(q), new MathLib.Line([2, 0, 0])), 'degeneratedConic.polarity()');
-	ok(MathLib.isEqual( deg3.polarity(l), new MathLib.Point([0, 2, 1])), 'degeneratedConic.polarity()');
+	ok(MathLib.isEqual(deg3.polarity(q), new MathLib.Line([2, 0, 0])), 'degeneratedConic.polarity()');
+	ok(MathLib.isEqual(deg3.polarity(l), new MathLib.Point([0, 2, 1])), 'degeneratedConic.polarity()');
 });
 test('.splitDegenerated()', 4, function () {
 	var c1 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
 			c2 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 0]]),
 			c3 = new MathLib.Conic([[1, 1, 0], [1, 1, 0], [0, 0, 0]]),
 			c4 = new MathLib.Conic([[1, 0, 0], [0, 0, 0], [0, 0, 0]]);
-
 
 	equal(c1.splitDegenerated(), undefined, 'rank 3 conic');
 	deepEqual(c2.splitDegenerated(), [new MathLib.Line([1, 1, 0]), new MathLib.Line([1, -1, 0])], 'rank 2 conic');
@@ -668,7 +664,6 @@ test('.throughFivePoints()', 5, function () {
 			p4 = new MathLib.Point([Math.random(), Math.random(), 1]),
 			p5 = new MathLib.Point([Math.random(), Math.random(), 1]),
 			conic = MathLib.Conic.throughFivePoints(p1, p2, p3, p4, p5);
-
 
 	ok(MathLib.isEqual(p1.times(conic.primal).scalarProduct(p1), 0), 'conic goes through first point');
 	ok(MathLib.isEqual(p2.times(conic.primal).scalarProduct(p2), 0), 'conic goes through second point');
@@ -2184,6 +2179,7 @@ test('.isEqual()', 4, function () {
 test('.isFinite()', 2, function () {
 	var line1 = new MathLib.Line([3, 2, 1]),
 			line2 = new MathLib.Line([0, 0, 1]);
+
 	equal(line1.isFinite(), true, '.isFinite()');
 	equal(line2.isFinite(), false, '.isFinite()');
 });
@@ -2214,7 +2210,9 @@ test('.meet()', 5, function () {
 			l3 = new MathLib.Line([1, 1, 0]),
 			p1 = l1.meet(l2),
 			i = 0,
-			f = function () {i++;}
+			f = function () {
+				i++;
+			};
 
 	deepEqual(p1, new MathLib.Point([-1, -1, 1]), '.meet()');
 	deepEqual(l1.meet(l3), new MathLib.Point([-1, 1, 1]), '.meet()');
@@ -2243,7 +2241,9 @@ test('.parallelThrough()', 5, function () {
 			p = new MathLib.Point([1, 1, 1]),
 			parallel = l.parallelThrough(p),
 			i = 0,
-			f = function () {i++;}
+			f = function () {
+				i++;
+			};
 
 	deepEqual(parallel, new MathLib.Line([-1, 0, 1]), '.parallelThrough()');
 
@@ -2301,12 +2301,13 @@ test('.LU()', 2, function () {
 	deepEqual(n.LU(), res2, 'LU decomposition');
 });
 test('.adjoint()', 1, function () {
-	var c = MathLib.Complex,
-			m = new MathLib.Matrix([[new c(3, 1), 5, new c(0, -2)], [new c(2, -2), new c(0, 1), new c(-7, -13)]]),
-			res = new MathLib.Matrix([[new c(3, -1), new c(2, 2)], [5, new c(0, -1)], [new c(0, 2), new c(-7, 13)]]);
+	var C = MathLib.Complex,
+			m = new MathLib.Matrix([[new C(3, 1), 5, new C(0, -2)], [new C(2, -2), new C(0, 1), new C(-7, -13)]]),
+			res = new MathLib.Matrix([[new C(3, -1), new C(2, 2)], [5, new C(0, -1)], [new C(0, 2), new C(-7, 13)]]);
 
 	deepEqual(m.adjoint(), res, 'Adjoint matrix of a complex 2x3 matrix');
 });
+
 test('.adjugate()', 1, function () {
 	var m = new MathLib.Matrix([[-3, 2, -5], [-1, 0, -3], [3, -4, 1]]),
 			res = new MathLib.Matrix([[-12, 18, -6], [-8, 12, -4], [4, -6, 2]]);
@@ -2339,9 +2340,9 @@ test('.determinant()', 3, function () {
 	equal(p.determinant(), undefined, 'Determinant of 2x3 matrix should be undefined');
 });
 test('.gershgorin()', 2, function () {
-	var c = MathLib.Complex,
+	var C = MathLib.Complex,
 			m = new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
-			n = new MathLib.Matrix([[new c(1, 4), 2, 3], [new c(2, 3), new c(4, 2), 6], [7, new c(0, 5), 9]]),
+			n = new MathLib.Matrix([[new C(1, 4), 2, 3], [new C(2, 3), new C(4, 2), 6], [7, new C(0, 5), 9]]),
 			resm = [new MathLib.Circle([1, 0], 5), new MathLib.Circle([5, 0], 10), new MathLib.Circle([9, 0], 9)],
 			resn = [new MathLib.Circle([1, 4], 5), new MathLib.Circle([4, 2], 7), new MathLib.Circle([9, 0], 9)];
 
@@ -2384,14 +2385,14 @@ test('identity()', 1, function () {
 	equal(new MathLib.Matrix.identity(4).isIdentity(), true, 'creating a identity matrix');
 });
 test('.inverse()', 3, function () {
-	var c = MathLib.Complex,
+	var C = MathLib.Complex,
 			m1 = new MathLib.Matrix([[1, 2, 0], [2, 3, 0], [3, 4, 1]]),
 			m2 = new MathLib.Matrix([[1, 2], [2, 4]]),
-			m3 = new MathLib.Matrix([[new c(1, 2), new c(3, 4)], [new c(5, 6), new c(7, 8)]]);
+			m3 = new MathLib.Matrix([[new C(1, 2), new C(3, 4)], [new C(5, 6), new C(7, 8)]]);
 
 	equal(m1.inverse().isEqual(new MathLib.Matrix([[-3, 2, 0], [2, -1, 0], [1, -2, 1]])), true, 'inverting a regular matrix');
 	equal(m2.inverse(), undefined, 'inverting a singular matrix');
-	equal(m3.inverse().isEqual(new MathLib.Matrix([[new c(-1 / 2, 7 / 16), new c(1 / 4, -3 / 16)], [new c(6 / 16, -5 / 16), new c(-2 / 16, 1 / 16)]])), true, 'inverting a regular complex matrix');
+	equal(m3.inverse().isEqual(new MathLib.Matrix([[new C(-1 / 2, 7 / 16), new C(1 / 4, -3 / 16)], [new C(6 / 16, -5 / 16), new C(-2 / 16, 1 / 16)]])), true, 'inverting a regular complex matrix');
 });
 test('.isBandMatrix()', 2, function () {
 	var m = new MathLib.Matrix([[2, 1, 3, 0], [1, 2, 1, 3], [0, 1, 2, 1], [0, 0, 1, 2]]);
@@ -2401,7 +2402,7 @@ test('.isBandMatrix()', 2, function () {
 });
 test('.isDiag()', 2, function () {
 	var c = new MathLib.Complex(0, 0),
-			m = new MathLib.Matrix([[1, 0, 0], [0, 5, 0], [0, 0, 9]]),
+			m = new MathLib.Matrix([[1, 0, 0], [0, 5, c], [0, 0, 9]]),
 			n = new MathLib.Matrix([[1, 4, 7], [2, 5, 8], [2, 5, 8]]);
 	equal(m.isDiag(), true, 'square matrix');
 	equal(n.isDiag(), false, 'non square matrix');
@@ -2547,7 +2548,7 @@ test('.rref()', 2, function () {
 	deepEqual(n.rref(), new MathLib.Matrix([[1, 2, 0], [0, 0, 1], [0, 0, 0]]), 'singular matrix');
 });
 test('.solve()', 7, function () {
-	var c  = MathLib.Complex,
+	var C  = MathLib.Complex,
 			A1 = new MathLib.Matrix([[1, 2, 3], [1, 1, 1], [3, 3, 1]]),
 			b1 = new MathLib.Vector([2, 2, 0]),
 			x1 = new MathLib.Vector([5, -6, 3]),
@@ -2556,9 +2557,9 @@ test('.solve()', 7, function () {
 			b2 = new MathLib.Vector([10, 3, 3]),
 			x2 = new MathLib.Vector([1, 1, 3]),
 			
-			A3 = new MathLib.Matrix([[new c(2, 3), 0, 3], [2, new c(-1, 5), 0], [new c(3, -4), new c(0, 1), 1]]),
-			b3 = new MathLib.Vector([new c(5, 37), new c(5, 19), new c(21, 0)]),
-			x3 = new MathLib.Vector([new c(4, 2), new c(3, 0), new c(1, 7)]),
+			A3 = new MathLib.Matrix([[new C(2, 3), 0, 3], [2, new C(-1, 5), 0], [new C(3, -4), new C(0, 1), 1]]),
+			b3 = new MathLib.Vector([new C(5, 37), new C(5, 19), new C(21, 0)]),
+			x3 = new MathLib.Vector([new C(4, 2), new C(3, 0), new C(1, 7)]),
 
 			A4 = new MathLib.Matrix([[2, 4], [1, 2]]),
 			A5 = new MathLib.Matrix([[1, 0, 1], [0, 1, 1], [0, 0, 0]]);
@@ -2580,14 +2581,14 @@ test('.times()', 5, function () {
 			n = new MathLib.Matrix([[0, 1], [0, 0]]),
 			res = new MathLib.Matrix([[0, 1], [0, 3]]),
 
-			c  = MathLib.Complex,
-			mc = new MathLib.Matrix([[new c(2, 3), 0, 3], [2, new c(-1, 5), 0], [new c(3, -4), new c(0, 1), 1]]),
-			bc = new MathLib.Vector([new c(4, 2), 3, new c(1, 7)]),
-			resc = new MathLib.Vector([new c(5, 37), new c(5, 19), new c(21, 0)]),
+			C  = MathLib.Complex,
+			mc = new MathLib.Matrix([[new C(2, 3), 0, 3], [2, new C(-1, 5), 0], [new C(3, -4), new C(0, 1), 1]]),
+			bc = new MathLib.Vector([new C(4, 2), 3, new C(1, 7)]),
+			resc = new MathLib.Vector([new C(5, 37), new C(5, 19), new C(21, 0)]),
 			r = new MathLib.Rational(2, 3);
 
 	deepEqual(m.times(3), new MathLib.Matrix([[3, 6], [9, 12]]), 'matrix scalar multiplication');
-	deepEqual(m.times(new c(0, 1)), new MathLib.Matrix([[new c(0, 1), new c(0, 2)], [new c(0, 3), new c(0, 4)]]), 'matrix scalar multiplication');
+	deepEqual(m.times(new C(0, 1)), new MathLib.Matrix([[new C(0, 1), new C(0, 2)], [new C(0, 3), new C(0, 4)]]), 'matrix scalar multiplication');
 	deepEqual(m.times(n), res, 'multiplying two simple matrices');
 	deepEqual(mc.times(bc), resc, 'complex matrix times complex vector');
 	equal(m.times(r).isEqual(new MathLib.Matrix([[2 / 3, 4 / 3], [6 / 3, 8 / 3]])), true, 'complex matrix times rational number');
@@ -2808,7 +2809,9 @@ test('.join()', 5, function () {
 			p3 = new MathLib.Point([1, 1, 0]),
 			l1 = p1.join(p2),
 			i = 0,
-			f = function () {i++;}
+			f = function () {
+				i++;
+			};
 
 	deepEqual(l1, new MathLib.Line([-1, -1, 1]), '.join()');
 	deepEqual(p1.join(p3), new MathLib.Line([-1, 1, 1]), '.join()');
@@ -3016,7 +3019,7 @@ test('init', 5, function () {
 	equal(r.denominator, 3, 'Testing the denominator');
 	equal(p.numerator, 4, 'Testing the numerator');
 	equal(p.denominator, 1, 'Testing the denominator');
-	throws(function () {var r = new MathLib.Rational(2, 0); }, 'Setting the denominator to zero should throw an error.');
+	throws(function () {new MathLib.Rational(2, 0); }, 'Setting the denominator to zero should throw an error.');
 });
 
 
@@ -3293,9 +3296,9 @@ test('.plus()', 3, function () {
 	deepEqual(s.plus(m), new MathLib.Set([2, 3, 4, 5, 6, 7, 8, 9, 10]), 'Testing .plus(set) (set)');
 });
 test('.powerset()', 1, function () {
-	var s = MathLib.Set,
+	var S = MathLib.Set,
 			m = new MathLib.Set([1, 2, 3]),
-			n = new MathLib.Set([new s([]), new s([1]), new s([2]), new s([3]), new s([1, 2]), new s([1, 3]), new s([2, 3]), new s([1, 2, 3])]);
+			n = new MathLib.Set([new S([]), new S([1]), new S([2]), new S([3]), new S([1, 2]), new S([1, 3]), new S([2, 3]), new S([1, 2, 3])]);
 	deepEqual(m.powerset(), n, '.powerset()');
 });
 test('.reduce()', 1, function () {
@@ -3437,8 +3440,9 @@ test('.forEach()', 1, function () {
 			str = '',
 			f = function (x) {
 				str += x;
-			},
-			res = p.forEach(f);
+			};
+
+	p.forEach(f);
 
 	deepEqual(str, '123', '.forEach()');
 });

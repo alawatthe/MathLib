@@ -1,6 +1,6 @@
 // ### [Conic.prototype.linearEccentricity()](http://mathlib.de/en/docs/Conic/linearEccentricity)
 // Calculates the linear eccentricity of a conic.
-// 
+//
 // *@return {number}*
 linearEccentricity() : number {
 	var normalForm = this.normalize(),

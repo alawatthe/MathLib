@@ -1,5 +1,5 @@
 // ### Matrix.parametricPlot3D()
-// 
+//
 //
 // *@param {function}* The function which is called on every argument  
 // *@return {Screen3D}*
@@ -20,7 +20,7 @@ parametricPlot3D(f, options) : Screen3D {
 			opts = extendObject(defaults, options),
 
 
-			curve = THREE.Curve.create(
+			Curve = THREE.Curve.create(
 				function () {},
 				function (t) {
 					t = (opts.max - opts.min) * t + opts.min;
@@ -31,7 +31,7 @@ parametricPlot3D(f, options) : Screen3D {
 		
 
 			mesh = new THREE.Mesh(
-				new THREE.TubeGeometry(new curve(), opts.pointNum, opts.radius, opts.segmentsRadius, opts.closed, opts.debug),
+				new THREE.TubeGeometry(new Curve(), opts.pointNum, opts.radius, opts.segmentsRadius, opts.closed, opts.debug),
 				new THREE[opts.material.type + 'Material'](opts.material)
 			);
 

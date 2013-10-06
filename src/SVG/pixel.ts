@@ -14,12 +14,11 @@ pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
 			left    = (              - screen.translation.x) / screen.scale.x,
 			right   = (screen.width  - screen.translation.x) / screen.scale.x,
-			ctx = this.ctx,
 			canvas = <any>document.createElement('canvas'),
 			canvasCtx = canvas.getContext('2d'),
 			svgImage = document.createElementNS('http://www.w3.org/2000/svg', 'image'),
 			svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'g'),
-			dataURL, prop, opts, x, y, i, pxl,
+			x, y, i, pxl,
 			m = screen.transformation;
 
 	canvas.width = screen.width;

@@ -1,5 +1,5 @@
 // ### Polynomial.prototype.valueAt()
-// Evaluates the polynomial at a given point 
+// Evaluates the polynomial at a given point
 //
 // *@param {number|Complex|Matrix}*  
 // *@return {number|Complex|Matrix}*

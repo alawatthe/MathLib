@@ -4,8 +4,7 @@
 // *@return {Expression}*
 static parseContentMathML(MathMLString) : Expression {
 	var tokenizer = new DOMParser(),
-			MathMLdoc,
-			expr = {};
+			MathMLdoc;
 
 
 	// Whitespace normalization (see section 2.1.7 of the MathML 3 specification)
@@ -145,13 +144,13 @@ static parseContentMathML(MathMLString) : Expression {
 				subtype: 'vector'
 			});
 		},
-		false: function (node) {
+		false: function () {
 			return new MathLib.Expression.constant('false');
 		},
-		pi: function (node) {
+		pi: function () {
 			return new MathLib.Expression.constant('pi');
 		},
-		true: function (node) {
+		true: function () {
 			return new MathLib.Expression.constant('true');
 		}
 	}

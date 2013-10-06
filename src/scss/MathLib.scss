@@ -64,7 +64,7 @@ $padding: 4px;
 	@include display-box;
 	@include box-align(center);
 	@include expandToFullscreen;
-	margin: 0em auto;
+	margin: 0 auto;
 	@include box-orient(vertical);
 }
 

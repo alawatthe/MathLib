@@ -3,8 +3,9 @@ test('.forEach()', 1, function () {
 			str = '',
 			f = function (x) {
 				str += x;
-			},
-			res = p.forEach(f);
+			};
+
+	p.forEach(f);
 
 	deepEqual(str, '123', '.forEach()');
 });

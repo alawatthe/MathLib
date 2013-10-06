@@ -16,15 +16,13 @@ draw(screen, options, redraw = false) {
 		options.to = 2 * Math.PI;
 		options.conic = this;
 
-		var	i, j, lines, alpha, cos, sin, sgn,
+		var lines, alpha, cos, sin, sgn,
 				a = this.primal[0][0],
 				b = this.primal[0][1] * 2,
 				c = this.primal[1][1],
 				d = this.primal[0][2] * 2,
 				e = this.primal[1][2] * 2,
-				f = this.primal[2][2],
 				disc = 4*a*c - b*b,
-				r = this.primal.determinant() / disc,
 				rank = this.primal.rank(),
 				cx = (b*e - 2*c*d) / (4*a*c - b*b),
 				cy = (b*d - 2*a*e) / (4*a*c - b*b),
@@ -100,7 +98,7 @@ draw(screen, options, redraw = false) {
 
 				screen.path([
 					t => cx + cos * MathLib.sec(t) * A - sin * MathLib.tan(t) * C * sgn(t),
-					t => cy + sin * MathLib.sec(t) * A + cos * MathLib.tan(t) * C * sgn(t) 
+					t => cy + sin * MathLib.sec(t) * A + cos * MathLib.tan(t) * C * sgn(t)
 				], options, redraw);
 			}
 

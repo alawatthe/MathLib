@@ -1,6 +1,6 @@
 // ### [Functn.prototype.diff()](http://mathlib.de/en/docs/Functn/diff)
 // Numeric derivative at a given point
-// 
+//
 // *@param {number}* The point  
 // *@param {number}* Optional step size  
 // *@return {number}*

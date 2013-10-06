@@ -21,6 +21,8 @@ export class Expression {
 			expr = MathLib.Expression.parse(expr);
 		}
 		for (prop in expr) {
-			this[prop] = expr[prop];
+			if (expr.hasOwnProperty(prop)) {
+				this[prop] = expr[prop];
+			}
 		}
 	}

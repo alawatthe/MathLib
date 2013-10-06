@@ -15,7 +15,7 @@ pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 			left    = (              - screen.translation.x) / screen.scale.x,
 			right   = (screen.width  - screen.translation.x) / screen.scale.x,
 			ctx = this.ctx,
-			prop, opts, path, x, y, i;
+			x, y, i;
 
 	t = Math.min(top, t);
 	r = Math.min(right, r);

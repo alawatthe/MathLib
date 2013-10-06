@@ -1,6 +1,6 @@
 // ### [Conic.prototype.throughFivePoints()](http://mathlib.de/en/docs/Conic/throughFivePoints)
 // Calculates the conic through five points.
-// 
+//
 // *@return {Conic}*
 static throughFivePoints(p, q, r, s, t) : Conic {
 

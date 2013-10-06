@@ -1,6 +1,6 @@
 // ### [Conic.prototype.latusRectum()](http://mathlib.de/en/docs/Conic/latusRectum)
 // Calculates the latusRectum of a conic.
-// 
+//
 // *@return {number}*
 latusRectum() : number {
 	var normalForm = this.normalize(),

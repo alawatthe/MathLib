@@ -2,7 +2,7 @@
 var nAryFunctions = {
 	// ### MathLib.and()
 	// Returns true iff all arguments are true.
-	// 
+	//
 	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
 	// *@return {boolean}*
 	and: function (n) {
@@ -82,7 +82,7 @@ var nAryFunctions = {
 	},
 	// ### MathLib.isEqual()
 	// Determines if all arguments are equal.
-	// 
+	//
 	// *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
 	// *@return {boolean}*
 	isEqual: function (n) {
@@ -124,7 +124,7 @@ var nAryFunctions = {
 	},
 	// ### MathLib.or()
 	// Returns true iff at least one argument is true.
-	// 
+	//
 	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
 	// *@return {boolean}*
 	or: function (n) {
@@ -175,7 +175,7 @@ var nAryFunctions = {
 								value: '+',
 								name: 'plus'
 							})
-						]	
+						]
 					})
 				});
 			}
@@ -233,7 +233,7 @@ var nAryFunctions = {
 								value: '*',
 								name: 'times'
 							})
-						]	
+						]
 					})
 				});
 			}
@@ -248,16 +248,16 @@ var nAryFunctions = {
 	},
 	// ### MathLib.xor()
 	// Returns true iff an odd number of the arguments is true.
-	// 
+	//
 	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
 	// *@return {boolean}*
 	xor: function (n) {
 		return n.reduce(function (x, y) {return x + !!y;}, 0) % 2 !== 0;
-	}	
+	}
 };
 
 
-var createNaryFunction = function (f, name) {
+var createNaryFunction = function (f) {
 	return function (n) {
 		if (MathLib.type(n) === 'set') {
 			return f(n.slice());
@@ -273,7 +273,7 @@ var createNaryFunction = function (f, name) {
 for (func in nAryFunctions) {
 	if (nAryFunctions.hasOwnProperty(func)) {
 		Object.defineProperty(MathLib, func, {
-			value: createNaryFunction(nAryFunctions[func], func)
+			value: createNaryFunction(nAryFunctions[func])
 		});
 	}
 }

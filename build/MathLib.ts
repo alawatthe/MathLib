@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.6.0 - 2013-09-23  
+// v0.6.0 - 2013-10-06  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -201,7 +201,9 @@ export class Expression {
 			expr = MathLib.Expression.parse(expr);
 		}
 		for (prop in expr) {
-			this[prop] = expr[prop];
+			if (expr.hasOwnProperty(prop)) {
+				this[prop] = expr[prop];
+			}
 		}
 	}
 
@@ -711,7 +713,7 @@ static parse = function (str) {
 		// Exponentiation ::= Unary |
 		//                    Exponentiation '^' Unary |
 		function parseExponentiation() {
-			var token, left, right, r;
+			var token, left, right;
 
 			left = parseUnary();
 			token = lexer.peek();
@@ -826,7 +828,7 @@ static parse = function (str) {
 		// Assignment ::= Identifier '=' Assignment |
 		//                Additive
 		function parseAssignment() {
-			var token, expr;
+			var expr;
 
 			expr = parseAdditive();
 
@@ -885,8 +887,7 @@ static parse = function (str) {
 // *@return {Expression}*
 static parseContentMathML(MathMLString) : Expression {
 	var tokenizer = new DOMParser(),
-			MathMLdoc,
-			expr = {};
+			MathMLdoc;
 
 
 	// Whitespace normalization (see section 2.1.7 of the MathML 3 specification)
@@ -1026,13 +1027,13 @@ static parseContentMathML(MathMLString) : Expression {
 				subtype: 'vector'
 			});
 		},
-		false: function (node) {
+		false: function () {
 			return new MathLib.Expression.constant('false');
 		},
-		pi: function (node) {
+		pi: function () {
 			return new MathLib.Expression.constant('pi');
 		},
-		true: function (node) {
+		true: function () {
 			return new MathLib.Expression.constant('true');
 		}
 	}
@@ -1594,7 +1595,7 @@ for (func in binaryFunctions) {
 
 // ### [Functn.prototype.diff()](http://mathlib.de/en/docs/Functn/diff)
 // Numeric derivative at a given point
-// 
+//
 // *@param {number}* The point  
 // *@param {number}* Optional step size  
 // *@return {number}*
@@ -1884,7 +1885,7 @@ MathLib.loadMathJax = function (config : string) : void {
 var nAryFunctions = {
 	// ### MathLib.and()
 	// Returns true iff all arguments are true.
-	// 
+	//
 	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
 	// *@return {boolean}*
 	and: function (n) {
@@ -1964,7 +1965,7 @@ var nAryFunctions = {
 	},
 	// ### MathLib.isEqual()
 	// Determines if all arguments are equal.
-	// 
+	//
 	// *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
 	// *@return {boolean}*
 	isEqual: function (n) {
@@ -2006,7 +2007,7 @@ var nAryFunctions = {
 	},
 	// ### MathLib.or()
 	// Returns true iff at least one argument is true.
-	// 
+	//
 	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
 	// *@return {boolean}*
 	or: function (n) {
@@ -2057,7 +2058,7 @@ var nAryFunctions = {
 								value: '+',
 								name: 'plus'
 							})
-						]	
+						]
 					})
 				});
 			}
@@ -2115,7 +2116,7 @@ var nAryFunctions = {
 								value: '*',
 								name: 'times'
 							})
-						]	
+						]
 					})
 				});
 			}
@@ -2130,16 +2131,16 @@ var nAryFunctions = {
 	},
 	// ### MathLib.xor()
 	// Returns true iff an odd number of the arguments is true.
-	// 
+	//
 	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
 	// *@return {boolean}*
 	xor: function (n) {
 		return n.reduce(function (x, y) {return x + !!y;}, 0) % 2 !== 0;
-	}	
+	}
 };
 
 
-var createNaryFunction = function (f, name) {
+var createNaryFunction = function (f) {
 	return function (n) {
 		if (MathLib.type(n) === 'set') {
 			return f(n.slice());
@@ -2155,7 +2156,7 @@ var createNaryFunction = function (f, name) {
 for (func in nAryFunctions) {
 	if (nAryFunctions.hasOwnProperty(func)) {
 		Object.defineProperty(MathLib, func, {
-			value: createNaryFunction(nAryFunctions[func], func)
+			value: createNaryFunction(nAryFunctions[func])
 		});
 	}
 }
@@ -2593,11 +2594,11 @@ var unaryFunctions = {
 	ln: Math.log,
 	// Algorithm based on [Numerical Recipes Vol. 3, p. 257](www.nr.com)
 	logGamma: function (x) {
-		var x, j, tmp, y, ser,
+		var j, tmp, y, ser,
 				cof = [57.1562356658629235, -59.5979603554754912, 14.1360979747417471, -0.491913816097620199,
-			.339946499848118887e-4, .465236289270485756e-4, -.983744753048795646e-4, .158088703224912494e-3,
-			-.210264441724104883e-3, .217439618115212643e-3, -.164318106536763890e-3, .844182239838527433e-4,
-			-.261908384015814087e-4, .368991826595316234e-5];
+			0.339946499848118887e-4, 0.465236289270485756e-4, -0.983744753048795646e-4, 0.158088703224912494e-3,
+			-0.210264441724104883e-3, 0.217439618115212643e-3, -0.164318106536763890e-3, 0.844182239838527433e-4,
+			-0.261908384015814087e-4, 0.368991826595316234e-5];
 
 		y = x;
 		tmp = x + 5.24218750000000000; // Rational 671/128.
@@ -2638,7 +2639,7 @@ var unaryFunctions = {
 	sqrt: Math.sqrt,
 	tan: Math.tan,
 	tanh: MathLib.isNative((<any>Math).tanh) || function (x) {
-		var n, p;
+		var p;
 
 		// Handle ±0 and ±∞ separately
 		// Their values happen to coincide with sign
@@ -2731,10 +2732,9 @@ export class Screen {
 				opts = extendObject(defaults, options),
 				container = document.getElementById(id),
 				innerHTMLContextMenu = '',
-				id = +Date.now(),
+				uuid = +Date.now(),
 				fullscreenchange,
-				innerHTML,
-				screen;
+				innerHTML;
 
 
 
@@ -2755,13 +2755,13 @@ export class Screen {
 						innerHTMLContextMenu += [
 								'<div class="MathLib_needs2D">',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_' + id + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
+										'<input type="radio" name="MathLib_grid_type_' + uuid + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_' + id + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
+										'<input type="radio" name="MathLib_grid_type_' + uuid + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_' + id + '" class="MathLib_radio MathLib_grid_type" value="none">none',
+										'<input type="radio" name="MathLib_grid_type_' + uuid + '" class="MathLib_radio MathLib_grid_type" value="none">none',
 									'</label>',
 								'</div>'
 						].join('');
@@ -2771,37 +2771,37 @@ export class Screen {
 								'<div class="MathLib_needs3D">',
 									'<div class="MathLib_menuItem MathLib_is_disabled">xy-plane</div>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_xy' + id + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
+										'<input type="radio" name="MathLib_grid_type_xy' + uuid + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_xy' + id + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
+										'<input type="radio" name="MathLib_grid_type_xy' + uuid + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_xy' + id + '" class="MathLib_radio MathLib_grid_type" value="none">none',
+										'<input type="radio" name="MathLib_grid_type_xy' + uuid + '" class="MathLib_radio MathLib_grid_type" value="none">none',
 									'</label>'
 						].join('');
 						innerHTMLContextMenu += [
 									'<div class="MathLib_menuItem MathLib_is_disabled">xz-plane</div>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_xz' + id + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
+										'<input type="radio" name="MathLib_grid_type_xz' + uuid + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_xz' + id + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
+										'<input type="radio" name="MathLib_grid_type_xz' + uuid + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_xz' + id + '" class="MathLib_radio MathLib_grid_type" value="none">none',
+										'<input type="radio" name="MathLib_grid_type_xz' + uuid + '" class="MathLib_radio MathLib_grid_type" value="none">none',
 									'</label>'
 						].join('');
 						innerHTMLContextMenu += [
 									'<div class="MathLib_menuItem MathLib_is_disabled">yz-plane</div>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_yz' + id + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
+										'<input type="radio" name="MathLib_grid_type_yz' + uuid + '" class="MathLib_radio MathLib_grid_type" value="cartesian">cartesian',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_yz' + id + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
+										'<input type="radio" name="MathLib_grid_type_yz' + uuid + '" class="MathLib_radio MathLib_grid_type" value="polar">polar',
 									'</label>',
 									'<label class="MathLib_menuItem">',
-										'<input type="radio" name="MathLib_grid_type_yz' + id + '" class="MathLib_radio MathLib_grid_type" value="none">none',
+										'<input type="radio" name="MathLib_grid_type_yz' + uuid + '" class="MathLib_radio MathLib_grid_type" value="none">none',
 									'</label>',
 								'</div>'
 						].join('');
@@ -2944,7 +2944,7 @@ export class Screen {
 
 
 
-		fullscreenchange = function (evt) {
+		fullscreenchange = function () {
 			if ((<any>document).fullscreenElement) {
 				_this.origWidth = _this.width;
 				_this.origHeight = _this.height;
@@ -3070,7 +3070,7 @@ export class Layer {
 			this.applyTransformation();
 
 
-			// Set the drawing functions      
+			// Set the drawing functions
 			if (id === 'back') {
 				this.draw = function () {
 					var top     = (              - screen.translation.y) / screen.scale.y,
@@ -3082,14 +3082,14 @@ export class Layer {
 					this.ctx.fillStyle = colorConvert(screen.options.background);
 					this.ctx.fillRect(left, bottom, right - left, top - bottom);
 
-					this.stack.forEach(function (x, i) {
-						if (x.type === 'conic' ) {
+					this.stack.forEach(function (x) {
+						if (x.type === 'conic') {
 							x.object.draw(_this, x.options, true);
 						}
-						else if (x.type === 'text' ) {
+						else if (x.type === 'text') {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
-						else if (x.type === 'pixel' ) {
+						else if (x.type === 'pixel') {
 							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
 						}
 						else {
@@ -3123,7 +3123,7 @@ export class Layer {
 				this.draw = function () {
 					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 
-					this.stack.forEach(function (x, i) {
+					this.stack.forEach(function (x) {
 						if (x.type === 'conic' ) {
 							x.object.draw(_this, x.options, true);
 						}
@@ -3159,22 +3159,17 @@ export class Layer {
 			this.ctx = ctx;
 
 
-			// Set the drawing functions      
+			// Set the drawing functions
 			if (id === 'back') {
 				this.draw = function () {
-					var top     = (              - screen.translation.y) / screen.scale.y,
-							bottom  = (screen.height - screen.translation.y) / screen.scale.y,
-							left    = (              - screen.translation.x) / screen.scale.x,
-							right   = (screen.width  - screen.translation.x) / screen.scale.x;
-
-					this.stack.forEach(function (x, i) {
-						if (x.type === 'conic' ) {
+					this.stack.forEach(function (x) {
+						if (x.type === 'conic') {
 							x.object.draw(_this, x.options, true);
 						}
-						else if (x.type === 'text' ) {
+						else if (x.type === 'text') {
 							_this.text(x.object, x.x, x.y, x.options, true);
 						}
-						else if (x.type === 'pixel' ) {
+						else if (x.type === 'pixel') {
 							_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
 						}
 						else {
@@ -3203,7 +3198,7 @@ export class Layer {
 			else {
 				this.draw = function () {
 
-					this.stack.forEach(function (x, i) {
+					this.stack.forEach(function (x) {
 						if (x.type === 'conic' ) {
 							x.object.draw(_this, x.options, true);
 						}
@@ -3528,7 +3523,7 @@ pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 			left    = (              - screen.translation.x) / screen.scale.x,
 			right   = (screen.width  - screen.translation.x) / screen.scale.x,
 			ctx = this.ctx,
-			prop, opts, path, x, y, i;
+			x, y, i;
 
 	t = Math.min(top, t);
 	r = Math.min(right, r);
@@ -3584,7 +3579,7 @@ pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 point: function (point, options = {}, redraw = false) {
 	var screen = this.screen,
 			ctx = this.ctx,
-			prop, opts, dist, textOptions;
+			prop, opts, dist;
 
 	ctx.save();
 	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
@@ -3594,7 +3589,7 @@ point: function (point, options = {}, redraw = false) {
 		opts = MathLib.Canvas.convertOptions(options);
 
 		if (!('fillColor' in options) && !('color' in options)) {
-			opts['fillStyle'] = 'black';
+			opts.fillStyle = 'black';
 		}
 
 		for (prop in opts) {
@@ -3948,12 +3943,11 @@ pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 			bottom  = (screen.height - screen.translation.y) / screen.scale.y,
 			left    = (              - screen.translation.x) / screen.scale.x,
 			right   = (screen.width  - screen.translation.x) / screen.scale.x,
-			ctx = this.ctx,
 			canvas = <any>document.createElement('canvas'),
 			canvasCtx = canvas.getContext('2d'),
 			svgImage = document.createElementNS('http://www.w3.org/2000/svg', 'image'),
 			svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'g'),
-			dataURL, prop, opts, x, y, i, pxl,
+			x, y, i, pxl,
 			m = screen.transformation;
 
 	canvas.width = screen.width;
@@ -4044,7 +4038,7 @@ point: function (point, options = {}, redraw = false) {
 		}
 
 		if (!('fillColor' in options) && !('color' in options)) {
-			opts['fill'] = 'black';
+			opts.fill = 'black';
 		}
 
 		for (prop in opts) {
@@ -4059,7 +4053,7 @@ point: function (point, options = {}, redraw = false) {
 		svgPoint.setAttribute('cursor', 'move');
 
 		// mousedown
-		svgPoint.addEventListener('mousedown', 
+		svgPoint.addEventListener('mousedown',
 			function () {
 				screen.options.interaction.type = 'move';
 				var invTransformation = screen.transformation.inverse();
@@ -4070,7 +4064,7 @@ point: function (point, options = {}, redraw = false) {
 							var evtPoint = invTransformation.times(screen.getEventPoint(evt));
 							point[0] = evtPoint[0];
 							point[1] = evtPoint[1];
-							screen.draw()
+							screen.draw();
 						},
 
 						up = function () {
@@ -4101,7 +4095,7 @@ point: function (point, options = {}, redraw = false) {
 	}
 
 
-	svgPoint.addEventListener('contextmenu', function (evt) {
+	svgPoint.addEventListener('contextmenu', function () {
 		screen.options.interaction.type = 'contextmenu';
 		var x = (<any>svgPoint).cx.baseVal.value,
 				y = (<any>svgPoint).cy.baseVal.value;
@@ -4157,10 +4151,7 @@ point: function (point, options = {}, redraw = false) {
 // *@return {Screen}* Returns the screen
 text: function (str, x, y, options = {}, redraw = false) {
 	var screen = this.screen,
-			svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
-			ctx = this.ctx,
-			prop, opts;
-	var tf = this.screen.transformation;
+			svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
 	svgText.textContent = str;
 	svgText.setAttribute('x', x * screen.scale.x + '');
@@ -4808,11 +4799,11 @@ resize(width : number, height : number) : Screen2D {
 export class Screen3D extends Screen {
 	type = 'screen3D';
 
- 	grid: any;
- 	axis: any;
- 	render: any;
- 	camera: any;
- 	element: any;
+	grid: any;
+	axis: any;
+	render: any;
+	camera: any;
+	element: any;
 	scene: any;
 
 	constructor (id: string, options = {}) {
@@ -4862,9 +4853,9 @@ export class Screen3D extends Screen {
 
 		// Camera
 		// ======
-		viewAngle = 45,
-		aspect = opts.width / opts.height,
-		near = 0.1,
+		viewAngle = 45;
+		aspect = opts.width / opts.height;
+		near = 0.1;
 		far = 20000;
 
 		camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
@@ -4877,7 +4868,7 @@ export class Screen3D extends Screen {
 
 		// Renderer
 		// ========
-		renderer = new THREE[opts.renderer + 'Renderer']( {antialias: true, preserveDrawingBuffer: true} );
+		renderer = new THREE[opts.renderer + 'Renderer']({antialias: true, preserveDrawingBuffer: true});
 		// Remove the warning message.
 		this.wrapper.innerHTML = '';
 		this.wrapper.appendChild(renderer.domElement);
@@ -5006,7 +4997,7 @@ drawGrid() {
 					for (i = -size; i <= size; i += tickX) {
 						lines.moveTo(-size, i);
 						lines.lineTo(size, i);
-					}		
+					}
 
 					for (i = -size; i <= size; i += tickY) {
 						lines.moveTo(i, -size);
@@ -5024,12 +5015,10 @@ drawGrid() {
 				else if (opts.type === 'polar') {
 
 					var circles = new THREE.Shape(),
-							rays = new THREE.Shape(),
-							line;
-
+							rays = new THREE.Shape();
 
 					for (i = 0; i <= size; i += opts.tick.r) {
-						circles.moveTo(i, 0)
+						circles.moveTo(i, 0);
 						circles.absarc(0, 0, i, 0, 2 * Math.PI + 0.001, false);
 					}
 					grid.add(new THREE.Line(circles.createPointsGeometry(),
@@ -5060,7 +5049,7 @@ drawGrid() {
 
 
 // ### Matrix.parametricPlot3D()
-// 
+//
 //
 // *@param {function}* The function which is called on every argument  
 // *@return {Screen3D}*
@@ -5081,7 +5070,7 @@ parametricPlot3D(f, options) : Screen3D {
 			opts = extendObject(defaults, options),
 
 
-			curve = THREE.Curve.create(
+			Curve = THREE.Curve.create(
 				function () {},
 				function (t) {
 					t = (opts.max - opts.min) * t + opts.min;
@@ -5092,7 +5081,7 @@ parametricPlot3D(f, options) : Screen3D {
 		
 
 			mesh = new THREE.Mesh(
-				new THREE.TubeGeometry(new curve(), opts.pointNum, opts.radius, opts.segmentsRadius, opts.closed, opts.debug),
+				new THREE.TubeGeometry(new Curve(), opts.pointNum, opts.radius, opts.segmentsRadius, opts.closed, opts.debug),
 				new THREE[opts.material.type + 'Material'](opts.material)
 			);
 
@@ -5465,7 +5454,7 @@ times(n : any) : any {
 		});
 	}
 	if (n.type === 'matrix') {
-		if (this.length == n.rows) {
+		if (this.length === n.rows) {
 			colVectors = n.toColVectors();
 			for (i = 0, ii = colVectors.length; i < ii; i++) {
 				product[i] = this.scalarProduct(colVectors[i]);
@@ -5562,7 +5551,7 @@ vectorProduct(v : Vector) : Vector {
 static zero = function (n : number) : Vector {
 	var vector = [], i;
 	for (i = 0; i < n; i++) {
-		vector.push(0); 
+		vector.push(0);
 	}
 	return new MathLib.Vector(vector);
 }
@@ -6787,10 +6776,10 @@ inverse() {
 // Determines if the matrix is a band matrix.
 //
 // *@param {number}*  
-// *@param {number}*   
+// *@param {number}*  
 // *@return {boolean}*
 isBandMatrix(l, u) : boolean {
-	var i, j, ii, jj;
+	// var i, j, ii, jj;
 	
 	if (arguments.length === 1) {
 		u = l;
@@ -6818,14 +6807,14 @@ isBandMatrix(l, u) : boolean {
 // *@return {boolean}*
 isDiag() : boolean {
 	var i, j, ii, jj;
-	if (+(this.hasOwnProperty('isUpper') && this.isUpper()) + 
-			+(this.hasOwnProperty('isLower') && this.isLower()) + 
-			+(this.hasOwnProperty('isSymmetric') && this.isSymmetric()) > 1) {
+	if (Number(this.hasOwnProperty('isUpper') && this.isUpper()) + 
+			Number(this.hasOwnProperty('isLower') && this.isLower()) + 
+			Number(this.hasOwnProperty('isSymmetric') && this.isSymmetric()) > 1) {
 		return true;
 	}
 	for (i = 0, ii = this.rows; i < ii; i++) {
 		for (j = 0, jj = this.cols; j < jj; j++) {
-			if (i !== j && this[i][j] !== 0) {
+			if (i !== j && !MathLib.isZero(this[i][j])) {
 				return false;
 			}
 		}
@@ -7232,14 +7221,15 @@ static random = function (r, c) {
 //
 // *@return {number}*
 rank() {
-	var rank = 0, mat, i, ii, j;
-	mat = this.rref();
+	var i, j,
+			rank = 0,
+			mat = this.rref();
 
-	label: for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
+	rankloop: for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
 		for (j = this.cols - 1; j >= i; j--) {
 			if (!MathLib.isZero(mat[i][j])) {
 				rank = i + 1;
-				break label;
+				break rankloop;
 			}
 		}
 	}
@@ -7902,15 +7892,13 @@ draw(screen, options, redraw = false) {
 		options.to = 2 * Math.PI;
 		options.conic = this;
 
-		var	i, j, lines, alpha, cos, sin, sgn,
+		var lines, alpha, cos, sin, sgn,
 				a = this.primal[0][0],
 				b = this.primal[0][1] * 2,
 				c = this.primal[1][1],
 				d = this.primal[0][2] * 2,
 				e = this.primal[1][2] * 2,
-				f = this.primal[2][2],
 				disc = 4*a*c - b*b,
-				r = this.primal.determinant() / disc,
 				rank = this.primal.rank(),
 				cx = (b*e - 2*c*d) / (4*a*c - b*b),
 				cy = (b*d - 2*a*e) / (4*a*c - b*b),
@@ -7986,7 +7974,7 @@ draw(screen, options, redraw = false) {
 
 				screen.path([
 					t => cx + cos * MathLib.sec(t) * A - sin * MathLib.tan(t) * C * sgn(t),
-					t => cy + sin * MathLib.sec(t) * A + cos * MathLib.tan(t) * C * sgn(t) 
+					t => cy + sin * MathLib.sec(t) * A + cos * MathLib.tan(t) * C * sgn(t)
 				], options, redraw);
 			}
 
@@ -8014,11 +8002,10 @@ draw(screen, options, redraw = false) {
 
 // ### [Conic.prototype.eccentricity()](http://mathlib.de/en/docs/Conic/eccentricity)
 // Calculates the eccentricity of a conic.
-// 
+//
 // *@return {number}*
 eccentricity() : number {
-	var min, max,
-			normalform = this.normalize(),
+	var normalform = this.normalize(),
 			a = normalform.primal[0][0],
 			c = normalform.primal[1][1];
 
@@ -8093,7 +8080,7 @@ isEqual(c : Conic) : boolean {
 
 // ### [Conic.prototype.latusRectum()](http://mathlib.de/en/docs/Conic/latusRectum)
 // Calculates the latusRectum of a conic.
-// 
+//
 // *@return {number}*
 latusRectum() : number {
 	var normalForm = this.normalize(),
@@ -8116,7 +8103,7 @@ latusRectum() : number {
 
 // ### [Conic.prototype.linearEccentricity()](http://mathlib.de/en/docs/Conic/linearEccentricity)
 // Calculates the linear eccentricity of a conic.
-// 
+//
 // *@return {number}*
 linearEccentricity() : number {
 	var normalForm = this.normalize(),
@@ -8141,27 +8128,30 @@ linearEccentricity() : number {
 
 // ### [Conic.prototype.meet()](http://mathlib.de/en/docs/Conic/meet)
 // Calculates the meet of the conic with a line or a conic.
-// 
+//
 // *@return {Point[]}*
 meet(x) {
+	var B, C, alpha, i, j, p1, p2, Ml,
+			a, b, c, d, Delta0, Delta1, lambda, degenerated, lines,
+			A = this.primal;
+			
 	if (x.type === 'line') {
-		var Ml, B, alpha, C, i, j, p1, p2,
-				setter = function () {
+
+		var setter = function () {
 					MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Conic#meet'});
 				},
-				conic = this,
 				recalculate = function () {
-					Ml = new MathLib.Matrix([[0, x[2], -x[1]], [-x[2], 0, x[0]], [x[1], -x[0], 0]]),
-					B = Ml.transpose().times(conic.primal).times(Ml);
+					Ml = new MathLib.Matrix([[0, x[2], -x[1]], [-x[2], 0, x[0]], [x[1], -x[0], 0]]);
+					B = Ml.transpose().times(A).times(Ml);
 
 					if (!MathLib.isZero(x[0])) {
-						alpha = 1 / x[0] * Math.sqrt(B[2][1] * B[1][2] - B[1][1] * B[2][2]);
+						alpha = Math.sqrt(B[2][1] * B[1][2] - B[1][1] * B[2][2]) / x[0];
 					}
 					else if (!MathLib.isZero(x[1])) {
-						alpha = 1 / x[1] * Math.sqrt(B[0][2] * B[2][0] - B[2][2] * B[0][0]);
+						alpha = Math.sqrt(B[0][2] * B[2][0] - B[2][2] * B[0][0]) / x[1];
 					}
 					else {
-						alpha = 1 / x[2] * Math.sqrt(B[1][0] * B[0][1] - B[0][0] * B[1][1]);
+						alpha = Math.sqrt(B[1][0] * B[0][1] - B[0][0] * B[1][1]) / x[2];
 					}
 
 					C = Ml.times(alpha).plus(B);
@@ -8242,19 +8232,16 @@ meet(x) {
 		return [p1, p2];
 	}
 	else if (x.type === 'conic') {
-		var A = this.primal,
-				B = x.primal,
-				a = A.determinant(),
-				b = (new MathLib.Matrix([A[0], A[1], B[2]])).plus(new MathLib.Matrix([A[0], B[1], A[2]])).plus(new MathLib.Matrix([B[0], A[1], A[2]])).determinant(),
-				c = (new MathLib.Matrix([A[0], B[1], B[2]])).plus(new MathLib.Matrix([B[0], A[1], B[2]])).plus(new MathLib.Matrix([B[0], B[1], A[2]])).determinant(),
-				d = B.determinant(),
-				Delta0 = b*b - 3*a*c,
-				Delta1 = 2*b*b* - 9*a*b*c + 27*a*a*d,
-				C = MathLib.cbrt((Delta1 + Math.sqrt(Math.pow(Delta1, 2) - 4*Math.pow(Delta0, 3))) / 2),
-				lambda = -1/(3*a) * (b + C+ Delta0 / C),
-				degenerated = new MathLib.Conic(B.times(lambda).plus(A)),
-				lines;
-				
+		B = x.primal;
+		a = A.determinant();
+		b = (new MathLib.Matrix([A[0], A[1], B[2]])).plus(new MathLib.Matrix([A[0], B[1], A[2]])).plus(new MathLib.Matrix([B[0], A[1], A[2]])).determinant();
+		c = (new MathLib.Matrix([A[0], B[1], B[2]])).plus(new MathLib.Matrix([B[0], A[1], B[2]])).plus(new MathLib.Matrix([B[0], B[1], A[2]])).determinant();
+		d = B.determinant();
+		Delta0 = b * b - 3 * a * c;
+		Delta1 = 2 * b * b - 9 * a * b * c + 27 * a * a * d;
+		C = MathLib.cbrt((Delta1 + Math.sqrt(Math.pow(Delta1, 2) - 4 * Math.pow(Delta0, 3))) / 2);
+		lambda = - (b + C + Delta0 / C) / (3 * a);
+		degenerated = new MathLib.Conic(B.times(lambda).plus(A));
 		lines = degenerated.splitDegenerated();
 
 		return this.meet(lines[0]).concat(this.meet(lines[1]));
@@ -8264,7 +8251,7 @@ meet(x) {
 
 // ### [Conic.prototype.normalize()](http://mathlib.de/en/docs/Conic/normalize)
 // Calculates the normal form of a conic.
-// 
+//
 // *@return {Conic}*
 normalize() : Conic {
 	var A = this.primal[0][0],
@@ -8284,68 +8271,31 @@ normalize() : Conic {
 			e = E * cos - D * sin,
 			f = F;
 
-
-//*
-
-			if (a !== 0) {
-				f += -d * d / (4 * a);
-				d = 0;
-			}
-			
-			if (c !== 0) {
-				f += -e * e / (4 * c);
-				e = 0;
-			}
-
-			if (f !== 0) {
-				a = -a / f;
-				c = -c / f;
-				d = -d / f;
-				e = -e / f;
-				f = -1;
-			}
-
-
-			return new MathLib.Conic([[a, 0, d/2], [0, c, e/2], [d/2, e/2, f]]);
-
-
-	/*
-
-	if (a === 0) {
-		return new MathLib.Conic(new MathLib.Matrix([
-			[0, 0, Math.abs(d/c)], 
-			[0, 1, 0], 
-			[Math.abs(d/c), 0, 0]]));
+	if (a !== 0) {
+		f += -d * d / (4 * a);
+		d = 0;
 	}
-	else if (c === 0) {
-		return new MathLib.Conic(new MathLib.Matrix([
-			[0, 0, Math.abs(e/a)], 
-			[0, 1, 0], 
-			[Math.abs(e/a), 0, 0]]));
-	}
-	else {
-		f = d*d/a + e*e/c - F;
-
-		if (a*c < -1) {
-			var temp = a; 
-			a = c;
-			c = temp; 
-		}
-
-		return new MathLib.Conic(new MathLib.Matrix([
-			[c/f, 0, 0], 
-			[0, a/f, 0], 
-			[0, 0, -1]]));
+	
+	if (c !== 0) {
+		f += -e * e / (4 * c);
+		e = 0;
 	}
 
-	*/
+	if (f !== 0) {
+		a = -a / f;
+		c = -c / f;
+		d = -d / f;
+		e = -e / f;
+		f = -1;
+	}
 
+	return new MathLib.Conic([[a, 0, d/2], [0, c, e/2], [d/2, e/2, f]]);
 }
 
 
 // ### [Conic.prototype.polarity()](http://mathlib.de/en/docs/Conic/polarity)
 // Calculates the four polarity of a conic.
-// 
+//
 // *@return {Point[]}*
 polarity(x) {
 	var object, m,
@@ -8360,7 +8310,6 @@ polarity(x) {
 		object = new MathLib.Line([0, 0, 0]);
 		m = 'primal';
 	}
-
 
 
 	Object.defineProperties(object, {
@@ -8391,7 +8340,16 @@ polarity(x) {
 // *@return {boolean}*
 splitDegenerated() {
 	var n, i, j, B, C, p0, p1, p2,
-			rank = this.primal.rank();
+			rank = this.primal.rank(),
+			nonZeroSearch = function (C) {
+				for (i = 0; i < 3; i++) {
+					for (j = 0; j < 3; j++) {
+						if (C[i][j] !== 0) {
+							return;
+						}
+					}
+				}
+			};
 
 	if (rank === 2) {
 		if (this.dual[0][0] !== 0) {
@@ -8415,28 +8373,15 @@ splitDegenerated() {
 		p1 = B[1][n] / Math.sqrt(B[n][n]);
 		p2 = B[2][n] / Math.sqrt(B[n][n]);
 		C = this.primal.plus(new MathLib.Matrix([[0, p2, -p1], [-p2, 0, p0], [p1, -p0, 0]]));
-		
 
-		nonZeroSearch: for (i = 0; i < 3; i++) {
-			for (j = 0; j < 3; j++) {
-				if (C[i][j] !== 0) {
-					break nonZeroSearch;
-				}
-			}
-		}
+		nonZeroSearch(C);
 
 		return [new MathLib.Line(C[i]), new MathLib.Line([C[0][j], C[1][j], C[2][j]])];
 	}
 
 
 	else if (rank === 1) {
-		nonZeroSearch: for (i = 0; i < 3; i++) {
-			for (j = 0; j < 3; j++) {
-				if (this.primal[i][j] !== 0) {
-					break nonZeroSearch;
-				}
-			}
-		}
+		nonZeroSearch(this.primal);
 		return [new MathLib.Line(this.primal[i]), new MathLib.Line(this.primal[i])];
 	}
 }
@@ -8444,7 +8389,7 @@ splitDegenerated() {
 
 // ### [Conic.prototype.throughFivePoints()](http://mathlib.de/en/docs/Conic/throughFivePoints)
 // Calculates the conic through five points.
-// 
+//
 // *@return {Conic}*
 static throughFivePoints(p, q, r, s, t) : Conic {
 
@@ -8990,7 +8935,7 @@ static interpolation(a, b) {
 	var basisPolynomial,
 			interpolant = new MathLib.Polynomial([0]),
 			n = a.length,
-			i, j, x;
+			i, j;
 
 	if (arguments.length === 2) {
 		a = a.map(function (x, i) {
@@ -9116,18 +9061,20 @@ static regression(x, y) : Polynomial {
 //
 // *@return {Polynomial}*
 static roots(zeros) : Polynomial {
-	var elemSymPoly, coef = [], i, ii;
+	var elemSymPoly, i, ii,
+			coef = [];
+
 	if (MathLib.type(zeros) === 'array') {
 		zeros = new MathLib.Set(zeros);
 	}
 
 	elemSymPoly = zeros.powerset();
 	for (i = 0, ii = zeros.card; i < ii; i++) {
-		coef[i] = 0; 
+		coef[i] = 0;
 	}
 
 	// Vieta's theorem
-	elemSymPoly.slice(1).forEach(function (x, i) {
+	elemSymPoly.slice(1).forEach(function (x) {
 		coef[ii - x.card] = MathLib.plus(coef[ii - x.card], x.times());
 	});
 
@@ -9360,7 +9307,7 @@ toLaTeX() : string {
 // Returns a MathML representation of the polynomial
 //
 // *@return {string}*
-toMathML(math) : string {
+toMathML() : string {
 	var str = '<mrow>' + MathLib.toMathML(this[this.deg]) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(this.deg) + '</msup>',
 			i;
 	for (i = this.deg - 1; i >= 0; i--) {
@@ -9391,7 +9338,7 @@ toMathML(math) : string {
 // Custom toString function
 //
 // *@return {string}*
-toString(opt) : string {
+toString() : string {
 	var str = MathLib.toString(this[this.deg]) + '*x^' + this.deg,
 			i;
 	for (i = this.deg - 1; i >= 0; i--) {
@@ -9412,7 +9359,7 @@ toString(opt) : string {
 
 
 // ### Polynomial.prototype.valueAt()
-// Evaluates the polynomial at a given point 
+// Evaluates the polynomial at a given point
 //
 // *@param {number|Complex|Matrix}*  
 // *@return {number|Complex|Matrix}*
@@ -10194,7 +10141,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	}
 
 	// Document event: fullscreenchange
-	function fullscreenchange(oldEvent) {
+	function fullscreenchange() {
 		var newEvent = document.createEvent('CustomEvent');
 		(<any>newEvent).initCustomEvent('fullscreenchange', true, false, null);
 		// TODO: Any need for variable copy?
@@ -10204,7 +10151,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	document.addEventListener('mozfullscreenchange', fullscreenchange, false);
 
 	// Document event: fullscreenerror
-	function fullscreenerror(oldEvent) {
+	function fullscreenerror() {
 		var newEvent = document.createEvent('CustomEvent');
 		(<any>newEvent).initCustomEvent('fullscreenerror', true, false, null);
 		// TODO: Any need for variable copy?
@@ -10611,7 +10558,6 @@ if ((<any>Object).observe === undefined) {
 				throw new TypeError('callback must be a function, given ' + observer);
 			}
 			while (deliverChangeRecords(observer)) {}
-			return;
 		};
 
 		// Implementation of the public api 'Object.getNotifier'

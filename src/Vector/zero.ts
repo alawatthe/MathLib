@@ -6,7 +6,7 @@
 static zero = function (n : number) : Vector {
 	var vector = [], i;
 	for (i = 0; i < n; i++) {
-		vector.push(0); 
+		vector.push(0);
 	}
 	return new MathLib.Vector(vector);
 }

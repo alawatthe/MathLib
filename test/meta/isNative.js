@@ -1,5 +1,5 @@
 test('.isNative()', 2, function () {
-	Math.isNativeCheck = function (x) {
+	Math.isNativeCheck = function () {
 		return 42;
 	};
 	

@@ -6,7 +6,7 @@ static interpolation(a, b) {
 	var basisPolynomial,
 			interpolant = new MathLib.Polynomial([0]),
 			n = a.length,
-			i, j, x;
+			i, j;
 
 	if (arguments.length === 2) {
 		a = a.map(function (x, i) {

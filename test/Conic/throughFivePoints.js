@@ -6,7 +6,6 @@ test('.throughFivePoints()', 5, function () {
 			p5 = new MathLib.Point([Math.random(), Math.random(), 1]),
 			conic = MathLib.Conic.throughFivePoints(p1, p2, p3, p4, p5);
 
-
 	ok(MathLib.isEqual(p1.times(conic.primal).scalarProduct(p1), 0), 'conic goes through first point');
 	ok(MathLib.isEqual(p2.times(conic.primal).scalarProduct(p2), 0), 'conic goes through second point');
 	ok(MathLib.isEqual(p3.times(conic.primal).scalarProduct(p3), 0), 'conic goes through third point');
