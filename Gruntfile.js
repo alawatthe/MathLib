@@ -3,7 +3,6 @@ module.exports = function (grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-compass');
-	grunt.loadNpmTasks('grunt-contrib-csslint');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-connect');
@@ -14,6 +13,7 @@ module.exports = function (grunt) {
 
 	grunt.loadNpmTasks('grunt-docco');
 	grunt.loadNpmTasks('grunt-notify');
+	grunt.loadNpmTasks('grunt-karma');
 	grunt.loadNpmTasks('grunt-saucelabs');
 	grunt.loadNpmTasks('grunt-typescript');
 
@@ -219,6 +219,15 @@ module.exports = function (grunt) {
 			index: ['test/test.html', 'test/test.min.html']
 		},
 
+
+		karma: {
+			unit: {
+				configFile: 'karma.conf.js',
+				runnerPort: 9999,
+				singleRun: true,
+				browsers: ['PhantomJS']
+			}
+		},
 
 		connect: {
 			server: {
@@ -471,6 +480,6 @@ module.exports = function (grunt) {
 	});
 
 	grunt.registerTask('default', ['concat', 'typescript', 'uglify', 'qunit']);
-	grunt.registerTask('release', ['default', 'cssmin', 'docco']);
+	grunt.registerTask('release', ['default', 'cssmin', 'docco', 'karma']);
 	grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);
 };

@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.6.0 - 2013-10-06  
+// v0.6.0 - 2013-10-08  
 // MathLib is currently in public beta testing.
 //
 // ## License

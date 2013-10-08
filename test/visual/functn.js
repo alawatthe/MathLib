@@ -3,9 +3,11 @@ test('.draw()', 1, function () {
 			div = document.createElement('div');
 
 	div.id = 'functnDraw';
-	document.getElementById('testPlots').appendChild(div);
+	document.body.appendChild(div);
 
 	screen = new MathLib.Screen2D('functnDraw', {});
 
 	equal(MathLib.sin.draw(screen), MathLib.sin, 'The draw method should return the functn.');
+
+	div.parentElement.removeChild(div);
 });
