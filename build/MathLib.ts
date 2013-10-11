@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.6.0 - 2013-10-08  
+// v0.6.0 - 2013-10-11  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -235,6 +235,10 @@ static constant(n) : Expression {
 //
 // *@return {any}*
 evaluate() : any {
+
+	if (this.subtype === 'binaryOperator') {
+		return MathLib[this.name].apply(null, this.content.map(x => x.evaluate()));
+	}
 	if (this.subtype === 'brackets') {
 		return this.content.evaluate();
 	}
@@ -724,9 +728,9 @@ static parse = function (str) {
 
 
 				// Exponentiation is right associative
-				// a/b/c should be a^(b^c) and not (a^b)^c
+				// a^b^c should be a^(b^c) and not (a^b)^c
 				return new MathLib.Expression({
-					subtype: 'naryOperator',
+					subtype: 'binaryOperator',
 					value: '^',
 					content: [left, right],
 					name: 'pow'
@@ -753,14 +757,14 @@ static parse = function (str) {
 
 				// Multiplication and division is left associative:
 				// a/b/c should be (a/b)/c and not a/(b/c)
-				if (right.subtype === 'naryOperator') {
+				if (right.subtype === 'naryOperator' || right.subtype === 'binaryOperator') {
 					r = right;
-					while (r.content[0].subtype === 'naryOperator') {
+					while (r.content[0].subtype === 'naryOperator' || r.content[0].subtype === 'binaryOperator') {
 						r = r.content[0];
 					}
 					
 					r.content[0] = new MathLib.Expression({
-						subtype: 'naryOperator',
+						subtype: token.value === '*' ? 'naryOperator' : 'binaryOperator',
 						content: [left, r.content[0]],
 						value: token.value,
 						name: token.value === '*' ? 'times' : 'divide'
@@ -770,7 +774,7 @@ static parse = function (str) {
 				
 				else {
 					return new MathLib.Expression({
-						subtype: 'naryOperator',
+						subtype: token.value === '*' ? 'naryOperator' : 'binaryOperator',
 						value: token.value,
 						name: token.value === '*' ? 'times' : 'divide',
 						content: [left, right]
@@ -804,7 +808,7 @@ static parse = function (str) {
 					}
 					
 					r.content[0] = new MathLib.Expression({
-						subtype: 'naryOperator',
+						subtype: token.value === '+' ? 'naryOperator' : 'binaryOperator',
 						content: [left, r.content[0]],
 						value: token.value,
 						name: token.value === '+' ? 'plus' : 'minus'
@@ -814,7 +818,7 @@ static parse = function (str) {
 				
 				else {
 					return new MathLib.Expression({
-						subtype: 'naryOperator',
+						subtype: token.value === '+' ? 'naryOperator' : 'binaryOperator',
 						value: token.value,
 						name: token.value === '+' ? 'plus' : 'minus',
 						content: [left, right]
@@ -1056,6 +1060,15 @@ static parseContentMathML(MathMLString) : Expression {
 //
 // *@return {string}*
 toContentMathML() : string {
+
+	if (this.subtype === 'binaryOperator') {
+		var op = this.name === 'pow' ? 'power' : this.name;
+
+		return '<apply><csymbol cd="arith1">' + op + '</csymbol>' +
+			this.content[0].toContentMathML() +
+			this.content[1].toContentMathML() +
+			'</apply>';
+	}
 	if (this.subtype === 'brackets') {
 		return this.content.toContentMathML();
 	}
@@ -1112,7 +1125,7 @@ toContentMathML() : string {
 	}
 
 	if (this.subtype === 'functionDefinition') {
-		return '<lambda><bvar><ci>' + 
+		return '<lambda><bvar><ci>' +
 			this.arguments.join('</ci></bvar><bvar><ci>') +
 			'</ci></bvar>' +
 			this.content.map(expr => expr.toContentMathML()) +
@@ -1128,6 +1141,22 @@ toContentMathML() : string {
 toLaTeX(opts = {}) : string {
 	var op;
 
+	if (this.subtype === 'binaryOperator') {
+		var str;
+
+		if (this.value === '/') {
+			str = '\\frac{' + this.content[0].toLaTeX() + '}';
+		}
+		else {
+			str = this.content[0].toLaTeX() + this.value;
+		}
+
+		str += this.value !== '-' ? '{' : '';
+		str += this.content[1].toLaTeX();
+		str += this.value !== '-' ? '}' : '';
+
+		return str;
+	}
 	if (this.subtype === 'brackets') {
 		return '\\left(' + this.content.toLaTeX(opts) + '\\right)';
 	}
@@ -1221,6 +1250,18 @@ toLaTeX(opts = {}) : string {
 //
 // *@return {string}*
 toMathML() : string {
+
+	if (this.subtype === 'binaryOperator') {
+		if (this.value === '-') {
+			return this.content[0].toMathML() + '<mo>-</mo>' + this.content[1].toMathML();
+		}
+		if (this.value === '/') {
+			return '<mfrac>' + this.content[0].toMathML() + this.content[1].toMathML() + '</mfrac>';
+		}
+		if (this.value === '^') {
+			return '<msup>' + this.content[0].toMathML() + this.content[1].toMathML() + '</msup>';
+		}
+	}
 	if (this.subtype === 'brackets') {
 		return '<mrow><mo>(</mo>' + this.content.toMathML() + '<mo>)</mo></mrow>';
 	}
@@ -1303,6 +1344,10 @@ toMathML() : string {
 //
 // *@return {string}*
 toString() : string {
+
+	if (this.subtype === 'binaryOperator') {
+		return this.content[0].toString() + this.value + this.content[1].toString();
+	}
 	if (this.subtype === 'brackets') {
 		return '(' + this.content.toString() + ')';
 	}

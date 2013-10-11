@@ -5,6 +5,22 @@
 toLaTeX(opts = {}) : string {
 	var op;
 
+	if (this.subtype === 'binaryOperator') {
+		var str;
+
+		if (this.value === '/') {
+			str = '\\frac{' + this.content[0].toLaTeX() + '}';
+		}
+		else {
+			str = this.content[0].toLaTeX() + this.value;
+		}
+
+		str += this.value !== '-' ? '{' : '';
+		str += this.content[1].toLaTeX();
+		str += this.value !== '-' ? '}' : '';
+
+		return str;
+	}
 	if (this.subtype === 'brackets') {
 		return '\\left(' + this.content.toLaTeX(opts) + '\\right)';
 	}

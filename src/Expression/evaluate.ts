@@ -3,6 +3,10 @@
 //
 // *@return {any}*
 evaluate() : any {
+
+	if (this.subtype === 'binaryOperator') {
+		return MathLib[this.name].apply(null, this.content.map(x => x.evaluate()));
+	}
 	if (this.subtype === 'brackets') {
 		return this.content.evaluate();
 	}

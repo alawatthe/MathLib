@@ -3,6 +3,10 @@
 //
 // *@return {string}*
 toString() : string {
+
+	if (this.subtype === 'binaryOperator') {
+		return this.content[0].toString() + this.value + this.content[1].toString();
+	}
 	if (this.subtype === 'brackets') {
 		return '(' + this.content.toString() + ')';
 	}

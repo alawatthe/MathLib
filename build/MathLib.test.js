@@ -853,23 +853,31 @@ test('whitespaces', 1, function () {
 
 	equal(mathML.toString(), '{123, " String with spaces "}');
 });
-test('.toContentMathML', 5, function () {
+test('.toContentMathML', 8, function () {
 	equal(MathLib.Expression.parse('123.456E-7').toContentMathML(), '<cn>123.456E-7</cn>', '("123.456E-7").toContentMathML()');
 	equal(MathLib.Expression.parse('1+2').toContentMathML(), '<apply><csymbol cd="arith1">plus</csymbol><cn>1</cn><cn>2</cn></apply>', '("1+2").toContentMathML()');
 	equal(MathLib.Expression.parse('(1+2)*3').toContentMathML(), '<apply><csymbol cd="arith1">times</csymbol><apply><csymbol cd="arith1">plus</csymbol><cn>1</cn><cn>2</cn></apply><cn>3</cn></apply>', '("(1+2)*3").toContentMathML()');
+	equal(MathLib.Expression.parse('2-3-4').toContentMathML(), '<apply><csymbol cd="arith1">minus</csymbol><apply><csymbol cd="arith1">minus</csymbol><cn>2</cn><cn>3</cn></apply><cn>4</cn></apply>', '("2-3-4").toContentMathML()');
+
+	equal(MathLib.Expression.parse('2/3/4').toContentMathML(), '<apply><csymbol cd="arith1">divide</csymbol><apply><csymbol cd="arith1">divide</csymbol><cn>2</cn><cn>3</cn></apply><cn>4</cn></apply>', '("2/3/4").toContentMathML()');
+
+	equal(MathLib.Expression.parse('2^3^4').toContentMathML(), '<apply><csymbol cd="arith1">power</csymbol><cn>2</cn><apply><csymbol cd="arith1">power</csymbol><cn>3</cn><cn>4</cn></apply></apply>', '("2^3^4").toContentMathML()');
+	
 	equal(MathLib.Expression.parse('sin(1)').toContentMathML(), '<apply><csymbol cd="transc1">sin</csymbol><cn>1</cn></apply>', '("sin(1)").toContentMathML()');
 	equal(MathLib.Expression.parse('sin(1)+cos(exp(2)*3)').toContentMathML(), '<apply><csymbol cd="arith1">plus</csymbol><apply><csymbol cd="transc1">sin</csymbol><cn>1</cn></apply><apply><csymbol cd="transc1">cos</csymbol><apply><csymbol cd="arith1">times</csymbol><apply><csymbol cd="transc1">exp</csymbol><cn>2</cn></apply><cn>3</cn></apply></apply></apply>', '("sin(1)+cos(exp(2)*3)").toContentMathML()');
 });
-test('.toLaTeX', 14, function () {
+test('.toLaTeX', 17, function () {
 	equal(MathLib.Expression.parse('123.456E-7').toLaTeX(), '123.456E-7', '("123.456E-7").toLaTeX()');
 	equal(MathLib.Expression.parse('1+2').toLaTeX(), '1+2', '("1+2").toLaTeX()');
 	equal(MathLib.Expression.parse('(1+2)*3').toLaTeX(), '\\left(1+2\\right)\\cdot3', '("(1+2)*3").toLaTeX()');
+	equal(MathLib.Expression.parse('2-3-4').toLaTeX(), '2-3-4', '("2-3-4").toLaTeX()');
+	equal(MathLib.Expression.parse('2/3/4').toLaTeX(), '\\frac{\\frac{2}{3}}{4}', '("2/3/4").toLaTeX()');
+	equal(MathLib.Expression.parse('2^3^4').toLaTeX(), '2^{3^{4}}', '("2^3^4").toLaTeX()');
 	equal(MathLib.Expression.parse('sin(1)').toLaTeX(), '\\sin\\left(1\\right)', '("sin(1)").toLaTeX()');
 	equal(MathLib.Expression.parse('exp(1)').toLaTeX(), 'e^{1}', '("exp(1)").toLaTeX()');
 	equal(MathLib.Expression.parse('sqrt(1)').toLaTeX(), '\\sqrt{1}', '("sqrt(1)").toLaTeX()');
 	equal(MathLib.Expression.parse('arsinh(1)').toLaTeX(), '\\operatorname{arsinh}\\left(1\\right)', '("arsinh(1)").toLaTeX()');
 	equal(MathLib.Expression.parse('sin(1)+cos(exp(2)*3)').toLaTeX(), '\\sin\\left(1\\right)+\\cos\\left(e^{2}\\cdot3\\right)', '("sin(1)+cos(exp(2)*3)").toLaTeX()');
-
 
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><cs>MathLib.js - A mathematical JavaScript library</cs></math>').toLaTeX(), '\\texttt{"{}MathLib.js - A mathematical JavaScript library"}', '.toLaTeX() cs');
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><cn type="complex-cartesian">2<sep/>3</cn></math>').toLaTeX(), '2+3i', '.toLaTeX() complex');
@@ -878,10 +886,13 @@ test('.toLaTeX', 14, function () {
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><set><cn>1</cn><cn>2</cn><cn>3</cn></set></math>').toLaTeX(), '\\left{1, 2, 3\\right}', '.toLaTeX() set');
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><vector><cn>1</cn><cn>2</cn><cn>3</cn></vector></math>').toLaTeX(), '\\begin{pmatrix}1\\\\2\\\\3\\end{pmatrix}', 'toLaTeX() vector');
 });
-test('.toMathML', 11, function () {
+test('.toMathML', 14, function () {
 	equal(MathLib.Expression.parse('123.456E-7').toMathML(), '<mn>123.456E-7</mn>', '("123.456E-7").toMathML()');
 	equal(MathLib.Expression.parse('1+2').toMathML(), '<mrow><mn>1</mn><mo>+</mo><mn>2</mn></mrow>', '("1+2").toMathML()');
 	equal(MathLib.Expression.parse('(1+2)*3').toMathML(), '<mrow><mrow><mo>(</mo><mrow><mn>1</mn><mo>+</mo><mn>2</mn></mrow><mo>)</mo></mrow><mo>&middot;</mo><mn>3</mn></mrow>', '("(1+2)*3").toMathML()');
+	equal(MathLib.Expression.parse('2-3-4').toMathML(), '<mn>2</mn><mo>-</mo><mn>3</mn><mo>-</mo><mn>4</mn>', '("2-3-4").toMathML()');
+	equal(MathLib.Expression.parse('2/3/4').toMathML(), '<mfrac><mfrac><mn>2</mn><mn>3</mn></mfrac><mn>4</mn></mfrac>', '("2/3/4").toMathML()');
+	equal(MathLib.Expression.parse('2^3^4').toMathML(), '<msup><mn>2</mn><msup><mn>3</mn><mn>4</mn></msup></msup>', '("2^3^4").toMathML()');
 	equal(MathLib.Expression.parse('sin(1)').toMathML(), '<mrow><mi>sin</mi><mo>&af;</mo><mrow><mo>(</mo><mn>1</mn><mo>)</mo></mrow></mrow>', '("sin(1)").toMathML()');
 	equal(MathLib.Expression.parse('sin(1)+cos(exp(2)*3)').toMathML(), '<mrow><mrow><mi>sin</mi><mo>&af;</mo><mrow><mo>(</mo><mn>1</mn><mo>)</mo></mrow></mrow><mo>+</mo><mrow><mi>cos</mi><mo>&af;</mo><mrow><mo>(</mo><mrow><mrow><mi>exp</mi><mo>&af;</mo><mrow><mo>(</mo><mn>2</mn><mo>)</mo></mrow></mrow><mo>&middot;</mo><mn>3</mn></mrow><mo>)</mo></mrow></mrow></mrow>', '("sin(1)+cos(exp(2)*3)").toMathML()');
 
@@ -893,15 +904,13 @@ test('.toMathML', 11, function () {
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><set><cn>1</cn><cn>2</cn><cn>3</cn></set></math>').toMathML(), '<mrow><mo>{</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>}</mo></mrow>', '.toMathML() set');
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><vector><cn>1</cn><cn>2</cn><cn>3</cn></vector></math>').toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>)</mo></mrow>', 'toMathML() vector');
 });
-
-
-
-
-
-test('.toString', 11, function () {
+test('.toString', 14, function () {
 	equal(MathLib.Expression.parse('123.456E-7').toString(), '123.456E-7', '("123.456E-7").toString()');
 	equal(MathLib.Expression.parse('1+2').toString(), '1+2', '("1+2").toString()');
 	equal(MathLib.Expression.parse('(1+2)*3').toString(), '(1+2)*3', '("(1+2)*3").toString()');
+	equal(MathLib.Expression.parse('2-3-4').toString(), '2-3-4', '("2-3-4").toString()');
+	equal(MathLib.Expression.parse('2/3/4').toString(), '2/3/4', '("2/3/4").toString()');
+	equal(MathLib.Expression.parse('2^3^4').toString(), '2^3^4', '("2^3^4").toString()');
 	equal(MathLib.Expression.parse('sin(1)').toString(), 'sin(1)', '("sin(1)").toString()');
 	equal(MathLib.Expression.parse('sin(1)+cos(exp(2)*3)').toString(), 'sin(1)+cos(exp(2)*3)', '("sin(1)+cos(exp(2)*3)").toString()');
 
@@ -911,7 +920,6 @@ test('.toString', 11, function () {
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><matrix><matrixrow><cn>1</cn><cn>2</cn></matrixrow><matrixrow><cn>3</cn><cn>4</cn></matrixrow><matrixrow><cn>5</cn><cn>6</cn></matrixrow></matrix></math>').toString(), '⎛1\t2⎞\n⎜3\t4⎟\n⎝5\t6⎠', '.evaluate() matrix');
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><set><cn>1</cn><cn>2</cn><cn>3</cn></set></math>').toString(), '{1, 2, 3}', '.toString() set');
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><vector><cn>1</cn><cn>2</cn><cn>3</cn></vector></math>').toString(), '(1, 2, 3)', 'toString() vector');
-
 });
 module('Functn');
 test('execution', 4, function () {

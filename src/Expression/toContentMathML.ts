@@ -3,6 +3,15 @@
 //
 // *@return {string}*
 toContentMathML() : string {
+
+	if (this.subtype === 'binaryOperator') {
+		var op = this.name === 'pow' ? 'power' : this.name;
+
+		return '<apply><csymbol cd="arith1">' + op + '</csymbol>' +
+			this.content[0].toContentMathML() +
+			this.content[1].toContentMathML() +
+			'</apply>';
+	}
 	if (this.subtype === 'brackets') {
 		return this.content.toContentMathML();
 	}
@@ -59,7 +68,7 @@ toContentMathML() : string {
 	}
 
 	if (this.subtype === 'functionDefinition') {
-		return '<lambda><bvar><ci>' + 
+		return '<lambda><bvar><ci>' +
 			this.arguments.join('</ci></bvar><bvar><ci>') +
 			'</ci></bvar>' +
 			this.content.map(expr => expr.toContentMathML()) +

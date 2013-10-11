@@ -3,6 +3,18 @@
 //
 // *@return {string}*
 toMathML() : string {
+
+	if (this.subtype === 'binaryOperator') {
+		if (this.value === '-') {
+			return this.content[0].toMathML() + '<mo>-</mo>' + this.content[1].toMathML();
+		}
+		if (this.value === '/') {
+			return '<mfrac>' + this.content[0].toMathML() + this.content[1].toMathML() + '</mfrac>';
+		}
+		if (this.value === '^') {
+			return '<msup>' + this.content[0].toMathML() + this.content[1].toMathML() + '</msup>';
+		}
+	}
 	if (this.subtype === 'brackets') {
 		return '<mrow><mo>(</mo>' + this.content.toMathML() + '<mo>)</mo></mrow>';
 	}

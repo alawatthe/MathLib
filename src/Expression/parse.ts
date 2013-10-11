@@ -372,9 +372,9 @@ static parse = function (str) {
 
 
 				// Exponentiation is right associative
-				// a/b/c should be a^(b^c) and not (a^b)^c
+				// a^b^c should be a^(b^c) and not (a^b)^c
 				return new MathLib.Expression({
-					subtype: 'naryOperator',
+					subtype: 'binaryOperator',
 					value: '^',
 					content: [left, right],
 					name: 'pow'
@@ -401,14 +401,14 @@ static parse = function (str) {
 
 				// Multiplication and division is left associative:
 				// a/b/c should be (a/b)/c and not a/(b/c)
-				if (right.subtype === 'naryOperator') {
+				if (right.subtype === 'naryOperator' || right.subtype === 'binaryOperator') {
 					r = right;
-					while (r.content[0].subtype === 'naryOperator') {
+					while (r.content[0].subtype === 'naryOperator' || r.content[0].subtype === 'binaryOperator') {
 						r = r.content[0];
 					}
 					
 					r.content[0] = new MathLib.Expression({
-						subtype: 'naryOperator',
+						subtype: token.value === '*' ? 'naryOperator' : 'binaryOperator',
 						content: [left, r.content[0]],
 						value: token.value,
 						name: token.value === '*' ? 'times' : 'divide'
@@ -418,7 +418,7 @@ static parse = function (str) {
 				
 				else {
 					return new MathLib.Expression({
-						subtype: 'naryOperator',
+						subtype: token.value === '*' ? 'naryOperator' : 'binaryOperator',
 						value: token.value,
 						name: token.value === '*' ? 'times' : 'divide',
 						content: [left, right]
@@ -452,7 +452,7 @@ static parse = function (str) {
 					}
 					
 					r.content[0] = new MathLib.Expression({
-						subtype: 'naryOperator',
+						subtype: token.value === '+' ? 'naryOperator' : 'binaryOperator',
 						content: [left, r.content[0]],
 						value: token.value,
 						name: token.value === '+' ? 'plus' : 'minus'
@@ -462,7 +462,7 @@ static parse = function (str) {
 				
 				else {
 					return new MathLib.Expression({
-						subtype: 'naryOperator',
+						subtype: token.value === '+' ? 'naryOperator' : 'binaryOperator',
 						value: token.value,
 						name: token.value === '+' ? 'plus' : 'minus',
 						content: [left, right]

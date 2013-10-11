@@ -129,6 +129,11 @@ var MathLib;
 		};
 
 		Expression.prototype.evaluate = function () {
+			if (this.subtype === 'binaryOperator') {
+				return MathLib[this.name].apply(null, this.content.map(function (x) {
+					return x.evaluate();
+				}));
+			}
 			if (this.subtype === 'brackets') {
 				return this.content.evaluate();
 			}
@@ -381,6 +386,11 @@ var MathLib;
 		};
 
 		Expression.prototype.toContentMathML = function () {
+			if (this.subtype === 'binaryOperator') {
+				var op = this.name === 'pow' ? 'power' : this.name;
+
+				return '<apply><csymbol cd="arith1">' + op + '</csymbol>' + this.content[0].toContentMathML() + this.content[1].toContentMathML() + '</apply>';
+			}
 			if (this.subtype === 'brackets') {
 				return this.content.toContentMathML();
 			}
@@ -435,6 +445,21 @@ var MathLib;
 			if (typeof opts === 'undefined') { opts = {}; }
 			var op;
 
+			if (this.subtype === 'binaryOperator') {
+				var str;
+
+				if (this.value === '/') {
+					str = '\\frac{' + this.content[0].toLaTeX() + '}';
+				} else {
+					str = this.content[0].toLaTeX() + this.value;
+				}
+
+				str += this.value !== '-' ? '{' : '';
+				str += this.content[1].toLaTeX();
+				str += this.value !== '-' ? '}' : '';
+
+				return str;
+			}
 			if (this.subtype === 'brackets') {
 				return '\\left(' + this.content.toLaTeX(opts) + '\\right)';
 			}
@@ -537,6 +562,17 @@ var MathLib;
 		};
 
 		Expression.prototype.toMathML = function () {
+			if (this.subtype === 'binaryOperator') {
+				if (this.value === '-') {
+					return this.content[0].toMathML() + '<mo>-</mo>' + this.content[1].toMathML();
+				}
+				if (this.value === '/') {
+					return '<mfrac>' + this.content[0].toMathML() + this.content[1].toMathML() + '</mfrac>';
+				}
+				if (this.value === '^') {
+					return '<msup>' + this.content[0].toMathML() + this.content[1].toMathML() + '</msup>';
+				}
+			}
 			if (this.subtype === 'brackets') {
 				return '<mrow><mo>(</mo>' + this.content.toMathML() + '<mo>)</mo></mrow>';
 			}
@@ -607,6 +643,9 @@ var MathLib;
 
 		Expression.prototype.toString = function () {
 			var _this = this;
+			if (this.subtype === 'binaryOperator') {
+				return this.content[0].toString() + this.value + this.content[1].toString();
+			}
 			if (this.subtype === 'brackets') {
 				return '(' + this.content.toString() + ')';
 			}
@@ -1019,7 +1058,7 @@ var MathLib;
 						right = parseExponentiation();
 
 						return new MathLib.Expression({
-							subtype: 'naryOperator',
+							subtype: 'binaryOperator',
 							value: '^',
 							content: [left, right],
 							name: 'pow'
@@ -1038,14 +1077,14 @@ var MathLib;
 
 						right = parseMultiplicative();
 
-						if (right.subtype === 'naryOperator') {
+						if (right.subtype === 'naryOperator' || right.subtype === 'binaryOperator') {
 							r = right;
-							while (r.content[0].subtype === 'naryOperator') {
+							while (r.content[0].subtype === 'naryOperator' || r.content[0].subtype === 'binaryOperator') {
 								r = r.content[0];
 							}
 
 							r.content[0] = new MathLib.Expression({
-								subtype: 'naryOperator',
+								subtype: token.value === '*' ? 'naryOperator' : 'binaryOperator',
 								content: [left, r.content[0]],
 								value: token.value,
 								name: token.value === '*' ? 'times' : 'divide'
@@ -1053,7 +1092,7 @@ var MathLib;
 							return right;
 						} else {
 							return new MathLib.Expression({
-								subtype: 'naryOperator',
+								subtype: token.value === '*' ? 'naryOperator' : 'binaryOperator',
 								value: token.value,
 								name: token.value === '*' ? 'times' : 'divide',
 								content: [left, right]
@@ -1079,7 +1118,7 @@ var MathLib;
 							}
 
 							r.content[0] = new MathLib.Expression({
-								subtype: 'naryOperator',
+								subtype: token.value === '+' ? 'naryOperator' : 'binaryOperator',
 								content: [left, r.content[0]],
 								value: token.value,
 								name: token.value === '+' ? 'plus' : 'minus'
@@ -1087,7 +1126,7 @@ var MathLib;
 							return right;
 						} else {
 							return new MathLib.Expression({
-								subtype: 'naryOperator',
+								subtype: token.value === '+' ? 'naryOperator' : 'binaryOperator',
 								value: token.value,
 								name: token.value === '+' ? 'plus' : 'minus',
 								content: [left, right]
