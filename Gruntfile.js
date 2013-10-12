@@ -17,6 +17,32 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-saucelabs');
 	grunt.loadNpmTasks('grunt-typescript');
 
+
+
+	grunt.registerTask('template', 'A simple task to convert HTML templates', function() {
+		var template = grunt.file.read('src/Screen/template.hbs'),
+			process = function(template) {
+				var str = 'var template = function (data) {';
+
+				str += "var p = [];"
+				str += "p.push('" +
+				template.replace(/[\r\t\n]/g, ' ')                                           // remove linebreaks etc.
+								.replace(/\{\{!--[^\}]*--\}\}/g, '')                                 // remove comments
+								.replace(/\{\{#if ([^\}]*)\}\}/g, "');\nif (data.$1) {\n\tp.push('") // opening if
+								.replace(/\{\{\/if\}\}/g, "');\n}\np.push('")                        // closing if
+								.replace(/\{\{/g, "');\np.push(data.")
+								.replace(/\}\}/g, ");\np.push('") +
+				"');\n" +
+				'return p.join("");\n}';
+
+				return str;
+			};
+
+		grunt.file.write('src/Screen/template.ts', process(template));
+		grunt.log.writeln('template.js created successfully');
+	});
+
+
 	var banner = '/*! MathLib v<%= pkg.version %> MathLib.de | MathLib.de/en/license */';
 
 	grunt.initConfig({
@@ -26,6 +52,7 @@ module.exports = function (grunt) {
 		concat: {
 			MathLib: {
 				src: ['src/meta/head.ts',
+							'src/Screen/template.ts',
 							'src/meta/errorSystem.ts',
 
 							'src/Expression/init.ts',
@@ -35,7 +62,7 @@ module.exports = function (grunt) {
 							'src/Functn/!(init).ts',
 
 							'src/Screen/init.ts',
-							'src/screen/!(init).ts',
+							'src/screen/!(init|template).ts',
 
 							'src/Layer/init.ts',
 							'src/Layer/!(init).ts',
@@ -210,6 +237,10 @@ module.exports = function (grunt) {
 			scss: {
 				files: ['src/scss/MathLib.scss'],
 				tasks: ['compass', 'cssmin']
+			},
+			handlebars: {
+				files: ['src/Screen/template.hbs'],
+				tasks: ['template']
 			}
 		},
 		
