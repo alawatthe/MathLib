@@ -1,4 +1,4 @@
-// ### Complex.prototype.isZero()
+// ### [Complex.prototype.isZero()](http://mathlib.de/en/docs/Complex/isZero)
 // Determines if the complex number is equal to 0.
 //
 // *@return {boolean}*

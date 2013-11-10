@@ -1,4 +1,4 @@
-// ### Complex.prototype.cosh()
+// ### [Complex.prototype.cosh()](http://mathlib.de/en/docs/Complex/cosh)
 // Calculates the hyperbolic cosine of a complex number
 //
 // *@return {Complex}*

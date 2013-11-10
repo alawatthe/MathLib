@@ -1,13 +1,34 @@
-// ### Complex.prototype.arcsin()
+// ### [Complex.prototype.arcsin()](http://mathlib.de/en/docs/Complex/arcsin)
 // Returns the inverse sine of the number
 //
 // *@return {Complex}*
 arcsin() : Complex {
-	var a = this.re, b = this.im,
+	var a = this.re,
+			b = this.im,
 			aa = a * a,
-			bb = b * b;
+			bb = b * b,
+			sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb),
+			sgn = function (x) {
+				if (x > 0) {
+					return 1; 
+				}
+				if (x < 0) {
+					return -1; 
+				}
+				if (1/x === Infinity) {
+					return 1; 
+				}
+				if (1/x === -Infinity) {
+					return -1; 
+				}
+			};
+
+	if (a === Infinity) {
+		return new MathLib.Complex(Infinity);
+	}
+
 	return new MathLib.Complex(
-			MathLib.sign(a) / 2 * MathLib.arccos(Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb) - (aa + bb)),
-			MathLib.sign(b) / 2 * MathLib.arcosh(Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb) + (aa + bb))
+			sgn(a) / 2 * MathLib.arccos(sqrt - (aa + bb)),
+			sgn(b) / 2 * MathLib.arcosh(sqrt + (aa + bb))
 		);
 }

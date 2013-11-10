@@ -5,10 +5,23 @@ test('init (1 Number)', 2, function () {
 	equal(c.im, 0, 'Testing the imaginary part');
 });
 
-test('init (2 Numbers)', 2, function () {
-	var c = new MathLib.Complex(1, 2);
-	equal(c.re, 1, 'Testing the real part');
-	equal(c.im, 2, 'Testing the imaginary part');
+test('init (2 Numbers)', 10, function () {
+	var c1 = new MathLib.Complex(Infinity, 2),
+			c2 = new MathLib.Complex(-Infinity, 2),
+			c3 = new MathLib.Complex(NaN, 2),
+			c4 = new MathLib.Complex(2, NaN),
+			c5 = new MathLib.Complex(1, 2);
+
+	equal(c1.re, Infinity, 'Testing the real part');
+	equal(c1.im, Infinity, 'Testing the imaginary part');
+	equal(c2.re, Infinity, 'Testing the real part');
+	equal(c2.im, Infinity, 'Testing the imaginary part');
+	ok(MathLib.isNaN(c3.re), 'Testing the real part');
+	ok(MathLib.isNaN(c3.im), 'Testing the imaginary part');
+	ok(MathLib.isNaN(c4.re), 'Testing the real part');
+	ok(MathLib.isNaN(c4.im), 'Testing the imaginary part');
+	equal(c5.re, 1, 'Testing the real part');
+	equal(c5.im, 2, 'Testing the imaginary part');
 });
 
 

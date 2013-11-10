@@ -1,4 +1,4 @@
-// ### Complex.prototype.abs()
+// ### [Complex.prototype.abs()](http://mathlib.de/en/docs/Complex/abs)
 // Returns the absolute value of the number.
 //
 // *@return {number}*

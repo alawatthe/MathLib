@@ -1,4 +1,4 @@
-/*! MathLib v0.6.0 MathLib.de | MathLib.de/en/license */
+/*! MathLib v0.6.1 MathLib.de | MathLib.de/en/license */
 module('MathLib');
 test('general', 1, function () {
 	equal(typeof MathLib, 'object', 'is MathLib defined');
@@ -207,10 +207,23 @@ test('init (1 Number)', 2, function () {
 	equal(c.im, 0, 'Testing the imaginary part');
 });
 
-test('init (2 Numbers)', 2, function () {
-	var c = new MathLib.Complex(1, 2);
-	equal(c.re, 1, 'Testing the real part');
-	equal(c.im, 2, 'Testing the imaginary part');
+test('init (2 Numbers)', 10, function () {
+	var c1 = new MathLib.Complex(Infinity, 2),
+			c2 = new MathLib.Complex(-Infinity, 2),
+			c3 = new MathLib.Complex(NaN, 2),
+			c4 = new MathLib.Complex(2, NaN),
+			c5 = new MathLib.Complex(1, 2);
+
+	equal(c1.re, Infinity, 'Testing the real part');
+	equal(c1.im, Infinity, 'Testing the imaginary part');
+	equal(c2.re, Infinity, 'Testing the real part');
+	equal(c2.im, Infinity, 'Testing the imaginary part');
+	ok(MathLib.isNaN(c3.re), 'Testing the real part');
+	ok(MathLib.isNaN(c3.im), 'Testing the imaginary part');
+	ok(MathLib.isNaN(c4.re), 'Testing the real part');
+	ok(MathLib.isNaN(c4.im), 'Testing the imaginary part');
+	equal(c5.re, 1, 'Testing the real part');
+	equal(c5.im, 2, 'Testing the imaginary part');
 });
 
 
@@ -224,50 +237,554 @@ test('.type', 1, function () {
 	var c = new MathLib.Complex(3, 4);
 	equal(c.type, 'complex', 'Testing .type');
 });
-test('.abs()', 2, function () {
-	var c1 = new MathLib.Complex(3, 4),
-			c2 = new MathLib.Complex(0, 0);
+test('.abs()', 4, function () {
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).abs()));
+	equal((new MathLib.Complex(Infinity)).abs(), Infinity);
 
-	equal(MathLib.isEqual(c1.abs(), 5), true, 'Absolut value of a complex number');
-	equal(MathLib.isEqual(c2.abs(), 0), true, 'Absolut value of a complex number');
+	ok(MathLib.isEqual((new MathLib.Complex(0, 0)).abs(), 0), 'Absolut value of a complex number');
+	ok(MathLib.isEqual((new MathLib.Complex(3, 4)).abs(), 5), 'Absolut value of a complex number');
 });
-test('.arg()', 4, function () {
+test('.arccos()', 26, function () {
+	var n2p0 = (new MathLib.Complex(-2, +0)).arccos(),
+			n2n0 = (new MathLib.Complex(-2, -0)).arccos(),
+			n1p0 = (new MathLib.Complex(-1, +0)).arccos(),
+			n1n0 = (new MathLib.Complex(-1, -0)).arccos(),
+			p0p0 = (new MathLib.Complex(+0, +0)).arccos(),
+			p0n0 = (new MathLib.Complex(+0, -0)).arccos(),
+			n0p0 = (new MathLib.Complex(-0, +0)).arccos(),
+			n0n0 = (new MathLib.Complex(-0, -0)).arccos(),
+			p1p0 = (new MathLib.Complex(1, +0)).arccos(),
+			p1n0 = (new MathLib.Complex(1, -0)).arccos(),
+			p2p0 = (new MathLib.Complex(2, +0)).arccos(),
+			p2n0 = (new MathLib.Complex(2, -0)).arccos();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arccos().re));
+	equal((new MathLib.Complex(Infinity)).arccos().re, Infinity);
+
+
+	ok(MathLib.isEqual(n2p0, new MathLib.Complex(Math.PI, -1.3169578969248167086)));
+	ok(MathLib.isEqual(n2n0, new MathLib.Complex(Math.PI, +1.3169578969248167086)));
+
+	ok(MathLib.isEqual(n1p0.re, Math.PI));
+	ok(MathLib.isNegZero(n1p0.im));
+	ok(MathLib.isEqual(n1n0.re, Math.PI));
+	ok(MathLib.isPosZero(n1n0.im));
+
+
+	ok(MathLib.isEqual(p0p0.re, 1.5707963267948966192));
+	ok(MathLib.isNegZero(p0p0.im));
+	ok(MathLib.isEqual(p0n0.re, 1.5707963267948966192));
+	ok(MathLib.isPosZero(p0n0.im));
+	ok(MathLib.isEqual(n0p0.re, 1.5707963267948966192));
+	ok(MathLib.isNegZero(n0p0.im));
+	ok(MathLib.isEqual(n0n0.re, 1.5707963267948966192));
+	ok(MathLib.isPosZero(n0n0.im));
+
+
+	ok(MathLib.isPosZero(p1p0.re));
+	ok(MathLib.isNegZero(p1p0.im));
+	ok(MathLib.isPosZero(p1n0.re));
+	ok(MathLib.isPosZero(p1n0.im));
+
+	ok(MathLib.isPosZero(p2p0.re));
+	ok(MathLib.isEqual(p2p0.im, -1.3169578969248167086));
+	ok(MathLib.isPosZero(p2n0.re));
+	ok(MathLib.isEqual(p2n0.im, 1.3169578969248167086));
+
+	
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arccos(), new MathLib.Complex(1.1437177404024204938, -1.5285709194809981613)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arccos(), new MathLib.Complex(2.2047801924340733356, -2.3055090312434769420)));
+});
+test('.arccot()', 25, function () {
+	var p0n2 = (new MathLib.Complex(+0, -2)).arccot(),
+			n0n2 = (new MathLib.Complex(-0, -2)).arccot(),
+			p0n1 = (new MathLib.Complex(+0, -1)).arccot(),
+			n0n1 = (new MathLib.Complex(-0, -1)).arccot(),
+			p0n5 = (new MathLib.Complex(+0, -0.5)).arccot(),
+			n0n5 = (new MathLib.Complex(-0, -0.5)).arccot(),
+			p0p0 = (new MathLib.Complex(+0, +0)).arccot(),
+			p0n0 = (new MathLib.Complex(+0, -0)).arccot(),
+			n0p0 = (new MathLib.Complex(-0, +0)).arccot(),
+			n0n0 = (new MathLib.Complex(-0, -0)).arccot(),
+			p0p5 = (new MathLib.Complex(+0, +0.5)).arccot(),
+			n0p5 = (new MathLib.Complex(-0, +0.5)).arccot(),
+			p0p1 = (new MathLib.Complex(+0, 1)).arccot(),
+			n0p1 = (new MathLib.Complex(-0, 1)).arccot(),
+			p0p2 = (new MathLib.Complex(+0, 2)).arccot(),
+			n0p2 = (new MathLib.Complex(-0, 2)).arccot();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arccot().re));
+	equal((new MathLib.Complex(Infinity)).arccot().re, 0);
+	equal((new MathLib.Complex(Infinity)).arccot().im, 0);
+
+	ok(MathLib.isPosZero(p0n2.re), '(+0 -2i).arccot().re = +0');
+	equal(p0n2.im, 0.54930614433405484570, '(+0 -2i).arccot().im = 0.54930614433405484570');
+	ok(MathLib.isNegZero(n0n2.re), '(-0 -2i).arccot().re = -0');
+	equal(n0n2.im, 0.54930614433405484570, '(-0 -2i).arccot().im = 0.54930614433405484570');
+
+	equal(p0n1.re, Infinity, '(+0 -1i).arccot().re = ComplexInfinity');
+	equal(n0n1.re, Infinity, '(-0 -1i).arccot().re = ComplexInfinity');
+
+	//ok(MathLib.isPosZero(p0n5.re), '(+0 -0.5i).arctan().re = +0');
+	//equal(p0n5.im, -0.5493061443340548457, '(+0 -0.5i).arctan().im = +0.549');
+	//ok(MathLib.isNegZero(n0n5.re), '(-0 -0.5i).arctan().re = -0');
+	//equal(n0n5.im, -0.5493061443340548457, '(-0 -0.5i).arctan().im = -0.549');
+
+	equal(p0p0.re, Math.PI/2, '(+0 +0i).arccot().re = +&pi;/2');
+	ok(MathLib.isNegZero(p0p0.im), '(+0 +0i).arccot().im = -0');
+	equal(p0n0.re, Math.PI/2, '(+0 -0i).arccot().re = +&pi;/2');
+	ok(MathLib.isPosZero(p0n0.im), '(+0 -0i).arccot().im = +0');
+	equal(n0p0.re, -Math.PI/2, '(-0 +0i).arccot().re = -&pi;/2');
+	ok(MathLib.isNegZero(n0p0.im), '(-0 +0i).arccot().im = -0');
+	equal(n0n0.re, -Math.PI/2, '(-0 -0i).arccot().re = -&pi;/2');
+	ok(MathLib.isPosZero(n0n0.im), '(-0 -0i).arccot().im = +0');
+
+	//ok(MathLib.isPosZero(p0p5.re), '(+0 +0.5i).arctan().re = +0');
+	//equal(p0p5.im, +0.5493061443340548457, '(+0 +0.5i).arctan().im = +0.549');
+	//ok(MathLib.isNegZero(n0p5.re), '(-0 +0.5i).arctan().re = -0');
+	//equal(n0p5.im, +0.5493061443340548457, '(-0 +0.5i).arctan().im = -0.549');
+
+	equal(p0p1.re, Infinity, '(+0 +1i).arccot().re = ComplexInfinity');
+	equal(n0p1.re, Infinity, '(-0 +1i).arccot().re = ComplexInfinity');
+
+
+	ok(MathLib.isPosZero(p0p2.re), '(+0 +2i).arccot().re = +0');
+	equal(p0p2.im, -0.54930614433405484570, '(+0 +2i).arccot().im = -0.54930614433405484570');
+	ok(MathLib.isNegZero(n0p2.re), '(-0 +2i).arccot().re = -0');
+	equal(n0p2.im, -0.54930614433405484570, '(-0 +2i).arccot().im = -0.54930614433405484570');
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arccot(), new MathLib.Complex(0.23182380450040305811, -0.40235947810852509365)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arccot(), new MathLib.Complex(-0.12248933156343207709, -0.15899719167999917436)));
+
+});
+test('.arccsc()', 17, function () {
+	var n1p0 = (new MathLib.Complex(-1, +0)).arccsc(),
+			n1n0 = (new MathLib.Complex(-1, -0)).arccsc(),
+			p0p0 = (new MathLib.Complex(+0, +0)).arccsc(),
+			p0n0 = (new MathLib.Complex(+0, -0)).arccsc(),
+			n0p0 = (new MathLib.Complex(-0, +0)).arccsc(),
+			n0n0 = (new MathLib.Complex(-0, -0)).arccsc(),
+			p1p0 = (new MathLib.Complex(1, +0)).arccsc(),
+			p1n0 = (new MathLib.Complex(1, -0)).arccsc();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arccsc().re));
+	ok(MathLib.isPosZero((new MathLib.Complex(Infinity)).arccsc().re));
+	ok(MathLib.isPosZero((new MathLib.Complex(Infinity)).arccsc().im));
+
+
+	ok(MathLib.isEqual(n1p0.re, -Math.PI/2));
+	ok(MathLib.isNegZero(n1p0.im));
+	ok(MathLib.isEqual(n1n0.re, -Math.PI/2));
+	ok(MathLib.isPosZero(n1n0.im));
+
+
+	equal(p0p0.re, Infinity);
+	equal(p0n0.re, Infinity);
+	equal(n0p0.re, Infinity);
+	equal(n0n0.re, Infinity);
+
+
+	ok(MathLib.isEqual(p1p0.re, Math.PI/2));
+	ok(MathLib.isNegZero(p1p0.im));
+	ok(MathLib.isEqual(p1n0.re, Math.PI/2));
+	ok(MathLib.isPosZero(p1n0.im));
+
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arccsc(), new MathLib.Complex(0.18631805410781552582, -0.39656823011232897892)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arccsc(), new MathLib.Complex(-0.11875073130741175420, -0.16044553377450493240)));
+});
+test('.arcsec()', 17, function () {
+	var n1p0 = (new MathLib.Complex(-1, +0)).arcsec(),
+			n1n0 = (new MathLib.Complex(-1, -0)).arcsec(),
+			p0p0 = (new MathLib.Complex(+0, +0)).arcsec(),
+			p0n0 = (new MathLib.Complex(+0, -0)).arcsec(),
+			n0p0 = (new MathLib.Complex(-0, +0)).arcsec(),
+			n0n0 = (new MathLib.Complex(-0, -0)).arcsec(),
+			p1p0 = (new MathLib.Complex(1, +0)).arcsec(),
+			p1n0 = (new MathLib.Complex(1, -0)).arcsec();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arcsec().re));
+	ok(MathLib.isEqual((new MathLib.Complex(Infinity)).arcsec().re, Math.PI/2));
+	ok(MathLib.isNegZero((new MathLib.Complex(Infinity)).arcsec().im));
+
+
+	ok(MathLib.isEqual(n1p0.re, Math.PI));
+	ok(MathLib.isPosZero(n1p0.im));
+	ok(MathLib.isEqual(n1n0.re, Math.PI));
+	ok(MathLib.isNegZero(n1n0.im));
+
+
+	equal(p0p0.re, Infinity);
+	equal(p0n0.re, Infinity);
+	equal(n0p0.re, Infinity);
+	equal(n0n0.re, Infinity);
+
+
+	ok(MathLib.isPosZero(p1p0.re));
+	ok(MathLib.isPosZero(p1p0.im));
+	ok(MathLib.isPosZero(p1n0.re));
+	ok(MathLib.isNegZero(p1n0.im));
+
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arcsec(), new MathLib.Complex(1.3844782726870810934, 0.3965682301123289789)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arcsec(), new MathLib.Complex(1.6895470581023083734, 0.1604455337745049324)));
+});
+test('.arcsin()', 24, function () {
+	var n2p0 = (new MathLib.Complex(-2, +0)).arcsin(),
+			n2n0 = (new MathLib.Complex(-2, -0)).arcsin(),
+			n1p0 = (new MathLib.Complex(-1, +0)).arcsin(),
+			n1n0 = (new MathLib.Complex(-1, -0)).arcsin(),
+			p0p0 = (new MathLib.Complex(+0, +0)).arcsin(),
+			p0n0 = (new MathLib.Complex(+0, -0)).arcsin(),
+			n0p0 = (new MathLib.Complex(-0, +0)).arcsin(),
+			n0n0 = (new MathLib.Complex(-0, -0)).arcsin(),
+			p1p0 = (new MathLib.Complex(1, +0)).arcsin(),
+			p1n0 = (new MathLib.Complex(1, -0)).arcsin(),
+			p2p0 = (new MathLib.Complex(2, +0)).arcsin(),
+			p2n0 = (new MathLib.Complex(2, -0)).arcsin();
+
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arcsin().re));
+	equal((new MathLib.Complex(Infinity)).arcsin().re, Infinity);
+
+
+	ok(MathLib.isEqual(n2p0, new MathLib.Complex(-1.5707963267948966192, +1.3169578969248167086)));
+	ok(MathLib.isEqual(n2n0, new MathLib.Complex(-1.5707963267948966192, -1.3169578969248167086)));
+
+	ok(MathLib.isEqual(n1p0.re, -1.5707963267948966192));
+	ok(MathLib.isPosZero(n1p0.im));
+	ok(MathLib.isEqual(n1n0.re, -1.5707963267948966192));
+	ok(MathLib.isNegZero(n1n0.im));
+
+	ok(MathLib.isPosZero(p0p0.re));
+	ok(MathLib.isPosZero(p0p0.im));
+	ok(MathLib.isPosZero(p0n0.re));
+	ok(MathLib.isNegZero(p0n0.im));
+	ok(MathLib.isNegZero(n0p0.re));
+	ok(MathLib.isPosZero(n0p0.im));
+	ok(MathLib.isNegZero(n0n0.re));
+	ok(MathLib.isNegZero(n0n0.im));
+
+	ok(MathLib.isEqual(p1p0.re, 1.5707963267948966192));
+	ok(MathLib.isPosZero(p1p0.im));
+	ok(MathLib.isEqual(p1n0.re, 1.5707963267948966192));
+	ok(MathLib.isNegZero(p1n0.im));
+
+	ok(MathLib.isEqual(p2p0, new MathLib.Complex(1.5707963267948966192, +1.3169578969248167086)));
+	ok(MathLib.isEqual(p2n0, new MathLib.Complex(1.5707963267948966192, -1.3169578969248167086)));
+
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arcsin(), new MathLib.Complex(0.4270785863924761255, 1.5285709194809981613)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arcsin(), new MathLib.Complex(-0.6339838656391767163, 2.3055090312434769420)));
+});
+test('.arctan()', 28, function () {
+	var p0n2 = (new MathLib.Complex(+0, -2)).arctan(),
+			n0n2 = (new MathLib.Complex(-0, -2)).arctan(),
+			p0n1 = (new MathLib.Complex(+0, -1)).arctan(),
+			n0n1 = (new MathLib.Complex(-0, -1)).arctan(),
+			p0n5 = (new MathLib.Complex(+0, -0.5)).arctan(),
+			n0n5 = (new MathLib.Complex(-0, -0.5)).arctan(),
+			p0p0 = (new MathLib.Complex(+0, +0)).arctan(),
+			p0n0 = (new MathLib.Complex(+0, -0)).arctan(),
+			n0p0 = (new MathLib.Complex(-0, +0)).arctan(),
+			n0n0 = (new MathLib.Complex(-0, -0)).arctan(),
+			p0p5 = (new MathLib.Complex(+0, +0.5)).arctan(),
+			n0p5 = (new MathLib.Complex(-0, +0.5)).arctan(),
+			p0p1 = (new MathLib.Complex(+0, 1)).arctan(),
+			n0p1 = (new MathLib.Complex(-0, 1)).arctan(),
+			p0p2 = (new MathLib.Complex(+0, 2)).arctan(),
+			n0p2 = (new MathLib.Complex(-0, 2)).arctan();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arctan().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).arctan().re));
+
+	ok(MathLib.isEqual(p0n2, new MathLib.Complex(1.5707963267948966192, -0.5493061443340548457)), '(+0 -2i).arctan() = 1.57 - 0.55i');
+	ok(MathLib.isEqual(n0n2, new MathLib.Complex(-1.5707963267948966192, -0.5493061443340548457)), '(-0 -2i).arctan() = -1.57 - 0.55i');
+
+	equal(p0n1.re, Infinity);
+	equal(n0n1.re, Infinity);
+
+	ok(MathLib.isPosZero(p0n5.re), '(+0 -0.5i).arctan().re = +0');
+	equal(p0n5.im, -0.5493061443340548457, '(+0 -0.5i).arctan().im = +0.549');
+	ok(MathLib.isNegZero(n0n5.re), '(-0 -0.5i).arctan().re = -0');
+	equal(n0n5.im, -0.5493061443340548457, '(-0 -0.5i).arctan().im = -0.549');
+
+	ok(MathLib.isPosZero(p0p0.re), '(+0 +0i).arctan().re = +0');
+	ok(MathLib.isPosZero(p0p0.im), '(+0 +0i).arctan().im = +0');
+	ok(MathLib.isPosZero(p0n0.re), '(+0 -0i).arctan().re = +0');
+	ok(MathLib.isNegZero(p0n0.im), '(+0 -0i).arctan().im = -0');
+	ok(MathLib.isNegZero(n0p0.re), '(-0 +0i).arctan().re = -0');
+	ok(MathLib.isPosZero(n0p0.im), '(-0 +0i).arctan().im = +0');
+	ok(MathLib.isNegZero(n0n0.re), '(-0 -0i).arctan().re = -0');
+	ok(MathLib.isNegZero(n0n0.im), '(-0 -0i).arctan().im = -0');
+
+	ok(MathLib.isPosZero(p0p5.re), '(+0 +0.5i).arctan().re = +0');
+	equal(p0p5.im, +0.5493061443340548457, '(+0 +0.5i).arctan().im = +0.549');
+	ok(MathLib.isNegZero(n0p5.re), '(-0 +0.5i).arctan().re = -0');
+	equal(n0p5.im, +0.5493061443340548457, '(-0 +0.5i).arctan().im = -0.549');
+
+	equal(p0p1.re, Infinity);
+	equal(n0p1.re, Infinity);
+
+	ok(MathLib.isEqual(p0p2, new MathLib.Complex(1.5707963267948966192, 0.5493061443340548457)), '(+0 +2i).arctan() = 1.57 + 0.55i');
+	ok(MathLib.isEqual(n0p2, new MathLib.Complex(-1.5707963267948966192, 0.5493061443340548457)), '(-0 +2i).arctan() = -1.57 + 0.55i');
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arctan(), new MathLib.Complex(1.33897252229449356112, 0.40235947810852509365)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arctan(), new MathLib.Complex(-1.4483069952314645421, 0.1589971916799991744)));
+
+});
+test('.artanh()', 28, function () {
+	var n2p0 = (new MathLib.Complex(-2, +0)).artanh(),
+			n2n0 = (new MathLib.Complex(-2, -0)).artanh(),
+			n1p0 = (new MathLib.Complex(-1, +0)).artanh(),
+			n1n0 = (new MathLib.Complex(-1, -0)).artanh(),
+			n5p0 = (new MathLib.Complex(-0.5, +0)).artanh(),
+			n5n0 = (new MathLib.Complex(-0.5, -0)).artanh(),
+			p0p0 = (new MathLib.Complex(+0, +0)).artanh(),
+			p0n0 = (new MathLib.Complex(+0, -0)).artanh(),
+			n0p0 = (new MathLib.Complex(-0, +0)).artanh(),
+			n0n0 = (new MathLib.Complex(-0, -0)).artanh(),
+			p5p0 = (new MathLib.Complex(+0.5, +0)).artanh(),
+			p5n0 = (new MathLib.Complex(+0.5, -0)).artanh(),
+			p1p0 = (new MathLib.Complex(1, +0)).artanh(),
+			p1n0 = (new MathLib.Complex(1, -0)).artanh(),
+			p2p0 = (new MathLib.Complex(2, +0)).artanh(),
+			p2n0 = (new MathLib.Complex(2, -0)).artanh();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).artanh().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).artanh().re));
+
+	ok(MathLib.isEqual(n2p0, new MathLib.Complex(-0.5493061443340548457, 1.5707963267948966192)), '(-2 +0i).artanh() = -0.55 + 1.57i');
+	ok(MathLib.isEqual(n2n0, new MathLib.Complex(-0.5493061443340548457, -1.5707963267948966192)), '(-2 -0i).artanh() = -0.55 - 1.57i');
+
+	equal(n1p0.re, Infinity);
+	equal(n1n0.re, Infinity);
+
+	ok(MathLib.isEqual(n5p0.re, -0.5493061443340548457), '(+0 -0.5i).artanh().re = -0.549');
+	ok(MathLib.isPosZero(n5p0.im), '(+0 -0.5i).artanh().im = +0');
+	ok(MathLib.isEqual(n5n0.re, -0.5493061443340548457), '(-0 -0.5i).artanh().re = -0.549');
+	ok(MathLib.isNegZero(n5n0.im), '(-0 -0.5i).artanh().im = -0');
+
+	ok(MathLib.isPosZero(p0p0.re), '(+0 +0i).artanh().re = +0');
+	ok(MathLib.isPosZero(p0p0.im), '(+0 +0i).artanh().im = +0');
+	ok(MathLib.isPosZero(p0n0.re), '(+0 -0i).artanh().re = +0');
+	ok(MathLib.isNegZero(p0n0.im), '(+0 -0i).artanh().im = -0');
+	ok(MathLib.isNegZero(n0p0.re), '(-0 +0i).artanh().re = -0');
+	ok(MathLib.isPosZero(n0p0.im), '(-0 +0i).artanh().im = +0');
+	ok(MathLib.isNegZero(n0n0.re), '(-0 -0i).artanh().re = -0');
+	ok(MathLib.isNegZero(n0n0.im), '(-0 -0i).artanh().im = -0');
+
+	ok(MathLib.isEqual(p5p0.re, +0.54930614433405484570), '(+0.5i +0).artanh().re = +0.549');
+	ok(MathLib.isPosZero(p5p0.im), '(+0.5i +0).artanh().im = +0');
+	ok(MathLib.isEqual(p5n0.re, +0.54930614433405484570), '(+0.5i -0).artanh().re = +0.549');
+	ok(MathLib.isNegZero(p5n0.im), '(+0.5i -0).artanh().im = -0');
+
+	equal(p1p0.re, Infinity);
+	equal(p1n0.re, Infinity);
+
+	ok(MathLib.isEqual(p2p0, new MathLib.Complex(0.5493061443340548457, 1.5707963267948966192)), '(2 + 0i).artanh() = 1.57 + 0.55');
+	ok(MathLib.isEqual(p2n0, new MathLib.Complex(0.5493061443340548457, -1.5707963267948966192)), '(2 - 0i).artanh() = -1.57 + 0.55');
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).artanh(), new MathLib.Complex(0.17328679513998632735, 1.17809724509617246442)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).artanh(), new MathLib.Complex(-0.1175009073114338884, 1.4099210495965755225)));
+});
+test('.arg()', 6, function () {
 	var c1 = new MathLib.Complex(1, 1),
 			c2 = new MathLib.Complex(1, -1),
 			c3 = new MathLib.Complex(0, 0),
 			c4 = new MathLib.Complex(-1, 0);
 
-	equal(c1.arg(), 0.7853981633974483, '');
-	equal(c2.arg(), -0.7853981633974483, '');
-	equal(c3.arg(), 0,  '');
-	equal(c4.arg(), 3.141592653589793,  '');
+	ok(MathLib.isNaN((new MathLib.Complex(NaN, 1)).arg()));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity, 1)).arg()));
+	equal(c1.arg(), 0.7853981633974483);
+	equal(c2.arg(), -0.7853981633974483);
+	equal(c3.arg(), 0);
+	equal(c4.arg(), 3.141592653589793);
 });
-test('.compare()', 3, function () {
+test('.compare()', 9, function () {
 	var c = new MathLib.Complex(3, 2),
 			d = new MathLib.Complex(1, 1),
-			e = new MathLib.Complex(-1, 1);
+			e = new MathLib.Complex(-1, 1),
+			nan = new MathLib.Complex(NaN),
+			inf = new MathLib.Complex(Infinity);
+
+	equal(nan.compare(nan), 0);
+	equal(nan.compare(c), -1);
+	equal(nan.compare(inf), -1);
+
+	equal(inf.compare(nan), 1);
+	equal(inf.compare(c), 1);
+	equal(inf.compare(inf), 0);
+
 	equal(c.compare(c), 0, 'equal complex numbers');
 	equal(c.compare(d), 1, 'normal compare');
 	equal(d.compare(e), -1,  '');
 });
-test('.conjugate()', 2, function () {
-	var c = new MathLib.Complex(3, 4);
-	c = c.conjugate();
-	equal(c.re, 3, 'Checking the conjugate of a complex number');
-	equal(c.im, -4, 'Checking the conjugate of a complex number');
+test('.conjugate()', 12, function () {
+	var pp = (new MathLib.Complex(+0, +0)).conjugate(),
+			pn = (new MathLib.Complex(+0, -0)).conjugate(),
+			np = (new MathLib.Complex(-0, +0)).conjugate(),
+			nn = (new MathLib.Complex(-0, -0)).conjugate();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).conjugate().re));
+	equal((new MathLib.Complex(Infinity)).conjugate().re, Infinity);
+
+	ok(MathLib.isPosZero(pp.re));
+	ok(MathLib.isNegZero(pp.im));
+
+	ok(MathLib.isPosZero(pn.re));
+	ok(MathLib.isPosZero(pn.im));
+
+	ok(MathLib.isNegZero(np.re));
+	ok(MathLib.isNegZero(np.im));
+
+	ok(MathLib.isNegZero(nn.re));
+	ok(MathLib.isPosZero(nn.im));
+	
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).conjugate(), new MathLib.Complex(1, -2)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).conjugate(), new MathLib.Complex(-3, -4)));
 });
-test('.divide()', 2, function () {
-	var c = new MathLib.Complex(3, 6),
-			d = new MathLib.Complex(2, 5),
+test('.copy()', 12, function () {
+	var pp = (new MathLib.Complex(+0, +0)).copy(),
+			pn = (new MathLib.Complex(+0, -0)).copy(),
+			np = (new MathLib.Complex(-0, +0)).copy(),
+			nn = (new MathLib.Complex(-0, -0)).copy();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).copy().re));
+	equal((new MathLib.Complex(Infinity)).copy().re, Infinity);
+
+	ok(MathLib.isPosZero(pp.re));
+	ok(MathLib.isPosZero(pp.im));
+
+	ok(MathLib.isPosZero(pn.re));
+	ok(MathLib.isNegZero(pn.im));
+
+	ok(MathLib.isNegZero(np.re));
+	ok(MathLib.isPosZero(np.im));
+
+	ok(MathLib.isNegZero(nn.re));
+	ok(MathLib.isNegZero(nn.im));
+	
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).copy(), new MathLib.Complex(1, 2)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).copy(), new MathLib.Complex(-3, 4)));
+});
+test('.cos()', 3, function () {
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).cos().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).cos().re));
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).cos(), new MathLib.Complex(2.0327230070196655294, -3.0518977991518000575)));
+});
+test('.cosh()', 4, function () {
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).cosh().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).cosh().re));
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).cosh(), new MathLib.Complex(-0.64214812471551996484, 1.06860742138277833960)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).cosh(), new MathLib.Complex(-6.5806630405511564326, 7.5815527427465443537)));
+});
+test('.cot()', 5, function () {
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).cot().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).cot().re));
+
+	equal((new MathLib.Complex(0)).cot().re, Infinity);
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).cot(), new MathLib.Complex(0.03279775553375259406, -0.98432922645819102947)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).cot(), new MathLib.Complex(0.00018758773798365922, -1.00064439247155908010)));
+});
+test('.coth()', 5, function () {
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).coth().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).coth().re));
+
+	equal((new MathLib.Complex(0)).coth().re, Infinity);
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).coth(), new MathLib.Complex(0.82132979749385168671, 0.17138361290918501441)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).coth(), new MathLib.Complex(-0.99926692780590154452, -0.00490118239430447336)));
+});
+test('.csc()', 5, function () {
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).csc().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).csc().re));
+
+	equal((new MathLib.Complex(0)).csc().re, Infinity);
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).csc(), new MathLib.Complex(0.22837506559968659341, -0.14136302161240780072)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).csc(), new MathLib.Complex(-0.005174473184019397654, 0.036275889628626011594)));
+});
+test('.csch()', 5, function () {
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).csch().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).csch().re));
+
+	equal((new MathLib.Complex(0)).csch().re, Infinity);
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).csch(), new MathLib.Complex(-0.22150093085050939664, -0.63549379925389995364)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).csch(), new MathLib.Complex(0.064877471370635490483, 0.075489832915863699572)));
+});
+test('.divide()', 18, function () {
+	var inf = new MathLib.Complex(Infinity),
+			nan = new MathLib.Complex(NaN),
+			zero = new MathLib.Complex(0, 0),
+			c = new MathLib.Complex(2, 5),
+			c = new MathLib.Complex(2, 5),
+			d = new MathLib.Complex(3, 6),
 			e = new MathLib.Complex(3, 7);
-	deepEqual(c.divide(3), new MathLib.Complex(1, 2), 'Dividing by a normal number.');
-	ok(d.divide(e).isEqual(new MathLib.Complex(41 / 58, 1 / 58)), 'Dividing by a complex number.');
+
+	deepEqual(nan.divide(nan), nan, 'ComplexNaN / ComplexNaN = ComplexNaN');
+	deepEqual(nan.divide(inf), nan, 'ComplexNaN / ComplexInfinity = ComplexNaN');
+	deepEqual(nan.divide(zero), nan, 'ComplexNaN / 0 = ComplexNaN');
+	deepEqual(nan.divide(c), nan, 'ComplexNaN / (2+5i) = ComplexNaN');
+	
+	deepEqual(inf.divide(nan), nan, 'ComplexInfinity / ComplexNaN = ComplexNaN');
+	deepEqual(inf.divide(inf), nan, 'ComplexInfinity / ComplexInfinity = ComplexNaN');
+	deepEqual(inf.divide(zero), inf, 'ComplexInfinity / 0 = ComplexInfinity');
+	deepEqual(inf.divide(c), inf, 'ComplexInfinity / (2+5i) = ComplexInfinity');
+	
+	deepEqual(zero.divide(nan), nan, '0 / ComplexNaN = ComplexNaN');
+	deepEqual(zero.divide(inf), zero, '0 / ComplexInfinity = 0');
+	deepEqual(zero.divide(zero), nan, '0 / 0 = ComplexNaN');
+	deepEqual(zero.divide(c), zero, '0 / (2+5i) = 0');
+
+	deepEqual(c.divide(nan), nan, '(2+5i) / ComplexNaN = ComplexNaN');
+	deepEqual(c.divide(inf), zero, '(2+5i) / ComplexInfinity = 0');
+	deepEqual(c.divide(zero), inf, '(2+5i) / 0 = ComplexInfinity');
+	deepEqual(c.divide(c), new MathLib.Complex(1), '(2+5i) / (2+5i) = 1'); 
+
+	deepEqual(d.divide(3), new MathLib.Complex(1, 2), 'Dividing by a normal number.');
+	ok(c.divide(e).isEqual(new MathLib.Complex(41 / 58, 1 / 58)), 'Dividing by a complex number.');
 });
-test('.inverse()', 2, function () {
-	var c1 = new MathLib.Complex(3, 4),
-			c2 = new MathLib.Complex(0, 2);
-	deepEqual(c1.inverse(), new MathLib.Complex(3 / 25, -4 / 25), 'Checking the inverse of a complex number');
-	deepEqual(c2.inverse(), new MathLib.Complex(0, -1 / 2), 'Checking the inverse of a complex number');
+test('.exp()', 12, function () {
+	var pp = (new MathLib.Complex(+0, +0)).exp(),
+			pn = (new MathLib.Complex(+0, -0)).exp(),
+			np = (new MathLib.Complex(-0, +0)).exp(),
+			nn = (new MathLib.Complex(-0, -0)).exp();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).exp().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).exp().re));
+
+	equal(pp.re, 1, '(+0 +0i).exp().re = 1');
+	ok(MathLib.isPosZero(pp.im), '(+0 +0i).exp().im = 0');
+
+	equal(pn.re, 1, '(+0 -0i).exp().re = 1');
+	ok(MathLib.isNegZero(pn.im), '(+0 -0i).exp().im = 0');
+
+	equal(np.re, 1, '(-0 +0i).exp().re = 1');
+	ok(MathLib.isPosZero(np.im), '(-0 +0i).exp().im = 0');
+
+	equal(nn.re, 1, '(-0 -0i).exp().re = 1');
+	ok(MathLib.isNegZero(nn.im), '(-0 -0i).exp().im = 0');
+	
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).exp(), new MathLib.Complex(-1.1312043837568136384, 2.4717266720048189276)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).exp(), new MathLib.Complex(-0.032542999640154784794, -0.037678977574865854771)));
+});
+test('.inverse()', 9, function () {
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).inverse().re));
+	ok(MathLib.isPosZero(new MathLib.Complex(Infinity).inverse().re));
+	ok(MathLib.isPosZero(new MathLib.Complex(Infinity).inverse().im));
+
+	equal((new MathLib.Complex(+0, +0)).inverse().re, Infinity);
+	equal((new MathLib.Complex(+0, -0)).inverse().re, Infinity);
+	equal((new MathLib.Complex(-0, +0)).inverse().re, Infinity);
+	equal((new MathLib.Complex(-0, -0)).inverse().re, Infinity);
+
+	deepEqual((new MathLib.Complex(3, 4)).inverse(), new MathLib.Complex(3 / 25, -4 / 25));
+	deepEqual((new MathLib.Complex(0, 2)).inverse(), new MathLib.Complex(0, -1 / 2));
 });
 test('.isEqual()', 2, function () {
 	var c = new MathLib.Complex(3, 4),
@@ -276,23 +793,10 @@ test('.isEqual()', 2, function () {
 	equal(c.isEqual(d), true, 'equal number');
 	equal(d.isEqual(e), false, 'different number');
 });
-test('.isFinite()', 2, function () {
-	var c = new MathLib.Complex(3, 4),
-			d = new MathLib.Complex(Infinity, 0);
-	equal(c.isFinite(), true, 'finite complex number');
-	equal(d.isFinite(), false, 'infinte complex number');
-});
-test('.isOne()', 2, function () {
-	var c = new MathLib.Complex(3, 4),
-			d = new MathLib.Complex(1, 0);
-	equal(c.isOne(), false, '3+4i');
-	equal(d.isOne(), true, 'complex one');
-});
-test('.isReal()', 2, function () {
-	var c = new MathLib.Complex(3, 4),
-			d = new MathLib.Complex(3, 0);
-	equal(c.isReal(), false, '3+4i');
-	equal(d.isReal(), true, '3+0i');
+test('.isFinite()', 3, function () {
+	equal((new MathLib.Complex(3, 4)).isFinite(), true, 'finite complex number');
+	equal((new MathLib.Complex(Infinity)).isFinite(), false, 'ComplexInfinity');
+	equal((new MathLib.Complex(NaN)).isFinite(), false, 'ComplexNaN');
 });
 test('.isZero()', 2, function () {
 	var c = new MathLib.Complex(3, 4),
@@ -300,118 +804,411 @@ test('.isZero()', 2, function () {
 	equal(c.isZero(), false, 'non zero complex');
 	equal(d.isZero(), true, 'complex zero');
 });
-test('.ln()', 1, function () {
+test('.ln()', 4, function () {
 	var c = new MathLib.Complex(3, 4),
 			res = new MathLib.Complex(1.6094379124341003, 0.9272952180016123);
+	
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).ln().re));
+	equal((new MathLib.Complex(Infinity)).ln().re, Infinity);
+
+	equal((new MathLib.Complex(0)).ln().re, Infinity);
+
 	equal(MathLib.isEqual(c.ln(), res), true, 'natural logarithm of the complex number');
 });
-test('.minus()', 1, function () {
-	var c = new MathLib.Complex(3, -4),
+test('.minus()', 17, function () {
+	var inf = new MathLib.Complex(Infinity),
+			nan = new MathLib.Complex(NaN),
+			zero = new MathLib.Complex(0, 0),
+			c = new MathLib.Complex(2, 5),
 			d = new MathLib.Complex(7, -8);
-	deepEqual(c.minus(d), new MathLib.Complex(-4, 4), 'Checking the negative of a complex number');
+
+	deepEqual(nan.minus(nan), nan, 'ComplexNaN - ComplexNaN = ComplexNaN');
+	deepEqual(nan.minus(inf), nan, 'ComplexNaN - ComplexInfinity = ComplexNaN');
+	deepEqual(nan.minus(zero), nan, 'ComplexNaN - 0 = ComplexNaN');
+	deepEqual(nan.minus(c), nan, 'ComplexNaN - (2+5i) = ComplexNaN');
+	
+	deepEqual(inf.minus(nan), nan, 'ComplexInfinity - ComplexNaN = ComplexNaN');
+	deepEqual(inf.minus(inf), inf, 'ComplexInfinity - ComplexInfinity = ComplexInfinity');
+	deepEqual(inf.minus(zero), inf, 'ComplexInfinity - 0 = ComplexInfinity');
+	deepEqual(inf.minus(c), inf, 'ComplexInfinity - (2+5i) = ComplexInfinity');
+	
+	deepEqual(zero.minus(nan), nan, '0 - ComplexNaN = ComplexNaN');
+	deepEqual(zero.minus(inf), inf, '0 - ComplexInfinity = ComplexInfinity');
+	deepEqual(zero.minus(zero), zero, '0 - 0 = 0');
+	deepEqual(zero.minus(c), c.negative(), '0 - (2+5i) = -2-5i');
+
+	deepEqual(c.minus(nan), nan, '(2+5i) - ComplexNaN = ComplexNaN');
+	deepEqual(c.minus(inf), inf, '(2+5i) - ComplexInfinity = ComplexInfinity');
+	deepEqual(c.minus(zero), c, '(2+5i) - 0 = 2+5i');
+	deepEqual(c.minus(c), zero, '(2+5i) - (2+5i) = 0');
+
+	deepEqual(c.minus(d), new MathLib.Complex(-5, 13), '(2+5i)-(7-8i) = -5 + 13i)');
 });
-test('.negative()', 2, function () {
-	var c = new MathLib.Complex(3, -4);
-	c = c.negative();
-	equal(c.re, -3, 'Checking the negative of a complex number');
-	equal(c.im, 4, 'Checking the negative of a complex number');
+test('.negative()', 11, function () {
+	var pp = (new MathLib.Complex(+0, +0)).negative(),
+			pn = (new MathLib.Complex(+0, -0)).negative(),
+			np = (new MathLib.Complex(-0, +0)).negative(),
+			nn = (new MathLib.Complex(-0, -0)).negative();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).negative().re));
+	equal((new MathLib.Complex(Infinity)).negative().re, Infinity);
+
+	ok(MathLib.isNegZero(pp.re));
+	ok(MathLib.isNegZero(pp.im));
+
+	ok(MathLib.isNegZero(pn.re));
+	ok(MathLib.isPosZero(pn.im));
+
+	ok(MathLib.isPosZero(np.re));
+	ok(MathLib.isNegZero(np.im));
+
+	ok(MathLib.isPosZero(nn.re));
+	ok(MathLib.isPosZero(nn.im));
+	
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).negative(), new MathLib.Complex(3, -4)));
 });
-test('one', 1, function () {
-	var c = MathLib.Complex.one;
-	deepEqual(c, new MathLib.Complex(1, 0), '.one');
+test('.plus()', 18, function () {
+	var inf = new MathLib.Complex(Infinity),
+			nan = new MathLib.Complex(NaN),
+			zero = new MathLib.Complex(0, 0),
+			c = new MathLib.Complex(2, 5),
+			d = new MathLib.Complex(3, 4);
+
+	deepEqual(nan.plus(nan), nan, 'ComplexNaN + ComplexNaN = ComplexNaN');
+	deepEqual(nan.plus(inf), nan, 'ComplexNaN + ComplexInfinity = ComplexNaN');
+	deepEqual(nan.plus(zero), nan, 'ComplexNaN + 0 = ComplexNaN');
+	deepEqual(nan.plus(c), nan, 'ComplexNaN + (2+5i) = ComplexNaN');
+	
+	deepEqual(inf.plus(nan), nan, 'ComplexInfinity + ComplexNaN = ComplexNaN');
+	deepEqual(inf.plus(inf), inf, 'ComplexInfinity + ComplexInfinity = ComplexInfinity');
+	deepEqual(inf.plus(zero), inf, 'ComplexInfinity + 0 = ComplexInfinity');
+	deepEqual(inf.plus(c), inf, 'ComplexInfinity + (2+5i) = ComplexInfinity');
+	
+	deepEqual(zero.plus(nan), nan, '0 + ComplexNaN = ComplexNaN');
+	deepEqual(zero.plus(inf), inf, '0 + ComplexInfinity = ComplexInfinity');
+	deepEqual(zero.plus(zero), zero, '0 + 0 = 0');
+	deepEqual(zero.plus(c), c, '0 + (2+5i) = c');
+
+	deepEqual(c.plus(nan), nan, '(2+5i) + ComplexNaN = ComplexNaN');
+	deepEqual(c.plus(inf), inf, '(2+5i) + ComplexInfinity = ComplexInfinity');
+	deepEqual(c.plus(zero), c, '(2+5i) + 0 = 2+5i');
+	deepEqual(c.plus(c), new MathLib.Complex(4, 10), '(2+5i) + (2+5i) = 4+10i');
+
+	deepEqual(c.plus(d), new MathLib.Complex(5, 9), 'Adding two complex numbers.');
+	deepEqual(d.plus(5), new MathLib.Complex(8, 4), 'Adding a number to a complex number.');
 });
-test('.plus()', 2, function () {
-	var c = new MathLib.Complex(3, 4);
-	var d = new MathLib.Complex(2, -5);
-	deepEqual(c.plus(d), new MathLib.Complex(5, -1), 'Adding two complex numbers.');
-	deepEqual(c.plus(5), new MathLib.Complex(8, 4), 'Adding a number to a complex numbers.');
+test('.polar()', 8, function () {
+	equal(new MathLib.Complex.polar(Infinity).re, Infinity);
+	equal(new MathLib.Complex.polar(Infinity, NaN).re, Infinity);
+	equal(new MathLib.Complex.polar(Infinity, Infinity).re, Infinity);
+	equal(new MathLib.Complex.polar(Infinity, 0).re, Infinity);
+
+	ok(MathLib.isPosZero(new MathLib.Complex.polar(1, +0).im));
+	ok(MathLib.isNegZero(new MathLib.Complex.polar(1, -0).im));
+	ok(MathLib.isEqual(new MathLib.Complex.polar(2, 3), new MathLib.Complex(-1.9799849932008909145, 0.2822400161197344442)));
+	ok(MathLib.isEqual(new MathLib.Complex.polar(4, -5), new MathLib.Complex(1.1346487418529050579, 3.8356970986525538756)));
 });
-test('.sign()', 1, function () {
-	var c = new MathLib.Complex(5, 6),
-			d = MathLib.Complex.polar(1, Math.atan2(6, 5));
-	equal(c.sign().isEqual(d), true, '.sign()');
+test('.pow()', 29, function () {
+	var inf = new MathLib.Complex(Infinity),
+			nan = new MathLib.Complex(NaN),
+			zero = new MathLib.Complex(0, 0),
+			c = new MathLib.Complex(2, 5),
+			d = new MathLib.Complex(3, 7);
+
+	// complex exponent
+	deepEqual(nan.pow(nan), nan, 'ComplexNaN ^ ComplexNaN = ComplexNaN');
+	deepEqual(nan.pow(inf), nan, 'ComplexNaN ^ ComplexInfinity = ComplexNaN');
+	deepEqual(nan.pow(zero), nan, 'ComplexNaN ^ 0 = ComplexNaN');
+	deepEqual(nan.pow(c), nan, 'ComplexNaN ^ (2+5i) = ComplexNaN');
+	
+	deepEqual(inf.pow(nan), nan, 'ComplexInfinity ^ ComplexNaN = ComplexNaN');
+	deepEqual(inf.pow(inf), nan, 'ComplexInfinity ^ ComplexInfinity = ComplexNaN');
+	deepEqual(inf.pow(zero), nan, 'ComplexInfinity ^ 0 = ComplexNaN');
+	deepEqual(inf.pow(c), inf, 'ComplexInfinity ^ (2+5i) = ComplexInfinity');
+	
+	deepEqual(zero.pow(nan), nan, '0 ^ ComplexNaN = ComplexNaN');
+	deepEqual(zero.pow(inf), nan, '0 ^ ComplexInfinity = ComplexNaN');
+	deepEqual(zero.pow(zero), nan, '0 ^ 0 = ComplexNaN');
+	deepEqual(zero.pow(c), zero, '0 ^ (2+5i) = 0');
+
+	deepEqual(c.pow(nan), nan, '(2+5i) ^ ComplexNaN = ComplexNaN');
+	deepEqual(c.pow(inf), nan, '(2+5i) ^ ComplexInfinity = ComplexNaN');
+	ok(c.pow(zero).isEqual(new MathLib.Complex(1)), '(2+5i) ^ 0 = 1');
+	ok(c.pow(c).isEqual(new MathLib.Complex(-0.014751488748626422189, -0.074003984757716712413)), '(2+5i) ^ (2+5i) = -0.01475 -0.07400i');
+	ok(c.pow(d).isEqual(new MathLib.Complex(-0.035288471617042692023, 0.012943638960390488567)));
+
+
+	// number exponent
+	equal(c.pow(0).re, 1, '(2+5i) ^ 0 = 1 + 0i')
+	ok(MathLib.isPosZero(c.pow(0).im), '(2+5i) ^ 0 = 1 + 0i');
+
+	equal(c.pow(-0).re, 1, '(2+5i) ^ -0 = 1 - 0i')
+	ok(MathLib.isNegZero(c.pow(-0).im), '(2+5i) ^ -0 = 1 - 0i');
+
+
+	deepEqual(nan.pow(3), nan, 'ComplexNaN ^ 3 = ComplexNaN');
+	deepEqual(inf.pow(3), inf, 'ComplexInfinity ^ 3 = ComplexInfinity');
+	deepEqual(zero.pow(3), zero, '0 ^ 3 = 0');
+
+
+	ok(c.pow(3).isEqual(new MathLib.Complex(-142, -65)), '(2+5i) ^ 3 = -142 -65i');
+	ok(c.pow(-3).isEqual(new MathLib.Complex(-0.0058222969371437943335, 0.0026651359219320185329)), '(2+5i) ^ -3 = -0.0058223 + 0.00266514 i');
+	
+	// TODO: Fix the pow method and rewrite this test with .isEqual
+	ok(Math.abs(c.pow(3.24).re + 176.64664988162751823) < 1e-12, '(2+5i) ^ 3.24 = -176.647 -153.359i');
+	ok(Math.abs(c.pow(3.24).im + 153.35877082892785196) < 1e-12, '(2+5i) ^ 3.24 = -176.647 -153.359i');
+	
+	ok(c.pow(-3.24).isEqual(new MathLib.Complex(-0.0032280175872257475063, 0.0028024579561675012682)), '(2+5i) ^ -3.24 = -0.00322802 + 0.00280246i');
+
 });
-test('.sin()', 1, function () {
-	ok(MathLib.isEqual(MathLib.sin(new MathLib.Complex(1, 2)), new MathLib.Complex(3.1657785132161674, 1.959601041421606)));
+test('.sec()', 4, function () {
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).sec().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).sec().re));
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).sec(), new MathLib.Complex(0.15117629826557722714, 0.22697367539372159537)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).sec(), new MathLib.Complex(-0.036253496915868871891, -0.005164344607753179367)));
 });
-test('.sqrt()', 3, function () {
+test('.sech()', 4, function () {
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).sech().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).sech().re));
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).sech(), new MathLib.Complex(-0.41314934426694000946, -0.68752743865547898158)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).sech(), new MathLib.Complex(-0.065294027857947046445, -0.075224960302773226866)));
+});
+test('.sign()', 12, function () {
+	var pp = (new MathLib.Complex(+0, +0)).sign(),
+			pn = (new MathLib.Complex(+0, -0)).sign(),
+			np = (new MathLib.Complex(-0, +0)).sign(),
+			nn = (new MathLib.Complex(-0, -0)).sign();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).sign().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).sign().re));
+
+	ok(MathLib.isPosZero(pp.re));
+	ok(MathLib.isPosZero(pp.im));
+
+	ok(MathLib.isPosZero(pn.re));
+	ok(MathLib.isNegZero(pn.im));
+
+	ok(MathLib.isNegZero(np.re));
+	ok(MathLib.isPosZero(np.im));
+
+	ok(MathLib.isNegZero(nn.re));
+	ok(MathLib.isNegZero(nn.im));
+
+	ok((new MathLib.Complex(2, -3)).sign().isEqual(MathLib.Complex.polar(1, Math.atan2(-3, 2))));
+	ok((new MathLib.Complex(5, 6)).sign().isEqual(MathLib.Complex.polar(1, Math.atan2(6, 5))));
+});
+test('.sin()', 11, function () {
+	var pp = (new MathLib.Complex(+0, +0)).sin(),
+			pn = (new MathLib.Complex(+0, -0)).sin(),
+			np = (new MathLib.Complex(-0, +0)).sin(),
+			nn = (new MathLib.Complex(-0, -0)).sin();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).sin().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).sin().re));
+
+	ok(MathLib.isPosZero(pp.re));
+	ok(MathLib.isPosZero(pp.im));
+
+	ok(MathLib.isPosZero(pn.re));
+	ok(MathLib.isNegZero(pn.im));
+
+	ok(MathLib.isNegZero(np.re));
+	ok(MathLib.isPosZero(np.im));
+
+	ok(MathLib.isNegZero(nn.re));
+	ok(MathLib.isNegZero(nn.im));
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).sin(), new MathLib.Complex(3.1657785132161674, 1.959601041421606)));
+});
+test('.sinh()', 12, function () {
+	var pp = (new MathLib.Complex(+0, +0)).sinh(),
+			pn = (new MathLib.Complex(+0, -0)).sinh(),
+			np = (new MathLib.Complex(-0, +0)).sinh(),
+			nn = (new MathLib.Complex(-0, -0)).sinh();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).sinh().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).sinh().re));
+
+	ok(MathLib.isPosZero(pp.re));
+	ok(MathLib.isPosZero(pp.im));
+
+	ok(MathLib.isPosZero(pn.re));
+	ok(MathLib.isNegZero(pn.im));
+
+	ok(MathLib.isNegZero(np.re));
+	ok(MathLib.isPosZero(np.im));
+
+	ok(MathLib.isNegZero(nn.re));
+	ok(MathLib.isNegZero(nn.im));
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).sinh(), new MathLib.Complex(-0.4890562590412936736, 1.4031192506220405880)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).sinh(), new MathLib.Complex(6.5481200409110016478, -7.6192317203214102085)));
+});
+test('.sqrt()', 6, function () {
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).sqrt().re));
+	equal((new MathLib.Complex(Infinity)).sqrt().re, Infinity);
+
+	ok(MathLib.isEqual((new MathLib.Complex(0, 0)).sqrt(), new MathLib.Complex(0, 0)));
 	ok(MathLib.isEqual((new MathLib.Complex(0, 2)).sqrt(), new MathLib.Complex(1, 1)));
 	ok(MathLib.isEqual((new MathLib.Complex(-1, 0)).sqrt(), new MathLib.Complex(0, 1)));
 	ok(MathLib.isEqual((new MathLib.Complex(-1, -0)).sqrt(), new MathLib.Complex(0, -1)));
 });
-test('.times()', 3, function () {
-	var c = new MathLib.Complex(2, 5),
+test('.tan()', 12, function () {
+	var pp = (new MathLib.Complex(+0, +0)).tan(),
+			pn = (new MathLib.Complex(+0, -0)).tan(),
+			np = (new MathLib.Complex(-0, +0)).tan(),
+			nn = (new MathLib.Complex(-0, -0)).tan();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).tan().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).tan().re));
+
+	ok(MathLib.isPosZero(pp.re));
+	ok(MathLib.isPosZero(pp.im));
+
+	ok(MathLib.isPosZero(pn.re));
+	ok(MathLib.isNegZero(pn.im));
+
+	ok(MathLib.isNegZero(np.re));
+	ok(MathLib.isPosZero(np.im));
+
+	ok(MathLib.isNegZero(nn.re));
+	ok(MathLib.isNegZero(nn.im));
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).tan(), new MathLib.Complex(0.033812826079896690284, 1.0147936161466335681)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).tan(), new MathLib.Complex(0.00018734620462947843, 0.99935598738147314139)));
+});
+test('.tanh()', 12, function () {
+	var pp = (new MathLib.Complex(+0, +0)).tanh(),
+			pn = (new MathLib.Complex(+0, -0)).tanh(),
+			np = (new MathLib.Complex(-0, +0)).tanh(),
+			nn = (new MathLib.Complex(-0, -0)).tanh();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).tanh().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).tanh().re));
+
+	ok(MathLib.isPosZero(pp.re));
+	ok(MathLib.isPosZero(pp.im));
+
+	ok(MathLib.isPosZero(pn.re));
+	ok(MathLib.isNegZero(pn.im));
+
+	ok(MathLib.isNegZero(np.re));
+	ok(MathLib.isPosZero(np.im));
+
+	ok(MathLib.isNegZero(nn.re));
+	ok(MathLib.isNegZero(nn.im));
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).tanh(), new MathLib.Complex(1.16673625724091988181, -0.24345820118572525270)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).tanh(), new MathLib.Complex(-1.00070953606723293933, 0.00490825806749606026)));
+});
+test('.times()', 19, function () {
+	var inf = new MathLib.Complex(Infinity),
+			nan = new MathLib.Complex(NaN),
+			zero = new MathLib.Complex(0, 0),
+			c = new MathLib.Complex(2, 5),
 			d = new MathLib.Complex(3, 7),
 			r = new MathLib.Rational(2, 3);
+
+	deepEqual(nan.times(nan), nan, 'ComplexNaN * ComplexNaN = ComplexNaN');
+	deepEqual(nan.times(inf), nan, 'ComplexNaN * ComplexInfinity = ComplexNaN');
+	deepEqual(nan.times(zero), nan, 'ComplexNaN * 0 = ComplexNaN');
+	deepEqual(nan.times(c), nan, 'ComplexNaN * (2+5i) = ComplexNaN');
+	
+	deepEqual(inf.times(nan), nan, 'ComplexInfinity * ComplexNaN = ComplexNaN');
+	deepEqual(inf.times(inf), inf, 'ComplexInfinity * ComplexInfinity = ComplexInfinity');
+	deepEqual(inf.times(zero), nan, 'ComplexInfinity * 0 = ComplexNaN');
+	deepEqual(inf.times(c), inf, 'ComplexInfinity * (2+5i) = ComplexInfinity');
+	
+	deepEqual(zero.times(nan), nan, '0 * ComplexNaN = ComplexNaN');
+	deepEqual(zero.times(inf), nan, '0 * ComplexInfinity = ComplexNaN');
+	deepEqual(zero.times(zero), zero, '0 * 0 = 0');
+	deepEqual(zero.times(c), zero, '0 * (2+5i) = 0');
+
+	deepEqual(c.times(nan), nan, '(2+5i) * ComplexNaN = ComplexNaN');
+	deepEqual(c.times(inf), inf, '(2+5i) * ComplexInfinity = ComplexInfinity');
+	deepEqual(c.times(zero), zero, '(2+5i) * 0 = 0');
+	deepEqual(c.times(c), new MathLib.Complex(-21, 20), '(2+5i) * (2+5i) = -21+20i');
+
 	equal(c.times(3).isEqual(new MathLib.Complex(6, 15)), true, 'Multiplying by a normal number.');
 	equal(c.times(d).isEqual(new MathLib.Complex(-29, 29)), true, 'Multiplying by a complex number.');
 	equal(c.times(r).isEqual(new MathLib.Complex(4 / 3, 10 / 3)), true, 'Multiplying by a rational number.');
 });
-test('.toContentMathML()', 5, function () {
+test('.toContentMathML()', 7, function () {
 	var c = new MathLib.Complex(3, 4),
 			d = new MathLib.Complex(0, 7),
 			e = new MathLib.Complex(4, 0),
 			f = new MathLib.Complex(4, -5),
 			g = new MathLib.Complex(0, 0);
-	equal(c.toContentMathML(), '<cn type="complex-cartesian">3<sep/>4</cn>', 'Normal complex number.');
-	equal(d.toContentMathML(), '<cn type="complex-cartesian">0<sep/>7</cn>', 'Real part is zero.');
-	equal(e.toContentMathML(), '<cn type="complex-cartesian">4<sep/>0</cn>', 'Complex part is zero.');
-	equal(f.toContentMathML(), '<cn type="complex-cartesian">4<sep/>-5</cn>', 'Complex part is negative.');
-	equal(g.toContentMathML(), '<cn type="complex-cartesian">0<sep/>0</cn>', 'Number is zero.');
+
+	equal((new MathLib.Complex(NaN)).toContentMathML(), '<csymbol cd="nums1">NaN</csymbol>');
+	equal((new MathLib.Complex(Infinity)).toContentMathML(), '<csymbol cd="nums1">infinity</csymbol>');
+
+	equal(c.toContentMathML(), '<apply><plus /><cn>3</cn><apply><times /><cn>4</cn><imaginaryi /></apply></apply>', 'Normal complex number.');
+	equal(d.toContentMathML(), '<apply><plus /><cn>0</cn><apply><times /><cn>7</cn><imaginaryi /></apply></apply>', 'Real part is zero.');
+	equal(e.toContentMathML(), '<apply><plus /><cn>4</cn><apply><times /><cn>0</cn><imaginaryi /></apply></apply>', 'Complex part is zero.');
+	equal(f.toContentMathML(), '<apply><plus /><cn>4</cn><apply><times /><cn>-5</cn><imaginaryi /></apply></apply>', 'Complex part is negative.');
+	equal(g.toContentMathML(), '<apply><plus /><cn>0</cn><apply><times /><cn>0</cn><imaginaryi /></apply></apply>', 'Number is zero.');
 });
-test('.toLaTeX()', 5, function () {
+test('.toLaTeX()', 7, function () {
 	var c = new MathLib.Complex(3, 4),
 			d = new MathLib.Complex(0, 7),
 			e = new MathLib.Complex(4, 0),
 			f = new MathLib.Complex(4, -5),
 			g = new MathLib.Complex(0, 0);
+
+	equal((new MathLib.Complex(NaN)).toLaTeX(), '\\text{ComplexNaN}');
+	equal((new MathLib.Complex(Infinity)).toLaTeX(), '\\text{ComplexInfinity}');
+
 	equal(c.toLaTeX(), '3+4i', 'Normal complex number.');
 	equal(d.toLaTeX(), '7i', 'Real part is zero.');
 	equal(e.toLaTeX(), '4', 'Complex part is zero.');
 	equal(f.toLaTeX(), '4-5i', 'Complex part is negative.');
 	equal(g.toLaTeX(), '0', 'Number is zero.');
 });
-test('.toMathML()', 5, function () {
+test('.toMathML()', 7, function () {
 	var c = new MathLib.Complex(3, 4),
 			d = new MathLib.Complex(0, 7),
 			e = new MathLib.Complex(4, 0),
 			f = new MathLib.Complex(4, -5),
 			g = new MathLib.Complex(0, 0);
+
+	equal((new MathLib.Complex(NaN)).toMathML(), '<mi>ComplexNaN</mi>');
+	equal((new MathLib.Complex(Infinity)).toMathML(), '<mi>ComplexInfinity</mi>');
+
 	equal(c.toMathML(), '<mn>3</mn><mo>+</mo><mn>4</mn><mo>&#x2062;</mo><mi>i</mi>', 'Normal complex number.');
 	equal(d.toMathML(), '<mn>7</mn><mo>&#x2062;</mo><mi>i</mi>', 'Real part is zero.');
 	equal(e.toMathML(), '<mn>4</mn>', 'Complex part is zero.');
 	equal(f.toMathML(), '<mn>4</mn><mo>-</mo><mn>5</mn><mo>&#x2062;</mo><mi>i</mi>', 'Complex part is negative.');
 	equal(g.toMathML(), '<mn>0</mn>', 'Number is zero.');
 });
-test('.toMatrix()', 2, function () {
-	var c = new MathLib.Complex(3, -4);
-	equal(c.toMatrix().type, 'matrix', 'type check');
-	deepEqual(c.toMatrix(), new MathLib.Matrix([[3, 4], [-4, 3]]), 'entries');
-});
-test('.toPoint()', 3, function () {
+test('.toPoint()', 5, function () {
 	var c = new MathLib.Complex(3, -4),
 			p = c.toPoint();
 	equal(p.type, 'point', 'Converting a complex number to a point: type check');
 	equal(p.dimension, 2, 'Converting a complex number to a point: dimension check.');
 	deepEqual(p, new MathLib.Point([3, -4, 1]), 'Converting a complex number to a point: position check.');
+
+	ok((new MathLib.Complex(NaN)).toPoint().isEqual(new MathLib.Point([0,0,0])), 'ComplexNaN.toPoint() = (0,0,0)');
+	ok((new MathLib.Complex(Infinity)).toPoint().isEqual(new MathLib.Point([0,0,0])), 'ComplexInfinity.toPoint() = (0,0,0)');
 });
-test('.toString()', 5, function () {
+test('.toString()', 7, function () {
 	var c = new MathLib.Complex(3, 4),
 			d = new MathLib.Complex(0, 7),
 			e = new MathLib.Complex(4, 0),
 			f = new MathLib.Complex(4, -5),
 			g = new MathLib.Complex(0, 0);
+
+	equal((new MathLib.Complex(NaN)).toString(), 'ComplexNaN');
+	equal((new MathLib.Complex(Infinity)).toString(), 'ComplexInfinity');
+
 	equal(c.toString(), '3+4i', 'Normal complex number.');
 	equal(d.toString(), '7i', 'Real part is zero.');
 	equal(e.toString(), '4', 'Complex part is zero.');
 	equal(f.toString(), '4-5i', 'Complex part is negative.');
 	equal(g.toString(), '0', 'Number is zero.');
 });
-test('zero', 1, function () {
-	var c = MathLib.Complex.zero;
-	deepEqual(c, new MathLib.Complex(0, 0), '.zero');
-});
-
 module('Conic');
 test('init', 1, function () {
 	var p = new MathLib.Conic(new MathLib.Matrix([[0, 1], [2, 3]]));
@@ -2347,6 +3144,16 @@ test('.determinant()', 3, function () {
 	equal(n.determinant(), 42, 'Determinant of 1x1 matrix');
 	equal(p.determinant(), undefined, 'Determinant of 2x3 matrix should be undefined');
 });
+test('.every()', 2, function () {
+	var f = function (x) {
+				return x % 2;
+			},
+			m = new MathLib.Matrix([[1, 5, 3], [9, 5, 11], [-1, 9, 3]]),
+			n = new MathLib.Matrix([[1, 3, 5], [7, 8, 1], [11, 6, 3]]);
+
+	equal(m.every(f), true, '.every()');
+	equal(n.every(f), false, '.every()');
+});
 test('.gershgorin()', 2, function () {
 	var C = MathLib.Complex,
 			m = new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
@@ -2583,6 +3390,16 @@ test('.solve()', 7, function () {
 	deepEqual(A4.solve([2, 1]), [1, 0], '2x2 linear system with more than one solution');
 
 	deepEqual(A5.solve([2, 1, 0]), [2, 1, 0], '3x3 linear system with more than one solution');
+});
+test('.some()', 2, function () {
+	var f = function (x) {
+				return x % 2;
+			},
+			m = new MathLib.Matrix([[1, 2, 3], [0, 5, 4], [0, 10, 2]]),
+			n = new MathLib.Matrix([[2, 4, 6], [0, 6, 4], [0, 8, 2]]);
+
+	equal(m.some(f), true, '.some()');
+	equal(n.some(f), false, '.some()');
 });
 test('.times()', 5, function () {
 	var m = new MathLib.Matrix([[1, 2], [3, 4]]),
@@ -3412,16 +4229,18 @@ test('.type', 1, function () {
 	var v = new MathLib.Vector([1, 2, 3]);
 	equal(v.type, 'vector', 'Testing .type');
 });
-test('.areLinearIndependent()', 4, function () {
+test('.areLinearIndependent()', 5, function () {
 	var v1 = new MathLib.Vector([0, 0, 0]),
 			v2 = new MathLib.Vector([1, 0, 0]),
 			v3 = new MathLib.Vector([2, 0, 0]),
 			v4 = new MathLib.Vector([0, 1, 0]),
 			v5 = new MathLib.Vector([0, 0, 1]),
 			v6 = new MathLib.Vector([0, 1]);
+
 	equal(MathLib.Vector.areLinearIndependent([v1, v2]), false, '.areLinearIndependent()');
 	equal(MathLib.Vector.areLinearIndependent([v2, v3]), false, '.areLinearIndependent()');
 	equal(MathLib.Vector.areLinearIndependent([v2, v4, v5]), true, '.areLinearIndependent()');
+	equal(MathLib.Vector.areLinearIndependent([v2, v4, v5, v3]), false, '.areLinearIndependent()');
 	equal(MathLib.Vector.areLinearIndependent([v5, v6]), undefined, '.areLinearIndependent()');
 });
 test('.compare()', 3, function () {

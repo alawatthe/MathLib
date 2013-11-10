@@ -1,4 +1,4 @@
-// ### Complex.prototype.divide()
+// ### [Complex.prototype.divide()](http://mathlib.de/en/docs/Complex/divide)
 // Divides a complex number by an other
 //
 // *@param {number|Complex}* The divisor  

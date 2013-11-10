@@ -1,4 +1,4 @@
-// ### Complex.prototype.cos()
+// ### [Complex.prototype.cos()](http://mathlib.de/en/docs/Complex/cos)
 // Calculates the cosine of a complex number
 //
 // *@return {Complex}*

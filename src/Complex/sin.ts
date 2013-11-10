@@ -1,4 +1,4 @@
-// ### Complex.prototype.sin()
+// ### [Complex.prototype.sin()](http://mathlib.de/en/docs/Complex/sin)
 // Calculates the sine of a complex number
 //
 // *@return {Complex}*

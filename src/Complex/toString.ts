@@ -1,9 +1,13 @@
-// ### Complex.prototype.toString()
+// ### [Complex.prototype.toString()](http://mathlib.de/en/docs/Complex/toString)
 // Custom toString function
 //
 // *@return {string}*
 toString() : string {
 	var str = '';
+
+	if (!this.isFinite()) {
+		return 'Complex' + this.re;
+	}
 
 	if (!MathLib.isZero(this.re)) {
 		str = MathLib.toString(this.re);

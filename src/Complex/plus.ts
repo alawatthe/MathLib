@@ -1,4 +1,4 @@
-// ### Complex.prototype.plus()
+// ### [Complex.prototype.plus()](http://mathlib.de/en/docs/Complex/plus)
 // Add complex numbers
 //
 // *@param {Complex|number|Rational}* The number to be added  

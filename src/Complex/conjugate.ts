@@ -1,4 +1,4 @@
-// ### Complex.prototype.conjugate()
+// ### [Complex.prototype.conjugate()](http://mathlib.de/en/docs/Complex/conjugate)
 // Calculates the conjugate of a complex number
 //
 // *@return {Complex}*

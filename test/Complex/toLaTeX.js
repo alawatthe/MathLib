@@ -1,9 +1,13 @@
-test('.toLaTeX()', 5, function () {
+test('.toLaTeX()', 7, function () {
 	var c = new MathLib.Complex(3, 4),
 			d = new MathLib.Complex(0, 7),
 			e = new MathLib.Complex(4, 0),
 			f = new MathLib.Complex(4, -5),
 			g = new MathLib.Complex(0, 0);
+
+	equal((new MathLib.Complex(NaN)).toLaTeX(), '\\text{ComplexNaN}');
+	equal((new MathLib.Complex(Infinity)).toLaTeX(), '\\text{ComplexInfinity}');
+
 	equal(c.toLaTeX(), '3+4i', 'Normal complex number.');
 	equal(d.toLaTeX(), '7i', 'Real part is zero.');
 	equal(e.toLaTeX(), '4', 'Complex part is zero.');

@@ -1,4 +1,4 @@
-// ### Complex.prototype.negative()
+// ### [Complex.prototype.negative()](http://mathlib.de/en/docs/Complex/negative)
 // Calculates the negative of the complex number
 //
 // *@return {Complex}*

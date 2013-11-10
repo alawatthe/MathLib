@@ -1,4 +1,4 @@
-// ### Complex.prototype.sinh()
+// ### [Complex.prototype.sinh()](http://mathlib.de/en/docs/Complex/sinh)
 // Calculates the hyperbolic sine of a complex number
 //
 // *@return {Complex}*

@@ -1,4 +1,4 @@
-// ### Complex.prototype.sqrt()
+// ### [Complex.prototype.sqrt()](http://mathlib.de/en/docs/Complex/sqrt)
 // Takes the square root of a complex number
 //
 // *@return {Complex}*

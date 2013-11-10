@@ -39,7 +39,7 @@ module.exports = function (grunt) {
 			};
 
 		grunt.file.write('src/Screen/template.ts', process(template));
-		grunt.log.writeln('template.js created successfully');
+		grunt.log.writeln('template.ts created successfully');
 	});
 
 

@@ -20,6 +20,16 @@ export class Complex {
 	im: number;
 
 	constructor (re: number, im = 0) {
-		this.re = re;
-		this.im = im;
+		if (MathLib.isNaN(re) || MathLib.isNaN(im)) {
+			this.re = NaN;
+			this.im = NaN;
+		}
+		else if (!MathLib.isFinite(re) || !MathLib.isFinite(im)) {
+			this.re = Infinity;
+			this.im = Infinity;
+		}
+		else {
+			this.re = re;		
+			this.im = im;
+		}
 	}

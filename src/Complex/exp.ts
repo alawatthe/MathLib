@@ -1,4 +1,4 @@
-// ### Complex.prototype.exp()
+// ### [Complex.prototype.exp()](http://mathlib.de/en/docs/Complex/exp)
 // Evaluates the exponential function with a complex argument
 //
 // *@return {Complex}*

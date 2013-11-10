@@ -1,7 +1,13 @@
-// ### Complex.prototype.arccsc()
+// ### [Complex.prototype.arccsc()](http://mathlib.de/en/docs/Complex/arccsc)
 // Returns the inverse cosecant of the number
 //
 // *@return {Complex}*
 arccsc() : Complex {
-	return MathLib.times(new MathLib.Complex(0, 1), MathLib.ln(MathLib.plus(MathLib.sqrt(MathLib.minus(1, MathLib.divide(1, MathLib.times(this, this)))) , MathLib.divide(new MathLib.Complex(0, 1), this))));
+
+	// arccsc(0) = ComplexInfinity not ComplexNaN
+	if (this.isZero()) {
+		return new MathLib.Complex(Infinity);
+	}
+
+	return this.inverse().arcsin();
 }
