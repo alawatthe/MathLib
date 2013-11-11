@@ -1,7 +1,7 @@
 # MathLib
 [Homepage](http://mathlib.de/en/) - [Download](http://mathlib.de/en/download) - [Demonstrations](http://mathlib.de/en/demos) - [Documentation](http://mathlib.de/en/docs)
 
-[![Dependency Status](https://gemnasium.com/alawatthe/MathLib.png)](https://gemnasium.com/alawatthe/MathLib)
+[![Selenium Test Status](https://saucelabs.com/buildstatus/alawatthe)](https://saucelabs.com/u/alawatthe) [![Dependency Status](https://gemnasium.com/alawatthe/MathLib.png)](https://gemnasium.com/alawatthe/MathLib)
 
 MathLib.js is a JavaScript library for mathematical computations. It can handle circles, complex numbers, expressions, functions, lines, matrices, permutations, points, polynomials, rational numbers, sets, and vectors.
 
@@ -11,7 +11,7 @@ Further it can parse Content MathML and write Content MathML, Presentation MathM
 
 
 ## Test Suite
-MathLib has an extensive QUnit test suite with more than 1000 tests. Crossbrowser tests are automated with Sauce Labs' Open Sauce.
+MathLib has an extensive QUnit test suite with more than 1800 tests. Crossbrowser tests are automated with Sauce Labs' Open Sauce.
 
 IE9, Android and Opera don't work with the automated test runner. Their passing of the test suite was confirmed using a manual testing session.
 
