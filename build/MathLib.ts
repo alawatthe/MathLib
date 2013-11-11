@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.6.1 - 2013-11-10  
+// v0.6.1 - 2013-11-11  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -52,7 +52,6 @@ module MathLib {
 	declare var MathLib : any;
 	declare var MathJax : any;
 	declare var THREE : any;
-
 
 
 	MathLib.version = '0.6.1';
@@ -443,17 +442,17 @@ static parse = function (str) {
 
 	Lexer = function () {
 		var expression = '',
-			length = 0,
-			index = 0,
-			marker = 0,
-			T = Token;
+				length = 0,
+				index = 0,
+				marker = 0,
+				T = Token;
 
-		function peekNextChar() {
+		function peekNextChar () {
 			var idx = index;
 			return ((idx < length) ? expression.charAt(idx) : '\x00');
 		}
 
-		function getNextChar() {
+		function getNextChar () {
 			var ch = '\x00',
 				idx = index;
 			if (idx < length) {
@@ -463,19 +462,19 @@ static parse = function (str) {
 			return ch;
 		}
 
-		function isWhiteSpace(ch) {
+		function isWhiteSpace (ch) {
 			return (ch === '\u0009') || (ch === ' ') || (ch === '\u00A0');
 		}
 
-		function isLetter(ch) {
+		function isLetter (ch) {
 			return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 		}
 
-		function isDecimalDigit(ch) {
+		function isDecimalDigit (ch) {
 			return (ch >= '0') && (ch <= '9');
 		}
 
-		function createToken(type, value) {
+		function createToken (type, value) {
 			return {
 				type: type,
 				value: value,
@@ -484,7 +483,7 @@ static parse = function (str) {
 			};
 		}
 
-		function skipSpaces() {
+		function skipSpaces () {
 			var ch;
 
 			while (index < length) {
@@ -496,7 +495,7 @@ static parse = function (str) {
 			}
 		}
 
-		function scanOperator() {
+		function scanOperator () {
 			var ch = peekNextChar();
 			if ('+-*/()^%=;,'.indexOf(ch) >= 0) {
 				return createToken(T.Operator, getNextChar());
@@ -504,15 +503,15 @@ static parse = function (str) {
 			return undefined;
 		}
 
-		function isIdentifierStart(ch) {
+		function isIdentifierStart (ch) {
 			return (ch === '_') || isLetter(ch);
 		}
 
-		function isIdentifierPart(ch) {
+		function isIdentifierPart (ch) {
 			return isIdentifierStart(ch) || isDecimalDigit(ch);
 		}
 
-		function scanIdentifier() {
+		function scanIdentifier () {
 			var ch, id;
 
 			ch = peekNextChar();
@@ -532,7 +531,7 @@ static parse = function (str) {
 			return createToken(T.Identifier, id);
 		}
 
-		function scanNumber() {
+		function scanNumber () {
 			var ch, number;
 
 			ch = peekNextChar();
@@ -591,13 +590,13 @@ static parse = function (str) {
 			return createToken(T.Number, number);
 		}
 
-		function reset(str) {
+		function reset (str) {
 			expression = str;
 			length = str.length;
 			index = 0;
 		}
 
-		function next() {
+		function next () {
 			var token;
 
 			skipSpaces();
@@ -626,7 +625,7 @@ static parse = function (str) {
 			throw new SyntaxError('Unknown token from character ' + peekNextChar());
 		}
 
-		function peek() {
+		function peek () {
 			var token, idx;
 
 			idx = index;
@@ -4955,19 +4954,19 @@ export class Screen3D extends Screen {
 
 		// Animate the scene
 		// =================
-		function animate() {
+		function animate () {
 			requestAnimationFrame(animate);
 			render();
 			update();
 		}
 
-		function update() {
+		function update () {
 			//var delta = clock.getDelta();
 			controls.update();
 		}
 
 		// Render the scene
-		function render() {
+		function render () {
 			renderer.render(scene, camera);
 		}
 
@@ -10706,7 +10705,7 @@ if ((<any>Object).observe === undefined) {
 		var changeDeliveryImmediateUid;
 
 		// Used to schedule a call to deliverAllChangeRecords
-		function setUpChangesDelivery() {
+		function setUpChangesDelivery () {
 			clearImmediate(changeDeliveryImmediateUid);
 			changeDeliveryImmediateUid = setImmediate(deliverAllChangeRecords, 0);
 		}
@@ -10719,7 +10718,7 @@ if ((<any>Object).observe === undefined) {
 		// Implementation of the internal algorithm 'GetNotifier'
 		// described in the proposal.
 		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#getnotifier)
-		function getNotifier(target) {
+		function getNotifier (target) {
 			if (!target.hasOwnProperty(notifierProperty)) {
 				var notifier = Object.create(NotifierPrototype);
 				notifier.target = target;
@@ -10744,7 +10743,7 @@ if ((<any>Object).observe === undefined) {
 		// Implementation of the internal algorithm 'EnqueueChangeRecord'
 		// described in the proposal.
 		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#enqueuechangerecord)
-		function enqueueChangeRecord(newRecord, observers) {
+		function enqueueChangeRecord (newRecord, observers) {
 			for (var i = 0, l = observers.length; i < l; i++) {
 				var observer = observers[i];
 				if (!observer.hasOwnProperty(pendingChangesProperty)) {
@@ -10767,7 +10766,7 @@ if ((<any>Object).observe === undefined) {
 		// if this one is not used anymore.
 		// In the proposal the ObserverCallBack has a weak reference over observers,
 		// Without this possibility we need to clean this list to avoid memory leak
-		function cleanObserver(observer) {
+		function cleanObserver (observer) {
 			if (!observer[attachedNotifierCountProperty] && !observer[pendingChangesProperty]) {
 				var index = observerCallbacks.indexOf(observer);
 				if (index !== -1) {
@@ -10779,7 +10778,7 @@ if ((<any>Object).observe === undefined) {
 		// Implementation of the internal algorithm 'DeliverChangeRecords'
 		// described in the proposal.
 		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#deliverchangerecords)
-		function deliverChangeRecords(observer) {
+		function deliverChangeRecords (observer) {
 			var pendingChangeRecords = observer[pendingChangesProperty];
 			observer[pendingChangesProperty] = null;
 			if (!pendingChangeRecords || pendingChangeRecords.length === 0) {
@@ -10800,7 +10799,7 @@ if ((<any>Object).observe === undefined) {
 		// Implementation of the internal algorithm 'DeliverAllChangeRecords'
 		// described in the proposal.
 		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#deliverallchangerecords)
-		function deliverAllChangeRecords() {
+		function deliverAllChangeRecords () {
 			var observers = observerCallbacks.slice(0);
 			var anyWorkDone = false;
 			for (var i = 0, l = observers.length; i < l; i++) {

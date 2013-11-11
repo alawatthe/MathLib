@@ -33,13 +33,13 @@ test('.arccot()', 25, function () {
 	//ok(MathLib.isNegZero(n0n5.re), '(-0 -0.5i).arctan().re = -0');
 	//equal(n0n5.im, -0.5493061443340548457, '(-0 -0.5i).arctan().im = -0.549');
 
-	equal(p0p0.re, Math.PI/2, '(+0 +0i).arccot().re = +&pi;/2');
+	equal(p0p0.re, Math.PI / 2, '(+0 +0i).arccot().re = +&pi;/2');
 	ok(MathLib.isNegZero(p0p0.im), '(+0 +0i).arccot().im = -0');
-	equal(p0n0.re, Math.PI/2, '(+0 -0i).arccot().re = +&pi;/2');
+	equal(p0n0.re, Math.PI / 2, '(+0 -0i).arccot().re = +&pi;/2');
 	ok(MathLib.isPosZero(p0n0.im), '(+0 -0i).arccot().im = +0');
-	equal(n0p0.re, -Math.PI/2, '(-0 +0i).arccot().re = -&pi;/2');
+	equal(n0p0.re, -Math.PI / 2, '(-0 +0i).arccot().re = -&pi;/2');
 	ok(MathLib.isNegZero(n0p0.im), '(-0 +0i).arccot().im = -0');
-	equal(n0n0.re, -Math.PI/2, '(-0 -0i).arccot().re = -&pi;/2');
+	equal(n0n0.re, -Math.PI / 2, '(-0 -0i).arccot().re = -&pi;/2');
 	ok(MathLib.isPosZero(n0n0.im), '(-0 -0i).arccot().im = +0');
 
 	//ok(MathLib.isPosZero(p0p5.re), '(+0 +0.5i).arctan().re = +0');

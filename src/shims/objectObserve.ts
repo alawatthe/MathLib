@@ -109,7 +109,7 @@ if ((<any>Object).observe === undefined) {
 		var changeDeliveryImmediateUid;
 
 		// Used to schedule a call to deliverAllChangeRecords
-		function setUpChangesDelivery() {
+		function setUpChangesDelivery () {
 			clearImmediate(changeDeliveryImmediateUid);
 			changeDeliveryImmediateUid = setImmediate(deliverAllChangeRecords, 0);
 		}
@@ -122,7 +122,7 @@ if ((<any>Object).observe === undefined) {
 		// Implementation of the internal algorithm 'GetNotifier'
 		// described in the proposal.
 		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#getnotifier)
-		function getNotifier(target) {
+		function getNotifier (target) {
 			if (!target.hasOwnProperty(notifierProperty)) {
 				var notifier = Object.create(NotifierPrototype);
 				notifier.target = target;
@@ -147,7 +147,7 @@ if ((<any>Object).observe === undefined) {
 		// Implementation of the internal algorithm 'EnqueueChangeRecord'
 		// described in the proposal.
 		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#enqueuechangerecord)
-		function enqueueChangeRecord(newRecord, observers) {
+		function enqueueChangeRecord (newRecord, observers) {
 			for (var i = 0, l = observers.length; i < l; i++) {
 				var observer = observers[i];
 				if (!observer.hasOwnProperty(pendingChangesProperty)) {
@@ -170,7 +170,7 @@ if ((<any>Object).observe === undefined) {
 		// if this one is not used anymore.
 		// In the proposal the ObserverCallBack has a weak reference over observers,
 		// Without this possibility we need to clean this list to avoid memory leak
-		function cleanObserver(observer) {
+		function cleanObserver (observer) {
 			if (!observer[attachedNotifierCountProperty] && !observer[pendingChangesProperty]) {
 				var index = observerCallbacks.indexOf(observer);
 				if (index !== -1) {
@@ -182,7 +182,7 @@ if ((<any>Object).observe === undefined) {
 		// Implementation of the internal algorithm 'DeliverChangeRecords'
 		// described in the proposal.
 		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#deliverchangerecords)
-		function deliverChangeRecords(observer) {
+		function deliverChangeRecords (observer) {
 			var pendingChangeRecords = observer[pendingChangesProperty];
 			observer[pendingChangesProperty] = null;
 			if (!pendingChangeRecords || pendingChangeRecords.length === 0) {
@@ -203,7 +203,7 @@ if ((<any>Object).observe === undefined) {
 		// Implementation of the internal algorithm 'DeliverAllChangeRecords'
 		// described in the proposal.
 		// [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#deliverallchangerecords)
-		function deliverAllChangeRecords() {
+		function deliverAllChangeRecords () {
 			var observers = observerCallbacks.slice(0);
 			var anyWorkDone = false;
 			for (var i = 0, l = observers.length; i < l; i++) {

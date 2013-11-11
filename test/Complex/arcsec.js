@@ -9,7 +9,7 @@ test('.arcsec()', 17, function () {
 			p1n0 = (new MathLib.Complex(1, -0)).arcsec();
 
 	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arcsec().re));
-	ok(MathLib.isEqual((new MathLib.Complex(Infinity)).arcsec().re, Math.PI/2));
+	ok(MathLib.isEqual((new MathLib.Complex(Infinity)).arcsec().re, Math.PI / 2));
 	ok(MathLib.isNegZero((new MathLib.Complex(Infinity)).arcsec().im));
 
 

@@ -330,13 +330,13 @@ test('.arccot()', 25, function () {
 	//ok(MathLib.isNegZero(n0n5.re), '(-0 -0.5i).arctan().re = -0');
 	//equal(n0n5.im, -0.5493061443340548457, '(-0 -0.5i).arctan().im = -0.549');
 
-	equal(p0p0.re, Math.PI/2, '(+0 +0i).arccot().re = +&pi;/2');
+	equal(p0p0.re, Math.PI / 2, '(+0 +0i).arccot().re = +&pi;/2');
 	ok(MathLib.isNegZero(p0p0.im), '(+0 +0i).arccot().im = -0');
-	equal(p0n0.re, Math.PI/2, '(+0 -0i).arccot().re = +&pi;/2');
+	equal(p0n0.re, Math.PI / 2, '(+0 -0i).arccot().re = +&pi;/2');
 	ok(MathLib.isPosZero(p0n0.im), '(+0 -0i).arccot().im = +0');
-	equal(n0p0.re, -Math.PI/2, '(-0 +0i).arccot().re = -&pi;/2');
+	equal(n0p0.re, -Math.PI / 2, '(-0 +0i).arccot().re = -&pi;/2');
 	ok(MathLib.isNegZero(n0p0.im), '(-0 +0i).arccot().im = -0');
-	equal(n0n0.re, -Math.PI/2, '(-0 -0i).arccot().re = -&pi;/2');
+	equal(n0n0.re, -Math.PI / 2, '(-0 -0i).arccot().re = -&pi;/2');
 	ok(MathLib.isPosZero(n0n0.im), '(-0 -0i).arccot().im = +0');
 
 	//ok(MathLib.isPosZero(p0p5.re), '(+0 +0.5i).arctan().re = +0');
@@ -372,9 +372,9 @@ test('.arccsc()', 17, function () {
 	ok(MathLib.isPosZero((new MathLib.Complex(Infinity)).arccsc().im));
 
 
-	ok(MathLib.isEqual(n1p0.re, -Math.PI/2));
+	ok(MathLib.isEqual(n1p0.re, -Math.PI / 2));
 	ok(MathLib.isNegZero(n1p0.im));
-	ok(MathLib.isEqual(n1n0.re, -Math.PI/2));
+	ok(MathLib.isEqual(n1n0.re, -Math.PI / 2));
 	ok(MathLib.isPosZero(n1n0.im));
 
 
@@ -384,9 +384,9 @@ test('.arccsc()', 17, function () {
 	equal(n0n0.re, Infinity);
 
 
-	ok(MathLib.isEqual(p1p0.re, Math.PI/2));
+	ok(MathLib.isEqual(p1p0.re, Math.PI / 2));
 	ok(MathLib.isNegZero(p1p0.im));
-	ok(MathLib.isEqual(p1n0.re, Math.PI/2));
+	ok(MathLib.isEqual(p1n0.re, Math.PI / 2));
 	ok(MathLib.isPosZero(p1n0.im));
 
 
@@ -404,7 +404,7 @@ test('.arcsec()', 17, function () {
 			p1n0 = (new MathLib.Complex(1, -0)).arcsec();
 
 	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arcsec().re));
-	ok(MathLib.isEqual((new MathLib.Complex(Infinity)).arcsec().re, Math.PI/2));
+	ok(MathLib.isEqual((new MathLib.Complex(Infinity)).arcsec().re, Math.PI / 2));
 	ok(MathLib.isNegZero((new MathLib.Complex(Infinity)).arcsec().im));
 
 
@@ -4210,6 +4210,7 @@ test('.xor()', 2, function () {
 module('Vector');
 test('init', 4, function () {
 	var vector = new MathLib.Vector([1, 2, 3]);
+
 	equal(vector.length, 3, 'Testing the dimension');
 	equal(vector[0], 1, 'checking the entries');
 	equal(vector[1], 2, 'checking the entries');
@@ -4221,12 +4222,14 @@ test('init', 4, function () {
 // Properties
 test('.constructor', 1, function () {
 	var v = new MathLib.Vector([1, 2, 3]);
+
 	equal(v.constructor, MathLib.Vector, 'Testing .constructor');
 });
 
 
 test('.type', 1, function () {
 	var v = new MathLib.Vector([1, 2, 3]);
+
 	equal(v.type, 'vector', 'Testing .type');
 });
 test('.areLinearIndependent()', 5, function () {
@@ -4275,6 +4278,7 @@ test('.isEqual()', 3, function () {
 			w = new MathLib.Vector([0, 1, 2]),
 			u = new MathLib.Vector([0, 0, 0]),
 			x = new MathLib.Vector([0, 0, 0, 0]);
+
 	equal(v.isEqual(w), true, '.isEqual()');
 	equal(v.isEqual(u), false, '.isEqual()');
 	equal(u.isEqual(x), false, '.isEqual()');
@@ -4282,6 +4286,7 @@ test('.isEqual()', 3, function () {
 test('.isZero()', 2, function () {
 	var v = new MathLib.Vector([0, 0, 0]),
 			w = new MathLib.Vector([0, 0, 1]);
+
 	equal(v.isZero(), true, '.isZero()');
 	equal(w.isZero(), false, '.isZero()');
 });
@@ -4300,15 +4305,18 @@ test('.minus()', 2, function () {
 	var v = new MathLib.Vector([3, 1, 4]),
 			w = new MathLib.Vector([1, 5, 9]),
 			u = new MathLib.Vector([1, 2]);
+
 	equal(v.minus(w).isEqual(new MathLib.Vector([2, -4, -5])), true, '.minus()');
 	equal(v.minus(u), undefined, '.minus()');
 });
 test('.neagtive()', 1, function () {
 	var v = new MathLib.Vector([3, 1, 4]);
+
 	equal(v.negative().isEqual(new MathLib.Vector([-3, -1, -4])), true, '.negative()');
 });
 test('.norm()', 5, function () {
 	var v = new MathLib.Vector([1, 2, -2]);
+
 	equal(v.norm(), 3, '.norm()');
 	equal(v.norm(2), 3, '.norm(2)');
 	equal(v.norm(1), 5, '.norm(1)');
@@ -4318,12 +4326,14 @@ test('.norm()', 5, function () {
 test('.outerProduct()', 1, function () {
 	var v = new MathLib.Vector([3, 1, 4]),
 			w = new MathLib.Vector([1, 5, 9]);
+
 	equal(v.outerProduct(w).isEqual(new MathLib.Matrix([[3, 15, 27], [1, 5, 9], [4, 20, 36]])), true, '.outerProduct()');
 });
 test('.plus()', 2, function () {
 	var v = new MathLib.Vector([3, 1, 4]),
 			w = new MathLib.Vector([1, 5, 9]),
 			u = new MathLib.Vector([1, 2]);
+
 	equal(v.plus(w).isEqual(new MathLib.Vector([4, 6, 13])), true, '.plus()');
 	equal(v.plus(u), undefined, '.plus()');
 });
@@ -4347,6 +4357,7 @@ test('.scalarProduct()', 3, function () {
 });
 test('.slice()', 2, function () {
 	var v = new MathLib.Vector([1, 2, 3, 4, 5]);
+
 	deepEqual(v.slice(1, 3), [2, 3], '.slice()');
 	equal(MathLib.type(v.slice(1, 3)), 'array', '.slice()');
 });
@@ -4361,23 +4372,28 @@ test('.times()', 3, function () {
 });
 test('.toArray()', 2, function () {
 	var v = new MathLib.Vector([1, 2, 3]);
+
 	deepEqual(v.toArray(), [1, 2, 3], '.toArray()');
 	equal(MathLib.type(v.toArray()), 'array', '.toArray()');
 });
 test('.toContentMathML()', 1, function () {
 	var v = new MathLib.Vector([1, 2, 3]);
+
 	equal(v.toContentMathML(), '<vector><cn>1</cn><cn>2</cn><cn>3</cn></vector>', '.toContentMathML()');
 });
 test('.toLaTeX()', 1, function () {
 	var v = new MathLib.Vector([1, 2, 3]);
+
 	equal(v.toLaTeX(), '\\begin{pmatrix}\n\t1\\\\\n\t2\\\\\n\t3\n\\end{pmatrix}');
 });
 test('.toMathML()', 1, function () {
 	var v = new MathLib.Vector([1, 2, 3]);
+
 	equal(v.toMathML(), '<mrow><mo>(</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>)</mo></mrow>', '.toMathML()');
 });
 test('.toString()', 1, function () {
 	var v = new MathLib.Vector([1, 2, 3]);
+
 	equal(v.toString(), '(1, 2, 3)', '.toString()');
 });
 test('.vectorProduct()', 3, function () {
@@ -4385,11 +4401,13 @@ test('.vectorProduct()', 3, function () {
 			w = new MathLib.Vector([-7, 8, 9]),
 			u = new MathLib.Vector([1, 2]),
 			res = new MathLib.Vector([-6, -30, 22]);
+
 	equal(v.vectorProduct(w).isEqual(res), true, '.vectorProduct()');
 	equal(u.vectorProduct(w), undefined, '.vectorProduct()');
 	equal(v.vectorProduct(u), undefined, '.vectorProduct()');
 });
 test('zero()', 1, function () {
 	var v = new MathLib.Vector.zero(3);
+
 	equal(v.isZero(), true, 'testing zero vector');
 });

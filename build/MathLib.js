@@ -4,7 +4,7 @@ var __extends = this.__extends || function (d, b) {
 					d[p] = b[p];
 				}
 			}
-			function __() {
+			function __ () {
 				this.constructor = d;
 			}
 			__.prototype = b.prototype;
@@ -16,7 +16,7 @@ var MathLib;
 	MathLib.apery = 1.2020569031595942;
 	MathLib.e = Math.E;
 
-	MathLib.epsilon = (Number).EPSILON || ((function () {
+	MathLib.epsilon = (Number).EPSILON || ((function  () {
 		var next, result;
 		for (next = 1; 1 + next !== 1; next = next / 2) {
 			result = next;
@@ -27,19 +27,19 @@ var MathLib;
 	MathLib.goldenRatio = 1.618033988749895;
 	MathLib.pi = Math.PI;
 
-	MathLib.isArrayLike = function (x) {
+	MathLib.isArrayLike = function  (x) {
 		return typeof x === 'object' && 'length' in x;
 	};
 
-	MathLib.isNative = function (fn) {
+	MathLib.isNative = function  (fn) {
 		return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
 	};
 
-	MathLib.argToRgba = function (h) {
+	MathLib.argToRgba = function  (h) {
 		var r, g, b;
 		h = -h / (2 * Math.PI);
 
-		function hue2rgb(t) {
+		function hue2rgb (t) {
 			if (t < 0) {
 				t += 1;
 			}
@@ -65,9 +65,9 @@ var MathLib;
 		return [r * 255, g * 255, b * 255, 255];
 	};
 
-	var flatten = function (a) {
+	var flatten = function  (a) {
 		var flattendArray = [];
-		a.forEach(function (x) {
+		a.forEach(function  (x) {
 			if (Array.isArray(x)) {
 				flattendArray = flattendArray.concat(flatten(x));
 			} else {
@@ -75,7 +75,7 @@ var MathLib;
 			}
 		});
 		return flattendArray;
-	}, extendObject = function (dest, src) {
+	}, extendObject = function  (dest, src) {
 		for (var prop in src) {
 			if (typeof dest[prop] === 'object' && typeof src[prop] === 'object') {
 				dest[prop] = extendObject(dest[prop], src[prop]);
@@ -84,13 +84,13 @@ var MathLib;
 			}
 		}
 		return dest;
-	}, to3js = function (x) {
+	}, to3js = function  (x) {
 		if (x.length === 2) {
 			return new THREE.Vector2(x[0], x[1]);
 		} else if (x.length === 3) {
 			return new THREE.Vector3(x[0], x[1], x[2]);
 		}
-	}, colorConvert = function (n) {
+	}, colorConvert = function  (n) {
 		if (typeof n === 'number') {
 			n = Math.max(Math.min(Math.floor(n), 0xffffff), 0);
 			return '#' + ('00000' + n.toString(16)).slice(-6);
@@ -98,7 +98,7 @@ var MathLib;
 		return n;
 	};
 
-	var template = function (data) {
+	var template = function  (data) {
 		var p = [];
 		p.push(' <figure class="MathLib_figure">     <div class="MathLib_wrapper" style="width: ');
 		p.push(data.width);
@@ -138,7 +138,7 @@ var MathLib;
 
 	var errors = [], warnings = [];
 
-	MathLib.on = function (type, callback) {
+	MathLib.on = function  (type, callback) {
 		if (type === 'error') {
 			errors.push(callback);
 		} else if (type === 'warning') {
@@ -146,32 +146,32 @@ var MathLib;
 		}
 	};
 
-	MathLib.off = function (type, callback) {
+	MathLib.off = function  (type, callback) {
 		if (type === 'error') {
-			errors = errors.filter(function (x) {
+			errors = errors.filter(function  (x) {
 				return x !== callback;
 			});
 		} else if (type === 'warning') {
-			warnings = warnings.filter(function (x) {
+			warnings = warnings.filter(function  (x) {
 				return x !== callback;
 			});
 		}
 	};
 
-	MathLib.error = function (details) {
-		errors.forEach(function (cb) {
+	MathLib.error = function  (details) {
+		errors.forEach(function  (cb) {
 			cb(details);
 		});
 	};
 
-	MathLib.warning = function (details) {
-		warnings.forEach(function (cb) {
+	MathLib.warning = function  (details) {
+		warnings.forEach(function  (cb) {
 			cb(details);
 		});
 	};
 
 	var Expression = (function () {
-		function Expression(expr) {
+		function Expression (expr) {
 			if (typeof expr === 'undefined') { expr = {}; }
 			this.type = 'expression';
 			var prop;
@@ -185,20 +185,20 @@ var MathLib;
 				}
 			}
 		}
-		Expression.prototype.compare = function (e) {
+		Expression.prototype.compare = function  (e) {
 			return MathLib.sign(this.toString().localeCompare(e.toString()));
 		};
 
-		Expression.constant = function (n) {
+		Expression.constant = function  (n) {
 			return new MathLib.Expression({
 				subtype: 'constant',
 				value: n
 			});
 		};
 
-		Expression.prototype.evaluate = function () {
+		Expression.prototype.evaluate = function  () {
 			if (this.subtype === 'binaryOperator') {
-				return MathLib[this.name].apply(null, this.content.map(function (x) {
+				return MathLib[this.name].apply(null, this.content.map(function  (x) {
 					return x.evaluate();
 				}));
 			}
@@ -225,13 +225,13 @@ var MathLib;
 			}
 			if (this.subtype === 'functionCall') {
 				if (this.isMethod) {
-					var args = this.content.map(function (x) {
+					var args = this.content.map(function  (x) {
 						return x.evaluate();
 					}), _this = args.shift();
 
 					return _this[this.value].apply(_this, args);
 				} else {
-					return MathLib[this.value].apply(null, this.content.map(function (x) {
+					return MathLib[this.value].apply(null, this.content.map(function  (x) {
 						return x.evaluate();
 					}));
 				}
@@ -243,8 +243,8 @@ var MathLib;
 				});
 			}
 			if (this.subtype === 'matrix') {
-				return new MathLib.Matrix(this.value.map(function (r) {
-					return r.map(function (c) {
+				return new MathLib.Matrix(this.value.map(function  (r) {
+					return r.map(function  (c) {
 						return c.evaluate();
 					});
 				}));
@@ -253,7 +253,7 @@ var MathLib;
 				return parseFloat(this.value);
 			}
 			if (this.subtype === 'naryOperator') {
-				return MathLib[this.name].apply(null, this.content.map(function (x) {
+				return MathLib[this.name].apply(null, this.content.map(function  (x) {
 					return x.evaluate();
 				}));
 			}
@@ -261,7 +261,7 @@ var MathLib;
 				return new MathLib.Rational(this.value[0].evaluate(), this.value[1].evaluate());
 			}
 			if (this.subtype === 'set') {
-				return new MathLib.Set(this.value.map(function (x) {
+				return new MathLib.Set(this.value.map(function  (x) {
 					return x.evaluate();
 				}));
 			}
@@ -275,7 +275,7 @@ var MathLib;
 				return this;
 			}
 			if (this.subtype === 'vector') {
-				return new MathLib.Vector(this.value.map(function (x) {
+				return new MathLib.Vector(this.value.map(function  (x) {
 					return x.evaluate();
 				}));
 			}
@@ -287,7 +287,7 @@ var MathLib;
 			}
 		};
 
-		Expression.prototype.map = function (f) {
+		Expression.prototype.map = function  (f) {
 			var prop, properties = {}, mappedProperties;
 
 			for (prop in this) {
@@ -298,7 +298,7 @@ var MathLib;
 
 			mappedProperties = f(properties);
 			if (Array.isArray(this.content)) {
-				mappedProperties.content = this.content.map(function (expr) {
+				mappedProperties.content = this.content.map(function  (expr) {
 					return expr.map(f);
 				});
 			} else if (this.content) {
@@ -308,17 +308,17 @@ var MathLib;
 			return new MathLib.Expression(mappedProperties);
 		};
 
-		Expression.number = function (n) {
+		Expression.number = function  (n) {
 			return new MathLib.Expression({
 				subtype: 'number',
 				value: n
 			});
 		};
 
-		Expression.parseContentMathML = function (MathMLString) {
+		Expression.parseContentMathML = function  (MathMLString) {
 			var tokenizer = new DOMParser(), MathMLdoc;
 
-			MathMLString = MathMLString.split('cs>').map(function (x, i) {
+			MathMLString = MathMLString.split('cs>').map(function  (x, i) {
 				if (i % 2 === 0) {
 					return x.replace(/\s+/g, ' ').replace(/ </g, '<').replace(/> /g, '>');
 				} else {
@@ -329,7 +329,7 @@ var MathLib;
 			MathMLdoc = tokenizer.parseFromString(MathMLString, 'application/xml');
 
 			var handler = {
-				apply: function (node) {
+				apply: function  (node) {
 					var children = Array.prototype.slice.call(node.childNodes), functnName = children.shift().nodeName, isMethod = true, functnNames = {
 						ident: 'identity',
 						power: 'pow',
@@ -352,13 +352,13 @@ var MathLib;
 						content: parser(children)
 					});
 				},
-				ci: function (node) {
+				ci: function  (node) {
 					return new MathLib.Expression({
 						subtype: 'variable',
 						value: node.textContent
 					});
 				},
-				cn: function (node) {
+				cn: function  (node) {
 					var type = node.getAttribute('type') !== null ? node.getAttribute('type') : 'number';
 
 					if (type === 'number') {
@@ -382,66 +382,66 @@ var MathLib;
 						});
 					}
 				},
-				cs: function (node) {
+				cs: function  (node) {
 					return new MathLib.Expression({
 						subtype: 'string',
 						value: node.textContent
 					});
 				},
-				lambda: function (node) {
+				lambda: function  (node) {
 					var bvar = node.childNodes[0], doa = node.childNodes[1], apply = node.childNodes[2];
 
 					return new MathLib.Expression({
 						subtype: 'functionDefinition',
 						domain: doa.childNodes[0].nodeName,
-						arguments: Array.prototype.map.call(bvar.childNodes, function (variable) {
+						arguments: Array.prototype.map.call(bvar.childNodes, function  (variable) {
 							return new MathLib.Expression.variable(variable.textContent);
 						}),
 						content: [parser(apply)]
 					});
 				},
-				math: function (node) {
+				math: function  (node) {
 					return parser(node.childNodes[0]);
 				},
-				matrix: function (node) {
+				matrix: function  (node) {
 					return new MathLib.Expression({
 						value: Array.prototype.slice.call(node.childNodes).map(handler.matrixrow),
 						subtype: 'matrix'
 					});
 				},
-				matrixrow: function (node) {
+				matrixrow: function  (node) {
 					return Array.prototype.map.call(node.childNodes, parser);
 				},
-				set: function (node) {
+				set: function  (node) {
 					return new MathLib.Expression({
 						value: parser(Array.prototype.slice.call(node.childNodes)),
 						subtype: 'set'
 					});
 				},
-				'#text': function (node) {
+				'#text': function  (node) {
 					if (node.parentNode.nodeName === 'cn') {
 						return new MathLib.Expression.number(node.nodeValue.trim());
 					}
 					return node.nodeValue;
 				},
-				vector: function (node) {
+				vector: function  (node) {
 					return new MathLib.Expression({
 						value: parser(Array.prototype.slice.call(node.childNodes)),
 						subtype: 'vector'
 					});
 				},
-				false: function () {
+				false: function  () {
 					return new MathLib.Expression.constant('false');
 				},
-				pi: function () {
+				pi: function  () {
 					return new MathLib.Expression.constant('pi');
 				},
-				true: function () {
+				true: function  () {
 					return new MathLib.Expression.constant('true');
 				}
 			};
 
-			var parser = function (node) {
+			var parser = function  (node) {
 				if (Array.isArray(node)) {
 					var nodes = node.map(parser);
 					return nodes;
@@ -453,7 +453,7 @@ var MathLib;
 			return parser(MathMLdoc.childNodes[0]);
 		};
 
-		Expression.prototype.toContentMathML = function () {
+		Expression.prototype.toContentMathML = function  () {
 			if (this.subtype === 'binaryOperator') {
 				var op = this.name === 'pow' ? 'power' : this.name;
 
@@ -469,7 +469,7 @@ var MathLib;
 				return '<ci>' + this.value + '</ci>';
 			}
 			if (this.subtype === 'naryOperator') {
-				return '<apply><csymbol cd="arith1">' + this.name + '</csymbol>' + this.content.map(function (expr) {
+				return '<apply><csymbol cd="arith1">' + this.name + '</csymbol>' + this.content.map(function  (expr) {
 					return expr.toContentMathML();
 				}).join('') + '</apply>';
 			}
@@ -497,19 +497,19 @@ var MathLib;
 					funcName = this.value;
 				}
 
-				return '<apply><csymbol cd="transc1">' + funcName + '</csymbol>' + this.content.map(function (expr) {
+				return '<apply><csymbol cd="transc1">' + funcName + '</csymbol>' + this.content.map(function  (expr) {
 					return expr.toContentMathML();
 				}).join('') + '</apply>';
 			}
 
 			if (this.subtype === 'functionDefinition') {
-				return '<lambda><bvar><ci>' + this.arguments.join('</ci></bvar><bvar><ci>') + '</ci></bvar>' + this.content.map(function (expr) {
+				return '<lambda><bvar><ci>' + this.arguments.join('</ci></bvar><bvar><ci>') + '</ci></bvar>' + this.content.map(function  (expr) {
 					return expr.toContentMathML();
 				}) + '</lambda>';
 			}
 		};
 
-		Expression.prototype.toLaTeX = function (opts) {
+		Expression.prototype.toLaTeX = function  (opts) {
 			if (typeof opts === 'undefined') { opts = {}; }
 			var op;
 
@@ -544,8 +544,8 @@ var MathLib;
 				}
 			}
 			if (this.subtype === 'matrix') {
-				return '\\begin{pmatrix}' + this.value.map(function (row) {
-					return row.map(function (col) {
+				return '\\begin{pmatrix}' + this.value.map(function  (row) {
+					return row.map(function  (col) {
 						return col.toLaTeX();
 					}).join('&');
 				}).join('\\\\') + '\\end{pmatrix}';
@@ -555,7 +555,7 @@ var MathLib;
 			}
 			if (this.subtype === 'naryOperator') {
 				op = this.value === '*' ? '\\cdot' : this.value;
-				return this.content.reduce(function (old, cur, idx) {
+				return this.content.reduce(function  (old, cur, idx) {
 					return old + (idx ? op : '') + cur.toLaTeX(opts);
 				}, '');
 			}
@@ -563,7 +563,7 @@ var MathLib;
 				return '\\frac{' + this.value[0].toLaTeX() + '}{' + this.value[1].toLaTeX() + '}';
 			}
 			if (this.subtype === 'set') {
-				return '\\left{' + this.value.map(function (x) {
+				return '\\left{' + this.value.map(function  (x) {
 					return x.toLaTeX();
 				}).join(', ') + '\\right}';
 			}
@@ -577,7 +577,7 @@ var MathLib;
 				return this.content.toLaTeX(opts);
 			}
 			if (this.subtype === 'vector') {
-				return '\\begin{pmatrix}' + this.value.map(function (x) {
+				return '\\begin{pmatrix}' + this.value.map(function  (x) {
 					return x.toLaTeX();
 				}).join('\\\\') + '\\end{pmatrix}';
 			}
@@ -608,7 +608,7 @@ var MathLib;
 					'tan',
 					'tanh'
 				].indexOf(this.value) + 1) {
-					return '\\' + this.value + '\\left(' + (this.content.length ? this.content.reduce(function (old, cur, idx) {
+					return '\\' + this.value + '\\left(' + (this.content.length ? this.content.reduce(function  (old, cur, idx) {
 						return old + (idx ? ',' : '') + cur.toLaTeX(opts);
 					}, '') : 'x') + '\\right)';
 				} else if (this.value === 'exp') {
@@ -616,20 +616,20 @@ var MathLib;
 				} else if (this.value === 'sqrt') {
 					return '\\' + this.value + '{' + (this.content.length ? this.content[0].toLaTeX(opts) : 'x') + '}';
 				} else {
-					return '\\operatorname{' + this.value + '}\\left(' + (this.content.length ? this.content.reduce(function (old, cur, idx) {
+					return '\\operatorname{' + this.value + '}\\left(' + (this.content.length ? this.content.reduce(function  (old, cur, idx) {
 						return old + (idx ? ',' : '') + cur.toLaTeX(opts);
 					}, '') : 'x') + '\\right)';
 				}
 			}
 
 			if (this.subtype === 'functionDefinition') {
-				return (this.arguments.length === 1 ? this.arguments[0] : '\\left(' + this.arguments.join(', ') + '\\right)') + ' \\longmapsto ' + (this.content.length === 1 ? this.content[0].toLaTeX() : '\\left(' + this.content.map(function (expr) {
+				return (this.arguments.length === 1 ? this.arguments[0] : '\\left(' + this.arguments.join(', ') + '\\right)') + ' \\longmapsto ' + (this.content.length === 1 ? this.content[0].toLaTeX() : '\\left(' + this.content.map(function  (expr) {
 					return expr.toLaTeX();
 				}).join(', ') + '\\right)');
 			}
 		};
 
-		Expression.prototype.toMathML = function () {
+		Expression.prototype.toMathML = function  () {
 			if (this.subtype === 'binaryOperator') {
 				if (this.value === '-') {
 					return this.content[0].toMathML() + '<mo>-</mo>' + this.content[1].toMathML();
@@ -657,8 +657,8 @@ var MathLib;
 				}
 			}
 			if (this.subtype === 'matrix') {
-				return '<mrow><mo>(</mo><mtable><mtr><mtd>' + this.value.map(function (row) {
-					return row.map(function (col) {
+				return '<mrow><mo>(</mo><mtable><mtr><mtd>' + this.value.map(function  (row) {
+					return row.map(function  (col) {
 						return col.toMathML();
 					}).join('</mtd><mtd>');
 				}).join('</mtd></mtr><mtr><mtd>') + '</mtd></mtr></mtable><mo>)</mo></mrow>';
@@ -670,7 +670,7 @@ var MathLib;
 				return '<mfrac>' + this.value[0].toMathML() + this.value[1].toMathML() + '</mfrac>';
 			}
 			if (this.subtype === 'set') {
-				return '<mrow><mo>{</mo>' + this.value.map(function (x) {
+				return '<mrow><mo>{</mo>' + this.value.map(function  (x) {
 					return x.toMathML();
 				}).join('<mo>,</mo>') + '<mo>}</mo></mrow>';
 			}
@@ -681,12 +681,12 @@ var MathLib;
 				return '<mi>' + this.value + '</mi>';
 			}
 			if (this.subtype === 'vector') {
-				return '<mrow><mo>(</mo><mtable><mtr><mtd>' + this.value.map(function (x) {
+				return '<mrow><mo>(</mo><mtable><mtr><mtd>' + this.value.map(function  (x) {
 					return x.toMathML();
 				}).join('</mtd></mtr><mtr><mtd>') + '</mtd></mtr></mtable><mo>)</mo></mrow>';
 			}
 			if (this.subtype === 'naryOperator') {
-				return '<mrow>' + this.content.map(function (expr) {
+				return '<mrow>' + this.content.map(function  (expr) {
 					return expr.toMathML();
 				}).join('<mo>' + (this.value === '*' ? '&middot;' : this.value) + '</mo>') + '</mrow>';
 			}
@@ -697,19 +697,19 @@ var MathLib;
 				return this.content.toMathML();
 			}
 			if (this.subtype === 'functionCall') {
-				return '<mrow><mi>' + this.value + '</mi><mo>&af;</mo><mrow><mo>(</mo>' + (this.content.length ? this.content.map(function (expr) {
+				return '<mrow><mi>' + this.value + '</mi><mo>&af;</mo><mrow><mo>(</mo>' + (this.content.length ? this.content.map(function  (expr) {
 					return expr.toMathML();
 				}).join('') : '<mi>x</mi>') + '<mo>)</mo></mrow></mrow>';
 			}
 
 			if (this.subtype === 'functionDefinition') {
-				return '<mrow>' + (this.arguments.length === 1 ? '<mi>' + this.arguments[0] + '</mi>' : '<mrow><mo>(</mo><mi>' + this.arguments.join('</mi><mo>,<mo><mi>') + '</mi><mo>)</mo></mrow>') + '<mo>&#x27FC;</mo>' + (this.content.length === 1 ? this.content[0].toMathML() : '<mrow><mo>(</mo>' + this.content.map(function (expr) {
+				return '<mrow>' + (this.arguments.length === 1 ? '<mi>' + this.arguments[0] + '</mi>' : '<mrow><mo>(</mo><mi>' + this.arguments.join('</mi><mo>,<mo><mi>') + '</mi><mo>)</mo></mrow>') + '<mo>&#x27FC;</mo>' + (this.content.length === 1 ? this.content[0].toMathML() : '<mrow><mo>(</mo>' + this.content.map(function  (expr) {
 					return expr.toMathML();
 				}) + '<mo>)</mo></mrow>') + '</mrow>';
 			}
 		};
 
-		Expression.prototype.toString = function () {
+		Expression.prototype.toString = function  () {
 			var _this = this;
 			if (this.subtype === 'binaryOperator') {
 				return this.content[0].toString() + this.value + this.content[1].toString();
@@ -731,11 +731,11 @@ var MathLib;
 			}
 			if (this.subtype === 'matrix') {
 				var length = this.value.length;
-				return this.value.map(function (row) {
-					return row.map(function (col) {
+				return this.value.map(function  (row) {
+					return row.map(function  (col) {
 						return col.toString();
 					}).join('\t');
-				}).map(function (row, index) {
+				}).map(function  (row, index) {
 					if (index === 0) {
 						return '⎛' + row + '⎞';
 					} else if (index === length - 1) {
@@ -749,7 +749,7 @@ var MathLib;
 				return this.value;
 			}
 			if (this.subtype === 'naryOperator') {
-				return this.content.reduce(function (old, cur) {
+				return this.content.reduce(function  (old, cur) {
 					return old + _this.value + cur;
 				});
 			}
@@ -757,7 +757,7 @@ var MathLib;
 				return this.value[0].toString() + '/' + this.value[1].toString();
 			}
 			if (this.subtype === 'set') {
-				return '{' + this.value.map(function (x) {
+				return '{' + this.value.map(function  (x) {
 					return x.toString();
 				}).join(', ') + '}';
 			}
@@ -771,29 +771,29 @@ var MathLib;
 				return this.content.toString();
 			}
 			if (this.subtype === 'vector') {
-				return '(' + this.value.map(function (x) {
+				return '(' + this.value.map(function  (x) {
 					return x.toString();
 				}).join(', ') + ')';
 			}
 			if (this.subtype === 'functionCall') {
-				return this.value + '(' + (this.content.length ? this.content.map(function (expr) {
+				return this.value + '(' + (this.content.length ? this.content.map(function  (expr) {
 					return expr.toString();
 				}).join(', ') : 'x') + ')';
 			}
 			if (this.subtype === 'functionDefinition') {
-				return (this.arguments.length === 1 ? this.arguments[0] : '(' + this.arguments.join(', ') + ')') + ' ⟼ ' + (this.content.length === 1 ? this.content[0].toString() : '(' + this.content.map(function (expr) {
+				return (this.arguments.length === 1 ? this.arguments[0] : '(' + this.arguments.join(', ') + ')') + ' ⟼ ' + (this.content.length === 1 ? this.content[0].toString() : '(' + this.content.map(function  (expr) {
 					return expr.toString();
 				}).join(', ') + ')');
 			}
 		};
 
-		Expression.variable = function (n) {
+		Expression.variable = function  (n) {
 			return new MathLib.Expression({
 				subtype: 'variable',
 				value: n
 			});
 		};
-		Expression.parse = function (str) {
+		Expression.parse = function  (str) {
 			var Token, Lexer, Parser;
 
 			Token = {
@@ -802,15 +802,15 @@ var MathLib;
 				Number: 'Number'
 			};
 
-			Lexer = function () {
+			Lexer = function  () {
 				var expression = '', length = 0, index = 0, marker = 0, T = Token;
 
-				function peekNextChar() {
+				function peekNextChar () {
 					var idx = index;
 					return ((idx < length) ? expression.charAt(idx) : '\x00');
 				}
 
-				function getNextChar() {
+				function getNextChar () {
 					var ch = '\x00', idx = index;
 					if (idx < length) {
 						ch = expression.charAt(idx);
@@ -819,19 +819,19 @@ var MathLib;
 					return ch;
 				}
 
-				function isWhiteSpace(ch) {
+				function isWhiteSpace (ch) {
 					return (ch === '\u0009') || (ch === ' ') || (ch === '\u00A0');
 				}
 
-				function isLetter(ch) {
+				function isLetter (ch) {
 					return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 				}
 
-				function isDecimalDigit(ch) {
+				function isDecimalDigit (ch) {
 					return (ch >= '0') && (ch <= '9');
 				}
 
-				function createToken(type, value) {
+				function createToken (type, value) {
 					return {
 						type: type,
 						value: value,
@@ -840,7 +840,7 @@ var MathLib;
 					};
 				}
 
-				function skipSpaces() {
+				function skipSpaces () {
 					var ch;
 
 					while (index < length) {
@@ -852,7 +852,7 @@ var MathLib;
 					}
 				}
 
-				function scanOperator() {
+				function scanOperator () {
 					var ch = peekNextChar();
 					if ('+-*/()^%=;,'.indexOf(ch) >= 0) {
 						return createToken(T.Operator, getNextChar());
@@ -860,15 +860,15 @@ var MathLib;
 					return undefined;
 				}
 
-				function isIdentifierStart(ch) {
+				function isIdentifierStart (ch) {
 					return (ch === '_') || isLetter(ch);
 				}
 
-				function isIdentifierPart(ch) {
+				function isIdentifierPart (ch) {
 					return isIdentifierStart(ch) || isDecimalDigit(ch);
 				}
 
-				function scanIdentifier() {
+				function scanIdentifier () {
 					var ch, id;
 
 					ch = peekNextChar();
@@ -888,7 +888,7 @@ var MathLib;
 					return createToken(T.Identifier, id);
 				}
 
-				function scanNumber() {
+				function scanNumber () {
 					var ch, number;
 
 					ch = peekNextChar();
@@ -947,13 +947,13 @@ var MathLib;
 					return createToken(T.Number, number);
 				}
 
-				function reset(str) {
+				function reset (str) {
 					expression = str;
 					length = str.length;
 					index = 0;
 				}
 
-				function next() {
+				function next () {
 					var token;
 
 					skipSpaces();
@@ -981,7 +981,7 @@ var MathLib;
 					throw new SyntaxError('Unknown token from character ' + peekNextChar());
 				}
 
-				function peek() {
+				function peek () {
 					var token, idx;
 
 					idx = index;
@@ -1004,14 +1004,14 @@ var MathLib;
 				};
 			};
 
-			Parser = function () {
+			Parser = function  () {
 				var lexer = new Lexer(), T = Token;
 
-				function matchOp(token, op) {
+				function matchOp (token, op) {
 					return (typeof token !== 'undefined') && token.type === T.Operator && token.value === op;
 				}
 
-				function parseArgumentList() {
+				function parseArgumentList () {
 					var token, expr, args = [];
 
 					while (true) {
@@ -1030,7 +1030,7 @@ var MathLib;
 					return args;
 				}
 
-				function parseFunctionCall(name) {
+				function parseFunctionCall (name) {
 					var token, args = [];
 
 					token = lexer.next();
@@ -1055,7 +1055,7 @@ var MathLib;
 					});
 				}
 
-				function parsePrimary() {
+				function parsePrimary () {
 					var token, expr;
 
 					token = lexer.peek();
@@ -1098,7 +1098,7 @@ var MathLib;
 					throw new SyntaxError('Parse error, can not process token ' + token.value);
 				}
 
-				function parseUnary() {
+				function parseUnary () {
 					var token, expr;
 
 					token = lexer.peek();
@@ -1115,7 +1115,7 @@ var MathLib;
 					return parsePrimary();
 				}
 
-				function parseExponentiation() {
+				function parseExponentiation () {
 					var token, left, right;
 
 					left = parseUnary();
@@ -1135,7 +1135,7 @@ var MathLib;
 					return left;
 				}
 
-				function parseMultiplicative() {
+				function parseMultiplicative () {
 					var token, left, right, r;
 
 					left = parseExponentiation();
@@ -1170,7 +1170,7 @@ var MathLib;
 					return left;
 				}
 
-				function parseAdditive() {
+				function parseAdditive () {
 					var token, left, right, r;
 
 					left = parseMultiplicative();
@@ -1204,7 +1204,7 @@ var MathLib;
 					return left;
 				}
 
-				function parseAssignment() {
+				function parseAssignment () {
 					var expr;
 
 					expr = parseAdditive();
@@ -1212,11 +1212,11 @@ var MathLib;
 					return expr;
 				}
 
-				function parseExpression() {
+				function parseExpression () {
 					return parseAssignment();
 				}
 
-				function parse(expression) {
+				function parse (expression) {
 					var expr, token;
 
 					lexer.reset(expression);
@@ -1245,21 +1245,21 @@ var MathLib;
 
 	var functnPrototype = {};
 
-	MathLib.Functn = function (f, options) {
+	MathLib.Functn = function  (f, options) {
 		options = options || {};
 
-		var functn = function (x) {
+		var functn = function  (x) {
 			if (typeof x === 'number' || typeof x === 'boolean') {
 				return f.apply('', arguments);
 			} else if (x.type === 'functn') {
-				var bvar = options.expression.arguments[0].value, composition = options.expression.map(function (expr) {
+				var bvar = options.expression.arguments[0].value, composition = options.expression.map(function  (expr) {
 					if (expr.subtype === 'variable' && expr.value === bvar) {
 						expr = x.expression.content[0];
 					}
 					return expr;
 				});
 
-				return new MathLib.Functn(function (y) {
+				return new MathLib.Functn(function  (y) {
 					return f(x(y));
 				}, {
 					expression: new MathLib.Expression({
@@ -1277,7 +1277,7 @@ var MathLib;
 					})
 				});
 			} else if (typeof x === 'function') {
-				return function (y) {
+				return function  (y) {
 					return f(x(y));
 				};
 			} else if (x.type === 'complex') {
@@ -1311,7 +1311,7 @@ var MathLib;
 
 	var binaryFunctions = {
 		arctan2: Math.atan2,
-		binomial: function (n, k) {
+		binomial: function  (n, k) {
 			var binomial = 1, i, sign;
 
 			if (MathLib.isNaN(n) || !MathLib.isFinite(k)) {
@@ -1344,30 +1344,30 @@ var MathLib;
 			}
 			return binomial;
 		},
-		divide: function (a, b) {
+		divide: function  (a, b) {
 			return MathLib.times(a, MathLib.inverse(b));
 		},
-		log: function (base, x) {
+		log: function  (base, x) {
 			if (arguments.length === 1) {
 				x = base;
 				base = 10;
 			}
 			return Math.log(x) / Math.log(base);
 		},
-		minus: function (a, b) {
+		minus: function  (a, b) {
 			return MathLib.plus(a, MathLib.negative(b));
 		},
-		mod: function (n, m) {
+		mod: function  (n, m) {
 			var nm = n % m;
 			return nm >= 0 ? nm : nm + m;
 		},
-		pow: function (x, y) {
+		pow: function  (x, y) {
 			if (x === 1 || (x === -1 && (y === Infinity || y === -Infinity))) {
 				return 1;
 			}
 			return Math.pow(x, y);
 		},
-		root: function (x, root) {
+		root: function  (x, root) {
 			if (arguments.length === 1) {
 				return Math.sqrt(x);
 			}
@@ -1375,12 +1375,12 @@ var MathLib;
 		}
 	};
 
-	var createBinaryFunction = function (f, name) {
-		return function (x) {
+	var createBinaryFunction = function  (f, name) {
+		return function  (x) {
 			if (typeof x === 'number') {
 				return f.apply('', arguments);
 			} else if (typeof x === 'function') {
-				return function (y) {
+				return function  (y) {
 					return f(x(y));
 				};
 			} else if (x.type === 'set') {
@@ -1405,16 +1405,16 @@ var MathLib;
 		}
 	}
 
-	functnPrototype.diff = function (x, h) {
+	functnPrototype.diff = function  (x, h) {
 		if (typeof h === 'undefined') { h = 1e-5; }
 		return (this(x + h) - this(x - h)) / (2 * h);
 	};
 
-	functnPrototype.draw = function (screen, options) {
+	functnPrototype.draw = function  (screen, options) {
 		if (typeof options === 'undefined') { options = {}; }
 		var functn = this;
 		if (Array.isArray(screen)) {
-			screen.forEach(function (x) {
+			screen.forEach(function  (x) {
 				x.path(functn, options);
 			});
 		} else {
@@ -1425,7 +1425,7 @@ var MathLib;
 	};
 
 	var functionList1 = {
-		divisors: function (x) {
+		divisors: function  (x) {
 			var divisors = x === 1 ? [] : [1], i, ii;
 			for (i = 2, ii = x / 2; i <= ii; i++) {
 				if (x % i === 0) {
@@ -1435,7 +1435,7 @@ var MathLib;
 			divisors.push(x);
 			return MathLib.set(divisors);
 		},
-		factor: function (n) {
+		factor: function  (n) {
 			var factors = [], i;
 			n = Math.abs(n);
 			while (n % 2 === 0) {
@@ -1453,7 +1453,7 @@ var MathLib;
 			}
 			return new MathLib.Set(factors, true);
 		},
-		fallingFactorial: function (n, m, s) {
+		fallingFactorial: function  (n, m, s) {
 			var factorial = 1, j;
 			s = s || 1;
 
@@ -1462,11 +1462,11 @@ var MathLib;
 			}
 			return factorial;
 		},
-		fibonacci: function (n) {
+		fibonacci: function  (n) {
 			return Math.floor(Math.pow(MathLib.goldenRatio, n) / Math.sqrt(5));
 		},
 		random: Math.random,
-		risingFactorial: function (n, m, s) {
+		risingFactorial: function  (n, m, s) {
 			var factorial = 1, j;
 			s = s || 1;
 
@@ -1475,37 +1475,37 @@ var MathLib;
 			}
 			return factorial;
 		},
-		round: function (x) {
+		round: function  (x) {
 			if (x === 0) {
 				return x;
 			}
 			return Math.round(x);
 		},
-		trunc: function (x, n) {
+		trunc: function  (x, n) {
 			return x.toFixed(n || 0);
 		},
-		toContentMathML: function (x) {
+		toContentMathML: function  (x) {
 			if (typeof x === 'number') {
 				return '<cn>' + x + '</cn>';
 			} else {
 				return x.toContentMathML();
 			}
 		},
-		toLaTeX: function (x, plus) {
+		toLaTeX: function  (x, plus) {
 			if (plus) {
 				return (x < 0 ? '-' : '+') + Math.abs(x);
 			} else {
 				return (x < 0 ? '-' : '') + Math.abs(x);
 			}
 		},
-		toMathML: function (x, plus) {
+		toMathML: function  (x, plus) {
 			if (plus) {
 				return '<mo>' + (x < 0 ? '-' : '+') + '</mo><mn>' + Math.abs(x) + '</mn>';
 			} else {
 				return (x < 0 ? '<mo>-</mo>' : '') + '<mn>' + Math.abs(x) + '</mn>';
 			}
 		},
-		toString: function (x, plus) {
+		toString: function  (x, plus) {
 			if (plus) {
 				return (x < 0 ? '-' : '+') + Math.abs(x);
 			} else {
@@ -1514,12 +1514,12 @@ var MathLib;
 		}
 	};
 
-	var createFunction1 = function (f, name) {
-		return function (x) {
+	var createFunction1 = function  (f, name) {
+		return function  (x) {
 			if (typeof x === 'number') {
 				return f.apply('', arguments);
 			} else if (typeof x === 'function') {
-				return function (y) {
+				return function  (y) {
 					return f(x(y));
 				};
 			} else if (x.type === 'set') {
@@ -1543,7 +1543,7 @@ var MathLib;
 		}
 	}
 
-	MathLib.compare = function (a, b) {
+	MathLib.compare = function  (a, b) {
 		if (MathLib.type(a) !== MathLib.type(b)) {
 			return MathLib.sign(MathLib.type(a).localeCompare(MathLib.type(b)));
 		} else if (typeof a === 'number') {
@@ -1554,7 +1554,7 @@ var MathLib;
 		return a.compare(b);
 	};
 
-	MathLib.type = function (x) {
+	MathLib.type = function  (x) {
 		if (x === null) {
 			return 'null';
 		}
@@ -1564,8 +1564,8 @@ var MathLib;
 		return x.type ? x.type : (x.constructor.name || Object.prototype.toString.call(x).slice(8, -1)).toLowerCase();
 	};
 
-	MathLib.is = function (obj, type) {
-		var ucfirst = function (str) {
+	MathLib.is = function  (obj, type) {
+		var ucfirst = function  (str) {
 			return str.slice(0, 1).toUpperCase() + str.slice(1);
 		};
 
@@ -1594,7 +1594,7 @@ var MathLib;
 		}
 	};
 
-	MathLib.isMathMLSupported = function () {
+	MathLib.isMathMLSupported = function  () {
 		var hasMathML = false, ns, div, mfrac;
 		if (document.createElementNS) {
 			ns = 'http://www.w3.org/1998/Math/MathML';
@@ -1610,7 +1610,7 @@ var MathLib;
 		return hasMathML;
 	};
 
-	MathLib.writeMathML = function (id, math) {
+	MathLib.writeMathML = function  (id, math) {
 		var formula;
 		document.getElementById(id).innerHTML = '<math>' + math + '</math>';
 		if (typeof MathJax !== 'undefined') {
@@ -1619,7 +1619,7 @@ var MathLib;
 		}
 	};
 
-	MathLib.loadMathJax = function (config) {
+	MathLib.loadMathJax = function  (config) {
 		var script = document.createElement('script');
 		script.type = 'text/javascript';
 		script.src = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js';
@@ -1636,18 +1636,18 @@ var MathLib;
 	};
 
 	var nAryFunctions = {
-		and: function (n) {
-			return n.every(function (x) {
+		and: function  (n) {
+			return n.every(function  (x) {
 				return !!x;
 			});
 		},
-		arithMean: function (n) {
+		arithMean: function  (n) {
 			return MathLib.plus(n) / n.length;
 		},
-		gcd: function (a) {
-			var min, reduction = function (x) {
+		gcd: function  (a) {
+			var min, reduction = function  (x) {
 				return x !== min ? x % min : x;
-			}, isntZero = function (x) {
+			}, isntZero = function  (x) {
 				return x !== 0;
 			};
 
@@ -1663,13 +1663,13 @@ var MathLib;
 			}
 			return a[0] || min;
 		},
-		geoMean: function (n) {
+		geoMean: function  (n) {
 			return MathLib.root(MathLib.times(n), n.length);
 		},
-		harmonicMean: function (n) {
+		harmonicMean: function  (n) {
 			return n.length / MathLib.plus(n.map(MathLib.inverse));
 		},
-		hypot: function (n) {
+		hypot: function  (n) {
 			var a, b, max, min;
 
 			if (n.length === 1) {
@@ -1677,7 +1677,7 @@ var MathLib;
 			}
 
 			if (n.length > 2) {
-				return n.reduce(function (a, b) {
+				return n.reduce(function  (a, b) {
 					return MathLib.hypot(a, b);
 				});
 			}
@@ -1698,18 +1698,18 @@ var MathLib;
 
 			return max * Math.sqrt(1 + Math.pow(min / max, 2));
 		},
-		hypot2: function (n) {
-			if (n.some(function (x) {
+		hypot2: function  (n) {
+			if (n.some(function  (x) {
 				return x === Infinity || x === -Infinity;
 			})) {
 				return Infinity;
 			}
-			return n.reduce(function (old, cur) {
+			return n.reduce(function  (old, cur) {
 				return old + cur * cur;
 			}, 0);
 		},
-		isEqual: function (n) {
-			return n.every(function (a, i, args) {
+		isEqual: function  (n) {
+			return n.every(function  (a, i, args) {
 				if (a === args[0]) {
 					return true;
 				} else if (typeof a === 'number' && typeof args[0] === 'number') {
@@ -1722,7 +1722,7 @@ var MathLib;
 				return false;
 			});
 		},
-		lcm: function (n) {
+		lcm: function  (n) {
 			if (n.length === 0) {
 				return 0;
 			}
@@ -1731,27 +1731,27 @@ var MathLib;
 			} else if (n.length === 2) {
 				return MathLib.times(n) / MathLib.gcd(n);
 			} else if (n.length > 2) {
-				return n.reduce(function (x, y) {
+				return n.reduce(function  (x, y) {
 					return MathLib.lcm(x, y);
 				});
 			}
 		},
-		max: function (n) {
+		max: function  (n) {
 			return Math.max.apply(null, n);
 		},
-		min: function (n) {
+		min: function  (n) {
 			return Math.min.apply(null, n);
 		},
-		or: function (n) {
-			return n.some(function (x) {
+		or: function  (n) {
+			return n.some(function  (x) {
 				return !!x;
 			});
 		},
-		plus: function (n) {
+		plus: function  (n) {
 			if (n.length === 0) {
 				return 0;
 			}
-			return n.reduce(function (a, b) {
+			return n.reduce(function  (a, b) {
 				var f1, f2, aExpr, bExpr;
 				if (typeof a === 'number' && typeof b === 'number') {
 					return a + b;
@@ -1762,7 +1762,7 @@ var MathLib;
 					bExpr = b.expression ? b.expression.content[0] : {};
 
 					if (a.type !== 'functn') {
-						f1 = function () {
+						f1 = function  () {
 							return a;
 						};
 						aExpr = new MathLib.Expression({
@@ -1770,7 +1770,7 @@ var MathLib;
 							subtype: 'number'
 						});
 					} else if (b.type !== 'functn') {
-						f2 = function () {
+						f2 = function  () {
 							return b;
 						};
 						bExpr = new MathLib.Expression({
@@ -1778,7 +1778,7 @@ var MathLib;
 							subtype: 'number'
 						});
 					}
-					return new MathLib.Functn(function (x) {
+					return new MathLib.Functn(function  (x) {
 						return MathLib.plus(f1(x), f2(x));
 					}, {
 						expression: new MathLib.Expression({
@@ -1801,11 +1801,11 @@ var MathLib;
 				}
 			});
 		},
-		times: function (n) {
+		times: function  (n) {
 			if (n.length === 0) {
 				return 1;
 			}
-			return n.reduce(function (a, b) {
+			return n.reduce(function  (a, b) {
 				var f1, f2, aExpr, bExpr;
 				if (typeof a === 'number' && typeof b === 'number') {
 					return a * b;
@@ -1816,7 +1816,7 @@ var MathLib;
 					bExpr = b.expression ? b.expression.content[0] : {};
 
 					if (a.type !== 'functn') {
-						f1 = function () {
+						f1 = function  () {
 							return a;
 						};
 						aExpr = new MathLib.Expression({
@@ -1824,7 +1824,7 @@ var MathLib;
 							subtype: 'number'
 						});
 					} else if (b.type !== 'functn') {
-						f2 = function () {
+						f2 = function  () {
 							return b;
 						};
 						bExpr = new MathLib.Expression({
@@ -1832,7 +1832,7 @@ var MathLib;
 							subtype: 'number'
 						});
 					}
-					return new MathLib.Functn(function (x) {
+					return new MathLib.Functn(function  (x) {
 						return MathLib.times(f1(x), f2(x));
 					}, {
 						expression: new MathLib.Expression({
@@ -1855,15 +1855,15 @@ var MathLib;
 				}
 			});
 		},
-		xor: function (n) {
-			return n.reduce(function (x, y) {
+		xor: function  (n) {
+			return n.reduce(function  (x, y) {
 				return x + !!y;
 			}, 0) % 2 !== 0;
 		}
 	};
 
-	var createNaryFunction = function (f) {
-		return function (n) {
+	var createNaryFunction = function  (f) {
+		return function  (n) {
 			if (MathLib.type(n) === 'set') {
 				return f(n.slice());
 			} else if (MathLib.type(n) !== 'array') {
@@ -1881,7 +1881,7 @@ var MathLib;
 		}
 	}
 
-	functnPrototype.quad = function (a, b, options) {
+	functnPrototype.quad = function  (a, b, options) {
 		if (typeof options === 'undefined') { options = {}; }
 		var f = this, warnMessage = [
 			'Calculation succeded',
@@ -1920,7 +1920,7 @@ var MathLib;
 		return Q;
 	};
 
-	var quadstep = function (f, a, b, fa, fc, fb, options) {
+	var quadstep = function  (f, a, b, fa, fc, fb, options) {
 		var h = b - a, c = (a + b) / 2, fd = f((a + c) / 2), fe = f((c + b) / 2), Q1 = (h / 6) * (fa + 4 * fc + fb), Q2 = (h / 12) * (fa + 4 * fd + 2 * fc + 4 * fe + fb), Q = Q2 + (Q2 - Q1) / 15;
 
 		options.calls = options.calls + 2;
@@ -1947,73 +1947,73 @@ var MathLib;
 		return quadstep(f, a, c, fa, fd, fc, options) + quadstep(f, c, b, fc, fe, fb, options);
 	};
 
-	functnPrototype.toContentMathML = function () {
+	functnPrototype.toContentMathML = function  () {
 		return this.expression.toContentMathML();
 	};
 
-	functnPrototype.toLaTeX = function () {
+	functnPrototype.toLaTeX = function  () {
 		return this.expression.toLaTeX();
 	};
 
-	functnPrototype.toMathML = function () {
+	functnPrototype.toMathML = function  () {
 		return this.expression.toMathML();
 	};
 
-	functnPrototype.toString = function () {
+	functnPrototype.toString = function  () {
 		return this.expression.toString();
 	};
 
 	var unaryFunctions = {
 		abs: Math.abs,
 		arccos: Math.acos,
-		arccot: function (x) {
+		arccot: function  (x) {
 			return 1.5707963267948966 - Math.atan(x);
 		},
-		arccsc: function (x) {
+		arccsc: function  (x) {
 			return Math.asin(1 / x);
 		},
-		arcosh: MathLib.isNative((Math).acosh) || function (x) {
+		arcosh: MathLib.isNative((Math).acosh) || function  (x) {
 			return Math.log(x + Math.sqrt(x * x - 1));
 		},
-		arcoth: function (x) {
+		arcoth: function  (x) {
 			if (!MathLib.isFinite(x)) {
 				return 1 / x;
 			}
 			return 0.5 * Math.log((x + 1) / (x - 1));
 		},
-		arcsch: function (x) {
+		arcsch: function  (x) {
 			if (x === 0 || !MathLib.isFinite(x)) {
 				return 1 / x;
 			}
 			return Math.log(1 / x + Math.sqrt(1 / (x * x) + 1));
 		},
-		arcsec: function (x) {
+		arcsec: function  (x) {
 			return Math.acos(1 / x);
 		},
 		arcsin: Math.asin,
 		arctan: Math.atan,
-		arsech: function (x) {
+		arsech: function  (x) {
 			return Math.log((1 + Math.sqrt(1 - x * x)) / x);
 		},
-		arsinh: MathLib.isNative((Math).asinh) || function (x) {
+		arsinh: MathLib.isNative((Math).asinh) || function  (x) {
 			if (x === 0 || !MathLib.isFinite(x)) {
 				return x;
 			}
 			return Math.log(x + Math.sqrt(x * x + 1));
 		},
-		artanh: MathLib.isNative((Math).atanh) || function (x) {
+		artanh: MathLib.isNative((Math).atanh) || function  (x) {
 			if (x === 0) {
 				return x;
 			}
 			return 0.5 * Math.log((1 + x) / (1 - x));
 		},
-		ceil: function (x) {
+		ceil: function  (x) {
 			if (x === 0) {
 				return x;
 			}
 			return Math.ceil(x);
 		},
-		cbrt: function (x) {
+		cbrt: function  (x) {
 			var a3, a3x, an, a;
 
 			if (x === 0 || x !== x || x === Infinity || x === -Infinity) {
@@ -2033,24 +2033,24 @@ var MathLib;
 			}
 			return an;
 		},
-		conjugate: function (x) {
+		conjugate: function  (x) {
 			return x;
 		},
-		copy: function (x) {
+		copy: function  (x) {
 			return x;
 		},
 		cos: Math.cos,
-		cosh: MathLib.isNative((Math).cosh) || function (x) {
+		cosh: MathLib.isNative((Math).cosh) || function  (x) {
 			return (Math.exp(x) + Math.exp(-x)) / 2;
 		},
-		cot: function (x) {
+		cot: function  (x) {
 			if (x === 0) {
 				return 1 / x;
 			}
 
 			return Math.tan(1.5707963267948966 - x);
 		},
-		coth: function (x) {
+		coth: function  (x) {
 			if (x === 0) {
 				return 1 / x;
 			}
@@ -2061,19 +2061,19 @@ var MathLib;
 
 			return (Math.exp(x) + Math.exp(-x)) / (Math.exp(x) - Math.exp(-x));
 		},
-		csc: function (x) {
+		csc: function  (x) {
 			return 1 / Math.sin(x);
 		},
-		csch: function (x) {
+		csch: function  (x) {
 			if (x === 0) {
 				return 1 / x;
 			}
 			return 2 / (Math.exp(x) - Math.exp(-x));
 		},
-		degToRad: function (x) {
+		degToRad: function  (x) {
 			return x * 0.017453292519943295;
 		},
-		digitsum: function (x) {
+		digitsum: function  (x) {
 			var out = 0;
 			while (x > 9) {
 				out += x % 10;
@@ -2082,7 +2082,7 @@ var MathLib;
 			return out + x;
 		},
 		exp: Math.exp,
-		factorial: function (x) {
+		factorial: function  (x) {
 			var factorial = 1, i;
 			if ((x > 170 && MathLib.isInt(x)) || x === Infinity) {
 				return Infinity;
@@ -2096,31 +2096,31 @@ var MathLib;
 			return factorial;
 		},
 		floor: Math.floor,
-		identity: function (x) {
+		identity: function  (x) {
 			return x;
 		},
-		inverse: function (x) {
+		inverse: function  (x) {
 			return 1 / x;
 		},
-		isFinite: function (x) {
+		isFinite: function  (x) {
 			return Math.abs(x) < Infinity;
 		},
-		isInt: function (x) {
+		isInt: function  (x) {
 			return x % 1 === 0;
 		},
-		isNaN: function (x) {
+		isNaN: function  (x) {
 			return x !== x;
 		},
-		isNegZero: function (x) {
+		isNegZero: function  (x) {
 			return 1 / x === -Infinity;
 		},
-		isOne: function (a) {
+		isOne: function  (a) {
 			return Math.abs(a - 1) < MathLib.epsilon;
 		},
-		isPosZero: function (x) {
+		isPosZero: function  (x) {
 			return 1 / x === Infinity;
 		},
-		isPrime: function (x) {
+		isPrime: function  (x) {
 			var sqrt = Math.sqrt(x), i;
 			if (x % 1 === 0 && x > 1) {
 				if (x === 2) {
@@ -2138,17 +2138,17 @@ var MathLib;
 			}
 			return false;
 		},
-		isReal: function (x) {
+		isReal: function  (x) {
 			return Math.abs(x) < Infinity;
 		},
-		isZero: function (x) {
+		isZero: function  (x) {
 			return Math.abs(x) < MathLib.epsilon;
 		},
-		lg: function (x) {
+		lg: function  (x) {
 			return Math.log(x) / Math.LN10;
 		},
 		ln: Math.log,
-		logGamma: function (x) {
+		logGamma: function  (x) {
 			var j, tmp, y, ser, cof = [
 				57.1562356658629235,
 				-59.5979603554754912,
@@ -2175,26 +2175,26 @@ var MathLib;
 			}
 			return tmp + Math.log(2.5066282746310005 * ser / x);
 		},
-		negative: function (x) {
+		negative: function  (x) {
 			return -x;
 		},
-		not: function (x) {
+		not: function  (x) {
 			return !x;
 		},
-		radToDeg: function (x) {
+		radToDeg: function  (x) {
 			return x * 57.29577951308232;
 		},
-		sec: function (x) {
+		sec: function  (x) {
 			return 1 / Math.cos(x);
 		},
-		sech: function (x) {
+		sech: function  (x) {
 			return 2 / (Math.exp(x) + Math.exp(-x));
 		},
-		sign: function (x) {
+		sign: function  (x) {
 			return x && (x < 0 ? -1 : 1);
 		},
 		sin: Math.sin,
-		sinh: MathLib.isNative((Math).sinh) || function (x) {
+		sinh: MathLib.isNative((Math).sinh) || function  (x) {
 			if (x === 0) {
 				return x;
 			}
@@ -2202,7 +2202,7 @@ var MathLib;
 		},
 		sqrt: Math.sqrt,
 		tan: Math.tan,
-		tanh: MathLib.isNative((Math).tanh) || function (x) {
+		tanh: MathLib.isNative((Math).tanh) || function  (x) {
 			var p;
 
 			if (x === 0 || !MathLib.isFinite(x)) {
@@ -2249,7 +2249,7 @@ var MathLib;
 	}
 
 	var Screen = (function () {
-		function Screen(id, options) {
+		function Screen (id, options) {
 			if (typeof options === 'undefined') { options = {}; }
 			var _this = this;
 			this.type = 'screen';
@@ -2278,12 +2278,12 @@ var MathLib;
 			this.innerHTMLContextMenu = innerHTMLContextMenu;
 
 			if ((options).contextMenu) {
-				this.wrapper.oncontextmenu = function (evt) {
+				this.wrapper.oncontextmenu = function  (evt) {
 					return _this.oncontextmenu(evt);
 				};
 
 				if ((opts).contextMenu.screenshot && !('opera' in window)) {
-					this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function () {
+					this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function  () {
 						var dataURI, a = document.createElement('a');
 
 						if (_this.options.renderer === 'Canvas' && _this.type === 'screen2D') {
@@ -2331,7 +2331,7 @@ var MathLib;
 				}
 
 				if ((opts).contextMenu.fullscreen && 'requestFullScreen' in document.body) {
-					this.contextMenu.getElementsByClassName('MathLib_fullscreen')[0].onclick = function () {
+					this.contextMenu.getElementsByClassName('MathLib_fullscreen')[0].onclick = function  () {
 						if ((document).fullscreenElement) {
 							(document).exitFullScreen();
 						} else {
@@ -2341,22 +2341,22 @@ var MathLib;
 				}
 
 				if ((opts).contextMenu.grid) {
-					this.contextMenu.getElementsByClassName('MathLib_grid_type')[0].onchange = function () {
+					this.contextMenu.getElementsByClassName('MathLib_grid_type')[0].onchange = function  () {
 						(_this).options.grid.type = 'cartesian';
 						(_this).draw();
 					};
-					this.contextMenu.getElementsByClassName('MathLib_grid_type')[1].onchange = function () {
+					this.contextMenu.getElementsByClassName('MathLib_grid_type')[1].onchange = function  () {
 						(_this).options.grid.type = 'polar';
 						(_this).draw();
 					};
-					this.contextMenu.getElementsByClassName('MathLib_grid_type')[2].onchange = function () {
+					this.contextMenu.getElementsByClassName('MathLib_grid_type')[2].onchange = function  () {
 						(_this).options.grid.type = false;
 						(_this).draw();
 					};
 				}
 			}
 
-			fullscreenchange = function () {
+			fullscreenchange = function  () {
 				if ((document).fullscreenElement) {
 					_this.origWidth = _this.width;
 					_this.origHeight = _this.height;
@@ -2376,7 +2376,7 @@ var MathLib;
 				this.container.addEventListener('webkitfullscreenchange', fullscreenchange);
 			}
 		}
-		Screen.prototype.oncontextmenu = function (evt) {
+		Screen.prototype.oncontextmenu = function  (evt) {
 			var listener, _this = this, menu = this.contextMenu, overlay = this.contextMenuOverlay;
 
 			if (evt.preventDefault) {
@@ -2388,10 +2388,10 @@ var MathLib;
 			menu.style.setProperty('left', evt.clientX + 'px');
 			overlay.style.setProperty('display', 'block');
 
-			listener = function () {
+			listener = function  () {
 				overlay.style.setProperty('display', 'none');
 
-				Array.prototype.forEach.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem'), function (x) {
+				Array.prototype.forEach.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem'), function  (x) {
 					_this.contextMenu.removeChild(x);
 				});
 
@@ -2405,7 +2405,7 @@ var MathLib;
 	MathLib.Screen = Screen;
 
 	var Layer = (function () {
-		function Layer(screen, id, zIndex) {
+		function Layer (screen, id, zIndex) {
 			var _this = this;
 			this.screen = screen;
 			this.id = id;
@@ -2425,20 +2425,20 @@ var MathLib;
 				this.element = element;
 
 				this.ctx = element.getContext('2d');
-				this.applyTransformation = function () {
+				this.applyTransformation = function  () {
 					var m = _this.transformation;
 					_this.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
 				};
 				this.applyTransformation();
 
 				if (id === 'back') {
-					this.draw = function () {
+					this.draw = function  () {
 						var top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x;
 
 						this.ctx.fillStyle = colorConvert(screen.options.background);
 						this.ctx.fillRect(left, bottom, right - left, top - bottom);
 
-						this.stack.forEach(function (x) {
+						this.stack.forEach(function  (x) {
 							if (x.type === 'conic') {
 								x.object.draw(_this, x.options, true);
 							} else if (x.type === 'text') {
@@ -2454,14 +2454,14 @@ var MathLib;
 					this.ctx.strokeStyle = colorConvert(screen.options.grid.color) || '#cccccc';
 					this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
-					this.draw = function () {
+					this.draw = function  () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 						_this.screen.drawGrid();
 					};
 				} else if (id === 'axis') {
 					this.ctx.strokeStyle = colorConvert(screen.options.axis.color) || '#000000';
 
-					this.draw = function () {
+					this.draw = function  () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 						_this.screen.drawAxis();
 					};
@@ -2469,10 +2469,10 @@ var MathLib;
 					this.ctx.strokeStyle = '#000000';
 					this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
-					this.draw = function () {
+					this.draw = function  () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 
-						this.stack.forEach(function (x) {
+						this.stack.forEach(function  (x) {
 							if (x.type === 'conic') {
 								x.object.draw(_this, x.options, true);
 							} else if (x.type === 'text') {
@@ -2499,8 +2499,8 @@ var MathLib;
 				this.ctx = ctx;
 
 				if (id === 'back') {
-					this.draw = function () {
-						this.stack.forEach(function (x) {
+					this.draw = function  () {
+						this.stack.forEach(function  (x) {
 							if (x.type === 'conic') {
 								x.object.draw(_this, x.options, true);
 							} else if (x.type === 'text') {
@@ -2515,20 +2515,20 @@ var MathLib;
 				} else if (id === 'grid') {
 					ctx.setAttribute('stroke', colorConvert(screen.options.grid.color) || '#cccccc');
 
-					this.draw = function () {
+					this.draw = function  () {
 						ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
 						_this.screen.drawGrid();
 					};
 				} else if (id === 'axis') {
 					ctx.setAttribute('stroke', colorConvert(screen.options.axis.color) || '#000000');
 
-					this.draw = function () {
+					this.draw = function  () {
 						ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
 						_this.screen.drawAxis();
 					};
 				} else {
-					this.draw = function () {
-						this.stack.forEach(function (x) {
+					this.draw = function  () {
+						this.stack.forEach(function  (x) {
 							if (x.type === 'conic') {
 								x.object.draw(_this, x.options, true);
 							} else if (x.type === 'text') {
@@ -2552,7 +2552,7 @@ var MathLib;
 
 			screen.layer.splice(zIndex, 0, this);
 		}
-		Layer.prototype.clear = function () {
+		Layer.prototype.clear = function  () {
 			this.screen.renderer.clear(this);
 			return this;
 		};
@@ -2561,13 +2561,13 @@ var MathLib;
 	MathLib.Layer = Layer;
 
 	MathLib.Canvas = {
-		applyTransformation: function () {
+		applyTransformation: function  () {
 			var m = this.transformation;
-			this.layer.forEach(function (l) {
+			this.layer.forEach(function  (l) {
 				l.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
 			});
 		},
-		circle: function (circle, options, redraw) {
+		circle: function  (circle, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, ctx = this.ctx, prop, opts;
@@ -2608,12 +2608,12 @@ var MathLib;
 
 			return this;
 		},
-		clear: function (layer) {
+		clear: function  (layer) {
 			var screen = layer.screen, left = -screen.translation.x / screen.scale.x, top = -screen.translation.y / screen.scale.y, width = screen.width / screen.scale.x, height = screen.height / screen.scale.y;
 
 			layer.ctx.clearRect(left, top, width, height);
 		},
-		convertOptions: function (opt) {
+		convertOptions: function  (opt) {
 			var convertedOptions = {};
 			if ('fillColor' in opt) {
 				convertedOptions.fillStyle = colorConvert(opt.fillColor);
@@ -2637,7 +2637,7 @@ var MathLib;
 
 			return convertedOptions;
 		},
-		line: function (line, options, redraw) {
+		line: function  (line, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, points = this.screen.getLineEndPoints(line), ctx = this.ctx, prop, opts;
@@ -2678,7 +2678,7 @@ var MathLib;
 
 			return this;
 		},
-		path: function (curve, options, redraw) {
+		path: function  (curve, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, ctx = this.ctx, prop, opts, path, x, y, i, step = 2 / (screen.scale.x - screen.scale.y), from, to;
@@ -2723,7 +2723,7 @@ var MathLib;
 
 			ctx.beginPath();
 			ctx.moveTo(path[0][0], path[0][1]);
-			path.forEach(function (x) {
+			path.forEach(function  (x) {
 				ctx.lineTo(x[0], x[1]);
 			});
 			ctx.stroke();
@@ -2748,7 +2748,7 @@ var MathLib;
 
 			return this;
 		},
-		pixel: function (f, t, r, b, l, options, redraw) {
+		pixel: function  (f, t, r, b, l, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x, ctx = this.ctx, x, y, i;
@@ -2786,7 +2786,7 @@ var MathLib;
 
 			return this;
 		},
-		point: function (point, options, redraw) {
+		point: function  (point, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, ctx = this.ctx, prop, opts, dist;
@@ -2837,7 +2837,7 @@ var MathLib;
 
 			return this;
 		},
-		text: function (str, x, y, options, redraw) {
+		text: function  (str, x, y, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var defaults = {
@@ -2884,13 +2884,13 @@ var MathLib;
 	};
 
 	MathLib.SVG = {
-		applyTransformation: function () {
+		applyTransformation: function  () {
 			var m = this.transformation;
-			this.layer.forEach(function (l) {
+			this.layer.forEach(function  (l) {
 				l.ctx.setAttribute('transform', 'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')');
 			});
 		},
-		circle: function (circle, options, redraw) {
+		circle: function  (circle, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, prop, opts, svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -2921,10 +2921,10 @@ var MathLib;
 
 			return this;
 		},
-		clear: function (layer) {
+		clear: function  (layer) {
 			layer.ctx.textContent = '';
 		},
-		convertOptions: function (opt) {
+		convertOptions: function  (opt) {
 			var convertedOptions = {};
 			if ('fillColor' in opt) {
 				convertedOptions.fill = colorConvert(opt.fillColor);
@@ -2960,7 +2960,7 @@ var MathLib;
 
 			return convertedOptions;
 		},
-		line: function (line, options, redraw) {
+		line: function  (line, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, points = this.screen.getLineEndPoints(line), prop, opts, svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -2992,7 +2992,7 @@ var MathLib;
 
 			return this;
 		},
-		path: function (curve, options, redraw) {
+		path: function  (curve, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'), step = 2 / (screen.scale.x - screen.scale.y), pathString, from, to, prop, opts, x, y, i, path;
@@ -3016,7 +3016,7 @@ var MathLib;
 				path = curve;
 			}
 
-			pathString = 'M' + path.reduce(function (prev, cur) {
+			pathString = 'M' + path.reduce(function  (prev, cur) {
 				return prev + ' L' + cur.join(' ');
 			});
 			svgPath.setAttribute('d', pathString);
@@ -3052,7 +3052,7 @@ var MathLib;
 
 			return this;
 		},
-		pixel: function (f, t, r, b, l, options, redraw) {
+		pixel: function  (f, t, r, b, l, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x, canvas = document.createElement('canvas'), canvasCtx = canvas.getContext('2d'), svgImage = document.createElementNS('http://www.w3.org/2000/svg', 'image'), svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'g'), x, y, i, pxl, m = screen.transformation;
@@ -3105,7 +3105,7 @@ var MathLib;
 
 			return this;
 		},
-		point: function (point, options, redraw) {
+		point: function  (point, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, prop, opts, dist, svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -3136,18 +3136,18 @@ var MathLib;
 			if ((options).moveable) {
 				svgPoint.setAttribute('cursor', 'move');
 
-				svgPoint.addEventListener('mousedown', function () {
+				svgPoint.addEventListener('mousedown', function  () {
 					screen.options.interaction.type = 'move';
 					var invTransformation = screen.transformation.inverse();
 
-					var move = function (evt) {
+					var move = function  (evt) {
 						evt.stopPropagation();
 
 						var evtPoint = invTransformation.times(screen.getEventPoint(evt));
 						point[0] = evtPoint[0];
 						point[1] = evtPoint[1];
 						screen.draw();
-					}, up = function () {
+					}, up = function  () {
 						screen.options.interaction.type = '';
 
 						document.body.removeEventListener('mousemove', move);
@@ -3167,7 +3167,7 @@ var MathLib;
 				screen.text((options).label, point[0] / point[2] + dist / (screen.scale.x - screen.scale.y), point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), {}, true);
 			}
 
-			svgPoint.addEventListener('contextmenu', function () {
+			svgPoint.addEventListener('contextmenu', function  () {
 				screen.options.interaction.type = 'contextmenu';
 				var x = (svgPoint).cx.baseVal.value, y = (svgPoint).cy.baseVal.value;
 
@@ -3184,7 +3184,7 @@ var MathLib;
 
 			return this;
 		},
-		text: function (str, x, y, options, redraw) {
+		text: function  (str, x, y, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -3219,7 +3219,7 @@ var MathLib;
 
 	var Screen2D = (function (_super) {
 		__extends(Screen2D, _super);
-		function Screen2D(id, options) {
+		function Screen2D (id, options) {
 			if (typeof options === 'undefined') { options = {}; }
 			var _this = this;
 			_super.call(this, id, options);
@@ -3256,21 +3256,21 @@ var MathLib;
 			this.options = opts;
 			this.renderer = MathLib[opts.renderer];
 
-			this.circle = function () {
+			this.circle = function  () {
 				var args = [];
 				for (var _i = 0; _i < (arguments.length - 0); _i++) {
 					args[_i] = arguments[_i + 0];
 				}
 				return _this.renderer.circle.apply(_this.layer.main, args);
 			};
-			this.line = function () {
+			this.line = function  () {
 				var args = [];
 				for (var _i = 0; _i < (arguments.length - 0); _i++) {
 					args[_i] = arguments[_i + 0];
 				}
 				return _this.renderer.line.apply(_this.layer.main, args);
 			};
-			this.path = function () {
+			this.path = function  () {
 				var args = [];
 				for (var _i = 0; _i < (arguments.length - 0); _i++) {
 					args[_i] = arguments[_i + 0];
@@ -3278,21 +3278,21 @@ var MathLib;
 				return _this.renderer.path.apply(_this.layer.main, args);
 			};
 
-			this.pixel = function () {
+			this.pixel = function  () {
 				var args = [];
 				for (var _i = 0; _i < (arguments.length - 0); _i++) {
 					args[_i] = arguments[_i + 0];
 				}
 				return _this.renderer.pixel.apply(_this.layer.main, args);
 			};
-			this.point = function () {
+			this.point = function  () {
 				var args = [];
 				for (var _i = 0; _i < (arguments.length - 0); _i++) {
 					args[_i] = arguments[_i + 0];
 				}
 				return _this.renderer.point.apply(_this.layer.main, args);
 			};
-			this.text = function () {
+			this.text = function  () {
 				var args = [];
 				for (var _i = 0; _i < (arguments.length - 0); _i++) {
 					args[_i] = arguments[_i + 0];
@@ -3304,7 +3304,7 @@ var MathLib;
 
 			this.container.classList.add('MathLib_screen2D');
 
-			this.applyTransformation = function () {
+			this.applyTransformation = function  () {
 			};
 
 			this.translation = {};
@@ -3312,40 +3312,40 @@ var MathLib;
 			this.transformation = transformation;
 
 			Object.defineProperty(this.translation, 'x', {
-				get: function () {
+				get: function  () {
 					return _this.transformation[0][2];
 				},
-				set: function (x) {
+				set: function  (x) {
 					_this.transformation[0][2] = x;
 					_this.applyTransformation();
 				}
 			});
 
 			Object.defineProperty(this.translation, 'y', {
-				get: function () {
+				get: function  () {
 					return _this.transformation[1][2];
 				},
-				set: function (y) {
+				set: function  (y) {
 					_this.transformation[1][2] = y;
 					_this.applyTransformation();
 				}
 			});
 
 			Object.defineProperty(this.scale, 'x', {
-				get: function () {
+				get: function  () {
 					return _this.transformation[0][0];
 				},
-				set: function (x) {
+				set: function  (x) {
 					_this.transformation[0][0] = x;
 					_this.applyTransformation();
 				}
 			});
 
 			Object.defineProperty(this.scale, 'y', {
-				get: function () {
+				get: function  () {
 					return _this.transformation[1][1];
 				},
-				set: function (y) {
+				set: function  (y) {
 					_this.transformation[1][1] = y;
 					_this.applyTransformation();
 				}
@@ -3354,40 +3354,40 @@ var MathLib;
 			this.lookAt = {};
 			this.range = {};
 			Object.defineProperty(this.lookAt, 'x', {
-				get: function () {
+				get: function  () {
 					return (_this.width / 2 - _this.transformation[0][2]) / _this.transformation[0][0];
 				},
-				set: function (x) {
+				set: function  (x) {
 					_this.transformation[0][2] = _this.width / 2 - x * _this.transformation[0][0];
 					_this.applyTransformation();
 				}
 			});
 
 			Object.defineProperty(this.lookAt, 'y', {
-				get: function () {
+				get: function  () {
 					return (_this.height / 2 - _this.transformation[1][2]) / _this.transformation[1][1];
 				},
-				set: function (y) {
+				set: function  (y) {
 					_this.transformation[1][2] = _this.height / 2 - y * _this.transformation[1][1];
 					_this.applyTransformation();
 				}
 			});
 
 			Object.defineProperty(this.range, 'x', {
-				get: function () {
+				get: function  () {
 					return _this.width / (2 * _this.transformation[0][0]);
 				},
-				set: function (x) {
+				set: function  (x) {
 					_this.transformation[0][0] = 0.5 * _this.width / x;
 					_this.applyTransformation();
 				}
 			});
 
 			Object.defineProperty(this.range, 'y', {
-				get: function () {
+				get: function  () {
 					return -_this.height / (2 * _this.transformation[1][1]);
 				},
-				set: function (y) {
+				set: function  (y) {
 					_this.transformation[1][1] = -0.5 * _this.height / y;
 					_this.applyTransformation();
 				}
@@ -3435,30 +3435,30 @@ var MathLib;
 			this.layer.axis = new MathLib.Layer(this, 'axis', 2);
 			this.layer.main = new MathLib.Layer(this, 'main', 3);
 
-			this.wrapper.addEventListener('mouseup', function (evt) {
+			this.wrapper.addEventListener('mouseup', function  (evt) {
 				return _this.onmouseup(evt);
 			}, false);
-			this.wrapper.addEventListener('mousedown', function (evt) {
+			this.wrapper.addEventListener('mousedown', function  (evt) {
 				return _this.onmousedown(evt);
 			}, false);
-			this.wrapper.addEventListener('mousemove', function (evt) {
+			this.wrapper.addEventListener('mousemove', function  (evt) {
 				return _this.onmousemove(evt);
 			}, false);
-			this.wrapper.addEventListener('mousewheel', function (evt) {
+			this.wrapper.addEventListener('mousewheel', function  (evt) {
 				return _this.onmousewheel(evt);
 			}, false);
 
-			this.wrapper.addEventListener('DOMMouseScroll', function (evt) {
+			this.wrapper.addEventListener('DOMMouseScroll', function  (evt) {
 				return _this.onmousewheel(evt);
 			}, false);
 
 			this.applyTransformation = this.renderer.applyTransformation;
 
-			this.draw = function (x, options) {
+			this.draw = function  (x, options) {
 				if (typeof options === 'undefined') { options = {}; }
 				var _this = this;
 				if (arguments.length === 0) {
-					this.layer.forEach(function (l) {
+					this.layer.forEach(function  (l) {
 						l.clear().draw();
 					});
 				} else if (x.type === 'circle') {
@@ -3466,7 +3466,7 @@ var MathLib;
 				} else if (x.type === 'line') {
 					this.line(x, options);
 				} else if (Array.isArray(x)) {
-					x.forEach(function (y) {
+					x.forEach(function  (y) {
 						return _this[y.type](y, options);
 					});
 				}
@@ -3479,15 +3479,15 @@ var MathLib;
 
 			this.draw();
 		}
-		Screen2D.prototype.drawAxis = function () {
+		Screen2D.prototype.drawAxis = function  () {
 			var _this = this;
-			var line = function () {
+			var line = function  () {
 				var args = [];
 				for (var _i = 0; _i < (arguments.length - 0); _i++) {
 					args[_i] = arguments[_i + 0];
 				}
 				return _this.renderer.line.apply(_this.layer.axis, args);
-			}, text = function () {
+			}, text = function  () {
 				var args = [];
 				for (var _i = 0; _i < (arguments.length - 0); _i++) {
 					args[_i] = arguments[_i + 0];
@@ -3543,19 +3543,19 @@ var MathLib;
 			return this;
 		};
 
-		Screen2D.prototype.drawGrid = function () {
+		Screen2D.prototype.drawGrid = function  () {
 			var _this = this;
 			if (!this.options.grid) {
 				return this;
 			}
 
-			var line = function () {
+			var line = function  () {
 				var args = [];
 				for (var _i = 0; _i < (arguments.length - 0); _i++) {
 					args[_i] = arguments[_i + 0];
 				}
 				return _this.renderer.line.apply(_this.layer.grid, args);
-			}, circle = function () {
+			}, circle = function  () {
 				var args = [];
 				for (var _i = 0; _i < (arguments.length - 0); _i++) {
 					args[_i] = arguments[_i + 0];
@@ -3586,7 +3586,7 @@ var MathLib;
 			return this;
 		};
 
-		Screen2D.prototype.getEventPoint = function (evt) {
+		Screen2D.prototype.getEventPoint = function  (evt) {
 			var x, y;
 			if (evt.offsetX) {
 				x = evt.offsetX;
@@ -3598,7 +3598,7 @@ var MathLib;
 			return new MathLib.Point([x, y, 1]);
 		};
 
-		Screen2D.prototype.getLineEndPoints = function (l) {
+		Screen2D.prototype.getLineEndPoints = function  (l) {
 			if (l.type === 'line') {
 				var top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lineRight = -(l[2] + l[0] * right) / l[1], lineTop = -(l[2] + l[1] * top) / l[0], lineLeft = -(l[2] + l[0] * left) / l[1], lineBottom = -(l[2] + l[1] * bottom) / l[0], points = [];
 
@@ -3620,7 +3620,7 @@ var MathLib;
 			}
 		};
 
-		Screen2D.prototype.onmousedown = function (evt) {
+		Screen2D.prototype.onmousedown = function  (evt) {
 			if (evt.button !== 0) {
 				return;
 			}
@@ -3638,7 +3638,7 @@ var MathLib;
 			}
 		};
 
-		Screen2D.prototype.onmousemove = function (evt) {
+		Screen2D.prototype.onmousemove = function  (evt) {
 			var p;
 
 			if (evt.preventDefault) {
@@ -3655,7 +3655,7 @@ var MathLib;
 			}
 		};
 
-		Screen2D.prototype.onmouseup = function (evt) {
+		Screen2D.prototype.onmouseup = function  (evt) {
 			if (evt.preventDefault) {
 				evt.preventDefault();
 			}
@@ -3669,7 +3669,7 @@ var MathLib;
 			}
 		};
 
-		Screen2D.prototype.onmousewheel = function (evt) {
+		Screen2D.prototype.onmousewheel = function  (evt) {
 			var delta, s, p, z;
 
 			if (this.options.interaction.allowZoom) {
@@ -3697,7 +3697,7 @@ var MathLib;
 			}
 		};
 
-		Screen2D.prototype.resize = function (width, height) {
+		Screen2D.prototype.resize = function  (width, height) {
 			this.height = height;
 			this.width = width;
 
@@ -3735,7 +3735,7 @@ var MathLib;
 
 	var Screen3D = (function (_super) {
 		__extends(Screen3D, _super);
-		function Screen3D(id, options) {
+		function Screen3D (id, options) {
 			if (typeof options === 'undefined') { options = {}; }
 			_super.call(this, id, options);
 			this.type = 'screen3D';
@@ -3805,7 +3805,7 @@ var MathLib;
 				controls = new THREE[opts.controls + 'Controls'](camera, renderer.domElement);
 			} else {
 				controls = {
-					update: function () {
+					update: function  () {
 					}
 				};
 			}
@@ -3829,17 +3829,17 @@ var MathLib;
 				scene.add(axis);
 			}
 
-			function animate() {
+			function animate () {
 				requestAnimationFrame(animate);
 				render();
 				update();
 			}
 
-			function update() {
+			function update () {
 				controls.update();
 			}
 
-			function render() {
+			function render () {
 				renderer.render(scene, camera);
 			}
 
@@ -3852,12 +3852,12 @@ var MathLib;
 
 			this.container.classList.add('MathLib_screen3D');
 		}
-		Screen3D.prototype.drawGrid = function () {
+		Screen3D.prototype.drawGrid = function  () {
 			if (!this.options.grid) {
 				return this;
 			}
 
-			var _this = this, gridDrawer = function (opts, rotX, rotY) {
+			var _this = this, gridDrawer = function  (opts, rotX, rotY) {
 				var size = 10, grid = new THREE.Object3D(), color = new THREE.Color(opts.color), i, ii;
 
 				if (opts.type === 'cartesian') {
@@ -3909,7 +3909,7 @@ var MathLib;
 			return this;
 		};
 
-		Screen3D.prototype.parametricPlot3D = function (f, options) {
+		Screen3D.prototype.parametricPlot3D = function  (f, options) {
 			var defaults = {
 				closed: false,
 				debug: false,
@@ -3921,8 +3921,8 @@ var MathLib;
 				material: {
 					type: 'MeshLambert'
 				}
-			}, opts = extendObject(defaults, options), Curve = THREE.Curve.create(function () {
-			}, function (t) {
+			}, opts = extendObject(defaults, options), Curve = THREE.Curve.create(function  () {
+			}, function  (t) {
 				t = (opts.max - opts.min) * t + opts.min;
 				var ft = f(t);
 				return new THREE.Vector3(ft[0], ft[1], ft[2]);
@@ -3933,13 +3933,13 @@ var MathLib;
 			return this;
 		};
 
-		Screen3D.prototype.plot3D = function (f, options) {
-			return this.surfacePlot3D(function (u, v) {
+		Screen3D.prototype.plot3D = function  (f, options) {
+			return this.surfacePlot3D(function  (u, v) {
 				return [u, v, f(u, v)];
 			}, options);
 		};
 
-		Screen3D.prototype.resize = function (width, height) {
+		Screen3D.prototype.resize = function  (width, height) {
 			this.renderer.setSize(width, height);
 			this.camera.aspect = width / height;
 			this.camera.updateProjectionMatrix();
@@ -3947,7 +3947,7 @@ var MathLib;
 			return this;
 		};
 
-		Screen3D.prototype.surfacePlot3D = function (f, options) {
+		Screen3D.prototype.surfacePlot3D = function  (f, options) {
 			var defaults = {
 				material: {
 					type: 'MeshLambert'
@@ -3958,7 +3958,7 @@ var MathLib;
 				xmax: 1,
 				ymin: 0,
 				ymax: 1
-			}, opts = extendObject(defaults, options), map = function (u, v) {
+			}, opts = extendObject(defaults, options), map = function  (u, v) {
 				u = (opts.xmax - opts.xmin) * u + opts.xmin;
 				v = (opts.ymax - opts.ymin) * v + opts.ymin;
 				var fuv = f(u, v);
@@ -3978,15 +3978,15 @@ var MathLib;
 	MathLib.Screen3D = Screen3D;
 
 	var Vector = (function () {
-		function Vector(coords) {
+		function Vector (coords) {
 			var _this = this;
 			this.type = 'vector';
-			coords.forEach(function (x, i) {
+			coords.forEach(function  (x, i) {
 				_this[i] = x;
 			});
 			this.length = coords.length;
 		}
-		Vector.prototype.compare = function (v) {
+		Vector.prototype.compare = function  (v) {
 			var i, ii;
 
 			if (this.length !== v.length) {
@@ -4002,33 +4002,33 @@ var MathLib;
 			return 0;
 		};
 
-		Vector.prototype.every = function (f) {
+		Vector.prototype.every = function  (f) {
 			return Array.prototype.every.call(this, f);
 		};
 
-		Vector.prototype.forEach = function (f) {
+		Vector.prototype.forEach = function  (f) {
 			Array.prototype.forEach.call(this, f);
 		};
 
-		Vector.prototype.isEqual = function (v) {
+		Vector.prototype.isEqual = function  (v) {
 			if (this.length !== v.length) {
 				return false;
 			}
 
-			return this.every(function (x, i) {
+			return this.every(function  (x, i) {
 				return MathLib.isEqual(x, v[i]);
 			});
 		};
 
-		Vector.prototype.isZero = function () {
+		Vector.prototype.isZero = function  () {
 			return this.every(MathLib.isZero);
 		};
 
-		Vector.prototype.map = function (f) {
+		Vector.prototype.map = function  (f) {
 			return new this['constructor'](Array.prototype.map.call(this, f));
 		};
 
-		Vector.prototype.minus = function (v) {
+		Vector.prototype.minus = function  (v) {
 			if (this.length === v.length) {
 				return this.plus(v.negative());
 			} else {
@@ -4037,34 +4037,34 @@ var MathLib;
 			}
 		};
 
-		Vector.prototype.negative = function () {
+		Vector.prototype.negative = function  () {
 			return this.map(MathLib.negative);
 		};
 
-		Vector.prototype.norm = function (p) {
+		Vector.prototype.norm = function  (p) {
 			if (typeof p === 'undefined') { p = 2; }
 			if (p === 2) {
 				return MathLib.hypot.apply(null, this.toArray());
 			} else if (p === Infinity) {
 				return Math.max.apply(null, this.map(Math.abs).toArray());
 			} else {
-				return MathLib.root(this.reduce(function (prev, curr) {
+				return MathLib.root(this.reduce(function  (prev, curr) {
 					return prev + Math.pow(Math.abs(curr), p);
 				}, 0), p);
 			}
 		};
 
-		Vector.prototype.outerProduct = function (v) {
-			return new MathLib.Matrix(this.map(function (x) {
-				return v.map(function (y) {
+		Vector.prototype.outerProduct = function  (v) {
+			return new MathLib.Matrix(this.map(function  (x) {
+				return v.map(function  (y) {
 					return MathLib.times(x, y);
 				});
 			}));
 		};
 
-		Vector.prototype.plus = function (v) {
+		Vector.prototype.plus = function  (v) {
 			if (this.length === v.length) {
-				return new MathLib.Vector(this.map(function (x, i) {
+				return new MathLib.Vector(this.map(function  (x, i) {
 					return MathLib.plus(x, v[i]);
 				}));
 			} else {
@@ -4073,7 +4073,7 @@ var MathLib;
 			}
 		};
 
-		Vector.prototype.reduce = function () {
+		Vector.prototype.reduce = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -4081,9 +4081,9 @@ var MathLib;
 			return Array.prototype.reduce.apply(this, args);
 		};
 
-		Vector.prototype.scalarProduct = function (v) {
+		Vector.prototype.scalarProduct = function  (v) {
 			if (this.length === v.length) {
-				return this.reduce(function (old, cur, i, w) {
+				return this.reduce(function  (old, cur, i, w) {
 					return MathLib.plus(old, MathLib.times(w[i], v[i]));
 				}, 0);
 			} else {
@@ -4092,7 +4092,7 @@ var MathLib;
 			}
 		};
 
-		Vector.prototype.slice = function () {
+		Vector.prototype.slice = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -4100,13 +4100,13 @@ var MathLib;
 			return Array.prototype.slice.apply(this, args);
 		};
 
-		Vector.prototype.times = function (n) {
+		Vector.prototype.times = function  (n) {
 			var i, ii, colVectors, product = [];
 			if (n.type === 'rational') {
 				n = n.toNumber();
 			}
 			if (typeof n === 'number' || n.type === 'complex') {
-				return this.map(function (x) {
+				return this.map(function  (x) {
 					return MathLib.times(n, x);
 				});
 			}
@@ -4124,35 +4124,35 @@ var MathLib;
 			}
 		};
 
-		Vector.prototype.toArray = function () {
+		Vector.prototype.toArray = function  () {
 			return Array.prototype.slice.call(this);
 		};
 
-		Vector.prototype.toContentMathML = function () {
-			return this.reduce(function (old, cur) {
+		Vector.prototype.toContentMathML = function  () {
+			return this.reduce(function  (old, cur) {
 				return old + MathLib.toContentMathML(cur);
 			}, '<vector>') + '</vector>';
 		};
 
-		Vector.prototype.toLaTeX = function () {
-			return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
+		Vector.prototype.toLaTeX = function  () {
+			return '\\begin{pmatrix}\n\t' + this.reduce(function  (old, cur) {
 				return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
 			}) + '\n\\end{pmatrix}';
 		};
 
-		Vector.prototype.toMathML = function () {
-			return this.reduce(function (old, cur) {
+		Vector.prototype.toMathML = function  () {
+			return this.reduce(function  (old, cur) {
 				return old + '<mtr><mtd>' + MathLib.toMathML(cur) + '</mtd></mtr>';
 			}, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
 		};
 
-		Vector.prototype.toString = function () {
-			return '(' + this.reduce(function (old, cur) {
+		Vector.prototype.toString = function  () {
+			return '(' + this.reduce(function  (old, cur) {
 				return old + ', ' + MathLib.toString(cur);
 			}) + ')';
 		};
 
-		Vector.prototype.vectorProduct = function (v) {
+		Vector.prototype.vectorProduct = function  (v) {
 			if (this.length === 3 && v.length === 3) {
 				return new MathLib.Vector([
 					MathLib.minus(MathLib.times(this[1], v[2]), MathLib.times(this[2], v[1])),
@@ -4164,14 +4164,14 @@ var MathLib;
 				return;
 			}
 		};
-		Vector.areLinearIndependent = function (v) {
+		Vector.areLinearIndependent = function  (v) {
 			var n = v.length, m = v[0].length;
 
 			if (n > m) {
 				return false;
 			}
 
-			if (!v.every(function (x) {
+			if (!v.every(function  (x) {
 				return x.length === m;
 			})) {
 				return undefined;
@@ -4180,7 +4180,7 @@ var MathLib;
 			return (new MathLib.Matrix(v)).rank() === n;
 		};
 
-		Vector.zero = function (n) {
+		Vector.zero = function  (n) {
 			var vector = [], i;
 			for (i = 0; i < n; i++) {
 				vector.push(0);
@@ -4192,7 +4192,7 @@ var MathLib;
 	MathLib.Vector = Vector;
 
 	var Circle = (function () {
-		function Circle(center, radius) {
+		function Circle (center, radius) {
 			this.type = 'circle';
 			if (center.type === undefined) {
 				center = new MathLib.Point(center.concat(1));
@@ -4201,22 +4201,22 @@ var MathLib;
 			this.center = center;
 			this.radius = radius;
 		}
-		Circle.prototype.area = function () {
+		Circle.prototype.area = function  () {
 			return this.radius * this.radius * Math.PI;
 		};
 
-		Circle.prototype.circumference = function () {
+		Circle.prototype.circumference = function  () {
 			return 2 * this.radius * Math.PI;
 		};
 
-		Circle.prototype.compare = function (c) {
+		Circle.prototype.compare = function  (c) {
 			return MathLib.sign(this.center.compare(c.center)) || MathLib.sign(this.radius - c.radius);
 		};
 
-		Circle.prototype.draw = function (screen, options) {
+		Circle.prototype.draw = function  (screen, options) {
 			if (Array.isArray(screen)) {
 				var circle = this;
-				screen.forEach(function (x) {
+				screen.forEach(function  (x) {
 					x.circle(circle, options);
 				});
 			} else {
@@ -4225,11 +4225,11 @@ var MathLib;
 			return this;
 		};
 
-		Circle.prototype.isEqual = function (c) {
+		Circle.prototype.isEqual = function  (c) {
 			return MathLib.isEqual(this.radius, c.radius) && this.center.isEqual(c.center);
 		};
 
-		Circle.prototype.positionOf = function (p) {
+		Circle.prototype.positionOf = function  (p) {
 			var diff;
 			if (p.type === 'point' && p.dimension === 2) {
 				diff = p.distanceTo(this.center) - this.radius;
@@ -4243,15 +4243,15 @@ var MathLib;
 			}
 		};
 
-		Circle.prototype.reflectAt = function (a) {
+		Circle.prototype.reflectAt = function  (a) {
 			return new MathLib.Circle(this.center.reflectAt(a), this.radius);
 		};
 
-		Circle.prototype.toLaTeX = function () {
+		Circle.prototype.toLaTeX = function  () {
 			return 'B_{' + MathLib.toLaTeX(this.radius) + '}\\left(' + this.center.toLaTeX() + '\\right)';
 		};
 
-		Circle.prototype.toMatrix = function () {
+		Circle.prototype.toMatrix = function  () {
 			var x = this.center[0] / this.center[2], y = this.center[1] / this.center[2], r = this.radius;
 			return new MathLib.Matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x * x + y * y - r * r]]);
 		};
@@ -4260,7 +4260,7 @@ var MathLib;
 	MathLib.Circle = Circle;
 
 	var Complex = (function () {
-		function Complex(re, im) {
+		function Complex (re, im) {
 			if (typeof im === 'undefined') { im = 0; }
 			this.type = 'complex';
 			if (MathLib.isNaN(re) || MathLib.isNaN(im)) {
@@ -4274,22 +4274,22 @@ var MathLib;
 				this.im = im;
 			}
 		}
-		Complex.prototype.abs = function () {
+		Complex.prototype.abs = function  () {
 			return MathLib.hypot(this.re, this.im);
 		};
 
-		Complex.prototype.arccos = function () {
+		Complex.prototype.arccos = function  () {
 			return MathLib.minus(Math.PI / 2, this.arcsin());
 		};
 
-		Complex.prototype.arccot = function () {
+		Complex.prototype.arccot = function  () {
 			if (this.isZero()) {
 				return new MathLib.Complex(MathLib.sign(1 / this.re) * Math.PI / 2, -this.im);
 			}
 			return this.inverse().arctan();
 		};
 
-		Complex.prototype.arccsc = function () {
+		Complex.prototype.arccsc = function  () {
 			if (this.isZero()) {
 				return new MathLib.Complex(Infinity);
 			}
@@ -4297,7 +4297,7 @@ var MathLib;
 			return this.inverse().arcsin();
 		};
 
-		Complex.prototype.arcsec = function () {
+		Complex.prototype.arcsec = function  () {
 			if (this.isZero()) {
 				return new MathLib.Complex(Infinity);
 			}
@@ -4305,8 +4305,8 @@ var MathLib;
 			return this.inverse().arccos();
 		};
 
-		Complex.prototype.arcsin = function () {
-			var a = this.re, b = this.im, aa = a * a, bb = b * b, sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb), sgn = function (x) {
+		Complex.prototype.arcsin = function  () {
+			var a = this.re, b = this.im, aa = a * a, bb = b * b, sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb), sgn = function  (x) {
 				if (x > 0) {
 					return 1;
 				}
@@ -4328,7 +4328,7 @@ var MathLib;
 			return new MathLib.Complex(sgn(a) / 2 * MathLib.arccos(sqrt - (aa + bb)), sgn(b) / 2 * MathLib.arcosh(sqrt + (aa + bb)));
 		};
 
-		Complex.prototype.arctan = function () {
+		Complex.prototype.arctan = function  () {
 			var res, iz = new MathLib.Complex(-this.im, this.re);
 
 			if (this.isZero()) {
@@ -4344,14 +4344,14 @@ var MathLib;
 			return res;
 		};
 
-		Complex.prototype.arg = function () {
+		Complex.prototype.arg = function  () {
 			if (this.re === Infinity) {
 				return NaN;
 			}
 			return Math.atan2(this.im, this.re);
 		};
 
-		Complex.prototype.artanh = function () {
+		Complex.prototype.artanh = function  () {
 			if (this.isZero()) {
 				return new MathLib.Complex(this.re, this.im);
 			}
@@ -4363,7 +4363,7 @@ var MathLib;
 			return MathLib.times(0.5, MathLib.minus(MathLib.ln(MathLib.plus(1, this)), MathLib.ln(MathLib.minus(1, this))));
 		};
 
-		Complex.prototype.compare = function (x) {
+		Complex.prototype.compare = function  (x) {
 			var a = MathLib.sign(this.abs() - x.abs());
 
 			if (MathLib.isNaN(this.re)) {
@@ -4383,23 +4383,23 @@ var MathLib;
 			return a ? a : MathLib.sign(this.arg() - x.arg());
 		};
 
-		Complex.prototype.conjugate = function () {
+		Complex.prototype.conjugate = function  () {
 			return new MathLib.Complex(this.re, MathLib.negative(this.im));
 		};
 
-		Complex.prototype.copy = function () {
+		Complex.prototype.copy = function  () {
 			return new MathLib.Complex(MathLib.copy(this.re), MathLib.copy(this.im));
 		};
 
-		Complex.prototype.cos = function () {
+		Complex.prototype.cos = function  () {
 			return new MathLib.Complex(MathLib.cos(this.re) * MathLib.cosh(this.im), -MathLib.sin(this.re) * MathLib.sinh(this.im));
 		};
 
-		Complex.prototype.cosh = function () {
+		Complex.prototype.cosh = function  () {
 			return new MathLib.Complex(MathLib.cos(this.im) * MathLib.cosh(this.re), MathLib.sin(this.im) * MathLib.sinh(this.re));
 		};
 
-		Complex.prototype.cot = function () {
+		Complex.prototype.cot = function  () {
 			var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cos(aa) - MathLib.cosh(bb);
 
 			if (this.isZero()) {
@@ -4409,7 +4409,7 @@ var MathLib;
 			return new MathLib.Complex(-MathLib.sin(aa) / d, MathLib.sinh(bb) / d);
 		};
 
-		Complex.prototype.coth = function () {
+		Complex.prototype.coth = function  () {
 			var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cosh(aa) - MathLib.cos(bb);
 
 			if (this.isZero()) {
@@ -4419,7 +4419,7 @@ var MathLib;
 			return new MathLib.Complex(MathLib.sinh(aa) / d, -MathLib.sin(bb) / d);
 		};
 
-		Complex.prototype.csc = function () {
+		Complex.prototype.csc = function  () {
 			var a = this.re, b = this.im, d = MathLib.cos(2 * a) - MathLib.cosh(2 * b);
 
 			if (this.isZero()) {
@@ -4429,7 +4429,7 @@ var MathLib;
 			return new MathLib.Complex(-2 * MathLib.sin(a) * MathLib.cosh(b) / d, 2 * MathLib.cos(a) * MathLib.sinh(b) / d);
 		};
 
-		Complex.prototype.csch = function () {
+		Complex.prototype.csch = function  () {
 			var a = this.re, b = this.im, d = MathLib.cosh(2 * a) - MathLib.cos(2 * b);
 
 			if (this.isZero()) {
@@ -4439,15 +4439,15 @@ var MathLib;
 			return new MathLib.Complex(2 * MathLib.sinh(a) * MathLib.cos(b) / d, -2 * MathLib.cosh(a) * MathLib.sin(b) / d);
 		};
 
-		Complex.prototype.divide = function (c) {
+		Complex.prototype.divide = function  (c) {
 			return this.times(MathLib.inverse(c));
 		};
 
-		Complex.prototype.exp = function () {
+		Complex.prototype.exp = function  () {
 			return new MathLib.Complex(MathLib.exp(this.re) * MathLib.cos(this.im), MathLib.exp(this.re) * MathLib.sin(this.im));
 		};
 
-		Complex.prototype.inverse = function () {
+		Complex.prototype.inverse = function  () {
 			var d = MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2));
 
 			if (this.isZero()) {
@@ -4461,7 +4461,7 @@ var MathLib;
 			return new MathLib.Complex(MathLib.divide(this.re, d), MathLib.divide(MathLib.negative(this.im), d));
 		};
 
-		Complex.prototype.isEqual = function (n) {
+		Complex.prototype.isEqual = function  (n) {
 			if (typeof n === 'number') {
 				return MathLib.isEqual(this.re, n) && MathLib.isZero(this.im);
 			}
@@ -4471,30 +4471,30 @@ var MathLib;
 			return false;
 		};
 
-		Complex.prototype.isFinite = function () {
+		Complex.prototype.isFinite = function  () {
 			return MathLib.isFinite(this.re);
 		};
 
-		Complex.prototype.isZero = function () {
+		Complex.prototype.isZero = function  () {
 			return MathLib.isZero(this.re) && MathLib.isZero(this.im);
 		};
 
-		Complex.prototype.ln = function () {
+		Complex.prototype.ln = function  () {
 			if (this.re === Infinity) {
 				return new MathLib.Complex(Infinity);
 			}
 			return new MathLib.Complex(MathLib.ln(this.abs()), this.arg());
 		};
 
-		Complex.prototype.minus = function (c) {
+		Complex.prototype.minus = function  (c) {
 			return this.plus(MathLib.negative(c));
 		};
 
-		Complex.prototype.negative = function () {
+		Complex.prototype.negative = function  () {
 			return new MathLib.Complex(MathLib.negative(this.re), MathLib.negative(this.im));
 		};
 
-		Complex.prototype.plus = function (c) {
+		Complex.prototype.plus = function  (c) {
 			if (c.type === 'complex') {
 				return new MathLib.Complex(MathLib.plus(this.re, c.re), MathLib.plus(this.im, c.im));
 			} else if (c.type === 'rational') {
@@ -4505,7 +4505,7 @@ var MathLib;
 			}
 		};
 
-		Complex.prototype.pow = function (c) {
+		Complex.prototype.pow = function  (c) {
 			var re, im, abs, arg;
 
 			if (MathLib.type(c) === 'complex') {
@@ -4547,19 +4547,19 @@ var MathLib;
 			}
 		};
 
-		Complex.prototype.sec = function () {
+		Complex.prototype.sec = function  () {
 			var a = this.re, b = this.im, d = MathLib.cos(2 * a) + MathLib.cosh(2 * b);
 
 			return new MathLib.Complex(2 * MathLib.cos(a) * MathLib.cosh(b) / d, 2 * MathLib.sin(a) * MathLib.sinh(b) / d);
 		};
 
-		Complex.prototype.sech = function () {
+		Complex.prototype.sech = function  () {
 			var a = this.re, b = this.im, d = MathLib.cosh(2 * a) + MathLib.cos(2 * b);
 
 			return new MathLib.Complex(2 * MathLib.cosh(a) * MathLib.cos(b) / d, -2 * MathLib.sinh(a) * MathLib.sin(b) / d);
 		};
 
-		Complex.prototype.sign = function () {
+		Complex.prototype.sign = function  () {
 			if (this.isZero() || MathLib.isNaN(this.re)) {
 				return this;
 			} else if (this.re === Infinity) {
@@ -4568,31 +4568,31 @@ var MathLib;
 			return MathLib.Complex.polar(1, this.arg());
 		};
 
-		Complex.prototype.sin = function () {
+		Complex.prototype.sin = function  () {
 			return new MathLib.Complex(MathLib.sin(this.re) * MathLib.cosh(this.im), MathLib.cos(this.re) * MathLib.sinh(this.im));
 		};
 
-		Complex.prototype.sinh = function () {
+		Complex.prototype.sinh = function  () {
 			return new MathLib.Complex(MathLib.cos(this.im) * MathLib.sinh(this.re), MathLib.sin(this.im) * MathLib.cosh(this.re));
 		};
 
-		Complex.prototype.sqrt = function () {
+		Complex.prototype.sqrt = function  () {
 			return MathLib.Complex.polar(Math.sqrt(this.abs()), this.arg() / 2);
 		};
 
-		Complex.prototype.tan = function () {
+		Complex.prototype.tan = function  () {
 			var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cos(aa) + MathLib.cosh(bb);
 
 			return new MathLib.Complex(MathLib.sin(aa) / d, MathLib.sinh(bb) / d);
 		};
 
-		Complex.prototype.tanh = function () {
+		Complex.prototype.tanh = function  () {
 			var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cosh(aa) + MathLib.cos(bb);
 
 			return new MathLib.Complex(MathLib.sinh(aa) / d, MathLib.sin(bb) / d);
 		};
 
-		Complex.prototype.times = function (c) {
+		Complex.prototype.times = function  (c) {
 			if (c.type === 'complex') {
 				if (this.re === Infinity) {
 					if (c.isZero() || MathLib.isNaN(c.re)) {
@@ -4619,7 +4619,7 @@ var MathLib;
 			}
 		};
 
-		Complex.prototype.toContentMathML = function () {
+		Complex.prototype.toContentMathML = function  () {
 			if (!this.isFinite()) {
 				return '<csymbol cd="nums1">' + (this.re === Infinity ? 'infinity' : 'NaN') + '</csymbol>';
 			}
@@ -4627,7 +4627,7 @@ var MathLib;
 			return '<apply><plus />' + MathLib.toContentMathML(this.re) + '<apply><times />' + MathLib.toContentMathML(this.im) + '<imaginaryi /></apply></apply>';
 		};
 
-		Complex.prototype.toLaTeX = function () {
+		Complex.prototype.toLaTeX = function  () {
 			var str = '', reFlag = false;
 
 			if (!this.isFinite()) {
@@ -4647,7 +4647,7 @@ var MathLib;
 			return str;
 		};
 
-		Complex.prototype.toMathML = function () {
+		Complex.prototype.toMathML = function  () {
 			var str = '', reFlag = false;
 
 			if (!this.isFinite()) {
@@ -4667,7 +4667,7 @@ var MathLib;
 			return str;
 		};
 
-		Complex.prototype.toPoint = function () {
+		Complex.prototype.toPoint = function  () {
 			if (this.re == Infinity || MathLib.isNaN(this.re)) {
 				return new MathLib.Point([0, 0, 0]);
 			}
@@ -4675,7 +4675,7 @@ var MathLib;
 			return new MathLib.Point(this.re, this.im);
 		};
 
-		Complex.prototype.toString = function () {
+		Complex.prototype.toString = function  () {
 			var str = '';
 
 			if (!this.isFinite()) {
@@ -4693,7 +4693,7 @@ var MathLib;
 			}
 			return str;
 		};
-		Complex.polar = function (abs, arg) {
+		Complex.polar = function  (abs, arg) {
 			if (abs === Infinity) {
 				return new MathLib.Complex(Infinity);
 			}
@@ -4705,15 +4705,15 @@ var MathLib;
 
 	var Line = (function (_super) {
 		__extends(Line, _super);
-		function Line(coords) {
+		function Line (coords) {
 			_super.call(this, coords);
 			this.type = 'line';
 			this.dimension = 2;
 		}
-		Line.prototype.draw = function (screen, options) {
+		Line.prototype.draw = function  (screen, options) {
 			if (Array.isArray(screen)) {
 				var line = this;
-				screen.forEach(function (x) {
+				screen.forEach(function  (x) {
 					x.line(line, options);
 				});
 			} else {
@@ -4722,7 +4722,7 @@ var MathLib;
 			return this;
 		};
 
-		Line.prototype.isEqual = function (q) {
+		Line.prototype.isEqual = function  (q) {
 			var p = this.normalize();
 			q = q.normalize();
 
@@ -4730,20 +4730,20 @@ var MathLib;
 				return false;
 			}
 
-			return p.every(function (x, i) {
+			return p.every(function  (x, i) {
 				return MathLib.isEqual(x, q[i]);
 			});
 		};
 
-		Line.prototype.isFinite = function () {
+		Line.prototype.isFinite = function  () {
 			return !MathLib.isZero(this[0]) || !MathLib.isZero(this[1]);
 		};
 
-		Line.prototype.isParallelTo = function (l) {
+		Line.prototype.isParallelTo = function  (l) {
 			return MathLib.isZero(this[0] * l[1] - this[1] * l[0]);
 		};
 
-		Line.prototype.meet = function (l) {
+		Line.prototype.meet = function  (l) {
 			var point, k = this;
 
 			if (this.dimension === 2 && l.dimension === 2) {
@@ -4751,28 +4751,28 @@ var MathLib;
 
 				Object.defineProperties(point, {
 					'0': {
-						get: function () {
+						get: function  () {
 							return k[1] * l[2] - k[2] * l[1];
 						},
-						set: function () {
+						set: function  () {
 							MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet' });
 						},
 						enumerable: true
 					},
 					'1': {
-						get: function () {
+						get: function  () {
 							return k[2] * l[0] - k[0] * l[2];
 						},
-						set: function () {
+						set: function  () {
 							MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet' });
 						},
 						enumerable: true
 					},
 					'2': {
-						get: function () {
+						get: function  () {
 							return k[0] * l[1] - k[1] * l[0];
 						},
-						set: function () {
+						set: function  () {
 							MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet' });
 						},
 						enumerable: true
@@ -4783,11 +4783,11 @@ var MathLib;
 			}
 		};
 
-		Line.prototype.normalize = function () {
+		Line.prototype.normalize = function  () {
 			var h = MathLib.hypot(this[0], this[1]);
 
 			if (h !== 0) {
-				return this.map(function (x) {
+				return this.map(function  (x) {
 					return x / h;
 				});
 			} else {
@@ -4795,33 +4795,33 @@ var MathLib;
 			}
 		};
 
-		Line.prototype.parallelThrough = function (p) {
+		Line.prototype.parallelThrough = function  (p) {
 			var l = this, parallel = new MathLib.Line([0, 0, 0]);
 
 			Object.defineProperties(parallel, {
 				'0': {
-					get: function () {
+					get: function  () {
 						return -l[0] * p[2];
 					},
-					set: function () {
+					set: function  () {
 						MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough' });
 					},
 					enumerable: true
 				},
 				'1': {
-					get: function () {
+					get: function  () {
 						return -l[1] * p[2];
 					},
-					set: function () {
+					set: function  () {
 						MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough' });
 					},
 					enumerable: true
 				},
 				'2': {
-					get: function () {
+					get: function  () {
 						return l[1] * p[1] + l[0] * p[0];
 					},
-					set: function () {
+					set: function  () {
 						MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough' });
 					},
 					enumerable: true
@@ -4835,7 +4835,7 @@ var MathLib;
 	MathLib.Line = Line;
 
 	var Matrix = (function () {
-		function Matrix(matrix) {
+		function Matrix (matrix) {
 			var _this = this;
 			this.type = 'matrix';
 			if (typeof matrix === 'string') {
@@ -4846,14 +4846,14 @@ var MathLib;
 					matrix = JSON.parse('[[' + matrix + ']]');
 				}
 			}
-			matrix.forEach(function (x, i) {
+			matrix.forEach(function  (x, i) {
 				_this[i] = x;
 			});
 			this.length = matrix.length;
 			this.cols = matrix[0].length;
 			this.rows = matrix.length;
 		}
-		Matrix.prototype.LU = function () {
+		Matrix.prototype.LU = function  () {
 			var i, j, k, t, p, LU = this.toArray(), m = this.rows, n = this.cols, permutation = [];
 
 			for (k = 0; k < n; k++) {
@@ -4881,24 +4881,24 @@ var MathLib;
 				}
 			}
 			LU = new MathLib.Matrix(LU);
-			this.LU = function () {
+			this.LU = function  () {
 				return LU;
 			};
 			this.LUpermutation = new MathLib.Permutation(permutation);
 			return LU;
 		};
 
-		Matrix.prototype.adjoint = function () {
+		Matrix.prototype.adjoint = function  () {
 			return this.map(MathLib.conjugate).transpose();
 		};
 
-		Matrix.prototype.adjugate = function () {
-			return this.map(function (x, r, c, m) {
+		Matrix.prototype.adjugate = function  () {
+			return this.map(function  (x, r, c, m) {
 				return MathLib.times(m.remove(c, r).determinant(), 1 - ((r + c) % 2) * 2);
 			});
 		};
 
-		Matrix.prototype.cholesky = function () {
+		Matrix.prototype.cholesky = function  () {
 			var i, ii, j, jj, k, kk, sum, choleskyMatrix, cholesky = [];
 
 			for (i = 0, ii = this.rows; i < ii; i++) {
@@ -4926,13 +4926,13 @@ var MathLib;
 			}
 			choleskyMatrix = new MathLib.Matrix(cholesky);
 
-			this.cholesky = function () {
+			this.cholesky = function  () {
 				return choleskyMatrix;
 			};
 			return choleskyMatrix;
 		};
 
-		Matrix.prototype.compare = function (m) {
+		Matrix.prototype.compare = function  (m) {
 			var i, ii, j, jj;
 
 			if (this.rows !== m.rows) {
@@ -4954,11 +4954,11 @@ var MathLib;
 			return 0;
 		};
 
-		Matrix.prototype.copy = function () {
+		Matrix.prototype.copy = function  () {
 			return this.map(MathLib.copy);
 		};
 
-		Matrix.prototype.determinant = function () {
+		Matrix.prototype.determinant = function  () {
 			var LU, determinant;
 
 			if (!this.isSquare()) {
@@ -4973,13 +4973,13 @@ var MathLib;
 				determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, LU.diag()));
 			}
 
-			this.determinant = function () {
+			this.determinant = function  () {
 				return determinant;
 			};
 			return determinant;
 		};
 
-		Matrix.prototype.diag = function () {
+		Matrix.prototype.diag = function  () {
 			var diagonal = [], i, ii;
 			for (i = 0, ii = Math.min(this.rows, this.cols); i < ii; i++) {
 				diagonal.push(this[i][i]);
@@ -4987,27 +4987,27 @@ var MathLib;
 			return diagonal;
 		};
 
-		Matrix.prototype.divide = function (n) {
+		Matrix.prototype.divide = function  (n) {
 			return this.times(MathLib.inverse(n));
 		};
 
-		Matrix.prototype.every = function (f) {
-			return Array.prototype.every.call(this, function (x, i) {
-				return Array.prototype.every.call(x, function (y, j) {
+		Matrix.prototype.every = function  (f) {
+			return Array.prototype.every.call(this, function  (x, i) {
+				return Array.prototype.every.call(x, function  (y, j) {
 					return f(y, i, j, this);
 				});
 			});
 		};
 
-		Matrix.prototype.forEach = function (f) {
-			Array.prototype.forEach.call(this, function (x, i) {
-				return Array.prototype.forEach.call(x, function (y, j) {
+		Matrix.prototype.forEach = function  (f) {
+			Array.prototype.forEach.call(this, function  (x, i) {
+				return Array.prototype.forEach.call(x, function  (y, j) {
 					return f(y, i, j, this);
 				});
 			});
 		};
 
-		Matrix.prototype.gershgorin = function () {
+		Matrix.prototype.gershgorin = function  () {
 			var c = [], rc = [], rr = [], circles = [], i, ii;
 
 			for (i = 0, ii = this.rows; i < ii; i++) {
@@ -5015,7 +5015,7 @@ var MathLib;
 				rr.push(0);
 			}
 
-			this.forEach(function (x, i, j) {
+			this.forEach(function  (x, i, j) {
 				if (i === j) {
 					if (MathLib.is(x, 'complex')) {
 						c.push(x.toPoint());
@@ -5035,7 +5035,7 @@ var MathLib;
 			return circles;
 		};
 
-		Matrix.prototype.givens = function () {
+		Matrix.prototype.givens = function  () {
 			var rows = this.rows, cols = this.cols, R = this.copy(), Q = MathLib.Matrix.identity(rows), c, s, rho, i, j, k, ri, rj, qi, qj;
 
 			for (i = 0; i < cols; i++) {
@@ -5074,7 +5074,7 @@ var MathLib;
 			return [Q, R];
 		};
 
-		Matrix.prototype.inverse = function () {
+		Matrix.prototype.inverse = function  () {
 			var i, ii, res, inverse, col = [], matrix = [], n = this.rows;
 
 			if (!this.isSquare()) {
@@ -5099,29 +5099,29 @@ var MathLib;
 					return;
 				}
 
-				res.forEach(function (x, i) {
+				res.forEach(function  (x, i) {
 					matrix[i].push(x);
 				});
 			}
 
 			inverse = new MathLib.Matrix(matrix);
-			this.inverse = function () {
+			this.inverse = function  () {
 				return inverse;
 			};
 			return inverse;
 		};
 
-		Matrix.prototype.isBandMatrix = function (l, u) {
+		Matrix.prototype.isBandMatrix = function  (l, u) {
 			if (arguments.length === 1) {
 				u = l;
 			}
 
-			return this.every(function (x, i, j) {
+			return this.every(function  (x, i, j) {
 				return (i - l <= j && i + u >= j) || MathLib.isZero(x);
 			});
 		};
 
-		Matrix.prototype.isDiag = function () {
+		Matrix.prototype.isDiag = function  () {
 			var i, j, ii, jj;
 			if (Number(this.hasOwnProperty('isUpper') && this.isUpper()) + Number(this.hasOwnProperty('isLower') && this.isLower()) + Number(this.hasOwnProperty('isSymmetric') && this.isSymmetric()) > 1) {
 				return true;
@@ -5136,7 +5136,7 @@ var MathLib;
 			return true;
 		};
 
-		Matrix.prototype.isEqual = function (x) {
+		Matrix.prototype.isEqual = function  (x) {
 			var i, j, ii, jj;
 			if (this === x) {
 				return true;
@@ -5154,32 +5154,32 @@ var MathLib;
 			return false;
 		};
 
-		Matrix.prototype.isIdentity = function () {
+		Matrix.prototype.isIdentity = function  () {
 			if (!this.isSquare()) {
 				return false;
 			}
 
-			var isIdentity = this.every(function (x, r, c) {
+			var isIdentity = this.every(function  (x, r, c) {
 				return r === c ? MathLib.isOne(x) : MathLib.isZero(x);
 			});
 
-			this.isIdentity = function () {
+			this.isIdentity = function  () {
 				return isIdentity;
 			};
 			return isIdentity;
 		};
 
-		Matrix.prototype.isInvertible = function () {
+		Matrix.prototype.isInvertible = function  () {
 			return this.isSquare() && this.rank() === this.rows;
 		};
 
-		Matrix.prototype.isLower = function () {
-			return this.slice(0, -1).every(function (x, i) {
+		Matrix.prototype.isLower = function  () {
+			return this.slice(0, -1).every(function  (x, i) {
 				return x.slice(i + 1).every(MathLib.isZero);
 			});
 		};
 
-		Matrix.prototype.isNegDefinite = function () {
+		Matrix.prototype.isNegDefinite = function  () {
 			if (!this.isSquare()) {
 				return;
 			}
@@ -5194,14 +5194,14 @@ var MathLib;
 			}
 		};
 
-		Matrix.prototype.isOrthogonal = function () {
+		Matrix.prototype.isOrthogonal = function  () {
 			return this.transpose().times(this).isIdentity();
 		};
 
-		Matrix.prototype.isPermutation = function () {
+		Matrix.prototype.isPermutation = function  () {
 			var rows = [], cols = [];
 
-			return this.every(function (x, r, c) {
+			return this.every(function  (x, r, c) {
 				if (MathLib.isOne(x)) {
 					if (rows[r] || cols[c]) {
 						return false;
@@ -5217,7 +5217,7 @@ var MathLib;
 			}) && rows.length === this.rows && cols.length === this.cols;
 		};
 
-		Matrix.prototype.isPosDefinite = function () {
+		Matrix.prototype.isPosDefinite = function  () {
 			if (!this.isSquare()) {
 				return;
 			}
@@ -5228,11 +5228,11 @@ var MathLib;
 			return this.determinant() > 0 && this.remove(this.rows - 1, this.cols - 1).isPosDefinite();
 		};
 
-		Matrix.prototype.isReal = function () {
+		Matrix.prototype.isReal = function  () {
 			return this.every(MathLib.isReal);
 		};
 
-		Matrix.prototype.isScalar = function () {
+		Matrix.prototype.isScalar = function  () {
 			var i, ii, diag = this.diag;
 			if (this.hasOwnProperty('isIdentity') && this.hasOwnProperty('isZero')) {
 				if (this.isIdentity() || this.isZero()) {
@@ -5252,11 +5252,11 @@ var MathLib;
 			return false;
 		};
 
-		Matrix.prototype.isSquare = function () {
+		Matrix.prototype.isSquare = function  () {
 			return this.cols === this.rows;
 		};
 
-		Matrix.prototype.isSymmetric = function () {
+		Matrix.prototype.isSymmetric = function  () {
 			var i, ii, j, jj, isSymmetric = true;
 
 			if (!this.isSquare()) {
@@ -5273,45 +5273,45 @@ var MathLib;
 				}
 			}
 
-			this.isSymmetric = function () {
+			this.isSymmetric = function  () {
 				return isSymmetric;
 			};
 			return isSymmetric;
 		};
 
-		Matrix.prototype.isUpper = function () {
-			return this.slice(1).every(function (x, i) {
+		Matrix.prototype.isUpper = function  () {
+			return this.slice(1).every(function  (x, i) {
 				return x.slice(0, i + 1).every(MathLib.isZero);
 			});
 		};
 
-		Matrix.prototype.isVector = function () {
+		Matrix.prototype.isVector = function  () {
 			return (this.rows === 1) || (this.cols === 1);
 		};
 
-		Matrix.prototype.isZero = function () {
+		Matrix.prototype.isZero = function  () {
 			var isZero = this.every(MathLib.isZero);
 
-			this.isZero = function () {
+			this.isZero = function  () {
 				return isZero;
 			};
 			return isZero;
 		};
 
-		Matrix.prototype.map = function (f) {
+		Matrix.prototype.map = function  (f) {
 			var m = this;
-			return new MathLib.Matrix(Array.prototype.map.call(this, function (x, i) {
-				return Array.prototype.map.call(x, function (y, j) {
+			return new MathLib.Matrix(Array.prototype.map.call(this, function  (x, i) {
+				return Array.prototype.map.call(x, function  (y, j) {
 					return f(y, i, j, m);
 				});
 			}));
 		};
 
-		Matrix.prototype.minor = function (r, c) {
+		Matrix.prototype.minor = function  (r, c) {
 			return this.remove(r, c).determinant();
 		};
 
-		Matrix.prototype.minus = function (m) {
+		Matrix.prototype.minus = function  (m) {
 			if (this.rows === m.rows && this.cols === m.cols) {
 				return this.plus(m.negative());
 			} else {
@@ -5320,7 +5320,7 @@ var MathLib;
 			}
 		};
 
-		Matrix.prototype.negative = function () {
+		Matrix.prototype.negative = function  () {
 			var i, ii, negative = [];
 
 			for (i = 0, ii = this.rows; i < ii; i++) {
@@ -5329,7 +5329,7 @@ var MathLib;
 			return new MathLib.Matrix(negative);
 		};
 
-		Matrix.prototype.plus = function (m) {
+		Matrix.prototype.plus = function  (m) {
 			var i, ii, j, jj, sum = [];
 
 			if (this.rows === m.rows && this.cols === m.cols) {
@@ -5346,7 +5346,7 @@ var MathLib;
 			}
 		};
 
-		Matrix.prototype.rank = function () {
+		Matrix.prototype.rank = function  () {
 			var i, j, rank = 0, mat = this.rref();
 
 			rankloop:
@@ -5359,13 +5359,13 @@ var MathLib;
 				}
 			}
 
-			this.rank = function () {
+			this.rank = function  () {
 				return rank;
 			};
 			return rank;
 		};
 
-		Matrix.prototype.reduce = function () {
+		Matrix.prototype.reduce = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -5373,14 +5373,14 @@ var MathLib;
 			return Array.prototype.reduce.apply(this, args);
 		};
 
-		Matrix.prototype.remove = function (row, col) {
+		Matrix.prototype.remove = function  (row, col) {
 			var rest = this.toArray();
 
 			if (row || row === 0) {
 				if (typeof row === 'number') {
 					row = [row];
 				}
-				rest = rest.filter(function (x, i) {
+				rest = rest.filter(function  (x, i) {
 					return row.indexOf(i) === -1;
 				});
 			}
@@ -5390,8 +5390,8 @@ var MathLib;
 					col = [col];
 				}
 				col = col.sort().reverse();
-				col.forEach(function (n) {
-					rest = rest.map(function (x) {
+				col.forEach(function  (n) {
+					rest = rest.map(function  (x) {
 						x.splice(n, 1);
 						return x;
 					});
@@ -5401,7 +5401,7 @@ var MathLib;
 			return new MathLib.Matrix(rest);
 		};
 
-		Matrix.prototype.rref = function () {
+		Matrix.prototype.rref = function  () {
 			var i, ii, j, jj, k, kk, pivot, factor, swap, lead = 0, rref = this.toArray();
 
 			for (i = 0, ii = this.rows; i < ii; i++) {
@@ -5447,7 +5447,7 @@ var MathLib;
 			return new MathLib.Matrix(rref);
 		};
 
-		Matrix.prototype.slice = function () {
+		Matrix.prototype.slice = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -5455,7 +5455,7 @@ var MathLib;
 			return Array.prototype.slice.apply(this, args);
 		};
 
-		Matrix.prototype.solve = function (b) {
+		Matrix.prototype.solve = function  (b) {
 			var LU = this.LU(), i, j, n = b.length, x = [], y = [];
 
 			b = this.LUpermutation.applyTo(b);
@@ -5491,22 +5491,22 @@ var MathLib;
 			}
 		};
 
-		Matrix.prototype.some = function (f) {
-			return Array.prototype.some.call(this, function (x, i) {
-				return Array.prototype.some.call(x, function (y, j) {
+		Matrix.prototype.some = function  (f) {
+			return Array.prototype.some.call(this, function  (x, i) {
+				return Array.prototype.some.call(x, function  (y, j) {
 					return f(y, i, j, this);
 				});
 			});
 		};
 
-		Matrix.prototype.times = function (a) {
+		Matrix.prototype.times = function  (a) {
 			var i, ii, j, jj, k, kk, product = [], entry;
 
 			if (a.type === 'rational') {
 				a = a.toNumber();
 			}
 			if (typeof a === 'number' || a.type === 'complex') {
-				return this.map(function (x) {
+				return this.map(function  (x) {
 					return MathLib.times(x, a);
 				});
 			} else if (a.type === 'matrix') {
@@ -5541,66 +5541,66 @@ var MathLib;
 			}
 		};
 
-		Matrix.prototype.toArray = function () {
-			return Array.prototype.map.call(this, function (x) {
-				return Array.prototype.map.call(x, function (y) {
+		Matrix.prototype.toArray = function  () {
+			return Array.prototype.map.call(this, function  (x) {
+				return Array.prototype.map.call(x, function  (y) {
 					return MathLib.copy(y);
 				});
 			});
 		};
 
-		Matrix.prototype.toColVectors = function () {
+		Matrix.prototype.toColVectors = function  () {
 			return this.transpose().toRowVectors();
 		};
 
-		Matrix.prototype.toContentMathML = function () {
-			return this.reduce(function (str, x) {
-				return str + x.reduce(function (prev, cur) {
+		Matrix.prototype.toContentMathML = function  () {
+			return this.reduce(function  (str, x) {
+				return str + x.reduce(function  (prev, cur) {
 					return prev + MathLib.toContentMathML(cur);
 				}, '<matrixrow>') + '</matrixrow>';
 			}, '<matrix>') + '</matrix>';
 		};
 
-		Matrix.prototype.toLaTeX = function () {
-			return '\\begin{pmatrix}\n' + this.reduce(function (str, x) {
-				return str + x.reduce(function (prev, cur) {
+		Matrix.prototype.toLaTeX = function  () {
+			return '\\begin{pmatrix}\n' + this.reduce(function  (str, x) {
+				return str + x.reduce(function  (prev, cur) {
 					return prev + ' & ' + MathLib.toLaTeX(cur);
 				}) + '\\\n';
 			}, '').slice(0, -2) + '\n\\end{pmatrix}';
 		};
 
-		Matrix.prototype.toMathML = function () {
-			return this.reduce(function (str, x) {
-				return str + x.reduce(function (prev, cur) {
+		Matrix.prototype.toMathML = function  () {
+			return this.reduce(function  (str, x) {
+				return str + x.reduce(function  (prev, cur) {
 					return prev + '<mtd>' + MathLib.toMathML(cur) + '</mtd>';
 				}, '<mtr>') + '</mtr>';
 			}, '<mrow><mo> ( </mo><mtable>') + '</mtable><mo> ) </mo></mrow>';
 		};
 
-		Matrix.prototype.toRowVectors = function () {
-			return this.toArray().map(function (v) {
+		Matrix.prototype.toRowVectors = function  () {
+			return this.toArray().map(function  (v) {
 				return new MathLib.Vector(v);
 			});
 		};
 
-		Matrix.prototype.toString = function () {
-			return this.reduce(function (str, x) {
-				return str + x.reduce(function (prev, cur) {
+		Matrix.prototype.toString = function  () {
+			return this.reduce(function  (str, x) {
+				return str + x.reduce(function  (prev, cur) {
 					return prev + '\t' + MathLib.toString(cur);
 				}) + '\n';
 			}, '').slice(0, -1);
 		};
 
-		Matrix.prototype.trace = function () {
+		Matrix.prototype.trace = function  () {
 			var trace = MathLib.plus.apply(null, this.diag());
 
-			this.trace = function () {
+			this.trace = function  () {
 				return trace;
 			};
 			return trace;
 		};
 
-		Matrix.prototype.transpose = function () {
+		Matrix.prototype.transpose = function  () {
 			var transposedMatrix, row, i, j, ii, jj, transpose = [];
 
 			for (i = 0, ii = this.cols; i < ii; i++) {
@@ -5612,12 +5612,12 @@ var MathLib;
 			}
 
 			transposedMatrix = new MathLib.Matrix(transpose);
-			this.transpose = function () {
+			this.transpose = function  () {
 				return transposedMatrix;
 			};
 			return transposedMatrix;
 		};
-		Matrix.givensMatrix = function (n, i, k, phi) {
+		Matrix.givensMatrix = function  (n, i, k, phi) {
 			var givens = MathLib.Matrix.identity(n);
 			givens[k][k] = givens[i][i] = Math.cos(phi);
 			givens[i][k] = Math.sin(phi);
@@ -5625,7 +5625,7 @@ var MathLib;
 			return givens;
 		};
 
-		Matrix.identity = function (n) {
+		Matrix.identity = function  (n) {
 			var row = [], matrix = [], i, ii;
 			n = n || 1;
 
@@ -5643,7 +5643,7 @@ var MathLib;
 			return new MathLib.Matrix(matrix);
 		};
 
-		Matrix.numbers = function (n, r, c) {
+		Matrix.numbers = function  (n, r, c) {
 			var i, ii, row = [], matrix = [];
 
 			for (i = 0, ii = c || r || 1; i < ii; i++) {
@@ -5655,13 +5655,13 @@ var MathLib;
 			return new MathLib.Matrix(matrix);
 		};
 
-		Matrix.one = function (r, c) {
+		Matrix.one = function  (r, c) {
 			r = r || 1;
 			c = c || 1;
 			return MathLib.Matrix.numbers(1, r, c);
 		};
 
-		Matrix.random = function (r, c) {
+		Matrix.random = function  (r, c) {
 			var row, matrix = [], i, j, ii, jj;
 			for (i = 0, ii = r || 1; i < ii; i++) {
 				row = [];
@@ -5673,7 +5673,7 @@ var MathLib;
 			return new MathLib.Matrix(matrix);
 		};
 
-		Matrix.zero = function (r, c) {
+		Matrix.zero = function  (r, c) {
 			r = r || 1;
 			c = c || 1;
 			return MathLib.Matrix.numbers(0, r, c);
@@ -5683,7 +5683,7 @@ var MathLib;
 	MathLib.Matrix = Matrix;
 
 	var Permutation = (function () {
-		function Permutation(p) {
+		function Permutation (p) {
 			var _this = this;
 			this.type = 'permutation';
 			var cycle, permutation;
@@ -5696,13 +5696,13 @@ var MathLib;
 				cycle = Permutation.listToCycle(permutation);
 			}
 
-			permutation.forEach(function (x, i) {
+			permutation.forEach(function  (x, i) {
 				_this[i] = x;
 			});
 			this.length = permutation.length;
 			this.cycle = cycle;
 		}
-		Permutation.prototype.applyTo = function (n) {
+		Permutation.prototype.applyTo = function  (n) {
 			var p, permutatedObj;
 			if (typeof n === 'number') {
 				if (n >= this.length) {
@@ -5711,7 +5711,7 @@ var MathLib;
 				return this[n];
 			} else {
 				p = this;
-				permutatedObj = n.map(function (x, i) {
+				permutatedObj = n.map(function  (x, i) {
 					return n[p.applyTo(i)];
 				});
 
@@ -5719,7 +5719,7 @@ var MathLib;
 			}
 		};
 
-		Permutation.prototype.compare = function (p) {
+		Permutation.prototype.compare = function  (p) {
 			var i, ii;
 
 			if (this.length !== p.length) {
@@ -5735,10 +5735,10 @@ var MathLib;
 			return 0;
 		};
 
-		Permutation.cycleToList = function (cycle) {
+		Permutation.cycleToList = function  (cycle) {
 			var index, list = [], cur, i, ii, j, jj, max;
 
-			max = cycle.map(function (b) {
+			max = cycle.map(function  (b) {
 				return Math.max.apply(null, b);
 			});
 			max = Math.max.apply(null, max);
@@ -5756,15 +5756,15 @@ var MathLib;
 			return list;
 		};
 
-		Permutation.prototype.inverse = function () {
+		Permutation.prototype.inverse = function  () {
 			var cycle = this.cycle.slice(0);
-			cycle.reverse().forEach(function (e) {
+			cycle.reverse().forEach(function  (e) {
 				e.reverse();
 			});
 			return new MathLib.Permutation(cycle);
 		};
 
-		Permutation.listToCycle = function (list) {
+		Permutation.listToCycle = function  (list) {
 			var finished = [], cur, i, ii, cycle, cycles = [];
 
 			for (i = 0, ii = list.length; i < ii; i++) {
@@ -5782,7 +5782,7 @@ var MathLib;
 			return cycles;
 		};
 
-		Permutation.prototype.map = function () {
+		Permutation.prototype.map = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -5790,7 +5790,7 @@ var MathLib;
 			return new MathLib.Permutation(Array.prototype.map.apply(this, args));
 		};
 
-		Permutation.prototype.sgn = function () {
+		Permutation.prototype.sgn = function  () {
 			var i, ii, count = 0;
 
 			for (i = 0, ii = this.cycle.length; i < ii; i++) {
@@ -5800,14 +5800,14 @@ var MathLib;
 			return -2 * (count % 2) + 1;
 		};
 
-		Permutation.prototype.times = function (p) {
+		Permutation.prototype.times = function  (p) {
 			var a = this;
-			return p.map(function (x) {
+			return p.map(function  (x) {
 				return a[x];
 			});
 		};
 
-		Permutation.prototype.toMatrix = function (n) {
+		Permutation.prototype.toMatrix = function  (n) {
 			var row = [], matrix = [], index, i, ii;
 			n = n || this.length;
 
@@ -5822,9 +5822,9 @@ var MathLib;
 			return new MathLib.Matrix(matrix);
 		};
 
-		Permutation.prototype.toString = function () {
+		Permutation.prototype.toString = function  () {
 			var str = '';
-			this.cycle.forEach(function (elem) {
+			this.cycle.forEach(function  (elem) {
 				str += '(' + elem.toString() + ')';
 			});
 			return str;
@@ -5835,7 +5835,7 @@ var MathLib;
 	MathLib.Permutation = Permutation;
 
 	var Conic = (function () {
-		function Conic(primal, dual) {
+		function Conic (primal, dual) {
 			this.type = 'conic';
 			if (primal.type !== 'matrix') {
 				primal = new MathLib.Matrix(primal);
@@ -5845,10 +5845,10 @@ var MathLib;
 			if (primal.rank() > 1) {
 				Object.defineProperties(this, {
 					'dual': {
-						get: function () {
+						get: function  () {
 							return this.primal.adjugate();
 						},
-						set: function () {
+						set: function  () {
 						},
 						enumerable: true,
 						configurable: true
@@ -5858,11 +5858,11 @@ var MathLib;
 				this.dual = dual;
 			}
 		}
-		Conic.prototype.draw = function (screen, options, redraw) {
+		Conic.prototype.draw = function  (screen, options, redraw) {
 			if (typeof redraw === 'undefined') { redraw = false; }
 			if (Array.isArray(screen)) {
 				var conic = this;
-				screen.forEach(function (x) {
+				screen.forEach(function  (x) {
 					conic.draw(x, options);
 				});
 			} else {
@@ -5886,10 +5886,10 @@ var MathLib;
 						cy = this.primal[2][2] / this.primal[0][0];
 
 						screen.path([
-							function (t) {
+							function  (t) {
 								return cx + cos * param * t * t - sin * 2 * param * t;
 							},
-							function (t) {
+							function  (t) {
 								return cy + sin * param * t * t + cos * 2 * param * t;
 							}
 						], options, redraw);
@@ -5898,10 +5898,10 @@ var MathLib;
 						options.to = 2 * Math.PI;
 
 						screen.path([
-							function (t) {
+							function  (t) {
 								return cx + cos * Math.cos(t) * A - sin * Math.sin(t) * C;
 							},
-							function (t) {
+							function  (t) {
 								return cy + sin * Math.cos(t) * A + cos * Math.sin(t) * C;
 							}
 						], options, redraw);
@@ -5909,7 +5909,7 @@ var MathLib;
 						options.from = 0;
 						options.to = 2 * Math.PI;
 
-						sgn = function (t) {
+						sgn = function  (t) {
 							return +((t + Math.PI / 2) % (2 * Math.PI) < Math.PI) * 2 - 1;
 						};
 
@@ -5926,10 +5926,10 @@ var MathLib;
 						}
 
 						screen.path([
-							function (t) {
+							function  (t) {
 								return cx + cos * MathLib.sec(t) * A - sin * MathLib.tan(t) * C * sgn(t);
 							},
-							function (t) {
+							function  (t) {
 								return cy + sin * MathLib.sec(t) * A + cos * MathLib.tan(t) * C * sgn(t);
 							}
 						], options, redraw);
@@ -5948,7 +5948,7 @@ var MathLib;
 			return this;
 		};
 
-		Conic.prototype.eccentricity = function () {
+		Conic.prototype.eccentricity = function  () {
 			var normalform = this.normalize(), a = normalform.primal[0][0], c = normalform.primal[1][1];
 
 			if (!this.isDegenerated()) {
@@ -5962,16 +5962,16 @@ var MathLib;
 			}
 		};
 
-		Conic.prototype.isDegenerated = function () {
+		Conic.prototype.isDegenerated = function  () {
 			return this.primal.rank() !== 3;
 		};
 
-		Conic.prototype.isEqual = function (c) {
+		Conic.prototype.isEqual = function  (c) {
 			if (this === c) {
 				return true;
 			}
 
-			var compare = function (M, N) {
+			var compare = function  (M, N) {
 				var i, j, m, n;
 
 				if (M === N) {
@@ -6008,7 +6008,7 @@ var MathLib;
 			return compare(this.primal, c.primal) && compare(this.dual, c.dual);
 		};
 
-		Conic.prototype.latusRectum = function () {
+		Conic.prototype.latusRectum = function  () {
 			var normalForm = this.normalize(), a = normalForm.primal[0][0], c = normalForm.primal[1][1], min = Math.min(Math.abs(a), Math.abs(c)), max = Math.max(Math.abs(a), Math.abs(c));
 
 			if (!this.isDegenerated()) {
@@ -6020,7 +6020,7 @@ var MathLib;
 			}
 		};
 
-		Conic.prototype.linearEccentricity = function () {
+		Conic.prototype.linearEccentricity = function  () {
 			var normalForm = this.normalize(), a = normalForm.primal[0][0], c = normalForm.primal[1][1], max = Math.max(Math.abs(a), Math.abs(c)), min = Math.min(Math.abs(a), Math.abs(c));
 
 			if (!this.isDegenerated()) {
@@ -6035,13 +6035,13 @@ var MathLib;
 			}
 		};
 
-		Conic.prototype.meet = function (x) {
+		Conic.prototype.meet = function  (x) {
 			var B, C, alpha, i, j, p1, p2, Ml, a, b, c, d, Delta0, Delta1, lambda, degenerated, lines, A = this.primal;
 
 			if (x.type === 'line') {
-				var setter = function () {
+				var setter = function  () {
 					MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent point.', method: 'Conic#meet' });
-				}, recalculate = function () {
+				}, recalculate = function  () {
 					Ml = new MathLib.Matrix([[0, x[2], -x[1]], [-x[2], 0, x[0]], [x[1], -x[0], 0]]);
 					B = Ml.transpose().times(A).times(Ml);
 
@@ -6070,7 +6070,7 @@ var MathLib;
 				p1 = new MathLib.Point(C[i]);
 				Object.defineProperties(p1, {
 					'0': {
-						get: function () {
+						get: function  () {
 							recalculate();
 							return C[i][0];
 						},
@@ -6078,7 +6078,7 @@ var MathLib;
 						enumerable: true
 					},
 					'1': {
-						get: function () {
+						get: function  () {
 							recalculate();
 							return C[i][1];
 						},
@@ -6086,7 +6086,7 @@ var MathLib;
 						enumerable: true
 					},
 					'2': {
-						get: function () {
+						get: function  () {
 							recalculate();
 							return C[i][2];
 						},
@@ -6098,7 +6098,7 @@ var MathLib;
 				p2 = new MathLib.Point([C[0][j], C[1][j], C[2][j]]);
 				Object.defineProperties(p2, {
 					'0': {
-						get: function () {
+						get: function  () {
 							recalculate();
 							return C[0][j];
 						},
@@ -6106,7 +6106,7 @@ var MathLib;
 						enumerable: true
 					},
 					'1': {
-						get: function () {
+						get: function  () {
 							recalculate();
 							return C[1][j];
 						},
@@ -6114,7 +6114,7 @@ var MathLib;
 						enumerable: true
 					},
 					'2': {
-						get: function () {
+						get: function  () {
 							recalculate();
 							return C[2][j];
 						},
@@ -6141,7 +6141,7 @@ var MathLib;
 			}
 		};
 
-		Conic.prototype.normalize = function () {
+		Conic.prototype.normalize = function  () {
 			var A = this.primal[0][0], B = this.primal[0][1] * 2, C = this.primal[1][1], D = this.primal[0][2] * 2, E = this.primal[1][2] * 2, F = this.primal[2][2], r = Math.atan2(B, A - C) / 2, cos = Math.cos(r), sin = Math.sin(r), a = A * cos * cos + B * sin * cos + C * sin * sin, c = A * sin * sin - B * sin * cos + C * cos * cos, d = D * cos + E * sin, e = E * cos - D * sin, f = F;
 
 			if (a !== 0) {
@@ -6165,7 +6165,7 @@ var MathLib;
 			return new MathLib.Conic([[a, 0, d / 2], [0, c, e / 2], [d / 2, e / 2, f]]);
 		};
 
-		Conic.prototype.polarity = function (x) {
+		Conic.prototype.polarity = function  (x) {
 			var object, m, c = this;
 
 			if (x.type === 'line') {
@@ -6178,28 +6178,28 @@ var MathLib;
 
 			Object.defineProperties(object, {
 				'0': {
-					get: function () {
+					get: function  () {
 						return c[m][0][0] * x[0] + c[m][0][1] * x[1] + c[m][0][2] * x[2];
 					},
-					set: function () {
+					set: function  () {
 						MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity' });
 					},
 					enumerable: true
 				},
 				'1': {
-					get: function () {
+					get: function  () {
 						return c[m][1][0] * x[0] + c[m][1][1] * x[1] + c[m][1][2] * x[2];
 					},
-					set: function () {
+					set: function  () {
 						MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity' });
 					},
 					enumerable: true
 				},
 				'2': {
-					get: function () {
+					get: function  () {
 						return c[m][2][0] * x[0] + c[m][2][1] * x[1] + c[m][2][2] * x[2];
 					},
-					set: function () {
+					set: function  () {
 						MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity' });
 					},
 					enumerable: true
@@ -6209,8 +6209,8 @@ var MathLib;
 			return object;
 		};
 
-		Conic.prototype.splitDegenerated = function () {
-			var n, i, j, B, C, p0, p1, p2, rank = this.primal.rank(), nonZeroSearch = function (C) {
+		Conic.prototype.splitDegenerated = function  () {
+			var n, i, j, B, C, p0, p1, p2, rank = this.primal.rank(), nonZeroSearch = function  (C) {
 				for (i = 0; i < 3; i++) {
 					for (j = 0; j < 3; j++) {
 						if (C[i][j] !== 0) {
@@ -6249,16 +6249,16 @@ var MathLib;
 			}
 		};
 
-		Conic.throughFivePoints = function (p, q, r, s, t) {
+		Conic.throughFivePoints = function  (p, q, r, s, t) {
 			var conic = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
 
 			Object.defineProperties(conic, {
 				'primal': {
-					get: function () {
+					get: function  () {
 						var G = p.vectorProduct(r).outerProduct(q.vectorProduct(s)), H = p.vectorProduct(s).outerProduct(q.vectorProduct(r)), M = G.times(t.times(H).scalarProduct(t)).minus(H.times(t.times(G).scalarProduct(t)));
 						return M.transpose().plus(M);
 					},
-					set: function () {
+					set: function  () {
 					},
 					enumerable: true,
 					configurable: true
@@ -6273,19 +6273,19 @@ var MathLib;
 
 	var Point = (function (_super) {
 		__extends(Point, _super);
-		function Point(coords) {
+		function Point (coords) {
 			_super.call(this, arguments.length > 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
 			this.type = 'point';
 
 			this.dimension = 2;
 		}
-		Point.prototype.crossRatio = function (a, b, c, d) {
+		Point.prototype.crossRatio = function  (a, b, c, d) {
 			var xa = this.vectorProduct(a), xb = this.vectorProduct(b);
 
 			return xa.scalarProduct(c) * xb.scalarProduct(d) / (xa.scalarProduct(d) * xb.scalarProduct(c));
 		};
 
-		Point.prototype.distanceTo = function (p) {
+		Point.prototype.distanceTo = function  (p) {
 			if (arguments.length === 0) {
 				return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
 			}
@@ -6295,10 +6295,10 @@ var MathLib;
 			}
 		};
 
-		Point.prototype.draw = function (screen, options) {
+		Point.prototype.draw = function  (screen, options) {
 			if (Array.isArray(screen)) {
 				var point = this;
-				screen.forEach(function (x) {
+				screen.forEach(function  (x) {
 					x.point(point, options);
 				});
 			} else {
@@ -6308,7 +6308,7 @@ var MathLib;
 			return this;
 		};
 
-		Point.prototype.isEqual = function (q) {
+		Point.prototype.isEqual = function  (q) {
 			var p = this.normalize();
 			q = q.normalize();
 
@@ -6316,22 +6316,22 @@ var MathLib;
 				return false;
 			}
 
-			return p.every(function (x, i) {
+			return p.every(function  (x, i) {
 				return MathLib.isEqual(x, q[i]);
 			});
 		};
 
-		Point.prototype.isFinite = function () {
+		Point.prototype.isFinite = function  () {
 			return !MathLib.isZero(this[this.length - 1]);
 		};
 
-		Point.prototype.isInside = function (a) {
+		Point.prototype.isInside = function  (a) {
 			if (a.type === 'circle') {
 				return this.distanceTo(a.center) < a.radius;
 			}
 		};
 
-		Point.prototype.isOn = function (a) {
+		Point.prototype.isOn = function  (a) {
 			if (a.type === 'line') {
 				return this.distanceTo(a.center) === a.radius;
 			} else if (a.type === 'circle') {
@@ -6339,13 +6339,13 @@ var MathLib;
 			}
 		};
 
-		Point.prototype.isOutside = function (a) {
+		Point.prototype.isOutside = function  (a) {
 			if (a.type === 'circle') {
 				return this.distanceTo(a.center) > a.radius;
 			}
 		};
 
-		Point.prototype.join = function (q) {
+		Point.prototype.join = function  (q) {
 			var line, p = this;
 
 			if (this.dimension === 2 && q.dimension === 2) {
@@ -6353,28 +6353,28 @@ var MathLib;
 
 				Object.defineProperties(line, {
 					'0': {
-						get: function () {
+						get: function  () {
 							return p[1] * q[2] - p[2] * q[1];
 						},
-						set: function () {
+						set: function  () {
 							MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join' });
 						},
 						enumerable: true
 					},
 					'1': {
-						get: function () {
+						get: function  () {
 							return p[2] * q[0] - p[0] * q[2];
 						},
-						set: function () {
+						set: function  () {
 							MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join' });
 						},
 						enumerable: true
 					},
 					'2': {
-						get: function () {
+						get: function  () {
 							return p[0] * q[1] - p[1] * q[0];
 						},
-						set: function () {
+						set: function  () {
 							MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join' });
 						},
 						enumerable: true
@@ -6385,14 +6385,14 @@ var MathLib;
 			}
 		};
 
-		Point.prototype.normalize = function () {
+		Point.prototype.normalize = function  () {
 			var last = this[this.dimension] || 1;
-			return this.map(function (x) {
+			return this.map(function  (x) {
 				return x / last;
 			});
 		};
 
-		Point.prototype.reflectAt = function (a) {
+		Point.prototype.reflectAt = function  (a) {
 			var i, ii, reflectedPoint = [], p = this.normalize();
 
 			if (a.type === 'point') {
@@ -6407,35 +6407,35 @@ var MathLib;
 			}
 		};
 
-		Point.prototype.restrictTo = function (l) {
+		Point.prototype.restrictTo = function  (l) {
 			var p = this.slice();
 
 			Object.defineProperties(this, {
 				'0': {
-					get: function () {
+					get: function  () {
 						return l[1] * l[1] * p[0] - l[0] * (l[1] * p[1] + l[2] * p[2]);
 					},
-					set: function (point) {
+					set: function  (point) {
 						p[0] = point;
 					},
 					enumerable: true,
 					configurable: true
 				},
 				'1': {
-					get: function () {
+					get: function  () {
 						return -l[1] * l[2] * p[2] + l[0] * (l[0] * p[1] - l[1] * p[0]);
 					},
-					set: function (point) {
+					set: function  (point) {
 						p[1] = point;
 					},
 					enumerable: true,
 					configurable: true
 				},
 				'2': {
-					get: function () {
+					get: function  () {
 						return l[1] * l[1] * p[2] + l[0] * l[0] * p[2];
 					},
-					set: function (point) {
+					set: function  (point) {
 						p[2] = point;
 					},
 					enumerable: true,
@@ -6444,7 +6444,7 @@ var MathLib;
 			});
 		};
 
-		Point.prototype.toComplex = function () {
+		Point.prototype.toComplex = function  () {
 			if (this.dimension === 2) {
 				if (MathLib.isZero(this[2])) {
 					return MathLib.Complex.infinity;
@@ -6453,29 +6453,29 @@ var MathLib;
 			}
 		};
 
-		Point.prototype.toLaTeX = function (opt) {
+		Point.prototype.toLaTeX = function  (opt) {
 			if (typeof opt === 'undefined') { opt = false; }
 			var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
-			return '\\begin{pmatrix}' + p.reduce(function (old, cur) {
+			return '\\begin{pmatrix}' + p.reduce(function  (old, cur) {
 				return old + '\\\\' + MathLib.toLaTeX(cur);
 			}) + '\\end{pmatrix}';
 		};
 
-		Point.prototype.toMathML = function (opt) {
+		Point.prototype.toMathML = function  (opt) {
 			if (typeof opt === 'undefined') { opt = false; }
 			var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
-			return p.reduce(function (old, cur) {
+			return p.reduce(function  (old, cur) {
 				return old + '<mtr><mtd>' + MathLib.toMathML(cur) + '</mtd></mtr>';
 			}, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
 		};
 
-		Point.prototype.toString = function (opt) {
+		Point.prototype.toString = function  (opt) {
 			if (typeof opt === 'undefined') { opt = false; }
 			var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
-			return '(' + p.reduce(function (old, cur) {
+			return '(' + p.reduce(function  (old, cur) {
 				return old + ', ' + MathLib.toString(cur);
 			}) + ')';
 		};
@@ -6487,7 +6487,7 @@ var MathLib;
 	MathLib.Point = Point;
 
 	var Polynomial = (function () {
-		function Polynomial(polynomial) {
+		function Polynomial (polynomial) {
 			var _this = this;
 			this.type = 'polynomial';
 			var coefficients = [];
@@ -6502,12 +6502,12 @@ var MathLib;
 				polynomial = coefficients;
 			}
 
-			polynomial.forEach(function (x, i) {
+			polynomial.forEach(function  (x, i) {
 				_this[i] = x;
 			});
 			this.length = polynomial.length;
 			this.deg = polynomial.length - 1;
-			this.subdeg = ((function (a) {
+			this.subdeg = ((function  (a) {
 				var i = 0;
 				if (a.length > 1 || a[0]) {
 					while (i < a.length && MathLib.isZero(a[i])) {
@@ -6518,7 +6518,7 @@ var MathLib;
 				return Infinity;
 			})(polynomial));
 		}
-		Polynomial.prototype.compare = function (p) {
+		Polynomial.prototype.compare = function  (p) {
 			var i, ii;
 
 			if (this.length !== p.length) {
@@ -6534,7 +6534,7 @@ var MathLib;
 			return 0;
 		};
 
-		Polynomial.prototype.differentiate = function (n) {
+		Polynomial.prototype.differentiate = function  (n) {
 			if (typeof n === 'undefined') { n = 1; }
 			var i, ii, derivative = [];
 
@@ -6548,12 +6548,12 @@ var MathLib;
 			return new MathLib.Polynomial(derivative);
 		};
 
-		Polynomial.prototype.draw = function (screen, options) {
+		Polynomial.prototype.draw = function  (screen, options) {
 			var path = [], i, line = this;
 
 			if (this.deg < 2) {
 				if (Array.isArray(screen)) {
-					screen.forEach(function (x) {
+					screen.forEach(function  (x) {
 						x.line([[-50, line.valueAt(-50)], [50, line.valueAt(50)]], options);
 					});
 				} else {
@@ -6564,7 +6564,7 @@ var MathLib;
 					path.push([i, this.valueAt(i)]);
 				}
 				if (Array.isArray(screen)) {
-					screen.forEach(function (x) {
+					screen.forEach(function  (x) {
 						x.path(path, options);
 					});
 				} else {
@@ -6575,11 +6575,11 @@ var MathLib;
 			return this;
 		};
 
-		Polynomial.prototype.every = function (f) {
+		Polynomial.prototype.every = function  (f) {
 			return Array.prototype.every.call(this, f);
 		};
 
-		Polynomial.prototype.forEach = function () {
+		Polynomial.prototype.forEach = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -6587,7 +6587,7 @@ var MathLib;
 			Array.prototype.forEach.apply(this, args);
 		};
 
-		Polynomial.prototype.integrate = function (n) {
+		Polynomial.prototype.integrate = function  (n) {
 			if (typeof n === 'undefined') { n = 1; }
 			var i, ii, antiderivative = [];
 
@@ -6605,11 +6605,11 @@ var MathLib;
 			return new MathLib.Polynomial(antiderivative);
 		};
 
-		Polynomial.interpolation = function (a, b) {
+		Polynomial.interpolation = function  (a, b) {
 			var basisPolynomial, interpolant = new MathLib.Polynomial([0]), n = a.length, i, j;
 
 			if (arguments.length === 2) {
-				a = a.map(function (x, i) {
+				a = a.map(function  (x, i) {
 					return [x, b[i]];
 				});
 			}
@@ -6626,7 +6626,7 @@ var MathLib;
 			return interpolant;
 		};
 
-		Polynomial.prototype.isEqual = function (p) {
+		Polynomial.prototype.isEqual = function  (p) {
 			var i, ii;
 			if (this.deg !== p.deg || this.subdeg !== p.subdeg) {
 				return false;
@@ -6639,15 +6639,15 @@ var MathLib;
 			return true;
 		};
 
-		Polynomial.prototype.map = function (f) {
+		Polynomial.prototype.map = function  (f) {
 			return new MathLib.Polynomial(Array.prototype.map.call(this, f));
 		};
 
-		Polynomial.prototype.negative = function () {
+		Polynomial.prototype.negative = function  () {
 			return new MathLib.Polynomial(this.map(MathLib.negative));
 		};
 
-		Polynomial.prototype.plus = function (a) {
+		Polynomial.prototype.plus = function  (a) {
 			var plus = [], i;
 			if (typeof a === 'number') {
 				plus = this.slice();
@@ -6661,7 +6661,7 @@ var MathLib;
 			return new MathLib.Polynomial(plus);
 		};
 
-		Polynomial.regression = function (x, y) {
+		Polynomial.regression = function  (x, y) {
 			var length = x.length, xy = 0, xi = 0, yi = 0, x2 = 0, m, c, i;
 
 			if (arguments.length === 2) {
@@ -6685,7 +6685,7 @@ var MathLib;
 			return new MathLib.Polynomial([c, m]);
 		};
 
-		Polynomial.roots = function (zeros) {
+		Polynomial.roots = function  (zeros) {
 			var elemSymPoly, i, ii, coef = [];
 
 			if (MathLib.type(zeros) === 'array') {
@@ -6697,11 +6697,11 @@ var MathLib;
 				coef[i] = 0;
 			}
 
-			elemSymPoly.slice(1).forEach(function (x) {
+			elemSymPoly.slice(1).forEach(function  (x) {
 				coef[ii - x.card] = MathLib.plus(coef[ii - x.card], x.times());
 			});
 
-			coef = coef.map(function (x, i) {
+			coef = coef.map(function  (x, i) {
 				if ((ii - i) % 2) {
 					return MathLib.negative(x);
 				}
@@ -6712,7 +6712,7 @@ var MathLib;
 			return new MathLib.Polynomial(coef);
 		};
 
-		Polynomial.prototype.slice = function () {
+		Polynomial.prototype.slice = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -6720,7 +6720,7 @@ var MathLib;
 			return Array.prototype.slice.apply(this, args);
 		};
 
-		Polynomial.prototype.times = function (a) {
+		Polynomial.prototype.times = function  (a) {
 			var i, ii, j, jj, product = [];
 
 			if (a.type === 'polynomial') {
@@ -6734,12 +6734,12 @@ var MathLib;
 				a = a.toNumber();
 			}
 
-			return this.map(function (b) {
+			return this.map(function  (b) {
 				return MathLib.times(a, b);
 			});
 		};
 
-		Polynomial.prototype.toContentMathML = function (math) {
+		Polynomial.prototype.toContentMathML = function  (math) {
 			var str = '<apply><csymbol cd="arith1">plus</csymbol>', i;
 			for (i = this.deg; i >= 0; i--) {
 				if (!MathLib.isZero(this[i])) {
@@ -6766,7 +6766,7 @@ var MathLib;
 			return str;
 		};
 
-		Polynomial.prototype.toExpression = function () {
+		Polynomial.prototype.toExpression = function  () {
 			var content = [], sum, i;
 
 			for (i = this.deg; i >= 0; i--) {
@@ -6837,7 +6837,7 @@ var MathLib;
 			});
 		};
 
-		Polynomial.prototype.toFunctn = function () {
+		Polynomial.prototype.toFunctn = function  () {
 			var str = '', i, ii;
 			for (i = 0, ii = this.deg; i <= ii; i++) {
 				if (!MathLib.isZero(this[i])) {
@@ -6860,7 +6860,7 @@ var MathLib;
 			});
 		};
 
-		Polynomial.prototype.toLaTeX = function () {
+		Polynomial.prototype.toLaTeX = function  () {
 			var str = MathLib.toString(this[this.deg]) + 'x^{' + this.deg + '}', i;
 
 			for (i = this.deg - 1; i >= 0; i--) {
@@ -6877,7 +6877,7 @@ var MathLib;
 			return str;
 		};
 
-		Polynomial.prototype.toMathML = function () {
+		Polynomial.prototype.toMathML = function  () {
 			var str = '<mrow>' + MathLib.toMathML(this[this.deg]) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(this.deg) + '</msup>', i;
 			for (i = this.deg - 1; i >= 0; i--) {
 				if (!MathLib.isZero(this[i])) {
@@ -6896,7 +6896,7 @@ var MathLib;
 			return str;
 		};
 
-		Polynomial.prototype.toString = function () {
+		Polynomial.prototype.toString = function  () {
 			var str = MathLib.toString(this[this.deg]) + '*x^' + this.deg, i;
 			for (i = this.deg - 1; i >= 0; i--) {
 				if (!MathLib.isZero(this[i])) {
@@ -6912,7 +6912,7 @@ var MathLib;
 			return str;
 		};
 
-		Polynomial.prototype.valueAt = function (x) {
+		Polynomial.prototype.valueAt = function  (x) {
 			var pot = MathLib.is(x, 'matrix') ? MathLib.Matrix.identity(x.rows, x.cols) : 1, value = MathLib.is(x, 'matrix') ? MathLib.Matrix.zero(x.rows, x.cols) : 0, i, ii;
 
 			for (i = 0, ii = this.deg; i <= ii; i++) {
@@ -6929,7 +6929,7 @@ var MathLib;
 	MathLib.Polynomial = Polynomial;
 
 	var Rational = (function () {
-		function Rational(numerator, denominator) {
+		function Rational (numerator, denominator) {
 			if (typeof denominator === 'undefined') { denominator = 1; }
 			this.type = 'rational';
 			if (MathLib.isZero(denominator)) {
@@ -6939,11 +6939,11 @@ var MathLib;
 			this.numerator = numerator;
 			this.denominator = denominator;
 		}
-		Rational.prototype.compare = function (r) {
+		Rational.prototype.compare = function  (r) {
 			return MathLib.sign(this.numerator * r.denominator - this.denominator * r.numerator);
 		};
 
-		Rational.prototype.divide = function (r) {
+		Rational.prototype.divide = function  (r) {
 			if (r.type === 'rational') {
 				return new MathLib.Rational(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));
 			} else if (typeof r === 'number') {
@@ -6953,21 +6953,21 @@ var MathLib;
 			}
 		};
 
-		Rational.prototype.inverse = function () {
+		Rational.prototype.inverse = function  () {
 			if (!MathLib.isZero(this.numerator)) {
 				return new MathLib.Rational(this.denominator, this.numerator);
 			}
 		};
 
-		Rational.prototype.isEqual = function (r) {
+		Rational.prototype.isEqual = function  (r) {
 			return MathLib.isEqual(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));
 		};
 
-		Rational.prototype.isZero = function () {
+		Rational.prototype.isZero = function  () {
 			return MathLib.isZero(this.numerator);
 		};
 
-		Rational.prototype.minus = function (r) {
+		Rational.prototype.minus = function  (r) {
 			var n = this.numerator, d = this.denominator;
 
 			if (r.type === 'rational') {
@@ -6979,11 +6979,11 @@ var MathLib;
 			}
 		};
 
-		Rational.prototype.negative = function () {
+		Rational.prototype.negative = function  () {
 			return new MathLib.Rational(-this.numerator, this.denominator);
 		};
 
-		Rational.prototype.plus = function (r) {
+		Rational.prototype.plus = function  (r) {
 			var n = this.numerator, d = this.denominator;
 
 			if (r.type === 'rational') {
@@ -6995,12 +6995,12 @@ var MathLib;
 			}
 		};
 
-		Rational.prototype.reduce = function () {
+		Rational.prototype.reduce = function  () {
 			var gcd = MathLib.sign(this.denominator) * MathLib.gcd([this.numerator, this.denominator]);
 			return new MathLib.Rational(this.numerator / gcd, this.denominator / gcd);
 		};
 
-		Rational.prototype.times = function (r) {
+		Rational.prototype.times = function  (r) {
 			if (r.type === 'rational') {
 				return new MathLib.Rational(MathLib.times(this.numerator, r.numerator), MathLib.times(this.denominator, r.denominator));
 			} else if (typeof r === 'number') {
@@ -7010,23 +7010,23 @@ var MathLib;
 			}
 		};
 
-		Rational.prototype.toContentMathML = function () {
+		Rational.prototype.toContentMathML = function  () {
 			return '<cn type="rational">' + this.numerator + '<sep/>' + this.denominator + '</cn>';
 		};
 
-		Rational.prototype.toLaTeX = function () {
+		Rational.prototype.toLaTeX = function  () {
 			return '\\frac{' + MathLib.toLaTeX(this.numerator) + '}{' + MathLib.toLaTeX(this.denominator) + '}';
 		};
 
-		Rational.prototype.toMathML = function () {
+		Rational.prototype.toMathML = function  () {
 			return '<mfrac>' + MathLib.toMathML(this.numerator) + MathLib.toMathML(this.denominator) + '</mfrac>';
 		};
 
-		Rational.prototype.toNumber = function () {
+		Rational.prototype.toNumber = function  () {
 			return this.numerator / this.denominator;
 		};
 
-		Rational.prototype.toString = function () {
+		Rational.prototype.toString = function  () {
 			return MathLib.toString(this.numerator) + '/' + MathLib.toString(this.denominator);
 		};
 		return Rational;
@@ -7034,7 +7034,7 @@ var MathLib;
 	MathLib.Rational = Rational;
 
 	var Set = (function () {
-		function Set(elements) {
+		function Set (elements) {
 			var _this = this;
 			this.type = 'set';
 			this.intersect = Set.createSetOperation(false, true, false);
@@ -7045,17 +7045,17 @@ var MathLib;
 				elements = [];
 			}
 
-			elements = elements.sort(MathLib.compare).filter(function (x, i, a) {
+			elements = elements.sort(MathLib.compare).filter(function  (x, i, a) {
 				return (a.length === i + 1) || !MathLib.isEqual(x, a[i + 1]);
 			});
 
-			elements.forEach(function (x, i) {
+			elements.forEach(function  (x, i) {
 				_this[i] = x;
 			});
 			this.length = elements.length;
 			this.card = elements.length;
 		}
-		Set.prototype.compare = function (x) {
+		Set.prototype.compare = function  (x) {
 			var a, i, ii;
 
 			if (this.card !== x.card) {
@@ -7071,7 +7071,7 @@ var MathLib;
 			}
 		};
 
-		Set.prototype.every = function () {
+		Set.prototype.every = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -7079,7 +7079,7 @@ var MathLib;
 			return Array.prototype.every.apply(this, args);
 		};
 
-		Set.prototype.filter = function () {
+		Set.prototype.filter = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -7087,7 +7087,7 @@ var MathLib;
 			return new MathLib.Set(Array.prototype.filter.apply(this, args));
 		};
 
-		Set.prototype.forEach = function () {
+		Set.prototype.forEach = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -7095,7 +7095,7 @@ var MathLib;
 			Array.prototype.forEach.apply(this, args);
 		};
 
-		Set.prototype.indexOf = function () {
+		Set.prototype.indexOf = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -7103,7 +7103,7 @@ var MathLib;
 			return Array.prototype.indexOf.apply(this, args);
 		};
 
-		Set.prototype.insert = function (x) {
+		Set.prototype.insert = function  (x) {
 			var i = this.locate(x);
 			if (this[i] !== x) {
 				this.splice(i, 0, x);
@@ -7112,27 +7112,27 @@ var MathLib;
 			return this;
 		};
 
-		Set.prototype.isEmpty = function () {
+		Set.prototype.isEmpty = function  () {
 			return this.card === 0;
 		};
 
-		Set.prototype.isEqual = function (x) {
+		Set.prototype.isEqual = function  (x) {
 			if (this.card !== x.card) {
 				return false;
 			} else {
-				return this.every(function (y, i) {
+				return this.every(function  (y, i) {
 					return MathLib.isEqual(y, x[i]);
 				});
 			}
 		};
 
-		Set.prototype.isSubsetOf = function (a) {
-			return this.every(function (x) {
+		Set.prototype.isSubsetOf = function  (a) {
+			return this.every(function  (x) {
 				return a.indexOf(x) !== -1;
 			});
 		};
 
-		Set.prototype.locate = function (x) {
+		Set.prototype.locate = function  (x) {
 			var left = 0, right = this.card - 1, middle, i = this.indexOf(x);
 
 			if (i !== -1) {
@@ -7152,7 +7152,7 @@ var MathLib;
 			return left;
 		};
 
-		Set.prototype.map = function () {
+		Set.prototype.map = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -7160,26 +7160,26 @@ var MathLib;
 			return new MathLib.Set(Array.prototype.map.apply(this, args));
 		};
 
-		Set.prototype.plus = function (n) {
+		Set.prototype.plus = function  (n) {
 			var sum = [];
 			if (!arguments.length) {
 				return MathLib.plus.apply(null, this.toArray());
 			} else if (n.type === 'set') {
-				this.forEach(function (x) {
-					n.forEach(function (y) {
+				this.forEach(function  (x) {
+					n.forEach(function  (y) {
 						sum.push(MathLib.plus(x, y));
 					});
 				});
 
 				return new MathLib.Set(sum);
 			} else {
-				return this.map(function (x) {
+				return this.map(function  (x) {
 					return MathLib.plus(x, n);
 				});
 			}
 		};
 
-		Set.prototype.powerset = function () {
+		Set.prototype.powerset = function  () {
 			var flag, subset, i, ii, j, jj, powerset = [];
 
 			for (i = 0, ii = Math.pow(2, this.card); i < ii; i++) {
@@ -7195,7 +7195,7 @@ var MathLib;
 			return new MathLib.Set(powerset);
 		};
 
-		Set.prototype.reduce = function () {
+		Set.prototype.reduce = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -7203,7 +7203,7 @@ var MathLib;
 			return Array.prototype.reduce.apply(this, arguments);
 		};
 
-		Set.prototype.remove = function (a) {
+		Set.prototype.remove = function  (a) {
 			var i = this.indexOf(a);
 			if (i !== -1) {
 				this.splice(i, 1);
@@ -7212,7 +7212,7 @@ var MathLib;
 			return this;
 		};
 
-		Set.prototype.slice = function () {
+		Set.prototype.slice = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -7220,7 +7220,7 @@ var MathLib;
 			return Array.prototype.slice.apply(this, args);
 		};
 
-		Set.prototype.some = function () {
+		Set.prototype.some = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -7228,7 +7228,7 @@ var MathLib;
 			return Array.prototype.some.apply(this, args);
 		};
 
-		Set.prototype.splice = function () {
+		Set.prototype.splice = function  () {
 			var args = [];
 			for (var _i = 0; _i < (arguments.length - 0); _i++) {
 				args[_i] = arguments[_i + 0];
@@ -7236,57 +7236,57 @@ var MathLib;
 			return Array.prototype.splice.apply(this, args);
 		};
 
-		Set.prototype.times = function (n) {
+		Set.prototype.times = function  (n) {
 			if (!arguments.length) {
 				return MathLib.times.apply(null, this.toArray());
 			} else {
-				return this.map(function (x) {
+				return this.map(function  (x) {
 					return MathLib.times(x, n);
 				});
 			}
 		};
 
-		Set.prototype.toArray = function () {
+		Set.prototype.toArray = function  () {
 			return Array.prototype.slice.call(this);
 		};
 
-		Set.prototype.toContentMathML = function () {
+		Set.prototype.toContentMathML = function  () {
 			if (this.isEmpty()) {
 				return '<emptyset/>';
 			} else {
-				return this.reduce(function (old, cur) {
+				return this.reduce(function  (old, cur) {
 					return old + MathLib.toContentMathML(cur);
 				}, '<set>') + '</set>';
 			}
 		};
 
-		Set.prototype.toLaTeX = function () {
+		Set.prototype.toLaTeX = function  () {
 			if (this.isEmpty()) {
 				return '\\emptyset';
 			} else {
-				return this.reduce(function (old, cur) {
+				return this.reduce(function  (old, cur) {
 					return old + MathLib.toLaTeX(cur) + ', ';
 				}, '\\{').slice(0, -2) + '\\}';
 			}
 		};
 
-		Set.prototype.toMathML = function () {
+		Set.prototype.toMathML = function  () {
 			if (this.isEmpty()) {
 				return '<mi>&#x2205;</mi>';
 			} else {
-				return this.reduce(function (old, cur) {
+				return this.reduce(function  (old, cur) {
 					return old + MathLib.toMathML(cur) + '<mo>,</mo>';
 				}, '<mrow><mo>{</mo>').slice(0, -10) + '<mo>}</mo></mrow>';
 			}
 		};
 
-		Set.prototype.toString = function () {
+		Set.prototype.toString = function  () {
 			if (this.isEmpty()) {
 				return '∅';
 			}
 			return '{' + Array.prototype.join.call(this, ', ') + '}';
 		};
-		Set.fromTo = function (f, t, s) {
+		Set.fromTo = function  (f, t, s) {
 			if (typeof s === 'undefined') { s = 1; }
 			var i, set = [];
 			if (f <= t) {
@@ -7297,8 +7297,8 @@ var MathLib;
 			}
 		};
 
-		Set.createSetOperation = function (left, both, right) {
-			return function (a) {
+		Set.createSetOperation = function  (left, both, right) {
+			return function  (a) {
 				var set = [], i = 0, j = 0, tl = this.card, al = a.card;
 
 				while (i < tl && j < al) {
@@ -7338,42 +7338,42 @@ var MathLib;
 	MathLib.Set = Set;
 })(MathLib || (MathLib = {}));
 
-(function (global) {
+(function  (global) {
 	'use strict';
 
 	var elementPrototype = (global.HTMLElement || global.Element)['prototype'];
 	var getter;
 
 	if (!document.hasOwnProperty('fullscreenEnabled')) {
-		getter = (function () {
+		getter = (function  () {
 			if ('webkitIsFullScreen' in document) {
-				return function () {
+				return function  () {
 					return (document).webkitFullscreenEnabled;
 				};
 			}
 			if ('mozFullScreenEnabled' in document) {
-				return function () {
+				return function  () {
 					return (document).mozFullScreenEnabled;
 				};
 			}
 
-			return function () {
+			return function  () {
 				return false;
 			};
 		})();
 	}
 
 	if (!document.hasOwnProperty('fullscreenElement')) {
-		getter = (function () {
+		getter = (function  () {
 			var i, ii, name = ['webkitCurrentFullScreenElement', 'webkitFullscreenElement', 'mozFullScreenElement'];
 			for (i = 0, ii = name.length; i < ii; i++) {
 				if (name[i] in document) {
-					return function () {
+					return function  () {
 						return document[name[i]];
 					};
 				}
 			}
-			return function () {
+			return function  () {
 				return null;
 			};
 		})();
@@ -7386,7 +7386,7 @@ var MathLib;
 		});
 	}
 
-	function fullscreenchange() {
+	function fullscreenchange () {
 		var newEvent = document.createEvent('CustomEvent');
 		(newEvent).initCustomEvent('fullscreenchange', true, false, null);
 
@@ -7395,7 +7395,7 @@ var MathLib;
 	document.addEventListener('webkitfullscreenchange', fullscreenchange, false);
 	document.addEventListener('mozfullscreenchange', fullscreenchange, false);
 
-	function fullscreenerror() {
+	function fullscreenerror () {
 		var newEvent = document.createEvent('CustomEvent');
 		(newEvent).initCustomEvent('fullscreenerror', true, false, null);
 
@@ -7405,27 +7405,27 @@ var MathLib;
 	document.addEventListener('mozfullscreenerror', fullscreenerror, false);
 
 	if (!elementPrototype.requestFullScreen) {
-		elementPrototype.requestFullScreen = (function () {
+		elementPrototype.requestFullScreen = (function  () {
 			if (elementPrototype.webkitRequestFullScreen) {
-				return function () {
+				return function  () {
 					this.webkitRequestFullScreen((Element).ALLOW_KEYBOARD_INPUT);
 				};
 			}
 
 			if (elementPrototype.mozRequestFullScreen) {
-				return function () {
+				return function  () {
 					this.mozRequestFullScreen();
 				};
 			}
 
-			return function () {
+			return function  () {
 			};
 		})();
 	}
 
 	if (!(document).exitFullScreen) {
-		(document).exitFullScreen = (function () {
-			return (document).webkitCancelFullScreen || (document).mozCancelFullScreen || function () {
+		(document).exitFullScreen = (function  () {
+			return (document).webkitCancelFullScreen || (document).mozCancelFullScreen || function  () {
 			};
 		})();
 	}
@@ -7436,28 +7436,28 @@ if (!('setLineDash' in CanvasRenderingContext2D.prototype)) {
 
 	if ('mozDash' in CanvasRenderingContext2D.prototype) {
 		prototype = CanvasRenderingContext2D.prototype;
-		setLineDash = function (dash) {
+		setLineDash = function  (dash) {
 			this.mozDash = dash;
 		};
-		getLineDash = function () {
+		getLineDash = function  () {
 			return this.mozDash;
 		};
 
-		setLineDashOffset = function (dashOffset) {
+		setLineDashOffset = function  (dashOffset) {
 			this.mozDashOffset = dashOffset;
 		};
-		getLineDashOffset = function () {
+		getLineDashOffset = function  () {
 			return this.mozDashOffset;
 		};
 	} else {
 		prototype = CanvasRenderingContext2D.prototype;
-		setLineDash = function () {
+		setLineDash = function  () {
 		};
-		getLineDash = function () {
+		getLineDash = function  () {
 		};
-		setLineDashOffset = function () {
+		setLineDashOffset = function  () {
 		};
-		getLineDashOffset = function () {
+		getLineDashOffset = function  () {
 		};
 	}
 
@@ -7485,16 +7485,16 @@ if (!('setLineDash' in CanvasRenderingContext2D.prototype)) {
 }
 
 if ((Object).observe === undefined) {
-	(function (global) {
+	(function  (global) {
 		'use strict';
 
 		var setImmediate = global.setImmediate || global.msSetImmediate;
 		var clearImmediate = global.clearImmediate || global.msClearImmediate;
 		if (!setImmediate) {
-			setImmediate = function (func, args) {
+			setImmediate = function  (func, args) {
 				return setTimeout(func, 0, args);
 			};
-			clearImmediate = function (id) {
+			clearImmediate = function  (id) {
 				clearTimeout(id);
 			};
 		}
@@ -7503,7 +7503,7 @@ if ((Object).observe === undefined) {
 
 		var NotifierPrototype = Object.create(Object.prototype);
 		Object.defineProperty(NotifierPrototype, 'notify', {
-			value: function (changeRecord) {
+			value: function  (changeRecord) {
 				var notifier = this;
 				if (Object(notifier) !== notifier) {
 					throw new TypeError('this must be an Object, given ' + notifier);
@@ -7553,14 +7553,14 @@ if ((Object).observe === undefined) {
 
 		var changeDeliveryImmediateUid;
 
-		function setUpChangesDelivery() {
+		function setUpChangesDelivery () {
 			clearImmediate(changeDeliveryImmediateUid);
 			changeDeliveryImmediateUid = setImmediate(deliverAllChangeRecords, 0);
 		}
 
 		var notifierProperty = '__notifier__';
 
-		function getNotifier(target) {
+		function getNotifier (target) {
 			if (!target.hasOwnProperty(notifierProperty)) {
 				var notifier = Object.create(NotifierPrototype);
 				notifier.target = target;
@@ -7578,7 +7578,7 @@ if ((Object).observe === undefined) {
 
 		var pendingChangesProperty = '__pendingChangeRecords__';
 
-		function enqueueChangeRecord(newRecord, observers) {
+		function enqueueChangeRecord (newRecord, observers) {
 			for (var i = 0, l = observers.length; i < l; i++) {
 				var observer = observers[i];
 				if (!observer.hasOwnProperty(pendingChangesProperty)) {
@@ -7596,7 +7596,7 @@ if ((Object).observe === undefined) {
 
 		var attachedNotifierCountProperty = '___attachedNotifierCount__';
 
-		function cleanObserver(observer) {
+		function cleanObserver (observer) {
 			if (!observer[attachedNotifierCountProperty] && !observer[pendingChangesProperty]) {
 				var index = observerCallbacks.indexOf(observer);
 				if (index !== -1) {
@@ -7605,7 +7605,7 @@ if ((Object).observe === undefined) {
 			}
 		}
 
-		function deliverChangeRecords(observer) {
+		function deliverChangeRecords (observer) {
 			var pendingChangeRecords = observer[pendingChangesProperty];
 			observer[pendingChangesProperty] = null;
 			if (!pendingChangeRecords || pendingChangeRecords.length === 0) {
@@ -7621,7 +7621,7 @@ if ((Object).observe === undefined) {
 			return true;
 		}
 
-		function deliverAllChangeRecords() {
+		function deliverAllChangeRecords () {
 			var observers = observerCallbacks.slice(0);
 			var anyWorkDone = false;
 			for (var i = 0, l = observers.length; i < l; i++) {
@@ -7633,7 +7633,7 @@ if ((Object).observe === undefined) {
 			return anyWorkDone;
 		}
 
-		(Object).observe = function (target, observer) {
+		(Object).observe = function  (target, observer) {
 			if (Object(target) !== target) {
 				throw new TypeError('target must be an Object, given ' + target);
 			}
@@ -7665,7 +7665,7 @@ if ((Object).observe === undefined) {
 			return target;
 		};
 
-		(Object).unobserve = function (target, observer) {
+		(Object).unobserve = function  (target, observer) {
 			if (Object(target) !== target) {
 				throw new TypeError('target must be an Object, given ' + target);
 			}
@@ -7683,7 +7683,7 @@ if ((Object).observe === undefined) {
 			return target;
 		};
 
-		(Object).deliverChangeRecords = function (observer) {
+		(Object).deliverChangeRecords = function  (observer) {
 			if (typeof observer !== 'function') {
 				throw new TypeError('callback must be a function, given ' + observer);
 			}
@@ -7691,7 +7691,7 @@ if ((Object).observe === undefined) {
 			}
 		};
 
-		(Object).getNotifier = function (target) {
+		(Object).getNotifier = function  (target) {
 			if (Object(target) !== target) {
 				throw new TypeError('target must be an Object, given ' + target);
 			}

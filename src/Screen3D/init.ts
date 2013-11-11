@@ -148,19 +148,19 @@ export class Screen3D extends Screen {
 
 		// Animate the scene
 		// =================
-		function animate() {
+		function animate () {
 			requestAnimationFrame(animate);
 			render();
 			update();
 		}
 
-		function update() {
+		function update () {
 			//var delta = clock.getDelta();
 			controls.update();
 		}
 
 		// Render the scene
-		function render() {
+		function render () {
 			renderer.render(scene, camera);
 		}
 

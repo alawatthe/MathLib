@@ -19,17 +19,17 @@ static parse = function (str) {
 
 	Lexer = function () {
 		var expression = '',
-			length = 0,
-			index = 0,
-			marker = 0,
-			T = Token;
+				length = 0,
+				index = 0,
+				marker = 0,
+				T = Token;
 
-		function peekNextChar() {
+		function peekNextChar () {
 			var idx = index;
 			return ((idx < length) ? expression.charAt(idx) : '\x00');
 		}
 
-		function getNextChar() {
+		function getNextChar () {
 			var ch = '\x00',
 				idx = index;
 			if (idx < length) {
@@ -39,19 +39,19 @@ static parse = function (str) {
 			return ch;
 		}
 
-		function isWhiteSpace(ch) {
+		function isWhiteSpace (ch) {
 			return (ch === '\u0009') || (ch === ' ') || (ch === '\u00A0');
 		}
 
-		function isLetter(ch) {
+		function isLetter (ch) {
 			return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 		}
 
-		function isDecimalDigit(ch) {
+		function isDecimalDigit (ch) {
 			return (ch >= '0') && (ch <= '9');
 		}
 
-		function createToken(type, value) {
+		function createToken (type, value) {
 			return {
 				type: type,
 				value: value,
@@ -60,7 +60,7 @@ static parse = function (str) {
 			};
 		}
 
-		function skipSpaces() {
+		function skipSpaces () {
 			var ch;
 
 			while (index < length) {
@@ -72,7 +72,7 @@ static parse = function (str) {
 			}
 		}
 
-		function scanOperator() {
+		function scanOperator () {
 			var ch = peekNextChar();
 			if ('+-*/()^%=;,'.indexOf(ch) >= 0) {
 				return createToken(T.Operator, getNextChar());
@@ -80,15 +80,15 @@ static parse = function (str) {
 			return undefined;
 		}
 
-		function isIdentifierStart(ch) {
+		function isIdentifierStart (ch) {
 			return (ch === '_') || isLetter(ch);
 		}
 
-		function isIdentifierPart(ch) {
+		function isIdentifierPart (ch) {
 			return isIdentifierStart(ch) || isDecimalDigit(ch);
 		}
 
-		function scanIdentifier() {
+		function scanIdentifier () {
 			var ch, id;
 
 			ch = peekNextChar();
@@ -108,7 +108,7 @@ static parse = function (str) {
 			return createToken(T.Identifier, id);
 		}
 
-		function scanNumber() {
+		function scanNumber () {
 			var ch, number;
 
 			ch = peekNextChar();
@@ -167,13 +167,13 @@ static parse = function (str) {
 			return createToken(T.Number, number);
 		}
 
-		function reset(str) {
+		function reset (str) {
 			expression = str;
 			length = str.length;
 			index = 0;
 		}
 
-		function next() {
+		function next () {
 			var token;
 
 			skipSpaces();
@@ -202,7 +202,7 @@ static parse = function (str) {
 			throw new SyntaxError('Unknown token from character ' + peekNextChar());
 		}
 
-		function peek() {
+		function peek () {
 			var token, idx;
 
 			idx = index;

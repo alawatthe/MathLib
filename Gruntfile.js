@@ -13,15 +13,16 @@ module.exports = function (grunt) {
 
 	grunt.loadNpmTasks('grunt-docco');
 	grunt.loadNpmTasks('grunt-notify');
+	grunt.loadNpmTasks('grunt-jscs-checker');
 	grunt.loadNpmTasks('grunt-karma');
 	grunt.loadNpmTasks('grunt-saucelabs');
 	grunt.loadNpmTasks('grunt-typescript');
 
 
 
-	grunt.registerTask('template', 'A simple task to convert HTML templates', function() {
+	grunt.registerTask('template', 'A simple task to convert HTML templates', function () {
 		var template = grunt.file.read('src/Screen/template.hbs'),
-			process = function(template) {
+			process = function (template) {
 				var str = 'var template = function (data) {';
 
 				str += "var p = [];"
@@ -434,6 +435,34 @@ module.exports = function (grunt) {
 			all: ['Gruntfile.js', 'build/MathLib.js', 'build/MathLib.test.js'],
 			options: {
 				jshintrc: '.jshintrc'
+			}
+		},
+
+
+		jscs: {
+			MathLib: {
+				options: {
+					config: '.jscs.json',
+				},
+				files: {
+					src: ['build/MathLib.js']
+				}
+			},
+			Tests: {
+				options: {
+					config: '.jscs.json',
+				},
+				files: {
+					src: ['build/MathLib.test.js']
+				}
+			},
+			Grunt: {
+				options: {
+					config: '.jscs.json',
+				},
+				files: {
+					src: ['Gruntfile.js']
+				}
 			}
 		},
 
