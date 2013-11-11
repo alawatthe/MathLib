@@ -24,7 +24,12 @@ IE9, Android and Opera don't work with the automated test runner. Their passing 
 ### In the browser
 Download the [production version](https://raw.github.com/alawatthe/MathLib/master/build/MathLib.min.js) or the [development version](https://raw.github.com/alawatthe/MathLib/master/build/MathLib.js).
 
-In your web page:
+Alternatively you can use Bower:
+```
+bower install MathLib
+```
+
+Include MathLib in your web page:
 
 ```
 <script src="path/to/MathLib.min.js"></script>

@@ -1,0 +1,22 @@
+{
+  "name": "MathLib",
+  "version": "0.6.1",
+  "homepage": "https://github.com/alawatthe/MathLib",
+  "authors": [
+    "alawatthe <alawatthe@googlemail.com>"
+  ],
+  "description": "JavaScript library for mathematical computations.",
+  "main": "build/MathLib.js",
+  "keywords": [
+    "JavaScript",
+    "Library",
+    "Math",
+    "Mathematics"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "test"
+  ]
+}
