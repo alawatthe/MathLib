@@ -6,13 +6,20 @@
 // *@return {Screen}* Returns the screen
 line: function (line, options = {}, redraw = false) {
 	var screen = this.screen,
-			points = this.screen.getLineEndPoints(line),
+			points,
 			ctx = this.ctx,
 			prop, opts;
 
 	ctx.save()
 	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 
+	// Don't try to draw the line at infinity
+	if (line.type === 'line' && MathLib.isZero(line[0]) && MathLib.isZero(line[1])) {
+		return this;
+	}
+	else {
+		points = this.screen.getLineEndPoints(line)
+	}
 
 	// Set the drawing options
 	if (options) {

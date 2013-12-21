@@ -19,10 +19,10 @@ resize(width : number, height : number) : Screen2D {
 		this.layer.grid.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 		this.layer.grid.ctx.strokeStyle = colorConvert(this.options.grid.color) || '#cccccc';
 
-		this.layer.axis.element.width = width;
-		this.layer.axis.element.height = height;
-		this.layer.axis.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-		this.layer.axis.ctx.strokeStyle = colorConvert(this.options.axis.color) || '#000000';
+		this.layer.axes.element.width = width;
+		this.layer.axes.element.height = height;
+		this.layer.axes.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
+		this.layer.axes.ctx.strokeStyle = colorConvert(this.options.axes.color) || '#000000';
 
 		this.layer.main.element.width = width;
 		this.layer.main.element.height = height;

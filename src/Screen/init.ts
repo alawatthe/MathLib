@@ -78,7 +78,7 @@ export class Screen {
 
 						ctx.drawImage((<any>_this).layer.back.element, 0, 0);
 						ctx.drawImage((<any>_this).layer.grid.element, 0, 0);
-						ctx.drawImage((<any>_this).layer.axis.element, 0, 0);
+						ctx.drawImage((<any>_this).layer.axes.element, 0, 0);
 						ctx.drawImage((<any>_this).layer.main.element, 0, 0);
 
 

@@ -107,3 +107,5 @@ module MathLib {
 				}
 				return n;
 			};
+			
+MathLib.extendObject = extendObject;

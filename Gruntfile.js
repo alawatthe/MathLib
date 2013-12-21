@@ -25,8 +25,8 @@ module.exports = function (grunt) {
 			process = function (template) {
 				var str = 'var template = function (data) {';
 
-				str += "var p = [];"
-				str += "p.push('" +
+				str += "var p = [];" +
+				"p.push('" +
 				template.replace(/[\r\t\n]/g, ' ')                                           // remove linebreaks etc.
 								.replace(/\{\{!--[^\}]*--\}\}/g, '')                                 // remove comments
 								.replace(/\{\{#if ([^\}]*)\}\}/g, "');\nif (data.$1) {\n\tp.push('") // opening if

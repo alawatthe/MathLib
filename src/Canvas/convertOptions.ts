@@ -14,11 +14,11 @@ convertOptions: function (opt) {
 
 
 	if ('font' in opt) {
-		convertedOptions['font-family'] = opt.font;
+		convertedOptions.font = opt.font;
 	}
 
 	if ('fontSize' in opt) {
-		convertedOptions['font-size'] = opt.fontSize;
+		convertedOptions.fontSize = opt.fontSize;
 	}
 
 
@@ -28,6 +28,7 @@ convertOptions: function (opt) {
 	else if ('color' in opt) {
 		convertedOptions.strokeStyle = colorConvert(opt.color);
 	}
+
 
 	return convertedOptions;
 },

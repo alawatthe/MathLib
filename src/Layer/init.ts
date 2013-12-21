@@ -88,18 +88,17 @@ export class Layer {
 				this.ctx.strokeStyle = colorConvert(screen.options.grid.color) || '#cccccc';
 				this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
-				
 				this.draw = function () {
-					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
+//					_this.ctx.lineWidth = (screen.options.grid.lineWidth || 4) / (screen.scale.x - screen.scale.y);
 					_this.screen.drawGrid();
 				}
 			}
-			else if (id === 'axis') {
-				this.ctx.strokeStyle = colorConvert(screen.options.axis.color) || '#000000';
+			else if (id === 'axes') {
+				this.ctx.strokeStyle = colorConvert(screen.options.axes.color) || '#000000';
 				
 				this.draw = function () {
 					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
-					_this.screen.drawAxis();
+					_this.screen.drawAxes();
 				}
 			}
 			else {
@@ -139,6 +138,8 @@ export class Layer {
 		else if (screen.options.renderer === 'SVG') {
 			var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g'),
 					m = screen.transformation;
+			
+			ctx.className.baseVal = 'MathLib_layer_' + id;
 			ctx.setAttribute('transform',
 				'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')' );
 			screen.element.appendChild(ctx);
@@ -173,12 +174,12 @@ export class Layer {
 				};
 
 			}
-			else if (id === 'axis') {
-				ctx.setAttribute('stroke', colorConvert(screen.options.axis.color) || '#000000');
+			else if (id === 'axes') {
+				ctx.setAttribute('stroke', colorConvert(screen.options.axes.color) || '#000000');
 				
 				this.draw = function () {
 					ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
-					_this.screen.drawAxis();
+					_this.screen.drawAxes();
 				}
 			}
 			else {

@@ -7,13 +7,9 @@
 path: function (curve, options = {}, redraw = false) {
 	var screen = this.screen,
 			ctx = this.ctx,
-			prop, opts, path, x, y, i,
+			prop, opts, path, paths = [], x, y, i, fx, fxold,
 			step = 2 / (screen.scale.x - screen.scale.y),
 			from, to;
-
-
-	from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x) - step;
-	to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x) + step;
 
 	ctx.save()
 	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
@@ -40,8 +36,37 @@ path: function (curve, options = {}, redraw = false) {
 	// If curve is a function f, the path will be (x, f(x))
 	if (typeof curve === 'function') {
 		path = [];
+		from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x) - step;
+		to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x) + step;
+
 		for (i = from; i <= to; i += step) {
-			path.push([i, curve(i)]);
+			fx = curve(i);
+			// Inline NaN test and disontinuity test
+			// Check if we are drawing a (nearly) vertical line, which should not be there.
+			// i.e the vertical lines at π/2 for the tangent function
+			// TODO: Find a better check if there is a discontinuity.
+			if (fx !== fx ||
+				// next the check for very steep lines
+				(MathLib.abs((fxold - fx) / step) >= 1e2 && 
+				// But those points additionally have to satisfy,
+				// that the midpoint of the current interval is not in between
+				// the two values of the function at the endpoints of the intervall.
+				(fx - curve(i - step / 2)) * (fxold - curve(i - step / 2)) >= 0)) {
+
+				// Don't add empty subpaths
+				if (path.length) {
+					paths.push(path);
+					path = [];
+				}
+			}
+			else {
+				path.push([i, fx]);
+			}
+
+			fxold = fx;
+		}
+		if (path.length) {
+			paths.push(path);
 		}
 	}
 
@@ -51,9 +76,12 @@ path: function (curve, options = {}, redraw = false) {
 		path = [];
 		x = curve[0];
 		y = curve[1];
+		from = ('from' in options ? (<any>options).from : 0) - step;
+		to = ('to' in options ? (<any>options).to : 2 * Math.PI) + step;
 		for (i = from; i <= to; i += step) {
 			path.push([x(i), y(i)]);
 		}
+		paths.push(path);
 	}
 	else {
 		path = curve;
@@ -61,15 +89,37 @@ path: function (curve, options = {}, redraw = false) {
 
 
 	// Draw the path
-	ctx.beginPath();
-	ctx.moveTo(path[0][0], path[0][1]);
-	path.forEach(function (x) {
-		ctx.lineTo(x[0], x[1]);
-	});
-	ctx.stroke();
-	ctx.closePath();
-	ctx.restore();
+	// Till now I haven't found a way to stroke and fill the path in one go.
+	// The problem is basically, that moveTo creates a new subpath
+	// and every subpath is filled on its own.
+	if ((<any>options).fillColor || (<any>options).fillColor !== 'transparent') {
+		ctx.beginPath();
+		ctx.lineTo(from, 0);
+		paths.forEach(function (path) {
+			// The following line (and the line four lines afterwards) fixes the fill at holes in the path.
+			ctx.lineTo(path[0][0], 0);
+			path.forEach(function (x) {
+				ctx.lineTo(x[0], x[1]); 
+			});
+			ctx.lineTo(path[path.length - 1][0], 0);
+		});
+		ctx.fill();
+//		ctx.closePath();
+	}
 
+	if ((<any>options).lineColor || (<any>options).lineColor !== 'transparent') {
+		ctx.beginPath();
+		paths.forEach(function (path) {
+			ctx.moveTo(path[0][0], path[0][1]);
+			path.forEach(function (x) {
+				ctx.lineTo(x[0], x[1]); 
+			});
+		});
+		ctx.stroke();
+//		ctx.closePath();
+	}
+
+	ctx.restore();
 
 	if (!redraw) {
 		if (options.conic) {

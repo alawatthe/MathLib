@@ -14,15 +14,11 @@ convertOptions: function (opt) {
 
 
 	if ('font' in opt) {
-		convertedOptions['font-family'] = opt.font;
+		convertedOptions.font = opt.font;
 	}
 
 	if ('fontSize' in opt) {
-		convertedOptions['font-size'] = opt.fontSize;
-	}
-
-	if ('size' in opt) {
-		convertedOptions.size = opt.size;
+		convertedOptions.fontSize = opt.fontSize;
 	}
 
 

@@ -8,7 +8,7 @@ export class Screen2D extends Screen {
 	applyTransformation: any;
 	background: any;
 	renderer: any;
-	axis: any;
+	axes: any;
 	grid: any;
 	layer: any;
 	element: any;
@@ -43,16 +43,43 @@ export class Screen2D extends Screen {
 	constructor (id: string, options = {}) {
 		super(id, options);
 		var defaults = {
-					axis: {
+					axes: {
 						color: 0x000000,
+						lineColor: 0x000000,
 						textColor: 0x000000,
-						tick: {x: 1, y: 1}
+					
+/*						label: true
+						label: false
+						label: {
+							x: true,
+							y: false
+						}
+*/
+						label: {
+							fontSize: 12,
+							font: 'Helvetica',
+							x: true,
+							y: true
+						},
+					
+						x: true,
+						y: true
+						
+//						origin: {x: 0, y: 0},
+//						tick: {x: 1, y: 1}
 					},
 					grid: {
-						angle: Math.PI / 8,
-						color: 0xcccccc,
+						// angle: Math.PI / 8,
 						type: 'cartesian',
-						tick: {x: 1, y: 1, r: 1}
+						lineColor: 0xcccccc,
+						lineWidth: 4,
+						dash: [],
+						dashOffset: 0,
+						//tick: {x: 1, y: 1, r: 1}
+						x: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
+						y: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
+						r: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
+						angle: {tick: Math.PI / 8, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0}
 					},
 					interaction: {
 						allowPan: true,
@@ -172,23 +199,24 @@ export class Screen2D extends Screen {
 
 			element.setAttribute('stroke', '#000000');
 			element.setAttribute('stroke-opacity', '1');
-			element.setAttribute('fill', '#ffffff');
-			element.setAttribute('fill-opacity', '0');
+			element.setAttribute('fill', 'transparent');
+
 
 			this.element = element;
 			this.wrapper.appendChild(element);
 
-			if ('background' in options) {
+//			if ('background' in options) {
 				var background = document.createElementNS('http://www.w3.org/2000/svg','rect');
 
 				background.setAttribute('x', '0px');
 				background.setAttribute('y', '0px');
 				background.setAttribute('width', this.width + 'px');
 				background.setAttribute('height', this.height + 'px');
-				background.setAttribute('fill', colorConvert((<any>options).background));
+				background.setAttribute('stroke', 'transparent');
+				background.setAttribute('fill', 'background' in options ? colorConvert((<any>options).background) : 'white');
 				background.setAttribute('fill-opacity', '1');
 				this.element.appendChild(background);
-			}
+//			}
 		}
 
 
@@ -198,7 +226,7 @@ export class Screen2D extends Screen {
 		this.layer = [];
 		this.layer.back = new MathLib.Layer(this, 'back', 0);
 		this.layer.grid = new MathLib.Layer(this, 'grid', 1);
-		this.layer.axis = new MathLib.Layer(this, 'axis', 2);
+		this.layer.axes = new MathLib.Layer(this, 'axes', 2);
 		this.layer.main = new MathLib.Layer(this, 'main', 3);
 
 

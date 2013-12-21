@@ -17,11 +17,28 @@
   position: absolute;
 }
 
+.qunit-image-marginTop {
+  margin-top: 27px;
+}
+
 .qunit-image-comparisonImage {
   display: none;
 }
 .qunit-image-comparisonImage.qunit-image-isVisible {
   display: block;
+}
+
+.qunit-image-slider {
+  margin-left: 0;
+}
+
+.qunit-image-colorTable {
+  margin: 20px;
+}
+.qunit-image-colorTable th, .qunit-image-colorTable td {
+  width: 100px;
+  height: 20px;
+  text-align: right;
 }
 
 .qunit-image-absoluteContainer {

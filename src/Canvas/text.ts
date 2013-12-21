@@ -9,14 +9,12 @@
 text: function (str, x, y, options = {}, redraw = false) {
 	var defaults = {
 				font:       'Helvetica',
-				fontSize:   10,
-				fillColor:  'rgba(0, 0, 0, 1)',
-				lineColor:  'rgba(0, 0, 0, 1)',
-				lineWidth:  0.05
+				fontSize:   12,
+//				lineWidth:  0.05,
+				textColor:  'rgba(0, 0, 0, 1)'
 			},
 			ctx, prop, opts;
 
-	// Determine the layer to draw onto
 	ctx = this.ctx;
 
 	opts = MathLib.Canvas.convertOptions(extendObject(defaults, options));
@@ -29,11 +27,13 @@ text: function (str, x, y, options = {}, redraw = false) {
 		}
 	}
 
-	ctx.font = '10px Helvetica';
+	ctx.fillStyle = colorConvert((<any>options).textColor || (<any>options).color || defaults.textColor);
+	ctx.strokeStyle = colorConvert((<any>options).textColor || (<any>options).color || defaults.textColor);
+
+	ctx.font = opts.fontSize + 'px ' + opts.font;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 
-	// Draw the text
 	var tf = this.screen.transformation;
 
 	ctx.save();

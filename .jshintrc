@@ -57,7 +57,7 @@
 	"nomen"         : false,
 	"onevar"        : false,
 	"passfail"      : false,
-	"white"         : true,
+	"white"         : false,
 
 	"maxerr"        : 100,
 	"globals"       : {
@@ -74,6 +74,5 @@
 		"test"        : true,
 		"throws"      : true,
 		"THREE"       : true
-	},
-	"quotmark"      : "single"
+	}
 }

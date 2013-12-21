@@ -66,7 +66,7 @@ declare module MathLib {
 		public applyTransformation: any;
 		public background: any;
 		public renderer: any;
-		public axis: any;
+		public axes: any;
 		public grid: any;
 		public layer: any;
 		public element: any;
@@ -87,7 +87,7 @@ declare module MathLib {
 		public interaction: any;
 		public zoomSpeed: any;
 		constructor(id: string, options?: {});
-		public drawAxis(): Screen2D;
+		public drawAxes(): Screen2D;
 		public drawGrid(): Screen2D;
 		public getEventPoint(evt);
 		public getLineEndPoints(l);
@@ -100,7 +100,7 @@ declare module MathLib {
 	class Screen3D extends Screen {
 		public type: string;
 		public grid: any;
-		public axis: any;
+		public axes: any;
 		public render: any;
 		public camera: any;
 		public element: any;

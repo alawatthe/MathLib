@@ -76,7 +76,7 @@ point: function (point, options = {}, redraw = false) {
 		dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
 		screen.text((<any>options).label,
 			point[0] / point[2] + dist / (screen.scale.x - screen.scale.y),
-			point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), {}, true);
+			point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), options, true);
 	}
 
 

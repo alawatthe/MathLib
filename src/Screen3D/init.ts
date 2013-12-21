@@ -5,7 +5,7 @@ export class Screen3D extends Screen {
 	type = 'screen3D';
 
 	grid: any;
-	axis: any;
+	axes: any;
 	render: any;
 	camera: any;
 	element: any;
@@ -16,7 +16,7 @@ export class Screen3D extends Screen {
 
 		var defaults = {
 					anaglyphMode: false,
-					axis: true,
+					axes: true,
 					background: 0xffffff,
 					camera: {
 						lookAt: [0, 0, 0],
@@ -137,11 +137,11 @@ export class Screen3D extends Screen {
 		}
 
 
-		// Axis
+		// Axes
 		// ====
-		if (opts.axis) {
-			var axis = new THREE.AxisHelper(10);
-			scene.add(axis);
+		if (opts.axes) {
+			var axes = new THREE.AxisHelper(10);
+			scene.add(axes);
 		}
 
 

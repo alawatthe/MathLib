@@ -8,46 +8,18 @@
 	</head>
 	<body>
 
-		<div id="failing" style="display: none">
-			<h2>Summary of failing tests</h2>
-			<table>
-				<thead>
-					<tr>
-						<th>Module</th><th>Name</th><th>Actual</th><th>Expected</th><th>Message</th>
-					</tr>
-				</thead>
-				<tbody id="errortable">
-				</tbody>
-			</table>
-
-			<h2>Complete test suite</h2>
-		</div>
-
-
 		<div id="qunit"></div>
 		<div id="qunit-fixture"></div>
 		<div id="testPlots" style="display: none"></div>
 
 		<script src="../node_modules/qunitjs/qunit/qunit.js"></script>
-		<script>
-			QUnit.config.hidepassed = true;
-			
-			QUnit.log(function (details) {
-				if (!details.result) {
-					document.getElementById('errortable').innerHTML += '<tr><td>' + [details.module, details.name, details.actual, details.expected, details.message].join('</td><td>') + '</td></tr>' 
-				}
-			});
 
-			QUnit.done(function (details) {
-				if (details.failed) {
-					document.getElementById('failing').style.setProperty('display', 'block');
-				}
-			});
-		</script>
 		<script src="./vendor/qunit-image.js"></script>
 		<script src="../build/MathLib.js"></script>
 		<script src="./visual/circle.js"></script>
 		<script src="./visual/functn.js"></script>
+		<script src="./visual/Line.js"></script>
 		<script src="./visual/point.js"></script>
+		<script src="./visual/Screen2D.js"></script>
 	</body>
 </html>

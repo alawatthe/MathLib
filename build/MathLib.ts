@@ -1,7 +1,7 @@
 // MathLib.js is a JavaScript library for mathematical computations.
 //
 // ## Version
-// v0.6.1 - 2013-11-11  
+// v0.6.1 - 2013-12-21  
 // MathLib is currently in public beta testing.
 //
 // ## License
@@ -52,6 +52,7 @@ module MathLib {
 	declare var MathLib : any;
 	declare var MathJax : any;
 	declare var THREE : any;
+
 
 
 	MathLib.version = '0.6.1';
@@ -150,6 +151,8 @@ module MathLib {
 				}
 				return n;
 			};
+			
+MathLib.extendObject = extendObject;
 
 
 var template = function (data) {var p = [];p.push(' <figure class="MathLib_figure">     <div class="MathLib_wrapper" style="width: ');
@@ -2881,7 +2884,7 @@ export class Screen {
 
 						ctx.drawImage((<any>_this).layer.back.element, 0, 0);
 						ctx.drawImage((<any>_this).layer.grid.element, 0, 0);
-						ctx.drawImage((<any>_this).layer.axis.element, 0, 0);
+						ctx.drawImage((<any>_this).layer.axes.element, 0, 0);
 						ctx.drawImage((<any>_this).layer.main.element, 0, 0);
 
 
@@ -3113,18 +3116,17 @@ export class Layer {
 				this.ctx.strokeStyle = colorConvert(screen.options.grid.color) || '#cccccc';
 				this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
-				
 				this.draw = function () {
-					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
+//					_this.ctx.lineWidth = (screen.options.grid.lineWidth || 4) / (screen.scale.x - screen.scale.y);
 					_this.screen.drawGrid();
 				}
 			}
-			else if (id === 'axis') {
-				this.ctx.strokeStyle = colorConvert(screen.options.axis.color) || '#000000';
+			else if (id === 'axes') {
+				this.ctx.strokeStyle = colorConvert(screen.options.axes.color) || '#000000';
 				
 				this.draw = function () {
 					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
-					_this.screen.drawAxis();
+					_this.screen.drawAxes();
 				}
 			}
 			else {
@@ -3164,6 +3166,8 @@ export class Layer {
 		else if (screen.options.renderer === 'SVG') {
 			var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g'),
 					m = screen.transformation;
+			
+			ctx.className.baseVal = 'MathLib_layer_' + id;
 			ctx.setAttribute('transform',
 				'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')' );
 			screen.element.appendChild(ctx);
@@ -3198,12 +3202,12 @@ export class Layer {
 				};
 
 			}
-			else if (id === 'axis') {
-				ctx.setAttribute('stroke', colorConvert(screen.options.axis.color) || '#000000');
+			else if (id === 'axes') {
+				ctx.setAttribute('stroke', colorConvert(screen.options.axes.color) || '#000000');
 				
 				this.draw = function () {
 					ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
-					_this.screen.drawAxis();
+					_this.screen.drawAxes();
 				}
 			}
 			else {
@@ -3350,11 +3354,11 @@ convertOptions: function (opt) {
 
 
 	if ('font' in opt) {
-		convertedOptions['font-family'] = opt.font;
+		convertedOptions.font = opt.font;
 	}
 
 	if ('fontSize' in opt) {
-		convertedOptions['font-size'] = opt.fontSize;
+		convertedOptions.fontSize = opt.fontSize;
 	}
 
 
@@ -3364,6 +3368,7 @@ convertOptions: function (opt) {
 	else if ('color' in opt) {
 		convertedOptions.strokeStyle = colorConvert(opt.color);
 	}
+
 
 	return convertedOptions;
 },
@@ -3377,13 +3382,20 @@ convertOptions: function (opt) {
 // *@return {Screen}* Returns the screen
 line: function (line, options = {}, redraw = false) {
 	var screen = this.screen,
-			points = this.screen.getLineEndPoints(line),
+			points,
 			ctx = this.ctx,
 			prop, opts;
 
 	ctx.save()
 	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 
+	// Don't try to draw the line at infinity
+	if (line.type === 'line' && MathLib.isZero(line[0]) && MathLib.isZero(line[1])) {
+		return this;
+	}
+	else {
+		points = this.screen.getLineEndPoints(line)
+	}
 
 	// Set the drawing options
 	if (options) {
@@ -3432,13 +3444,9 @@ line: function (line, options = {}, redraw = false) {
 path: function (curve, options = {}, redraw = false) {
 	var screen = this.screen,
 			ctx = this.ctx,
-			prop, opts, path, x, y, i,
+			prop, opts, path, paths = [], x, y, i, fx, fxold,
 			step = 2 / (screen.scale.x - screen.scale.y),
 			from, to;
-
-
-	from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x) - step;
-	to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x) + step;
 
 	ctx.save()
 	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
@@ -3465,8 +3473,37 @@ path: function (curve, options = {}, redraw = false) {
 	// If curve is a function f, the path will be (x, f(x))
 	if (typeof curve === 'function') {
 		path = [];
+		from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x) - step;
+		to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x) + step;
+
 		for (i = from; i <= to; i += step) {
-			path.push([i, curve(i)]);
+			fx = curve(i);
+			// Inline NaN test and disontinuity test
+			// Check if we are drawing a (nearly) vertical line, which should not be there.
+			// i.e the vertical lines at π/2 for the tangent function
+			// TODO: Find a better check if there is a discontinuity.
+			if (fx !== fx ||
+				// next the check for very steep lines
+				(MathLib.abs((fxold - fx) / step) >= 1e2 && 
+				// But those points additionally have to satisfy,
+				// that the midpoint of the current interval is not in between
+				// the two values of the function at the endpoints of the intervall.
+				(fx - curve(i - step / 2)) * (fxold - curve(i - step / 2)) >= 0)) {
+
+				// Don't add empty subpaths
+				if (path.length) {
+					paths.push(path);
+					path = [];
+				}
+			}
+			else {
+				path.push([i, fx]);
+			}
+
+			fxold = fx;
+		}
+		if (path.length) {
+			paths.push(path);
 		}
 	}
 
@@ -3476,9 +3513,12 @@ path: function (curve, options = {}, redraw = false) {
 		path = [];
 		x = curve[0];
 		y = curve[1];
+		from = ('from' in options ? (<any>options).from : 0) - step;
+		to = ('to' in options ? (<any>options).to : 2 * Math.PI) + step;
 		for (i = from; i <= to; i += step) {
 			path.push([x(i), y(i)]);
 		}
+		paths.push(path);
 	}
 	else {
 		path = curve;
@@ -3486,15 +3526,37 @@ path: function (curve, options = {}, redraw = false) {
 
 
 	// Draw the path
-	ctx.beginPath();
-	ctx.moveTo(path[0][0], path[0][1]);
-	path.forEach(function (x) {
-		ctx.lineTo(x[0], x[1]);
-	});
-	ctx.stroke();
-	ctx.closePath();
-	ctx.restore();
+	// Till now I haven't found a way to stroke and fill the path in one go.
+	// The problem is basically, that moveTo creates a new subpath
+	// and every subpath is filled on its own.
+	if ((<any>options).fillColor || (<any>options).fillColor !== 'transparent') {
+		ctx.beginPath();
+		ctx.lineTo(from, 0);
+		paths.forEach(function (path) {
+			// The following line (and the line four lines afterwards) fixes the fill at holes in the path.
+			ctx.lineTo(path[0][0], 0);
+			path.forEach(function (x) {
+				ctx.lineTo(x[0], x[1]); 
+			});
+			ctx.lineTo(path[path.length - 1][0], 0);
+		});
+		ctx.fill();
+//		ctx.closePath();
+	}
 
+	if ((<any>options).lineColor || (<any>options).lineColor !== 'transparent') {
+		ctx.beginPath();
+		paths.forEach(function (path) {
+			ctx.moveTo(path[0][0], path[0][1]);
+			path.forEach(function (x) {
+				ctx.lineTo(x[0], x[1]); 
+			});
+		});
+		ctx.stroke();
+//		ctx.closePath();
+	}
+
+	ctx.restore();
 
 	if (!redraw) {
 		if (options.conic) {
@@ -3631,7 +3693,7 @@ point: function (point, options = {}, redraw = false) {
 		dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
 		screen.text((<any>options).label,
 			point[0] / point[2] + dist / (screen.scale.x - screen.scale.y),
-			point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), {}, true);
+			point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), options, true);
 	}
 
 
@@ -3658,14 +3720,12 @@ point: function (point, options = {}, redraw = false) {
 text: function (str, x, y, options = {}, redraw = false) {
 	var defaults = {
 				font:       'Helvetica',
-				fontSize:   10,
-				fillColor:  'rgba(0, 0, 0, 1)',
-				lineColor:  'rgba(0, 0, 0, 1)',
-				lineWidth:  0.05
+				fontSize:   12,
+//				lineWidth:  0.05,
+				textColor:  'rgba(0, 0, 0, 1)'
 			},
 			ctx, prop, opts;
 
-	// Determine the layer to draw onto
 	ctx = this.ctx;
 
 	opts = MathLib.Canvas.convertOptions(extendObject(defaults, options));
@@ -3678,11 +3738,13 @@ text: function (str, x, y, options = {}, redraw = false) {
 		}
 	}
 
-	ctx.font = '10px Helvetica';
+	ctx.fillStyle = colorConvert((<any>options).textColor || (<any>options).color || defaults.textColor);
+	ctx.strokeStyle = colorConvert((<any>options).textColor || (<any>options).color || defaults.textColor);
+
+	ctx.font = opts.fontSize + 'px ' + opts.font;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 
-	// Draw the text
 	var tf = this.screen.transformation;
 
 	ctx.save();
@@ -3786,15 +3848,11 @@ convertOptions: function (opt) {
 
 
 	if ('font' in opt) {
-		convertedOptions['font-family'] = opt.font;
+		convertedOptions.font = opt.font;
 	}
 
 	if ('fontSize' in opt) {
-		convertedOptions['font-size'] = opt.fontSize;
-	}
-
-	if ('size' in opt) {
-		convertedOptions.size = opt.size;
+		convertedOptions.fontSize = opt.fontSize;
 	}
 
 
@@ -3827,9 +3885,17 @@ convertOptions: function (opt) {
 // *@return {Canvas}* Returns the screen
 line: function (line, options = {}, redraw = false) {
 	var screen = this.screen,
-			points = this.screen.getLineEndPoints(line),
+			points,
 			prop, opts,
 			svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+
+	// Don't try to draw the line at infinity
+	if (line.type === 'line' && MathLib.isZero(line[0]) && MathLib.isZero(line[1])) {
+		return this;
+	}
+	else {
+		points = this.screen.getLineEndPoints(line)
+	}
 
 	svgLine.setAttribute('x1', points[0][0]);
 	svgLine.setAttribute('y1', points[0][1]);
@@ -3868,19 +3934,39 @@ line: function (line, options = {}, redraw = false) {
 // *@return {Screen}* Returns the screen
 path: function (curve, options = {}, redraw = false) {
 	var screen = this.screen,
-			svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
+			svgPathStroke = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
+			svgPathFill = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
 			step = 2 / (screen.scale.x - screen.scale.y),
-			pathString, from, to, prop, opts, x, y, i, path;
-
-	from = ('from' in options ? (<any>options).from :         - screen.translation.x  / screen.scale.x) - step;
-	to = ('to' in options ? (<any>options).to : (screen.width - screen.translation.x) / screen.scale.x) + step;
-
+			pathStringFill, pathStringStroke, from, to, prop, opts, x, y, i, path, paths = [], fx, fxold;
 
 	// If curve is a function f, the path will be (x, f(x))
 	if (typeof curve === 'function') {
 		path = [];
+		from = ('from' in options ? (<any>options).from :         - screen.translation.x  / screen.scale.x) - step;
+		to = ('to' in options ? (<any>options).to : (screen.width - screen.translation.x) / screen.scale.x) + step;
 		for (i = from; i <= to; i += step) {
-			path.push([i, curve(i)]);
+			fx = curve(i);
+			
+			// Inline NaN test and disontinuity test
+			// For more info see the corresponding function for canvas
+			if (fx !== fx ||
+				(MathLib.abs((fxold - fx) / step) >= 1e2 && 
+				(fx - curve(i - step / 2)) * (fxold - curve(i - step / 2)) >= 0)) {
+				
+				// Don't add empty subpaths
+				if (path.length) {
+					paths.push(path);
+					path = [];
+				}
+			}
+			else {
+				path.push([i, fx]);
+			}
+
+			fxold = fx;
+		}
+		if (path.length) {
+			paths.push(path);
 		}
 	}
 
@@ -3890,32 +3976,62 @@ path: function (curve, options = {}, redraw = false) {
 		path = [];
 		x = curve[0];
 		y = curve[1];
+		from = ('from' in options ? (<any>options).from : 0) - step;
+		to = ('to' in options ? (<any>options).to : 2 * Math.PI) + step;
 		for (i = from; i <= to; i += step) {
 			path.push([x(i), y(i)]);
 		}
+		paths.push(path);
 	}
 	else {
 		path = curve;
 	}
 
-	pathString = 'M' + path.reduce(function (prev, cur) {
-		return prev + ' L' + cur.join(' ');
-	});
-	svgPath.setAttribute('d', pathString);
 
-	svgPath.setAttribute('stroke-width', ((<any>options).lineWidth || 4 ) / (screen.scale.x - screen.scale.y) + '');
+	pathStringFill = 'M' + from + ' 0 ' + paths.reduce(function (previ, path) {
+		return previ +
+		// Bring the fill down to the zero line at the beginning of a subpath
+		' L ' + path[0][0] + ' 0 ' +
+		// The "normal" path
+		path.reduce(function (prev, cur) {
+			return prev + ' L ' + cur.join(' ');
+		}, '') + 
+		// Move the fill back to the zero line at the end of a subpath
+		' L ' + path[path.length - 1][0] + ' 0 ';
+	}, '');
+	
+	pathStringStroke = paths.reduce(function (previ, path) {
+		return previ + ' M ' + path[0].join(' ') + path.reduce(function (prev, cur) {
+			return prev + ' L ' + cur.join(' ');
+		}, '');
+	}, '');
+	
+
+	if (pathStringFill !== '') {
+		svgPathFill.setAttribute('d', pathStringFill);
+	}
+	if (pathStringStroke) {
+		svgPathStroke.setAttribute('d', pathStringStroke);
+	}
+
+	svgPathStroke.setAttribute('stroke-width', ((<any>options).lineWidth || 4 ) / (screen.scale.x - screen.scale.y) + '');
 
 
 	if (options) {
 		opts = MathLib.SVG.convertOptions(options);
 		for (prop in opts) {
 			if (opts.hasOwnProperty(prop)) {
-				svgPath.setAttribute(prop, opts[prop]);
+				svgPathFill.setAttribute(prop, opts[prop]);
+				svgPathStroke.setAttribute(prop, opts[prop]);
 			}
 		}
 	}
+	
+	svgPathFill.setAttribute('stroke', 'transparent');
+	svgPathStroke.setAttribute('fill', 'transparent');
 
-	this.ctx.appendChild(svgPath);
+	this.ctx.appendChild(svgPathFill);
+	this.ctx.appendChild(svgPathStroke);
 
 	if (!redraw) {
 		if (options.conic) {
@@ -4102,7 +4218,7 @@ point: function (point, options = {}, redraw = false) {
 		dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
 		screen.text((<any>options).label,
 			point[0] / point[2] + dist / (screen.scale.x - screen.scale.y),
-			point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), {}, true);
+			point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), options, true);
 	}
 
 
@@ -4161,26 +4277,37 @@ point: function (point, options = {}, redraw = false) {
 // *@param {object}* [options] Optional drawing options  
 // *@return {Screen}* Returns the screen
 text: function (str, x, y, options = {}, redraw = false) {
-	var screen = this.screen,
-			svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+	var defaults = {
+				font:       'Helvetica',
+				fontSize:   12,
+//				lineWidth:  0.05,
+				textColor:  'rgba(0, 0, 0, 1)'
+			},
+			opts,
+			screen = this.screen,
+			svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'),
+			svgTspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
 
-	svgText.textContent = str;
-	svgText.setAttribute('x', x * screen.scale.x + '');
-	svgText.setAttribute('y', y * screen.scale.y + '');
+	opts = MathLib.SVG.convertOptions(extendObject(defaults, options));
+
+	svgTspan.textContent = str;
+	svgTspan.setAttribute('x', x * screen.scale.x + '');
+	svgTspan.setAttribute('y', y * screen.scale.y + '');
 	svgText.setAttribute('transform', 'matrix(' + 1 / screen.scale.x + ', 0, 0, ' + 1 / screen.scale.y + ', 0, 0)');
-	svgText.setAttribute('font-family', 'Helvetica');
-	svgText.setAttribute('fill', colorConvert((<any>options).color) || '#000000');
+	svgText.setAttribute('font-family', opts.font);
+	svgText.setAttribute('font-size', opts.fontSize);
+	svgText.setAttribute('fill', colorConvert((<any>options).textColor || (<any>options).color) || defaults.textColor);
 	svgText.setAttribute('fill-opacity', '1');
-	svgText.setAttribute('stroke', colorConvert((<any>options).color) || '#000000');
+	svgText.setAttribute('stroke', colorConvert((<any>options).textColor || (<any>options).color) || defaults.textColor);
 	svgText.setAttribute('text-anchor', 'middle');
 
 	// alignment-baseline isn't defined for text elements, 
 	// only for ‘tspan’, ‘tref’, ‘altGlyph’, ‘textPath’ elements.  
 	// see the [Specification](http://www.w3.org/TR/SVG/text.html#AlignmentBaselineProperty)  
 	// But it works for text elements, so we don't need an additional tspan element.
-	svgText.setAttribute('alignment-baseline', 'middle');
+	svgTspan.setAttribute('alignment-baseline', 'middle');
 
-
+	svgText.appendChild(svgTspan);
 	this.ctx.appendChild(svgText);
 
 	if (!redraw) {
@@ -4207,7 +4334,7 @@ export class Screen2D extends Screen {
 	applyTransformation: any;
 	background: any;
 	renderer: any;
-	axis: any;
+	axes: any;
 	grid: any;
 	layer: any;
 	element: any;
@@ -4242,16 +4369,43 @@ export class Screen2D extends Screen {
 	constructor (id: string, options = {}) {
 		super(id, options);
 		var defaults = {
-					axis: {
+					axes: {
 						color: 0x000000,
+						lineColor: 0x000000,
 						textColor: 0x000000,
-						tick: {x: 1, y: 1}
+					
+/*						label: true
+						label: false
+						label: {
+							x: true,
+							y: false
+						}
+*/
+						label: {
+							fontSize: 12,
+							font: 'Helvetica',
+							x: true,
+							y: true
+						},
+					
+						x: true,
+						y: true
+						
+//						origin: {x: 0, y: 0},
+//						tick: {x: 1, y: 1}
 					},
 					grid: {
-						angle: Math.PI / 8,
-						color: 0xcccccc,
+						// angle: Math.PI / 8,
 						type: 'cartesian',
-						tick: {x: 1, y: 1, r: 1}
+						lineColor: 0xcccccc,
+						lineWidth: 4,
+						dash: [],
+						dashOffset: 0,
+						//tick: {x: 1, y: 1, r: 1}
+						x: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
+						y: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
+						r: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
+						angle: {tick: Math.PI / 8, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0}
 					},
 					interaction: {
 						allowPan: true,
@@ -4371,23 +4525,24 @@ export class Screen2D extends Screen {
 
 			element.setAttribute('stroke', '#000000');
 			element.setAttribute('stroke-opacity', '1');
-			element.setAttribute('fill', '#ffffff');
-			element.setAttribute('fill-opacity', '0');
+			element.setAttribute('fill', 'transparent');
+
 
 			this.element = element;
 			this.wrapper.appendChild(element);
 
-			if ('background' in options) {
+//			if ('background' in options) {
 				var background = document.createElementNS('http://www.w3.org/2000/svg','rect');
 
 				background.setAttribute('x', '0px');
 				background.setAttribute('y', '0px');
 				background.setAttribute('width', this.width + 'px');
 				background.setAttribute('height', this.height + 'px');
-				background.setAttribute('fill', colorConvert((<any>options).background));
+				background.setAttribute('stroke', 'transparent');
+				background.setAttribute('fill', 'background' in options ? colorConvert((<any>options).background) : 'white');
 				background.setAttribute('fill-opacity', '1');
 				this.element.appendChild(background);
-			}
+//			}
 		}
 
 
@@ -4397,7 +4552,7 @@ export class Screen2D extends Screen {
 		this.layer = [];
 		this.layer.back = new MathLib.Layer(this, 'back', 0);
 		this.layer.grid = new MathLib.Layer(this, 'grid', 1);
-		this.layer.axis = new MathLib.Layer(this, 'axis', 2);
+		this.layer.axes = new MathLib.Layer(this, 'axes', 2);
 		this.layer.main = new MathLib.Layer(this, 'main', 3);
 
 
@@ -4440,21 +4595,24 @@ export class Screen2D extends Screen {
 	}
 
 
-// ### Screen.prototype.drawAxis
-// Draws the axis.
+// ### Screen.prototype.drawAxes
+// Draws the axes.
 //
 // *@return {Screen2D}*
-drawAxis() {
+drawAxes() {
 
-	var line = (...args : any[]) => this.renderer.line.apply(this.layer.axis, args),
-			text = (...args : any[]) => this.renderer.text.apply(this.layer.axis, args),
+	var line = (...args : any[]) => this.renderer.line.apply(this.layer.axes, args),
+			text = (...args : any[]) => this.renderer.text.apply(this.layer.axes, args),
 			options = {
-				lineColor: colorConvert(this.options.axis.color),
+				lineColor: colorConvert(this.options.axes.color),
 				'stroke-width': -1 / this.transformation[1][1]
 			},
 			textOptions = {
-				strokeStyle: colorConvert(this.options.axis.textColor),
-				fillStyle: colorConvert(this.options.axis.textColor)
+				font: this.options.axes && 'label' in this.options.axes ? this.options.axes.label.font : '',
+				fontSize: this.options.axes && 'label' in this.options.axes ? this.options.axes.label.fontSize : '',
+//				fontSize: this.options.axes.label.fontSize,
+				strokeStyle: colorConvert(this.options.axes.textColor),
+				fillStyle: colorConvert(this.options.axes.textColor)
 			},
 			top     = (            - this.translation.y) / this.scale.y,
 			bottom  = (this.height - this.translation.y) / this.scale.y,
@@ -4469,57 +4627,66 @@ drawAxis() {
 			xTick = Math.pow(10, xExp),
 			i;
 
-  if (!this.options.axis) {
+  if (!this.options.axes) {
 		return this;
 	}
 
+
 	// The axes
-	line([[left, 0], [right, 0]], options, true);
-	line([[0, bottom], [0, top]], options, true);
+	if (this.options.axes.x) {
+		line([[left, 0], [right, 0]], options, true);	
+	}
+	if (this.options.axes.y) {
+		line([[0, bottom], [0, top]], options, true);
+	}
 
 
 
 	// The ticks on the axes
-	// The x axis
-	if (this.options.grid.tick) {
-		for (i = -yTick; i >= left; i -= yTick) {
+	// The x axes
+	if (this.options.axes.x) {
+		for (i = left; i <= right; i += yTick) {
 			line([[i, -lengthY], [i, lengthY]], options, true);
 		}
-		for (i = yTick; i <= right; i += yTick) {
-			line([[i, -lengthY], [i, lengthY]], options, true);
-		}
+	}
 
-		// The y axis
-		for (i = -xTick; i >= bottom; i -= xTick) {
-			line([[-lengthX, i], [lengthX, i]], options, true);
-		}
-		for (i = xTick; i <= top; i += xTick) {
+	// The y axes
+	if (this.options.axes.y) {
+		for (i = bottom; i <= top; i += xTick) {
 			line([[-lengthX, i], [lengthX, i]], options, true);
 		}
 	}
 
 
 	// The labels
-	// The x axis
+	// The x axes
 	// .toFixed() is necessary to display 0.3 as "0.3" and not as "0.30000000000000004".
 	// .toFixed expects arguments between 0 and 20.
 	var xLen = Math.max(0, Math.min(20, -xExp)),
 			yLen = Math.max(0, Math.min(20, -yExp));
 
-	for (i = -yTick; i >= left; i -= yTick) {
-		text(i.toFixed(yLen), i, -2 * lengthY, textOptions, true);
-	}
-	for (i = yTick; i <= right; i += yTick) {
-		text(i.toFixed(yLen), i, -2 * lengthY, textOptions, true);
-	}
+	if (this.options.axes.label) {
+		if (this.options.axes.x) {
+			for (i = -yTick; i >= left; i -= yTick) {
+				text(i.toFixed(yLen), i, -2 * lengthY, textOptions, true);
+			}
+			for (i = yTick; i <= right; i += yTick) {
+				text(i.toFixed(yLen), i, -2 * lengthY, textOptions, true);
+			}
+		}
 
-
-	// The y axis
-	for (i = -xTick; i >= bottom; i -= xTick) {
-		text(i.toFixed(xLen), -2 * lengthX, i, textOptions, true);
-	}
-	for (i = xTick; i <= top; i += xTick) {
-		text(i.toFixed(xLen), -2 * lengthX, i, textOptions, true);
+		// The y axes
+		if (this.options.axes.y) {
+			for (i = -xTick; i >= bottom; i -= xTick) {
+				text(i.toFixed(xLen), -2 * lengthX, i, textOptions, true);
+			}
+			for (i = xTick; i <= top; i += xTick) {
+				text(i.toFixed(xLen), -2 * lengthX, i, textOptions, true);
+			}
+		}
+		else {
+			text(0..toFixed(yLen), 0, -2 * lengthY, textOptions, true);
+		}
 	}
 
 	return this;
@@ -4536,33 +4703,37 @@ drawGrid() {
 		return this;
 	}
 
-	var line   = (...args : any[]) => this.renderer.line.apply(this.layer.grid, args),
+	var i, ii,
+			line   = (...args : any[]) => this.renderer.line.apply(this.layer.grid, args),
 			circle = (...args : any[]) => this.renderer.circle.apply(this.layer.grid, args),
 			top    = (            - this.translation.y) / this.scale.y,
 			bottom = (this.height - this.translation.y) / this.scale.y,
 			left   = (            - this.translation.x) / this.scale.x,
 			right  = (this.width  - this.translation.x) / this.scale.x,
 			yTick  = Math.pow(10, 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3)),
-			xTick  = Math.pow(10, 1 - Math.floor(Math.log( this.transformation[0][0]) / Math.LN10 - 0.3)),
-			i, ii;
+			xTick  = Math.pow(10, 1 - Math.floor(Math.log( this.transformation[0][0]) / Math.LN10 - 0.3));
 
 
 	if (this.options.grid.type === 'cartesian') {
 
-		// The horizontal lines
-		for (i = bottom - (bottom % yTick); i <= top; i += yTick) {
-			line([[left, i], [right, i]], false, true);
+		// The vertical lines
+		if (this.options.grid.x) {
+			for (i = left - (left % xTick); i <= right; i += xTick) {
+				line([[i, bottom], [i, top]], extendObject(this.options.grid, this.options.grid.x), true);
+			}
 		}
 
 
-		// The vertical lines
-		for (i = left - (left % xTick); i <= right; i += xTick) {
-			line([[i, bottom], [i, top]], false, true);
+		// The horizontal lines
+		if (this.options.grid.y) {
+			for (i = bottom - (bottom % yTick); i <= top; i += yTick) {
+				line([[left, i], [right, i]], extendObject(this.options.grid, this.options.grid.y), true);
+			}
 		}
 
 
 		// Test for logarithmic plots
-		/*for (i = left - (left % this.axis.tick.x); i <= right; i += this.axis.tick.x) {
+		/*for (i = left - (left % this.axes.tick.x); i <= right; i += this.axes.tick.x) {
 			for (var j = 1; j <= 10; j++ ) {
 				this.line([[i * Math.log(10) + Math.log(j), bottom], [i * Math.log(10) + Math.log(j), top]], options);
 			}
@@ -4574,12 +4745,16 @@ drawGrid() {
 		var max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right)),
 				min = 0; // TODO: improve this estimate
 
-		for (i = 0, ii = 2 * Math.PI; i < ii; i += this.options.grid.angle) {
-			line([[0, 0], [max * Math.cos(i), max * Math.sin(i)]], false, true);
+		if (this.options.grid.angle) {
+			for (i = 0, ii = 2 * Math.PI; i < ii; i += this.options.grid.angle.tick) {
+				line([[0, 0], [max * Math.cos(i), max * Math.sin(i)]], extendObject(this.options.grid, this.options.grid.angle), true);
+			}
 		}
 
-		for (i = min; i <= max; i += Math.min(xTick, yTick)) {
-			circle(new MathLib.Circle([0, 0, 1], i), false, true);
+		if (this.options.grid.r) {
+			for (i = min; i <= max; i += Math.min(xTick, yTick)) {
+				circle(new MathLib.Circle([0, 0, 1], i), extendObject(this.options.grid, this.options.grid.r), true);
+			}
 		}
 	}
 
@@ -4781,10 +4956,10 @@ resize(width : number, height : number) : Screen2D {
 		this.layer.grid.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 		this.layer.grid.ctx.strokeStyle = colorConvert(this.options.grid.color) || '#cccccc';
 
-		this.layer.axis.element.width = width;
-		this.layer.axis.element.height = height;
-		this.layer.axis.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-		this.layer.axis.ctx.strokeStyle = colorConvert(this.options.axis.color) || '#000000';
+		this.layer.axes.element.width = width;
+		this.layer.axes.element.height = height;
+		this.layer.axes.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
+		this.layer.axes.ctx.strokeStyle = colorConvert(this.options.axes.color) || '#000000';
 
 		this.layer.main.element.width = width;
 		this.layer.main.element.height = height;
@@ -4811,7 +4986,7 @@ export class Screen3D extends Screen {
 	type = 'screen3D';
 
 	grid: any;
-	axis: any;
+	axes: any;
 	render: any;
 	camera: any;
 	element: any;
@@ -4822,7 +4997,7 @@ export class Screen3D extends Screen {
 
 		var defaults = {
 					anaglyphMode: false,
-					axis: true,
+					axes: true,
 					background: 0xffffff,
 					camera: {
 						lookAt: [0, 0, 0],
@@ -4943,11 +5118,11 @@ export class Screen3D extends Screen {
 		}
 
 
-		// Axis
+		// Axes
 		// ====
-		if (opts.axis) {
-			var axis = new THREE.AxisHelper(10);
-			scene.add(axis);
+		if (opts.axes) {
+			var axes = new THREE.AxisHelper(10);
+			scene.add(axes);
 		}
 
 

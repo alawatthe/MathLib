@@ -6,9 +6,17 @@
 // *@return {Canvas}* Returns the screen
 line: function (line, options = {}, redraw = false) {
 	var screen = this.screen,
-			points = this.screen.getLineEndPoints(line),
+			points,
 			prop, opts,
 			svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+
+	// Don't try to draw the line at infinity
+	if (line.type === 'line' && MathLib.isZero(line[0]) && MathLib.isZero(line[1])) {
+		return this;
+	}
+	else {
+		points = this.screen.getLineEndPoints(line)
+	}
 
 	svgLine.setAttribute('x1', points[0][0]);
 	svgLine.setAttribute('y1', points[0][1]);
