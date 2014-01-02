@@ -4,7 +4,7 @@
 // *@return {Conic}*
 static throughFivePoints(p, q, r, s, t) : Conic {
 
-	var conic = new MathLib.Conic([[1,0,0], [0,1,0], [0,0,1]]);
+	var conic = new MathLib.Conic(new MathLib.Matrix([[1,0,0], [0,1,0], [0,0,1]]));
 
 	Object.defineProperties(conic, {
 			'primal': {

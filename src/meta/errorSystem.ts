@@ -7,7 +7,7 @@ var errors = [],
 // 
 // *@param {string}* The name of the event.  
 // *@param {function}* The callback function.  
-MathLib.on = function (type, callback) {
+export var on = function (type, callback) {
 	if (type === 'error') {
 		errors.push(callback);
 	}
@@ -22,7 +22,7 @@ MathLib.on = function (type, callback) {
 //
 // *@param {string}* The name of the event.  
 // *@param {function}* The callback function.  
-MathLib.off = function (type, callback) {
+export var off = function (type, callback) {
 	if (type === 'error') {
 		errors = errors.filter(x => x !== callback);
 	}
@@ -36,7 +36,7 @@ MathLib.off = function (type, callback) {
 // Fires an error event.
 //
 // *@param {oject}* An object describing the error further.  
-MathLib.error = function (details) {
+export var error = function (details) {
 	errors.forEach(function (cb) {
 		cb(details);
 	});
@@ -47,8 +47,11 @@ MathLib.error = function (details) {
 // Fires a waring event.
 //
 // *@param {object}* An object describing the warning further.  
-MathLib.warning = function (details) {
+export var warning = function (details) {
 	warnings.forEach(function (cb) {
 		cb(details);
 	});
 };
+
+
+'export MathLib';

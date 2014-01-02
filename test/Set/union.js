@@ -3,6 +3,6 @@ test('.union()', 2, function () {
 			m = new MathLib.Set([1, 3, 5, 7]),
 			c = new MathLib.Set([1, new MathLib.Complex(1, 1), new MathLib.Complex(0, 1), 3]);
 
-	deepEqual(s.union(m), new MathLib.Set([1, 2, 3, 4, 5, 7]), '.union()');
-	deepEqual(s.union(c), new MathLib.Set([1, 2, 3, 4, new MathLib.Complex(0, 1), new MathLib.Complex(1, 1)]), '.union()');
+	ok(s.union(m).isEqual(new MathLib.Set([1, 2, 3, 4, 5, 7])), '.union()');
+	ok(s.union(c).isEqual(new MathLib.Set([1, 2, 3, 4, new MathLib.Complex(0, 1), new MathLib.Complex(1, 1)])), '.union()');
 });

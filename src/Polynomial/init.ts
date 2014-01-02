@@ -13,9 +13,7 @@
 // new MathLib.Polynomial(100)
 // ```
 
-
-//declare var Polynomial : any;
-
+/// import Functn
 export class Polynomial {
 
 	type = 'polynomial';

@@ -1,5 +1,6 @@
 // ## <a id="Permutation"></a>Permutation
 
+/// import Functn, Matrix
 export class Permutation {
 
 	type = 'permutation';

@@ -38,5 +38,5 @@ normalize() : Conic {
 		f = -1;
 	}
 
-	return new MathLib.Conic([[a, 0, d/2], [0, c, e/2], [d/2, e/2, f]]);
+	return new MathLib.Conic(new MathLib.Matrix([[a, 0, d / 2], [0, c, e / 2], [d / 2, e / 2, f]]));
 }

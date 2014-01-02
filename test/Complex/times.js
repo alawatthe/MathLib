@@ -6,22 +6,22 @@ test('.times()', 19, function () {
 			d = new MathLib.Complex(3, 7),
 			r = new MathLib.Rational(2, 3);
 
-	deepEqual(nan.times(nan), nan, 'ComplexNaN * ComplexNaN = ComplexNaN');
-	deepEqual(nan.times(inf), nan, 'ComplexNaN * ComplexInfinity = ComplexNaN');
-	deepEqual(nan.times(zero), nan, 'ComplexNaN * 0 = ComplexNaN');
-	deepEqual(nan.times(c), nan, 'ComplexNaN * (2+5i) = ComplexNaN');
+	ok(MathLib.isNaN(nan.times(nan).re), 'ComplexNaN * ComplexNaN = ComplexNaN');
+	ok(MathLib.isNaN(nan.times(inf).re), 'ComplexNaN * ComplexInfinity = ComplexNaN');
+	ok(MathLib.isNaN(nan.times(zero).re), 'ComplexNaN * 0 = ComplexNaN');
+	ok(MathLib.isNaN(nan.times(c).re), 'ComplexNaN * (2+5i) = ComplexNaN');
 	
-	deepEqual(inf.times(nan), nan, 'ComplexInfinity * ComplexNaN = ComplexNaN');
+	ok(MathLib.isNaN(inf.times(nan).re), 'ComplexInfinity * ComplexNaN = ComplexNaN');
 	deepEqual(inf.times(inf), inf, 'ComplexInfinity * ComplexInfinity = ComplexInfinity');
-	deepEqual(inf.times(zero), nan, 'ComplexInfinity * 0 = ComplexNaN');
+	ok(MathLib.isNaN(inf.times(zero).re), 'ComplexInfinity * 0 = ComplexNaN');
 	deepEqual(inf.times(c), inf, 'ComplexInfinity * (2+5i) = ComplexInfinity');
 	
-	deepEqual(zero.times(nan), nan, '0 * ComplexNaN = ComplexNaN');
-	deepEqual(zero.times(inf), nan, '0 * ComplexInfinity = ComplexNaN');
+	ok(MathLib.isNaN(zero.times(nan).re), '0 * ComplexNaN = ComplexNaN');
+	ok(MathLib.isNaN(zero.times(inf).re), '0 * ComplexInfinity = ComplexNaN');
 	deepEqual(zero.times(zero), zero, '0 * 0 = 0');
 	deepEqual(zero.times(c), zero, '0 * (2+5i) = 0');
 
-	deepEqual(c.times(nan), nan, '(2+5i) * ComplexNaN = ComplexNaN');
+	ok(MathLib.isNaN(c.times(nan).re), '(2+5i) * ComplexNaN = ComplexNaN');
 	deepEqual(c.times(inf), inf, '(2+5i) * ComplexInfinity = ComplexInfinity');
 	deepEqual(c.times(zero), zero, '(2+5i) * 0 = 0');
 	deepEqual(c.times(c), new MathLib.Complex(-21, 20), '(2+5i) * (2+5i) = -21+20i');

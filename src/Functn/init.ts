@@ -3,9 +3,12 @@
 // Because 'Function' is a reserved word in JavaScript,
 // the module is called 'Functn'.  
 
+/// import Expression
 var functnPrototype : any = {};
 
-MathLib.Functn = function (f, options) {
+declare var MathJax : any;
+
+export var Functn = function (f, options) {
 	options = options || {};
 
 	var functn = function (x) {
@@ -78,3 +81,5 @@ MathLib.Functn = function (f, options) {
 
 	return functn;
 };
+
+var exports = {};

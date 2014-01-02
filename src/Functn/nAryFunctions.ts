@@ -163,7 +163,7 @@ var nAryFunctions = {
 						subtype: 'number'
 					});
 				}
-				return new MathLib.Functn(function (x) {
+				return MathLib.Functn(function (x) {
 					return MathLib.plus(f1(x), f2(x));
 				}, {
 					expression: new MathLib.Expression({
@@ -221,7 +221,7 @@ var nAryFunctions = {
 						subtype: 'number'
 					});
 				}
-				return new MathLib.Functn(function (x) {
+				return MathLib.Functn(function (x) {
 					return MathLib.times(f1(x), f2(x));
 				}, {
 					expression: new MathLib.Expression({
@@ -272,7 +272,7 @@ var createNaryFunction = function (f) {
 
 for (func in nAryFunctions) {
 	if (nAryFunctions.hasOwnProperty(func)) {
-		Object.defineProperty(MathLib, func, {
+		Object.defineProperty(exports, func, {
 			value: createNaryFunction(nAryFunctions[func])
 		});
 	}

@@ -12,6 +12,7 @@
 // var c = new MathLib.Complex(1, 2);  
 // ```
 
+/// import Functn, Point
 export class Complex {
 
 	type = 'complex';

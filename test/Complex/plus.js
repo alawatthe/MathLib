@@ -5,22 +5,22 @@ test('.plus()', 18, function () {
 			c = new MathLib.Complex(2, 5),
 			d = new MathLib.Complex(3, 4);
 
-	deepEqual(nan.plus(nan), nan, 'ComplexNaN + ComplexNaN = ComplexNaN');
-	deepEqual(nan.plus(inf), nan, 'ComplexNaN + ComplexInfinity = ComplexNaN');
-	deepEqual(nan.plus(zero), nan, 'ComplexNaN + 0 = ComplexNaN');
-	deepEqual(nan.plus(c), nan, 'ComplexNaN + (2+5i) = ComplexNaN');
+	ok(MathLib.isNaN(nan.plus(nan).re), 'ComplexNaN + ComplexNaN = ComplexNaN');
+	ok(MathLib.isNaN(nan.plus(inf).re), 'ComplexNaN + ComplexInfinity = ComplexNaN');
+	ok(MathLib.isNaN(nan.plus(zero).re), 'ComplexNaN + 0 = ComplexNaN');
+	ok(MathLib.isNaN(nan.plus(c).re), 'ComplexNaN + (2+5i) = ComplexNaN');
 	
-	deepEqual(inf.plus(nan), nan, 'ComplexInfinity + ComplexNaN = ComplexNaN');
+	ok(MathLib.isNaN(inf.plus(nan).re), 'ComplexInfinity + ComplexNaN = ComplexNaN');
 	deepEqual(inf.plus(inf), inf, 'ComplexInfinity + ComplexInfinity = ComplexInfinity');
 	deepEqual(inf.plus(zero), inf, 'ComplexInfinity + 0 = ComplexInfinity');
 	deepEqual(inf.plus(c), inf, 'ComplexInfinity + (2+5i) = ComplexInfinity');
 	
-	deepEqual(zero.plus(nan), nan, '0 + ComplexNaN = ComplexNaN');
+	ok(MathLib.isNaN(zero.plus(nan).re), '0 + ComplexNaN = ComplexNaN');
 	deepEqual(zero.plus(inf), inf, '0 + ComplexInfinity = ComplexInfinity');
 	deepEqual(zero.plus(zero), zero, '0 + 0 = 0');
 	deepEqual(zero.plus(c), c, '0 + (2+5i) = c');
 
-	deepEqual(c.plus(nan), nan, '(2+5i) + ComplexNaN = ComplexNaN');
+	ok(MathLib.isNaN(c.plus(nan).re), '(2+5i) + ComplexNaN = ComplexNaN');
 	deepEqual(c.plus(inf), inf, '(2+5i) + ComplexInfinity = ComplexInfinity');
 	deepEqual(c.plus(zero), c, '(2+5i) + 0 = 2+5i');
 	deepEqual(c.plus(c), new MathLib.Complex(4, 10), '(2+5i) + (2+5i) = 4+10i');

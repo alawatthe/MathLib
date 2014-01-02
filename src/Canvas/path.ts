@@ -122,10 +122,10 @@ path: function (curve, options = {}, redraw = false) {
 	ctx.restore();
 
 	if (!redraw) {
-		if (options.conic) {
+		if ((<any>options).conic) {
 			this.stack.push({
 				type: 'conic',
-				object: options.conic,
+				object: (<any>options).conic,
 				options: options
 			});
 		}

@@ -8,7 +8,7 @@ meet(l : Line) : Point {
 			k = this;
 
 	if (this.dimension === 2 && l.dimension === 2) {
-		point = new MathLib.Point(this.vectorProduct(l));
+		point = new MathLib.Point(this.vectorProduct(l).toArray());
 
 		Object.defineProperties(point, {
 			'0': {

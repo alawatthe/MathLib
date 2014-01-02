@@ -106,10 +106,10 @@ path: function (curve, options = {}, redraw = false) {
 	this.ctx.appendChild(svgPathStroke);
 
 	if (!redraw) {
-		if (options.conic) {
+		if ((<any>options).conic) {
 			this.stack.push({
 				type: 'conic',
-				object: options.conic,
+				object: (<any>options).conic,
 				options: options
 			});
 		}

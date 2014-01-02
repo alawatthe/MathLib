@@ -10,6 +10,7 @@
 //    ⎜ 2 ⎟  
 //    ⎝ 3 ⎠
 
+/// import Functn
 export class Vector {
 	type = 'vector';
 

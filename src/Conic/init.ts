@@ -1,6 +1,7 @@
 // ## <a id="Conic" href="http://mathlib.de/en/docs/Conic">Conic</a>
 // The conic implementation of MathLib makes calculations with conics possible.
 
+/// import Functn, Matrix
 export class Conic {
 	type = 'conic';
 
@@ -16,10 +17,9 @@ export class Conic {
 //		if (!dual) {
 //			dual = primal.adjugate();
 //		}
-		//else if (!primal.times(dual).isScalar()) {
-			// Throw error
-		//}
-
+//		else if (!primal.times(dual).isScalar()) {
+//			// Throw error
+//		}
 
 		if (primal.rank() > 1) {
 			Object.defineProperties(this, {

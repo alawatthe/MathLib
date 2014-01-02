@@ -41,7 +41,7 @@ evaluate() : any {
 		}
 	}
 	if (this.subtype === 'functionDefinition') {
-		return new MathLib.Functn(this.content[0].evaluate(), {
+		return MathLib.Functn(this.content[0].evaluate(), {
 			name: 'f', 
 			expression: this.value
 		});

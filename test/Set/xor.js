@@ -4,6 +4,6 @@ test('.xor()', 2, function () {
 			c1 = new MathLib.Set([1, new MathLib.Complex(1, 1), new MathLib.Complex(0, 1), 2]),
 			c2 = new MathLib.Set([1, new MathLib.Complex(1, 1), new MathLib.Complex(0, 2), 3]);
 
-	deepEqual(s.xor(m), new MathLib.Set([2, 4, 5, 7]), '.xor()');
-	deepEqual(c1.xor(c2), new MathLib.Set([2, 3, new MathLib.Complex(0, 1), new MathLib.Complex(0, 2)]), '.xor()');
+	ok(s.xor(m).isEqual(new MathLib.Set([2, 4, 5, 7])), '.xor()');
+	ok(c1.xor(c2).isEqual(new MathLib.Set([2, 3, new MathLib.Complex(0, 1), new MathLib.Complex(0, 2)])), '.xor()');
 });

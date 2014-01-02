@@ -12,6 +12,7 @@
 //    ⎜ 4 5 6 ⎟  
 //    ⎝ 7 8 9 ⎠
 
+/// import Functn, Permutation
 export class Matrix {
 	type = 'matrix';
 
@@ -24,7 +25,7 @@ export class Matrix {
 		if (typeof matrix === 'string') {
 			// If there is a < in the string we assume it's MathML
 			if (matrix.indexOf('<') > -1) {
-				return new MathLib.Expression.parseMathML(matrix).evaluate();
+				return MathLib.Expression.parseContentMathML(matrix).evaluate();
 			}
 			// else we assume it's MatLab notation
 			else {

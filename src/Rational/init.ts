@@ -8,6 +8,7 @@
 // var r = new MathLib.Rational(2, 3);  
 // ```
 
+/// import Functn
 export class Rational {
 
 	type = 'rational';

@@ -8,7 +8,7 @@ join(q : Point) : Line {
 			p = this;
 
 	if (this.dimension === 2 && q.dimension === 2) {
-		line = new MathLib.Line(this.vectorProduct(q));
+		line = new MathLib.Line(this.vectorProduct(q).toArray());
 
 		Object.defineProperties(line, {
 			'0': {

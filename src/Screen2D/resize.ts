@@ -17,12 +17,12 @@ resize(width : number, height : number) : Screen2D {
 		this.layer.grid.element.width = width;
 		this.layer.grid.element.height = height;
 		this.layer.grid.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-		this.layer.grid.ctx.strokeStyle = colorConvert(this.options.grid.color) || '#cccccc';
+		this.layer.grid.ctx.strokeStyle = MathLib.colorConvert(this.options.grid.color) || '#cccccc';
 
 		this.layer.axes.element.width = width;
 		this.layer.axes.element.height = height;
 		this.layer.axes.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-		this.layer.axes.ctx.strokeStyle = colorConvert(this.options.axes.color) || '#000000';
+		this.layer.axes.ctx.strokeStyle = MathLib.colorConvert(this.options.axes.color) || '#000000';
 
 		this.layer.main.element.width = width;
 		this.layer.main.element.height = height;

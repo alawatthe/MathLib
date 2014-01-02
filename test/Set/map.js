@@ -6,6 +6,6 @@ test('.map()', 2, function () {
 			},
 			res = p.map(f);
 
-	deepEqual(res, q, '.map()');
+	ok(res.isEqual(q), '.map()');
 	equal(res.type, 'set', '.type should be set');
 });

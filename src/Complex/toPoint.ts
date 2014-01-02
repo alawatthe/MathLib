@@ -9,5 +9,5 @@ toPoint() : Point {
 		return new MathLib.Point([0, 0, 0]);
 	}
 
-	return new MathLib.Point(this.re, this.im);
+	return new MathLib.Point([this.re, this.im, 1]);
 }

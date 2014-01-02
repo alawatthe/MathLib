@@ -1,6 +1,7 @@
 // ## <a id="Layers"></a>Layers
 // Layers for two dimensional plotting
 
+/// import Screen2D
 export class Layer {
 
 

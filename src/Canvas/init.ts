@@ -1,4 +1,5 @@
 // ## Canvas
 // The Canvas renderer for 2D plotting
-//
-MathLib.Canvas = {
+
+/// import screen2d
+export var Canvas = {

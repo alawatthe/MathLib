@@ -73,9 +73,9 @@ test('.parse() matrix', 2, function () {
 
 
 test('.parse() set', 3, function () {
-	deepEqual(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><set><cn>1</cn><cn>2</cn><cn>3</cn><cn>4</cn><cn>5</cn><cn>6</cn><cn>7</cn><cn>8</cn><cn>9</cn><cn>10</cn></set></math>').evaluate(), MathLib.Set.fromTo(1, 10), 'set containing numbers');
-	deepEqual(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><union/><set><cn>1</cn><cn>2</cn></set><set><cn>2</cn><cn>3</cn></set></apply></math>').evaluate(), new MathLib.Set([1, 2, 3]), 'set union');
-	deepEqual(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><set><cs>A</cs><cs>B</cs><cs> </cs></set></math>').evaluate(), new MathLib.Set(['A', 'B', ' ']), 'set containing variables');
+	ok(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><set><cn>1</cn><cn>2</cn><cn>3</cn><cn>4</cn><cn>5</cn><cn>6</cn><cn>7</cn><cn>8</cn><cn>9</cn><cn>10</cn></set></math>').evaluate().isEqual(MathLib.Set.fromTo(1, 10)), 'set containing numbers');
+	ok(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><union/><set><cn>1</cn><cn>2</cn></set><set><cn>2</cn><cn>3</cn></set></apply></math>').evaluate().isEqual(new MathLib.Set([1, 2, 3])), 'set union');
+	ok(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><set><cs>A</cs><cs>B</cs><cs> </cs></set></math>').evaluate().isEqual(new MathLib.Set(['A', 'B', ' '])), 'set containing variables');
 });
 
 

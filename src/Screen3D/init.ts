@@ -1,7 +1,21 @@
 // ## <a id="Screen3D"></a>Screen3D
 // Two dimensional plotting
 
+declare var THREE : any;
+
+// A function converting arrays to THREE.js vectors
+var to3js = function (x) {
+	if (x.length === 2) {
+		return new THREE.Vector2(x[0], x[1]);
+	}
+	else if (x.length === 3) {
+		return new THREE.Vector3(x[0], x[1], x[2]);
+	}
+};
+
+/// import Screen
 export class Screen3D extends Screen {
+
 	type = 'screen3D';
 
 	grid: any;

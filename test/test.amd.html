@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>QUnit Test Suite</title>
+		<link rel="stylesheet" href="../node_modules/qunitjs/qunit/qunit.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="./vendor/qunit-image.css" type="text/css" media="screen">
+	</head>
+	<body>
+
+		<div id="failing" style="display: none">
+			<h2>Summary of failing tests</h2>
+			<table>
+				<thead>
+					<tr>
+						<th>Module</th><th>Name</th><th>Actual</th><th>Expected</th><th>Message</th>
+					</tr>
+				</thead>
+				<tbody id="errortable">
+				</tbody>
+			</table>
+
+			<h2>Complete test suite</h2>
+		</div>
+
+
+		<div id="qunit"></div>
+		<div id="qunit-fixture"></div>
+		<div id="testPlots" style="display: none"></div>
+
+		<script src="../node_modules/qunitjs/qunit/qunit.js"></script>
+		<script data-main="../build/amd/MathLib.test.amd.js" src="../node_modules/requirejs/require.js"></script>
+	</body>
+</html>

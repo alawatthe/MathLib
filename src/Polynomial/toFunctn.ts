@@ -22,7 +22,7 @@ toFunctn() {
 		}
 	}
 
-	return new MathLib.Functn(new Function('x', 'return ' + str), {
+	return MathLib.Functn(new Function('x', 'return ' + str), {
 		expression: this.toExpression()
 	});
 }

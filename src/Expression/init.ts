@@ -1,6 +1,11 @@
 // ## <a id="Expression" href="http://mathlib.de/en/docs/Expression">Expression</a>
 // MathLib.Expression is the MathLib implementation of symbolic expressions
 
+/// no import
+
+// There is no DOMParser in Node, so we have to require one (done via a regexp replace)
+/// DOMParser
+
 export class Expression {
 
 	type = 'expression';

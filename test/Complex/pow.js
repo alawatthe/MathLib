@@ -6,23 +6,23 @@ test('.pow()', 29, function () {
 			d = new MathLib.Complex(3, 7);
 
 	// complex exponent
-	deepEqual(nan.pow(nan), nan, 'ComplexNaN ^ ComplexNaN = ComplexNaN');
-	deepEqual(nan.pow(inf), nan, 'ComplexNaN ^ ComplexInfinity = ComplexNaN');
-	deepEqual(nan.pow(zero), nan, 'ComplexNaN ^ 0 = ComplexNaN');
-	deepEqual(nan.pow(c), nan, 'ComplexNaN ^ (2+5i) = ComplexNaN');
+	ok(MathLib.isNaN(nan.pow(nan).re), 'ComplexNaN ^ ComplexNaN = ComplexNaN');
+	ok(MathLib.isNaN(nan.pow(inf).re), 'ComplexNaN ^ ComplexInfinity = ComplexNaN');
+	ok(MathLib.isNaN(nan.pow(zero).re), 'ComplexNaN ^ 0 = ComplexNaN');
+	ok(MathLib.isNaN(nan.pow(c).re), 'ComplexNaN ^ (2+5i) = ComplexNaN');
 	
-	deepEqual(inf.pow(nan), nan, 'ComplexInfinity ^ ComplexNaN = ComplexNaN');
-	deepEqual(inf.pow(inf), nan, 'ComplexInfinity ^ ComplexInfinity = ComplexNaN');
-	deepEqual(inf.pow(zero), nan, 'ComplexInfinity ^ 0 = ComplexNaN');
+	ok(MathLib.isNaN(inf.pow(nan).re), 'ComplexInfinity ^ ComplexNaN = ComplexNaN');
+	ok(MathLib.isNaN(inf.pow(inf).re), 'ComplexInfinity ^ ComplexInfinity = ComplexNaN');
+	ok(MathLib.isNaN(inf.pow(zero).re), 'ComplexInfinity ^ 0 = ComplexNaN');
 	deepEqual(inf.pow(c), inf, 'ComplexInfinity ^ (2+5i) = ComplexInfinity');
 	
-	deepEqual(zero.pow(nan), nan, '0 ^ ComplexNaN = ComplexNaN');
-	deepEqual(zero.pow(inf), nan, '0 ^ ComplexInfinity = ComplexNaN');
-	deepEqual(zero.pow(zero), nan, '0 ^ 0 = ComplexNaN');
+	ok(MathLib.isNaN(zero.pow(nan).re), '0 ^ ComplexNaN = ComplexNaN');
+	ok(MathLib.isNaN(zero.pow(inf).re), '0 ^ ComplexInfinity = ComplexNaN');
+	ok(MathLib.isNaN(zero.pow(zero).re), '0 ^ 0 = ComplexNaN');
 	deepEqual(zero.pow(c), zero, '0 ^ (2+5i) = 0');
 
-	deepEqual(c.pow(nan), nan, '(2+5i) ^ ComplexNaN = ComplexNaN');
-	deepEqual(c.pow(inf), nan, '(2+5i) ^ ComplexInfinity = ComplexNaN');
+	ok(MathLib.isNaN(c.pow(nan).re), '(2+5i) ^ ComplexNaN = ComplexNaN');
+	ok(MathLib.isNaN(c.pow(inf).re), '(2+5i) ^ ComplexInfinity = ComplexNaN');
 	ok(c.pow(zero).isEqual(new MathLib.Complex(1)), '(2+5i) ^ 0 = 1');
 	ok(c.pow(c).isEqual(new MathLib.Complex(-0.014751488748626422189, -0.074003984757716712413)), '(2+5i) ^ (2+5i) = -0.01475 -0.07400i');
 	ok(c.pow(d).isEqual(new MathLib.Complex(-0.035288471617042692023, 0.012943638960390488567)));
@@ -36,7 +36,7 @@ test('.pow()', 29, function () {
 	ok(MathLib.isNegZero(c.pow(-0).im), '(2+5i) ^ -0 = 1 - 0i');
 
 
-	deepEqual(nan.pow(3), nan, 'ComplexNaN ^ 3 = ComplexNaN');
+	ok(MathLib.isNaN(nan.pow(3).re), 'ComplexNaN ^ 3 = ComplexNaN');
 	deepEqual(inf.pow(3), inf, 'ComplexInfinity ^ 3 = ComplexInfinity');
 	deepEqual(zero.pow(3), zero, '0 ^ 3 = 0');
 

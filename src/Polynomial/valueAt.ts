@@ -4,8 +4,9 @@
 // *@param {number|Complex|Matrix}*  
 // *@return {number|Complex|Matrix}*
 valueAt(x) {
-	var pot = MathLib.is(x, 'matrix') ? MathLib.Matrix.identity(x.rows, x.cols) : 1,
-			value = MathLib.is(x, 'matrix') ? MathLib.Matrix.zero(x.rows, x.cols) : 0,
+	// TODO: warn if x is non square matrix
+	var pot = MathLib.is(x, 'matrix') ? (<any>MathLib.Matrix.identity(x.rows)) : (<any>1),
+			value = MathLib.is(x, 'matrix') ? (<any>MathLib.Matrix.zero(x.rows, x.cols)) : (<any>0),
 			i, ii;
 	
 	for (i = 0, ii = this.deg; i <= ii; i++) {

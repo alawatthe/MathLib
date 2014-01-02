@@ -11,6 +11,7 @@
 // c.radius                   // returns the radius of the circle
 // ```
 
+/// import Point
 export class Circle {
 
 	type = 'circle';

@@ -1,5 +1,6 @@
 // These functions will be added to the functn prototype soon.
 var functionList1 = {
+/*
 	divisors: function (x) {
 		var divisors = x === 1 ? [] : [1],
 				i, ii;
@@ -9,7 +10,7 @@ var functionList1 = {
 			}
 		}
 		divisors.push(x);
-		return MathLib.set(divisors);
+		return new MathLib.Set(divisors);
 	},
 	factor: function (n) {
 		var factors = [],
@@ -30,6 +31,7 @@ var functionList1 = {
 		}
 		return new MathLib.Set(factors, true);
 	},
+	*/
 	fallingFactorial: function (n, m, s) {
 		var factorial = 1, j;
 		s = s || 1;
@@ -128,7 +130,7 @@ for (func in functionList1) {
 	if (functionList1.hasOwnProperty(func)) {
 
 		cur = functionList1[func];
-		Object.defineProperty(MathLib, func, {
+		Object.defineProperty(exports, func, {
 			value: createFunction1(functionList1[func], func)
 		});
 	}
@@ -141,7 +143,7 @@ for (func in functionList1) {
 
 
 
-MathLib.compare = function (a, b) {
+export var compare = function (a, b) {
 	if (MathLib.type(a) !== MathLib.type(b)) {
 		return MathLib.sign(MathLib.type(a).localeCompare(MathLib.type(b)));
 	}
@@ -155,7 +157,7 @@ MathLib.compare = function (a, b) {
 };
 
 
-MathLib.type = function (x) {
+export var type = function (x) {
 	if (x === null) {
 		return 'null';
 	}
@@ -166,10 +168,20 @@ MathLib.type = function (x) {
 };
 
 
-MathLib.is = function (obj, type) {
+export var is = function (obj, type) {
 	var ucfirst = function (str) {
-		return str.slice(0,1).toUpperCase() + str.slice(1);
-	};
+				return str.slice(0,1).toUpperCase() + str.slice(1);
+			},
+			// Trick Typescript to believe that global exists
+			global = global,
+			// Do the same for Node and window 
+			window = window,
+			glbl = {
+				Object: Object,
+				Function: Function,
+				RegExp: RegExp,
+				Array: Array
+			}
 
 	if (MathLib.type(obj) === type) {
 		return true;
@@ -179,7 +191,12 @@ MathLib.is = function (obj, type) {
 		return obj instanceof MathLib[ucfirst(type)];
 	}
 	else {
-		return obj instanceof window[ucfirst(type)];
+		// if (window) {
+			return obj instanceof glbl[ucfirst(type)];
+		// }
+		// if (global) {
+		// 	return obj instanceof global[ucfirst(type)];
+		// }
 	}
 }
 
@@ -189,10 +206,11 @@ MathLib.is = function (obj, type) {
 // Code stolen from [Modernizr](http://www.modernizr.com/)
 //
 // *@return {boolean}*
-MathLib.isMathMLSupported = function () : boolean {
+export var isMathMLSupported = function () : boolean {
 	var hasMathML = false,
 			ns, div, mfrac;
-	if (document.createElementNS) {
+	// If document is undefined (e.g. in Node) we return false
+	if (typeof document !== 'undefined' && document.createElementNS) {
 		ns = 'http://www.w3.org/1998/Math/MathML';
 		div = document.createElement('div');
 		div.style.position = 'absolute';
@@ -215,7 +233,7 @@ MathLib.isMathMLSupported = function () : boolean {
 //
 // *@param {string}* The id of the element in which the MathML should be inserted.  
 // *@param {string}* The MathML to be inserted.
-MathLib.writeMathML = function (id : string, math : string) : void {
+export var writeMathML = function (id : string, math : string) : void {
 	var formula;
 	document.getElementById(id).innerHTML = '<math>' + math + '</math>';
 	if (typeof MathJax !== 'undefined') {
@@ -229,7 +247,7 @@ MathLib.writeMathML = function (id : string, math : string) : void {
 // Loads MathJax dynamically.
 //
 // *@param {string}* [config] Optional config options
-MathLib.loadMathJax = function (config : string) : void {
+export var loadMathJax = function (config : string) : void {
 	var script = <HTMLScriptElement>document.createElement('script');
 	script.type = 'text/javascript';
 	script.src  = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js';

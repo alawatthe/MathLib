@@ -4,6 +4,6 @@ test('.without()', 2, function () {
 			c1 = new MathLib.Set([1, new MathLib.Complex(1, 1), new MathLib.Complex(0, 1), 2]),
 			c2 = new MathLib.Set([1, new MathLib.Complex(1, 1), new MathLib.Complex(0, 2), 3]);
 
-	deepEqual(s.without(m), new MathLib.Set([2, 4]), '.without()');
-	deepEqual(c1.without(c2), new MathLib.Set([2, new MathLib.Complex(0, 1)]), '.without()');
+	ok(s.without(m).isEqual(new MathLib.Set([2, 4])), '.without()');
+	ok(c1.without(c2).isEqual(new MathLib.Set([2, new MathLib.Complex(0, 1)])), '.without()');
 });

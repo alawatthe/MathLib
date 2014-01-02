@@ -10,13 +10,13 @@
 // `new MathLib.Point(4, 2)`
 // The 1 will be added for you.
 
-
+/// import Complex, Vector
 export class Point extends Vector {
 	type = 'point';
 
 	dimension: number;
 
-	constructor (coords: number[]) {
+	constructor (coords: any[]) {
 		super(arguments.length > 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
 
 		this.dimension = 2;

@@ -264,8 +264,8 @@ var unaryFunctions = {
 // Create the unary functions
 for (var elemfn in unaryFunctions) {
 	if (unaryFunctions.hasOwnProperty(elemfn)) {
-		Object.defineProperty(MathLib, elemfn, {
-			value: new MathLib.Functn(unaryFunctions[elemfn], {
+		Object.defineProperty(exports, elemfn, {
+			value: MathLib.Functn(unaryFunctions[elemfn], {
 				name: elemfn, 
 				expression: new MathLib.Expression({
 					subtype: 'functionDefinition',
@@ -293,3 +293,94 @@ for (var elemfn in unaryFunctions) {
 		})
 	}
 }
+
+export var abs = (<any>exports).abs;
+export var arccos = (<any>exports).arccos;
+export var arccot = (<any>exports).arccot;
+export var arccsc = (<any>exports).arccsc;
+export var arcosh = (<any>exports).arcosh;
+export var arcoth = (<any>exports).arcoth;
+export var arcsch = (<any>exports).arcsch;
+export var arcsec = (<any>exports).arcsec;
+export var arcsin = (<any>exports).arcsin;
+export var arctan = (<any>exports).arctan;
+export var arsech = (<any>exports).arsech;
+export var arsinh = (<any>exports).arsinh;
+export var artanh = (<any>exports).artanh;
+export var ceil = (<any>exports).ceil;
+export var cbrt = (<any>exports).cbrt;
+export var conjugate = (<any>exports).conjugate;
+export var copy = (<any>exports).copy;
+export var cos = (<any>exports).cos;
+export var cosh = (<any>exports).cosh;
+export var cot = (<any>exports).cot;
+export var coth = (<any>exports).coth;
+export var csc = (<any>exports).csc;
+export var csch = (<any>exports).csch;
+export var degToRad = (<any>exports).degToRad;
+export var digitsum = (<any>exports).digitsum;
+export var exp = (<any>exports).exp;
+export var factorial = (<any>exports).factorial;
+export var floor = (<any>exports).floor;
+export var identity = (<any>exports).identity;
+export var inverse = (<any>exports).inverse;
+export var isFinite = (<any>exports).isFinite;
+export var isInt = (<any>exports).isInt;
+export var isNaN = (<any>exports).isNaN;
+export var isNegZero = (<any>exports).isNegZero;
+export var isOne = (<any>exports).isOne;
+export var isPosZero = (<any>exports).isPosZero;
+export var isPrime = (<any>exports).isPrime;
+export var isReal = (<any>exports).isReal;
+export var isZero = (<any>exports).isZero;
+export var lg = (<any>exports).lg;
+export var ln = (<any>exports).ln;
+export var logGamma = (<any>exports).logGamma;
+export var negative = (<any>exports).negative;
+export var not = (<any>exports).not;
+export var radToDeg = (<any>exports).radToDeg;
+export var sec = (<any>exports).sec;
+export var sech = (<any>exports).sech;
+export var sign = (<any>exports).sign;
+export var sin = (<any>exports).sin;
+export var sinh = (<any>exports).sinh;
+export var sqrt = (<any>exports).sqrt;
+export var tan = (<any>exports).tan;
+export var tanh = (<any>exports).tanh;
+
+export var arctan2 = (<any>exports).arctan2;
+export var binomial = (<any>exports).binomial;
+export var divide = (<any>exports).divide;
+export var log = (<any>exports).log;
+export var minus = (<any>exports).minus;
+export var mod = (<any>exports).mod;
+export var pow = (<any>exports).pow;
+export var root = (<any>exports).root;
+
+export var divisors = (<any>exports).divisors;
+export var factor = (<any>exports).factor;
+export var fallingFactorial = (<any>exports).fallingFactorial;
+export var fibonacci = (<any>exports).fibonacci;
+export var risingFactorial = (<any>exports).risingFactorial;
+export var round = (<any>exports).round;
+export var trunc = (<any>exports).trunc;
+export var toContentMathML = (<any>exports).toContentMathML;
+export var toLaTeX = (<any>exports).toLaTeX;
+export var toMathML = (<any>exports).toMathML;
+export var toString = (<any>exports).toString;
+
+export var and = (<any>exports).and;
+export var arithMean = (<any>exports).arithMean;
+export var gcd = (<any>exports).gcd;
+export var geoMean = (<any>exports).geoMean;
+export var harmonicMean = (<any>exports).harmonicMean;
+export var hypot = (<any>exports).hypot;
+export var hypot2 = (<any>exports).hypot2;
+export var isEqual = (<any>exports).isEqual;
+export var lcm = (<any>exports).lcm;
+export var max = (<any>exports).max;
+export var min = (<any>exports).min;
+export var or = (<any>exports).or;
+export var plus = (<any>exports).plus;
+export var times = (<any>exports).times;
+export var xor = (<any>exports).xor;

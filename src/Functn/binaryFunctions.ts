@@ -104,7 +104,7 @@ for (func in binaryFunctions) {
 	if (binaryFunctions.hasOwnProperty(func)) {
 
 		cur = binaryFunctions[func];
-		Object.defineProperty(MathLib, func, {
+		Object.defineProperty(exports, func, {
 			value: createBinaryFunction(binaryFunctions[func], func)
 		});
 	}

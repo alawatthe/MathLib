@@ -21,7 +21,6 @@
 	"debug"         : false,
 	"eqnull"        : false,
 	"es5"           : false,
-	"esnext"        : false,
 	"evil"          : true,
 	"expr"          : false,
 	"funcscope"     : false,

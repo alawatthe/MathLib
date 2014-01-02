@@ -1,4 +1,6 @@
 // ## SVG
 // The SVG renderer for 2D plotting
 //
-MathLib.SVG = {
+
+/// import screen2D
+export var SVG = {

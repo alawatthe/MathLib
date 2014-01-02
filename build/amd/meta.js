@@ -1,0 +1,144 @@
+define([], function () {
+	var _MathLib = {};
+    
+
+    _MathLib.version = '0.6.1';
+    _MathLib.apery = 1.2020569031595942;
+    _MathLib.e = Math.E;
+
+    // Number.EPSILON is probably coming in ES6
+    // (see section 20.1.2.1 in the current draft)
+    _MathLib.epsilon = Number.EPSILON || (function () {
+        var next, result;
+        for (next = 1; 1 + next !== 1; next = next / 2) {
+            result = next;
+        }
+        return result;
+    }());
+    _MathLib.eulerMascheroni = 0.5772156649015329;
+    _MathLib.goldenRatio = 1.618033988749895;
+    _MathLib.pi = Math.PI;
+
+    _MathLib.isArrayLike = function (x) {
+        return typeof x === 'object' && 'length' in x;
+    };
+
+    _MathLib.isNative = function (fn) {
+        return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
+    };
+
+    _MathLib.argToRgba = function (h) {
+        var r, g, b;
+        h = -h / (2 * Math.PI);
+
+        function hue2rgb (t) {
+            if (t < 0) {
+                t += 1;
+            }
+            if (t > 1) {
+                t -= 1;
+            }
+            if (t < 1 / 6) {
+                return 6 * t;
+            }
+            if (t < 1 / 2) {
+                return 1;
+            }
+            if (t < 2 / 3) {
+                return 4 - 6 * t;
+            }
+            return 0;
+        }
+
+        r = hue2rgb(h + 1 / 3);
+        g = hue2rgb(h);
+        b = hue2rgb(h - 1 / 3);
+
+        return [r * 255, g * 255, b * 255, 255];
+    };
+
+    _MathLib.extendObject = function (dest, src) {
+        for (var prop in src) {
+            if (typeof dest[prop] === 'object' && typeof src[prop] === 'object') {
+                dest[prop] = _MathLib.extendObject(dest[prop], src[prop]);
+            } else {
+                dest[prop] = src[prop];
+            }
+        }
+        return dest;
+    };
+
+    _MathLib.colorConvert = function (n) {
+        if (typeof n === 'number') {
+            n = Math.max(Math.min(Math.floor(n), 0xffffff), 0);
+            return '#' + ('00000' + n.toString(16)).slice(-6);
+        }
+        return n;
+    };
+
+    var flatten = function (a) {
+        var flattendArray = [];
+        a.forEach(function (x) {
+            if (Array.isArray(x)) {
+                flattendArray = flattendArray.concat(flatten(x));
+            } else {
+                flattendArray.push(x);
+            }
+        });
+        return flattendArray;
+    };
+
+    var errors = [], warnings = [];
+
+    // ### [MathLib.on()](http://mathlib.de/en/docs/on)
+    // Binds an event handler to an event.
+    //
+    // *@param {string}* The name of the event.
+    // *@param {function}* The callback function.
+    _MathLib.on = function (type, callback) {
+        if (type === 'error') {
+            errors.push(callback);
+        } else if (type === 'warning') {
+            warnings.push(callback);
+        }
+    };
+
+    // ### [MathLib.off()](http://mathlib.de/en/docs/off)
+    // Unbinds an event handler from an event.
+    //
+    // *@param {string}* The name of the event.
+    // *@param {function}* The callback function.
+    _MathLib.off = function (type, callback) {
+        if (type === 'error') {
+            errors = errors.filter(function (x) {
+                return x !== callback;
+            });
+        } else if (type === 'warning') {
+            warnings = warnings.filter(function (x) {
+                return x !== callback;
+            });
+        }
+    };
+
+    // ### MathLib.error()
+    // Fires an error event.
+    //
+    // *@param {oject}* An object describing the error further.
+    _MathLib.error = function (details) {
+        errors.forEach(function (cb) {
+            cb(details);
+        });
+    };
+
+    // ### MathLib.warning()
+    // Fires a waring event.
+    //
+    // *@param {object}* An object describing the warning further.
+    _MathLib.warning = function (details) {
+        warnings.forEach(function (cb) {
+            cb(details);
+        });
+    };
+
+    	return _MathLib;
+});

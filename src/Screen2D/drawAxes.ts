@@ -7,15 +7,15 @@ drawAxes() {
 	var line = (...args : any[]) => this.renderer.line.apply(this.layer.axes, args),
 			text = (...args : any[]) => this.renderer.text.apply(this.layer.axes, args),
 			options = {
-				lineColor: colorConvert(this.options.axes.color),
+				lineColor: MathLib.colorConvert(this.options.axes.color),
 				'stroke-width': -1 / this.transformation[1][1]
 			},
 			textOptions = {
 				font: this.options.axes && 'label' in this.options.axes ? this.options.axes.label.font : '',
 				fontSize: this.options.axes && 'label' in this.options.axes ? this.options.axes.label.fontSize : '',
 //				fontSize: this.options.axes.label.fontSize,
-				strokeStyle: colorConvert(this.options.axes.textColor),
-				fillStyle: colorConvert(this.options.axes.textColor)
+				strokeStyle: MathLib.colorConvert(this.options.axes.textColor),
+				fillStyle: MathLib.colorConvert(this.options.axes.textColor)
 			},
 			top     = (            - this.translation.y) / this.scale.y,
 			bottom  = (this.height - this.translation.y) / this.scale.y,

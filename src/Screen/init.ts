@@ -1,8 +1,7 @@
 // ## <a id="Screen"></a>Screen
 // This module contains the common methods of all drawing modules.
 
-
-
+/// no import
 export class Screen {
 	type = 'screen';
 
@@ -27,7 +26,7 @@ export class Screen {
 
 	constructor (id: string, options = {}) {
 
-		var _this = this,
+		var that = this,
 				defaults = {
 					height: 500,
 					width: 500,
@@ -69,17 +68,17 @@ export class Screen {
 					var dataURI,
 							a = document.createElement('a');
 
-					if (_this.options.renderer === 'Canvas' && _this.type === 'screen2D') {
+					if (that.options.renderer === 'Canvas' && that.type === 'screen2D') {
 						var canvas = document.createElement('canvas'),
 								ctx = (<any>canvas).getContext('2d');
 
-						(<any>canvas).height = _this.height;
-						(<any>canvas).width = _this.width;
+						(<any>canvas).height = that.height;
+						(<any>canvas).width = that.width;
 
-						ctx.drawImage((<any>_this).layer.back.element, 0, 0);
-						ctx.drawImage((<any>_this).layer.grid.element, 0, 0);
-						ctx.drawImage((<any>_this).layer.axes.element, 0, 0);
-						ctx.drawImage((<any>_this).layer.main.element, 0, 0);
+						ctx.drawImage((<any>that).layer.back.element, 0, 0);
+						ctx.drawImage((<any>that).layer.grid.element, 0, 0);
+						ctx.drawImage((<any>that).layer.axes.element, 0, 0);
+						ctx.drawImage((<any>that).layer.main.element, 0, 0);
 
 
 						dataURI = (<any>canvas).toDataURL('image/png');
@@ -93,8 +92,8 @@ export class Screen {
 						}
 					}
 
-					if (_this.options.renderer === 'WebGL' && _this.type === 'screen3D') {
-						dataURI = _this.element.toDataURL('image/png');
+					if (that.options.renderer === 'WebGL' && that.type === 'screen3D') {
+						dataURI = that.element.toDataURL('image/png');
 						if ('download' in a) {
 							(<any>a).href = dataURI;
 							(<any>a).download = 'plot.png';
@@ -105,8 +104,8 @@ export class Screen {
 						}
 					}
 
-					else if (_this.options.renderer === 'SVG') {
-						dataURI = 'data:image/svg+xml,' + _this.element.parentElement.innerHTML;
+					else if (that.options.renderer === 'SVG') {
+						dataURI = 'data:image/svg+xml,' + that.element.parentElement.innerHTML;
 
 						if ('download' in a) {
 							(<any>a).href = dataURI;
@@ -127,23 +126,23 @@ export class Screen {
 						(<any>document).exitFullScreen();
 					}
 					else {
-						_this.container.requestFullScreen();
+						that.container.requestFullScreen();
 					}
 				};
 			}
 
 			if ((<any>opts).contextMenu.grid) {
 				this.contextMenu.getElementsByClassName('MathLib_grid_type')[0].onchange = function () {
-					(<any>_this).options.grid.type = 'cartesian';
-					(<any>_this).draw();
+					(<any>that).options.grid.type = 'cartesian';
+					(<any>that).draw();
 				}
 				this.contextMenu.getElementsByClassName('MathLib_grid_type')[1].onchange = function () {
-					(<any>_this).options.grid.type = 'polar';
-					(<any>_this).draw();
+					(<any>that).options.grid.type = 'polar';
+					(<any>that).draw();
 				}
 				this.contextMenu.getElementsByClassName('MathLib_grid_type')[2].onchange = function () {
-					(<any>_this).options.grid.type = false;
-					(<any>_this).draw();
+					(<any>that).options.grid.type = false;
+					(<any>that).draw();
 				}
 			}
 
@@ -154,14 +153,14 @@ export class Screen {
 
 		fullscreenchange = function () {
 			if ((<any>document).fullscreenElement) {
-				_this.origWidth = _this.width;
-				_this.origHeight = _this.height;
-				(<any>_this).resize(window.outerWidth, window.outerHeight);
+				that.origWidth = that.width;
+				that.origHeight = that.height;
+				(<any>that).resize(window.outerWidth, window.outerHeight);
 			}
 			else {
-				(<any>_this).resize(_this.origWidth, _this.origHeight);
-				delete _this.origWidth;
-				delete _this.origHeight;
+				(<any>that).resize(that.origWidth, that.origHeight);
+				delete that.origWidth;
+				delete that.origHeight;
 			}
 		};
 

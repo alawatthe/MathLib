@@ -3,8 +3,8 @@
 //
 // *@return {Expression}*
 static parseContentMathML(MathMLString) : Expression {
-	var tokenizer = new DOMParser(),
-			MathMLdoc;
+	var MathMLdoc,
+			tokenizer = new DOMParser();
 
 
 	// Whitespace normalization (see section 2.1.7 of the MathML 3 specification)
@@ -68,7 +68,11 @@ static parseContentMathML(MathMLString) : Expression {
 			});
 		},
 		cn: function (node) {
-			var type = node.getAttribute('type') !== null ? node.getAttribute('type') : 'number';
+      var type = node.getAttribute('type') 
+			
+			if (type === null || type === '') {
+				type = 'number';
+			}
 
 			if (type === 'number') {
 				/* TODO: base conversions
@@ -110,7 +114,7 @@ static parseContentMathML(MathMLString) : Expression {
 			return new MathLib.Expression({
 				subtype: 'functionDefinition',
 				domain: doa.childNodes[0].nodeName,
-				arguments: Array.prototype.map.call(bvar.childNodes, variable => new MathLib.Expression.variable(variable.textContent)),
+				arguments: Array.prototype.map.call(bvar.childNodes, variable => MathLib.Expression.variable(variable.textContent)),
 				content: [parser(apply)]
 			})
 		},
@@ -134,7 +138,7 @@ static parseContentMathML(MathMLString) : Expression {
 		},
 		'#text': function (node) {
 			if (node.parentNode.nodeName === 'cn') {
-				return new MathLib.Expression.number(node.nodeValue.trim());
+				return MathLib.Expression.number(node.nodeValue.trim());
 			}
 			return node.nodeValue;
 		},
@@ -145,13 +149,13 @@ static parseContentMathML(MathMLString) : Expression {
 			});
 		},
 		false: function () {
-			return new MathLib.Expression.constant('false');
+			return MathLib.Expression.constant('false');
 		},
 		pi: function () {
-			return new MathLib.Expression.constant('pi');
+			return MathLib.Expression.constant('pi');
 		},
 		true: function () {
-			return new MathLib.Expression.constant('true');
+			return MathLib.Expression.constant('true');
 		}
 	}
 

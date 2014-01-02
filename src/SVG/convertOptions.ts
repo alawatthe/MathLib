@@ -6,10 +6,10 @@
 convertOptions: function (opt) {
 	var convertedOptions : any = {};
 	if ('fillColor' in opt) {
-		convertedOptions.fill = colorConvert(opt.fillColor);
+		convertedOptions.fill = MathLib.colorConvert(opt.fillColor);
 	}
 	else if ('color' in opt) {
-		convertedOptions.fill = colorConvert(opt.color);
+		convertedOptions.fill = MathLib.colorConvert(opt.color);
 	}
 
 
@@ -23,10 +23,10 @@ convertOptions: function (opt) {
 
 
 	if ('lineColor' in opt) {
-		convertedOptions.stroke = colorConvert(opt.lineColor);
+		convertedOptions.stroke = MathLib.colorConvert(opt.lineColor);
 	}
 	else if ('color' in opt) {
-		convertedOptions.stroke = colorConvert(opt.color);
+		convertedOptions.stroke = MathLib.colorConvert(opt.color);
 	}
 
 

@@ -3,7 +3,7 @@
 //
 // *@param {number}* The number of rows and columns.  
 // *@return {Matrix}*
-static identity = function (n) {
+static identity = function (n) : Matrix {
 	var row = [],
 			matrix = [],
 			i, ii;
