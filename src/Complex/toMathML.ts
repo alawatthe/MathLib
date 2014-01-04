@@ -1,7 +1,8 @@
-// ### [Complex.prototype.toMathML()](http://mathlib.de/en/docs/Complex/toMathML)
-// Returns the (presentation) MathML representation of the number
-//
-// *@return {string}*
+/**
+ * Returns the (presentation) MathML representation of the number
+ *
+ * @return {string}
+ */
 toMathML() : string {
 	var str = '', reFlag = false;
 

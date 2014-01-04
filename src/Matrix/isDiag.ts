@@ -1,7 +1,8 @@
-// ### Matrix.prototype.isDiag()
-// Determines if the matrix is a diagonal matrix.
-//
-// *@return {boolean}*
+/**
+ * Determines if the matrix is a diagonal matrix.
+ *
+ * @return {boolean}
+ */
 isDiag() : boolean {
 	var i, j, ii, jj;
 	if (Number(this.hasOwnProperty('isUpper') && this.isUpper()) + 

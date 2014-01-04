@@ -1,9 +1,11 @@
-// ### SVG line
-// Draws a line on the screen.
-//
-// *@param {Line}* The line to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@return {Canvas}* Returns the screen
+/**
+ * Draws a line on the screen.
+ *
+ * @param {Line} line The line to be drawn  
+ * @param {object} options Optional drawing options
+ * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+ * @return {Canvas} Returns the screen
+ */
 line: function (line, options = {}, redraw = false) {
 	var screen = this.screen,
 			points,

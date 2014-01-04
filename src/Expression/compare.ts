@@ -1,8 +1,9 @@
-// ### [Expression.prototype.compare()](http://mathlib.de/en/docs/Expression/compare)
-// Compares two expressions
-//
-// *@param {Expression}* The expression to compare  
-// *@return {number}*
-compare(e) {
-	return MathLib.sign(this.toString().localeCompare(e.toString()));
+/**
+ * Compares two expressions
+ *
+ * @param {Expression} expr The expression to compare  
+ * @return {number}
+ */
+compare(expr) {
+	return MathLib.sign(this.toString().localeCompare(expr.toString()));
 }

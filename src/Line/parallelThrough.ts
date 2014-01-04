@@ -1,8 +1,9 @@
-// ### Line.prototype.parallelThrough()
-// Determines an parallel line through a given point.
-//
-// *@param {Point}*  
-// *@return {Line}*
+/**
+ * Determines an parallel line through a given point.
+ *
+ * @param {Point} p The Point through which the line should go through
+ * @return {Line}
+ */
 parallelThrough(p : Point) : Line {
 	var l = this,
 			parallel = new MathLib.Line([0,0,0]);

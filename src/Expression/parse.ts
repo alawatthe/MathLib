@@ -1,13 +1,14 @@
-// ### <a href="http://mathlib.de/en/docs/Expression/parse">Expression.parse</a>
-// 
-// Heavily based on Ariya Hidayat's [tapdigit library](https://code.google.com/p/tapdigit/)
-// and his series "math evaluator in javascript":  
-// [Part 1: tokenizer](http://ariya.ofilabs.com/2011/08/math-evaluator-in-javascript-part1.html)  
-// [Part 2: parser](http://ariya.ofilabs.com/2011/08/math-evaluator-in-javascript-part-2.html)  
-// [Part 3: interpreter](http://ariya.ofilabs.com/2011/08/math-expression-evaluator-in-javascript-part-3.html)  
-//
-// *@return {Expression}*
-static parse = function (str) {
+/**
+ * Heavily based on Ariya Hidayat's [tapdigit library](https://code.google.com/p/tapdigit/)
+ * and his series "math evaluator in javascript":  
+ * [Part 1: tokenizer](http://ariya.ofilabs.com/2011/08/math-evaluator-in-javascript-part1.html)  
+ * [Part 2: parser](http://ariya.ofilabs.com/2011/08/math-evaluator-in-javascript-part-2.html)  
+ * [Part 3: interpreter](http://ariya.ofilabs.com/2011/08/math-expression-evaluator-in-javascript-part-3.html)  
+ *
+ * @param {String} str The string to parse
+ * @return {Expression}
+ */
+static parse = function (str) : Expression {
 
 	var Token, Lexer, Parser;
 
@@ -480,21 +481,20 @@ static parse = function (str) {
 
 			expr = parseAdditive();
 
-			/*
-			TODO: support assignments
-			if (typeof expr !== 'undefined' && expr.Identifier) {
-				token = lexer.peek();
-				if (matchOp(token, '=')) {
-					lexer.next();
-					return new MathLib.Expression({
-							subtype: 'Assignment',
-							name: expr,
-							value: parseAssignment()
-						});
-				}
-				return expr;
-			}
-			*/
+
+			// TODO: support assignments
+			// if (typeof expr !== 'undefined' && expr.Identifier) {
+			// 	token = lexer.peek();
+			// 	if (matchOp(token, '=')) {
+			// 		lexer.next();
+			// 		return new MathLib.Expression({
+			// 				subtype: 'Assignment',
+			// 				name: expr,
+			// 				value: parseAssignment()
+			// 			});
+			// 	}
+			// 	return expr;
+			// }
 
 			return expr;
 		}

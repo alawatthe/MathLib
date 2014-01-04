@@ -1,7 +1,8 @@
-// ### [Complex.prototype.cot()](http://mathlib.de/en/docs/Complex/cot)
-// Calculates the cotangent of a complex number
-//
-// *@return {Complex}*
+/**
+ * Calculates the cotangent of a complex number
+ *
+ * @return {Complex}
+ */
 cot() : Complex {
 	var aa = 2 * this.re,
 			bb = 2 * this.im,

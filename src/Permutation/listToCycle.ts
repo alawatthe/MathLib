@@ -1,8 +1,9 @@
-// ### Permutation.listToCycle()
-// Converts a list representation to a cycle representation
-// 
-// *@param {array}* list The list to be converted  
-// *@return {array}*
+/**
+ * Converts a list representation to a cycle representation
+ * 
+ * @param {array} list The list to be converted  
+ * @return {array}
+ */
 static listToCycle(list : number[]) : any {
 	var finished = [],
 			cur, i, ii, cycle, cycles = [];

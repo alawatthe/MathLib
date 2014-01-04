@@ -1,11 +1,12 @@
-// ### [Vector.prototype.times()](http://mathlib.de/en/docs/Vector/times)
-// Multiplies the vector by a (complex) number or a matrix.
-// The vector is multiplied from left to the matrix. 
-// If you want to multiply it from the right use
-// matrix.times(vector) instead of vector.times(matrix)
-//
-// *@param {number|Complex|Matrix}*  
-// *@return {Vector}*
+/**
+ * Multiplies the vector by a (complex) number or a matrix.
+ * The vector is multiplied from left to the matrix. 
+ * If you want to multiply it from the right use
+ * matrix.times(vector) instead of vector.times(matrix)
+ *
+ * @param {number|Complex|Matrix} n The object to multiply to the vector  
+ * @return {Vector}
+ */
 times(n : any) : any {
 	var i, ii, colVectors,
 			product = [];

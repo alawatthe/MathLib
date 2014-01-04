@@ -1,9 +1,10 @@
-// ### Line.prototype.draw()
-// Draws the line on one or more screens
-//
-// *@param {Screen}* The screen to draw onto.  
-// *@param {object}* [options] Drawing options  
-// *@return {boolean}*
+/**
+ * Draws the line on one or more screens
+ *
+ * @param {Screen} screen The screen to draw onto.  
+ * @param {object} options Drawing options  
+ * @return {boolean}
+ */
 draw(screen, options) {
 	if (Array.isArray(screen)) {
 		var line = this;

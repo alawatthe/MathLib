@@ -1,13 +1,15 @@
-// ### Canvas.pixel
-// Draws pixel on the screen.
-//
-// *@param {function}* The pixel function  
-// *@param {number}* The top coordinate of the draw rectangle  
-// *@param {number}* The right coordinate of the draw rectangle  
-// *@param {number}* The bottom coordinate of the draw rectangle  
-// *@param {number}* The left coordinate of the draw rectangle  
-// *@param {object}* [options] Optional drawing options  
-// *@return {Screen}* Returns the screen
+/**
+ * Draws pixel on the screen.
+ *
+ * @param {function} f The pixel function
+ * @param {number} t The top coordinate of the draw rectangle
+ * @param {number} r The right coordinate of the draw rectangle
+ * @param {number} b The bottom coordinate of the draw rectangle
+ * @param {number} l The left coordinate of the draw rectangle
+ * @param {object} options Optional drawing options
+ * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+ * @return {Screen} Returns the screen
+ */
 pixel: function (f, t, r, b, l, options = {}, redraw = false) {
 	var screen = this.screen,
 			top     = (              - screen.translation.y) / screen.scale.y,

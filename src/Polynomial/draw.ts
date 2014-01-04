@@ -1,9 +1,10 @@
-// ### Polynomial.prototype.draw()
-// Draws the polynomial on the screen
-//
-// *@param {Screen}* The screen to draw the polynomial onto.  
-// *@param {object}* [options] Optional drawing options.  
-// *@return {Polynomial}*
+/**
+ * Draws the polynomial on the screen
+ *
+ * @param {Screen} screen The screen to draw the polynomial onto.  
+ * @param {object} options Optional drawing options.  
+ * @return {Polynomial}
+ */
 draw(screen, options) {
 	var path = [], i,
 			line = this;

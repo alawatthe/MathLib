@@ -11,8 +11,6 @@ __.prototype = b.prototype;
 d.prototype = new __();
 };
 
-
-
 // A function converting arrays to THREE.js vectors
 var to3js = function (x) {
     if (x.length === 2) {
@@ -25,6 +23,13 @@ var to3js = function (x) {
 import MathLib from './meta.js';
 import Screen from './Screen';
 
+/**
+* Three dimensional plotting
+*
+* @class
+* @augments Screen
+* @this {Screen3D}
+*/
 var Screen3D = (function (_super) {
     __extends(Screen3D, _super);
     function Screen3D(id, options) {
@@ -171,10 +176,11 @@ var Screen3D = (function (_super) {
 
         this.container.classList.add('MathLib_screen3D');
     }
-    // ### Screen3D.prototype.drawGrid
-    // Draws the grid.
-    //
-    // *@return {Screen3D}*
+    /**
+    * Draws the grid.
+    *
+    * @return {Screen3D}
+    */
     Screen3D.prototype.drawGrid = function () {
         if (!this.options.grid) {
             return this;
@@ -232,11 +238,13 @@ var Screen3D = (function (_super) {
         return this;
     };
 
-    // ### Matrix.parametricPlot3D()
-    //
-    //
-    // *@param {function}* The function which is called on every argument
-    // *@return {Screen3D}*
+    /**
+    * Creates a parametric plot
+    *
+    * @param {function} f The function which is called on every argument
+    * @param {object} options Optional drawing options
+    * @return {Screen3D}
+    */
     Screen3D.prototype.parametricPlot3D = function (f, options) {
         var defaults = {
             closed: false,
@@ -272,24 +280,26 @@ var Screen3D = (function (_super) {
         return this;
     };
 
-    // ### Screen3D.prototype.plot3D()
-    //
-    //
-    // *@param {function}* The map for the height
-    // *@param {object}* Options
-    // *@return {Screen3D}*
+    /**
+    * Creates a plot of a three dimensional function
+    *
+    * @param {function} f The map for the height
+    * @param {object} options Optional drawing options
+    * @return {Screen3D}
+    */
     Screen3D.prototype.plot3D = function (f, options) {
         return this.surfacePlot3D(function (u, v) {
             return [u, v, f(u, v)];
         }, options);
     };
 
-    // ### Screen3D.prototype.resize()
-    // Adjust the rendering if the screen is resized
-    //
-    // *@param {number}* The new width
-    // *@param {number}* The new height
-    // *@return {Screen3D}*
+    /**
+    * Adjust the rendering if the screen is resized
+    *
+    * @param {number} width The new width
+    * @param {number} height The new height
+    * @return {Screen3D}
+    */
     Screen3D.prototype.resize = function (width, height) {
         this.renderer.setSize(width, height);
         this.camera.aspect = width / height;
@@ -298,12 +308,13 @@ var Screen3D = (function (_super) {
         return this;
     };
 
-    // ### screen3D.prototype.surfacePlot()
-    //
-    //
-    // *@param {function}* The map for the surface
-    // *@param {object}* Options
-    // *@return {Screen3D}*
+    /**
+    * Creates a surface plot.
+    *
+    * @param {function} f The map for the surface
+    * @param {object} options Optional drawing options
+    * @return {Screen3D}
+    */
     Screen3D.prototype.surfacePlot3D = function (f, options) {
         var defaults = {
             material: {

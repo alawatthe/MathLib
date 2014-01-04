@@ -1,8 +1,9 @@
-// ### Polynomial.prototype.times()
-// Multiplies the polynomial by a number or an other polynomial  
-//
-// *@param {number|Polynomial}* The multiplicator  
-// *@return {Polynomial}*
+/**
+ * Multiplies the polynomial by a number or an other polynomial  
+ *
+ * @param {number|Polynomial} a The multiplicator  
+ * @return {Polynomial}
+ */
 times(a) : Polynomial {
 	var i, ii, j, jj,
 			product = [];
@@ -19,7 +20,5 @@ times(a) : Polynomial {
 		a = a.toNumber(); 
 	}
   // we we multiply it to every coefficient
-	return this.map(function (b) {
-											return MathLib.times(a, b);
-										});
+	return this.map(b => MathLib.times(a, b));
 }

@@ -1,7 +1,8 @@
-// ### [Complex.prototype.sinh()](http://mathlib.de/en/docs/Complex/sinh)
-// Calculates the hyperbolic sine of a complex number
-//
-// *@return {Complex}*
+/**
+ * Calculates the hyperbolic sine of a complex number
+ *
+ * @return {Complex}
+ */
 sinh() : Complex {
 	return new MathLib.Complex(MathLib.cos(this.im) * MathLib.sinh(this.re), MathLib.sin(this.im) * MathLib.cosh(this.re));
 }

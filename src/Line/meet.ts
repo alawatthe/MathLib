@@ -1,8 +1,9 @@
-// ### Line.prototype.meet()
-// Calculates the meeting point of two lines
-//
-// *@param {Line}*  
-// *@return {Point}*
+/**
+ * Calculates the meeting point of two lines
+ *
+ * @param {Line} l The line to intersect the current line with
+ * @return {Point}
+ */
 meet(l : Line) : Point {
 	var point,
 			k = this;

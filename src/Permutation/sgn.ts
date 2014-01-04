@@ -1,7 +1,8 @@
-// ### Permutation.prototype.sgn()
-// Calculates the signum of the permutation
-//
-// *@return {number}*
+/**
+ * Calculates the signum of the permutation
+ *
+ * @return {number}
+ */
 sgn() : number {
 	var i, ii,
 			count = 0;

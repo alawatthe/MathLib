@@ -1,7 +1,8 @@
-// ### Matrix.prototype.inverse()
-// Calculates the inverse matrix.
-//
-// *@return {Matrix}*
+/**
+ * Calculates the inverse matrix.
+ *
+ * @return {Matrix}
+ */
 inverse() {
 	var i, ii, res, inverse,
 			col = [],

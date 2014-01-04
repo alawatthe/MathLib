@@ -1,7 +1,8 @@
-// ### [Complex.prototype.csc()](http://mathlib.de/en/docs/Complex/csc)
-// Calculates the cosecant of a complex number
-//
-// *@return {Complex}*
+/**
+ * Calculates the cosecant of a complex number
+ *
+ * @return {Complex}
+ */
 csc() : Complex {
 	var a = this.re,
 			b = this.im,

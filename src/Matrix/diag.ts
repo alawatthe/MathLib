@@ -1,7 +1,8 @@
-// ### Matrix.prototype.diag()
-// Returns the entries on the diagonal in an array
-//
-// *@return {array}*
+/**
+ * Returns the entries on the diagonal in an array
+ *
+ * @return {array}
+ */
 diag() : any[] {
 	var diagonal = [],
 			i, ii;

@@ -1,7 +1,8 @@
-// ### Matrix.prototype.isReal()
-// Determines if the matrix has only real entries
-//
-// *@return {boolean}*
+/**
+ * Determines if the matrix has only real entries
+ *
+ * @return {boolean}
+ */
 isReal() : boolean {
 	return this.every(MathLib.isReal);
 }

@@ -1,7 +1,8 @@
-// ### [Functn.prototype.toLaTeX()](http://mathlib.de/en/docs/Functn/toLaTeX)
-// Returns a LaTeX representation of the function
-//
-// *@return {string}*
+/**
+ * Returns a LaTeX representation of the function
+ *
+ * @return {string}
+ */
 functnPrototype.toLaTeX = function () {
 	return this.expression.toLaTeX();
 /*

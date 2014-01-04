@@ -1,8 +1,9 @@
-// ### [Complex.prototype.pow()](http://mathlib.de/en/docs/Complex/pow)
-// Calculates the complex number raised to some power
-//
-// *@param {numeric}* The power to which the complex number should be raised   
-// *@return {Complex}*
+/**
+ * Calculates the complex number raised to some power
+ *
+ * @param {numeric} c The power to which the complex number should be raised   
+ * @return {Complex}
+ */
 pow(c) : Complex {	
 	var re, im, abs, arg;
 
@@ -35,11 +36,9 @@ pow(c) : Complex {
 		// instead of -142-65i which are errors of magnitude around 1e-14.
 		// This error increases quickly for increasing exponents.
 		// (2+5i)^21 has an error of 5.8 in the real part
-		/*
-		return MathLib.Complex.polar(MathLib.pow(abs, c), MathLib.times(arg, c));
-		*/
+		// return MathLib.Complex.polar(MathLib.pow(abs, c), MathLib.times(arg, c));
 
-		// The following algorithm uses a sifferent approach for integer exponents,
+		// The following algorithm uses a different approach for integer exponents,
 		// where it yields exact results.
 		// Non integer exponents are evaluated using the naive approach.
 		// TODO: Improve the algorithm.

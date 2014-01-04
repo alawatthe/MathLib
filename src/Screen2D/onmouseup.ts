@@ -1,7 +1,8 @@
-// ### Screen.prototype.onmouseup()
-// Handles the mouseup event
-//
-// *@param {event}*
+/**
+ * Handles the mouseup event
+ *
+ * @param {event} evt The event object
+ */
 onmouseup(evt) {
 	if (evt.preventDefault) {
 		evt.preventDefault();

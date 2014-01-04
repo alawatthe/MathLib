@@ -1,7 +1,8 @@
-// ### Matrix.prototype.givens()
-// QR decomposition with the givens method.
-//
-// *@return {[Matrix, Matrix]}*
+/**
+ * QR decomposition with the givens method.
+ *
+ * @return {[Matrix, Matrix]}
+ */
 givens() {
 	var rows = this.rows,
 			cols = this.cols,

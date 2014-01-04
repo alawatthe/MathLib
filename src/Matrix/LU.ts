@@ -1,8 +1,9 @@
-// ### Matrix.prototype.LU()
-// Calculates the LU decomposition of a matrix
-// The result is cached.
-//
-// *@return {Matrix}*
+/**
+ * Calculates the LU decomposition of a matrix
+ * The result is cached.
+ *
+ * @return {Matrix}
+ */
 LU() {
 	var i, j, k, t, p,
 			LU = this.toArray(),

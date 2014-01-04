@@ -1,7 +1,8 @@
-// ### <a href="http://mathlib.de/en/docs/Expression/toString">Expression.prototype.toString</a>
-// A custom toString function
-//
-// *@return {string}*
+/**
+ * A custom toString function
+ *
+ * @return {string}
+ */
 toString() : string {
 
 	if (this.subtype === 'binaryOperator') {

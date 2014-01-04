@@ -1,7 +1,8 @@
-// ### Polynomial.prototype.toExpression()
-// Custom toExpression function
-//
-// *@return {Expression}*
+/**
+ * Custom toExpression function
+ *
+ * @return {Expression}
+ */
 toExpression() : Expression {
 	var content = [],
 			sum, i;

@@ -1,14 +1,17 @@
-// ## <a id="Rational" href="http://mathlib.de/en/docs/Rational">Rational</a>
-// MathLib.Rational is the MathLib implementation of rational numbers.
-//
-//
-// #### Simple use case:
-// ```
-// // Create the rational number 2/3  
-// var r = new MathLib.Rational(2, 3);  
-// ```
-
 /// import Functn
+
+/**
+ * MathLib.Rational is the MathLib implementation of rational numbers.
+ *
+ * #### Simple use case:
+ * ```
+ * // Create the rational number 2/3  
+ * var r = new MathLib.Rational(2, 3);  
+ * ```
+ *
+ * @class
+ * @this {Rational}
+ */
 export class Rational {
 
 	type = 'rational';

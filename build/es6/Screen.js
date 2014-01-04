@@ -37,9 +37,13 @@ var template = function (data) {
     return p.join("");
 };
 
-// ## <a id="Screen"></a>Screen
-// This module contains the common methods of all drawing modules.
 import MathLib from './meta.js';
+/**
+* This module contains the common methods of all drawing modules.
+*
+* @class
+* @this {Screen}
+*/
 var Screen = (function () {
     function Screen(id, options) {
         if (typeof options === "undefined") { options = {}; }
@@ -168,10 +172,11 @@ var Screen = (function () {
             this.container.addEventListener('webkitfullscreenchange', fullscreenchange);
         }
     }
-    // ### Screen.prototype.contextmenu()
-    // Handles the contextmenu event
-    //
-    // *@param {event}*
+    /**
+    * Handles the contextmenu event
+    *
+    * @param {event} evt The event object
+    */
     Screen.prototype.oncontextmenu = function (evt) {
         var listener, _this = this, menu = this.contextMenu, overlay = this.contextMenuOverlay;
 

@@ -1,9 +1,10 @@
-// ### Matrix.prototype.solve()
-// Solves the system of linear equations Ax = b
-// given by the matrix A and a vector or point b.
-//
-// *@param {Vector|Point}* The b in Ax = b  
-// *@return {Vector|Point}*
+/**
+ * Solves the system of linear equations Ax = b
+ * given by the matrix A and a vector or point b.
+ *
+ * @param {Vector} b The b in Ax = b  
+ * @return {Vector}
+ */
 solve(b) {
 	// Ax = b -> LUx = b. Then y is defined to be Ux
 	var LU = this.LU(),

@@ -1,5 +1,6 @@
-// ### Expression.variables
-// Stores all the values of variables in symbolic expressions.
-//
-// *@return {Expression}*
+/**
+ * Stores all the values of variables in symbolic expressions.
+ *
+ * @return {Expression}
+ */
 static variables = {};

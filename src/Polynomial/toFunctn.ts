@@ -1,7 +1,8 @@
-// ### Polynomial.prototype.toFunctn()
-// Converts the polynomial to a functn
-//
-// *@return {Functn}*
+/**
+ * Converts the polynomial to a functn
+ *
+ * @return {Functn}
+ */
 toFunctn() {
 	var str = '', i, ii;
 	for (i = 0, ii = this.deg; i <= ii; i++) {

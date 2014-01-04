@@ -1,7 +1,12 @@
-// ## <a id="Screen2D"></a>Screen2D
-// Two dimensional plotting
-
 /// import Screen
+
+/**
+ * Two dimensional plotting
+ *
+ * @class
+ * @augments Screen
+ * @this {Screen2D}
+ */
 export class Screen2D extends Screen {
 	type = 'screen2D';
 

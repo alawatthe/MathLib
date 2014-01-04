@@ -1,7 +1,8 @@
-// ### Point.prototype.restrictTo()
-// Restricts the point to a line.
-//
-// *@param {Line}*
+/**
+ * Restricts the point to a line.
+ *
+ * @param {Line} l The line to restrict the point to.
+ */
 restrictTo(l : Line) {
 	var p = this.slice();
 

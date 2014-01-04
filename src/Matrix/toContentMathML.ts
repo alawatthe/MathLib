@@ -1,7 +1,8 @@
-// ### Matrix.prototype.toContentMathML()
-// converting the matrix to content MathML
-//
-// *@return {string}*
+/**
+ * converting the matrix to content MathML
+ *
+ * @return {string}
+ */
 toContentMathML() : string {
 	return this.reduce(function (str, x) {
 		return str + x.reduce(function (prev, cur) {

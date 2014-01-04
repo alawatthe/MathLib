@@ -1,7 +1,8 @@
-// ### Matrix.prototype.negative()
-// Returns the negative matrix
-//
-// *@return {Matrix}*
+/**
+ * Returns the negative matrix
+ *
+ * @return {Matrix}
+ */
 negative() {
 	var i, ii,
 			negative = [];

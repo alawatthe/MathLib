@@ -1,6 +1,6 @@
-// ### SVG.applyTransformation
-// Applies the current transformations to the screen
-//
+/**
+ * Applies the current transformations to the screen
+ */
 applyTransformation: function () {
 	var m = this.transformation;
 	this.layer.forEach(function (l) {

@@ -1,12 +1,13 @@
-// ### Matrix.prototype.map()
-// This function works like the Array.prototype.map function.
-// The matrix is processed row by row.
-// The function is called with the following arguments:
-// the entry at the current position, the number of the row,
-// the number of the column and the complete matrix
-//
-// *@param {function}* The function which is called on every argument  
-// *@return {Matrix}*
+/**
+ * This function works like the Array.prototype.map function.
+ * The matrix is processed row by row.
+ * The function is called with the following arguments:
+ * the entry at the current position, the number of the row,
+ * the number of the column and the complete matrix
+ *
+ * @param {function} f The function which is called on every argument  
+ * @return {Matrix}
+ */
 map(f) {
 	var m = this;
 	return new MathLib.Matrix(

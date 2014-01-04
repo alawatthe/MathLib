@@ -1,12 +1,14 @@
-// ### SVG text
-// Writes text on the screen.
-//
-// *@param {str}* The string to be drawn  
-// *@param {x}* The x coordinate  
-// *@param {y}* The y coordinate  
-// *@param {object}* [options] Optional drawing options  
-// *@return {Screen}* Returns the screen
-text: function (str, x, y, options = {}, redraw = false) {
+/**
+ * Writes text on the screen.
+ *
+ * @param {string} str The string to be drawn
+ * @param {number} x The x coordinate
+ * @param {number} y The y coordinate
+ * @param {object} options Optional drawing options
+ * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+ * @return {Screen} Returns the screen
+ */
+text: function (str : string, x : number, y : number, options = {}, redraw = false) {
 	var defaults = {
 				font:       'Helvetica',
 				fontSize:   12,

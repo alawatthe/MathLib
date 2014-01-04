@@ -1,7 +1,8 @@
-// ### [Complex.prototype.toLaTeX()](http://mathlib.de/en/docs/Complex/toLaTeX)
-// Returns the LaTeX representation of the complex number
-//
-// *@return {string}*
+/**
+ * Returns the LaTeX representation of the complex number
+ *
+ * @return {string}
+ */
 toLaTeX() : string {
 	var str = '',
 			reFlag = false;

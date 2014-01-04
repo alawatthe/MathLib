@@ -1,7 +1,8 @@
-// ### [Conic.prototype.splitDegenerated()](http://mathlib.de/en/docs/Conic/splitDegenerated)
-// Splits a conic into one or two lines if the conic is degenerated.
-//
-// *@return {boolean}*
+/**
+ * Splits a conic into one or two lines if the conic is degenerated.
+ *
+ * @return {boolean}
+ */
 splitDegenerated() {
 	var n, i, j, B, C, p0, p1, p2,
 			rank = this.primal.rank(),

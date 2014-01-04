@@ -1,7 +1,9 @@
-// ### Expression.prototype.map
-// Maps the expression tree over to an other expression tree.
-//
-// *@return {Expression}*
+/**
+ * Maps the expression tree over to an other expression tree.
+ *
+ * @param {function} f The function to apply to all the nodes in the tree.
+ * @return {Expression}
+ */
 map(f) : Expression {
 	var prop,
 			properties = {},

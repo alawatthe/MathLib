@@ -1,7 +1,8 @@
-// ### Matrix.prototype.rref()
-// Calculate the reduced row echelon form (rref) of a matrix.
-//
-// *@return {Matrix}*
+/**
+ * Calculate the reduced row echelon form (rref) of a matrix.
+ *
+ * @return {Matrix}
+ */
 rref() {
 	var i, ii, j, jj, k, kk, pivot, factor, swap,
 			lead = 0,

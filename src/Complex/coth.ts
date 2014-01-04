@@ -1,7 +1,8 @@
-// ### [Complex.prototype.coth()](http://mathlib.de/en/docs/Complex/coth)
-// Calculates the hyperbolic cotangent of a complex number
-//
-// *@return {Complex}*
+/**
+ * Calculates the hyperbolic cotangent of a complex number
+ *
+ * @return {Complex}
+ */
 coth() : Complex {
 	var aa = 2 * this.re,
 			bb = 2 * this.im,

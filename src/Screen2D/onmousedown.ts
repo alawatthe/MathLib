@@ -1,7 +1,8 @@
-// ### Screen2D.prototype.onmousedown()
-// Handles the mousedown event
-//
-// *@param {event}*
+/**
+ * Handles the mousedown event
+ *
+ * @param {event} evt The event object
+ */
 onmousedown(evt) {
 	// Only start the action if the left mouse button was clicked
 	if (evt.button !== 0) {

@@ -1,8 +1,9 @@
-// ### Permutation.cycleToList()
-// Converts a cycle representation to a list representation
-// 
-// *@param {array}* cycle The cycle to be converted  
-// *@return {array}*
+/**
+ * Converts a cycle representation to a list representation
+ * 
+ * @param {array} cycle The cycle to be converted  
+ * @return {array}
+ */
 static cycleToList(cycle : any) : number[] {
 	var index, list = [],
 			cur, i, ii, j, jj, max;

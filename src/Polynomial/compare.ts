@@ -1,8 +1,9 @@
-// ### Polynomial.prototype.compare()
-// Compares two polynomials.
-//
-// *@param {Polynomial}* The polynomial to compare  
-// *@return {number}*
+/**
+ * Compares two polynomials.
+ *
+ * @param {Polynomial} p The polynomial to compare  
+ * @return {number}
+ */
 compare(p : Polynomial) : number {
 	var i, ii;
 

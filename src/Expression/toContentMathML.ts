@@ -1,7 +1,8 @@
-// ### <a href="http://mathlib.de/en/docs/Expression/toContentMathML">Expression.prototype.toContentMathML</a>
-// Convert the Expression to MathML.
-//
-// *@return {string}*
+/**
+ * Convert the Expression to MathML.
+ *
+ * @return {string}
+ */
 toContentMathML() : string {
 
 	if (this.subtype === 'binaryOperator') {

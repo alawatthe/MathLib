@@ -1,7 +1,8 @@
-// ### [Complex.prototype.isZero()](http://mathlib.de/en/docs/Complex/isZero)
-// Determines if the complex number is equal to 0.
-//
-// *@return {boolean}*
+/**
+ * Determines if the complex number is equal to 0.
+ *
+ * @return {boolean}
+ */
 isZero() : boolean {
 	return MathLib.isZero(this.re) && MathLib.isZero(this.im);
 }

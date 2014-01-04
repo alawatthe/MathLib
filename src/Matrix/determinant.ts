@@ -1,8 +1,9 @@
-// ### Matrix.prototype.determinant()
-// Calculates the determinant of the matrix via the LU decomposition.
-// The result is cached.
-//
-// *@return {number|Complex}*
+/**
+ * Calculates the determinant of the matrix via the LU decomposition.
+ * The result is cached.
+ *
+ * @return {number|Complex}
+ */
 determinant() : any {
 	var LU, determinant;
 	

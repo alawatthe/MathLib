@@ -1,8 +1,9 @@
-// ### [Vector.prototype.vectorProduct()](http://mathlib.de/en/docs/Vector/vectorProduct)
-// Calculates the vector product of two vectors.
-//
-// *@param {Vector}*  
-// *@return {Vector}*
+/**
+ * Calculates the vector product of two vectors.
+ *
+ * @param {Vector} v The second vector to calculate the vector product with. 
+ * @return {Vector}
+ */
 vectorProduct(v : Vector) : Vector {
 	/* TODO: Implement vectorproduct for non three-dimensional vectors */
 	if (this.length === 3 && v.length === 3) {

@@ -1,9 +1,10 @@
-// ### Matrix.prototype.minor()
-// Calculates a minor
-//
-// *@param {number}* The row to be removed.  
-// *@param {number}* The column to be removed.  
-// *@return {Matrix}*
-minor(r, c) {
+/**
+ * Calculates a minor
+ *
+ * @param {number} r The row to be removed.  
+ * @param {number} c The column to be removed.  
+ * @return {Matrix}
+ */
+minor(r : number, c : number) {
 	return this.remove(r, c).determinant();
 }

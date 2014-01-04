@@ -1,13 +1,18 @@
 
-    // ## <a id="Functn" href="http://mathlib.de/en/docs/Functn">Functn</a>
-    //
-    // Because 'Function' is a reserved word in JavaScript,
-    // the module is called 'Functn'.
     var MathLib = require('./meta.js'),
 		Expression = require('./Expression');
 
     var functnPrototype = {};
 
+    /**
+    * MathLib.Functn is the MathLib implementation of mathematical functions
+    *
+    * Because 'Function' is a reserved word in JavaScript,
+    * the class is called 'Functn'.
+    *
+    * @class
+    * @this {Functn}
+    */
     MathLib.Functn = function (f, options) {
         options = options || {};
 
@@ -178,23 +183,25 @@
         }
     }
 
-    // ### [Functn.prototype.diff()](http://mathlib.de/en/docs/Functn/diff)
-    // Numeric derivative at a given point
-    //
-    // *@param {number}* The point
-    // *@param {number}* Optional step size
-    // *@return {number}*
+    /**
+    * Numeric derivative at a given point
+    *
+    * @param {number} x The value to calculate the derivative at
+    * @param {number} h Optional step size
+    * @return {number}
+    */
     functnPrototype.diff = function (x, h) {
         if (typeof h === "undefined") { h = 1e-5; }
         return (this(x + h) - this(x - h)) / (2 * h);
     };
 
-    // ### [Functn.prototype.draw()](http://mathlib.de/en/docs/Functn/draw)
-    // Draws the function on the screen
-    //
-    // *@param {Screen}* The screen to draw the function onto.
-    // *@param {object}* [options] Optional drawing options.
-    // *@return {Functn}*
+    /**
+    * Draws the function on the screen
+    *
+    * @param {Screen} screen The screen to draw the function onto.
+    * @param {object} options Optional drawing options.
+    * @return {Functn}
+    */
     functnPrototype.draw = function (screen, options) {
         if (typeof options === "undefined") { options = {}; }
         var functn = this;
@@ -381,11 +388,12 @@
         }
     };
 
-    // ### MathLib.isMathMLSupported()
-    // Checks if MathML is supported by the browser.
-    // Code stolen from [Modernizr](http://www.modernizr.com/)
-    //
-    // *@return {boolean}*
+    /**
+    * Checks if MathML is supported by the browser.
+    * Code stolen from [Modernizr](http://www.modernizr.com/)
+    *
+    * @return {boolean}
+    */
     MathLib.isMathMLSupported = function () {
         var hasMathML = false, ns, div, mfrac;
 
@@ -404,11 +412,13 @@
         return hasMathML;
     };
 
-    // ### MathLib.writeMathML()
-    // Writes MathML to an element.
-    //
-    // *@param {string}* The id of the element in which the MathML should be inserted.
-    // *@param {string}* The MathML to be inserted.
+    /**
+    * ### MathLib.writeMathML()
+    * Writes MathML to an element.
+    *
+    * @param {string} id The id of the element in which the MathML should be inserted.
+    * @param {string} math The MathML to be inserted.
+    */
     MathLib.writeMathML = function (id, math) {
         var formula;
         document.getElementById(id).innerHTML = '<math>' + math + '</math>';
@@ -418,10 +428,12 @@
         }
     };
 
-    // ### MathLib.loadMathJax()
-    // Loads MathJax dynamically.
-    //
-    // *@param {string}* [config] Optional config options
+    /**
+    * ### MathLib.loadMathJax()
+    * Loads MathJax dynamically.
+    *
+    * @param {string} config Optional config options
+    */
     MathLib.loadMathJax = function (config) {
         var script = document.createElement('script');
         script.type = 'text/javascript';
@@ -440,11 +452,12 @@
 
     // Functions that act on set-like structures and return one single number/boolean...
     var nAryFunctions = {
-        // ### MathLib.and()
-        // Returns true iff all arguments are true.
-        //
-        // *@param {boolean}* Expects an arbitrary number of boolean arguments
-        // *@return {boolean}*
+        /**
+        * Returns true iff all arguments are true.
+        *
+        * @param {...boolean} n Expects an arbitrary number of boolean arguments
+        * @return {boolean}
+        */
         and: function (n) {
             return n.every(function (x) {
                 return !!x;
@@ -522,11 +535,13 @@
                 return old + cur * cur;
             }, 0);
         },
-        // ### MathLib.isEqual()
-        // Determines if all arguments are equal.
-        //
-        // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects
-        // *@return {boolean}*
+        /**
+        * ### MathLib.isEqual()
+        * Determines if all arguments are equal.
+        *
+        * @param {...number|MathLib object} n Expects an arbitrary number of numbers or MathLib objects
+        * @return {boolean}
+        */
         isEqual: function (n) {
             return n.every(function (a, i, args) {
                 if (a === args[0]) {
@@ -561,11 +576,13 @@
         min: function (n) {
             return Math.min.apply(null, n);
         },
-        // ### MathLib.or()
-        // Returns true iff at least one argument is true.
-        //
-        // *@param {boolean}* Expects an arbitrary number of boolean arguments
-        // *@return {boolean}*
+        /**
+        * ### MathLib.or()
+        * Returns true iff at least one argument is true.
+        *
+        * @param {...boolean} Expects an arbitrary number of boolean arguments
+        * @return {boolean}
+        */
         or: function (n) {
             return n.some(function (x) {
                 return !!x;
@@ -679,11 +696,13 @@
                 }
             });
         },
-        // ### MathLib.xor()
-        // Returns true iff an odd number of the arguments is true.
-        //
-        // *@param {boolean}* Expects an arbitrary number of boolean arguments
-        // *@return {boolean}*
+        /**
+        * ### MathLib.xor()
+        * Returns true iff an odd number of the arguments is true.
+        *
+        * @param {...boolean} Expects an arbitrary number of boolean arguments
+        * @return {boolean}
+        */
         xor: function (n) {
             return n.reduce(function (x, y) {
                 return x + !!y;
@@ -710,16 +729,17 @@
         }
     }
 
-    // ### [Functn.prototype.quad()](http://mathlib.de/en/docs/Functn/quad)
-    // Numeric evaluation of an integral using an adative simpson approach.
-    //
-    // Inspired by "adaptsim.m" by Walter Gander
-    // and MatLab's "quad.m"
-    //
-    // *@param {number}* The starting point
-    // *@param {number}* The end point
-    // *@param {number}* The tolerance
-    // *@return {number}*
+    /**
+    * Numeric evaluation of an integral using an adative simpson approach.
+    *
+    * Inspired by "adaptsim.m" by Walter Gander
+    * and MatLab's "quad.m"
+    *
+    * @param {number} a The starting point
+    * @param {number} b The end point
+    * @param {number} options Optional options
+    * @return {number}
+    */
     functnPrototype.quad = function (a, b, options) {
         if (typeof options === "undefined") { options = {}; }
         var f = this, warnMessage = [
@@ -792,18 +812,20 @@
         return quadstep(f, a, c, fa, fd, fc, options) + quadstep(f, c, b, fc, fe, fb, options);
     };
 
-    // ### Functn.prototype.toContentMathML()
-    // Returns a content MathML representation of the function
-    //
-    // *@return {MathML}*
+    /**
+    * Returns a content MathML representation of the function
+    *
+    * @return {MathML}
+    */
     functnPrototype.toContentMathML = function () {
         return this.expression.toContentMathML();
     };
 
-    // ### [Functn.prototype.toLaTeX()](http://mathlib.de/en/docs/Functn/toLaTeX)
-    // Returns a LaTeX representation of the function
-    //
-    // *@return {string}*
+    /**
+    * Returns a LaTeX representation of the function
+    *
+    * @return {string}
+    */
     functnPrototype.toLaTeX = function () {
         return this.expression.toLaTeX();
         /*
@@ -849,25 +871,20 @@
         */
     };
 
-    // ### Functn.prototype.toMathML()
-    // Returns a MathML representation of the function
-    //
-    // *@return {string}*
+    /**
+    * Returns a MathML representation of the function
+    *
+    * @return {string}
+    */
     functnPrototype.toMathML = function () {
         return this.expression.toMathML();
     };
 
-    // ### Functn.prototype.toMathMLString
-    // Returns a MathML representation of the function
-    //
-    // *@return {string}*
-    /*functnPrototype.toMathMLString = function () {
-    return this.contentMathML.toMathMLString();
-    };*/
-    // ### [Functn.prototype.toString()](http://mathlib.de/en/docs/Functn/toString)
-    // Returns a string representation of the function
-    //
-    // *@return {string}*
+    /**
+    * Returns a string representation of the function
+    *
+    * @return {string}
+    */
     functnPrototype.toString = function () {
         return this.expression.toString();
         /*

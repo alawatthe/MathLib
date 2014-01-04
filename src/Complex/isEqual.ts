@@ -1,14 +1,15 @@
-// ### [Complex.prototype.isEqual()](http://mathlib.de/en/docs/Complex/isEqual)
-// Determines if the complex number is equal to another number.
-//
-// *@param {Complex|number|Rational}* The number to be compared  
-// *@return {boolean}*
-isEqual(n) : boolean {
-	if (typeof n === 'number') {
-		return MathLib.isEqual(this.re, n) && MathLib.isZero(this.im);
+/**
+ * Determines if the complex number is equal to another number.
+ *
+ * @param {Complex|number|Rational} number The number to be compared  
+ * @return {boolean}
+ */
+isEqual(number) : boolean {
+	if (typeof number === 'number') {
+		return MathLib.isEqual(this.re, number) && MathLib.isZero(this.im);
 	}
-	if (n.type === 'complex') {
-		return MathLib.isEqual(this.re, n.re) && MathLib.isEqual(this.im, n.im);
+	if (number.type === 'complex') {
+		return MathLib.isEqual(this.re, number.re) && MathLib.isEqual(this.im, number.im);
 	}
 	return false;
 }

@@ -1,7 +1,8 @@
-// ### Polynomial.prototype.toMathML()
-// Returns a MathML representation of the polynomial
-//
-// *@return {string}*
+/**
+ * Returns a MathML representation of the polynomial
+ *
+ * @return {string}
+ */
 toMathML() : string {
 	var str = '<mrow>' + MathLib.toMathML(this[this.deg]) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(this.deg) + '</msup>',
 			i;

@@ -1,7 +1,8 @@
-// ### Set.prototype.toContentMathML()
-// Returns the content MathML representation of the set
-//
-// *@return {string}*
+/**
+ * Returns the content MathML representation of the set
+ *
+ * @return {string}
+ */
 toContentMathML() : string {
 	if (this.isEmpty()) {
 		return '<emptyset/>';

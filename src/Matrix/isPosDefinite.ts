@@ -1,7 +1,8 @@
-// ### Matrix.prototype.isPosDefinite()
-// Determines if the matrix is positive definite
-//
-// *@return {boolean}*
+/**
+ * Determines if the matrix is positive definite
+ *
+ * @return {boolean}
+ */
 isPosDefinite() : boolean {
 	if (!this.isSquare()) {
 		return;

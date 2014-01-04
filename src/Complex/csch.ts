@@ -1,7 +1,8 @@
-// ### [Complex.prototype.csch()](http://mathlib.de/en/docs/Complex/csch)
-// Calculates the hyperbolic cosecant of a complex number
-//
-// *@return {Complex}*
+/**
+ * Calculates the hyperbolic cosecant of a complex number
+ *
+ * @return {Complex}
+ */
 csch() : Complex {
 	var a = this.re,
 			b = this.im,

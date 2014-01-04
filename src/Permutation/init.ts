@@ -1,6 +1,11 @@
-// ## <a id="Permutation"></a>Permutation
-
 /// import Functn, Matrix
+
+/**
+ * The permutation class for MathLib
+ *
+ * @class
+ * @this {Permutation}
+ */
 export class Permutation {
 
 	type = 'permutation';

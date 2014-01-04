@@ -1,7 +1,8 @@
-// ### [Complex.prototype.arctan()](http://mathlib.de/en/docs/Complex/arctan)
-// Returns the inverse tangent of the number
-//
-// *@return {Complex}*
+/**
+ * Returns the inverse tangent of the number
+ *
+ * @return {Complex}
+ */
 arctan() : Complex {
 	var res,
 			iz = new MathLib.Complex(-this.im, this.re);

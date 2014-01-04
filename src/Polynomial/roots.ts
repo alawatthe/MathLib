@@ -1,7 +1,9 @@
-// ### Polynomial.roots
-// Returns a polynomial with the specified roots
-//
-// *@return {Polynomial}*
+/**
+ * Returns a polynomial with the specified roots
+ *
+ * @param {array|Set} zeros The wished zeros.
+ * @return {Polynomial}
+ */
 static roots(zeros) : Polynomial {
 	var elemSymPoly, i, ii,
 			coef = [];

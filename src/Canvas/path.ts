@@ -1,9 +1,11 @@
-// ### Canvas.path
-// Draws a path on the screen.
-//
-// *@param {Path}* The path to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@return {Screen}* Returns the scren
+/**
+ * Draws a path on the screen.
+ *
+ * @param {Path} curve The path to be drawn
+ * @param {object} options Optional drawing options
+ * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+ * @return {Screen} Returns the scren
+ */
 path: function (curve, options = {}, redraw = false) {
 	var screen = this.screen,
 			ctx = this.ctx,

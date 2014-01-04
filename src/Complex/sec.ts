@@ -1,7 +1,8 @@
-// ### [Complex.prototype.sec()](http://mathlib.de/en/docs/Complex/sec)
-// Calculates the secant of a complex number
-//
-// *@return {Complex}*
+/**
+ * Calculates the secant of a complex number
+ *
+ * @return {Complex}
+ */
 sec() : Complex {
 	var a = this.re,
 			b = this.im,

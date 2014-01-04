@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" charset="utf-8">
+    <title>MathLib</title>
+    <link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css">
+    <link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/docs.css">
+    <style>
+      body > .navbar .brand {
+        float:left;
+        text-shadow: rgba(255, 255, 255, 0.0980392) 0px 1px 0px, rgba(255, 255, 255, 0.4) 0px 0px 30px;
+        color: white;
+        margin-left:0px;
+        font-weight:normal;
+      }
+      
+      .bs-docs-sidenav i{
+        width: 8px;
+        height: 8px;
+        padding: 0px;
+        margin: 0px;
+        display: inline-block;
+        margin-right:0.5em;
+      }
+      
+      .bs-docs-sidenav > li:first-child > a {
+        border-top-right-radius: 6px;
+        border-top-left-radius: 6px;
+      }
+      
+      code[class*="language-"],pre[class*="language-"]{color:black;text-shadow:0 1px white;font-family:Consolas,Monaco,'Andale Mono',monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*="language-"]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*="language-"],pre[class*="language-"]{background:#f5f2f0}:not(pre)>code[class*="language-"]{padding:.1em;border-radius:.3em}.token.comment,.token.prolog,.token.doctype,.token.cdata{color:slategray}.token.punctuation{color:#999}.namespace{opacity:.7}.token.property,.token.tag,.token.boolean,.token.number{color:#905}.token.selector,.token.attr-name,.token.string{color:#690}.token.operator,.token.entity,.token.url,.language-css .token.string,.style .token.string{color:#a67f59;background:hsla(0,0%,100%,.5)}.token.atrule,.token.attr-value,.token.keyword{color:#07a}.token.regex,.token.important{color:#e90}.token.important{font-weight:bold}.token.entity{cursor:help}
+      div.description {margin: 14px 0; padding-top: 14px; border-bottom:1px solid #eee; }
+      .tags {}
+      .ctx-type {
+        display:inline-block;
+        margin-right:0.5em;
+        //- float:right; margin-top:8px
+      }
+      
+      footer iframe{vertical-align:middle;}
+      
+    </style>
+  </head>
+  <body data-spy="scroll" data-target=".scrollspy">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container"><a class="brand">Doxx</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right sponsored"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header id="overview" class="jumbotron subhead">
+      <div class="container">
+        <h1>MathLib</h1>
+        <p class="lead"></p>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li class=""><a href="index.html">Main</a></li>
+            <li class=""><a href="Canvas.js.html"><span>Canvas</span></a></li>
+            <li class=""><a href="Circle.js.html"><span>Circle</span></a></li>
+            <li class=""><a href="Complex.js.html"><span>Complex</span></a></li>
+            <li class="active"><a href="Conic.js.html"><span>Conic</span></a></li>
+            <li class=""><a href="Expression.js.html"><span>Expression</span></a></li>
+            <li class=""><a href="Functn.js.html"><span>Functn</span></a></li>
+            <li class=""><a href="Layer.js.html"><span>Layer</span></a></li>
+            <li class=""><a href="Line.js.html"><span>Line</span></a></li>
+            <li class=""><a href="Matrix.js.html"><span>Matrix</span></a></li>
+            <li class=""><a href="Permutation.js.html"><span>Permutation</span></a></li>
+            <li class=""><a href="Point.js.html"><span>Point</span></a></li>
+            <li class=""><a href="Polynomial.js.html"><span>Polynomial</span></a></li>
+            <li class=""><a href="Rational.js.html"><span>Rational</span></a></li>
+            <li class=""><a href="SVG.js.html"><span>SVG</span></a></li>
+            <li class=""><a href="Screen.js.html"><span>Screen</span></a></li>
+            <li class=""><a href="Screen2D.js.html"><span>Screen2D</span></a></li>
+            <li class=""><a href="Screen3D.js.html"><span>Screen3D</span></a></li>
+            <li class=""><a href="Set.js.html"><span>Set</span></a></li>
+            <li class=""><a href="Vector.js.html"><span>Vector</span></a></li>
+            <li class=""><a href="meta.js.html"><span>meta</span></a></li>
+          </ul>
+          <div class="scrollspy">
+            <ul class="nav nav-list bs-docs-sidenav affix-top">
+              <li><a href="#Conic"><i class="alert alert-success"></i>Conic</a>
+              </li>
+              <li><a href="#draw"><i class="alert alert-info"></i>draw</a>
+              </li>
+              <li><a href="#eccentricity"><i class="alert alert-info"></i>eccentricity</a>
+              </li>
+              <li><a href="#isDegenerated"><i class="alert alert-info"></i>isDegenerated</a>
+              </li>
+              <li><a href="#isEqual"><i class="alert alert-info"></i>isEqual</a>
+              </li>
+              <li><a href="#latusRectum"><i class="alert alert-info"></i>latusRectum</a>
+              </li>
+              <li><a href="#linearEccentricity"><i class="alert alert-info"></i>linearEccentricity</a>
+              </li>
+              <li><a href="#meet"><i class="alert alert-info"></i>meet</a>
+              </li>
+              <li><a href="#normalize"><i class="alert alert-info"></i>normalize</a>
+              </li>
+              <li><a href="#polarity"><i class="alert alert-info"></i>polarity</a>
+              </li>
+              <li><a href="#splitDegenerated"><i class="alert alert-info"></i>splitDegenerated</a>
+              </li>
+              <li><a href="#throughFivePoints"><i class="alert alert-info"></i>throughFivePoints</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+          <section id="Conic">
+            <h1><a href="http://mathlib.de/en/docs/Conic">Conic</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">declaration</div><span>Conic</span>
+            </p>
+          </section>
+          <div class="description"><p>The conic implementation of MathLib makes calculations with conics possible.</p> </div>
+          <pre><code class="language-javascript">var Conic = (function () {
+function Conic(primal, dual) {
+    this.type = 'conic';
+    if (primal.type !== 'matrix') {
+        primal = new MathLib.Matrix(primal);
+    }
+    this.primal = primal;
+
+    //		if (!dual) {
+    //			dual = primal.adjugate();
+    //		}
+    //		else if (!primal.times(dual).isScalar()) {
+    //			// Throw error
+    //		}
+    if (primal.rank() &gt; 1) {
+        Object.defineProperties(this, {
+            'dual': {
+                get: function () {
+                    return this.primal.adjugate();
+                },
+                set: function () {
+                },
+                enumerable: true,
+                configurable: true
+            }
+        });
+    } else {
+        this.dual = dual;
+    }
+}</code></pre>
+          <section id="draw">
+            <h1><a href="http://mathlib.de/en/docs/Conic/draw">draw</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Conic.prototype.draw()</span> → <span>boolean</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>screen</td>
+                <td><a href="./Screen.js.html">Screen </a>
+                </td>
+                <td>The screen to draw onto.</td>
+              </tr>
+              <tr>
+                <td>options</td>
+                <td><span>object </span>
+                </td>
+                <td>Drawing options</td>
+              </tr>
+              <tr>
+                <td>redraw</td>
+                <td><span>boolean </span>
+                </td>
+                <td>Indicates if the current draw call is happening during a redraw</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Draws the conic on one or more screens</p> </div>
+          <pre><code class="language-javascript">Conic.prototype.draw = function (screen, options, redraw) {
+    if (typeof redraw === &quot;undefined&quot;) { redraw = false; }
+    if (Array.isArray(screen)) {
+        var conic = this;
+        screen.forEach(function (x) {
+            conic.draw(x, options);
+        });
+    } else {
+        options.from = 0;
+        options.to = 2 * Math.PI;
+        options.conic = this;
+
+        var lines, alpha, cos, sin, sgn, a = this.primal[0][0], b = this.primal[0][1] * 2, c = this.primal[1][1], d = this.primal[0][2] * 2, e = this.primal[1][2] * 2, disc = 4 * a * c - b * b, rank = this.primal.rank(), cx = (b * e - 2 * c * d) / (4 * a * c - b * b), cy = (b * d - 2 * a * e) / (4 * a * c - b * b), normalForm = this.normalize(), A = Math.sqrt(Math.abs(normalForm.primal[2][2] / normalForm.primal[0][0])), C = Math.sqrt(Math.abs(normalForm.primal[2][2] / normalForm.primal[1][1]));
+
+        if (rank === 3) {
+            alpha = Math.atan2(b, a - c) / 2;
+            cos = Math.cos(alpha);
+            sin = Math.sin(alpha);
+
+            // Parabola
+            if (disc === 0) {
+                options.from = -10;
+                options.to = 10;
+
+                var param = -this.primal[1][2] / (2 * this.primal[0][0]);
+                cx = 0;
+                cy = this.primal[2][2] / this.primal[0][0];
+
+                screen.path([
+                    function (t) {
+                        return cx + cos * param * t * t - sin * 2 * param * t;
+                    },
+                    function (t) {
+                        return cy + sin * param * t * t + cos * 2 * param * t;
+                    }
+                ], options, redraw);
+            } else if (disc &gt; 0) {
+                options.from = 0;
+                options.to = 2 * Math.PI;
+
+                screen.path([
+                    function (t) {
+                        return cx + cos * Math.cos(t) * A - sin * Math.sin(t) * C;
+                    },
+                    function (t) {
+                        return cy + sin * Math.cos(t) * A + cos * Math.sin(t) * C;
+                    }
+                ], options, redraw);
+            } else if (disc &lt; 0) {
+                options.from = 0;
+                options.to = 2 * Math.PI;
+
+                // This function changes the direction of the path for the second branch.
+                // Otherwise we get some lines which shouldn't be there.
+                sgn = function (t) {
+                    return +((t + Math.PI / 2) % (2 * Math.PI) &lt; Math.PI) * 2 - 1;
+                };
+
+                if (normalForm.primal[2][2] * normalForm.primal[0][0] &gt; 0) {
+                    var swap = A;
+                    A = C;
+                    C = swap;
+
+                    cos = Math.cos(alpha + Math.PI / 2);
+                    sin = Math.sin(alpha + Math.PI / 2);
+                } else {
+                    cos = Math.cos(alpha);
+                    sin = Math.sin(alpha);
+                }
+
+                screen.path([
+                    function (t) {
+                        return cx + cos * MathLib.sec(t) * A - sin * MathLib.tan(t) * C * sgn(t);
+                    },
+                    function (t) {
+                        return cy + sin * MathLib.sec(t) * A + cos * MathLib.tan(t) * C * sgn(t);
+                    }
+                ], options, redraw);
+            }
+        } else if (rank === 2) {
+            lines = this.splitDegenerated();
+
+            screen.line(lines[0], options);
+            screen.line(lines[1], options);
+        } else if (rank === 1) {
+            lines = this.splitDegenerated();
+
+            screen.line(lines[0], options);
+        }
+    }
+    return this;
+};</code></pre>
+          <section id="eccentricity">
+            <h1><a href="http://mathlib.de/en/docs/Conic/eccentricity">eccentricity</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Conic.prototype.eccentricity()</span> → <span>number</span>
+            </p>
+          </section>
+          <div class="description"><p>Calculates the eccentricity of a conic.</p> </div>
+          <pre><code class="language-javascript">Conic.prototype.eccentricity = function () {
+    var normalform = this.normalize(), a = normalform.primal[0][0], c = normalform.primal[1][1];
+
+    if (!this.isDegenerated()) {
+        // parabola
+        if (c === 0) {
+            return 1;
+        }
+        if (c &gt; 0) {
+            return Math.sqrt(1 - c / a);
+        }
+        return Math.sqrt(1 - a / c);
+    }
+};</code></pre>
+          <section id="isDegenerated">
+            <h1><a href="http://mathlib.de/en/docs/Conic/isDegenerated">isDegenerated</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Conic.prototype.isDegenerated()</span> → <span>boolean</span>
+            </p>
+          </section>
+          <div class="description"><p>Determines if a conic is degenerated.</p> </div>
+          <pre><code class="language-javascript">Conic.prototype.isDegenerated = function () {
+    return this.primal.rank() !== 3;
+};</code></pre>
+          <section id="isEqual">
+            <h1><a href="http://mathlib.de/en/docs/Conic/isEqual">isEqual</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Conic.prototype.isEqual()</span> → <span>boolean</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>conic</td>
+                <td><a href="./Conic.js.html">Conic </a>
+                </td>
+                <td>The conic to be compared</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Determines if two conics are equal.</p> </div>
+          <pre><code class="language-javascript">Conic.prototype.isEqual = function (conic) {
+    if (this === conic) {
+        return true;
+    }
+
+    var compare = function (M, N) {
+        var i, j, m, n;
+
+        if (M === N) {
+            return true;
+        }
+
+        nonZeroSearch:
+        for (i = 0; i &lt; 3; i++) {
+            for (j = 0; j &lt; 3; j++) {
+                if (M[i][j] !== 0) {
+                    break nonZeroSearch;
+                }
+            }
+        }
+
+        if (N[i][j] === 0) {
+            return false;
+        }
+
+        m = M[i][j];
+        n = N[i][j];
+
+        for (i = 0; i &lt; 3; i++) {
+            for (j = 0; j &lt; 3; j++) {
+                if (n / m * M[i][j] !== N[i][j]) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    };
+
+    return compare(this.primal, conic.primal) &amp;&amp; compare(this.dual, conic.dual);
+};</code></pre>
+          <section id="latusRectum">
+            <h1><a href="http://mathlib.de/en/docs/Conic/latusRectum">latusRectum</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Conic.prototype.latusRectum()</span> → <span>number</span>
+            </p>
+          </section>
+          <div class="description"><p>Calculates the latusRectum of a conic.</p> </div>
+          <pre><code class="language-javascript">Conic.prototype.latusRectum = function () {
+    var normalForm = this.normalize(), a = normalForm.primal[0][0], c = normalForm.primal[1][1], min = Math.min(Math.abs(a), Math.abs(c)), max = Math.max(Math.abs(a), Math.abs(c));
+
+    if (!this.isDegenerated()) {
+        // Parabola
+        if (c === 0) {
+            return -2 * normalForm.primal[1][2] / a;
+        }
+
+        return 2 * Math.sqrt(max) / min;
+    }
+};</code></pre>
+          <section id="linearEccentricity">
+            <h1><a href="http://mathlib.de/en/docs/Conic/linearEccentricity">linearEccentricity</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Conic.prototype.linearEccentricity()</span> → <span>number</span>
+            </p>
+          </section>
+          <div class="description"><p>Calculates the linear eccentricity of a conic.</p> </div>
+          <pre><code class="language-javascript">Conic.prototype.linearEccentricity = function () {
+    var normalForm = this.normalize(), a = normalForm.primal[0][0], c = normalForm.primal[1][1], max = Math.max(Math.abs(a), Math.abs(c)), min = Math.min(Math.abs(a), Math.abs(c));
+
+    if (!this.isDegenerated()) {
+        // parabola
+        if (c === 0) {
+            return normalForm.primal[1][2] / (-2 * a);
+        }
+
+        if (c &gt; 0) {
+            return Math.sqrt(1 / min - 1 / max);
+        }
+        return Math.sqrt(1 / max + 1 / min);
+    }
+};</code></pre>
+          <section id="meet">
+            <h1><a href="http://mathlib.de/en/docs/Conic/meet">meet</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Conic.prototype.meet()</span> → <span>Point[]</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>x</td>
+                <td><a href="./Line.js.html">Line </a><a href="./Conic.js.html">Conic </a>
+                </td>
+                <td>The line or conic to intersect with</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Calculates the meet of the conic with a line or a conic.</p> </div>
+          <pre><code class="language-javascript">Conic.prototype.meet = function (x) {
+    var B, C, alpha, i, j, p1, p2, Ml, a, b, c, d, Delta0, Delta1, lambda, degenerated, lines, A = this.primal;
+
+    if (x.type === 'line') {
+        var setter = function () {
+            MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent point.', method: 'Conic#meet' });
+        }, recalculate = function () {
+            Ml = new MathLib.Matrix([[0, x[2], -x[1]], [-x[2], 0, x[0]], [x[1], -x[0], 0]]);
+            B = Ml.transpose().times(A).times(Ml);
+
+            if (!MathLib.isZero(x[0])) {
+                alpha = Math.sqrt(B[2][1] * B[1][2] - B[1][1] * B[2][2]) / x[0];
+            } else if (!MathLib.isZero(x[1])) {
+                alpha = Math.sqrt(B[0][2] * B[2][0] - B[2][2] * B[0][0]) / x[1];
+            } else {
+                alpha = Math.sqrt(B[1][0] * B[0][1] - B[0][0] * B[1][1]) / x[2];
+            }
+
+            C = Ml.times(alpha).plus(B);
+
+            nonZeroSearch:
+            for (i = 0; i &lt; 3; i++) {
+                for (j = 0; j &lt; 3; j++) {
+                    if (C[i][j] !== 0) {
+                        break nonZeroSearch;
+                    }
+                }
+            }
+        };
+
+        recalculate();
+
+        p1 = new MathLib.Point(C[i]);
+        Object.defineProperties(p1, {
+            '0': {
+                get: function () {
+                    recalculate();
+                    return C[i][0];
+                },
+                set: setter,
+                enumerable: true
+            },
+            '1': {
+                get: function () {
+                    recalculate();
+                    return C[i][1];
+                },
+                set: setter,
+                enumerable: true
+            },
+            '2': {
+                get: function () {
+                    recalculate();
+                    return C[i][2];
+                },
+                set: setter,
+                enumerable: true
+            }
+        });
+
+        p2 = new MathLib.Point([C[0][j], C[1][j], C[2][j]]);
+        Object.defineProperties(p2, {
+            '0': {
+                get: function () {
+                    recalculate();
+                    return C[0][j];
+                },
+                set: setter,
+                enumerable: true
+            },
+            '1': {
+                get: function () {
+                    recalculate();
+                    return C[1][j];
+                },
+                set: setter,
+                enumerable: true
+            },
+            '2': {
+                get: function () {
+                    recalculate();
+                    return C[2][j];
+                },
+                set: setter,
+                enumerable: true
+            }
+        });
+
+        return [p1, p2];
+    } else if (x.type === 'conic') {
+        B = x.primal;
+        a = A.determinant();
+        b = (new MathLib.Matrix([A[0], A[1], B[2]])).plus(new MathLib.Matrix([A[0], B[1], A[2]])).plus(new MathLib.Matrix([B[0], A[1], A[2]])).determinant();
+        c = (new MathLib.Matrix([A[0], B[1], B[2]])).plus(new MathLib.Matrix([B[0], A[1], B[2]])).plus(new MathLib.Matrix([B[0], B[1], A[2]])).determinant();
+        d = B.determinant();
+        Delta0 = b * b - 3 * a * c;
+        Delta1 = 2 * b * b - 9 * a * b * c + 27 * a * a * d;
+        C = MathLib.cbrt((Delta1 + Math.sqrt(Math.pow(Delta1, 2) - 4 * Math.pow(Delta0, 3))) / 2);
+        lambda = -(b + C + Delta0 / C) / (3 * a);
+        degenerated = new MathLib.Conic(B.times(lambda).plus(A));
+        lines = degenerated.splitDegenerated();
+
+        return this.meet(lines[0]).concat(this.meet(lines[1]));
+    }
+};</code></pre>
+          <section id="normalize">
+            <h1><a href="http://mathlib.de/en/docs/Conic/normalize">normalize</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Conic.prototype.normalize()</span> → <a href="./Conic.js.html">Conic</a>
+            </p>
+          </section>
+          <div class="description"><p>Calculates the normal form of a conic.</p> </div>
+          <pre><code class="language-javascript">Conic.prototype.normalize = function () {
+    var A = this.primal[0][0], B = this.primal[0][1] * 2, C = this.primal[1][1], D = this.primal[0][2] * 2, E = this.primal[1][2] * 2, F = this.primal[2][2], r = Math.atan2(B, A - C) / 2, cos = Math.cos(r), sin = Math.sin(r), a = A * cos * cos + B * sin * cos + C * sin * sin, c = A * sin * sin - B * sin * cos + C * cos * cos, d = D * cos + E * sin, e = E * cos - D * sin, f = F;
+
+    if (a !== 0) {
+        f += -d * d / (4 * a);
+        d = 0;
+    }
+
+    if (c !== 0) {
+        f += -e * e / (4 * c);
+        e = 0;
+    }
+
+    if (f !== 0) {
+        a = -a / f;
+        c = -c / f;
+        d = -d / f;
+        e = -e / f;
+        f = -1;
+    }
+
+    return new MathLib.Conic(new MathLib.Matrix([[a, 0, d / 2], [0, c, e / 2], [d / 2, e / 2, f]]));
+};</code></pre>
+          <section id="polarity">
+            <h1><a href="http://mathlib.de/en/docs/Conic/polarity">polarity</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Conic.prototype.polarity()</span> → <span>Point[]</span>
+            </p>
+          </section>
+          <div class="description"><p>Calculates the four polarity of a conic.</p> </div>
+          <pre><code class="language-javascript">Conic.prototype.polarity = function (x) {
+    var object, m, c = this;
+
+    if (x.type === 'line') {
+        object = new MathLib.Point([0, 0, 0]);
+        m = 'dual';
+    } else if (x.type === 'point') {
+        object = new MathLib.Line([0, 0, 0]);
+        m = 'primal';
+    }
+
+    Object.defineProperties(object, {
+        '0': {
+            get: function () {
+                return c[m][0][0] * x[0] + c[m][0][1] * x[1] + c[m][0][2] * x[2];
+            },
+            set: function () {
+                MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity' });
+            },
+            enumerable: true
+        },
+        '1': {
+            get: function () {
+                return c[m][1][0] * x[0] + c[m][1][1] * x[1] + c[m][1][2] * x[2];
+            },
+            set: function () {
+                MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity' });
+            },
+            enumerable: true
+        },
+        '2': {
+            get: function () {
+                return c[m][2][0] * x[0] + c[m][2][1] * x[1] + c[m][2][2] * x[2];
+            },
+            set: function () {
+                MathLib.warning({ message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity' });
+            },
+            enumerable: true
+        }
+    });
+
+    return object;
+};</code></pre>
+          <section id="splitDegenerated">
+            <h1><a href="http://mathlib.de/en/docs/Conic/splitDegenerated">splitDegenerated</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Conic.prototype.splitDegenerated()</span> → <span>boolean</span>
+            </p>
+          </section>
+          <div class="description"><p>Splits a conic into one or two lines if the conic is degenerated.</p> </div>
+          <pre><code class="language-javascript">Conic.prototype.splitDegenerated = function () {
+    var n, i, j, B, C, p0, p1, p2, rank = this.primal.rank(), nonZeroSearch = function (C) {
+        for (i = 0; i &lt; 3; i++) {
+            for (j = 0; j &lt; 3; j++) {
+                if (C[i][j] !== 0) {
+                    return;
+                }
+            }
+        }
+    };
+
+    if (rank === 2) {
+        if (this.dual[0][0] !== 0) {
+            n = 0;
+        } else if (this.dual[1][1] !== 0) {
+            n = 1;
+        } else {
+            n = 2;
+        }
+
+        if (this.dual[n][n] &lt; 0) {
+            B = this.dual.negative();
+        } else {
+            B = this.dual;
+        }
+
+        p0 = B[0][n] / Math.sqrt(B[n][n]);
+        p1 = B[1][n] / Math.sqrt(B[n][n]);
+        p2 = B[2][n] / Math.sqrt(B[n][n]);
+        C = this.primal.plus(new MathLib.Matrix([[0, p2, -p1], [-p2, 0, p0], [p1, -p0, 0]]));
+
+        nonZeroSearch(C);
+
+        return [new MathLib.Line(C[i]), new MathLib.Line([C[0][j], C[1][j], C[2][j]])];
+    } else if (rank === 1) {
+        nonZeroSearch(this.primal);
+        return [new MathLib.Line(this.primal[i]), new MathLib.Line(this.primal[i])];
+    }
+};</code></pre>
+          <section id="throughFivePoints">
+            <h1><a href="http://mathlib.de/en/docs/Conic/throughFivePoints">throughFivePoints</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Conic.throughFivePoints()</span> → <a href="./Conic.js.html">Conic</a>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>p</td>
+                <td><a href="./Point.js.html">Point </a>
+                </td>
+                <td>The first point</td>
+              </tr>
+              <tr>
+                <td>q</td>
+                <td><a href="./Point.js.html">Point </a>
+                </td>
+                <td>The second point</td>
+              </tr>
+              <tr>
+                <td>r</td>
+                <td><a href="./Point.js.html">Point </a>
+                </td>
+                <td>The third point</td>
+              </tr>
+              <tr>
+                <td>s</td>
+                <td><a href="./Point.js.html">Point </a>
+                </td>
+                <td>The fourth point</td>
+              </tr>
+              <tr>
+                <td>t</td>
+                <td><a href="./Point.js.html">Point </a>
+                </td>
+                <td>The fifth point</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Calculates the conic through five points.</p> </div>
+          <pre><code class="language-javascript">Conic.throughFivePoints = function (p, q, r, s, t) {
+    var conic = new MathLib.Conic(new MathLib.Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]));
+
+    Object.defineProperties(conic, {
+        'primal': {
+            get: function () {
+                var G = p.vectorProduct(r).outerProduct(q.vectorProduct(s)), H = p.vectorProduct(s).outerProduct(q.vectorProduct(r)), M = G.times(t.times(H).scalarProduct(t)).minus(H.times(t.times(G).scalarProduct(t)));
+                return M.transpose().plus(M);
+            },
+            set: function () {
+            },
+            enumerable: true,
+            configurable: true
+        }
+    });
+
+    return conic;
+};
+return Conic;
+    })();
+    MathLib.Conic = Conic;
+})(MathLib || (MathLib = {}));</code></pre>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p>Documentation generated with <a href="https://github.com/FGRibreau/doxx">Doxx </a>created by Francois-Guillaume Ribreaun</p>
+        <p>Theme borrowed from Twitter Bootstrap</p>
+      </div>
+    </footer>
+    <script src="http://platform.twitter.com/widgets.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+    <script src="http://leaverou.github.com/prefixfree/prefixfree.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-transition.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-dropdown.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-collapse.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-affix.js"></script>
+    <script>
+      /**
+       * Prism: Lightweight, robust, elegant syntax highlighting
+       * MIT license http://www.opensource.org/licenses/mit-license.php/
+       * @author Lea Verou http://lea.verou.me
+       */(function(){var e=/\blang(?:uage)?-(?!\*)(\w+)\b/i,t=self.Prism={util:{type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},clone:function(e){var n=t.util.type(e);switch(n){case"Object":var r={};for(var i in e)e.hasOwnProperty(i)&&(r[i]=t.util.clone(e[i]));return r;case"Array":return e.slice()}return e}},languages:{extend:function(e,n){var r=t.util.clone(t.languages[e]);for(var i in n)r[i]=n[i];return r},insertBefore:function(e,n,r,i){i=i||t.languages;var s=i[e],o={};for(var u in s)if(s.hasOwnProperty(u)){if(u==n)for(var a in r)r.hasOwnProperty(a)&&(o[a]=r[a]);o[u]=s[u]}return i[e]=o},DFS:function(e,n){for(var r in e){n.call(e,r,e[r]);t.util.type(e)==="Object"&&t.languages.DFS(e[r],n)}}},highlightAll:function(e,n){var r=document.querySelectorAll('code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code');for(var i=0,s;s=r[i++];)t.highlightElement(s,e===!0,n)},highlightElement:function(r,i,s){var o,u,a=r;while(a&&!e.test(a.className))a=a.parentNode;if(a){o=(a.className.match(e)||[,""])[1];u=t.languages[o]}if(!u)return;r.className=r.className.replace(e,"").replace(/\s+/g," ")+" language-"+o;a=r.parentNode;/pre/i.test(a.nodeName)&&(a.className=a.className.replace(e,"").replace(/\s+/g," ")+" language-"+o);var f=r.textContent;if(!f)return;f=f.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\u00a0/g," ");var l={element:r,language:o,grammar:u,code:f};t.hooks.run("before-highlight",l);if(i&&self.Worker){var c=new Worker(t.filename);c.onmessage=function(e){l.highlightedCode=n.stringify(JSON.parse(e.data));l.element.innerHTML=l.highlightedCode;s&&s.call(l.element);t.hooks.run("after-highlight",l)};c.postMessage(JSON.stringify({language:l.language,code:l.code}))}else{l.highlightedCode=t.highlight(l.code,l.grammar);l.element.innerHTML=l.highlightedCode;s&&s.call(r);t.hooks.run("after-highlight",l)}},highlight:function(e,r){return n.stringify(t.tokenize(e,r))},tokenize:function(e,n){var r=t.Token,i=[e],s=n.rest;if(s){for(var o in s)n[o]=s[o];delete n.rest}e:for(var o in n){if(!n.hasOwnProperty(o)||!n[o])continue;var u=n[o],a=u.inside,f=!!u.lookbehind||0;u=u.pattern||u;for(var l=0;l<i.length;l++){var c=i[l];if(i.length>e.length)break e;if(c instanceof r)continue;u.lastIndex=0;var h=u.exec(c);if(h){f&&(f=h[1].length);var p=h.index-1+f,h=h[0].slice(f),d=h.length,v=p+d,m=c.slice(0,p+1),g=c.slice(v+1),y=[l,1];m&&y.push(m);var b=new r(o,a?t.tokenize(h,a):h);y.push(b);g&&y.push(g);Array.prototype.splice.apply(i,y)}}}return i},hooks:{all:{},add:function(e,n){var r=t.hooks.all;r[e]=r[e]||[];r[e].push(n)},run:function(e,n){var r=t.hooks.all[e];if(!r||!r.length)return;for(var i=0,s;s=r[i++];)s(n)}}},n=t.Token=function(e,t){this.type=e;this.content=t};n.stringify=function(e){if(typeof e=="string")return e;if(Object.prototype.toString.call(e)=="[object Array]"){for(var r=0;r<e.length;r++)e[r]=n.stringify(e[r]);return e.join("")}var i={type:e.type,content:n.stringify(e.content),tag:"span",classes:["token",e.type],attributes:{}};i.type=="comment"&&(i.attributes.spellcheck="true");t.hooks.run("wrap",i);var s="";for(var o in i.attributes)s+=o+'="'+(i.attributes[o]||"")+'"';return"<"+i.tag+' class="'+i.classes.join(" ")+'" '+s+">"+i.content+"</"+i.tag+">"};if(!self.document){self.addEventListener("message",function(e){var n=JSON.parse(e.data),r=n.language,i=n.code;self.postMessage(JSON.stringify(t.tokenize(i,t.languages[r])));self.close()},!1);return}var r=document.getElementsByTagName("script");r=r[r.length-1];if(r){t.filename=r.src;document.addEventListener&&!r.hasAttribute("data-manual")&&document.addEventListener("DOMContentLoaded",t.highlightAll)}})();;
+      Prism.languages.markup={comment:/&lt;!--[\w\W]*?--(&gt;|&gt;)/g,prolog:/&lt;\?.+?\?&gt;/,doctype:/&lt;!DOCTYPE.+?&gt;/,cdata:/&lt;!\[CDATA\[[\w\W]+?]]&gt;/i,tag:{pattern:/&lt;\/?[\w:-]+\s*(?:\s+[\w:-]+(?:=(?:("|')(\\?[\w\W])*?\1|\w+))?\s*)*\/?&gt;/gi,inside:{tag:{pattern:/^&lt;\/?[\w:-]+/i,inside:{punctuation:/^&lt;\/?/,namespace:/^[\w-]+?:/}},"attr-value":{pattern:/=(?:('|")[\w\W]*?(\1)|[^\s>]+)/gi,inside:{punctuation:/=|&gt;|"/g}},punctuation:/\/?&gt;/g,"attr-name":{pattern:/[\w:-]+/g,inside:{namespace:/^[\w-]+?:/}}}},entity:/&amp;#?[\da-z]{1,8};/gi};Prism.hooks.add("wrap",function(e){e.type==="entity"&&(e.attributes.title=e.content.replace(/&amp;/,"&"))});;
+      Prism.languages.css={comment:/\/\*[\w\W]*?\*\//g,atrule:/@[\w-]+?(\s+[^;{]+)?(?=\s*{|\s*;)/gi,url:/url\((["']?).*?\1\)/gi,selector:/[^\{\}\s][^\{\}]*(?=\s*\{)/g,property:/(\b|\B)[a-z-]+(?=\s*:)/ig,string:/("|')(\\?.)*?\1/g,important:/\B!important\b/gi,ignore:/&(lt|gt|amp);/gi,punctuation:/[\{\};:]/g};Prism.languages.markup&&Prism.languages.insertBefore("markup","tag",{style:{pattern:/(&lt;|<)style[\w\W]*?(>|&gt;)[\w\W]*?(&lt;|<)\/style(>|&gt;)/ig,inside:{tag:{pattern:/(&lt;|<)style[\w\W]*?(>|&gt;)|(&lt;|<)\/style(>|&gt;)/ig,inside:Prism.languages.markup.tag.inside},rest:Prism.languages.css}}});;
+      Prism.languages.clike={comment:{pattern:/(^|[^\\])(\/\*[\w\W]*?\*\/|\/\/.*?(\r?\n|$))/g,lookbehind:!0},string:/("|')(\\?.)*?\1/g,keyword:/\b(if|else|while|do|for|return|in|instanceof|function|new|try|catch|finally|null|break|continue)\b/g,"boolean":/\b(true|false)\b/g,number:/\b-?(0x)?\d*\.?[\da-f]+\b/g,operator:/[-+]{1,2}|!|=?&lt;|=?&gt;|={1,2}|(&amp;){1,2}|\|?\||\?|\*|\//g,ignore:/&(lt|gt|amp);/gi,punctuation:/[{}[\];(),.:]/g};;
+      Prism.languages.javascript=Prism.languages.extend("clike",{keyword:/\b(var|let|if|else|while|do|for|return|in|instanceof|function|new|with|typeof|try|catch|finally|null|break|continue)\b/g,number:/\b(-?(0x)?\d*\.?[\da-f]+|NaN|-?Infinity)\b/g});Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:/(^|[^/])\/(?!\/)(\[.+?]|\\.|[^/\r\n])+\/[gim]{0,3}(?=\s*($|[\r\n,.;})]))/g,lookbehind:!0}});Prism.languages.markup&&Prism.languages.insertBefore("markup","tag",{script:{pattern:/(&lt;|<)script[\w\W]*?(>|&gt;)[\w\W]*?(&lt;|<)\/script(>|&gt;)/ig,inside:{tag:{pattern:/(&lt;|<)script[\w\W]*?(>|&gt;)|(&lt;|<)\/script(>|&gt;)/ig,inside:Prism.languages.markup.tag.inside},rest:Prism.languages.javascript}}});;
+      
+    </script>
+    <!-- App js-->
+    <script>
+      $(function(){
+        var $window = $(window);
+        $('.scrollspy .nav').affix({
+          offset: {
+            top: function () { return $window.width() <= 980 ? 480 : 400 }
+          , bottom: 50
+          }
+        });
+      })
+    </script>
+  </body>
+</html>

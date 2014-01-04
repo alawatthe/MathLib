@@ -1,9 +1,10 @@
-// ### Set.prototype.plus()
-// Adds the argument to all elements in the set,  
-// or if no argument is provided adds up all the elements in the set.
-//
-// *@param {number|MathLib object}*  
-// *@return {Set|any}*
+/**
+ * Adds the argument to all elements in the set,  
+ * or if no argument is provided adds up all the elements in the set.
+ *
+ * @param {number|MathLib object} n The object to add to the elements in the set.
+ * @return {Set|any}
+ */
 plus(n : any) : any {
 	var sum = [];
 	if (!arguments.length) {

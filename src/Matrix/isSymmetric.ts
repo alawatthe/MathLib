@@ -1,7 +1,8 @@
-// ### Matrix.prototype.isSymmetric()
-// Determines if the matrix is symmetric
-//
-// *@return {boolean}*
+/**
+ * Determines if the matrix is symmetric
+ *
+ * @return {boolean}
+ */
 isSymmetric() : boolean {
 	var i, ii, j, jj,
 			isSymmetric = true;

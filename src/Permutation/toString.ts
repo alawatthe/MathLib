@@ -1,7 +1,8 @@
-// ### Permutation.prototype.toString()
-// String representation of the permutation. 
-//
-// *@return {string}*
+/**
+ * String representation of the permutation. 
+ *
+ * @return {string}
+ */
 toString() : string {
 	var str = '';
 	this.cycle.forEach(function (elem) {

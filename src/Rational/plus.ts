@@ -1,21 +1,22 @@
-// ### [Rational.prototype.plus()](http://mathlib.de/en/docs/Rational/plus)
-// Adds rational numbers
-//
-// *@param {Rational|number}* The number to be added  
-// *@return {Rational}*
-plus(r) {
+/**
+ * Adds rational numbers
+ *
+ * @param {Rational|number} summand The number to be added  
+ * @return {Rational}
+ */
+plus(summand) {
 	var n = this.numerator,
 			d = this.denominator;
 
-	if (r.type === 'rational') {
-		return new MathLib.Rational(MathLib.plus(MathLib.times(d, r.numerator), MathLib.times(n, r.denominator)),
-			MathLib.times(d, r.denominator));
+	if (summand.type === 'rational') {
+		return new MathLib.Rational(MathLib.plus(MathLib.times(d, summand.numerator), MathLib.times(n, summand.denominator)),
+			MathLib.times(d, summand.denominator));
 	}
-	else if (typeof r === 'number') {
-		return new MathLib.Rational(MathLib.plus(n, MathLib.times(r, d)), d);
+	else if (typeof summand === 'number') {
+		return new MathLib.Rational(MathLib.plus(n, MathLib.times(summand, d)), d);
 	}
 	// For complex numbers
 	else {
-		return r.plus(this);
+		return summand.plus(this);
 	}
 }

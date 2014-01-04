@@ -1,8 +1,9 @@
-// ### Permutation.prototype.compare()
-// Compares two permutations.
-//
-// *@param {Permutation}* The permutation to compare  
-// *@return {number}*
+/**
+ * Compares two permutations.
+ *
+ * @param {Permutation} p The permutation to compare  
+ * @return {number}
+ */
 compare(p : Permutation) : number {
 	var i, ii;
 

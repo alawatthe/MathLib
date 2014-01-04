@@ -1,15 +1,16 @@
-// ### Set.prototype.isEqual()
-// Determines if the set is equal to an other set.
-//
-// *@param {Set}* The set to compare  
-// *@return {boolean}*
-isEqual(x : Set) : boolean {
-	if (this.card !== x.card) {
+/**
+ * Determines if the set is equal to an other set.
+ *
+ * @param {Set} set The set to compare  
+ * @return {boolean}
+ */
+isEqual(set : Set) : boolean {
+	if (this.card !== set.card) {
 		return false;
 	}
 	else {
 		return this.every(function (y, i) {
-			return MathLib.isEqual(y, x[i]);
+			return MathLib.isEqual(y, set[i]);
 		});
 	}
 }

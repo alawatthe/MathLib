@@ -1,8 +1,9 @@
-// ### Matrix.prototype.times()
-// Multiplies the current matrix with a number, a matrix, a point or a vector.
-//
-// *@param {number|Matrix|Point|Rational|Vector}*  
-// *@return {Matrix|Point|Vector}*
+/**
+ * Multiplies the current matrix with a number, a matrix, a point or a vector.
+ *
+ * @param {number|Matrix|Point|Rational|Vector} a The object to multiply to the current matrix
+ * @return {Matrix|Point|Vector}
+ */
 times(a) {
 	var i, ii, j, jj, k, kk,
 			product = [], entry;

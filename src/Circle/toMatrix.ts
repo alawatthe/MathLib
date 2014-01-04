@@ -1,7 +1,8 @@
-// ### [Circle.prototype.toMatrix()](http://mathlib.de/en/docs/Circle/toMatrix)
-// Converts the circle to the corresponding matrix.
-//
-// *@return {Matrix}* 
+/**
+ * Converts the circle to the corresponding matrix.
+ *
+ * @return {Matrix}
+ */
 toMatrix() : Matrix {
 	var x = this.center[0] / this.center[2],
 			y = this.center[1] / this.center[2],

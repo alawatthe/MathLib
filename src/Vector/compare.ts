@@ -1,8 +1,9 @@
-// ### [Vector.prototype.compare()](http://mathlib.de/en/docs/Vector/compare)
-// Compares two vectors.
-//
-// *@param {Vector}* The vector to compare  
-// *@return {number}*
+/**
+ * Compares two vectors.
+ *
+ * @param {Vector} v The vector to compare  
+ * @return {number}
+ */
 compare(v : Vector) : number {
 	var i, ii;
 

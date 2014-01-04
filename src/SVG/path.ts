@@ -1,9 +1,11 @@
-// ### SVG path
-// Draws a path on the screen.
-//
-// *@param {curve}* The path to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@return {Screen}* Returns the screen
+/**
+ * Draws a path on the screen.
+ *
+ * @param {any} curve The path to be drawn  
+ * @param {object} options Optional drawing options  
+ * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+ * @return {Screen} Returns the screen
+ */
 path: function (curve, options = {}, redraw = false) {
 	var screen = this.screen,
 			svgPathStroke = document.createElementNS('http://www.w3.org/2000/svg', 'path'),

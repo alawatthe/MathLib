@@ -1,8 +1,9 @@
-// ### Permutation.prototype.applyTo()
-// Applies the permutation to a number or a array/matrix/point/vector
-//
-// *@param {number|array|Matrix|Point|Vector}*  
-// *@return {number|array|Matrix|Point|Vector}*
+/**
+ * Applies the permutation to a number or a array/matrix/point/vector
+ *
+ * @param {number|array|Matrix|Point|Vector} n The object to apply the permutation to
+ * @return {number|array|Matrix|Point|Vector}
+ */
 applyTo(n : any) : any {
 	var p, permutatedObj;
 	if (typeof n === 'number') {

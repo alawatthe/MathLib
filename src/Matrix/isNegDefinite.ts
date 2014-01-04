@@ -1,7 +1,8 @@
-// ### Matrix.prototype.isNegDefinite()
-// Determines if the matrix is negative definite
-//
-// *@return {boolean}*
+/**
+ * Determines if the matrix is negative definite
+ *
+ * @return {boolean}
+ */
 isNegDefinite() : boolean {
 	if (!this.isSquare()) {
 		return;

@@ -1,8 +1,9 @@
-// ### Matrix.prototype.transpose()
-// Calculating the transpose of the matrix
-// The result is cached.
-//
-// *@return {Matrix}*
+/**
+ * Calculating the transpose of the matrix
+ * The result is cached.
+ *
+ * @return {Matrix}
+ */
 transpose() : Matrix {
 	var transposedMatrix, row, i, j, ii, jj,
 			transpose = [];

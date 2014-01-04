@@ -1,7 +1,8 @@
-// ### Screen3D.prototype.drawGrid
-// Draws the grid.
-//
-// *@return {Screen3D}*
+/**
+ * Draws the grid.
+ *
+ * @return {Screen3D}
+ */
 drawGrid() {
 	if (!this.options.grid) {
 		return this;

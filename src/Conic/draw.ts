@@ -1,9 +1,11 @@
-// ### [Conic.prototype.draw()](http://mathlib.de/en/docs/Conic/draw)
-// Draws the conic on one or more screens
-//
-// *@param {Screen}* The screen to draw onto.  
-// *@param {object}* [options] Drawing options  
-// *@return {boolean}*
+/**
+ * Draws the conic on one or more screens
+ *
+ * @param {Screen} screen The screen to draw onto.
+ * @param {object} options Drawing options
+ * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+ * @return {boolean}
+ */
 draw(screen, options, redraw = false) {
 	if (Array.isArray(screen)) {
 		var conic = this;

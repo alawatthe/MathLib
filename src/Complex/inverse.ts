@@ -1,7 +1,8 @@
-// ### [Complex.prototype.inverse()](http://mathlib.de/en/docs/Complex/inverse)
-// Calculates the inverse of a complex number
-//
-// *@return {Complex}*
+/**
+ * Calculates the inverse of a complex number
+ *
+ * @return {Complex}
+ */
 inverse() : Complex {
 	var d = MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2));
 

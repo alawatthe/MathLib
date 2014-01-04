@@ -1,9 +1,10 @@
-// ### Screen2D.prototype.getineEndPoint()
-// Calculates the both endpoints for the line
-// for drawing purposes
-//
-// *@param {Line|array}*  
-// *@return {array}* The array has the format [[x1, y1], [x2, y2]]
+/**
+ * Calculates the both endpoints for the line
+ * for drawing purposes
+ *
+ * @param {Line|array} l The Line to calculate the end points to
+ * @return {array} The array has the format [[x1, y1], [x2, y2]]
+ */
 getLineEndPoints (l) {
 	if (l.type === 'line') {
 		var top    = (            - this.translation.y) / this.scale.y,

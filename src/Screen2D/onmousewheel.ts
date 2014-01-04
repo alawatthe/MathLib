@@ -1,7 +1,8 @@
-// ### Screen.prototype.onmousewheel()
-// Handles the mousewheel event
-//
-// *@param {event}*
+/**
+ * Handles the mousewheel event
+ *
+ * @param {event} evt The event object
+ */
 onmousewheel(evt) {
 	var delta, s, p, z;
 

@@ -1,13 +1,14 @@
-// ### [Functn.prototype.quad()](http://mathlib.de/en/docs/Functn/quad)
-// Numeric evaluation of an integral using an adative simpson approach.
-// 
-// Inspired by "adaptsim.m" by Walter Gander
-// and MatLab's "quad.m"
-// 
-// *@param {number}* The starting point  
-// *@param {number}* The end point  
-// *@param {number}* The tolerance  
-// *@return {number}*
+/**
+ * Numeric evaluation of an integral using an adative simpson approach.
+ * 
+ * Inspired by "adaptsim.m" by Walter Gander
+ * and MatLab's "quad.m"
+ * 
+ * @param {number} a The starting point
+ * @param {number} b The end point
+ * @param {number} options Optional options
+ * @return {number}
+ */
 functnPrototype.quad = function (a, b, options : any = {}) : number {
 	
 	var f = this,

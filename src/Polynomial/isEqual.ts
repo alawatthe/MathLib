@@ -1,8 +1,9 @@
-// ### Polynomial.prototype.isEqual()
-// Decides if two polynomials are equal.
-//
-// *@param {Polynomial}*  
-// *@return {boolean}*
+/**
+ * Decides if two polynomials are equal.
+ *
+ * @param {Polynomial} p The polynomial to compare.
+ * @return {boolean}
+ */
 isEqual(p : Polynomial) : boolean {
 	var i, ii;
 	if (this.deg !== p.deg || this.subdeg !== p.subdeg) {

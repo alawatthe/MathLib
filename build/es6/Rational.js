@@ -1,16 +1,19 @@
 
-// ## <a id="Rational" href="http://mathlib.de/en/docs/Rational">Rational</a>
-// MathLib.Rational is the MathLib implementation of rational numbers.
-//
-//
-// #### Simple use case:
-// ```
-// // Create the rational number 2/3
-// var r = new MathLib.Rational(2, 3);
-// ```
 import MathLib from './meta.js';
 import Functn from './Functn';
 
+/**
+* MathLib.Rational is the MathLib implementation of rational numbers.
+*
+* #### Simple use case:
+* ```
+* // Create the rational number 2/3
+* var r = new MathLib.Rational(2, 3);
+* ```
+*
+* @class
+* @this {Rational}
+*/
 var Rational = (function () {
     function Rational(numerator, denominator) {
         if (typeof denominator === "undefined") { denominator = 1; }
@@ -22,158 +25,174 @@ var Rational = (function () {
         this.numerator = numerator;
         this.denominator = denominator;
     }
-    // ### [Rational.prototype.compare()](http://mathlib.de/en/docs/Rational/compare)
-    // Compares two rational numbers
-    //
-    // *@param {Rational}* The number to compare
-    // *@return {number}*
-    Rational.prototype.compare = function (r) {
-        return MathLib.sign(this.numerator * r.denominator - this.denominator * r.numerator);
+    /**
+    * Compares two rational numbers
+    *
+    * @param {Rational} rational The number to compare
+    * @return {number}
+    */
+    Rational.prototype.compare = function (rational) {
+        return MathLib.sign(this.numerator * rational.denominator - this.denominator * rational.numerator);
     };
 
-    // ### [Rational.prototype.divide()](http://mathlib.de/en/docs/Rational/divide)
-    // Divides rational numbers
-    //
-    // *@param {Rational|number}* The divisor
-    // *@return {Rational}*
-    Rational.prototype.divide = function (r) {
-        if (r.type === 'rational') {
-            return new MathLib.Rational(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));
-        } else if (typeof r === 'number') {
-            return new MathLib.Rational(this.numerator, MathLib.times(this.denominator, r));
+    /**
+    * Divides rational numbers
+    *
+    * @param {Rational|number} divisor The divisor
+    * @return {Rational}
+    */
+    Rational.prototype.divide = function (divisor) {
+        if (divisor.type === 'rational') {
+            return new MathLib.Rational(MathLib.times(this.numerator, divisor.denominator), MathLib.times(this.denominator, divisor.numerator));
+        } else if (typeof divisor === 'number') {
+            return new MathLib.Rational(this.numerator, MathLib.times(this.denominator, divisor));
         } else {
-            return r.inverse().times(this);
+            return divisor.inverse().times(this);
         }
     };
 
-    // ### [Rational.prototype.inverse()](http://mathlib.de/en/docs/Rational/inverse)
-    // Calculates the inverse of a rational number
-    //
-    // *@return {Rational}*
+    /**
+    * Calculates the inverse of a rational number
+    *
+    * @return {Rational}
+    */
     Rational.prototype.inverse = function () {
         if (!MathLib.isZero(this.numerator)) {
             return new MathLib.Rational(this.denominator, this.numerator);
         }
     };
 
-    // ### [Rational.prototype.isEqual()](http://mathlib.de/en/docs/Rational/isEqual)
-    // Checks if the rational number is equal to an other number
-    //
-    // *@return {boolean}*
-    Rational.prototype.isEqual = function (r) {
-        return MathLib.isEqual(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));
+    /**
+    * Checks if the rational number is equal to an other number
+    *
+    * @param {Rational} number The number to compare
+    * @return {boolean}
+    */
+    Rational.prototype.isEqual = function (number) {
+        return MathLib.isEqual(MathLib.times(this.numerator, number.denominator), MathLib.times(this.denominator, number.numerator));
     };
 
-    // ### [Rational.prototype.isZero()](http://mathlib.de/en/docs/Rational/isZero)
-    // Checks if the rational number is zero
-    //
-    // *@return {boolean}*
+    /**
+    * Checks if the rational number is zero
+    *
+    * @return {boolean}
+    */
     Rational.prototype.isZero = function () {
         return MathLib.isZero(this.numerator);
     };
 
-    // ### [Rational.prototype.minus()](http://mathlib.de/en/docs/Rational/minus)
-    // Subtracts rational numbers
-    //
-    // *@param {Rational|number}* The number to be subtracted
-    // *@return {Rational}*
-    Rational.prototype.minus = function (r) {
+    /**
+    * Subtracts rational numbers
+    *
+    * @param {Rational|number} subtrahend The number to be subtracted
+    * @return {Rational}
+    */
+    Rational.prototype.minus = function (subtrahend) {
         var n = this.numerator, d = this.denominator;
 
-        if (r.type === 'rational') {
-            return new MathLib.Rational(MathLib.minus(MathLib.times(n, r.denominator), MathLib.times(d, r.numerator)), MathLib.times(d, r.denominator));
-        } else if (typeof r === 'number') {
-            return new MathLib.Rational(MathLib.minus(n, MathLib.times(r, d)), d);
+        if (subtrahend.type === 'rational') {
+            return new MathLib.Rational(MathLib.minus(MathLib.times(n, subtrahend.denominator), MathLib.times(d, subtrahend.numerator)), MathLib.times(d, subtrahend.denominator));
+        } else if (typeof subtrahend === 'number') {
+            return new MathLib.Rational(MathLib.minus(n, MathLib.times(subtrahend, d)), d);
         } else {
-            return r.minus(this).negative();
+            return subtrahend.minus(this).negative();
         }
     };
 
-    // ### [Rational.prototype.negative()](http://mathlib.de/en/docs/Rational/negative)
-    // Calculates the negative of a rational number
-    //
-    // *@return {Rational}*
+    /**
+    * Calculates the negative of a rational number
+    *
+    * @return {Rational}
+    */
     Rational.prototype.negative = function () {
         return new MathLib.Rational(-this.numerator, this.denominator);
     };
 
-    // ### [Rational.prototype.plus()](http://mathlib.de/en/docs/Rational/plus)
-    // Adds rational numbers
-    //
-    // *@param {Rational|number}* The number to be added
-    // *@return {Rational}*
-    Rational.prototype.plus = function (r) {
+    /**
+    * Adds rational numbers
+    *
+    * @param {Rational|number} summand The number to be added
+    * @return {Rational}
+    */
+    Rational.prototype.plus = function (summand) {
         var n = this.numerator, d = this.denominator;
 
-        if (r.type === 'rational') {
-            return new MathLib.Rational(MathLib.plus(MathLib.times(d, r.numerator), MathLib.times(n, r.denominator)), MathLib.times(d, r.denominator));
-        } else if (typeof r === 'number') {
-            return new MathLib.Rational(MathLib.plus(n, MathLib.times(r, d)), d);
+        if (summand.type === 'rational') {
+            return new MathLib.Rational(MathLib.plus(MathLib.times(d, summand.numerator), MathLib.times(n, summand.denominator)), MathLib.times(d, summand.denominator));
+        } else if (typeof summand === 'number') {
+            return new MathLib.Rational(MathLib.plus(n, MathLib.times(summand, d)), d);
         } else {
-            return r.plus(this);
+            return summand.plus(this);
         }
     };
 
-    // ### [Rational.prototype.reduce()](http://mathlib.de/en/docs/Rational/reduce)
-    // Reduces the rational number
-    //
-    // *@return {Rational}*
+    /**
+    * Reduces the rational number
+    *
+    * @return {Rational}
+    */
     Rational.prototype.reduce = function () {
         var gcd = MathLib.sign(this.denominator) * MathLib.gcd([this.numerator, this.denominator]);
         return new MathLib.Rational(this.numerator / gcd, this.denominator / gcd);
     };
 
-    // ### [Rational.prototype.times()](http://mathlib.de/en/docs/Rational/times)
-    // Multiplies rational numbers
-    //
-    // *@param {Rational|number}* The number to be multiplied
-    // *@return {Rational}*
-    Rational.prototype.times = function (r) {
-        if (r.type === 'rational') {
-            return new MathLib.Rational(MathLib.times(this.numerator, r.numerator), MathLib.times(this.denominator, r.denominator));
-        } else if (typeof r === 'number') {
-            return new MathLib.Rational(MathLib.times(this.numerator, r), this.denominator);
+    /**
+    * Multiplies rational numbers
+    *
+    * @param {Rational|number} factor The number to be multiplied
+    * @return {Rational}
+    */
+    Rational.prototype.times = function (factor) {
+        if (factor.type === 'rational') {
+            return new MathLib.Rational(MathLib.times(this.numerator, factor.numerator), MathLib.times(this.denominator, factor.denominator));
+        } else if (typeof factor === 'number') {
+            return new MathLib.Rational(MathLib.times(this.numerator, factor), this.denominator);
         } else {
-            return r.times(this);
+            return factor.times(this);
         }
     };
 
-    // ### [Rational.prototype.toContentMathML()](http://mathlib.de/en/docs/Rational/toContentMathML)
-    // Returns the Content MathML representation of the rational number
-    //
-    // *@return {string}*
+    /**
+    * Returns the Content MathML representation of the rational number
+    *
+    * @return {string}
+    */
     Rational.prototype.toContentMathML = function () {
         return '<cn type="rational">' + this.numerator + '<sep/>' + this.denominator + '</cn>';
     };
 
-    // ### [Rational.prototype.toLaTeX()](http://mathlib.de/en/docs/Rational/toLaTeX)
-    // Returns the LaTeX representation of the rational number
-    //
-    // *@return {string}*
+    /**
+    * Returns the LaTeX representation of the rational number
+    *
+    * @return {string}
+    */
     Rational.prototype.toLaTeX = function () {
         return '\\frac{' + MathLib.toLaTeX(this.numerator) + '}{' + MathLib.toLaTeX(this.denominator) + '}';
     };
 
-    // ### [Rational.prototype.toMathML()](http://mathlib.de/en/docs/Rational/toMathML)
-    // Returns the MathML representation of the rational number
-    //
-    // *@return {string}*
+    /**
+    * Returns the MathML representation of the rational number
+    *
+    * @return {string}
+    */
     Rational.prototype.toMathML = function () {
         return '<mfrac>' + MathLib.toMathML(this.numerator) + MathLib.toMathML(this.denominator) + '</mfrac>';
     };
 
-    // ### [Rational.prototype.toNumber()](http://mathlib.de/en/docs/Rational/toNumber)
-    // Returns the number represented by the rational number
-    //
-    // *@return {number}*
+    /**
+    * Returns the number represented by the rational number
+    *
+    * @return {number}
+    */
     Rational.prototype.toNumber = function () {
         return this.numerator / this.denominator;
     };
 
-    // ### [Rational.prototype.toString()](http://mathlib.de/en/docs/Rational/toString)
-    // Custom toString function
-    //
-    // *@return {string}*
+    /**
+    * Custom toString function
+    *
+    * @return {string}
+    */
     Rational.prototype.toString = function () {
         return MathLib.toString(this.numerator) + '/' + MathLib.toString(this.denominator);
     };

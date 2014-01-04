@@ -1,12 +1,13 @@
-// ### [Complex.prototype.times()](http://mathlib.de/en/docs/Complex/times)
-// Multiplies complex numbers
-//
-// *@param {Complex|number|Rational}* The number to be multiplied  
-// *@return {Complex}*
-times(c) : Complex {
-	if (c.type === 'complex') {
+/**
+ * Multiplies complex numbers
+ *
+ * @param {Complex|number|Rational} factor The number to be multiplied  
+ * @return {Complex}
+ */
+times(factor) : Complex {
+	if (factor.type === 'complex') {
 		if (this.re === Infinity) {
-			if (c.isZero() || MathLib.isNaN(c.re)) {
+			if (factor.isZero() || MathLib.isNaN(factor.re)) {
 				return new MathLib.Complex(NaN);
 			}
 			else {
@@ -14,7 +15,7 @@ times(c) : Complex {
 			}
 		}
 
-		if (c.re === Infinity) {
+		if (factor.re === Infinity) {
 			if (this.isZero() || MathLib.isNaN(this.re)) {
 				return new MathLib.Complex(NaN);
 			}
@@ -23,13 +24,13 @@ times(c) : Complex {
 			}
 		}
 
-		return new MathLib.Complex(MathLib.minus(MathLib.times(this.re, c.re), MathLib.times(this.im, c.im)),
-			MathLib.plus(MathLib.times(this.re, c.im), MathLib.times(this.im, c.re)));
+		return new MathLib.Complex(MathLib.minus(MathLib.times(this.re, factor.re), MathLib.times(this.im, factor.im)),
+			MathLib.plus(MathLib.times(this.re, factor.im), MathLib.times(this.im, factor.re)));
 	}
-	else if (c.type === 'rational') {
-		c = c.toNumber();
+	else if (factor.type === 'rational') {
+		factor = factor.toNumber();
 	}
-	if (typeof c === 'number') {
-		return new MathLib.Complex(MathLib.times(this.re, c), MathLib.times(this.im, c));
+	if (typeof factor === 'number') {
+		return new MathLib.Complex(MathLib.times(this.re, factor), MathLib.times(this.im, factor));
 	}
 }

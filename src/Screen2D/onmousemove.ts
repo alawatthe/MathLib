@@ -1,7 +1,8 @@
-// ### Screen.prototype.onmousemove()
-// Handles the mousemove event
-//
-// *@param {event}*
+/**
+ * Handles the mousemove event
+ *
+ * @param {event} evt The event object
+ */
 onmousemove(evt) {
 	var p;
 

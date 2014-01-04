@@ -1,7 +1,8 @@
-// ### Set.prototype.powerset()
-// Returns the powerset
-//
-// *@return {Set}*
+/**
+ * Returns the powerset
+ *
+ * @return {Set}
+ */
 powerset() : Set {
 	var flag, subset, i, ii, j, jj,
 			powerset = [];

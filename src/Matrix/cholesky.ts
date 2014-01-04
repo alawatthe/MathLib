@@ -1,10 +1,11 @@
-// ### Matrix.prototype.cholesky()
-// The cholesky decomposition of a matrix
-// using the Cholesky–Banachiewicz algorithm.
-// Does not change the current matrix, but returns a new one.
-// The result is cached.
-//
-// *@return {Matrix}*
+/**
+ * The cholesky decomposition of a matrix
+ * using the Cholesky–Banachiewicz algorithm.
+ * Does not change the current matrix, but returns a new one.
+ * The result is cached.
+ *
+ * @return {Matrix}
+ */
 cholesky() : Matrix {
 	var i, ii, j, jj, k, kk, sum, choleskyMatrix,
 			cholesky = [];

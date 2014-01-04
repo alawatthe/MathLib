@@ -1,16 +1,20 @@
-// ## <a id="Vector" href="http://mathlib.de/en/docs/Vector">Vector</a>
-// The vector implementation of MathLib makes calculations with vectors of
-// arbitrary size possible. The entries of the vector can be numbers and complex
-// numbers.
-//
-// It is as easy as
-// `new MathLib.Vector([1, 2, 3])`
-// to create the following vector:  
-//    ⎛ 1 ⎞  
-//    ⎜ 2 ⎟  
-//    ⎝ 3 ⎠
-
 /// import Functn
+
+/**
+ * The vector implementation of MathLib makes calculations with vectors of
+ * arbitrary size possible. The entries of the vector can be numbers and complex
+ * numbers.
+ *
+ * It is as easy as
+ * `new MathLib.Vector([1, 2, 3])`
+ * to create the following vector:  
+ *    ⎛ 1 ⎞  
+ *    ⎜ 2 ⎟  
+ *    ⎝ 3 ⎠
+ *
+ * @class
+ * @this {Vector}
+ */
 export class Vector {
 	type = 'vector';
 

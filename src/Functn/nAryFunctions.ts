@@ -1,10 +1,11 @@
 // Functions that act on set-like structures and return one single number/boolean...
 var nAryFunctions = {
-	// ### MathLib.and()
-	// Returns true iff all arguments are true.
-	//
-	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-	// *@return {boolean}*
+	/**
+	 * Returns true iff all arguments are true.
+	 *
+	 * @param {...boolean} n Expects an arbitrary number of boolean arguments  
+	 * @return {boolean}
+	 */
 	and: function (n) {
 		return n.every(function (x) {return !!x;});
 	},
@@ -80,11 +81,13 @@ var nAryFunctions = {
 			return old + cur * cur;
 		}, 0);
 	},
-	// ### MathLib.isEqual()
-	// Determines if all arguments are equal.
-	//
-	// *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects  
-	// *@return {boolean}*
+	/**
+	 * ### MathLib.isEqual()
+	 * Determines if all arguments are equal.
+	 *
+	 * @param {...number|MathLib object} n Expects an arbitrary number of numbers or MathLib objects  
+	 * @return {boolean}
+	 */
 	isEqual: function (n) {
 		return n.every(function (a, i, args) {
 			if (a === args[0]) {
@@ -122,11 +125,13 @@ var nAryFunctions = {
 	min: function (n) {
 		return Math.min.apply(null, n);
 	},
-	// ### MathLib.or()
-	// Returns true iff at least one argument is true.
-	//
-	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-	// *@return {boolean}*
+	/**
+	 * ### MathLib.or()
+	 * Returns true iff at least one argument is true.
+	 *
+	 * @param {...boolean} Expects an arbitrary number of boolean arguments  
+	 * @return {boolean}
+	 */
 	or: function (n) {
 		return n.some(function (x) {return !!x;});
 	},
@@ -246,11 +251,13 @@ var nAryFunctions = {
 			}
 		});
 	},
-	// ### MathLib.xor()
-	// Returns true iff an odd number of the arguments is true.
-	//
-	// *@param {boolean}* Expects an arbitrary number of boolean arguments  
-	// *@return {boolean}*
+	/**
+	 * ### MathLib.xor()
+	 * Returns true iff an odd number of the arguments is true.
+	 *
+	 * @param {...boolean} Expects an arbitrary number of boolean arguments  
+	 * @return {boolean}
+	 */
 	xor: function (n) {
 		return n.reduce(function (x, y) {return x + !!y;}, 0) % 2 !== 0;
 	}

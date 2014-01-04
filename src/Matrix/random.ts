@@ -1,10 +1,11 @@
-// ### Matrix.random()
-// Returns a matrix consisting completely of random numbers between 0 and 1
-//
-// *@param {number}* The number of rows.  
-// *@param {number}* The number of columns.  
-// *@return {Matrix}*
-static random = function (r, c) {
+/**
+ * Returns a matrix consisting completely of random numbers between 0 and 1
+ *
+ * @param {number} r The number of rows.  
+ * @param {number} c The number of columns.  
+ * @return {Matrix}
+ */
+static random = function (r : number, c : number) {
 	var row,
 			matrix = [],
 			i, j, ii, jj;

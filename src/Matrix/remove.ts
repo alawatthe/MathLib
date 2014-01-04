@@ -1,9 +1,10 @@
-// ### Matrix.prototype.remove()
-// This function removes the specified rows and/or columns for the matrix.
-//
-// *@param {number|array}* The row(s) to be removed.  
-// *@param {number|array}* The column(s) to be removed.  
-// *@return {Matrix}*
+/**
+ * This function removes the specified rows and/or columns for the matrix.
+ *
+ * @param {number|array} row The row(s) to be removed.  
+ * @param {number|array} col The column(s) to be removed.  
+ * @return {Matrix}
+ */
 remove(row, col) {
 	var rest = this.toArray();
 

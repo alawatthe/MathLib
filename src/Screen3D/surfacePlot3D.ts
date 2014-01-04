@@ -1,9 +1,10 @@
-// ### screen3D.prototype.surfacePlot()
-//
-//
-// *@param {function}* The map for the surface    
-// *@param {object}* Options  
-// *@return {Screen3D}*
+/**
+ * Creates a surface plot.
+ *
+ * @param {function} f The map for the surface
+ * @param {object} options Optional drawing options
+ * @return {Screen3D}
+ */
 surfacePlot3D(f, options) : Screen3D {
 	var defaults = {
 				material: {

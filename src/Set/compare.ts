@@ -1,8 +1,10 @@
-// ### Set.prototype.compare()
-// Compare function for sets
-//
-// *@return {number}*
-compare(x : any) : number {
+/**
+ * Compare function for sets
+ *
+ * @param {Set} x The set to compare the current set to
+ * @return {number}
+ */
+compare(x : Set) : number {
 	var a, i, ii;
 
 	if (this.card !== x.card) {

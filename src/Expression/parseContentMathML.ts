@@ -1,8 +1,10 @@
-// ### Expression.prototype.parseContentMathML
-// Parses a content MathML string and returns an Expression.
-//
-// *@return {Expression}*
-static parseContentMathML(MathMLString) : Expression {
+/**
+ * Parses a content MathML string and returns an Expression.
+ *
+ * @param {string} MathMLString The string to be parsed as MathML
+ * @return {Expression}
+ */
+static parseContentMathML(MathMLString : string) : Expression {
 	var MathMLdoc,
 			tokenizer = new DOMParser();
 
@@ -29,7 +31,7 @@ static parseContentMathML(MathMLString) : Expression {
 
 
 	// Gives an error in Firefox
-	//* MathML = tokenizer.parseFromString(MathMLString, 'application/mathml+xml'); *
+	// MathML = tokenizer.parseFromString(MathMLString, 'application/mathml+xml');
 	MathMLdoc = tokenizer.parseFromString(MathMLString, 'application/xml');
 
 
@@ -75,8 +77,8 @@ static parseContentMathML(MathMLString) : Expression {
 			}
 
 			if (type === 'number') {
-				/* TODO: base conversions
-				var base = node.getAttribute('base') !== null ? node.getAttributes('base') : '10'; */
+				// TODO: base conversions
+				// var base = node.getAttribute('base') !== null ? node.getAttributes('base') : '10';
 				return parser(node.childNodes[0]);
 			}
 			else if (type === 'rational') {

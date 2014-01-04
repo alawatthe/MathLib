@@ -1,5 +1,3 @@
-// ## <a id="Screen3D"></a>Screen3D
-// Two dimensional plotting
 
 declare var THREE : any;
 
@@ -14,6 +12,14 @@ var to3js = function (x) {
 };
 
 /// import Screen
+
+/**
+ * Three dimensional plotting
+ *
+ * @class
+ * @augments Screen
+ * @this {Screen3D}
+ */
 export class Screen3D extends Screen {
 
 	type = 'screen3D';

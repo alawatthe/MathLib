@@ -1,7 +1,8 @@
-// ### [Conic.prototype.normalize()](http://mathlib.de/en/docs/Conic/normalize)
-// Calculates the normal form of a conic.
-//
-// *@return {Conic}*
+/**
+ * Calculates the normal form of a conic.
+ *
+ * @return {Conic}
+ */
 normalize() : Conic {
 	var A = this.primal[0][0],
 			B = this.primal[0][1] * 2,

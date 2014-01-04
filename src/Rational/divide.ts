@@ -1,17 +1,18 @@
-// ### [Rational.prototype.divide()](http://mathlib.de/en/docs/Rational/divide)
-// Divides rational numbers
-//
-// *@param {Rational|number}* The divisor  
-// *@return {Rational}*
-divide(r) {
-	if (r.type === 'rational') {
-		return new MathLib.Rational(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));
+/**
+ * Divides rational numbers
+ *
+ * @param {Rational|number} divisor The divisor  
+ * @return {Rational}
+ */
+divide(divisor) {
+	if (divisor.type === 'rational') {
+		return new MathLib.Rational(MathLib.times(this.numerator, divisor.denominator), MathLib.times(this.denominator, divisor.numerator));
 	}
-	else if (typeof r === 'number') {
-		return new MathLib.Rational(this.numerator, MathLib.times(this.denominator, r));
+	else if (typeof divisor === 'number') {
+		return new MathLib.Rational(this.numerator, MathLib.times(this.denominator, divisor));
 	}
 	// For complex numbers
 	else {
-		return r.inverse().times(this);
+		return divisor.inverse().times(this);
 	}
 }

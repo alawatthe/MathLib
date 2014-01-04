@@ -1,7 +1,8 @@
-// ### [Functn.prototype.toString()](http://mathlib.de/en/docs/Functn/toString)
-// Returns a string representation of the function
-//
-// *@return {string}*
+/**
+ * Returns a string representation of the function
+ *
+ * @return {string}
+ */
 functnPrototype.toString = function () {
 	return this.expression.toString();
 

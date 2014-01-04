@@ -1,14 +1,16 @@
-// ### Set.prototype.fromTo()
-// Creates a set containing the numbers from a start value to a end value.
-//
-// *@param {number}* The number to start from  
-// *@param {number}* The number to end with  
-// *@param {number}* The stepsize (default = 1)  
-// *@return {Set}*
-static fromTo = function (f : number, t : number, s : number = 1) : Set {
+/**
+ * Creates a set containing the numbers from a start value to a end value.
+ *
+ * @param {number} start The number to start from
+ * @param {number} end The number to end with
+ * @param {number} step The stepsize (default = 1)
+ * @return {Set}
+ */
+static fromTo = function (start : number, end : number, step : number = 1) : Set {
 	var i, set = [];
-	if (f <= t) {
-		for (i = f; i <= t; i += s) {
+
+	if (start <= end) {
+		for (i = start; i <= end; i += step) {
 			set.push(i);
 		}
 		return new MathLib.Set(set);

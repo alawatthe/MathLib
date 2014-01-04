@@ -1,8 +1,9 @@
-// ### Permutation.prototype.toMatrix()
-// Converts the permuatation to a matrix.
-//
-// *@param {number}* [size] The size of the matrix  
-// *@return {Matrix}*
+/**
+ * Converts the permuatation to a matrix.
+ *
+ * @param {number} n The size of the matrix  
+ * @return {Matrix}
+ */
 toMatrix(n : number) : Matrix {
 	var row = [],
 			matrix = [],

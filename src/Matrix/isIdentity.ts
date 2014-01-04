@@ -1,7 +1,8 @@
-// ### Matrix.prototype.isIdentity()
-// Determines if the matrix is a identity matrix.
-//
-// *@return {boolean}*
+/**
+ * Determines if the matrix is a identity matrix.
+ *
+ * @return {boolean}
+ */
 isIdentity() : boolean {
 	if (!this.isSquare()) {
 		return false;

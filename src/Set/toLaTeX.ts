@@ -1,7 +1,8 @@
-// ### Set.prototype.toLaTeX()
-// Returns the LaTeX representation of the set
-//
-// *@return {string}*
+/**
+ * Returns the LaTeX representation of the set
+ *
+ * @return {string}
+ */
 toLaTeX() : string {
 	if (this.isEmpty()) {
 		return '\\emptyset';

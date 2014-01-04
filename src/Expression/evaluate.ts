@@ -1,7 +1,8 @@
-// ### <a href="http://mathlib.de/en/docs/Expression/evaluate">Expression.prototype.evaluate</a>
-// Evaluates the symbolic expression
-//
-// *@return {any}*
+/**
+ * Evaluates the symbolic expression
+ *
+ * @return {any}
+ */
 evaluate() : any {
 
 	if (this.subtype === 'binaryOperator') {

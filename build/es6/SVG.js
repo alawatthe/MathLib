@@ -1,26 +1,28 @@
 
-// ## SVG
-// The SVG renderer for 2D plotting
-//
 import MathLib from './meta.js';
 import screen2D from './screen2D';
 
+/**
+* The SVG renderer for 2D plotting
+*/
 export var SVG = {
-    // ### SVG.applyTransformation
-    // Applies the current transformations to the screen
-    //
+    /**
+    * Applies the current transformations to the screen
+    */
     applyTransformation: function () {
         var m = this.transformation;
         this.layer.forEach(function (l) {
             l.ctx.setAttribute('transform', 'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')');
         });
     },
-    // ### SVG circle
-    // Draws a circle on the screen.
-    //
-    // *@param {Circle}* The circle to be drawn
-    // *@param {object}* [options] Optional drawing options
-    // *@return {Screen}* Returns the screen
+    /**
+    * Draws a circle on the screen.
+    *
+    * @param {Circle} circle The circle to be drawn
+    * @param {object} options Optional drawing options
+    * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+    * @return {Screen} Returns the screen
+    */
     circle: function (circle, options, redraw) {
         if (typeof options === "undefined") { options = {}; }
         if (typeof redraw === "undefined") { redraw = false; }
@@ -52,56 +54,60 @@ export var SVG = {
 
         return this;
     },
-    // ### SVG.clear
-    // Clears a given Layer.
-    //
-    // *@param {Layer}* The layer to be cleared
+    /**
+    * Clears a given Layer.
+    *
+    * @param {Layer} layer The layer to be cleared
+    */
     clear: function (layer) {
         layer.ctx.textContent = '';
     },
-    // ### SVG.convertOptions
-    // Converts the options to the SVG options format
-    //
-    // *@param {object}* The drawing options
-    // *@return {object}* The converted options
-    convertOptions: function (opt) {
+    /**
+    * Converts the options to the SVG options format
+    *
+    * @param {object} options The drawing options
+    * @return {object} The converted options
+    */
+    convertOptions: function (options) {
         var convertedOptions = {};
-        if ('fillColor' in opt) {
-            convertedOptions.fill = MathLib.colorConvert(opt.fillColor);
-        } else if ('color' in opt) {
-            convertedOptions.fill = MathLib.colorConvert(opt.color);
+        if ('fillColor' in options) {
+            convertedOptions.fill = MathLib.colorConvert(options.fillColor);
+        } else if ('color' in options) {
+            convertedOptions.fill = MathLib.colorConvert(options.color);
         }
 
-        if ('font' in opt) {
-            convertedOptions.font = opt.font;
+        if ('font' in options) {
+            convertedOptions.font = options.font;
         }
 
-        if ('fontSize' in opt) {
-            convertedOptions.fontSize = opt.fontSize;
+        if ('fontSize' in options) {
+            convertedOptions.fontSize = options.fontSize;
         }
 
-        if ('lineColor' in opt) {
-            convertedOptions.stroke = MathLib.colorConvert(opt.lineColor);
-        } else if ('color' in opt) {
-            convertedOptions.stroke = MathLib.colorConvert(opt.color);
+        if ('lineColor' in options) {
+            convertedOptions.stroke = MathLib.colorConvert(options.lineColor);
+        } else if ('color' in options) {
+            convertedOptions.stroke = MathLib.colorConvert(options.color);
         }
 
-        if ('dash' in opt && opt.dash.length !== 0) {
-            convertedOptions['stroke-dasharray'] = opt.dash;
+        if ('dash' in options && options.dash.length !== 0) {
+            convertedOptions['stroke-dasharray'] = options.dash;
         }
 
-        if ('dashOffset' in opt && opt.dashOffset !== 0) {
-            convertedOptions['stroke-dashoffset'] = opt.dashOffset;
+        if ('dashOffset' in options && options.dashOffset !== 0) {
+            convertedOptions['stroke-dashoffset'] = options.dashOffset;
         }
 
         return convertedOptions;
     },
-    // ### SVG line
-    // Draws a line on the screen.
-    //
-    // *@param {Line}* The line to be drawn
-    // *@param {object}* [options] Optional drawing options
-    // *@return {Canvas}* Returns the screen
+    /**
+    * Draws a line on the screen.
+    *
+    * @param {Line} line The line to be drawn
+    * @param {object} options Optional drawing options
+    * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+    * @return {Canvas} Returns the screen
+    */
     line: function (line, options, redraw) {
         if (typeof options === "undefined") { options = {}; }
         if (typeof redraw === "undefined") { redraw = false; }
@@ -141,12 +147,14 @@ export var SVG = {
 
         return this;
     },
-    // ### SVG path
-    // Draws a path on the screen.
-    //
-    // *@param {curve}* The path to be drawn
-    // *@param {object}* [options] Optional drawing options
-    // *@return {Screen}* Returns the screen
+    /**
+    * Draws a path on the screen.
+    *
+    * @param {any} curve The path to be drawn
+    * @param {object} options Optional drawing options
+    * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+    * @return {Screen} Returns the screen
+    */
     path: function (curve, options, redraw) {
         if (typeof options === "undefined") { options = {}; }
         if (typeof redraw === "undefined") { redraw = false; }
@@ -246,16 +254,18 @@ export var SVG = {
 
         return this;
     },
-    // ### SVG pixel
-    // Draws pixel on the screen.
-    //
-    // *@param {function}* The pixel function
-    // *@param {number}* The top coordinate of the draw rectangle
-    // *@param {number}* The right coordinate of the draw rectangle
-    // *@param {number}* The bottom coordinate of the draw rectangle
-    // *@param {number}* The left coordinate of the draw rectangle
-    // *@param {object}* [options] Optional drawing options
-    // *@return {Screen}* Returns the screen
+    /**
+    * Draws pixel on the screen.
+    *
+    * @param {function} f The pixel function
+    * @param {number} t The top coordinate of the draw rectangle
+    * @param {number} r The right coordinate of the draw rectangle
+    * @param {number} b The bottom coordinate of the draw rectangle
+    * @param {number} l The left coordinate of the draw rectangle
+    * @param {object} options Optional drawing options
+    * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+    * @return {Screen} Returns the screen
+    */
     pixel: function (f, t, r, b, l, options, redraw) {
         if (typeof options === "undefined") { options = {}; }
         if (typeof redraw === "undefined") { redraw = false; }
@@ -309,12 +319,14 @@ export var SVG = {
 
         return this;
     },
-    // ### SVG point
-    // Draws a point on the screen.
-    //
-    // *@param {Point}* The point to be drawn
-    // *@param {object}* [options] Optional drawing options
-    // *@return {Screen}* Returns the screen
+    /**
+    * Draws a point on the screen.
+    *
+    * @param {Point} point The point to be drawn
+    * @param {object} options Optional drawing options
+    * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+    * @return {Screen} Returns the screen
+    */
     point: function (point, options, redraw) {
         if (typeof options === "undefined") { options = {}; }
         if (typeof redraw === "undefined") { redraw = false; }
@@ -397,14 +409,16 @@ export var SVG = {
 
         return this;
     },
-    // ### SVG text
-    // Writes text on the screen.
-    //
-    // *@param {str}* The string to be drawn
-    // *@param {x}* The x coordinate
-    // *@param {y}* The y coordinate
-    // *@param {object}* [options] Optional drawing options
-    // *@return {Screen}* Returns the screen
+    /**
+    * Writes text on the screen.
+    *
+    * @param {string} str The string to be drawn
+    * @param {number} x The x coordinate
+    * @param {number} y The y coordinate
+    * @param {object} options Optional drawing options
+    * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+    * @return {Screen} Returns the screen
+    */
     text: function (str, x, y, options, redraw) {
         if (typeof options === "undefined") { options = {}; }
         if (typeof redraw === "undefined") { redraw = false; }

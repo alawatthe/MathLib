@@ -1,9 +1,11 @@
-// ### SVG circle
-// Draws a circle on the screen.
-//
-// *@param {Circle}* The circle to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@return {Screen}* Returns the screen
+/**
+ * Draws a circle on the screen.
+ *
+ * @param {Circle} circle The circle to be drawn  
+ * @param {object} options Optional drawing options
+ * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+ * @return {Screen} Returns the screen
+ */
 circle: function (circle, options = {}, redraw = false) {
 	var screen = this.screen,
 			prop, opts,

@@ -1,8 +1,8 @@
-// ### [Complex.prototype.toPoint()](http://mathlib.de/en/docs/Complex/toPoint)
-
-// Interprets the complex number as point in the two dimensional plane
-//
-// *@return {Point}*
+/**
+ * Interprets the complex number as point in the two dimensional plane
+ *
+ * @return {Point}
+ */
 toPoint() : Point {
 
 	if (this.re == Infinity || MathLib.isNaN(this.re)) {

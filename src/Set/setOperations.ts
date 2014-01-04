@@ -1,3 +1,11 @@
+/**
+ * Function to create the intersect, union, without, xor methods
+ *
+ * @param {boolean} left Should the elements which are only in the left set be included in the result.
+ * @param {boolean} both Should the elements which are in both sets be included in the result.
+ * @param {boolean} right Should the elements which are only in the right set be included in the result.
+ * @return {function}
+ */
 static createSetOperation = function (left, both, right) {
 	return function (a) {
 		var set = [],

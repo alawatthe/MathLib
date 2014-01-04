@@ -1,21 +1,25 @@
 
-    // ## <a id="Polynomial"></a>Polynomial
-    // The polynomial implementation of MathLib makes calculations with polynomials.
-    // Both the coefficients and the arguments of a polynomial can be numbers,
-    // complex numbers and matrices.
-    //
-    // It is as easy as
-    // ```
-    // new MathLib.Polynomial([1, 2, 3])
-    // ```
-    // to create the polynomial 1 + 2x + 3x²
-    // The polynomial x¹⁰⁰ can be created with the following statement:
-    // ```
-    // new MathLib.Polynomial(100)
-    // ```
     var MathLib = require('./meta.js'),
 		Functn = require('./Functn');
 
+    /**
+    * The polynomial implementation of MathLib makes calculations with polynomials.
+    * Both the coefficients and the arguments of a polynomial can be numbers,
+    * complex numbers and matrices.
+    *
+    * It is as easy as
+    * ```
+    * new MathLib.Polynomial([1, 2, 3])
+    * ```
+    * to create the polynomial 1 + 2x + 3x²
+    * The polynomial x¹⁰⁰ can be created with the following statement:
+    * ```
+    * new MathLib.Polynomial(100)
+    * ```
+    *
+    * @class
+    * @this {Polynomial}
+    */
     var Polynomial = (function () {
         function Polynomial(polynomial) {
             var _this = this;
@@ -48,11 +52,12 @@
                 return Infinity;
             }(polynomial));
         }
-        // ### Polynomial.prototype.compare()
-        // Compares two polynomials.
-        //
-        // *@param {Polynomial}* The polynomial to compare
-        // *@return {number}*
+        /**
+        * Compares two polynomials.
+        *
+        * @param {Polynomial} p The polynomial to compare
+        * @return {number}
+        */
         Polynomial.prototype.compare = function (p) {
             var i, ii;
 
@@ -69,11 +74,12 @@
             return 0;
         };
 
-        // ### Polynomial.prototype.differentiate()
-        // Differentiates the polynomial
-        //
-        // *@param {number}* [n] the number of times to differentiate the polynomial.
-        // *@return {Polynomial}*
+        /**
+        * Differentiates the polynomial
+        *
+        * @param {number} n the number of times to differentiate the polynomial.
+        * @return {Polynomial}
+        */
         Polynomial.prototype.differentiate = function (n) {
             if (typeof n === "undefined") { n = 1; }
             var i, ii, derivative = [];
@@ -88,12 +94,13 @@
             return new MathLib.Polynomial(derivative);
         };
 
-        // ### Polynomial.prototype.draw()
-        // Draws the polynomial on the screen
-        //
-        // *@param {Screen}* The screen to draw the polynomial onto.
-        // *@param {object}* [options] Optional drawing options.
-        // *@return {Polynomial}*
+        /**
+        * Draws the polynomial on the screen
+        *
+        * @param {Screen} screen The screen to draw the polynomial onto.
+        * @param {object} options Optional drawing options.
+        * @return {Polynomial}
+        */
         Polynomial.prototype.draw = function (screen, options) {
             var path = [], i, line = this;
 
@@ -121,17 +128,19 @@
             return this;
         };
 
-        // ### Polynomial.prototype.every()
-        // Works like Array.prototype.every.
-        //
-        // *@return {boolean}*
+        /**
+        * Works like Array.prototype.every.
+        *
+        * @param {function} f The function to be applied to all the values
+        * @return {boolean}
+        */
         Polynomial.prototype.every = function (f) {
             return Array.prototype.every.call(this, f);
         };
 
-        // ### Polynomial.prototype.forEach()
-        // Works like the Array.prototype.forEach function
-        //
+        /**
+        * Works like the Array.prototype.forEach function
+        */
         Polynomial.prototype.forEach = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -140,11 +149,12 @@
             Array.prototype.forEach.apply(this, args);
         };
 
-        // ### Polynomial.prototype.integrate()
-        // Integrates the polynomial
-        //
-        // *@param {number}* [n] the number of times to integrate the polynomial.
-        // *@return {Polynomial}*
+        /**
+        * Integrates the polynomial
+        *
+        * @param {number} n The number of times to integrate the polynomial.
+        * @return {Polynomial}
+        */
         Polynomial.prototype.integrate = function (n) {
             if (typeof n === "undefined") { n = 1; }
             var i, ii, antiderivative = [];
@@ -163,10 +173,11 @@
             return new MathLib.Polynomial(antiderivative);
         };
 
-        // ### Polynomial.interpolation
-        // Interpolates points.
-        //
-        // *@return {Polynomial}*
+        /**
+        * Interpolates points.
+        *
+        * @return {Polynomial}
+        */
         Polynomial.interpolation = function (a, b) {
             var basisPolynomial, interpolant = new MathLib.Polynomial([0]), n = a.length, i, j;
 
@@ -188,11 +199,12 @@
             return interpolant;
         };
 
-        // ### Polynomial.prototype.isEqual()
-        // Decides if two polynomials are equal.
-        //
-        // *@param {Polynomial}*
-        // *@return {boolean}*
+        /**
+        * Decides if two polynomials are equal.
+        *
+        * @param {Polynomial} p The polynomial to compare.
+        * @return {boolean}
+        */
         Polynomial.prototype.isEqual = function (p) {
             var i, ii;
             if (this.deg !== p.deg || this.subdeg !== p.subdeg) {
@@ -206,26 +218,31 @@
             return true;
         };
 
-        // ### Polynomial.prototype.map()
-        // Works like the Array.prototype.map function
-        //
-        // *@return {Polynomial}*
+        /**
+        * Works like the Array.prototype.map function
+        *
+        * @param {function} f The function to be applied to all the values
+        * @return {Polynomial}
+        */
         Polynomial.prototype.map = function (f) {
             return new MathLib.Polynomial(Array.prototype.map.call(this, f));
         };
 
-        // ### Polynomial.prototype.negative()
-        // Returns the negative polynomial
-        //
-        // *@return {Polynomial}*
+        /**
+        * Returns the negative polynomial
+        *
+        * @return {Polynomial}
+        */
         Polynomial.prototype.negative = function () {
             return new MathLib.Polynomial(this.map(MathLib.negative));
         };
 
-        // ### Polynomial.prototype.plus()
-        // Adds a number or a polynomial
-        //
-        // *@return {Polynomial}*
+        /**
+        * Adds a number or a polynomial
+        *
+        * @param {number|Polynomial} a The number or polynomial to add to the current polynomial
+        * @return {Polynomial}
+        */
         Polynomial.prototype.plus = function (a) {
             var plus = [], i;
             if (typeof a === 'number') {
@@ -240,10 +257,13 @@
             return new MathLib.Polynomial(plus);
         };
 
-        // ### Polynomial.regression
-        // Calculates the regression line for some points
-        //
-        // *@return {Polynomial}*
+        /**
+        * Calculates the regression line for some points
+        *
+        * @param {array} x The x values
+        * @param {array} y The y values
+        * @return {Polynomial}
+        */
         Polynomial.regression = function (x, y) {
             var length = x.length, xy = 0, xi = 0, yi = 0, x2 = 0, m, c, i;
 
@@ -268,10 +288,12 @@
             return new MathLib.Polynomial([c, m]);
         };
 
-        // ### Polynomial.roots
-        // Returns a polynomial with the specified roots
-        //
-        // *@return {Polynomial}*
+        /**
+        * Returns a polynomial with the specified roots
+        *
+        * @param {array|Set} zeros The wished zeros.
+        * @return {Polynomial}
+        */
         Polynomial.roots = function (zeros) {
             var elemSymPoly, i, ii, coef = [];
 
@@ -300,10 +322,11 @@
             return new MathLib.Polynomial(coef);
         };
 
-        // ### Polynomial.prototype.slice()
-        // Works like the Array.prototype.slice function
-        //
-        // *@return {array}*
+        /**
+        * Works like the Array.prototype.slice function
+        *
+        * @return {array}
+        */
         Polynomial.prototype.slice = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -312,11 +335,12 @@
             return Array.prototype.slice.apply(this, args);
         };
 
-        // ### Polynomial.prototype.times()
-        // Multiplies the polynomial by a number or an other polynomial
-        //
-        // *@param {number|Polynomial}* The multiplicator
-        // *@return {Polynomial}*
+        /**
+        * Multiplies the polynomial by a number or an other polynomial
+        *
+        * @param {number|Polynomial} a The multiplicator
+        * @return {Polynomial}
+        */
         Polynomial.prototype.times = function (a) {
             var i, ii, j, jj, product = [];
 
@@ -337,10 +361,11 @@
             });
         };
 
-        // ### Polynomial.prototype.toContentMathML()
-        // Returns a content MathML representation of the polynomial
-        //
-        // *@return {string}*
+        /**
+        * Returns a content MathML representation of the polynomial
+        *
+        * @return {string}
+        */
         Polynomial.prototype.toContentMathML = function (math) {
             var str = '<apply><csymbol cd="arith1">plus</csymbol>', i;
             for (i = this.deg; i >= 0; i--) {
@@ -361,17 +386,17 @@
 
             str += '</apply>';
 
-            if (math) {
-                str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>';
-            }
-
+            //if (math) {
+            //	str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>';
+            //}
             return str;
         };
 
-        // ### Polynomial.prototype.toExpression()
-        // Custom toExpression function
-        //
-        // *@return {Expression}*
+        /**
+        * Custom toExpression function
+        *
+        * @return {Expression}
+        */
         Polynomial.prototype.toExpression = function () {
             var content = [], sum, i;
 
@@ -443,10 +468,11 @@
             });
         };
 
-        // ### Polynomial.prototype.toFunctn()
-        // Converts the polynomial to a functn
-        //
-        // *@return {Functn}*
+        /**
+        * Converts the polynomial to a functn
+        *
+        * @return {Functn}
+        */
         Polynomial.prototype.toFunctn = function () {
             var str = '', i, ii;
             for (i = 0, ii = this.deg; i <= ii; i++) {
@@ -470,10 +496,11 @@
             });
         };
 
-        // ### Polynomial.prototype.toLaTeX()
-        // Returns a LaTeX representation of the polynomial
-        //
-        // *@return {string}*
+        /**
+        * Returns a LaTeX representation of the polynomial
+        *
+        * @return {string}
+        */
         Polynomial.prototype.toLaTeX = function () {
             var str = MathLib.toString(this[this.deg]) + 'x^{' + this.deg + '}', i;
 
@@ -496,10 +523,11 @@
             return str;
         };
 
-        // ### Polynomial.prototype.toMathML()
-        // Returns a MathML representation of the polynomial
-        //
-        // *@return {string}*
+        /**
+        * Returns a MathML representation of the polynomial
+        *
+        * @return {string}
+        */
         Polynomial.prototype.toMathML = function () {
             var str = '<mrow>' + MathLib.toMathML(this[this.deg]) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(this.deg) + '</msup>', i;
             for (i = this.deg - 1; i >= 0; i--) {
@@ -524,10 +552,11 @@
             return str;
         };
 
-        // ### Polynomial.prototype.toString()
-        // Custom toString function
-        //
-        // *@return {string}*
+        /**
+        * Custom toString function
+        *
+        * @return {string}
+        */
         Polynomial.prototype.toString = function () {
             var str = MathLib.toString(this[this.deg]) + '*x^' + this.deg, i;
             for (i = this.deg - 1; i >= 0; i--) {
@@ -544,11 +573,12 @@
             return str;
         };
 
-        // ### Polynomial.prototype.valueAt()
-        // Evaluates the polynomial at a given point
-        //
-        // *@param {number|Complex|Matrix}*
-        // *@return {number|Complex|Matrix}*
+        /**
+        * Evaluates the polynomial at a given point
+        *
+        * @param {number|Complex|Matrix} x The value to evaluate the polynomial at.
+        * @return {number|Complex|Matrix}
+        */
         Polynomial.prototype.valueAt = function (x) {
             // TODO: warn if x is non square matrix
             var pot = MathLib.is(x, 'matrix') ? MathLib.Matrix.identity(x.rows) : 1, value = MathLib.is(x, 'matrix') ? MathLib.Matrix.zero(x.rows, x.cols) : 0, i, ii;

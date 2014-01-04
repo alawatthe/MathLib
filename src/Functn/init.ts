@@ -1,13 +1,18 @@
-// ## <a id="Functn" href="http://mathlib.de/en/docs/Functn">Functn</a>
-//
-// Because 'Function' is a reserved word in JavaScript,
-// the module is called 'Functn'.  
-
 /// import Expression
-var functnPrototype : any = {};
 
+var functnPrototype : any = {};
 declare var MathJax : any;
 
+
+/**
+ * MathLib.Functn is the MathLib implementation of mathematical functions
+ *
+ * Because 'Function' is a reserved word in JavaScript,
+ * the class is called 'Functn'.
+ * 
+ * @class
+ * @this {Functn}
+ */
 export var Functn = function (f, options) {
 	options = options || {};
 

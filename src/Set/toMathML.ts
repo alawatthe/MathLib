@@ -1,7 +1,8 @@
-// ### Set.prototype.toMathML()
-// Returns the (presentation) MathML representation of the set
-//
-// *@return {string}*
+/**
+ * Returns the (presentation) MathML representation of the set
+ *
+ * @return {string}
+ */
 toMathML() : string {
 	if (this.isEmpty()) {
 		return '<mi>&#x2205;</mi>';

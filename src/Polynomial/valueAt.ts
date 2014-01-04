@@ -1,8 +1,9 @@
-// ### Polynomial.prototype.valueAt()
-// Evaluates the polynomial at a given point
-//
-// *@param {number|Complex|Matrix}*  
-// *@return {number|Complex|Matrix}*
+/**
+ * Evaluates the polynomial at a given point
+ *
+ * @param {number|Complex|Matrix} x The value to evaluate the polynomial at. 
+ * @return {number|Complex|Matrix}
+ */
 valueAt(x) {
 	// TODO: warn if x is non square matrix
 	var pot = MathLib.is(x, 'matrix') ? (<any>MathLib.Matrix.identity(x.rows)) : (<any>1),

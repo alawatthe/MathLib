@@ -1,7 +1,11 @@
-// ## <a id="Layers"></a>Layers
-// Layers for two dimensional plotting
-
 /// import Screen2D
+
+/**
+ * Layers for two dimensional plotting
+ *
+ * @class Layer
+ * @this {Layer}
+ */
 export class Layer {
 
 

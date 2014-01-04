@@ -1,7 +1,8 @@
-// ### Polynomial.prototype.toString()
-// Custom toString function
-//
-// *@return {string}*
+/**
+ * Custom toString function
+ *
+ * @return {string}
+ */
 toString() : string {
 	var str = MathLib.toString(this[this.deg]) + '*x^' + this.deg,
 			i;

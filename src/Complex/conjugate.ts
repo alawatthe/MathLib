@@ -1,7 +1,8 @@
-// ### [Complex.prototype.conjugate()](http://mathlib.de/en/docs/Complex/conjugate)
-// Calculates the conjugate of a complex number
-//
-// *@return {Complex}*
+/**
+ * Calculates the conjugate of a complex number
+ *
+ * @return {Complex}
+ */
 conjugate() : Complex {
 	return new MathLib.Complex(this.re, MathLib.negative(this.im));
 }

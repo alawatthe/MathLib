@@ -1,7 +1,8 @@
-// ### [Complex.prototype.sech()](http://mathlib.de/en/docs/Complex/sech)
-// Calculates the hyperbolic secant of a complex number
-//
-// *@return {Complex}*
+/**
+ * Calculates the hyperbolic secant of a complex number
+ *
+ * @return {Complex}
+ */
 sech() : Complex {
 	var a = this.re,
 			b = this.im,

@@ -1,11 +1,15 @@
-// ## <a id="Set"></a>Set
-//
-// To generate the set {1, 2, 3, 4, 5} you simply need to type
-// ```
-// new MathLib.Set([1, 2, 3, 4, 5])
-// ```
-
 /// no import
+
+/**
+ * The Implementation of sets in MathLib
+ *
+ * To generate the set {1, 2, 3, 4, 5} you simply need to type
+ * ```
+ * new MathLib.Set([1, 2, 3, 4, 5])
+ * ```
+ * @class
+ * @this {Set}
+ */
 export class Set {
 
 	type = 'set';

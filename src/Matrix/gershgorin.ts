@@ -1,7 +1,8 @@
-// ### Matrix.prototype.gershgorin()
-// Returns the Gershgorin circles of the matrix.
-//
-// *@return {array}* Returns an array of circles
+/**
+ * Returns the Gershgorin circles of the matrix.
+ *
+ * @return {array} Returns an array of circles
+ */
 gershgorin() {
 	var c = [],
 			rc = [],

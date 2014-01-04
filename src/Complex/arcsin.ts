@@ -1,7 +1,8 @@
-// ### [Complex.prototype.arcsin()](http://mathlib.de/en/docs/Complex/arcsin)
-// Returns the inverse sine of the number
-//
-// *@return {Complex}*
+/**
+ * Returns the inverse sine of the number
+ *
+ * @return {Complex}
+ */
 arcsin() : Complex {
 	var a = this.re,
 			b = this.im,

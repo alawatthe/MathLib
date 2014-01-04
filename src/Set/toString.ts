@@ -1,7 +1,8 @@
-// ### Set.prototype.toString()
-// Returns a string representation of the set
-//
-// *@return {string}*
+/**
+ * Returns a string representation of the set
+ *
+ * @return {string}
+ */
 toString() : string {
 	if (this.isEmpty()) {
 		return '∅';

@@ -1,7 +1,8 @@
-// ### Matrix.prototype.rank()
-// Determines the rank of the matrix
-//
-// *@return {number}*
+/**
+ * Determines the rank of the matrix
+ *
+ * @return {number}
+ */
 rank() {
 	var i, j,
 			rank = 0,

@@ -1,7 +1,8 @@
-// ### [Complex.prototype.arccsc()](http://mathlib.de/en/docs/Complex/arccsc)
-// Returns the inverse cosecant of the number
-//
-// *@return {Complex}*
+/**
+ * Returns the inverse cosecant of the number
+ *
+ * @return {Complex}
+ */
 arccsc() : Complex {
 
 	// arccsc(0) = ComplexInfinity not ComplexNaN

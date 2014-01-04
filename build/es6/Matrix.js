@@ -1,21 +1,25 @@
 
-// ## <a id="Matrix"></a>Matrix
-// The matrix implementation of MathLib makes calculations with matrices of
-// arbitrary size possible. The entries of a matrix can be numbers and complex
-// numbers.
-//
-// It is as easy as
-// ```
-// new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-// ```
-// to create the following matrix:
-//    ⎛ 1 2 3 ⎞
-//    ⎜ 4 5 6 ⎟
-//    ⎝ 7 8 9 ⎠
 import MathLib from './meta.js';
 import Functn from './Functn';
 import Permutation from './Permutation';
 
+/**
+* The matrix implementation of MathLib makes calculations with matrices of
+* arbitrary size possible. The entries of a matrix can be numbers and complex
+* numbers.
+*
+* It is as easy as
+* ```
+* new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+* ```
+* to create the following matrix:
+*    ⎛ 1 2 3 ⎞
+*    ⎜ 4 5 6 ⎟
+*    ⎝ 7 8 9 ⎠
+*
+* @class
+* @this {Matrix}
+*/
 var Matrix = (function () {
     function Matrix(matrix) {
         var _this = this;
@@ -36,11 +40,12 @@ var Matrix = (function () {
         this.cols = matrix[0].length;
         this.rows = matrix.length;
     }
-    // ### Matrix.prototype.LU()
-    // Calculates the LU decomposition of a matrix
-    // The result is cached.
-    //
-    // *@return {Matrix}*
+    /**
+    * Calculates the LU decomposition of a matrix
+    * The result is cached.
+    *
+    * @return {Matrix}
+    */
     Matrix.prototype.LU = function () {
         var i, j, k, t, p, LU = this.toArray(), m = this.rows, n = this.cols, permutation = [];
 
@@ -79,31 +84,34 @@ var Matrix = (function () {
         return LU;
     };
 
-    // ### Matrix.prototype.adjoint()
-    // Calculates the adjoint matrix
-    //
-    // *@return {Matrix}*
+    /**
+    * Calculates the adjoint matrix
+    *
+    * @return {Matrix}
+    */
     Matrix.prototype.adjoint = function () {
         return this.map(MathLib.conjugate).transpose();
     };
 
-    // ### Matrix.prototype.adjugate()
-    // Calculates the adjugate matrix
-    //
-    // *@return {Matrix}*
+    /**
+    * Calculates the adjugate matrix
+    *
+    * @return {Matrix}
+    */
     Matrix.prototype.adjugate = function () {
         return this.map(function (x, r, c, m) {
             return MathLib.times(m.remove(c, r).determinant(), 1 - ((r + c) % 2) * 2);
         });
     };
 
-    // ### Matrix.prototype.cholesky()
-    // The cholesky decomposition of a matrix
-    // using the Cholesky–Banachiewicz algorithm.
-    // Does not change the current matrix, but returns a new one.
-    // The result is cached.
-    //
-    // *@return {Matrix}*
+    /**
+    * The cholesky decomposition of a matrix
+    * using the Cholesky–Banachiewicz algorithm.
+    * Does not change the current matrix, but returns a new one.
+    * The result is cached.
+    *
+    * @return {Matrix}
+    */
     Matrix.prototype.cholesky = function () {
         var i, ii, j, jj, k, kk, sum, choleskyMatrix, cholesky = [];
 
@@ -138,11 +146,12 @@ var Matrix = (function () {
         return choleskyMatrix;
     };
 
-    // ### Matrix.prototype.compare()
-    // Compares the matrix to an other matrix.
-    //
-    // *@param {Matrix}* The matrix to compare.
-    // *@return {number}*
+    /**
+    * Compares the matrix to an other matrix.
+    *
+    * @param {Matrix} m The matrix to compare.
+    * @return {number}
+    */
     Matrix.prototype.compare = function (m) {
         var i, ii, j, jj;
 
@@ -165,19 +174,21 @@ var Matrix = (function () {
         return 0;
     };
 
-    // ### Matrix.prototype.copy()
-    // Copies the matrix
-    //
-    // *@return {Matrix}*
+    /**
+    * Copies the matrix
+    *
+    * @return {Matrix}
+    */
     Matrix.prototype.copy = function () {
         return this.map(MathLib.copy);
     };
 
-    // ### Matrix.prototype.determinant()
-    // Calculates the determinant of the matrix via the LU decomposition.
-    // The result is cached.
-    //
-    // *@return {number|Complex}*
+    /**
+    * Calculates the determinant of the matrix via the LU decomposition.
+    * The result is cached.
+    *
+    * @return {number|Complex}
+    */
     Matrix.prototype.determinant = function () {
         var LU, determinant;
 
@@ -199,10 +210,11 @@ var Matrix = (function () {
         return determinant;
     };
 
-    // ### Matrix.prototype.diag()
-    // Returns the entries on the diagonal in an array
-    //
-    // *@return {array}*
+    /**
+    * Returns the entries on the diagonal in an array
+    *
+    * @return {array}
+    */
     Matrix.prototype.diag = function () {
         var diagonal = [], i, ii;
         for (i = 0, ii = Math.min(this.rows, this.cols); i < ii; i++) {
@@ -211,23 +223,25 @@ var Matrix = (function () {
         return diagonal;
     };
 
-    // ### Matrix.prototype.divide()
-    // Multiplies the matrix by the inverse of a number or a matrix
-    //
-    // *@return {Matrix}*
+    /**
+    * Multiplies the matrix by the inverse of a number or a matrix
+    *
+    * @return {Matrix|number} n The number or Matrix to be inverted and multiplied
+    */
     Matrix.prototype.divide = function (n) {
         return this.times(MathLib.inverse(n));
     };
 
-    // ### Matrix.prototype.every()
-    // This function works like the Array.prototype.every function.
-    // The matrix is processed row by row.
-    // The function is called with the following arguments:
-    // the entry at the current position, the number of the row,
-    // the number of the column and the complete matrix
-    //
-    // *@param {function}* The function which is called on every argument
-    // *@return {boolean}*
+    /**
+    * This function works like the Array.prototype.every function.
+    * The matrix is processed row by row.
+    * The function is called with the following arguments:
+    * the entry at the current position, the number of the row,
+    * the number of the column and the complete matrix
+    *
+    * @param {function} f The function which is called on every argument
+    * @return {boolean}
+    */
     Matrix.prototype.every = function (f) {
         return Array.prototype.every.call(this, function (x, i) {
             return Array.prototype.every.call(x, function (y, j) {
@@ -236,14 +250,15 @@ var Matrix = (function () {
         });
     };
 
-    // ### Matrix.prototype.forEach()
-    // This function works like the Array.prototype.forEach function.
-    // The matrix is processed row by row.
-    // The function is called with the following arguments:
-    // the entry at the current position, the number of the row,
-    // the number of the column and the complete matrix
-    //
-    // *@param {function}* The function which is called on every argument
+    /**
+    * This function works like the Array.prototype.forEach function.
+    * The matrix is processed row by row.
+    * The function is called with the following arguments:
+    * the entry at the current position, the number of the row,
+    * the number of the column and the complete matrix
+    *
+    * @param {function} f The function which is called on every argument
+    */
     Matrix.prototype.forEach = function (f) {
         Array.prototype.forEach.call(this, function (x, i) {
             return Array.prototype.forEach.call(x, function (y, j) {
@@ -252,10 +267,11 @@ var Matrix = (function () {
         });
     };
 
-    // ### Matrix.prototype.gershgorin()
-    // Returns the Gershgorin circles of the matrix.
-    //
-    // *@return {array}* Returns an array of circles
+    /**
+    * Returns the Gershgorin circles of the matrix.
+    *
+    * @return {array} Returns an array of circles
+    */
     Matrix.prototype.gershgorin = function () {
         var c = [], rc = [], rr = [], circles = [], i, ii;
 
@@ -284,10 +300,11 @@ var Matrix = (function () {
         return circles;
     };
 
-    // ### Matrix.prototype.givens()
-    // QR decomposition with the givens method.
-    //
-    // *@return {[Matrix, Matrix]}*
+    /**
+    * QR decomposition with the givens method.
+    *
+    * @return {[Matrix, Matrix]}
+    */
     Matrix.prototype.givens = function () {
         var rows = this.rows, cols = this.cols, R = this.copy(), Q = MathLib.Matrix.identity(rows), c, s, rho, i, j, k, ri, rj, qi, qj;
 
@@ -330,10 +347,11 @@ var Matrix = (function () {
         return [Q, R];
     };
 
-    // ### Matrix.prototype.inverse()
-    // Calculates the inverse matrix.
-    //
-    // *@return {Matrix}*
+    /**
+    * Calculates the inverse matrix.
+    *
+    * @return {Matrix}
+    */
     Matrix.prototype.inverse = function () {
         var i, ii, res, inverse, col = [], matrix = [], n = this.rows;
 
@@ -371,12 +389,13 @@ var Matrix = (function () {
         return inverse;
     };
 
-    // ### Matrix.prototype.isBandMatrix()
-    // Determines if the matrix is a band matrix.
-    //
-    // *@param {number}*
-    // *@param {number}*
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is a band matrix.
+    *
+    * @param {number} l The wished lower bandwidth
+    * @param {number} u The wished upper bandwidth
+    * @return {boolean}
+    */
     Matrix.prototype.isBandMatrix = function (l, u) {
         // var i, j, ii, jj;
         if (arguments.length === 1) {
@@ -396,10 +415,11 @@ var Matrix = (function () {
         // return true;
     };
 
-    // ### Matrix.prototype.isDiag()
-    // Determines if the matrix is a diagonal matrix.
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is a diagonal matrix.
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isDiag = function () {
         var i, j, ii, jj;
         if (Number(this.hasOwnProperty('isUpper') && this.isUpper()) + Number(this.hasOwnProperty('isLower') && this.isLower()) + Number(this.hasOwnProperty('isSymmetric') && this.isSymmetric()) > 1) {
@@ -415,20 +435,21 @@ var Matrix = (function () {
         return true;
     };
 
-    // ### Matrix.prototype.isEqual()
-    // Determines if the matrix is equal to an other matrix.
-    //
-    // *@param {Matrix}* the matrix to compare with
-    // *@return {boolean}*
-    Matrix.prototype.isEqual = function (x) {
+    /**
+    * Determines if the matrix is equal to an other matrix.
+    *
+    * @param {Matrix} matrix The matrix to compare with
+    * @return {boolean}
+    */
+    Matrix.prototype.isEqual = function (matrix) {
         var i, j, ii, jj;
-        if (this === x) {
+        if (this === matrix) {
             return true;
         }
-        if (this.rows === x.rows && this.cols === x.cols) {
+        if (this.rows === matrix.rows && this.cols === matrix.cols) {
             for (i = 0, ii = this.rows; i < ii; i++) {
                 for (j = 0, jj = this.cols; j < jj; j++) {
-                    if (!MathLib.isEqual(this[i][j], x[i][j])) {
+                    if (!MathLib.isEqual(this[i][j], matrix[i][j])) {
                         return false;
                     }
                 }
@@ -438,10 +459,11 @@ var Matrix = (function () {
         return false;
     };
 
-    // ### Matrix.prototype.isIdentity()
-    // Determines if the matrix is a identity matrix.
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is a identity matrix.
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isIdentity = function () {
         if (!this.isSquare()) {
             return false;
@@ -457,28 +479,31 @@ var Matrix = (function () {
         return isIdentity;
     };
 
-    // ### Matrix.prototype.isInvertible()
-    // Determines if the matrix is invertible.
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is invertible.
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isInvertible = function () {
         return this.isSquare() && this.rank() === this.rows;
     };
 
-    // ### Matrix.prototype.isLower()
-    // Determines if the matrix is a lower triangular matrix.
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is a lower triangular matrix.
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isLower = function () {
         return this.slice(0, -1).every(function (x, i) {
             return x.slice(i + 1).every(MathLib.isZero);
         });
     };
 
-    // ### Matrix.prototype.isNegDefinite()
-    // Determines if the matrix is negative definite
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is negative definite
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isNegDefinite = function () {
         if (!this.isSquare()) {
             return;
@@ -495,18 +520,20 @@ var Matrix = (function () {
         }
     };
 
-    // ### Matrix.prototype.isOrthogonal()
-    // Determines if the matrix is a orthogonal.
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is a orthogonal.
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isOrthogonal = function () {
         return this.transpose().times(this).isIdentity();
     };
 
-    // ### Matrix.prototype.isPermutation()
-    // Determines if the matrix is a permutation matrix
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is a permutation matrix
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isPermutation = function () {
         var rows = [], cols = [];
 
@@ -526,10 +553,11 @@ var Matrix = (function () {
         }) && rows.length === this.rows && cols.length === this.cols;
     };
 
-    // ### Matrix.prototype.isPosDefinite()
-    // Determines if the matrix is positive definite
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is positive definite
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isPosDefinite = function () {
         if (!this.isSquare()) {
             return;
@@ -542,19 +570,21 @@ var Matrix = (function () {
         return this.determinant() > 0 && this.remove(this.rows - 1, this.cols - 1).isPosDefinite();
     };
 
-    // ### Matrix.prototype.isReal()
-    // Determines if the matrix has only real entries
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix has only real entries
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isReal = function () {
         return this.every(MathLib.isReal);
     };
 
-    // ### Matrix.prototype.isScalar()
-    // Determines if the matrix is a scalar matrix
-    // (that is a multiple of the identity matrix)
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is a scalar matrix
+    * (that is a multiple of the identity matrix)
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isScalar = function () {
         var i, ii, diag = this.diag;
         if (this.hasOwnProperty('isIdentity') && this.hasOwnProperty('isZero')) {
@@ -575,18 +605,20 @@ var Matrix = (function () {
         return false;
     };
 
-    // ### Matrix.prototype.isSquare()
-    // Determines if the matrix is a square matrix
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is a square matrix
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isSquare = function () {
         return this.cols === this.rows;
     };
 
-    // ### Matrix.prototype.isSymmetric()
-    // Determines if the matrix is symmetric
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is symmetric
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isSymmetric = function () {
         var i, ii, j, jj, isSymmetric = true;
 
@@ -610,30 +642,33 @@ var Matrix = (function () {
         return isSymmetric;
     };
 
-    // ### Matrix.prototype.isUpper()
-    // Determines if the matrix is a upper triangular matrix
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is a upper triangular matrix
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isUpper = function () {
         return this.slice(1).every(function (x, i) {
             return x.slice(0, i + 1).every(MathLib.isZero);
         });
     };
 
-    // ### Matrix.prototype.isVector()
-    // Determines if the matrix is a vector
-    // (only one row or one column)
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix is a vector
+    * (only one row or one column)
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isVector = function () {
         return (this.rows === 1) || (this.cols === 1);
     };
 
-    // ### Matrix.prototype.isZero()
-    // Determines if the matrix the zero matrix
-    // The result is cached.
-    //
-    // *@return {boolean}*
+    /**
+    * Determines if the matrix the zero matrix
+    * The result is cached.
+    *
+    * @return {boolean}
+    */
     Matrix.prototype.isZero = function () {
         var isZero = this.every(MathLib.isZero);
 
@@ -643,15 +678,16 @@ var Matrix = (function () {
         return isZero;
     };
 
-    // ### Matrix.prototype.map()
-    // This function works like the Array.prototype.map function.
-    // The matrix is processed row by row.
-    // The function is called with the following arguments:
-    // the entry at the current position, the number of the row,
-    // the number of the column and the complete matrix
-    //
-    // *@param {function}* The function which is called on every argument
-    // *@return {Matrix}*
+    /**
+    * This function works like the Array.prototype.map function.
+    * The matrix is processed row by row.
+    * The function is called with the following arguments:
+    * the entry at the current position, the number of the row,
+    * the number of the column and the complete matrix
+    *
+    * @param {function} f The function which is called on every argument
+    * @return {Matrix}
+    */
     Matrix.prototype.map = function (f) {
         var m = this;
         return new MathLib.Matrix(Array.prototype.map.call(this, function (x, i) {
@@ -661,34 +697,37 @@ var Matrix = (function () {
         }));
     };
 
-    // ### Matrix.prototype.minor()
-    // Calculates a minor
-    //
-    // *@param {number}* The row to be removed.
-    // *@param {number}* The column to be removed.
-    // *@return {Matrix}*
+    /**
+    * Calculates a minor
+    *
+    * @param {number} r The row to be removed.
+    * @param {number} c The column to be removed.
+    * @return {Matrix}
+    */
     Matrix.prototype.minor = function (r, c) {
         return this.remove(r, c).determinant();
     };
 
-    // ### Matrix.prototype.minus()
-    // Calculates the difference of two matrices
-    //
-    // *@param {Matrix}* The matrix to be subtracted.
-    // *@return {Matrix}*
-    Matrix.prototype.minus = function (m) {
-        if (this.rows === m.rows && this.cols === m.cols) {
-            return this.plus(m.negative());
+    /**
+    * Calculates the difference of two matrices
+    *
+    * @param {Matrix} subtrahend The matrix to be subtracted.
+    * @return {Matrix}
+    */
+    Matrix.prototype.minus = function (subtrahend) {
+        if (this.rows === subtrahend.rows && this.cols === subtrahend.cols) {
+            return this.plus(subtrahend.negative());
         } else {
             MathLib.error({ message: 'Matrix sizes not matching', method: 'Matrix#minus' });
             return;
         }
     };
 
-    // ### Matrix.prototype.negative()
-    // Returns the negative matrix
-    //
-    // *@return {Matrix}*
+    /**
+    * Returns the negative matrix
+    *
+    * @return {Matrix}
+    */
     Matrix.prototype.negative = function () {
         var i, ii, negative = [];
 
@@ -698,20 +737,21 @@ var Matrix = (function () {
         return new MathLib.Matrix(negative);
     };
 
-    // ### Matrix.prototype.plus()
-    // This function adds a matrix to the current matrix
-    // and returns the result as a new matrix.
-    //
-    // *@param {Matrix}* The matrix to be added.
-    // *@return {Matrix}*
-    Matrix.prototype.plus = function (m) {
+    /**
+    * This function adds a matrix to the current matrix
+    * and returns the result as a new matrix.
+    *
+    * @param {Matrix} summand The matrix to be added.
+    * @return {Matrix}
+    */
+    Matrix.prototype.plus = function (summand) {
         var i, ii, j, jj, sum = [];
 
-        if (this.rows === m.rows && this.cols === m.cols) {
+        if (this.rows === summand.rows && this.cols === summand.cols) {
             for (i = 0, ii = this.rows; i < ii; i++) {
                 sum[i] = [];
                 for (j = 0, jj = this.cols; j < jj; j++) {
-                    sum[i][j] = MathLib.plus(this[i][j], m[i][j]);
+                    sum[i][j] = MathLib.plus(this[i][j], summand[i][j]);
                 }
             }
             return new MathLib.Matrix(sum);
@@ -721,10 +761,11 @@ var Matrix = (function () {
         }
     };
 
-    // ### Matrix.prototype.rank()
-    // Determines the rank of the matrix
-    //
-    // *@return {number}*
+    /**
+    * Determines the rank of the matrix
+    *
+    * @return {number}
+    */
     Matrix.prototype.rank = function () {
         var i, j, rank = 0, mat = this.rref();
 
@@ -744,10 +785,11 @@ var Matrix = (function () {
         return rank;
     };
 
-    // ### Matrix.prototype.reduce()
-    // This function works like the Array.prototype.reduce function.
-    //
-    // *@return {any}*
+    /**
+    * This function works like the Array.prototype.reduce function.
+    *
+    * @return {any}
+    */
     Matrix.prototype.reduce = function () {
         var args = [];
         for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -756,12 +798,13 @@ var Matrix = (function () {
         return Array.prototype.reduce.apply(this, args);
     };
 
-    // ### Matrix.prototype.remove()
-    // This function removes the specified rows and/or columns for the matrix.
-    //
-    // *@param {number|array}* The row(s) to be removed.
-    // *@param {number|array}* The column(s) to be removed.
-    // *@return {Matrix}*
+    /**
+    * This function removes the specified rows and/or columns for the matrix.
+    *
+    * @param {number|array} row The row(s) to be removed.
+    * @param {number|array} col The column(s) to be removed.
+    * @return {Matrix}
+    */
     Matrix.prototype.remove = function (row, col) {
         var rest = this.toArray();
 
@@ -790,10 +833,11 @@ var Matrix = (function () {
         return new MathLib.Matrix(rest);
     };
 
-    // ### Matrix.prototype.rref()
-    // Calculate the reduced row echelon form (rref) of a matrix.
-    //
-    // *@return {Matrix}*
+    /**
+    * Calculate the reduced row echelon form (rref) of a matrix.
+    *
+    * @return {Matrix}
+    */
     Matrix.prototype.rref = function () {
         var i, ii, j, jj, k, kk, pivot, factor, swap, lead = 0, rref = this.toArray();
 
@@ -842,10 +886,11 @@ var Matrix = (function () {
         return new MathLib.Matrix(rref);
     };
 
-    // ### Matrix.prototype.slice()
-    // This function works like the Array.prototype.slice function.
-    //
-    // *@return {array}*
+    /**
+    * This function works like the Array.prototype.slice function.
+    *
+    * @return {array}
+    */
     Matrix.prototype.slice = function () {
         var args = [];
         for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -854,12 +899,13 @@ var Matrix = (function () {
         return Array.prototype.slice.apply(this, args);
     };
 
-    // ### Matrix.prototype.solve()
-    // Solves the system of linear equations Ax = b
-    // given by the matrix A and a vector or point b.
-    //
-    // *@param {Vector|Point}* The b in Ax = b
-    // *@return {Vector|Point}*
+    /**
+    * Solves the system of linear equations Ax = b
+    * given by the matrix A and a vector or point b.
+    *
+    * @param {Vector} b The b in Ax = b
+    * @return {Vector}
+    */
     Matrix.prototype.solve = function (b) {
         // Ax = b -> LUx = b. Then y is defined to be Ux
         var LU = this.LU(), i, j, n = b.length, x = [], y = [];
@@ -898,15 +944,16 @@ var Matrix = (function () {
         }
     };
 
-    // ### Matrix.prototype.some()
-    // This function works like the Array.prototype.some function.
-    // The matrix is processed row by row.
-    // The function is called with the following arguments:
-    // the entry at the current position, the number of the row,
-    // the number of the column and the complete matrix
-    //
-    // *@param {function}* The function which is called on every argument
-    // *@return {boolean}*
+    /**
+    * This function works like the Array.prototype.some function.
+    * The matrix is processed row by row.
+    * The function is called with the following arguments:
+    * the entry at the current position, the number of the row,
+    * the number of the column and the complete matrix
+    *
+    * @param {function} f The function which is called on every argument
+    * @return {boolean}
+    */
     Matrix.prototype.some = function (f) {
         return Array.prototype.some.call(this, function (x, i) {
             return Array.prototype.some.call(x, function (y, j) {
@@ -915,11 +962,12 @@ var Matrix = (function () {
         });
     };
 
-    // ### Matrix.prototype.times()
-    // Multiplies the current matrix with a number, a matrix, a point or a vector.
-    //
-    // *@param {number|Matrix|Point|Rational|Vector}*
-    // *@return {Matrix|Point|Vector}*
+    /**
+    * Multiplies the current matrix with a number, a matrix, a point or a vector.
+    *
+    * @param {number|Matrix|Point|Rational|Vector} a The object to multiply to the current matrix
+    * @return {Matrix|Point|Vector}
+    */
     Matrix.prototype.times = function (a) {
         var i, ii, j, jj, k, kk, product = [], entry;
 
@@ -962,10 +1010,11 @@ var Matrix = (function () {
         }
     };
 
-    // ### Matrix.prototype.toArray()
-    // Converts the matrix to a two-dimensional array
-    //
-    // *@return {array}*
+    /**
+    * Converts the matrix to a two-dimensional array
+    *
+    * @return {array}
+    */
     Matrix.prototype.toArray = function () {
         return Array.prototype.map.call(this, function (x) {
             return Array.prototype.map.call(x, function (y) {
@@ -974,18 +1023,20 @@ var Matrix = (function () {
         });
     };
 
-    // ### Matrix.prototype.toColVectors()
-    // Converts the columns of the matrix to vectors
-    //
-    // *@return {array}*
+    /**
+    * Converts the columns of the matrix to vectors
+    *
+    * @return {array}
+    */
     Matrix.prototype.toColVectors = function () {
         return this.transpose().toRowVectors();
     };
 
-    // ### Matrix.prototype.toContentMathML()
-    // converting the matrix to content MathML
-    //
-    // *@return {string}*
+    /**
+    * converting the matrix to content MathML
+    *
+    * @return {string}
+    */
     Matrix.prototype.toContentMathML = function () {
         return this.reduce(function (str, x) {
             return str + x.reduce(function (prev, cur) {
@@ -994,10 +1045,11 @@ var Matrix = (function () {
         }, '<matrix>') + '</matrix>';
     };
 
-    // ### Matrix.prototype.toLaTeX()
-    // Converting the matrix to LaTeX
-    //
-    // *@return {string}*
+    /**
+    * Converting the matrix to LaTeX
+    *
+    * @return {string}
+    */
     Matrix.prototype.toLaTeX = function () {
         return '\\begin{pmatrix}\n' + this.reduce(function (str, x) {
             return str + x.reduce(function (prev, cur) {
@@ -1006,10 +1058,11 @@ var Matrix = (function () {
         }, '').slice(0, -2) + '\n\\end{pmatrix}';
     };
 
-    // ### Matrix.prototype.toMathML()
-    // converting the matrix to (presentation) MathML
-    //
-    // *@return {string}*
+    /**
+    * converting the matrix to (presentation) MathML
+    *
+    * @return {string}
+    */
     Matrix.prototype.toMathML = function () {
         return this.reduce(function (str, x) {
             return str + x.reduce(function (prev, cur) {
@@ -1018,20 +1071,22 @@ var Matrix = (function () {
         }, '<mrow><mo> ( </mo><mtable>') + '</mtable><mo> ) </mo></mrow>';
     };
 
-    // ### Matrix.prototype.toRowVectors()
-    // Converts the rows of the matrix to vectors
-    //
-    // *@return {array}*
+    /**
+    * Converts the rows of the matrix to vectors
+    *
+    * @return {array}
+    */
     Matrix.prototype.toRowVectors = function () {
         return this.toArray().map(function (v) {
             return new MathLib.Vector(v);
         });
     };
 
-    // ### Matrix.prototype.toString()
-    // Creating a custom .toString() function
-    //
-    // *@return {string}*
+    /**
+    * Creating a custom .toString() function
+    *
+    * @return {string}
+    */
     Matrix.prototype.toString = function () {
         return this.reduce(function (str, x) {
             return str + x.reduce(function (prev, cur) {
@@ -1040,10 +1095,11 @@ var Matrix = (function () {
         }, '').slice(0, -1);
     };
 
-    // ### Matrix.prototype.trace()
-    // Calculating the trace of the matrix
-    //
-    // *@return {number|Complex}*
+    /**
+    * Calculating the trace of the matrix
+    *
+    * @return {number|Complex}
+    */
     Matrix.prototype.trace = function () {
         var trace = MathLib.plus.apply(null, this.diag());
 
@@ -1053,11 +1109,12 @@ var Matrix = (function () {
         return trace;
     };
 
-    // ### Matrix.prototype.transpose()
-    // Calculating the transpose of the matrix
-    // The result is cached.
-    //
-    // *@return {Matrix}*
+    /**
+    * Calculating the transpose of the matrix
+    * The result is cached.
+    *
+    * @return {Matrix}
+    */
     Matrix.prototype.transpose = function () {
         var transposedMatrix, row, i, j, ii, jj, transpose = [];
 

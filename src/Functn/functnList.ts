@@ -201,11 +201,12 @@ export var is = function (obj, type) {
 }
 
 
-// ### MathLib.isMathMLSupported()
-// Checks if MathML is supported by the browser.  
-// Code stolen from [Modernizr](http://www.modernizr.com/)
-//
-// *@return {boolean}*
+/**
+ * Checks if MathML is supported by the browser.  
+ * Code stolen from [Modernizr](http://www.modernizr.com/)
+ *
+ * @return {boolean}
+ */
 export var isMathMLSupported = function () : boolean {
 	var hasMathML = false,
 			ns, div, mfrac;
@@ -228,11 +229,13 @@ export var isMathMLSupported = function () : boolean {
 };
 
 
-// ### MathLib.writeMathML()
-// Writes MathML to an element.
-//
-// *@param {string}* The id of the element in which the MathML should be inserted.  
-// *@param {string}* The MathML to be inserted.
+/**
+ * ### MathLib.writeMathML()
+ * Writes MathML to an element.
+ *
+ * @param {string} id The id of the element in which the MathML should be inserted.  
+ * @param {string} math The MathML to be inserted.
+ */
 export var writeMathML = function (id : string, math : string) : void {
 	var formula;
 	document.getElementById(id).innerHTML = '<math>' + math + '</math>';
@@ -243,10 +246,12 @@ export var writeMathML = function (id : string, math : string) : void {
 }
 
 
-// ### MathLib.loadMathJax()
-// Loads MathJax dynamically.
-//
-// *@param {string}* [config] Optional config options
+/**
+ * ### MathLib.loadMathJax()
+ * Loads MathJax dynamically.
+ *
+ * @param {string} config Optional config options
+ */
 export var loadMathJax = function (config : string) : void {
 	var script = <HTMLScriptElement>document.createElement('script');
 	script.type = 'text/javascript';

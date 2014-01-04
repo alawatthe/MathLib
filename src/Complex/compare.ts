@@ -1,7 +1,8 @@
-// ### [Complex.prototype.compare()](http://mathlib.de/en/docs/Complex/compare)
-// Compares two complex numbers
-//
-// *@return {number}*
+/**
+ * Compares two complex numbers
+ *
+ * @return {number}
+ */
 compare(x) : number {
 	var a = MathLib.sign(this.abs() - x.abs());
 

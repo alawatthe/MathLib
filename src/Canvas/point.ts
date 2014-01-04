@@ -1,10 +1,12 @@
-// ### Canvas.point
-// Draws a point on the screen.
-//
-// *@param {Point}* The point to be drawn  
-// *@param {object}* [options] Optional drawing options  
-// *@return {Screen}* Returns the screen
-point: function (point, options = {}, redraw = false) {
+/**
+ * Draws a point on the screen.
+ *
+ * @param {Point} point The point to be drawn
+ * @param {object} options Optional drawing options
+ * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+ * @return {Screen} Returns the screen
+ */
+point: function (point : Point, options = {}, redraw = false) {
 	var screen = this.screen,
 			ctx = this.ctx,
 			prop, opts, dist;

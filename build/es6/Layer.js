@@ -1,9 +1,13 @@
 
-// ## <a id="Layers"></a>Layers
-// Layers for two dimensional plotting
 import MathLib from './meta.js';
 import Screen2D from './Screen2D';
 
+/**
+* Layers for two dimensional plotting
+*
+* @class Layer
+* @this {Layer}
+*/
 var Layer = (function () {
     function Layer(screen, id, zIndex) {
         var _this = this;
@@ -160,10 +164,11 @@ var Layer = (function () {
         // Insert the layer into the layer array of the screen object.
         screen.layer.splice(zIndex, 0, this);
     }
-    // ### Layer.prototype.clear()
-    // Clears the Layer
-    //
-    // *@return {Layer}* Returns the current Layer
+    /**
+    * Clears the Layer
+    *
+    * @return {Layer} Returns the current Layer
+    */
     Layer.prototype.clear = function () {
         this.screen.renderer.clear(this);
         return this;

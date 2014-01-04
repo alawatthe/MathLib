@@ -1,8 +1,9 @@
-// ### Matrix.prototype.compare()
-// Compares the matrix to an other matrix.
-//
-// *@param {Matrix}* The matrix to compare.  
-// *@return {number}*
+/**
+ * Compares the matrix to an other matrix.
+ *
+ * @param {Matrix} m The matrix to compare.  
+ * @return {number}
+ */
 compare(m : Matrix) : number {
 	var i, ii, j, jj; 
 

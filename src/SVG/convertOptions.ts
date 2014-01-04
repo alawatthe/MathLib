@@ -1,41 +1,42 @@
-// ### SVG.convertOptions
-// Converts the options to the SVG options format
-//
-// *@param {object}* The drawing options  
-// *@return {object}* The converted options
-convertOptions: function (opt) {
+/**
+ * Converts the options to the SVG options format
+ *
+ * @param {object} options The drawing options  
+ * @return {object} The converted options
+ */
+convertOptions: function (options) {
 	var convertedOptions : any = {};
-	if ('fillColor' in opt) {
-		convertedOptions.fill = MathLib.colorConvert(opt.fillColor);
+	if ('fillColor' in options) {
+		convertedOptions.fill = MathLib.colorConvert(options.fillColor);
 	}
-	else if ('color' in opt) {
-		convertedOptions.fill = MathLib.colorConvert(opt.color);
-	}
-
-
-	if ('font' in opt) {
-		convertedOptions.font = opt.font;
-	}
-
-	if ('fontSize' in opt) {
-		convertedOptions.fontSize = opt.fontSize;
+	else if ('color' in options) {
+		convertedOptions.fill = MathLib.colorConvert(options.color);
 	}
 
 
-	if ('lineColor' in opt) {
-		convertedOptions.stroke = MathLib.colorConvert(opt.lineColor);
+	if ('font' in options) {
+		convertedOptions.font = options.font;
 	}
-	else if ('color' in opt) {
-		convertedOptions.stroke = MathLib.colorConvert(opt.color);
+
+	if ('fontSize' in options) {
+		convertedOptions.fontSize = options.fontSize;
+	}
+
+
+	if ('lineColor' in options) {
+		convertedOptions.stroke = MathLib.colorConvert(options.lineColor);
+	}
+	else if ('color' in options) {
+		convertedOptions.stroke = MathLib.colorConvert(options.color);
 	}
 
 
-	if ('dash' in opt && opt.dash.length !== 0) {
-		convertedOptions['stroke-dasharray'] = opt.dash;
+	if ('dash' in options && options.dash.length !== 0) {
+		convertedOptions['stroke-dasharray'] = options.dash;
 	}
 
-	if ('dashOffset' in opt && opt.dashOffset !== 0) {
-		convertedOptions['stroke-dashoffset'] = opt.dashOffset;
+	if ('dashOffset' in options && options.dashOffset !== 0) {
+		convertedOptions['stroke-dashoffset'] = options.dashOffset;
 	}
 
 

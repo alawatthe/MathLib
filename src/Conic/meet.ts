@@ -1,7 +1,9 @@
-// ### [Conic.prototype.meet()](http://mathlib.de/en/docs/Conic/meet)
-// Calculates the meet of the conic with a line or a conic.
-//
-// *@return {Point[]}*
+/**
+ * Calculates the meet of the conic with a line or a conic.
+ *
+ * @param {Line|Conic} x The line or conic to intersect with
+ * @return {Point[]}
+ */
 meet(x) {
 	var B, C, alpha, i, j, p1, p2, Ml,
 			a, b, c, d, Delta0, Delta1, lambda, degenerated, lines,

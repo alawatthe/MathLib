@@ -1,32 +1,33 @@
-// ### Canvas.convertOptions
-// Converts the options to the Canvas options format
-//
-// *@param {object}* The drawing options  
-// *@return {object}* The converted options
-convertOptions: function (opt) {
+/**
+ * Converts the options to the Canvas options format
+ *
+ * @param {object} options The drawing options  
+ * @return {object} The converted options
+ */
+convertOptions: function (options) {
 	var convertedOptions : any = {};
-	if ('fillColor' in opt) {
-		convertedOptions.fillStyle = MathLib.colorConvert(opt.fillColor);
+	if ('fillColor' in options) {
+		convertedOptions.fillStyle = MathLib.colorConvert(options.fillColor);
 	}
-	else if ('color' in opt) {
-		convertedOptions.fillStyle = MathLib.colorConvert(opt.color);
-	}
-
-
-	if ('font' in opt) {
-		convertedOptions.font = opt.font;
-	}
-
-	if ('fontSize' in opt) {
-		convertedOptions.fontSize = opt.fontSize;
+	else if ('color' in options) {
+		convertedOptions.fillStyle = MathLib.colorConvert(options.color);
 	}
 
 
-	if ('lineColor' in opt) {
-		convertedOptions.strokeStyle = MathLib.colorConvert(opt.lineColor);
+	if ('font' in options) {
+		convertedOptions.font = options.font;
 	}
-	else if ('color' in opt) {
-		convertedOptions.strokeStyle = MathLib.colorConvert(opt.color);
+
+	if ('fontSize' in options) {
+		convertedOptions.fontSize = options.fontSize;
+	}
+
+
+	if ('lineColor' in options) {
+		convertedOptions.strokeStyle = MathLib.colorConvert(options.lineColor);
+	}
+	else if ('color' in options) {
+		convertedOptions.strokeStyle = MathLib.colorConvert(options.color);
 	}
 
 

@@ -1,7 +1,8 @@
-// ### [Complex.prototype.tan()](http://mathlib.de/en/docs/Complex/tan)
-// Calculates the tangent of a complex number
-//
-// *@return {Complex}*
+/**
+ * Calculates the tangent of a complex number
+ *
+ * @return {Complex}
+ */
 tan() : Complex {
 	var aa = 2 * this.re,
 			bb = 2 * this.im,

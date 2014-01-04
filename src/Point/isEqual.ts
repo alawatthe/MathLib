@@ -1,8 +1,9 @@
-// ### Point.prototype.isEqual()
-// Determines if the point has the same coordinates as an other point
-//
-// *@param {Point}* The point to compare  
-// *@return {boolean}*
+/**
+ * Determines if the point has the same coordinates as an other point
+ *
+ * @param {Point} q The point to compare  
+ * @return {boolean}
+ */
 isEqual(q : Point) : boolean {
 	var p = this.normalize();
 	q = q.normalize();

@@ -1,7 +1,8 @@
-// ### Polynomial.interpolation
-// Interpolates points.
-//
-// *@return {Polynomial}*
+/**
+ * Interpolates points.
+ *
+ * @return {Polynomial}
+ */
 static interpolation(a, b) {
 	var basisPolynomial,
 			interpolant = new MathLib.Polynomial([0]),

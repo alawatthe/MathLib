@@ -1,9 +1,10 @@
-// ### Set.prototype.locate()
-// Array.prototype.indexOf() returns only the position of an element in the
-// array and not the position where one should be inserted.
-//
-// *@param {Set}* The element to locate  
-// *@return {number}*
+/**
+ * Array.prototype.indexOf() returns only the position of an element in the
+ * array and not the position where one should be inserted.
+ *
+ * @param {Set} x The element to locate  
+ * @return {number}
+ */
 locate(x : any) : number {
 	var left = 0,
 			right = this.card - 1,

@@ -1,7 +1,8 @@
-// ### Screen.prototype.drawAxes
-// Draws the axes.
-//
-// *@return {Screen2D}*
+/**
+ * Draws the axes.
+ *
+ * @return {Screen2D}
+ */
 drawAxes() {
 
 	var line = (...args : any[]) => this.renderer.line.apply(this.layer.axes, args),

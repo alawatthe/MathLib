@@ -1,8 +1,9 @@
-// ### Polynomial.prototype.differentiate()
-// Differentiates the polynomial
-//
-// *@param {number}* [n] the number of times to differentiate the polynomial.  
-// *@return {Polynomial}*
+/**
+ * Differentiates the polynomial
+ *
+ * @param {number} n the number of times to differentiate the polynomial.  
+ * @return {Polynomial}
+ */
 differentiate(n = 1) : Polynomial {
 	var i, ii,
 			derivative = [];

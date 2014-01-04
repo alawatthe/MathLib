@@ -1,7 +1,11 @@
 
-    // ## <a id="Conic" href="http://mathlib.de/en/docs/Conic">Conic</a>
-    // The conic implementation of MathLib makes calculations with conics possible.
     define(['meta', 'Functn', 'Matrix'], function(MathLib) {
+    /**
+    * The conic implementation of MathLib makes calculations with conics possible.
+    *
+    * @class Conic
+    * @this {Conic}
+    */
     var Conic = (function () {
         function Conic(primal, dual) {
             this.type = 'conic';
@@ -32,12 +36,14 @@
                 this.dual = dual;
             }
         }
-        // ### [Conic.prototype.draw()](http://mathlib.de/en/docs/Conic/draw)
-        // Draws the conic on one or more screens
-        //
-        // *@param {Screen}* The screen to draw onto.
-        // *@param {object}* [options] Drawing options
-        // *@return {boolean}*
+        /**
+        * Draws the conic on one or more screens
+        *
+        * @param {Screen} screen The screen to draw onto.
+        * @param {object} options Drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {boolean}
+        */
         Conic.prototype.draw = function (screen, options, redraw) {
             if (typeof redraw === "undefined") { redraw = false; }
             if (Array.isArray(screen)) {
@@ -131,10 +137,11 @@
             return this;
         };
 
-        // ### [Conic.prototype.eccentricity()](http://mathlib.de/en/docs/Conic/eccentricity)
-        // Calculates the eccentricity of a conic.
-        //
-        // *@return {number}*
+        /**
+        * Calculates the eccentricity of a conic.
+        *
+        * @return {number}
+        */
         Conic.prototype.eccentricity = function () {
             var normalform = this.normalize(), a = normalform.primal[0][0], c = normalform.primal[1][1];
 
@@ -150,21 +157,23 @@
             }
         };
 
-        // ### [Conic.prototype.isDegenerated()](http://mathlib.de/en/docs/Conic/isDegenerated)
-        // Determines if a conic is degenerated.
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if a conic is degenerated.
+        *
+        * @return {boolean}
+        */
         Conic.prototype.isDegenerated = function () {
             return this.primal.rank() !== 3;
         };
 
-        // ### [Conic.prototype.isEqual()](http://mathlib.de/en/docs/Conic/isEqual)
-        // Determines if two conics are equal.
-        //
-        // *@param {Conic}*
-        // *@return {boolean}*
-        Conic.prototype.isEqual = function (c) {
-            if (this === c) {
+        /**
+        * Determines if two conics are equal.
+        *
+        * @param {Conic} conic The conic to be compared
+        * @return {boolean}
+        */
+        Conic.prototype.isEqual = function (conic) {
+            if (this === conic) {
                 return true;
             }
 
@@ -202,13 +211,14 @@
                 return true;
             };
 
-            return compare(this.primal, c.primal) && compare(this.dual, c.dual);
+            return compare(this.primal, conic.primal) && compare(this.dual, conic.dual);
         };
 
-        // ### [Conic.prototype.latusRectum()](http://mathlib.de/en/docs/Conic/latusRectum)
-        // Calculates the latusRectum of a conic.
-        //
-        // *@return {number}*
+        /**
+        * Calculates the latusRectum of a conic.
+        *
+        * @return {number}
+        */
         Conic.prototype.latusRectum = function () {
             var normalForm = this.normalize(), a = normalForm.primal[0][0], c = normalForm.primal[1][1], min = Math.min(Math.abs(a), Math.abs(c)), max = Math.max(Math.abs(a), Math.abs(c));
 
@@ -222,10 +232,11 @@
             }
         };
 
-        // ### [Conic.prototype.linearEccentricity()](http://mathlib.de/en/docs/Conic/linearEccentricity)
-        // Calculates the linear eccentricity of a conic.
-        //
-        // *@return {number}*
+        /**
+        * Calculates the linear eccentricity of a conic.
+        *
+        * @return {number}
+        */
         Conic.prototype.linearEccentricity = function () {
             var normalForm = this.normalize(), a = normalForm.primal[0][0], c = normalForm.primal[1][1], max = Math.max(Math.abs(a), Math.abs(c)), min = Math.min(Math.abs(a), Math.abs(c));
 
@@ -242,10 +253,12 @@
             }
         };
 
-        // ### [Conic.prototype.meet()](http://mathlib.de/en/docs/Conic/meet)
-        // Calculates the meet of the conic with a line or a conic.
-        //
-        // *@return {Point[]}*
+        /**
+        * Calculates the meet of the conic with a line or a conic.
+        *
+        * @param {Line|Conic} x The line or conic to intersect with
+        * @return {Point[]}
+        */
         Conic.prototype.meet = function (x) {
             var B, C, alpha, i, j, p1, p2, Ml, a, b, c, d, Delta0, Delta1, lambda, degenerated, lines, A = this.primal;
 
@@ -352,10 +365,11 @@
             }
         };
 
-        // ### [Conic.prototype.normalize()](http://mathlib.de/en/docs/Conic/normalize)
-        // Calculates the normal form of a conic.
-        //
-        // *@return {Conic}*
+        /**
+        * Calculates the normal form of a conic.
+        *
+        * @return {Conic}
+        */
         Conic.prototype.normalize = function () {
             var A = this.primal[0][0], B = this.primal[0][1] * 2, C = this.primal[1][1], D = this.primal[0][2] * 2, E = this.primal[1][2] * 2, F = this.primal[2][2], r = Math.atan2(B, A - C) / 2, cos = Math.cos(r), sin = Math.sin(r), a = A * cos * cos + B * sin * cos + C * sin * sin, c = A * sin * sin - B * sin * cos + C * cos * cos, d = D * cos + E * sin, e = E * cos - D * sin, f = F;
 
@@ -380,10 +394,11 @@
             return new MathLib.Conic(new MathLib.Matrix([[a, 0, d / 2], [0, c, e / 2], [d / 2, e / 2, f]]));
         };
 
-        // ### [Conic.prototype.polarity()](http://mathlib.de/en/docs/Conic/polarity)
-        // Calculates the four polarity of a conic.
-        //
-        // *@return {Point[]}*
+        /**
+        * Calculates the four polarity of a conic.
+        *
+        * @return {Point[]}
+        */
         Conic.prototype.polarity = function (x) {
             var object, m, c = this;
 
@@ -428,10 +443,11 @@
             return object;
         };
 
-        // ### [Conic.prototype.splitDegenerated()](http://mathlib.de/en/docs/Conic/splitDegenerated)
-        // Splits a conic into one or two lines if the conic is degenerated.
-        //
-        // *@return {boolean}*
+        /**
+        * Splits a conic into one or two lines if the conic is degenerated.
+        *
+        * @return {boolean}
+        */
         Conic.prototype.splitDegenerated = function () {
             var n, i, j, B, C, p0, p1, p2, rank = this.primal.rank(), nonZeroSearch = function (C) {
                 for (i = 0; i < 3; i++) {
@@ -472,10 +488,16 @@
             }
         };
 
-        // ### [Conic.prototype.throughFivePoints()](http://mathlib.de/en/docs/Conic/throughFivePoints)
-        // Calculates the conic through five points.
-        //
-        // *@return {Conic}*
+        /**
+        * Calculates the conic through five points.
+        *
+        * @param {Point} p The first point
+        * @param {Point} q The second point
+        * @param {Point} r The third point
+        * @param {Point} s The fourth point
+        * @param {Point} t The fifth point
+        * @return {Conic}
+        */
         Conic.throughFivePoints = function (p, q, r, s, t) {
             var conic = new MathLib.Conic(new MathLib.Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]));
 

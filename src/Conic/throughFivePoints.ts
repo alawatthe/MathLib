@@ -1,8 +1,14 @@
-// ### [Conic.prototype.throughFivePoints()](http://mathlib.de/en/docs/Conic/throughFivePoints)
-// Calculates the conic through five points.
-//
-// *@return {Conic}*
-static throughFivePoints(p, q, r, s, t) : Conic {
+/**
+ * Calculates the conic through five points.
+ *
+ * @param {Point} p The first point
+ * @param {Point} q The second point
+ * @param {Point} r The third point
+ * @param {Point} s The fourth point
+ * @param {Point} t The fifth point
+ * @return {Conic}
+ */
+static throughFivePoints(p : Point, q : Point, r : Point, s : Point, t : Point) : Conic {
 
 	var conic = new MathLib.Conic(new MathLib.Matrix([[1,0,0], [0,1,0], [0,0,1]]));
 

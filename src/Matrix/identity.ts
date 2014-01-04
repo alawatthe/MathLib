@@ -1,9 +1,10 @@
-// ### Matrix.identity
-// Returns the identity matrix.
-//
-// *@param {number}* The number of rows and columns.  
-// *@return {Matrix}*
-static identity = function (n) : Matrix {
+/**
+ * Returns the identity matrix.
+ *
+ * @param {number} n The number of rows and columns.  
+ * @return {Matrix}
+ */
+static identity = function (n : number) : Matrix {
 	var row = [],
 			matrix = [],
 			i, ii;

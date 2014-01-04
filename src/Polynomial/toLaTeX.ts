@@ -1,7 +1,8 @@
-// ### Polynomial.prototype.toLaTeX()
-// Returns a LaTeX representation of the polynomial
-//
-// *@return {string}*
+/**
+ * Returns a LaTeX representation of the polynomial
+ *
+ * @return {string}
+ */
 toLaTeX() : string {
 	var str = MathLib.toString(this[this.deg]) + 'x^{' + this.deg + '}',
 			i;

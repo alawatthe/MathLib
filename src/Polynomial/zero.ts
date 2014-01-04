@@ -1,5 +1,5 @@
-// ### Polynomial.zero
-// Returns the zero polynomial
-//
-// *@return {Polynomial}*
+/**
+ * Returns the zero polynomial
+ * @static
+ */
 static zero = new Polynomial([0]);

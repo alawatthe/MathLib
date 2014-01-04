@@ -1,9 +1,13 @@
 
-    // ## <a id="Expression" href="http://mathlib.de/en/docs/Expression">Expression</a>
-    // MathLib.Expression is the MathLib implementation of symbolic expressions
     define(['meta'], function(MathLib) {
     // There is no DOMParser in Node, so we have to require one (done via a regexp replace)
     /// DOMParser
+    /**
+    * MathLib.Expression is the MathLib implementation of symbolic expressions
+    *
+    * @class
+    * @this {Expression}
+    */
     var Expression = (function () {
         function Expression(expr) {
             if (typeof expr === "undefined") { expr = {}; }
@@ -19,19 +23,22 @@
                 }
             }
         }
-        // ### [Expression.prototype.compare()](http://mathlib.de/en/docs/Expression/compare)
-        // Compares two expressions
-        //
-        // *@param {Expression}* The expression to compare
-        // *@return {number}*
-        Expression.prototype.compare = function (e) {
-            return MathLib.sign(this.toString().localeCompare(e.toString()));
+        /**
+        * Compares two expressions
+        *
+        * @param {Expression} expr The expression to compare
+        * @return {number}
+        */
+        Expression.prototype.compare = function (expr) {
+            return MathLib.sign(this.toString().localeCompare(expr.toString()));
         };
 
-        // ### Expression.constant
-        // Constructs a constant expression.
-        //
-        // *@return {Expression}*
+        /**
+        * Constructs a constant expression.
+        *
+        * @param {String} n The constant to generate an expression from
+        * @return {Expression}
+        */
         Expression.constant = function (n) {
             return new MathLib.Expression({
                 subtype: 'constant',
@@ -39,10 +46,11 @@
             });
         };
 
-        // ### <a href="http://mathlib.de/en/docs/Expression/evaluate">Expression.prototype.evaluate</a>
-        // Evaluates the symbolic expression
-        //
-        // *@return {any}*
+        /**
+        * Evaluates the symbolic expression
+        *
+        * @return {any}
+        */
         Expression.prototype.evaluate = function () {
             if (this.subtype === 'binaryOperator') {
                 return MathLib[this.name].apply(null, this.content.map(function (x) {
@@ -134,10 +142,12 @@
             }
         };
 
-        // ### Expression.prototype.map
-        // Maps the expression tree over to an other expression tree.
-        //
-        // *@return {Expression}*
+        /**
+        * Maps the expression tree over to an other expression tree.
+        *
+        * @param {function} f The function to apply to all the nodes in the tree.
+        * @return {Expression}
+        */
         Expression.prototype.map = function (f) {
             var prop, properties = {}, mappedProperties;
 
@@ -159,10 +169,12 @@
             return new MathLib.Expression(mappedProperties);
         };
 
-        // ### Expression.number
-        // Constructs a number expression.
-        //
-        // *@return {Expression}*
+        /**
+        * Constructs a number expression.
+        *
+        * @param {String} n The number to generate an expression from
+        * @return {Expression}
+        */
         Expression.number = function (n) {
             return new MathLib.Expression({
                 subtype: 'number',
@@ -170,10 +182,12 @@
             });
         };
 
-        // ### Expression.prototype.parseContentMathML
-        // Parses a content MathML string and returns an Expression.
-        //
-        // *@return {Expression}*
+        /**
+        * Parses a content MathML string and returns an Expression.
+        *
+        * @param {string} MathMLString The string to be parsed as MathML
+        * @return {Expression}
+        */
         Expression.parseContentMathML = function (MathMLString) {
             var MathMLdoc, tokenizer = new DOMParser();
 
@@ -196,7 +210,7 @@
             }).join('cs>');
 
             // Gives an error in Firefox
-            //* MathML = tokenizer.parseFromString(MathMLString, 'application/mathml+xml'); *
+            // MathML = tokenizer.parseFromString(MathMLString, 'application/mathml+xml');
             MathMLdoc = tokenizer.parseFromString(MathMLString, 'application/xml');
 
             var handler = {
@@ -238,8 +252,8 @@
                     }
 
                     if (type === 'number') {
-                        /* TODO: base conversions
-                        var base = node.getAttribute('base') !== null ? node.getAttributes('base') : '10'; */
+                        // TODO: base conversions
+                        // var base = node.getAttribute('base') !== null ? node.getAttributes('base') : '10';
                         return parser(node.childNodes[0]);
                     } else if (type === 'rational') {
                         return new MathLib.Expression({
@@ -331,10 +345,11 @@
             return parser(MathMLdoc.childNodes[0]);
         };
 
-        // ### <a href="http://mathlib.de/en/docs/Expression/toContentMathML">Expression.prototype.toContentMathML</a>
-        // Convert the Expression to MathML.
-        //
-        // *@return {string}*
+        /**
+        * Convert the Expression to MathML.
+        *
+        * @return {string}
+        */
         Expression.prototype.toContentMathML = function () {
             if (this.subtype === 'binaryOperator') {
                 var op = this.name === 'pow' ? 'power' : this.name;
@@ -397,12 +412,12 @@
             }
         };
 
-        // ### <a href="http://mathlib.de/en/docs/Expression/toLaTeX">Expression.prototype.toLaTeX</a>
-        // Convert the expression to a LaTeX string
-        //
-        // *@return {string}*
-        Expression.prototype.toLaTeX = function (opts) {
-            if (typeof opts === "undefined") { opts = {}; }
+        /**
+        * Convert the expression to a LaTeX string
+        *
+        * @return {string}
+        */
+        Expression.prototype.toLaTeX = function () {
             var op;
 
             if (this.subtype === 'binaryOperator') {
@@ -421,7 +436,7 @@
                 return str;
             }
             if (this.subtype === 'brackets') {
-                return '\\left(' + this.content.toLaTeX(opts) + '\\right)';
+                return '\\left(' + this.content.toLaTeX() + '\\right)';
             }
             if (this.subtype === 'complexNumber') {
                 if (this.mode === 'cartesian') {
@@ -448,7 +463,7 @@
             if (this.subtype === 'naryOperator') {
                 op = this.value === '*' ? '\\cdot' : this.value;
                 return this.content.reduce(function (old, cur, idx) {
-                    return old + (idx ? op : '') + cur.toLaTeX(opts);
+                    return old + (idx ? op : '') + cur.toLaTeX();
                 }, '');
             }
             if (this.subtype === 'rationalNumber') {
@@ -464,9 +479,9 @@
             }
             if (this.subtype === 'unaryOperator') {
                 if (this.value === '-') {
-                    return '-' + this.content.toLaTeX(opts);
+                    return '-' + this.content.toLaTeX();
                 }
-                return this.content.toLaTeX(opts);
+                return this.content.toLaTeX();
             }
             if (this.subtype === 'vector') {
                 return '\\begin{pmatrix}' + this.value.map(function (x) {
@@ -481,15 +496,15 @@
                     'arccos', 'arcsin', 'arctan', 'arg', 'cos', 'cosh', 'cot', 'coth', 'csc', 'deg', 'det', 'dim',
                     'gcd', 'lg', 'ln', 'log', 'max', 'min', 'sec', 'sin', 'sinh', 'tan', 'tanh'].indexOf(this.value) + 1) {
                     return '\\' + this.value + '\\left(' + (this.content.length ? this.content.reduce(function (old, cur, idx) {
-                        return old + (idx ? ',' : '') + cur.toLaTeX(opts);
+                        return old + (idx ? ',' : '') + cur.toLaTeX();
                     }, '') : 'x') + '\\right)';
                 } else if (this.value === 'exp') {
-                    return 'e^{' + (this.content.length ? this.content[0].toLaTeX(opts) : 'x') + '}';
+                    return 'e^{' + (this.content.length ? this.content[0].toLaTeX() : 'x') + '}';
                 } else if (this.value === 'sqrt') {
-                    return '\\' + this.value + '{' + (this.content.length ? this.content[0].toLaTeX(opts) : 'x') + '}';
+                    return '\\' + this.value + '{' + (this.content.length ? this.content[0].toLaTeX() : 'x') + '}';
                 } else {
                     return '\\operatorname{' + this.value + '}\\left(' + (this.content.length ? this.content.reduce(function (old, cur, idx) {
-                        return old + (idx ? ',' : '') + cur.toLaTeX(opts);
+                        return old + (idx ? ',' : '') + cur.toLaTeX();
                     }, '') : 'x') + '\\right)';
                 }
             }
@@ -501,10 +516,11 @@
             }
         };
 
-        // ### <a href="http://mathlib.de/en/docs/Expression/toMathML">Expression.prototype.toMathML</a>
-        // Convert the Expression to MathML.
-        //
-        // *@return {string}*
+        /**
+        * Convert the Expression to MathML.
+        *
+        * @return {string}
+        */
         Expression.prototype.toMathML = function () {
             if (this.subtype === 'binaryOperator') {
                 if (this.value === '-') {
@@ -585,10 +601,11 @@
             }
         };
 
-        // ### <a href="http://mathlib.de/en/docs/Expression/toString">Expression.prototype.toString</a>
-        // A custom toString function
-        //
-        // *@return {string}*
+        /**
+        * A custom toString function
+        *
+        * @return {string}
+        */
         Expression.prototype.toString = function () {
             var _this = this;
             if (this.subtype === 'binaryOperator') {
@@ -667,10 +684,12 @@
             }
         };
 
-        // ### Expression.variable
-        // Constructs a variable expression.
-        //
-        // *@return {Expression}*
+        /**
+        * Constructs a variable expression.
+        *
+        * @param {String} n The variable to generate an expression from
+        * @return {Expression}
+        */
         Expression.variable = function (n) {
             return new MathLib.Expression({
                 subtype: 'variable',
@@ -1119,21 +1138,19 @@
 
                     expr = parseAdditive();
 
-                    /*
-                    TODO: support assignments
-                    if (typeof expr !== 'undefined' && expr.Identifier) {
-                    token = lexer.peek();
-                    if (matchOp(token, '=')) {
-                    lexer.next();
-                    return new MathLib.Expression({
-                    subtype: 'Assignment',
-                    name: expr,
-                    value: parseAssignment()
-                    });
-                    }
-                    return expr;
-                    }
-                    */
+                    // TODO: support assignments
+                    // if (typeof expr !== 'undefined' && expr.Identifier) {
+                    // 	token = lexer.peek();
+                    // 	if (matchOp(token, '=')) {
+                    // 		lexer.next();
+                    // 		return new MathLib.Expression({
+                    // 				subtype: 'Assignment',
+                    // 				name: expr,
+                    // 				value: parseAssignment()
+                    // 			});
+                    // 	}
+                    // 	return expr;
+                    // }
                     return expr;
                 }
 

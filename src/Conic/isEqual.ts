@@ -1,10 +1,11 @@
-// ### [Conic.prototype.isEqual()](http://mathlib.de/en/docs/Conic/isEqual)
-// Determines if two conics are equal.
-//
-// *@param {Conic}*  
-// *@return {boolean}*
-isEqual(c : Conic) : boolean {
-	if (this === c) {
+/**
+ * Determines if two conics are equal.
+ *
+ * @param {Conic} conic The conic to be compared
+ * @return {boolean}
+ */
+isEqual(conic : Conic) : boolean {
+	if (this === conic) {
 		return true;
 	}
 
@@ -41,5 +42,5 @@ isEqual(c : Conic) : boolean {
 		return true;
 	}
 
-	return compare(this.primal, c.primal) && compare(this.dual, c.dual);
+	return compare(this.primal, conic.primal) && compare(this.dual, conic.dual);
 }

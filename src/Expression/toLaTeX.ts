@@ -1,8 +1,9 @@
-// ### <a href="http://mathlib.de/en/docs/Expression/toLaTeX">Expression.prototype.toLaTeX</a>
-// Convert the expression to a LaTeX string
-//
-// *@return {string}*
-toLaTeX(opts = {}) : string {
+/**
+ * Convert the expression to a LaTeX string
+ *
+ * @return {string}
+ */
+toLaTeX() : string {
 	var op;
 
 	if (this.subtype === 'binaryOperator') {
@@ -22,7 +23,7 @@ toLaTeX(opts = {}) : string {
 		return str;
 	}
 	if (this.subtype === 'brackets') {
-		return '\\left(' + this.content.toLaTeX(opts) + '\\right)';
+		return '\\left(' + this.content.toLaTeX() + '\\right)';
 	}
 	if (this.subtype === 'complexNumber') {
 		if (this.mode === 'cartesian') {
@@ -47,7 +48,7 @@ toLaTeX(opts = {}) : string {
 	}
 	if (this.subtype === 'naryOperator') {
 		op = this.value === '*' ? '\\cdot' : this.value;
-		return this.content.reduce((old, cur, idx) => old + (idx ? op : '') + cur.toLaTeX(opts), '');
+		return this.content.reduce((old, cur, idx) => old + (idx ? op : '') + cur.toLaTeX(), '');
 	}
 	if (this.subtype === 'rationalNumber') {
 		return '\\frac{' + this.value[0].toLaTeX() + '}{' + this.value[1].toLaTeX() + '}';
@@ -60,9 +61,9 @@ toLaTeX(opts = {}) : string {
 	}
 	if (this.subtype === 'unaryOperator') {
 		if (this.value === '-') {
-			return '-' + this.content.toLaTeX(opts)
+			return '-' + this.content.toLaTeX()
 		}
-		return this.content.toLaTeX(opts);
+		return this.content.toLaTeX();
 	}
 	if (this.subtype === 'vector') {
 		return '\\begin{pmatrix}' + this.value.map(x => x.toLaTeX()).join('\\\\') + '\\end{pmatrix}';
@@ -75,20 +76,20 @@ toLaTeX(opts = {}) : string {
 		'gcd', 'lg', 'ln', 'log', 'max', 'min', 'sec', 'sin', 'sinh', 'tan', 'tanh'].indexOf(this.value) + 1) {
 			return '\\' + this.value + '\\left(' +
 				(this.content.length
-				? this.content.reduce((old, cur, idx) => old + (idx ? ',' : '') + cur.toLaTeX(opts), '')
+				? this.content.reduce((old, cur, idx) => old + (idx ? ',' : '') + cur.toLaTeX(), '')
 				: 'x') +
 				'\\right)';
 		}
 		else if (this.value === 'exp') {
-			return 'e^{' + (this.content.length ? this.content[0].toLaTeX(opts) : 'x') + '}';
+			return 'e^{' + (this.content.length ? this.content[0].toLaTeX() : 'x') + '}';
 		}
 		else if (this.value === 'sqrt') {
-			return '\\' + this.value + '{' + (this.content.length ? this.content[0].toLaTeX(opts) : 'x') + '}';
+			return '\\' + this.value + '{' + (this.content.length ? this.content[0].toLaTeX() : 'x') + '}';
 		}
 		else {
 			return '\\operatorname{' + this.value + '}\\left(' +
 				(this.content.length
-				? this.content.reduce((old, cur, idx) => old + (idx ? ',' : '') + cur.toLaTeX(opts), '') 
+				? this.content.reduce((old, cur, idx) => old + (idx ? ',' : '') + cur.toLaTeX(), '') 
 				: 'x') +
 				'\\right)';
 		}

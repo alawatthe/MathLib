@@ -11,9 +11,14 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 
-    // ## <a id="Screen2D"></a>Screen2D
-    // Two dimensional plotting
     define(['meta', 'Screen'], function(MathLib) {
+    /**
+    * Two dimensional plotting
+    *
+    * @class
+    * @augments Screen
+    * @this {Screen2D}
+    */
     var Screen2D = (function (_super) {
         __extends(Screen2D, _super);
         function Screen2D(id, options) {
@@ -311,10 +316,11 @@ var __extends = this.__extends || function (d, b) {
 
             this.draw();
         }
-        // ### Screen.prototype.drawAxes
-        // Draws the axes.
-        //
-        // *@return {Screen2D}*
+        /**
+        * Draws the axes.
+        *
+        * @return {Screen2D}
+        */
         Screen2D.prototype.drawAxes = function () {
             var _this = this;
             var line = function () {
@@ -399,10 +405,11 @@ var __extends = this.__extends || function (d, b) {
             return this;
         };
 
-        // ### Screen2D.prototype.drawGrid
-        // Draws the grid.
-        //
-        // *@return {Screen2D}*
+        /**
+        * Draws the grid.
+        *
+        * @return {Screen2D}
+        */
         Screen2D.prototype.drawGrid = function () {
             var _this = this;
             if (!this.options.grid) {
@@ -462,11 +469,12 @@ var __extends = this.__extends || function (d, b) {
             return this;
         };
 
-        // ### Screen.prototype.getEventPoint
-        // Creates a point based on the coordinates of an event.
-        //
-        // *@param {event}*
-        // *@return {Point}*
+        /**
+        * Creates a point based on the coordinates of an event.
+        *
+        * @param {event} evt The event object
+        * @return {Point}
+        */
         Screen2D.prototype.getEventPoint = function (evt) {
             var x, y;
             if (evt.offsetX) {
@@ -479,12 +487,13 @@ var __extends = this.__extends || function (d, b) {
             return new MathLib.Point([x, y, 1]);
         };
 
-        // ### Screen2D.prototype.getineEndPoint()
-        // Calculates the both endpoints for the line
-        // for drawing purposes
-        //
-        // *@param {Line|array}*
-        // *@return {array}* The array has the format [[x1, y1], [x2, y2]]
+        /**
+        * Calculates the both endpoints for the line
+        * for drawing purposes
+        *
+        * @param {Line|array} l The Line to calculate the end points to
+        * @return {array} The array has the format [[x1, y1], [x2, y2]]
+        */
         Screen2D.prototype.getLineEndPoints = function (l) {
             if (l.type === 'line') {
                 var top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lineRight = -(l[2] + l[0] * right) / l[1], lineTop = -(l[2] + l[1] * top) / l[0], lineLeft = -(l[2] + l[0] * left) / l[1], lineBottom = -(l[2] + l[1] * bottom) / l[0], points = [];
@@ -507,10 +516,11 @@ var __extends = this.__extends || function (d, b) {
             }
         };
 
-        // ### Screen2D.prototype.onmousedown()
-        // Handles the mousedown event
-        //
-        // *@param {event}*
+        /**
+        * Handles the mousedown event
+        *
+        * @param {event} evt The event object
+        */
         Screen2D.prototype.onmousedown = function (evt) {
             // Only start the action if the left mouse button was clicked
             if (evt.button !== 0) {
@@ -531,10 +541,11 @@ var __extends = this.__extends || function (d, b) {
             }
         };
 
-        // ### Screen.prototype.onmousemove()
-        // Handles the mousemove event
-        //
-        // *@param {event}*
+        /**
+        * Handles the mousemove event
+        *
+        * @param {event} evt The event object
+        */
         Screen2D.prototype.onmousemove = function (evt) {
             var p;
 
@@ -553,10 +564,11 @@ var __extends = this.__extends || function (d, b) {
             }
         };
 
-        // ### Screen.prototype.onmouseup()
-        // Handles the mouseup event
-        //
-        // *@param {event}*
+        /**
+        * Handles the mouseup event
+        *
+        * @param {event} evt The event object
+        */
         Screen2D.prototype.onmouseup = function (evt) {
             if (evt.preventDefault) {
                 evt.preventDefault();
@@ -572,10 +584,11 @@ var __extends = this.__extends || function (d, b) {
             }
         };
 
-        // ### Screen.prototype.onmousewheel()
-        // Handles the mousewheel event
-        //
-        // *@param {event}*
+        /**
+        * Handles the mousewheel event
+        *
+        * @param {event} evt The event object
+        */
         Screen2D.prototype.onmousewheel = function (evt) {
             var delta, s, p, z;
 
@@ -609,12 +622,13 @@ var __extends = this.__extends || function (d, b) {
             }
         };
 
-        // ### Screen2D.prototype.resize()
-        // Adjust the rendering if the screen is resized
-        //
-        // *@param {number}* The new width
-        // *@param {number}* The new height
-        // *@return {Screen2D}*
+        /**
+        * Adjust the rendering if the screen is resized
+        *
+        * @param {number} width The new width
+        * @param {number} height The new height
+        * @return {Screen2D}
+        */
         Screen2D.prototype.resize = function (width, height) {
             this.height = height;
             this.width = width;

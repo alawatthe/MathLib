@@ -1,11 +1,12 @@
-// ### Matrix.numbers()
-// Returns a matrix consisting completely of a given number
-//
-// *@param {number}* The number.  
-// *@param {number}* The number of rows.  
-// *@param {number}* The number of columns.  
-// *@return {Matrix}*
-static numbers = function (n, r, c) {
+/**
+ * Returns a matrix consisting completely of a given number
+ *
+ * @param {number} n The number.
+ * @param {number} r The number of rows.
+ * @param {number} c The number of columns.
+ * @return {Matrix}
+ */
+static numbers = function (n, r : number, c : number) {
 	var i, ii,
 			row = [],
 			matrix = [];

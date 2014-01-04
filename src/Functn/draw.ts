@@ -1,9 +1,10 @@
-// ### [Functn.prototype.draw()](http://mathlib.de/en/docs/Functn/draw)
-// Draws the function on the screen
-//
-// *@param {Screen}* The screen to draw the function onto.  
-// *@param {object}* [options] Optional drawing options.  
-// *@return {Functn}*
+/**
+ * Draws the function on the screen
+ *
+ * @param {Screen} screen The screen to draw the function onto.  
+ * @param {object} options Optional drawing options.  
+ * @return {Functn}
+ */
 functnPrototype.draw = function (screen, options : any = {}) : number {
 	var functn = this;
 	if (Array.isArray(screen)) {

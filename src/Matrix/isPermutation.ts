@@ -1,7 +1,8 @@
-// ### Matrix.prototype.isPermutation()
-// Determines if the matrix is a permutation matrix
-//
-// *@return {boolean}*
+/**
+ * Determines if the matrix is a permutation matrix
+ *
+ * @return {boolean}
+ */
 isPermutation() : boolean {
 	var rows = [],
 			cols = [];

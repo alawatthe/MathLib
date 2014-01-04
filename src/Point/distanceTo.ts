@@ -1,9 +1,10 @@
-// ### Point.prototype.distanceTo()
-// Calculates the distance to an other point.
-// If no other point is provided, it calculates the distance to the origin.
-//
-// *@param {Point}* [point] The point to calculate the distance to  
-// *@return {number}*
+/**
+ * Calculates the distance to an other point.
+ * If no other point is provided, it calculates the distance to the origin.
+ *
+ * @param {Point} p The point to calculate the distance to  
+ * @return {number}
+ */
 distanceTo(p : Point /*, geom = MathLib.Geometry.active*/) : number {
 	if (arguments.length === 0) {
 		return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);

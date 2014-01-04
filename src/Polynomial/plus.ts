@@ -1,7 +1,9 @@
-// ### Polynomial.prototype.plus()
-// Adds a number or a polynomial
-//
-// *@return {Polynomial}*
+/**
+ * Adds a number or a polynomial
+ *
+ * @param {number|Polynomial} a The number or polynomial to add to the current polynomial
+ * @return {Polynomial}
+ */
 plus(a) : Polynomial {
 	var plus = [],
 			i;

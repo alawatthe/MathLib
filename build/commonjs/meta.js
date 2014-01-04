@@ -1,3 +1,7 @@
+/**
+ *
+ * @module MathLib
+ */
 var MathLib = {};
 
     
@@ -90,11 +94,13 @@ var MathLib = {};
 
     var errors = [], warnings = [];
 
-    // ### [MathLib.on()](http://mathlib.de/en/docs/on)
-    // Binds an event handler to an event.
-    //
-    // *@param {string}* The name of the event.
-    // *@param {function}* The callback function.
+    /**
+    * ### [MathLib.on()](http://mathlib.de/en/docs/on)
+    * Binds an event handler to an event.
+    *
+    * @param {string} The name of the event.
+    * @param {function} The callback function.
+    */
     MathLib.on = function (type, callback) {
         if (type === 'error') {
             errors.push(callback);
@@ -103,11 +109,13 @@ var MathLib = {};
         }
     };
 
-    // ### [MathLib.off()](http://mathlib.de/en/docs/off)
-    // Unbinds an event handler from an event.
-    //
-    // *@param {string}* The name of the event.
-    // *@param {function}* The callback function.
+    /**
+    * ### [MathLib.off()](http://mathlib.de/en/docs/off)
+    * Unbinds an event handler from an event.
+    *
+    * @param {string} The name of the event.
+    * @param {function} The callback function.
+    */
     MathLib.off = function (type, callback) {
         if (type === 'error') {
             errors = errors.filter(function (x) {
@@ -120,20 +128,24 @@ var MathLib = {};
         }
     };
 
-    // ### MathLib.error()
-    // Fires an error event.
-    //
-    // *@param {oject}* An object describing the error further.
+    /**
+    * ### MathLib.error()
+    * Fires an error event.
+    *
+    * @param {oject} An object describing the error further.
+    */
     MathLib.error = function (details) {
         errors.forEach(function (cb) {
             cb(details);
         });
     };
 
-    // ### MathLib.warning()
-    // Fires a waring event.
-    //
-    // *@param {object}* An object describing the warning further.
+    /**
+    * ### MathLib.warning()
+    * Fires a waring event.
+    *
+    * @param {object} An object describing the warning further.
+    */
     MathLib.warning = function (details) {
         warnings.forEach(function (cb) {
             cb(details);

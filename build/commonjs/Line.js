@@ -11,13 +11,18 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 
-    // ## <a id="Line"></a>Line
-    // The line implementation of MathLib makes calculations with lines in the
-    // real plane possible. (Higher dimensions will be supported later)
     var MathLib = require('./meta.js'),
 		Functn = require('./Functn'),
 		Vector = require('./Vector');
 
+    /**
+    * The line implementation of MathLib makes calculations with lines in the
+    * real plane possible. (Higher dimensions will be supported later)
+    *
+    * @class
+    * @augments Vector
+    * @this {Line}
+    */
     var Line = (function (_super) {
         __extends(Line, _super);
         function Line(coords) {
@@ -25,12 +30,13 @@ var __extends = this.__extends || function (d, b) {
             this.type = 'line';
             this.dimension = 2;
         }
-        // ### Line.prototype.draw()
-        // Draws the line on one or more screens
-        //
-        // *@param {Screen}* The screen to draw onto.
-        // *@param {object}* [options] Drawing options
-        // *@return {boolean}*
+        /**
+        * Draws the line on one or more screens
+        *
+        * @param {Screen} screen The screen to draw onto.
+        * @param {object} options Drawing options
+        * @return {boolean}
+        */
         Line.prototype.draw = function (screen, options) {
             if (Array.isArray(screen)) {
                 var line = this;
@@ -43,46 +49,50 @@ var __extends = this.__extends || function (d, b) {
             return this;
         };
 
-        // ### Line.prototype.isEqual()
-        // Determines if two lines are equal.
-        //
-        // *@param {Line}*
-        // *@return {boolean}*
-        Line.prototype.isEqual = function (q) {
+        /**
+        * Determines if two lines are equal.
+        *
+        * @param {Line} l The line to compare with
+        * @return {boolean}
+        */
+        Line.prototype.isEqual = function (l) {
             var p = this.normalize();
-            q = q.normalize();
+            l = l.normalize();
 
-            if (this.length !== q.length) {
+            if (this.length !== l.length) {
                 return false;
             }
 
             return p.every(function (x, i) {
-                return MathLib.isEqual(x, q[i]);
+                return MathLib.isEqual(x, l[i]);
             });
         };
 
-        // ### Line.prototype.isFinite()
-        // Determines if the line is finite
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the line is finite
+        *
+        * @return {boolean}
+        */
         Line.prototype.isFinite = function () {
             return !MathLib.isZero(this[0]) || !MathLib.isZero(this[1]);
         };
 
-        // ### Line.prototype.isParallelTo()
-        // Determines if two lines are parallel.
-        //
-        // *@param {Line}*
-        // *@return {boolean}*
+        /**
+        * Determines if two lines are parallel.
+        *
+        * @param {Line} l The other line
+        * @return {boolean}
+        */
         Line.prototype.isParallelTo = function (l) {
             return MathLib.isZero(this[0] * l[1] - this[1] * l[0]);
         };
 
-        // ### Line.prototype.meet()
-        // Calculates the meeting point of two lines
-        //
-        // *@param {Line}*
-        // *@return {Point}*
+        /**
+        * Calculates the meeting point of two lines
+        *
+        * @param {Line} l The line to intersect the current line with
+        * @return {Point}
+        */
         Line.prototype.meet = function (l) {
             var point, k = this;
 
@@ -123,10 +133,11 @@ var __extends = this.__extends || function (d, b) {
             }
         };
 
-        // ### Line.prototype.normalize()
-        // Normalizes the line.
-        //
-        // *@return {Line}*
+        /**
+        * Normalizes the line.
+        *
+        * @return {Line}
+        */
         Line.prototype.normalize = function () {
             var h = MathLib.hypot(this[0], this[1]);
 
@@ -139,11 +150,12 @@ var __extends = this.__extends || function (d, b) {
             }
         };
 
-        // ### Line.prototype.parallelThrough()
-        // Determines an parallel line through a given point.
-        //
-        // *@param {Point}*
-        // *@return {Line}*
+        /**
+        * Determines an parallel line through a given point.
+        *
+        * @param {Point} p The Point through which the line should go through
+        * @return {Line}
+        */
         Line.prototype.parallelThrough = function (p) {
             var l = this, parallel = new MathLib.Line([0, 0, 0]);
 

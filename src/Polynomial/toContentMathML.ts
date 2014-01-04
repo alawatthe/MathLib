@@ -1,7 +1,8 @@
-// ### Polynomial.prototype.toContentMathML()
-// Returns a content MathML representation of the polynomial
-//
-// *@return {string}*
+/**
+ * Returns a content MathML representation of the polynomial
+ *
+ * @return {string}
+ */
 toContentMathML(math) : string {
 	var str = '<apply><csymbol cd="arith1">plus</csymbol>', i;
 	for (i = this.deg; i >= 0; i--) {
@@ -24,9 +25,9 @@ toContentMathML(math) : string {
 
 	str += '</apply>';
 
-	if (math) {
-		str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>';
-	}
+	//if (math) {
+	//	str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>';
+	//}
 
 	return str;
 }

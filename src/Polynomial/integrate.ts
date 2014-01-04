@@ -1,8 +1,9 @@
-// ### Polynomial.prototype.integrate()
-// Integrates the polynomial
-//
-// *@param {number}* [n] the number of times to integrate the polynomial.  
-// *@return {Polynomial}*
+/**
+ * Integrates the polynomial
+ *
+ * @param {number} n The number of times to integrate the polynomial.  
+ * @return {Polynomial}
+ */
 integrate(n = 1) : Polynomial {
 	var i, ii, 
 			antiderivative = [];

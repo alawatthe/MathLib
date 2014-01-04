@@ -1,11 +1,13 @@
-// ### [Circle.prototype.positionOf()](http://mathlib.de/en/docs/Circle/positionOf)
-// Determine if a point is in, on or outside a circle.
-//
-// *@return {string}*
-positionOf(p) : string {
+/**
+ * Determine if a point is in, on or outside a circle.
+ *
+ * @param {Point} point The Point to determine the position of
+ * @return {string}
+ */
+positionOf(point : Point) : string {
 	var diff;
-	if (p.type === 'point' && p.dimension === 2) {
-		diff = p.distanceTo(this.center) - this.radius;
+	if (point.type === 'point' && point.dimension === 2) {
+		diff = point.distanceTo(this.center) - this.radius;
 		if (MathLib.isZero(diff)) {
 			return 'on';
 		}

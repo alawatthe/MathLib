@@ -1,10 +1,11 @@
-// ### Matrix.prototype.isBandMatrix()
-// Determines if the matrix is a band matrix.
-//
-// *@param {number}*  
-// *@param {number}*  
-// *@return {boolean}*
-isBandMatrix(l, u) : boolean {
+/**
+ * Determines if the matrix is a band matrix.
+ *
+ * @param {number} l The wished lower bandwidth
+ * @param {number} u The wished upper bandwidth
+ * @return {boolean}
+ */
+isBandMatrix(l : number, u : number) : boolean {
 	// var i, j, ii, jj;
 	
 	if (arguments.length === 1) {

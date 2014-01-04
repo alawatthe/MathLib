@@ -1,8 +1,10 @@
-// ### Matrix.parametricPlot3D()
-//
-//
-// *@param {function}* The function which is called on every argument  
-// *@return {Screen3D}*
+/**
+ * Creates a parametric plot
+ *
+ * @param {function} f The function which is called on every argument  
+ * @param {object} options Optional drawing options
+ * @return {Screen3D}
+ */
 parametricPlot3D(f, options) : Screen3D {
 
 	var defaults = {

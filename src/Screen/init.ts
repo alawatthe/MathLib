@@ -1,7 +1,11 @@
-// ## <a id="Screen"></a>Screen
-// This module contains the common methods of all drawing modules.
-
 /// no import
+
+/**
+ * This module contains the common methods of all drawing modules.
+ *
+ * @class
+ * @this {Screen}
+ */
 export class Screen {
 	type = 'screen';
 

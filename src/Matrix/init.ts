@@ -1,18 +1,22 @@
-// ## <a id="Matrix"></a>Matrix
-// The matrix implementation of MathLib makes calculations with matrices of
-// arbitrary size possible. The entries of a matrix can be numbers and complex
-// numbers.
-//
-// It is as easy as
-// ```
-// new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-// ```
-// to create the following matrix:  
-//    ⎛ 1 2 3 ⎞  
-//    ⎜ 4 5 6 ⎟  
-//    ⎝ 7 8 9 ⎠
-
 /// import Functn, Permutation
+
+/**
+ * The matrix implementation of MathLib makes calculations with matrices of
+ * arbitrary size possible. The entries of a matrix can be numbers and complex
+ * numbers.
+ *
+ * It is as easy as
+ * ```
+ * new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+ * ```
+ * to create the following matrix:  
+ *    ⎛ 1 2 3 ⎞  
+ *    ⎜ 4 5 6 ⎟  
+ *    ⎝ 7 8 9 ⎠
+ *
+ * @class
+ * @this {Matrix}
+ */
 export class Matrix {
 	type = 'matrix';
 

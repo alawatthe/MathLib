@@ -1,7 +1,8 @@
-// ### Complex.prototype.artanh()
-// Returns the inverse hyperbolic tangent of the number
-//
-// *@return {Complex}*
+/**
+ * Returns the inverse hyperbolic tangent of the number
+ *
+ * @return {Complex}
+ */
 artanh() : Complex {
 	if (this.isZero()) {
 		return new MathLib.Complex(this.re, this.im);

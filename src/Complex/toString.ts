@@ -1,7 +1,8 @@
-// ### [Complex.prototype.toString()](http://mathlib.de/en/docs/Complex/toString)
-// Custom toString function
-//
-// *@return {string}*
+/**
+ * Custom toString function
+ *
+ * @return {string}
+ */
 toString() : string {
 	var str = '';
 

@@ -1,7 +1,8 @@
-// ### Matrix.prototype.toString()
-// Creating a custom .toString() function
-//
-// *@return {string}*
+/**
+ * Creating a custom .toString() function
+ *
+ * @return {string}
+ */
 toString() : string {
 	return this.reduce(function (str, x) {
 		return str + x.reduce(function (prev, cur) {

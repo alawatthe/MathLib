@@ -1,7 +1,8 @@
-// ### Point.prototype.toComplex()
-// Converts a two dimensional point to the corresponding complex number.
-//
-// *@return {Complex}*
+/**
+ * Converts a two dimensional point to the corresponding complex number.
+ *
+ * @return {Complex}
+ */
 toComplex() : Complex {
 	if (this.dimension === 2) {
 		if (MathLib.isZero(this[2])) {

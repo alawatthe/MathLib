@@ -1,7 +1,8 @@
-// ### Screen2D.prototype.drawGrid
-// Draws the grid.
-//
-// *@return {Screen2D}*
+/**
+ * Draws the grid.
+ *
+ * @return {Screen2D}
+ */
 drawGrid() {
 
 	if (!this.options.grid) {

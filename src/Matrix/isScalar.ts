@@ -1,8 +1,9 @@
-// ### Matrix.prototype.isScalar()
-// Determines if the matrix is a scalar matrix
-// (that is a multiple of the identity matrix)
-//
-// *@return {boolean}*
+/**
+ * Determines if the matrix is a scalar matrix
+ * (that is a multiple of the identity matrix)
+ *
+ * @return {boolean}
+ */
 isScalar() : boolean {
 	var i, ii,
 			diag = this.diag;

@@ -1,8 +1,9 @@
-// ### Point.prototype.join()
-// Calculates a line connecting two points
-//
-// *@param {Point}* The point to calculate the line to  
-// *@return {Line}*
+/**
+ * Calculates a line connecting two points
+ *
+ * @param {Point} q The point to calculate the line to  
+ * @return {Line}
+ */
 join(q : Point) : Line {
 	var line,
 			p = this;

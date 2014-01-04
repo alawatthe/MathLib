@@ -1,7 +1,8 @@
-// ### Screen.prototype.contextmenu()
-// Handles the contextmenu event
-//
-// *@param {event}*
+/**
+ * Handles the contextmenu event
+ *
+ * @param {event} evt The event object
+ */
 oncontextmenu(evt) {
 
 	var listener,

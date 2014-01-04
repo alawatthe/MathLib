@@ -1,7 +1,8 @@
-// ### [Conic.prototype.polarity()](http://mathlib.de/en/docs/Conic/polarity)
-// Calculates the four polarity of a conic.
-//
-// *@return {Point[]}*
+/**
+ * Calculates the four polarity of a conic.
+ *
+ * @return {Point[]}
+ */
 polarity(x) {
 	var object, m,
 			c = this

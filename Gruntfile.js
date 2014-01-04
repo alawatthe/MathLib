@@ -622,6 +622,7 @@ module.exports = function (grunt) {
 			}
 		},
 
+
 		// Typescript
 		ts: {
 			plain: {
@@ -649,7 +650,7 @@ module.exports = function (grunt) {
 
 		clean: {
 			plain: ['build/plain'],
-			reference: ['build/amd/reference.js', 'build/commonjs/reference.js'],
+			reference: ['build/plain/reference.js', 'build/amd/reference.js', 'build/commonjs/reference.js'],
 			tscommand: ['tscommand.tmp.txt']
 		},
 
@@ -668,6 +669,31 @@ module.exports = function (grunt) {
 
 
 		'regex-replace': {
+			plainHead: {
+				src: ['build/plain/meta.js'],
+				actions: [
+					{
+						name: '',
+						search: /\/\/\/ <reference path='reference\.ts'\/>/,
+						replace: 
+						'/**\n'+
+						' *\n'+
+						' * @module MathLib\n'+
+						' */'
+					}
+				]
+			},
+			
+			plain: {
+				src: ['build/plain/*.js'],
+				actions: [
+					{
+						search: "/// <reference path='reference.ts'/>\n",
+						replace: ''
+					},
+				]
+			},
+			
 			amdHead: {
 				src: ['build/amd/meta.js'],
 				actions: [
@@ -951,9 +977,10 @@ module.exports = function (grunt) {
 	});
 
 
-	grunt.registerTask('generatePlain', ['generateTestFiles', 'concat:meta', 'concat:Expression', 'concat:Functn', 'concat:Screen', 'concat:Layer',
+	grunt.registerTask('generatePlain', ['clean:plain', 'generateTestFiles', 'concat:meta', 'concat:Expression', 'concat:Functn', 'concat:Screen', 'concat:Layer',
 			'concat:Canvas', 'concat:SVG', 'concat:Screen2D', 'concat:Screen3D', 'concat:Vector', 'concat:Circle', 'concat:Complex', 'concat:Line',
-			'concat:Matrix', 'concat:Permutation', 'concat:Conic', 'concat:Point', 'concat:Polynomial', 'concat:Rational', 'concat:Set', 'ts', 'concat:plain', 'uglify']);
+			'concat:Matrix', 'concat:Permutation', 'concat:Conic', 'concat:Point', 'concat:Polynomial', 'concat:Rational', 'concat:Set', 'ts', 'concat:plain', 'uglify',
+			'regex-replace:plainHead', 'regex-replace:plain', 'clean:reference']);
 	grunt.registerTask('generateAMD', ['copy:amd', 'regex-replace:amdHead', 'regex-replace:amd']);
 	grunt.registerTask('generateCommonjs', ['copy:commonjs', 'regex-replace:commonjsHead', 'regex-replace:commonjs']);
 	grunt.registerTask('generateES6', ['copy:es6', 'regex-replace:es6Head', 'regex-replace:es6']);

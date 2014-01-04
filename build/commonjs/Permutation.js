@@ -1,9 +1,14 @@
 
-    // ## <a id="Permutation"></a>Permutation
     var MathLib = require('./meta.js'),
 		Functn = require('./Functn'),
 		Matrix = require('./Matrix');
 
+    /**
+    * The permutation class for MathLib
+    *
+    * @class
+    * @this {Permutation}
+    */
     var Permutation = (function () {
         function Permutation(p) {
             var _this = this;
@@ -24,11 +29,12 @@
             this.length = permutation.length;
             this.cycle = cycle;
         }
-        // ### Permutation.prototype.applyTo()
-        // Applies the permutation to a number or a array/matrix/point/vector
-        //
-        // *@param {number|array|Matrix|Point|Vector}*
-        // *@return {number|array|Matrix|Point|Vector}*
+        /**
+        * Applies the permutation to a number or a array/matrix/point/vector
+        *
+        * @param {number|array|Matrix|Point|Vector} n The object to apply the permutation to
+        * @return {number|array|Matrix|Point|Vector}
+        */
         Permutation.prototype.applyTo = function (n) {
             var p, permutatedObj;
             if (typeof n === 'number') {
@@ -46,11 +52,12 @@
             }
         };
 
-        // ### Permutation.prototype.compare()
-        // Compares two permutations.
-        //
-        // *@param {Permutation}* The permutation to compare
-        // *@return {number}*
+        /**
+        * Compares two permutations.
+        *
+        * @param {Permutation} p The permutation to compare
+        * @return {number}
+        */
         Permutation.prototype.compare = function (p) {
             var i, ii;
 
@@ -67,11 +74,12 @@
             return 0;
         };
 
-        // ### Permutation.cycleToList()
-        // Converts a cycle representation to a list representation
-        //
-        // *@param {array}* cycle The cycle to be converted
-        // *@return {array}*
+        /**
+        * Converts a cycle representation to a list representation
+        *
+        * @param {array} cycle The cycle to be converted
+        * @return {array}
+        */
         Permutation.cycleToList = function (cycle) {
             var index, list = [], cur, i, ii, j, jj, max;
 
@@ -93,10 +101,11 @@
             return list;
         };
 
-        // ### Permutation.prototype.inverse()
-        // Calculates the inverse of the permutation
-        //
-        // *@return {Permutation}*
+        /**
+        * Calculates the inverse of the permutation
+        *
+        * @return {Permutation}
+        */
         Permutation.prototype.inverse = function () {
             var cycle = this.cycle.slice(0);
             cycle.reverse().forEach(function (e) {
@@ -105,11 +114,12 @@
             return new MathLib.Permutation(cycle);
         };
 
-        // ### Permutation.listToCycle()
-        // Converts a list representation to a cycle representation
-        //
-        // *@param {array}* list The list to be converted
-        // *@return {array}*
+        /**
+        * Converts a list representation to a cycle representation
+        *
+        * @param {array} list The list to be converted
+        * @return {array}
+        */
         Permutation.listToCycle = function (list) {
             var finished = [], cur, i, ii, cycle, cycles = [];
 
@@ -128,10 +138,11 @@
             return cycles;
         };
 
-        // ### Permutation.prototype.map()
-        // Works like Array.prototype.map.
-        //
-        // *@return {Permutation}*
+        /**
+        * Works like Array.prototype.map.
+        *
+        * @return {Permutation}
+        */
         Permutation.prototype.map = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -140,10 +151,11 @@
             return new MathLib.Permutation(Array.prototype.map.apply(this, args));
         };
 
-        // ### Permutation.prototype.sgn()
-        // Calculates the signum of the permutation
-        //
-        // *@return {number}*
+        /**
+        * Calculates the signum of the permutation
+        *
+        * @return {number}
+        */
         Permutation.prototype.sgn = function () {
             var i, ii, count = 0;
 
@@ -154,10 +166,12 @@
             return -2 * (count % 2) + 1;
         };
 
-        // ### Permutation.prototype.times()
-        // Multiplies two permutations
-        //
-        // *@return {Permutation}*
+        /**
+        * Multiplies two permutations
+        *
+        * @param {Permutation} p The permutation to multiply
+        * @return {Permutation}
+        */
         Permutation.prototype.times = function (p) {
             var a = this;
             return p.map(function (x) {
@@ -165,11 +179,12 @@
             });
         };
 
-        // ### Permutation.prototype.toMatrix()
-        // Converts the permuatation to a matrix.
-        //
-        // *@param {number}* [size] The size of the matrix
-        // *@return {Matrix}*
+        /**
+        * Converts the permuatation to a matrix.
+        *
+        * @param {number} n The size of the matrix
+        * @return {Matrix}
+        */
         Permutation.prototype.toMatrix = function (n) {
             var row = [], matrix = [], index, i, ii;
             n = n || this.length;
@@ -185,10 +200,11 @@
             return new MathLib.Matrix(matrix);
         };
 
-        // ### Permutation.prototype.toString()
-        // String representation of the permutation.
-        //
-        // *@return {string}*
+        /**
+        * String representation of the permutation.
+        *
+        * @return {string}
+        */
         Permutation.prototype.toString = function () {
             var str = '';
             this.cycle.forEach(function (elem) {

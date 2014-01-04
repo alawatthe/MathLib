@@ -1,7 +1,11 @@
-// ## <a id="Conic" href="http://mathlib.de/en/docs/Conic">Conic</a>
-// The conic implementation of MathLib makes calculations with conics possible.
-
 /// import Functn, Matrix
+
+/**
+ * The conic implementation of MathLib makes calculations with conics possible.
+ *
+ * @class Conic
+ * @this {Conic}
+ */
 export class Conic {
 	type = 'conic';
 
