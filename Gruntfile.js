@@ -203,7 +203,7 @@ module.exports = function (grunt) {
 
 			plain: {
 				src: ['build/plain/fullscreen.js', 'build/plain/lineDash.js', 'build/plain/meta.js', 'build/plain/Expression.js', 'build/plain/Functn.js', 'build/plain/Screen.js', 'build/plain/Layer.js', 'build/plain/Canvas.js', 'build/plain/SVG.js', 'build/plain/Screen2D.js', 'build/plain/Screen3D.js', 'build/plain/Vector.js', 'build/plain/Circle.js', 'build/plain/Complex.js', 'build/plain/Line.js', 'build/plain/Matrix.js', 'build/plain/Permutation.js', 'build/plain/Conic.js', 'build/plain/Point.js', 'build/plain/Polynomial.js', 'build/plain/Rational.js', 'build/plain/Set.js'],
-				dest: 'build/MathLib.d.ts',
+				dest: 'build/MathLib.js',
 				options: {
 					banner: banner,
 					footer: ''

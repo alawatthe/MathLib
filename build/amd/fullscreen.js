@@ -53,7 +53,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 				return function() { return document.mozFullScreenEnabled; };
 			}
 
-			GameShim.supports.fullscreen = false;
 			return function() { return false; }; // not supported, never fullscreen
 		})();
 		

@@ -2,12 +2,227 @@
  * MathLib JavaScript Library v0.6.1
  * http://mathlib.de/
  *
- * Copyright 2012 - 2013 Alexander Zeilmann
+ * Copyright 2012 - 2014 Alexander Zeilmann
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2013-12-31
+ * build date: 2014-01-05
  */
+// [Specification](https://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html)
+// Chrome: ~
+// Firefox: ~ [Unprefix the DOM fullscreen API](https://bugzilla.mozilla.org/show_bug.cgi?id=743198)
+// Safari: ✗
+// Internet Explorer: ✗
+// Opera: ✗
+
+
+/**
+* @fileoverview game-shim - Shims to normalize gaming-related APIs to their respective specs
+* @author Brandon Jones
+* @version 1.2
+*/
+
+
+/* Copyright (c) 2012, Brandon Jones. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+	* Redistributions of source code must retain the above copyright notice, this
+	list of conditions and the following disclaimer.
+	* Redistributions in binary form must reproduce the above copyright notice,
+	this list of conditions and the following disclaimer in the documentation 
+	and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+
+(function (global) {
+	'use strict';
+
+	var elementPrototype = (global.HTMLElement || global.Element)['prototype'];
+	var getter;
+
+
+	// document.fullscreenEnabled
+	if(!document.hasOwnProperty("fullscreenEnabled")) {
+		getter = (function() {
+			// These are the functions that match the spec, and should be preferred
+			if("webkitIsFullScreen" in document) {
+				return function() { return document.webkitFullscreenEnabled; };
+			}
+			if("mozFullScreenEnabled" in document) {
+				return function() { return document.mozFullScreenEnabled; };
+			}
+
+			return function() { return false; }; // not supported, never fullscreen
+		})();
+		
+		Object.defineProperty(document, "fullscreenEnabled", {
+			enumerable: true, configurable: false, writeable: false,
+			get: getter
+		});
+	}
+	
+	if(!document.hasOwnProperty("fullscreenElement")) {
+		getter = (function() {
+			// These are the functions that match the spec, and should be preferred
+			var i=0, name=["webkitCurrentFullScreenElement", "webkitFullscreenElement", "mozFullScreenElement"];
+			for (; i<name.length; i++)
+			{
+				if (name[i] in document)
+				{
+					return function() { return document[name[i]]; };
+				}
+			}
+			return function() { return null; }; // not supported
+		})();
+		
+		Object.defineProperty(document, "fullscreenElement", {
+			enumerable: true, configurable: false, writeable: false,
+			get: getter
+		});
+	}
+	
+	// Document event: fullscreenchange
+	function fullscreenchange(oldEvent) {
+		var newEvent = document.createEvent("CustomEvent");
+		newEvent.initCustomEvent("fullscreenchange", true, false, null);
+		// TODO: Any need for variable copy?
+		document.dispatchEvent(newEvent);
+	}
+	document.addEventListener("webkitfullscreenchange", fullscreenchange, false);
+	document.addEventListener("mozfullscreenchange", fullscreenchange, false);
+	
+	// Document event: fullscreenerror
+	function fullscreenerror(oldEvent) {
+		var newEvent = document.createEvent("CustomEvent");
+		newEvent.initCustomEvent("fullscreenerror", true, false, null);
+		// TODO: Any need for variable copy?
+		document.dispatchEvent(newEvent);
+	}
+	document.addEventListener("webkitfullscreenerror", fullscreenerror, false);
+	document.addEventListener("mozfullscreenerror", fullscreenerror, false);
+	
+	// element.requestFullScreen
+	if(!elementPrototype.requestFullScreen) {
+		elementPrototype.requestFullScreen = (function() {
+			if(elementPrototype.webkitRequestFullScreen) {
+				return function() {
+					this.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+				};
+			}
+
+			if(elementPrototype.mozRequestFullScreen) {
+				return function() {
+					this.mozRequestFullScreen();
+				};
+			}
+			
+			return function(){ /* unsupported, fail silently */ };
+		})();
+	}
+	
+	// document.cancelFullScreen
+	if(!document.cancelFullScreen) {
+		document.cancelFullScreen = (function() {
+			return document.webkitCancelFullScreen ||
+					document.mozCancelFullScreen ||
+					function(){ /* unsupported, fail silently */ };
+		})();
+	}
+
+})(window);
+// [Specification](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#line-styles)  
+// Chrome: ✓ [Implement canvas v5 line dash feature](http://trac.webkit.org/changeset/128116)  
+// Firefox: ~ [Implement canvasRenderingContext2D.get/setLineDash](https://bugzilla.mozilla.org/show_bug.cgi?id=768067)  
+// Safari: ✗  
+// Internet Explorer: ✗  
+// Opera: ✗  
+
+(function () {
+	if (!('setLineDash' in CanvasRenderingContext2D.prototype)) {
+		var setLineDash, getLineDash, setLineDashOffset, getLineDashOffset, prototype;
+
+		if ('mozDash' in CanvasRenderingContext2D.prototype) {
+			prototype = CanvasRenderingContext2D.prototype;
+			setLineDash = function (dash) {
+				this.mozDash = dash;
+			};
+			getLineDash = function () {
+				return this.mozDash;
+			};
+
+			setLineDashOffset = function (dashOffset) {
+				this.mozDashOffset = dashOffset;
+			};
+			getLineDashOffset = function () {
+				return this.mozDashOffset;
+			};
+
+		}
+
+		// Safari isn't supporting webkitLineDash any longer, but it also has no support for setLineDash.
+		// Additionally extending the CanvasRenderingContext2D.prototype is only possible with a weird hack.
+		/*
+		else if ('webkitLineDash' in CanvasRenderingContext2D.prototype) {
+			prototype = document.createElement('canvas').getContext('2d').__proto__;
+			setLineDash = function (dash) {
+				this.webkitLineDash = dash;
+			};
+			getLineDash = function () {
+				return this.webkitLineDash;
+			};
+
+			setLineDashOffset = function (dashOffset) {
+				this.webkitLineDashOffset = dashOffset;
+			};
+			getLineDashOffset = function () {
+				return this.webkitLineDashOffset;
+			};
+		}
+		*/
+		else {
+			prototype = CanvasRenderingContext2D.prototype;
+			setLineDash = function () {};
+			getLineDash = function () {};
+			setLineDashOffset = function () {};
+			getLineDashOffset = function () {};
+		}
+
+
+		Object.defineProperty(prototype, 'setLineDash', {
+			value: setLineDash,
+			enumerable: true,
+			configurable: false,
+			writeable: false
+		});
+
+		Object.defineProperty(prototype, 'getLineDash', {
+			value: getLineDash,
+			enumerable: true,
+			configurable: false,
+			writeable: false
+		});
+
+		Object.defineProperty(prototype, 'lineDashOffset', {
+			set: setLineDashOffset,
+			get: getLineDashOffset,
+			enumerable: true,
+			configurable: false,
+			writeable: false
+		});
+
+	}
+})();
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (_MathLib) {
@@ -101,11 +316,13 @@ var MathLib;
 
     var errors = [], warnings = [];
 
-    // ### [MathLib.on()](http://mathlib.de/en/docs/on)
-    // Binds an event handler to an event.
-    //
-    // *@param {string}* The name of the event.
-    // *@param {function}* The callback function.
+    /**
+    * ### [MathLib.on()](http://mathlib.de/en/docs/on)
+    * Binds an event handler to an event.
+    *
+    * @param {string} The name of the event.
+    * @param {function} The callback function.
+    */
     _MathLib.on = function (type, callback) {
         if (type === 'error') {
             errors.push(callback);
@@ -114,11 +331,13 @@ var MathLib;
         }
     };
 
-    // ### [MathLib.off()](http://mathlib.de/en/docs/off)
-    // Unbinds an event handler from an event.
-    //
-    // *@param {string}* The name of the event.
-    // *@param {function}* The callback function.
+    /**
+    * ### [MathLib.off()](http://mathlib.de/en/docs/off)
+    * Unbinds an event handler from an event.
+    *
+    * @param {string} The name of the event.
+    * @param {function} The callback function.
+    */
     _MathLib.off = function (type, callback) {
         if (type === 'error') {
             errors = errors.filter(function (x) {
@@ -131,20 +350,24 @@ var MathLib;
         }
     };
 
-    // ### MathLib.error()
-    // Fires an error event.
-    //
-    // *@param {oject}* An object describing the error further.
+    /**
+    * ### MathLib.error()
+    * Fires an error event.
+    *
+    * @param {oject} An object describing the error further.
+    */
     _MathLib.error = function (details) {
         errors.forEach(function (cb) {
             cb(details);
         });
     };
 
-    // ### MathLib.warning()
-    // Fires a waring event.
-    //
-    // *@param {object}* An object describing the warning further.
+    /**
+    * ### MathLib.warning()
+    * Fires a waring event.
+    *
+    * @param {object} An object describing the warning further.
+    */
     _MathLib.warning = function (details) {
         warnings.forEach(function (cb) {
             cb(details);
@@ -157,11 +380,15 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Expression" href="http://mathlib.de/en/docs/Expression">Expression</a>
-    // MathLib.Expression is the MathLib implementation of symbolic expressions
     /// no import
     // There is no DOMParser in Node, so we have to require one (done via a regexp replace)
     /// DOMParser
+    /**
+    * MathLib.Expression is the MathLib implementation of symbolic expressions
+    *
+    * @class
+    * @this {Expression}
+    */
     var Expression = (function () {
         function Expression(expr) {
             if (typeof expr === "undefined") { expr = {}; }
@@ -177,19 +404,22 @@ var MathLib;
                 }
             }
         }
-        // ### [Expression.prototype.compare()](http://mathlib.de/en/docs/Expression/compare)
-        // Compares two expressions
-        //
-        // *@param {Expression}* The expression to compare
-        // *@return {number}*
-        Expression.prototype.compare = function (e) {
-            return MathLib.sign(this.toString().localeCompare(e.toString()));
+        /**
+        * Compares two expressions
+        *
+        * @param {Expression} expr The expression to compare
+        * @return {number}
+        */
+        Expression.prototype.compare = function (expr) {
+            return MathLib.sign(this.toString().localeCompare(expr.toString()));
         };
 
-        // ### Expression.constant
-        // Constructs a constant expression.
-        //
-        // *@return {Expression}*
+        /**
+        * Constructs a constant expression.
+        *
+        * @param {String} n The constant to generate an expression from
+        * @return {Expression}
+        */
         Expression.constant = function (n) {
             return new MathLib.Expression({
                 subtype: 'constant',
@@ -197,10 +427,11 @@ var MathLib;
             });
         };
 
-        // ### <a href="http://mathlib.de/en/docs/Expression/evaluate">Expression.prototype.evaluate</a>
-        // Evaluates the symbolic expression
-        //
-        // *@return {any}*
+        /**
+        * Evaluates the symbolic expression
+        *
+        * @return {any}
+        */
         Expression.prototype.evaluate = function () {
             if (this.subtype === 'binaryOperator') {
                 return MathLib[this.name].apply(null, this.content.map(function (x) {
@@ -292,10 +523,12 @@ var MathLib;
             }
         };
 
-        // ### Expression.prototype.map
-        // Maps the expression tree over to an other expression tree.
-        //
-        // *@return {Expression}*
+        /**
+        * Maps the expression tree over to an other expression tree.
+        *
+        * @param {function} f The function to apply to all the nodes in the tree.
+        * @return {Expression}
+        */
         Expression.prototype.map = function (f) {
             var prop, properties = {}, mappedProperties;
 
@@ -317,10 +550,12 @@ var MathLib;
             return new MathLib.Expression(mappedProperties);
         };
 
-        // ### Expression.number
-        // Constructs a number expression.
-        //
-        // *@return {Expression}*
+        /**
+        * Constructs a number expression.
+        *
+        * @param {String} n The number to generate an expression from
+        * @return {Expression}
+        */
         Expression.number = function (n) {
             return new MathLib.Expression({
                 subtype: 'number',
@@ -328,10 +563,12 @@ var MathLib;
             });
         };
 
-        // ### Expression.prototype.parseContentMathML
-        // Parses a content MathML string and returns an Expression.
-        //
-        // *@return {Expression}*
+        /**
+        * Parses a content MathML string and returns an Expression.
+        *
+        * @param {string} MathMLString The string to be parsed as MathML
+        * @return {Expression}
+        */
         Expression.parseContentMathML = function (MathMLString) {
             var MathMLdoc, tokenizer = new DOMParser();
 
@@ -354,7 +591,7 @@ var MathLib;
             }).join('cs>');
 
             // Gives an error in Firefox
-            //* MathML = tokenizer.parseFromString(MathMLString, 'application/mathml+xml'); *
+            // MathML = tokenizer.parseFromString(MathMLString, 'application/mathml+xml');
             MathMLdoc = tokenizer.parseFromString(MathMLString, 'application/xml');
 
             var handler = {
@@ -396,8 +633,8 @@ var MathLib;
                     }
 
                     if (type === 'number') {
-                        /* TODO: base conversions
-                        var base = node.getAttribute('base') !== null ? node.getAttributes('base') : '10'; */
+                        // TODO: base conversions
+                        // var base = node.getAttribute('base') !== null ? node.getAttributes('base') : '10';
                         return parser(node.childNodes[0]);
                     } else if (type === 'rational') {
                         return new MathLib.Expression({
@@ -489,10 +726,11 @@ var MathLib;
             return parser(MathMLdoc.childNodes[0]);
         };
 
-        // ### <a href="http://mathlib.de/en/docs/Expression/toContentMathML">Expression.prototype.toContentMathML</a>
-        // Convert the Expression to MathML.
-        //
-        // *@return {string}*
+        /**
+        * Convert the Expression to MathML.
+        *
+        * @return {string}
+        */
         Expression.prototype.toContentMathML = function () {
             if (this.subtype === 'binaryOperator') {
                 var op = this.name === 'pow' ? 'power' : this.name;
@@ -555,12 +793,12 @@ var MathLib;
             }
         };
 
-        // ### <a href="http://mathlib.de/en/docs/Expression/toLaTeX">Expression.prototype.toLaTeX</a>
-        // Convert the expression to a LaTeX string
-        //
-        // *@return {string}*
-        Expression.prototype.toLaTeX = function (opts) {
-            if (typeof opts === "undefined") { opts = {}; }
+        /**
+        * Convert the expression to a LaTeX string
+        *
+        * @return {string}
+        */
+        Expression.prototype.toLaTeX = function () {
             var op;
 
             if (this.subtype === 'binaryOperator') {
@@ -579,7 +817,7 @@ var MathLib;
                 return str;
             }
             if (this.subtype === 'brackets') {
-                return '\\left(' + this.content.toLaTeX(opts) + '\\right)';
+                return '\\left(' + this.content.toLaTeX() + '\\right)';
             }
             if (this.subtype === 'complexNumber') {
                 if (this.mode === 'cartesian') {
@@ -606,7 +844,7 @@ var MathLib;
             if (this.subtype === 'naryOperator') {
                 op = this.value === '*' ? '\\cdot' : this.value;
                 return this.content.reduce(function (old, cur, idx) {
-                    return old + (idx ? op : '') + cur.toLaTeX(opts);
+                    return old + (idx ? op : '') + cur.toLaTeX();
                 }, '');
             }
             if (this.subtype === 'rationalNumber') {
@@ -622,9 +860,9 @@ var MathLib;
             }
             if (this.subtype === 'unaryOperator') {
                 if (this.value === '-') {
-                    return '-' + this.content.toLaTeX(opts);
+                    return '-' + this.content.toLaTeX();
                 }
-                return this.content.toLaTeX(opts);
+                return this.content.toLaTeX();
             }
             if (this.subtype === 'vector') {
                 return '\\begin{pmatrix}' + this.value.map(function (x) {
@@ -639,15 +877,15 @@ var MathLib;
                     'arccos', 'arcsin', 'arctan', 'arg', 'cos', 'cosh', 'cot', 'coth', 'csc', 'deg', 'det', 'dim',
                     'gcd', 'lg', 'ln', 'log', 'max', 'min', 'sec', 'sin', 'sinh', 'tan', 'tanh'].indexOf(this.value) + 1) {
                     return '\\' + this.value + '\\left(' + (this.content.length ? this.content.reduce(function (old, cur, idx) {
-                        return old + (idx ? ',' : '') + cur.toLaTeX(opts);
+                        return old + (idx ? ',' : '') + cur.toLaTeX();
                     }, '') : 'x') + '\\right)';
                 } else if (this.value === 'exp') {
-                    return 'e^{' + (this.content.length ? this.content[0].toLaTeX(opts) : 'x') + '}';
+                    return 'e^{' + (this.content.length ? this.content[0].toLaTeX() : 'x') + '}';
                 } else if (this.value === 'sqrt') {
-                    return '\\' + this.value + '{' + (this.content.length ? this.content[0].toLaTeX(opts) : 'x') + '}';
+                    return '\\' + this.value + '{' + (this.content.length ? this.content[0].toLaTeX() : 'x') + '}';
                 } else {
                     return '\\operatorname{' + this.value + '}\\left(' + (this.content.length ? this.content.reduce(function (old, cur, idx) {
-                        return old + (idx ? ',' : '') + cur.toLaTeX(opts);
+                        return old + (idx ? ',' : '') + cur.toLaTeX();
                     }, '') : 'x') + '\\right)';
                 }
             }
@@ -659,10 +897,11 @@ var MathLib;
             }
         };
 
-        // ### <a href="http://mathlib.de/en/docs/Expression/toMathML">Expression.prototype.toMathML</a>
-        // Convert the Expression to MathML.
-        //
-        // *@return {string}*
+        /**
+        * Convert the Expression to MathML.
+        *
+        * @return {string}
+        */
         Expression.prototype.toMathML = function () {
             if (this.subtype === 'binaryOperator') {
                 if (this.value === '-') {
@@ -743,10 +982,11 @@ var MathLib;
             }
         };
 
-        // ### <a href="http://mathlib.de/en/docs/Expression/toString">Expression.prototype.toString</a>
-        // A custom toString function
-        //
-        // *@return {string}*
+        /**
+        * A custom toString function
+        *
+        * @return {string}
+        */
         Expression.prototype.toString = function () {
             var _this = this;
             if (this.subtype === 'binaryOperator') {
@@ -825,10 +1065,12 @@ var MathLib;
             }
         };
 
-        // ### Expression.variable
-        // Constructs a variable expression.
-        //
-        // *@return {Expression}*
+        /**
+        * Constructs a variable expression.
+        *
+        * @param {String} n The variable to generate an expression from
+        * @return {Expression}
+        */
         Expression.variable = function (n) {
             return new MathLib.Expression({
                 subtype: 'variable',
@@ -1277,21 +1519,19 @@ var MathLib;
 
                     expr = parseAdditive();
 
-                    /*
-                    TODO: support assignments
-                    if (typeof expr !== 'undefined' && expr.Identifier) {
-                    token = lexer.peek();
-                    if (matchOp(token, '=')) {
-                    lexer.next();
-                    return new MathLib.Expression({
-                    subtype: 'Assignment',
-                    name: expr,
-                    value: parseAssignment()
-                    });
-                    }
-                    return expr;
-                    }
-                    */
+                    // TODO: support assignments
+                    // if (typeof expr !== 'undefined' && expr.Identifier) {
+                    // 	token = lexer.peek();
+                    // 	if (matchOp(token, '=')) {
+                    // 		lexer.next();
+                    // 		return new MathLib.Expression({
+                    // 				subtype: 'Assignment',
+                    // 				name: expr,
+                    // 				value: parseAssignment()
+                    // 			});
+                    // 	}
+                    // 	return expr;
+                    // }
                     return expr;
                 }
 
@@ -1331,13 +1571,18 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Functn" href="http://mathlib.de/en/docs/Functn">Functn</a>
-    //
-    // Because 'Function' is a reserved word in JavaScript,
-    // the module is called 'Functn'.
     /// import Expression
     var functnPrototype = {};
 
+    /**
+    * MathLib.Functn is the MathLib implementation of mathematical functions
+    *
+    * Because 'Function' is a reserved word in JavaScript,
+    * the class is called 'Functn'.
+    *
+    * @class
+    * @this {Functn}
+    */
     MathLib.Functn = function (f, options) {
         options = options || {};
 
@@ -1508,23 +1753,25 @@ var MathLib;
         }
     }
 
-    // ### [Functn.prototype.diff()](http://mathlib.de/en/docs/Functn/diff)
-    // Numeric derivative at a given point
-    //
-    // *@param {number}* The point
-    // *@param {number}* Optional step size
-    // *@return {number}*
+    /**
+    * Numeric derivative at a given point
+    *
+    * @param {number} x The value to calculate the derivative at
+    * @param {number} h Optional step size
+    * @return {number}
+    */
     functnPrototype.diff = function (x, h) {
         if (typeof h === "undefined") { h = 1e-5; }
         return (this(x + h) - this(x - h)) / (2 * h);
     };
 
-    // ### [Functn.prototype.draw()](http://mathlib.de/en/docs/Functn/draw)
-    // Draws the function on the screen
-    //
-    // *@param {Screen}* The screen to draw the function onto.
-    // *@param {object}* [options] Optional drawing options.
-    // *@return {Functn}*
+    /**
+    * Draws the function on the screen
+    *
+    * @param {Screen} screen The screen to draw the function onto.
+    * @param {object} options Optional drawing options.
+    * @return {Functn}
+    */
     functnPrototype.draw = function (screen, options) {
         if (typeof options === "undefined") { options = {}; }
         var functn = this;
@@ -1711,11 +1958,12 @@ var MathLib;
         }
     };
 
-    // ### MathLib.isMathMLSupported()
-    // Checks if MathML is supported by the browser.
-    // Code stolen from [Modernizr](http://www.modernizr.com/)
-    //
-    // *@return {boolean}*
+    /**
+    * Checks if MathML is supported by the browser.
+    * Code stolen from [Modernizr](http://www.modernizr.com/)
+    *
+    * @return {boolean}
+    */
     MathLib.isMathMLSupported = function () {
         var hasMathML = false, ns, div, mfrac;
 
@@ -1734,11 +1982,13 @@ var MathLib;
         return hasMathML;
     };
 
-    // ### MathLib.writeMathML()
-    // Writes MathML to an element.
-    //
-    // *@param {string}* The id of the element in which the MathML should be inserted.
-    // *@param {string}* The MathML to be inserted.
+    /**
+    * ### MathLib.writeMathML()
+    * Writes MathML to an element.
+    *
+    * @param {string} id The id of the element in which the MathML should be inserted.
+    * @param {string} math The MathML to be inserted.
+    */
     MathLib.writeMathML = function (id, math) {
         var formula;
         document.getElementById(id).innerHTML = '<math>' + math + '</math>';
@@ -1748,10 +1998,12 @@ var MathLib;
         }
     };
 
-    // ### MathLib.loadMathJax()
-    // Loads MathJax dynamically.
-    //
-    // *@param {string}* [config] Optional config options
+    /**
+    * ### MathLib.loadMathJax()
+    * Loads MathJax dynamically.
+    *
+    * @param {string} config Optional config options
+    */
     MathLib.loadMathJax = function (config) {
         var script = document.createElement('script');
         script.type = 'text/javascript';
@@ -1770,11 +2022,12 @@ var MathLib;
 
     // Functions that act on set-like structures and return one single number/boolean...
     var nAryFunctions = {
-        // ### MathLib.and()
-        // Returns true iff all arguments are true.
-        //
-        // *@param {boolean}* Expects an arbitrary number of boolean arguments
-        // *@return {boolean}*
+        /**
+        * Returns true iff all arguments are true.
+        *
+        * @param {...boolean} n Expects an arbitrary number of boolean arguments
+        * @return {boolean}
+        */
         and: function (n) {
             return n.every(function (x) {
                 return !!x;
@@ -1852,11 +2105,13 @@ var MathLib;
                 return old + cur * cur;
             }, 0);
         },
-        // ### MathLib.isEqual()
-        // Determines if all arguments are equal.
-        //
-        // *@param {number, MathLib object}* Expects an arbitrary number of numbers or MathLib objects
-        // *@return {boolean}*
+        /**
+        * ### MathLib.isEqual()
+        * Determines if all arguments are equal.
+        *
+        * @param {...number|MathLib object} n Expects an arbitrary number of numbers or MathLib objects
+        * @return {boolean}
+        */
         isEqual: function (n) {
             return n.every(function (a, i, args) {
                 if (a === args[0]) {
@@ -1891,11 +2146,13 @@ var MathLib;
         min: function (n) {
             return Math.min.apply(null, n);
         },
-        // ### MathLib.or()
-        // Returns true iff at least one argument is true.
-        //
-        // *@param {boolean}* Expects an arbitrary number of boolean arguments
-        // *@return {boolean}*
+        /**
+        * ### MathLib.or()
+        * Returns true iff at least one argument is true.
+        *
+        * @param {...boolean} Expects an arbitrary number of boolean arguments
+        * @return {boolean}
+        */
         or: function (n) {
             return n.some(function (x) {
                 return !!x;
@@ -2009,11 +2266,13 @@ var MathLib;
                 }
             });
         },
-        // ### MathLib.xor()
-        // Returns true iff an odd number of the arguments is true.
-        //
-        // *@param {boolean}* Expects an arbitrary number of boolean arguments
-        // *@return {boolean}*
+        /**
+        * ### MathLib.xor()
+        * Returns true iff an odd number of the arguments is true.
+        *
+        * @param {...boolean} Expects an arbitrary number of boolean arguments
+        * @return {boolean}
+        */
         xor: function (n) {
             return n.reduce(function (x, y) {
                 return x + !!y;
@@ -2040,16 +2299,17 @@ var MathLib;
         }
     }
 
-    // ### [Functn.prototype.quad()](http://mathlib.de/en/docs/Functn/quad)
-    // Numeric evaluation of an integral using an adative simpson approach.
-    //
-    // Inspired by "adaptsim.m" by Walter Gander
-    // and MatLab's "quad.m"
-    //
-    // *@param {number}* The starting point
-    // *@param {number}* The end point
-    // *@param {number}* The tolerance
-    // *@return {number}*
+    /**
+    * Numeric evaluation of an integral using an adative simpson approach.
+    *
+    * Inspired by "adaptsim.m" by Walter Gander
+    * and MatLab's "quad.m"
+    *
+    * @param {number} a The starting point
+    * @param {number} b The end point
+    * @param {number} options Optional options
+    * @return {number}
+    */
     functnPrototype.quad = function (a, b, options) {
         if (typeof options === "undefined") { options = {}; }
         var f = this, warnMessage = [
@@ -2122,18 +2382,20 @@ var MathLib;
         return quadstep(f, a, c, fa, fd, fc, options) + quadstep(f, c, b, fc, fe, fb, options);
     };
 
-    // ### Functn.prototype.toContentMathML()
-    // Returns a content MathML representation of the function
-    //
-    // *@return {MathML}*
+    /**
+    * Returns a content MathML representation of the function
+    *
+    * @return {MathML}
+    */
     functnPrototype.toContentMathML = function () {
         return this.expression.toContentMathML();
     };
 
-    // ### [Functn.prototype.toLaTeX()](http://mathlib.de/en/docs/Functn/toLaTeX)
-    // Returns a LaTeX representation of the function
-    //
-    // *@return {string}*
+    /**
+    * Returns a LaTeX representation of the function
+    *
+    * @return {string}
+    */
     functnPrototype.toLaTeX = function () {
         return this.expression.toLaTeX();
         /*
@@ -2179,25 +2441,20 @@ var MathLib;
         */
     };
 
-    // ### Functn.prototype.toMathML()
-    // Returns a MathML representation of the function
-    //
-    // *@return {string}*
+    /**
+    * Returns a MathML representation of the function
+    *
+    * @return {string}
+    */
     functnPrototype.toMathML = function () {
         return this.expression.toMathML();
     };
 
-    // ### Functn.prototype.toMathMLString
-    // Returns a MathML representation of the function
-    //
-    // *@return {string}*
-    /*functnPrototype.toMathMLString = function () {
-    return this.contentMathML.toMathMLString();
-    };*/
-    // ### [Functn.prototype.toString()](http://mathlib.de/en/docs/Functn/toString)
-    // Returns a string representation of the function
-    //
-    // *@return {string}*
+    /**
+    * Returns a string representation of the function
+    *
+    * @return {string}
+    */
     functnPrototype.toString = function () {
         return this.expression.toString();
         /*
@@ -2669,9 +2926,13 @@ var MathLib;
         return p.join("");
     };
 
-    // ## <a id="Screen"></a>Screen
-    // This module contains the common methods of all drawing modules.
     /// no import
+    /**
+    * This module contains the common methods of all drawing modules.
+    *
+    * @class
+    * @this {Screen}
+    */
     var Screen = (function () {
         function Screen(id, options) {
             if (typeof options === "undefined") { options = {}; }
@@ -2800,10 +3061,11 @@ var MathLib;
                 this.container.addEventListener('webkitfullscreenchange', fullscreenchange);
             }
         }
-        // ### Screen.prototype.contextmenu()
-        // Handles the contextmenu event
-        //
-        // *@param {event}*
+        /**
+        * Handles the contextmenu event
+        *
+        * @param {event} evt The event object
+        */
         Screen.prototype.oncontextmenu = function (evt) {
             var listener, _this = this, menu = this.contextMenu, overlay = this.contextMenuOverlay;
 
@@ -2836,9 +3098,13 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Layers"></a>Layers
-    // Layers for two dimensional plotting
     /// import Screen2D
+    /**
+    * Layers for two dimensional plotting
+    *
+    * @class Layer
+    * @this {Layer}
+    */
     var Layer = (function () {
         function Layer(screen, id, zIndex) {
             var _this = this;
@@ -2995,10 +3261,11 @@ var MathLib;
             // Insert the layer into the layer array of the screen object.
             screen.layer.splice(zIndex, 0, this);
         }
-        // ### Layer.prototype.clear()
-        // Clears the Layer
-        //
-        // *@return {Layer}* Returns the current Layer
+        /**
+        * Clears the Layer
+        *
+        * @return {Layer} Returns the current Layer
+        */
         Layer.prototype.clear = function () {
             this.screen.renderer.clear(this);
             return this;
@@ -3011,25 +3278,28 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## Canvas
-    // The Canvas renderer for 2D plotting
     /// import screen2d
+    /**
+    * The Canvas renderer for 2D plotting
+    */
     MathLib.Canvas = {
-        // ### Canvas.applyTransformation
-        // Applies the current transformations to the screen
-        //
+        /**
+        * Applies the current transformations to the screen
+        */
         applyTransformation: function () {
             var m = this.transformation;
             this.layer.forEach(function (l) {
                 l.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
             });
         },
-        // ### Canvas.circle
-        // Draws a circle on the screen.
-        //
-        // *@param {Circle}* The circle to be drawn
-        // *@param {object}* [options] Optional drawing options
-        // *@return {Screen}* Returns the screen
+        /**
+        * Draws a circle on the screen.
+        *
+        * @param {Circle} circle The circle to be drawn
+        * @param {object} options Optional drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {Screen} Returns the screen
+        */
         circle: function (circle, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
             if (typeof redraw === "undefined") { redraw = false; }
@@ -3073,50 +3343,54 @@ var MathLib;
 
             return this;
         },
-        // ### Canvas.clear
-        // Clears a given Layer.
-        //
-        // *@param {Layer}* The layer to be cleared
+        /**
+        * Clears a given Layer.
+        *
+        * @param {Layer} layer The layer to be cleared
+        */
         clear: function (layer) {
             var screen = layer.screen, left = -screen.translation.x / screen.scale.x, top = -screen.translation.y / screen.scale.y, width = screen.width / screen.scale.x, height = screen.height / screen.scale.y;
 
             layer.ctx.clearRect(left, top, width, height);
         },
-        // ### Canvas.convertOptions
-        // Converts the options to the Canvas options format
-        //
-        // *@param {object}* The drawing options
-        // *@return {object}* The converted options
-        convertOptions: function (opt) {
+        /**
+        * Converts the options to the Canvas options format
+        *
+        * @param {object} options The drawing options
+        * @return {object} The converted options
+        */
+        convertOptions: function (options) {
             var convertedOptions = {};
-            if ('fillColor' in opt) {
-                convertedOptions.fillStyle = MathLib.colorConvert(opt.fillColor);
-            } else if ('color' in opt) {
-                convertedOptions.fillStyle = MathLib.colorConvert(opt.color);
+            if ('fillColor' in options) {
+                convertedOptions.fillStyle = MathLib.colorConvert(options.fillColor);
+            } else if ('color' in options) {
+                convertedOptions.fillStyle = MathLib.colorConvert(options.color);
             }
 
-            if ('font' in opt) {
-                convertedOptions.font = opt.font;
+            if ('font' in options) {
+                convertedOptions.font = options.font;
             }
 
-            if ('fontSize' in opt) {
-                convertedOptions.fontSize = opt.fontSize;
+            if ('fontSize' in options) {
+                convertedOptions.fontSize = options.fontSize;
             }
 
-            if ('lineColor' in opt) {
-                convertedOptions.strokeStyle = MathLib.colorConvert(opt.lineColor);
-            } else if ('color' in opt) {
-                convertedOptions.strokeStyle = MathLib.colorConvert(opt.color);
+            if ('lineColor' in options) {
+                convertedOptions.strokeStyle = MathLib.colorConvert(options.lineColor);
+            } else if ('color' in options) {
+                convertedOptions.strokeStyle = MathLib.colorConvert(options.color);
             }
 
             return convertedOptions;
         },
-        // ### Canvas.line
-        // Draws a line on the screen.
-        //
-        // *@param {Line}* The line to be drawn
-        // *@param {object}* [options] Optional drawing options
-        // *@return {Screen}* Returns the screen
+        /**
+        * Draws a line on the screen.
+        *
+        * @param {Line} line The line to be drawn
+        * @param {object} options Optional drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {Screen} Returns the screen
+        */
         line: function (line, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
             if (typeof redraw === "undefined") { redraw = false; }
@@ -3167,12 +3441,14 @@ var MathLib;
 
             return this;
         },
-        // ### Canvas.path
-        // Draws a path on the screen.
-        //
-        // *@param {Path}* The path to be drawn
-        // *@param {object}* [options] Optional drawing options
-        // *@return {Screen}* Returns the scren
+        /**
+        * Draws a path on the screen.
+        *
+        * @param {Path} curve The path to be drawn
+        * @param {object} options Optional drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {Screen} Returns the scren
+        */
         path: function (curve, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
             if (typeof redraw === "undefined") { redraw = false; }
@@ -3291,16 +3567,18 @@ var MathLib;
 
             return this;
         },
-        // ### Canvas.pixel
-        // Draws pixel on the screen.
-        //
-        // *@param {function}* The pixel function
-        // *@param {number}* The top coordinate of the draw rectangle
-        // *@param {number}* The right coordinate of the draw rectangle
-        // *@param {number}* The bottom coordinate of the draw rectangle
-        // *@param {number}* The left coordinate of the draw rectangle
-        // *@param {object}* [options] Optional drawing options
-        // *@return {Screen}* Returns the screen
+        /**
+        * Draws pixel on the screen.
+        *
+        * @param {function} f The pixel function
+        * @param {number} t The top coordinate of the draw rectangle
+        * @param {number} r The right coordinate of the draw rectangle
+        * @param {number} b The bottom coordinate of the draw rectangle
+        * @param {number} l The left coordinate of the draw rectangle
+        * @param {object} options Optional drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {Screen} Returns the screen
+        */
         pixel: function (f, t, r, b, l, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
             if (typeof redraw === "undefined") { redraw = false; }
@@ -3339,12 +3617,14 @@ var MathLib;
 
             return this;
         },
-        // ### Canvas.point
-        // Draws a point on the screen.
-        //
-        // *@param {Point}* The point to be drawn
-        // *@param {object}* [options] Optional drawing options
-        // *@return {Screen}* Returns the screen
+        /**
+        * Draws a point on the screen.
+        *
+        * @param {Point} point The point to be drawn
+        * @param {object} options Optional drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {Screen} Returns the screen
+        */
         point: function (point, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
             if (typeof redraw === "undefined") { redraw = false; }
@@ -3398,14 +3678,15 @@ var MathLib;
 
             return this;
         },
-        // ### Canvas.text
-        // Writes text on the screen.
-        //
-        // *@param {str}* The string to be drawn
-        // *@param {x}* The x coordinate
-        // *@param {y}* The y coordinate
-        // *@param {object}* [options] Optional drawing options
-        // *@return {Screen}* Returns the screen
+        /**
+        * Writes text on the screen.
+        *
+        * @param {string} str The string to be drawn
+        * @param {number} x The x coordinate
+        * @param {number} y The y coordinate
+        * @param {object} options Optional drawing options
+        * @return {Screen} Returns the screen
+        */
         text: function (str, x, y, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
             if (typeof redraw === "undefined") { redraw = false; }
@@ -3458,26 +3739,28 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## SVG
-    // The SVG renderer for 2D plotting
-    //
     /// import screen2D
+    /**
+    * The SVG renderer for 2D plotting
+    */
     MathLib.SVG = {
-        // ### SVG.applyTransformation
-        // Applies the current transformations to the screen
-        //
+        /**
+        * Applies the current transformations to the screen
+        */
         applyTransformation: function () {
             var m = this.transformation;
             this.layer.forEach(function (l) {
                 l.ctx.setAttribute('transform', 'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')');
             });
         },
-        // ### SVG circle
-        // Draws a circle on the screen.
-        //
-        // *@param {Circle}* The circle to be drawn
-        // *@param {object}* [options] Optional drawing options
-        // *@return {Screen}* Returns the screen
+        /**
+        * Draws a circle on the screen.
+        *
+        * @param {Circle} circle The circle to be drawn
+        * @param {object} options Optional drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {Screen} Returns the screen
+        */
         circle: function (circle, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
             if (typeof redraw === "undefined") { redraw = false; }
@@ -3509,56 +3792,60 @@ var MathLib;
 
             return this;
         },
-        // ### SVG.clear
-        // Clears a given Layer.
-        //
-        // *@param {Layer}* The layer to be cleared
+        /**
+        * Clears a given Layer.
+        *
+        * @param {Layer} layer The layer to be cleared
+        */
         clear: function (layer) {
             layer.ctx.textContent = '';
         },
-        // ### SVG.convertOptions
-        // Converts the options to the SVG options format
-        //
-        // *@param {object}* The drawing options
-        // *@return {object}* The converted options
-        convertOptions: function (opt) {
+        /**
+        * Converts the options to the SVG options format
+        *
+        * @param {object} options The drawing options
+        * @return {object} The converted options
+        */
+        convertOptions: function (options) {
             var convertedOptions = {};
-            if ('fillColor' in opt) {
-                convertedOptions.fill = MathLib.colorConvert(opt.fillColor);
-            } else if ('color' in opt) {
-                convertedOptions.fill = MathLib.colorConvert(opt.color);
+            if ('fillColor' in options) {
+                convertedOptions.fill = MathLib.colorConvert(options.fillColor);
+            } else if ('color' in options) {
+                convertedOptions.fill = MathLib.colorConvert(options.color);
             }
 
-            if ('font' in opt) {
-                convertedOptions.font = opt.font;
+            if ('font' in options) {
+                convertedOptions.font = options.font;
             }
 
-            if ('fontSize' in opt) {
-                convertedOptions.fontSize = opt.fontSize;
+            if ('fontSize' in options) {
+                convertedOptions.fontSize = options.fontSize;
             }
 
-            if ('lineColor' in opt) {
-                convertedOptions.stroke = MathLib.colorConvert(opt.lineColor);
-            } else if ('color' in opt) {
-                convertedOptions.stroke = MathLib.colorConvert(opt.color);
+            if ('lineColor' in options) {
+                convertedOptions.stroke = MathLib.colorConvert(options.lineColor);
+            } else if ('color' in options) {
+                convertedOptions.stroke = MathLib.colorConvert(options.color);
             }
 
-            if ('dash' in opt && opt.dash.length !== 0) {
-                convertedOptions['stroke-dasharray'] = opt.dash;
+            if ('dash' in options && options.dash.length !== 0) {
+                convertedOptions['stroke-dasharray'] = options.dash;
             }
 
-            if ('dashOffset' in opt && opt.dashOffset !== 0) {
-                convertedOptions['stroke-dashoffset'] = opt.dashOffset;
+            if ('dashOffset' in options && options.dashOffset !== 0) {
+                convertedOptions['stroke-dashoffset'] = options.dashOffset;
             }
 
             return convertedOptions;
         },
-        // ### SVG line
-        // Draws a line on the screen.
-        //
-        // *@param {Line}* The line to be drawn
-        // *@param {object}* [options] Optional drawing options
-        // *@return {Canvas}* Returns the screen
+        /**
+        * Draws a line on the screen.
+        *
+        * @param {Line} line The line to be drawn
+        * @param {object} options Optional drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {Canvas} Returns the screen
+        */
         line: function (line, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
             if (typeof redraw === "undefined") { redraw = false; }
@@ -3598,12 +3885,14 @@ var MathLib;
 
             return this;
         },
-        // ### SVG path
-        // Draws a path on the screen.
-        //
-        // *@param {curve}* The path to be drawn
-        // *@param {object}* [options] Optional drawing options
-        // *@return {Screen}* Returns the screen
+        /**
+        * Draws a path on the screen.
+        *
+        * @param {any} curve The path to be drawn
+        * @param {object} options Optional drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {Screen} Returns the screen
+        */
         path: function (curve, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
             if (typeof redraw === "undefined") { redraw = false; }
@@ -3703,16 +3992,18 @@ var MathLib;
 
             return this;
         },
-        // ### SVG pixel
-        // Draws pixel on the screen.
-        //
-        // *@param {function}* The pixel function
-        // *@param {number}* The top coordinate of the draw rectangle
-        // *@param {number}* The right coordinate of the draw rectangle
-        // *@param {number}* The bottom coordinate of the draw rectangle
-        // *@param {number}* The left coordinate of the draw rectangle
-        // *@param {object}* [options] Optional drawing options
-        // *@return {Screen}* Returns the screen
+        /**
+        * Draws pixel on the screen.
+        *
+        * @param {function} f The pixel function
+        * @param {number} t The top coordinate of the draw rectangle
+        * @param {number} r The right coordinate of the draw rectangle
+        * @param {number} b The bottom coordinate of the draw rectangle
+        * @param {number} l The left coordinate of the draw rectangle
+        * @param {object} options Optional drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {Screen} Returns the screen
+        */
         pixel: function (f, t, r, b, l, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
             if (typeof redraw === "undefined") { redraw = false; }
@@ -3766,12 +4057,14 @@ var MathLib;
 
             return this;
         },
-        // ### SVG point
-        // Draws a point on the screen.
-        //
-        // *@param {Point}* The point to be drawn
-        // *@param {object}* [options] Optional drawing options
-        // *@return {Screen}* Returns the screen
+        /**
+        * Draws a point on the screen.
+        *
+        * @param {Point} point The point to be drawn
+        * @param {object} options Optional drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {Screen} Returns the screen
+        */
         point: function (point, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
             if (typeof redraw === "undefined") { redraw = false; }
@@ -3854,14 +4147,16 @@ var MathLib;
 
             return this;
         },
-        // ### SVG text
-        // Writes text on the screen.
-        //
-        // *@param {str}* The string to be drawn
-        // *@param {x}* The x coordinate
-        // *@param {y}* The y coordinate
-        // *@param {object}* [options] Optional drawing options
-        // *@return {Screen}* Returns the screen
+        /**
+        * Writes text on the screen.
+        *
+        * @param {string} str The string to be drawn
+        * @param {number} x The x coordinate
+        * @param {number} y The y coordinate
+        * @param {object} options Optional drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {Screen} Returns the screen
+        */
         text: function (str, x, y, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
             if (typeof redraw === "undefined") { redraw = false; }
@@ -3924,9 +4219,14 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Screen2D"></a>Screen2D
-    // Two dimensional plotting
     /// import Screen
+    /**
+    * Two dimensional plotting
+    *
+    * @class
+    * @augments Screen
+    * @this {Screen2D}
+    */
     var Screen2D = (function (_super) {
         __extends(Screen2D, _super);
         function Screen2D(id, options) {
@@ -4224,10 +4524,11 @@ var MathLib;
 
             this.draw();
         }
-        // ### Screen.prototype.drawAxes
-        // Draws the axes.
-        //
-        // *@return {Screen2D}*
+        /**
+        * Draws the axes.
+        *
+        * @return {Screen2D}
+        */
         Screen2D.prototype.drawAxes = function () {
             var _this = this;
             var line = function () {
@@ -4266,16 +4567,22 @@ var MathLib;
             }
 
             // The ticks on the axes
-            // The x axes
+            // The x axis
             if (this.options.axes.x) {
-                for (i = left; i <= right; i += yTick) {
+                for (i = -yTick; i >= left; i -= yTick) {
+                    line([[i, -lengthY], [i, lengthY]], options, true);
+                }
+                for (i = yTick; i <= right; i += yTick) {
                     line([[i, -lengthY], [i, lengthY]], options, true);
                 }
             }
 
-            // The y axes
+            // The y axis
             if (this.options.axes.y) {
-                for (i = bottom; i <= top; i += xTick) {
+                for (i = -xTick; i >= bottom; i -= xTick) {
+                    line([[-lengthX, i], [lengthX, i]], options, true);
+                }
+                for (i = xTick; i <= top; i += xTick) {
                     line([[-lengthX, i], [lengthX, i]], options, true);
                 }
             }
@@ -4312,10 +4619,11 @@ var MathLib;
             return this;
         };
 
-        // ### Screen2D.prototype.drawGrid
-        // Draws the grid.
-        //
-        // *@return {Screen2D}*
+        /**
+        * Draws the grid.
+        *
+        * @return {Screen2D}
+        */
         Screen2D.prototype.drawGrid = function () {
             var _this = this;
             if (!this.options.grid) {
@@ -4375,11 +4683,12 @@ var MathLib;
             return this;
         };
 
-        // ### Screen.prototype.getEventPoint
-        // Creates a point based on the coordinates of an event.
-        //
-        // *@param {event}*
-        // *@return {Point}*
+        /**
+        * Creates a point based on the coordinates of an event.
+        *
+        * @param {event} evt The event object
+        * @return {Point}
+        */
         Screen2D.prototype.getEventPoint = function (evt) {
             var x, y;
             if (evt.offsetX) {
@@ -4392,12 +4701,13 @@ var MathLib;
             return new MathLib.Point([x, y, 1]);
         };
 
-        // ### Screen2D.prototype.getineEndPoint()
-        // Calculates the both endpoints for the line
-        // for drawing purposes
-        //
-        // *@param {Line|array}*
-        // *@return {array}* The array has the format [[x1, y1], [x2, y2]]
+        /**
+        * Calculates the both endpoints for the line
+        * for drawing purposes
+        *
+        * @param {Line|array} l The Line to calculate the end points to
+        * @return {array} The array has the format [[x1, y1], [x2, y2]]
+        */
         Screen2D.prototype.getLineEndPoints = function (l) {
             if (l.type === 'line') {
                 var top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lineRight = -(l[2] + l[0] * right) / l[1], lineTop = -(l[2] + l[1] * top) / l[0], lineLeft = -(l[2] + l[0] * left) / l[1], lineBottom = -(l[2] + l[1] * bottom) / l[0], points = [];
@@ -4420,10 +4730,11 @@ var MathLib;
             }
         };
 
-        // ### Screen2D.prototype.onmousedown()
-        // Handles the mousedown event
-        //
-        // *@param {event}*
+        /**
+        * Handles the mousedown event
+        *
+        * @param {event} evt The event object
+        */
         Screen2D.prototype.onmousedown = function (evt) {
             // Only start the action if the left mouse button was clicked
             if (evt.button !== 0) {
@@ -4444,10 +4755,11 @@ var MathLib;
             }
         };
 
-        // ### Screen.prototype.onmousemove()
-        // Handles the mousemove event
-        //
-        // *@param {event}*
+        /**
+        * Handles the mousemove event
+        *
+        * @param {event} evt The event object
+        */
         Screen2D.prototype.onmousemove = function (evt) {
             var p;
 
@@ -4466,10 +4778,11 @@ var MathLib;
             }
         };
 
-        // ### Screen.prototype.onmouseup()
-        // Handles the mouseup event
-        //
-        // *@param {event}*
+        /**
+        * Handles the mouseup event
+        *
+        * @param {event} evt The event object
+        */
         Screen2D.prototype.onmouseup = function (evt) {
             if (evt.preventDefault) {
                 evt.preventDefault();
@@ -4485,10 +4798,11 @@ var MathLib;
             }
         };
 
-        // ### Screen.prototype.onmousewheel()
-        // Handles the mousewheel event
-        //
-        // *@param {event}*
+        /**
+        * Handles the mousewheel event
+        *
+        * @param {event} evt The event object
+        */
         Screen2D.prototype.onmousewheel = function (evt) {
             var delta, s, p, z;
 
@@ -4522,12 +4836,13 @@ var MathLib;
             }
         };
 
-        // ### Screen2D.prototype.resize()
-        // Adjust the rendering if the screen is resized
-        //
-        // *@param {number}* The new width
-        // *@param {number}* The new height
-        // *@return {Screen2D}*
+        /**
+        * Adjust the rendering if the screen is resized
+        *
+        * @param {number} width The new width
+        * @param {number} height The new height
+        * @return {Screen2D}
+        */
         Screen2D.prototype.resize = function (width, height) {
             this.height = height;
             this.width = width;
@@ -4580,8 +4895,6 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    
-
     // A function converting arrays to THREE.js vectors
     var to3js = function (x) {
         if (x.length === 2) {
@@ -4592,6 +4905,13 @@ var MathLib;
     };
 
     /// import Screen
+    /**
+    * Three dimensional plotting
+    *
+    * @class
+    * @augments Screen
+    * @this {Screen3D}
+    */
     var Screen3D = (function (_super) {
         __extends(Screen3D, _super);
         function Screen3D(id, options) {
@@ -4738,10 +5058,11 @@ var MathLib;
 
             this.container.classList.add('MathLib_screen3D');
         }
-        // ### Screen3D.prototype.drawGrid
-        // Draws the grid.
-        //
-        // *@return {Screen3D}*
+        /**
+        * Draws the grid.
+        *
+        * @return {Screen3D}
+        */
         Screen3D.prototype.drawGrid = function () {
             if (!this.options.grid) {
                 return this;
@@ -4799,11 +5120,13 @@ var MathLib;
             return this;
         };
 
-        // ### Matrix.parametricPlot3D()
-        //
-        //
-        // *@param {function}* The function which is called on every argument
-        // *@return {Screen3D}*
+        /**
+        * Creates a parametric plot
+        *
+        * @param {function} f The function which is called on every argument
+        * @param {object} options Optional drawing options
+        * @return {Screen3D}
+        */
         Screen3D.prototype.parametricPlot3D = function (f, options) {
             var defaults = {
                 closed: false,
@@ -4839,24 +5162,26 @@ var MathLib;
             return this;
         };
 
-        // ### Screen3D.prototype.plot3D()
-        //
-        //
-        // *@param {function}* The map for the height
-        // *@param {object}* Options
-        // *@return {Screen3D}*
+        /**
+        * Creates a plot of a three dimensional function
+        *
+        * @param {function} f The map for the height
+        * @param {object} options Optional drawing options
+        * @return {Screen3D}
+        */
         Screen3D.prototype.plot3D = function (f, options) {
             return this.surfacePlot3D(function (u, v) {
                 return [u, v, f(u, v)];
             }, options);
         };
 
-        // ### Screen3D.prototype.resize()
-        // Adjust the rendering if the screen is resized
-        //
-        // *@param {number}* The new width
-        // *@param {number}* The new height
-        // *@return {Screen3D}*
+        /**
+        * Adjust the rendering if the screen is resized
+        *
+        * @param {number} width The new width
+        * @param {number} height The new height
+        * @return {Screen3D}
+        */
         Screen3D.prototype.resize = function (width, height) {
             this.renderer.setSize(width, height);
             this.camera.aspect = width / height;
@@ -4865,12 +5190,13 @@ var MathLib;
             return this;
         };
 
-        // ### screen3D.prototype.surfacePlot()
-        //
-        //
-        // *@param {function}* The map for the surface
-        // *@param {object}* Options
-        // *@return {Screen3D}*
+        /**
+        * Creates a surface plot.
+        *
+        * @param {function} f The map for the surface
+        * @param {object} options Optional drawing options
+        * @return {Screen3D}
+        */
         Screen3D.prototype.surfacePlot3D = function (f, options) {
             var defaults = {
                 material: {
@@ -4925,18 +5251,22 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Vector" href="http://mathlib.de/en/docs/Vector">Vector</a>
-    // The vector implementation of MathLib makes calculations with vectors of
-    // arbitrary size possible. The entries of the vector can be numbers and complex
-    // numbers.
-    //
-    // It is as easy as
-    // `new MathLib.Vector([1, 2, 3])`
-    // to create the following vector:
-    //    ⎛ 1 ⎞
-    //    ⎜ 2 ⎟
-    //    ⎝ 3 ⎠
     /// import Functn
+    /**
+    * The vector implementation of MathLib makes calculations with vectors of
+    * arbitrary size possible. The entries of the vector can be numbers and complex
+    * numbers.
+    *
+    * It is as easy as
+    * `new MathLib.Vector([1, 2, 3])`
+    * to create the following vector:
+    *    ⎛ 1 ⎞
+    *    ⎜ 2 ⎟
+    *    ⎝ 3 ⎠
+    *
+    * @class
+    * @this {Vector}
+    */
     var Vector = (function () {
         function Vector(coords) {
             var _this = this;
@@ -4946,11 +5276,12 @@ var MathLib;
             });
             this.length = coords.length;
         }
-        // ### [Vector.prototype.compare()](http://mathlib.de/en/docs/Vector/compare)
-        // Compares two vectors.
-        //
-        // *@param {Vector}* The vector to compare
-        // *@return {number}*
+        /**
+        * Compares two vectors.
+        *
+        * @param {Vector} v The vector to compare
+        * @return {number}
+        */
         Vector.prototype.compare = function (v) {
             var i, ii;
 
@@ -4967,26 +5298,31 @@ var MathLib;
             return 0;
         };
 
-        // ### [Vector.prototype.every()](http://mathlib.de/en/docs/Vector/every)
-        // Works like Array.prototype.every.
-        //
-        // *@return {boolean}*
+        /**
+        * Works like Array.prototype.every.
+        *
+        * @param {function} f The function to be applied to all the values
+        * @return {boolean}
+        */
         Vector.prototype.every = function (f) {
             return Array.prototype.every.call(this, f);
         };
 
-        // ### [Vector.prototype.forEach()](http://mathlib.de/en/docs/Vector/forEach)
-        // Works like Array.prototype.forEach.
-        //
+        /**
+        * Works like Array.prototype.forEach.
+        *
+        * @param {function} f The function to be applied to all the values
+        */
         Vector.prototype.forEach = function (f) {
             Array.prototype.forEach.call(this, f);
         };
 
-        // ### [Vector.prototype.isEqual()](http://mathlib.de/en/docs/Vector/isEqual)
-        // Determines if two vectors are equal
-        //
-        // *@param {Vector}* v The vector to compare
-        // *@return {boolean}*
+        /**
+        * Determines if two vectors are equal
+        *
+        * @param {Vector} v The vector to compare
+        * @return {boolean}
+        */
         Vector.prototype.isEqual = function (v) {
             if (this.length !== v.length) {
                 return false;
@@ -4997,28 +5333,31 @@ var MathLib;
             });
         };
 
-        // ### [Vector.prototype.isZero()](http://mathlib.de/en/docs/Vector/isZero)
-        // Determines if the vector is the zero vector.
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the vector is the zero vector.
+        *
+        * @return {boolean}
+        */
         Vector.prototype.isZero = function () {
             return this.every(MathLib.isZero);
         };
 
-        // ### [Vector.prototype.map()](http://mathlib.de/en/docs/Vector/map)
-        // Works like Array.prototype.map.
-        //
-        // *@param {function}*
-        // *@return {Vector}*
+        /**
+        * Works like Array.prototype.map.
+        *
+        * @param {function} f The function to be applied to all the values
+        * @return {Vector}
+        */
         Vector.prototype.map = function (f) {
             return new this['constructor'](Array.prototype.map.call(this, f));
         };
 
-        // ### [Vector.prototype.minus()](http://mathlib.de/en/docs/Vector/minus)
-        // Calculates the difference of two vectors.
-        //
-        // *@param {Vector}* The vector to be subtracted.
-        // *@return {Vector}*
+        /**
+        * Calculates the difference of two vectors.
+        *
+        * @param {Vector} v The vector to be subtracted.
+        * @return {Vector}
+        */
         Vector.prototype.minus = function (v) {
             if (this.length === v.length) {
                 return this.plus(v.negative());
@@ -5028,19 +5367,21 @@ var MathLib;
             }
         };
 
-        // ### [Vector.prototype.negative()](http://mathlib.de/en/docs/Vector/negative)
-        // Returns the negative vector.
-        //
-        // *@return {Vector}*
+        /**
+        * Returns the negative vector.
+        *
+        * @return {Vector}
+        */
         Vector.prototype.negative = function () {
             return this.map(MathLib.negative);
         };
 
-        // ### [Vector.prototype.norm()](http://mathlib.de/en/docs/Vector/norm)
-        // Calcultes the norm of the vector.
-        //
-        // *@param {number}* [default=2] The p for the p-norm
-        // *@return {number}*
+        /**
+        * Calcultes the norm of the vector.
+        *
+        * @param {number} p The p for the p-norm
+        * @return {number}
+        */
         Vector.prototype.norm = function (p) {
             if (typeof p === "undefined") { p = 2; }
             if (p === 2) {
@@ -5054,11 +5395,12 @@ var MathLib;
             }
         };
 
-        // ### [Vector.prototype.outerProduct()](http://mathlib.de/en/docs/Vector/outerProduct)
-        // Calculates the outer product of two vectors.
-        //
-        // *@param {Vector}*
-        // *@return {Matrix}*
+        /**
+        * Calculates the outer product of two vectors.
+        *
+        * @param {Vector} v The second vector to calculate the outer product with.
+        * @return {Matrix}
+        */
         Vector.prototype.outerProduct = function (v) {
             return new MathLib.Matrix(this.map(function (x) {
                 return v.map(function (y) {
@@ -5067,11 +5409,12 @@ var MathLib;
             }));
         };
 
-        // ### [Vector.prototype.plus()](http://mathlib.de/en/docs/Vector/plus)
-        // Calculates the sum of two vectors.
-        //
-        // *@param {Vector}*
-        // *@return {Vector}*
+        /**
+        * Calculates the sum of two vectors.
+        *
+        * @param {Vector} v The vector to add to the current vector.
+        * @return {Vector}
+        */
         Vector.prototype.plus = function (v) {
             if (this.length === v.length) {
                 return new MathLib.Vector(this.map(function (x, i) {
@@ -5083,10 +5426,11 @@ var MathLib;
             }
         };
 
-        // ### [Vector.prototype.reduce()](http://mathlib.de/en/docs/Vector/reduce)
-        // Works like Array.prototype.reduce.
-        //
-        // *@return {any}*
+        /**
+        * Works like Array.prototype.reduce.
+        *
+        * @return {any}
+        */
         Vector.prototype.reduce = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -5095,11 +5439,12 @@ var MathLib;
             return Array.prototype.reduce.apply(this, args);
         };
 
-        // ### [Vector.prototype.scalarProduct()](http://mathlib.de/en/docs/Vector/scalarProduct)
-        // Calculates the scalar product of two vectors.
-        //
-        // *@param {Vector}*
-        // *@return {number|Complex}*
+        /**
+        * Calculates the scalar product of two vectors.
+        *
+        * @param {Vector} v The second vector to calculate the scalar product with.
+        * @return {number|Complex}
+        */
         Vector.prototype.scalarProduct = function (v) {
             if (this.length === v.length) {
                 return this.reduce(function (old, cur, i, w) {
@@ -5111,10 +5456,11 @@ var MathLib;
             }
         };
 
-        // ### [Vector.prototype.slice()](http://mathlib.de/en/docs/Vector/slice)
-        // Works like the Array.prototype.slice function
-        //
-        // *@return {array}*
+        /**
+        * Works like the Array.prototype.slice function
+        *
+        * @return {array}
+        */
         Vector.prototype.slice = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -5123,14 +5469,15 @@ var MathLib;
             return Array.prototype.slice.apply(this, args);
         };
 
-        // ### [Vector.prototype.times()](http://mathlib.de/en/docs/Vector/times)
-        // Multiplies the vector by a (complex) number or a matrix.
-        // The vector is multiplied from left to the matrix.
-        // If you want to multiply it from the right use
-        // matrix.times(vector) instead of vector.times(matrix)
-        //
-        // *@param {number|Complex|Matrix}*
-        // *@return {Vector}*
+        /**
+        * Multiplies the vector by a (complex) number or a matrix.
+        * The vector is multiplied from left to the matrix.
+        * If you want to multiply it from the right use
+        * matrix.times(vector) instead of vector.times(matrix)
+        *
+        * @param {number|Complex|Matrix} n The object to multiply to the vector
+        * @return {Vector}
+        */
         Vector.prototype.times = function (n) {
             var i, ii, colVectors, product = [];
             if (n.type === 'rational') {
@@ -5155,59 +5502,65 @@ var MathLib;
             }
         };
 
-        // ### [Vector.prototype.toArray()](http://mathlib.de/en/docs/Vector/toArray)
-        // Converts the vector to an array.
-        //
-        // *@return {array}*
+        /**
+        * Converts the vector to an array.
+        *
+        * @return {array}
+        */
         Vector.prototype.toArray = function () {
             return Array.prototype.slice.call(this);
         };
 
-        // ### [Vector.prototype.toContentMathML()](http://mathlib.de/en/docs/Vector/toContentMathML)
-        // Returns the content MathML representation of the vector.
-        //
-        // *@return {string}*
+        /**
+        * Returns the content MathML representation of the vector.
+        *
+        * @return {string}
+        */
         Vector.prototype.toContentMathML = function () {
             return this.reduce(function (old, cur) {
                 return old + MathLib.toContentMathML(cur);
             }, '<vector>') + '</vector>';
         };
 
-        // ### [Vector.prototype.toLaTeX()](http://mathlib.de/en/docs/Vector/toLaTeX)
-        // Returns a LaTeX representation of the vector.
-        //
-        // *@return {string}*
+        /**
+        * Returns a LaTeX representation of the vector.
+        *
+        * @return {string}
+        */
         Vector.prototype.toLaTeX = function () {
             return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
                 return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
             }) + '\n\\end{pmatrix}';
         };
 
-        // ### [Vector.prototype.toMathML()](http://mathlib.de/en/docs/Vector/toMathML)
-        // Returns the (presentation) MathML representation of the vector.
-        //
-        // *@return {string}*
+        /**
+        * Returns the (presentation) MathML representation of the vector.
+        *
+        * @return {string}
+        */
         Vector.prototype.toMathML = function () {
             return this.reduce(function (old, cur) {
                 return old + '<mtr><mtd>' + MathLib.toMathML(cur) + '</mtd></mtr>';
             }, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
         };
 
-        // ### [Vector.prototype.toString()](http://mathlib.de/en/docs/Vector/toString)
-        // Returns a string representation of the vector.
-        //
-        // *@return {string}*
+        /**
+        * Returns a string representation of the vector.
+        *
+        * @return {string}
+        */
         Vector.prototype.toString = function () {
             return '(' + this.reduce(function (old, cur) {
                 return old + ', ' + MathLib.toString(cur);
             }) + ')';
         };
 
-        // ### [Vector.prototype.vectorProduct()](http://mathlib.de/en/docs/Vector/vectorProduct)
-        // Calculates the vector product of two vectors.
-        //
-        // *@param {Vector}*
-        // *@return {Vector}*
+        /**
+        * Calculates the vector product of two vectors.
+        *
+        * @param {Vector} v The second vector to calculate the vector product with.
+        * @return {Vector}
+        */
         Vector.prototype.vectorProduct = function (v) {
             /* TODO: Implement vectorproduct for non three-dimensional vectors */
             if (this.length === 3 && v.length === 3) {
@@ -5221,20 +5574,20 @@ var MathLib;
                 return;
             }
         };
-        Vector.areLinearIndependent = function (v) {
-            var n = v.length, m = v[0].length;
+        Vector.areLinearIndependent = function (vectors) {
+            var n = vectors.length, m = vectors[0].length;
 
             if (n > m) {
                 return false;
             }
 
-            if (!v.every(function (x) {
+            if (!vectors.every(function (x) {
                 return x.length === m;
             })) {
                 return undefined;
             }
 
-            return (new MathLib.Matrix(v)).rank() === n;
+            return (new MathLib.Matrix(vectors)).rank() === n;
         };
 
         Vector.zero = function (n) {
@@ -5252,19 +5605,24 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Circle" href="http://mathlib.de/en/docs/Circle">Circle</a>
-    // MathLib.Circle expects two arguments.
-    // First the center in the form of an Array or a MathLib.point.
-    // The second argument should be the radius of the circle.
-    //
-    // #### Simple use case:
-    // ```
-    // // Create a circle with center (1, 2) and radius 3.
-    // var c = new MathLib.Circle([1, 2], 3);
-    // c.center                   // The center of the circle (point)
-    // c.radius                   // returns the radius of the circle
-    // ```
     /// import Point
+    /**
+    * Creates a MathLib circle
+    * MathLib.Circle expects two arguments.
+    * First the center in the form of an Array or a MathLib.point.
+    * The second argument should be the radius of the circle.
+    * #### Simple use case:
+    *
+    * ```
+    * // Create a circle with center (1, 2) and radius 3.
+    * var c = new MathLib.Circle([1, 2], 3);
+    * c.center                   // The center of the circle (point)
+    * c.radius                   // returns the radius of the circle
+    * ```
+    *
+    * @class
+    * @this {Circle}
+    */
     var Circle = (function () {
         function Circle(center, radius) {
             this.type = 'circle';
@@ -5275,37 +5633,41 @@ var MathLib;
             this.center = center;
             this.radius = radius;
         }
-        // ### [Circle.prototype.area()](http://mathlib.de/en/docs/Circle/area)
-        // Calculates the area of the circle.
-        //
-        // *@return {number}* The area of the circle
+        /**
+        * Calculates the area of the circle.
+        *
+        * @return {number} The area of the circle
+        */
         Circle.prototype.area = function () {
             return this.radius * this.radius * Math.PI;
         };
 
-        // ### [Circle.prototype.circumference()](http://mathlib.de/en/docs/Circle/circumference)
-        // Calculates the circumference of the circle.
-        //
-        // *@return {number}* The circumference of the circle
+        /**
+        * Calculates the circumference of the circle.
+        *
+        * @return {number} The circumference of the circle
+        */
         Circle.prototype.circumference = function () {
             return 2 * this.radius * Math.PI;
         };
 
-        // ### [Circle.prototype.compare()](http://mathlib.de/en/docs/Circle/compare)
-        // Compares two circles
-        //
-        // *@param {Circle}* The circle to compare
-        // *@return {number}*
-        Circle.prototype.compare = function (c) {
-            return MathLib.sign(this.center.compare(c.center)) || MathLib.sign(this.radius - c.radius);
+        /**
+        * Compares two circles
+        *
+        * @param {Circle} circle The circle to compare
+        * @return {number}
+        */
+        Circle.prototype.compare = function (circle) {
+            return MathLib.sign(this.center.compare(circle.center)) || MathLib.sign(this.radius - circle.radius);
         };
 
-        // ### [Circle.prototype.draw()](http://mathlib.de/en/docs/Circle/draw)
-        // Draw the circle onto the screen.
-        //
-        // *@param {Screen}* The screen to draw onto.
-        // *@param {object}* Optional drawing options
-        // *@return {Circle}* Returns the circle for chaining
+        /**
+        * Draw the circle onto the screen.
+        *
+        * @param {Screen} screen The screen to draw onto.
+        * @param {object} options Optional drawing options
+        * @return {Circle} Returns the circle for chaining
+        */
         Circle.prototype.draw = function (screen, options) {
             if (Array.isArray(screen)) {
                 var circle = this;
@@ -5318,22 +5680,26 @@ var MathLib;
             return this;
         };
 
-        // ### [Circle.prototype.isEqual()](http://mathlib.de/en/docs/Circle/isEqual)
-        // Checks if two circles are equal
-        //
-        // *@return {boolean}*
-        Circle.prototype.isEqual = function (c) {
-            return MathLib.isEqual(this.radius, c.radius) && this.center.isEqual(c.center);
+        /**
+        * Checks if two circles are equal
+        *
+        * @param {Circle} circle The circle to compare
+        * @return {boolean}
+        */
+        Circle.prototype.isEqual = function (circle) {
+            return MathLib.isEqual(this.radius, circle.radius) && this.center.isEqual(circle.center);
         };
 
-        // ### [Circle.prototype.positionOf()](http://mathlib.de/en/docs/Circle/positionOf)
-        // Determine if a point is in, on or outside a circle.
-        //
-        // *@return {string}*
-        Circle.prototype.positionOf = function (p) {
+        /**
+        * Determine if a point is in, on or outside a circle.
+        *
+        * @param {Point} point The Point to determine the position of
+        * @return {string}
+        */
+        Circle.prototype.positionOf = function (point) {
             var diff;
-            if (p.type === 'point' && p.dimension === 2) {
-                diff = p.distanceTo(this.center) - this.radius;
+            if (point.type === 'point' && point.dimension === 2) {
+                diff = point.distanceTo(this.center) - this.radius;
                 if (MathLib.isZero(diff)) {
                     return 'on';
                 } else if (diff < 0) {
@@ -5344,26 +5710,29 @@ var MathLib;
             }
         };
 
-        // ### [Circle.prototype.reflectAt()](http://mathlib.de/en/docs/Circle/reflectAt)
-        // Reflect the circle at a point or line
-        //
-        // *@return {Circle}*
+        /**
+        * Reflect the circle at a point or line
+        *
+        * @return {Circle}
+        */
         Circle.prototype.reflectAt = function (a) {
             return new MathLib.Circle(this.center.reflectAt(a), this.radius);
         };
 
-        // ### [Circle.prototype.toLaTeX()](http://mathlib.de/en/docs/Circle/toLaTeX)
-        // Returns a LaTeX expression of the circle
-        //
-        // *@return {string}*
+        /**
+        * Returns a LaTeX expression of the circle
+        *
+        * @return {string}
+        */
         Circle.prototype.toLaTeX = function () {
             return 'B_{' + MathLib.toLaTeX(this.radius) + '}\\left(' + this.center.toLaTeX() + '\\right)';
         };
 
-        // ### [Circle.prototype.toMatrix()](http://mathlib.de/en/docs/Circle/toMatrix)
-        // Converts the circle to the corresponding matrix.
-        //
-        // *@return {Matrix}*
+        /**
+        * Converts the circle to the corresponding matrix.
+        *
+        * @return {Matrix}
+        */
         Circle.prototype.toMatrix = function () {
             var x = this.center[0] / this.center[2], y = this.center[1] / this.center[2], r = this.radius;
             return new MathLib.Matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x * x + y * y - r * r]]);
@@ -5376,20 +5745,24 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Complex"></a>Complex
-    // MathLib.Complex is the MathLib implementation of complex numbers.
-    //
-    // There are two ways of defining complex numbers:
-    //
-    // * Two numbers representing the real and the complex part.
-    // * MathLib.Complex.polar(abs, arg)
-    //
-    // #### Simple example:
-    // ```
-    // // Create the complex number 1 + 2i
-    // var c = new MathLib.Complex(1, 2);
-    // ```
     /// import Functn, Point
+    /**
+    * MathLib.Complex is the MathLib implementation of complex numbers.
+    *
+    * There are two ways of defining complex numbers:
+    *
+    * * Two numbers representing the real and the complex part.
+    * * MathLib.Complex.polar(abs, arg)
+    *
+    * #### Simple example:
+    * ```
+    * // Create the complex number 1 + 2i
+    * var c = new MathLib.Complex(1, 2);
+    * ```
+    *
+    * @class
+    * @this {Complex}
+    */
     var Complex = (function () {
         function Complex(re, im) {
             if (typeof im === "undefined") { im = 0; }
@@ -5405,41 +5778,41 @@ var MathLib;
                 this.im = im;
             }
         }
-        // ### [Complex.prototype.abs()](http://mathlib.de/en/docs/Complex/abs)
-        // Returns the absolute value of the number.
-        //
-        // *@return {number}*
+        /**
+        * Returns the absolute value of the number.
+        *
+        * @return {number}
+        */
         Complex.prototype.abs = function () {
             return MathLib.hypot(this.re, this.im);
         };
 
-        // ### [Complex.prototype.arccos()](http://mathlib.de/en/docs/Complex/arccos)
-        // Returns the inverse cosine of the number.
-        //
-        // *@return {Complex}*
+        /**
+        * Returns the inverse cosine of the number.
+        *
+        * @return {Complex}
+        */
         Complex.prototype.arccos = function () {
             return MathLib.minus(Math.PI / 2, this.arcsin());
         };
 
-        // ### [Complex.prototype.arccot()](http://mathlib.de/en/docs/Complex/arccot)
-        // Returns the inverse cotangent of the number.
-        //
-        // *@return {Complex}*
+        /**
+        * Returns the inverse cotangent of the number.
+        *
+        * @return {Complex}
+        */
         Complex.prototype.arccot = function () {
             if (this.isZero()) {
                 return new MathLib.Complex(MathLib.sign(1 / this.re) * Math.PI / 2, -this.im);
             }
             return this.inverse().arctan();
-            //var c = this.arctan();
-            //console.log(c.toString());
-            //return new MathLib.Complex(Math.PI / 2 - c.re, c.im);
-            //return MathLib.minus(Math.PI / 2, this.arctan());
         };
 
-        // ### [Complex.prototype.arccsc()](http://mathlib.de/en/docs/Complex/arccsc)
-        // Returns the inverse cosecant of the number
-        //
-        // *@return {Complex}*
+        /**
+        * Returns the inverse cosecant of the number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.arccsc = function () {
             // arccsc(0) = ComplexInfinity not ComplexNaN
             if (this.isZero()) {
@@ -5449,10 +5822,11 @@ var MathLib;
             return this.inverse().arcsin();
         };
 
-        // ### [Complex.prototype.arcsec()](http://mathlib.de/en/docs/Complex/arcsec)
-        // Returns the inverse secant of the number
-        //
-        // *@return {Complex}*
+        /**
+        * Returns the inverse secant of the number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.arcsec = function () {
             // arcsec(0) = ComplexInfinity not ComplexNaN
             if (this.isZero()) {
@@ -5462,10 +5836,11 @@ var MathLib;
             return this.inverse().arccos();
         };
 
-        // ### [Complex.prototype.arcsin()](http://mathlib.de/en/docs/Complex/arcsin)
-        // Returns the inverse sine of the number
-        //
-        // *@return {Complex}*
+        /**
+        * Returns the inverse sine of the number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.arcsin = function () {
             var a = this.re, b = this.im, aa = a * a, bb = b * b, sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb), sgn = function (x) {
                 if (x > 0) {
@@ -5489,10 +5864,11 @@ var MathLib;
             return new MathLib.Complex(sgn(a) / 2 * MathLib.arccos(sqrt - (aa + bb)), sgn(b) / 2 * MathLib.arcosh(sqrt + (aa + bb)));
         };
 
-        // ### [Complex.prototype.arctan()](http://mathlib.de/en/docs/Complex/arctan)
-        // Returns the inverse tangent of the number
-        //
-        // *@return {Complex}*
+        /**
+        * Returns the inverse tangent of the number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.arctan = function () {
             var res, iz = new MathLib.Complex(-this.im, this.re);
 
@@ -5511,10 +5887,11 @@ var MathLib;
             return res;
         };
 
-        // ### [Complex.prototype.arg()](http://mathlib.de/en/docs/Complex/arg)
-        // Returns the argument (= the angle) of the complex number
-        //
-        // *@return {number}*
+        /**
+        * Returns the argument (= the angle) of the complex number
+        *
+        * @return {number}
+        */
         Complex.prototype.arg = function () {
             if (this.re === Infinity) {
                 return NaN;
@@ -5522,10 +5899,11 @@ var MathLib;
             return Math.atan2(this.im, this.re);
         };
 
-        // ### Complex.prototype.artanh()
-        // Returns the inverse hyperbolic tangent of the number
-        //
-        // *@return {Complex}*
+        /**
+        * Returns the inverse hyperbolic tangent of the number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.artanh = function () {
             if (this.isZero()) {
                 return new MathLib.Complex(this.re, this.im);
@@ -5538,10 +5916,11 @@ var MathLib;
             return MathLib.times(0.5, MathLib.minus(MathLib.ln(MathLib.plus(1, this)), MathLib.ln(MathLib.minus(1, this))));
         };
 
-        // ### [Complex.prototype.compare()](http://mathlib.de/en/docs/Complex/compare)
-        // Compares two complex numbers
-        //
-        // *@return {number}*
+        /**
+        * Compares two complex numbers
+        *
+        * @return {number}
+        */
         Complex.prototype.compare = function (x) {
             var a = MathLib.sign(this.abs() - x.abs());
 
@@ -5562,42 +5941,47 @@ var MathLib;
             return a ? a : MathLib.sign(this.arg() - x.arg());
         };
 
-        // ### [Complex.prototype.conjugate()](http://mathlib.de/en/docs/Complex/conjugate)
-        // Calculates the conjugate of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the conjugate of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.conjugate = function () {
             return new MathLib.Complex(this.re, MathLib.negative(this.im));
         };
 
-        // ### [Complex.prototype.copy()](http://mathlib.de/en/docs/Complex/copy)
-        // Copies the complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Copies the complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.copy = function () {
             return new MathLib.Complex(MathLib.copy(this.re), MathLib.copy(this.im));
         };
 
-        // ### [Complex.prototype.cos()](http://mathlib.de/en/docs/Complex/cos)
-        // Calculates the cosine of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the cosine of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.cos = function () {
             return new MathLib.Complex(MathLib.cos(this.re) * MathLib.cosh(this.im), -MathLib.sin(this.re) * MathLib.sinh(this.im));
         };
 
-        // ### [Complex.prototype.cosh()](http://mathlib.de/en/docs/Complex/cosh)
-        // Calculates the hyperbolic cosine of a complex number
-        //
-        // *@return {Complex}*
+        /*
+        * Calculates the hyperbolic cosine of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.cosh = function () {
             return new MathLib.Complex(MathLib.cos(this.im) * MathLib.cosh(this.re), MathLib.sin(this.im) * MathLib.sinh(this.re));
         };
 
-        // ### [Complex.prototype.cot()](http://mathlib.de/en/docs/Complex/cot)
-        // Calculates the cotangent of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the cotangent of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.cot = function () {
             var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cos(aa) - MathLib.cosh(bb);
 
@@ -5608,10 +5992,11 @@ var MathLib;
             return new MathLib.Complex(-MathLib.sin(aa) / d, MathLib.sinh(bb) / d);
         };
 
-        // ### [Complex.prototype.coth()](http://mathlib.de/en/docs/Complex/coth)
-        // Calculates the hyperbolic cotangent of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the hyperbolic cotangent of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.coth = function () {
             var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cosh(aa) - MathLib.cos(bb);
 
@@ -5622,10 +6007,11 @@ var MathLib;
             return new MathLib.Complex(MathLib.sinh(aa) / d, -MathLib.sin(bb) / d);
         };
 
-        // ### [Complex.prototype.csc()](http://mathlib.de/en/docs/Complex/csc)
-        // Calculates the cosecant of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the cosecant of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.csc = function () {
             var a = this.re, b = this.im, d = MathLib.cos(2 * a) - MathLib.cosh(2 * b);
 
@@ -5636,10 +6022,11 @@ var MathLib;
             return new MathLib.Complex(-2 * MathLib.sin(a) * MathLib.cosh(b) / d, 2 * MathLib.cos(a) * MathLib.sinh(b) / d);
         };
 
-        // ### [Complex.prototype.csch()](http://mathlib.de/en/docs/Complex/csch)
-        // Calculates the hyperbolic cosecant of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the hyperbolic cosecant of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.csch = function () {
             var a = this.re, b = this.im, d = MathLib.cosh(2 * a) - MathLib.cos(2 * b);
 
@@ -5650,27 +6037,30 @@ var MathLib;
             return new MathLib.Complex(2 * MathLib.sinh(a) * MathLib.cos(b) / d, -2 * MathLib.cosh(a) * MathLib.sin(b) / d);
         };
 
-        // ### [Complex.prototype.divide()](http://mathlib.de/en/docs/Complex/divide)
-        // Divides a complex number by an other
-        //
-        // *@param {number|Complex}* The divisor
-        // *@return {Complex}*
-        Complex.prototype.divide = function (c) {
-            return this.times(MathLib.inverse(c));
+        /**
+        * Divides a complex number by an other
+        *
+        * @param {number|Complex} divisor The divisor
+        * @return {Complex}
+        */
+        Complex.prototype.divide = function (divisor) {
+            return this.times(MathLib.inverse(divisor));
         };
 
-        // ### [Complex.prototype.exp()](http://mathlib.de/en/docs/Complex/exp)
-        // Evaluates the exponential function with a complex argument
-        //
-        // *@return {Complex}*
+        /**
+        * Evaluates the exponential function with a complex argument
+        *
+        * @return {Complex}
+        */
         Complex.prototype.exp = function () {
             return new MathLib.Complex(MathLib.exp(this.re) * MathLib.cos(this.im), MathLib.exp(this.re) * MathLib.sin(this.im));
         };
 
-        // ### [Complex.prototype.inverse()](http://mathlib.de/en/docs/Complex/inverse)
-        // Calculates the inverse of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the inverse of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.inverse = function () {
             var d = MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2));
 
@@ -5685,41 +6075,45 @@ var MathLib;
             return new MathLib.Complex(MathLib.divide(this.re, d), MathLib.divide(MathLib.negative(this.im), d));
         };
 
-        // ### [Complex.prototype.isEqual()](http://mathlib.de/en/docs/Complex/isEqual)
-        // Determines if the complex number is equal to another number.
-        //
-        // *@param {Complex|number|Rational}* The number to be compared
-        // *@return {boolean}*
-        Complex.prototype.isEqual = function (n) {
-            if (typeof n === 'number') {
-                return MathLib.isEqual(this.re, n) && MathLib.isZero(this.im);
+        /**
+        * Determines if the complex number is equal to another number.
+        *
+        * @param {Complex|number|Rational} number The number to be compared
+        * @return {boolean}
+        */
+        Complex.prototype.isEqual = function (number) {
+            if (typeof number === 'number') {
+                return MathLib.isEqual(this.re, number) && MathLib.isZero(this.im);
             }
-            if (n.type === 'complex') {
-                return MathLib.isEqual(this.re, n.re) && MathLib.isEqual(this.im, n.im);
+            if (number.type === 'complex') {
+                return MathLib.isEqual(this.re, number.re) && MathLib.isEqual(this.im, number.im);
             }
             return false;
         };
 
-        // ### [Complex.prototype.isFinite()](http://mathlib.de/en/docs/Complex/isFinite)
-        // Determines if the complex number is finite.
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the complex number is finite.
+        *
+        * @return {boolean}
+        */
         Complex.prototype.isFinite = function () {
             return MathLib.isFinite(this.re);
         };
 
-        // ### [Complex.prototype.isZero()](http://mathlib.de/en/docs/Complex/isZero)
-        // Determines if the complex number is equal to 0.
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the complex number is equal to 0.
+        *
+        * @return {boolean}
+        */
         Complex.prototype.isZero = function () {
             return MathLib.isZero(this.re) && MathLib.isZero(this.im);
         };
 
-        // ### [Complex.prototype.ln()](http://mathlib.de/en/docs/Complex/ln)
-        // Evaluates the natural logarithm with complex arguments
-        //
-        // *@return {Complex}*
+        /*
+        * Evaluates the natural logarithm with complex arguments
+        *
+        * @return {Complex}
+        */
         Complex.prototype.ln = function () {
             if (this.re === Infinity) {
                 return new MathLib.Complex(Infinity);
@@ -5727,44 +6121,48 @@ var MathLib;
             return new MathLib.Complex(MathLib.ln(this.abs()), this.arg());
         };
 
-        // ### [Complex.prototype.minus()](http://mathlib.de/en/docs/Complex/minus)
-        // Calculates the difference of two complex numbers
-        //
-        // *@param {number|Complex}* The subtrahend
-        // *@return {Complex}*
-        Complex.prototype.minus = function (c) {
-            return this.plus(MathLib.negative(c));
+        /**
+        * Calculates the difference of two complex numbers
+        *
+        * @param {number|Complex} subtrahend The subtrahend
+        * @return {Complex}
+        */
+        Complex.prototype.minus = function (subtrahend) {
+            return this.plus(MathLib.negative(subtrahend));
         };
 
-        // ### [Complex.prototype.negative()](http://mathlib.de/en/docs/Complex/negative)
-        // Calculates the negative of the complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the negative of the complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.negative = function () {
             return new MathLib.Complex(MathLib.negative(this.re), MathLib.negative(this.im));
         };
 
-        // ### [Complex.prototype.plus()](http://mathlib.de/en/docs/Complex/plus)
-        // Add complex numbers
-        //
-        // *@param {Complex|number|Rational}* The number to be added
-        // *@return {Complex}*
-        Complex.prototype.plus = function (c) {
-            if (c.type === 'complex') {
-                return new MathLib.Complex(MathLib.plus(this.re, c.re), MathLib.plus(this.im, c.im));
-            } else if (c.type === 'rational') {
-                c = c.toNumber();
+        /**
+        * Add complex numbers
+        *
+        * @param {number|Complex|Rational} summand The number to be added
+        * @return {Complex}
+        */
+        Complex.prototype.plus = function (summand) {
+            if (summand.type === 'complex') {
+                return new MathLib.Complex(MathLib.plus(this.re, summand.re), MathLib.plus(this.im, summand.im));
+            } else if (summand.type === 'rational') {
+                summand = summand.toNumber();
             }
-            if (typeof c === 'number') {
-                return new MathLib.Complex(MathLib.plus(this.re, c), this.im);
+            if (typeof summand === 'number') {
+                return new MathLib.Complex(MathLib.plus(this.re, summand), this.im);
             }
         };
 
-        // ### [Complex.prototype.pow()](http://mathlib.de/en/docs/Complex/pow)
-        // Calculates the complex number raised to some power
-        //
-        // *@param {numeric}* The power to which the complex number should be raised
-        // *@return {Complex}*
+        /**
+        * Calculates the complex number raised to some power
+        *
+        * @param {numeric} c The power to which the complex number should be raised
+        * @return {Complex}
+        */
         Complex.prototype.pow = function (c) {
             var re, im, abs, arg;
 
@@ -5786,10 +6184,8 @@ var MathLib;
                 // instead of -142-65i which are errors of magnitude around 1e-14.
                 // This error increases quickly for increasing exponents.
                 // (2+5i)^21 has an error of 5.8 in the real part
-                /*
-                return MathLib.Complex.polar(MathLib.pow(abs, c), MathLib.times(arg, c));
-                */
-                // The following algorithm uses a sifferent approach for integer exponents,
+                // return MathLib.Complex.polar(MathLib.pow(abs, c), MathLib.times(arg, c));
+                // The following algorithm uses a different approach for integer exponents,
                 // where it yields exact results.
                 // Non integer exponents are evaluated using the naive approach.
                 // TODO: Improve the algorithm.
@@ -5822,30 +6218,33 @@ var MathLib;
             }
         };
 
-        // ### [Complex.prototype.sec()](http://mathlib.de/en/docs/Complex/sec)
-        // Calculates the secant of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the secant of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.sec = function () {
             var a = this.re, b = this.im, d = MathLib.cos(2 * a) + MathLib.cosh(2 * b);
 
             return new MathLib.Complex(2 * MathLib.cos(a) * MathLib.cosh(b) / d, 2 * MathLib.sin(a) * MathLib.sinh(b) / d);
         };
 
-        // ### [Complex.prototype.sech()](http://mathlib.de/en/docs/Complex/sech)
-        // Calculates the hyperbolic secant of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the hyperbolic secant of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.sech = function () {
             var a = this.re, b = this.im, d = MathLib.cosh(2 * a) + MathLib.cos(2 * b);
 
             return new MathLib.Complex(2 * MathLib.cosh(a) * MathLib.cos(b) / d, -2 * MathLib.sinh(a) * MathLib.sin(b) / d);
         };
 
-        // ### [Complex.prototype.sign()](http://mathlib.de/en/docs/Complex/sign)
-        // Calculates the signum of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the signum of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.sign = function () {
             if (this.isZero() || MathLib.isNaN(this.re)) {
                 return this;
@@ -5855,66 +6254,72 @@ var MathLib;
             return MathLib.Complex.polar(1, this.arg());
         };
 
-        // ### [Complex.prototype.sin()](http://mathlib.de/en/docs/Complex/sin)
-        // Calculates the sine of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the sine of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.sin = function () {
             return new MathLib.Complex(MathLib.sin(this.re) * MathLib.cosh(this.im), MathLib.cos(this.re) * MathLib.sinh(this.im));
         };
 
-        // ### [Complex.prototype.sinh()](http://mathlib.de/en/docs/Complex/sinh)
-        // Calculates the hyperbolic sine of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the hyperbolic sine of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.sinh = function () {
             return new MathLib.Complex(MathLib.cos(this.im) * MathLib.sinh(this.re), MathLib.sin(this.im) * MathLib.cosh(this.re));
         };
 
-        // ### [Complex.prototype.sqrt()](http://mathlib.de/en/docs/Complex/sqrt)
-        // Takes the square root of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Takes the square root of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.sqrt = function () {
             return MathLib.Complex.polar(Math.sqrt(this.abs()), this.arg() / 2);
         };
 
-        // ### [Complex.prototype.tan()](http://mathlib.de/en/docs/Complex/tan)
-        // Calculates the tangent of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the tangent of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.tan = function () {
             var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cos(aa) + MathLib.cosh(bb);
 
             return new MathLib.Complex(MathLib.sin(aa) / d, MathLib.sinh(bb) / d);
         };
 
-        // ### [Complex.prototype.tanh()](http://mathlib.de/en/docs/Complex/tanh)
-        // Calculates the hyperbolic tangent of a complex number
-        //
-        // *@return {Complex}*
+        /**
+        * Calculates the hyperbolic tangent of a complex number
+        *
+        * @return {Complex}
+        */
         Complex.prototype.tanh = function () {
             var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cosh(aa) + MathLib.cos(bb);
 
             return new MathLib.Complex(MathLib.sinh(aa) / d, MathLib.sin(bb) / d);
         };
 
-        // ### [Complex.prototype.times()](http://mathlib.de/en/docs/Complex/times)
-        // Multiplies complex numbers
-        //
-        // *@param {Complex|number|Rational}* The number to be multiplied
-        // *@return {Complex}*
-        Complex.prototype.times = function (c) {
-            if (c.type === 'complex') {
+        /**
+        * Multiplies complex numbers
+        *
+        * @param {Complex|number|Rational} factor The number to be multiplied
+        * @return {Complex}
+        */
+        Complex.prototype.times = function (factor) {
+            if (factor.type === 'complex') {
                 if (this.re === Infinity) {
-                    if (c.isZero() || MathLib.isNaN(c.re)) {
+                    if (factor.isZero() || MathLib.isNaN(factor.re)) {
                         return new MathLib.Complex(NaN);
                     } else {
                         return new MathLib.Complex(Infinity);
                     }
                 }
 
-                if (c.re === Infinity) {
+                if (factor.re === Infinity) {
                     if (this.isZero() || MathLib.isNaN(this.re)) {
                         return new MathLib.Complex(NaN);
                     } else {
@@ -5922,19 +6327,20 @@ var MathLib;
                     }
                 }
 
-                return new MathLib.Complex(MathLib.minus(MathLib.times(this.re, c.re), MathLib.times(this.im, c.im)), MathLib.plus(MathLib.times(this.re, c.im), MathLib.times(this.im, c.re)));
-            } else if (c.type === 'rational') {
-                c = c.toNumber();
+                return new MathLib.Complex(MathLib.minus(MathLib.times(this.re, factor.re), MathLib.times(this.im, factor.im)), MathLib.plus(MathLib.times(this.re, factor.im), MathLib.times(this.im, factor.re)));
+            } else if (factor.type === 'rational') {
+                factor = factor.toNumber();
             }
-            if (typeof c === 'number') {
-                return new MathLib.Complex(MathLib.times(this.re, c), MathLib.times(this.im, c));
+            if (typeof factor === 'number') {
+                return new MathLib.Complex(MathLib.times(this.re, factor), MathLib.times(this.im, factor));
             }
         };
 
-        // ### [Complex.prototype.toContentMathML()](http://mathlib.de/en/docs/Complex/toContentMathML)
-        // Returns the content MathML representation of the number
-        //
-        // *@return {string}*
+        /**
+        * Returns the content MathML representation of the number
+        *
+        * @return {string}
+        */
         Complex.prototype.toContentMathML = function () {
             if (!this.isFinite()) {
                 return '<csymbol cd="nums1">' + (this.re === Infinity ? 'infinity' : 'NaN') + '</csymbol>';
@@ -5943,10 +6349,11 @@ var MathLib;
             return '<apply><plus />' + MathLib.toContentMathML(this.re) + '<apply><times />' + MathLib.toContentMathML(this.im) + '<imaginaryi /></apply></apply>';
         };
 
-        // ### [Complex.prototype.toLaTeX()](http://mathlib.de/en/docs/Complex/toLaTeX)
-        // Returns the LaTeX representation of the complex number
-        //
-        // *@return {string}*
+        /**
+        * Returns the LaTeX representation of the complex number
+        *
+        * @return {string}
+        */
         Complex.prototype.toLaTeX = function () {
             var str = '', reFlag = false;
 
@@ -5967,10 +6374,11 @@ var MathLib;
             return str;
         };
 
-        // ### [Complex.prototype.toMathML()](http://mathlib.de/en/docs/Complex/toMathML)
-        // Returns the (presentation) MathML representation of the number
-        //
-        // *@return {string}*
+        /**
+        * Returns the (presentation) MathML representation of the number
+        *
+        * @return {string}
+        */
         Complex.prototype.toMathML = function () {
             var str = '', reFlag = false;
 
@@ -5991,10 +6399,11 @@ var MathLib;
             return str;
         };
 
-        // ### [Complex.prototype.toPoint()](http://mathlib.de/en/docs/Complex/toPoint)
-        // Interprets the complex number as point in the two dimensional plane
-        //
-        // *@return {Point}*
+        /**
+        * Interprets the complex number as point in the two dimensional plane
+        *
+        * @return {Point}
+        */
         Complex.prototype.toPoint = function () {
             if (this.re == Infinity || MathLib.isNaN(this.re)) {
                 return new MathLib.Point([0, 0, 0]);
@@ -6003,10 +6412,11 @@ var MathLib;
             return new MathLib.Point([this.re, this.im, 1]);
         };
 
-        // ### [Complex.prototype.toString()](http://mathlib.de/en/docs/Complex/toString)
-        // Custom toString function
-        //
-        // *@return {string}*
+        /**
+        * Custom toString function
+        *
+        * @return {string}
+        */
         Complex.prototype.toString = function () {
             var str = '';
 
@@ -6051,10 +6461,15 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Line"></a>Line
-    // The line implementation of MathLib makes calculations with lines in the
-    // real plane possible. (Higher dimensions will be supported later)
     /// import Functn, Vector
+    /**
+    * The line implementation of MathLib makes calculations with lines in the
+    * real plane possible. (Higher dimensions will be supported later)
+    *
+    * @class
+    * @augments Vector
+    * @this {Line}
+    */
     var Line = (function (_super) {
         __extends(Line, _super);
         function Line(coords) {
@@ -6062,12 +6477,13 @@ var MathLib;
             this.type = 'line';
             this.dimension = 2;
         }
-        // ### Line.prototype.draw()
-        // Draws the line on one or more screens
-        //
-        // *@param {Screen}* The screen to draw onto.
-        // *@param {object}* [options] Drawing options
-        // *@return {boolean}*
+        /**
+        * Draws the line on one or more screens
+        *
+        * @param {Screen} screen The screen to draw onto.
+        * @param {object} options Drawing options
+        * @return {boolean}
+        */
         Line.prototype.draw = function (screen, options) {
             if (Array.isArray(screen)) {
                 var line = this;
@@ -6080,46 +6496,50 @@ var MathLib;
             return this;
         };
 
-        // ### Line.prototype.isEqual()
-        // Determines if two lines are equal.
-        //
-        // *@param {Line}*
-        // *@return {boolean}*
-        Line.prototype.isEqual = function (q) {
+        /**
+        * Determines if two lines are equal.
+        *
+        * @param {Line} l The line to compare with
+        * @return {boolean}
+        */
+        Line.prototype.isEqual = function (l) {
             var p = this.normalize();
-            q = q.normalize();
+            l = l.normalize();
 
-            if (this.length !== q.length) {
+            if (this.length !== l.length) {
                 return false;
             }
 
             return p.every(function (x, i) {
-                return MathLib.isEqual(x, q[i]);
+                return MathLib.isEqual(x, l[i]);
             });
         };
 
-        // ### Line.prototype.isFinite()
-        // Determines if the line is finite
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the line is finite
+        *
+        * @return {boolean}
+        */
         Line.prototype.isFinite = function () {
             return !MathLib.isZero(this[0]) || !MathLib.isZero(this[1]);
         };
 
-        // ### Line.prototype.isParallelTo()
-        // Determines if two lines are parallel.
-        //
-        // *@param {Line}*
-        // *@return {boolean}*
+        /**
+        * Determines if two lines are parallel.
+        *
+        * @param {Line} l The other line
+        * @return {boolean}
+        */
         Line.prototype.isParallelTo = function (l) {
             return MathLib.isZero(this[0] * l[1] - this[1] * l[0]);
         };
 
-        // ### Line.prototype.meet()
-        // Calculates the meeting point of two lines
-        //
-        // *@param {Line}*
-        // *@return {Point}*
+        /**
+        * Calculates the meeting point of two lines
+        *
+        * @param {Line} l The line to intersect the current line with
+        * @return {Point}
+        */
         Line.prototype.meet = function (l) {
             var point, k = this;
 
@@ -6160,10 +6580,11 @@ var MathLib;
             }
         };
 
-        // ### Line.prototype.normalize()
-        // Normalizes the line.
-        //
-        // *@return {Line}*
+        /**
+        * Normalizes the line.
+        *
+        * @return {Line}
+        */
         Line.prototype.normalize = function () {
             var h = MathLib.hypot(this[0], this[1]);
 
@@ -6176,11 +6597,12 @@ var MathLib;
             }
         };
 
-        // ### Line.prototype.parallelThrough()
-        // Determines an parallel line through a given point.
-        //
-        // *@param {Point}*
-        // *@return {Line}*
+        /**
+        * Determines an parallel line through a given point.
+        *
+        * @param {Point} p The Point through which the line should go through
+        * @return {Line}
+        */
         Line.prototype.parallelThrough = function (p) {
             var l = this, parallel = new MathLib.Line([0, 0, 0]);
 
@@ -6224,20 +6646,24 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Matrix"></a>Matrix
-    // The matrix implementation of MathLib makes calculations with matrices of
-    // arbitrary size possible. The entries of a matrix can be numbers and complex
-    // numbers.
-    //
-    // It is as easy as
-    // ```
-    // new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-    // ```
-    // to create the following matrix:
-    //    ⎛ 1 2 3 ⎞
-    //    ⎜ 4 5 6 ⎟
-    //    ⎝ 7 8 9 ⎠
     /// import Functn, Permutation
+    /**
+    * The matrix implementation of MathLib makes calculations with matrices of
+    * arbitrary size possible. The entries of a matrix can be numbers and complex
+    * numbers.
+    *
+    * It is as easy as
+    * ```
+    * new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+    * ```
+    * to create the following matrix:
+    *    ⎛ 1 2 3 ⎞
+    *    ⎜ 4 5 6 ⎟
+    *    ⎝ 7 8 9 ⎠
+    *
+    * @class
+    * @this {Matrix}
+    */
     var Matrix = (function () {
         function Matrix(matrix) {
             var _this = this;
@@ -6258,11 +6684,12 @@ var MathLib;
             this.cols = matrix[0].length;
             this.rows = matrix.length;
         }
-        // ### Matrix.prototype.LU()
-        // Calculates the LU decomposition of a matrix
-        // The result is cached.
-        //
-        // *@return {Matrix}*
+        /**
+        * Calculates the LU decomposition of a matrix
+        * The result is cached.
+        *
+        * @return {Matrix}
+        */
         Matrix.prototype.LU = function () {
             var i, j, k, t, p, LU = this.toArray(), m = this.rows, n = this.cols, permutation = [];
 
@@ -6301,31 +6728,34 @@ var MathLib;
             return LU;
         };
 
-        // ### Matrix.prototype.adjoint()
-        // Calculates the adjoint matrix
-        //
-        // *@return {Matrix}*
+        /**
+        * Calculates the adjoint matrix
+        *
+        * @return {Matrix}
+        */
         Matrix.prototype.adjoint = function () {
             return this.map(MathLib.conjugate).transpose();
         };
 
-        // ### Matrix.prototype.adjugate()
-        // Calculates the adjugate matrix
-        //
-        // *@return {Matrix}*
+        /**
+        * Calculates the adjugate matrix
+        *
+        * @return {Matrix}
+        */
         Matrix.prototype.adjugate = function () {
             return this.map(function (x, r, c, m) {
                 return MathLib.times(m.remove(c, r).determinant(), 1 - ((r + c) % 2) * 2);
             });
         };
 
-        // ### Matrix.prototype.cholesky()
-        // The cholesky decomposition of a matrix
-        // using the Cholesky–Banachiewicz algorithm.
-        // Does not change the current matrix, but returns a new one.
-        // The result is cached.
-        //
-        // *@return {Matrix}*
+        /**
+        * The cholesky decomposition of a matrix
+        * using the Cholesky–Banachiewicz algorithm.
+        * Does not change the current matrix, but returns a new one.
+        * The result is cached.
+        *
+        * @return {Matrix}
+        */
         Matrix.prototype.cholesky = function () {
             var i, ii, j, jj, k, kk, sum, choleskyMatrix, cholesky = [];
 
@@ -6360,11 +6790,12 @@ var MathLib;
             return choleskyMatrix;
         };
 
-        // ### Matrix.prototype.compare()
-        // Compares the matrix to an other matrix.
-        //
-        // *@param {Matrix}* The matrix to compare.
-        // *@return {number}*
+        /**
+        * Compares the matrix to an other matrix.
+        *
+        * @param {Matrix} m The matrix to compare.
+        * @return {number}
+        */
         Matrix.prototype.compare = function (m) {
             var i, ii, j, jj;
 
@@ -6387,19 +6818,21 @@ var MathLib;
             return 0;
         };
 
-        // ### Matrix.prototype.copy()
-        // Copies the matrix
-        //
-        // *@return {Matrix}*
+        /**
+        * Copies the matrix
+        *
+        * @return {Matrix}
+        */
         Matrix.prototype.copy = function () {
             return this.map(MathLib.copy);
         };
 
-        // ### Matrix.prototype.determinant()
-        // Calculates the determinant of the matrix via the LU decomposition.
-        // The result is cached.
-        //
-        // *@return {number|Complex}*
+        /**
+        * Calculates the determinant of the matrix via the LU decomposition.
+        * The result is cached.
+        *
+        * @return {number|Complex}
+        */
         Matrix.prototype.determinant = function () {
             var LU, determinant;
 
@@ -6421,10 +6854,11 @@ var MathLib;
             return determinant;
         };
 
-        // ### Matrix.prototype.diag()
-        // Returns the entries on the diagonal in an array
-        //
-        // *@return {array}*
+        /**
+        * Returns the entries on the diagonal in an array
+        *
+        * @return {array}
+        */
         Matrix.prototype.diag = function () {
             var diagonal = [], i, ii;
             for (i = 0, ii = Math.min(this.rows, this.cols); i < ii; i++) {
@@ -6433,23 +6867,25 @@ var MathLib;
             return diagonal;
         };
 
-        // ### Matrix.prototype.divide()
-        // Multiplies the matrix by the inverse of a number or a matrix
-        //
-        // *@return {Matrix}*
+        /**
+        * Multiplies the matrix by the inverse of a number or a matrix
+        *
+        * @return {Matrix|number} n The number or Matrix to be inverted and multiplied
+        */
         Matrix.prototype.divide = function (n) {
             return this.times(MathLib.inverse(n));
         };
 
-        // ### Matrix.prototype.every()
-        // This function works like the Array.prototype.every function.
-        // The matrix is processed row by row.
-        // The function is called with the following arguments:
-        // the entry at the current position, the number of the row,
-        // the number of the column and the complete matrix
-        //
-        // *@param {function}* The function which is called on every argument
-        // *@return {boolean}*
+        /**
+        * This function works like the Array.prototype.every function.
+        * The matrix is processed row by row.
+        * The function is called with the following arguments:
+        * the entry at the current position, the number of the row,
+        * the number of the column and the complete matrix
+        *
+        * @param {function} f The function which is called on every argument
+        * @return {boolean}
+        */
         Matrix.prototype.every = function (f) {
             return Array.prototype.every.call(this, function (x, i) {
                 return Array.prototype.every.call(x, function (y, j) {
@@ -6458,14 +6894,15 @@ var MathLib;
             });
         };
 
-        // ### Matrix.prototype.forEach()
-        // This function works like the Array.prototype.forEach function.
-        // The matrix is processed row by row.
-        // The function is called with the following arguments:
-        // the entry at the current position, the number of the row,
-        // the number of the column and the complete matrix
-        //
-        // *@param {function}* The function which is called on every argument
+        /**
+        * This function works like the Array.prototype.forEach function.
+        * The matrix is processed row by row.
+        * The function is called with the following arguments:
+        * the entry at the current position, the number of the row,
+        * the number of the column and the complete matrix
+        *
+        * @param {function} f The function which is called on every argument
+        */
         Matrix.prototype.forEach = function (f) {
             Array.prototype.forEach.call(this, function (x, i) {
                 return Array.prototype.forEach.call(x, function (y, j) {
@@ -6474,10 +6911,11 @@ var MathLib;
             });
         };
 
-        // ### Matrix.prototype.gershgorin()
-        // Returns the Gershgorin circles of the matrix.
-        //
-        // *@return {array}* Returns an array of circles
+        /**
+        * Returns the Gershgorin circles of the matrix.
+        *
+        * @return {array} Returns an array of circles
+        */
         Matrix.prototype.gershgorin = function () {
             var c = [], rc = [], rr = [], circles = [], i, ii;
 
@@ -6506,10 +6944,11 @@ var MathLib;
             return circles;
         };
 
-        // ### Matrix.prototype.givens()
-        // QR decomposition with the givens method.
-        //
-        // *@return {[Matrix, Matrix]}*
+        /**
+        * QR decomposition with the givens method.
+        *
+        * @return {[Matrix, Matrix]}
+        */
         Matrix.prototype.givens = function () {
             var rows = this.rows, cols = this.cols, R = this.copy(), Q = MathLib.Matrix.identity(rows), c, s, rho, i, j, k, ri, rj, qi, qj;
 
@@ -6552,10 +6991,11 @@ var MathLib;
             return [Q, R];
         };
 
-        // ### Matrix.prototype.inverse()
-        // Calculates the inverse matrix.
-        //
-        // *@return {Matrix}*
+        /**
+        * Calculates the inverse matrix.
+        *
+        * @return {Matrix}
+        */
         Matrix.prototype.inverse = function () {
             var i, ii, res, inverse, col = [], matrix = [], n = this.rows;
 
@@ -6593,12 +7033,13 @@ var MathLib;
             return inverse;
         };
 
-        // ### Matrix.prototype.isBandMatrix()
-        // Determines if the matrix is a band matrix.
-        //
-        // *@param {number}*
-        // *@param {number}*
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is a band matrix.
+        *
+        * @param {number} l The wished lower bandwidth
+        * @param {number} u The wished upper bandwidth
+        * @return {boolean}
+        */
         Matrix.prototype.isBandMatrix = function (l, u) {
             // var i, j, ii, jj;
             if (arguments.length === 1) {
@@ -6618,10 +7059,11 @@ var MathLib;
             // return true;
         };
 
-        // ### Matrix.prototype.isDiag()
-        // Determines if the matrix is a diagonal matrix.
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is a diagonal matrix.
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isDiag = function () {
             var i, j, ii, jj;
             if (Number(this.hasOwnProperty('isUpper') && this.isUpper()) + Number(this.hasOwnProperty('isLower') && this.isLower()) + Number(this.hasOwnProperty('isSymmetric') && this.isSymmetric()) > 1) {
@@ -6637,20 +7079,21 @@ var MathLib;
             return true;
         };
 
-        // ### Matrix.prototype.isEqual()
-        // Determines if the matrix is equal to an other matrix.
-        //
-        // *@param {Matrix}* the matrix to compare with
-        // *@return {boolean}*
-        Matrix.prototype.isEqual = function (x) {
+        /**
+        * Determines if the matrix is equal to an other matrix.
+        *
+        * @param {Matrix} matrix The matrix to compare with
+        * @return {boolean}
+        */
+        Matrix.prototype.isEqual = function (matrix) {
             var i, j, ii, jj;
-            if (this === x) {
+            if (this === matrix) {
                 return true;
             }
-            if (this.rows === x.rows && this.cols === x.cols) {
+            if (this.rows === matrix.rows && this.cols === matrix.cols) {
                 for (i = 0, ii = this.rows; i < ii; i++) {
                     for (j = 0, jj = this.cols; j < jj; j++) {
-                        if (!MathLib.isEqual(this[i][j], x[i][j])) {
+                        if (!MathLib.isEqual(this[i][j], matrix[i][j])) {
                             return false;
                         }
                     }
@@ -6660,10 +7103,11 @@ var MathLib;
             return false;
         };
 
-        // ### Matrix.prototype.isIdentity()
-        // Determines if the matrix is a identity matrix.
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is a identity matrix.
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isIdentity = function () {
             if (!this.isSquare()) {
                 return false;
@@ -6679,28 +7123,31 @@ var MathLib;
             return isIdentity;
         };
 
-        // ### Matrix.prototype.isInvertible()
-        // Determines if the matrix is invertible.
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is invertible.
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isInvertible = function () {
             return this.isSquare() && this.rank() === this.rows;
         };
 
-        // ### Matrix.prototype.isLower()
-        // Determines if the matrix is a lower triangular matrix.
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is a lower triangular matrix.
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isLower = function () {
             return this.slice(0, -1).every(function (x, i) {
                 return x.slice(i + 1).every(MathLib.isZero);
             });
         };
 
-        // ### Matrix.prototype.isNegDefinite()
-        // Determines if the matrix is negative definite
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is negative definite
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isNegDefinite = function () {
             if (!this.isSquare()) {
                 return;
@@ -6717,18 +7164,20 @@ var MathLib;
             }
         };
 
-        // ### Matrix.prototype.isOrthogonal()
-        // Determines if the matrix is a orthogonal.
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is a orthogonal.
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isOrthogonal = function () {
             return this.transpose().times(this).isIdentity();
         };
 
-        // ### Matrix.prototype.isPermutation()
-        // Determines if the matrix is a permutation matrix
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is a permutation matrix
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isPermutation = function () {
             var rows = [], cols = [];
 
@@ -6748,10 +7197,11 @@ var MathLib;
             }) && rows.length === this.rows && cols.length === this.cols;
         };
 
-        // ### Matrix.prototype.isPosDefinite()
-        // Determines if the matrix is positive definite
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is positive definite
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isPosDefinite = function () {
             if (!this.isSquare()) {
                 return;
@@ -6764,19 +7214,21 @@ var MathLib;
             return this.determinant() > 0 && this.remove(this.rows - 1, this.cols - 1).isPosDefinite();
         };
 
-        // ### Matrix.prototype.isReal()
-        // Determines if the matrix has only real entries
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix has only real entries
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isReal = function () {
             return this.every(MathLib.isReal);
         };
 
-        // ### Matrix.prototype.isScalar()
-        // Determines if the matrix is a scalar matrix
-        // (that is a multiple of the identity matrix)
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is a scalar matrix
+        * (that is a multiple of the identity matrix)
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isScalar = function () {
             var i, ii, diag = this.diag;
             if (this.hasOwnProperty('isIdentity') && this.hasOwnProperty('isZero')) {
@@ -6797,18 +7249,20 @@ var MathLib;
             return false;
         };
 
-        // ### Matrix.prototype.isSquare()
-        // Determines if the matrix is a square matrix
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is a square matrix
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isSquare = function () {
             return this.cols === this.rows;
         };
 
-        // ### Matrix.prototype.isSymmetric()
-        // Determines if the matrix is symmetric
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is symmetric
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isSymmetric = function () {
             var i, ii, j, jj, isSymmetric = true;
 
@@ -6832,30 +7286,33 @@ var MathLib;
             return isSymmetric;
         };
 
-        // ### Matrix.prototype.isUpper()
-        // Determines if the matrix is a upper triangular matrix
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is a upper triangular matrix
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isUpper = function () {
             return this.slice(1).every(function (x, i) {
                 return x.slice(0, i + 1).every(MathLib.isZero);
             });
         };
 
-        // ### Matrix.prototype.isVector()
-        // Determines if the matrix is a vector
-        // (only one row or one column)
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix is a vector
+        * (only one row or one column)
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isVector = function () {
             return (this.rows === 1) || (this.cols === 1);
         };
 
-        // ### Matrix.prototype.isZero()
-        // Determines if the matrix the zero matrix
-        // The result is cached.
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the matrix the zero matrix
+        * The result is cached.
+        *
+        * @return {boolean}
+        */
         Matrix.prototype.isZero = function () {
             var isZero = this.every(MathLib.isZero);
 
@@ -6865,15 +7322,16 @@ var MathLib;
             return isZero;
         };
 
-        // ### Matrix.prototype.map()
-        // This function works like the Array.prototype.map function.
-        // The matrix is processed row by row.
-        // The function is called with the following arguments:
-        // the entry at the current position, the number of the row,
-        // the number of the column and the complete matrix
-        //
-        // *@param {function}* The function which is called on every argument
-        // *@return {Matrix}*
+        /**
+        * This function works like the Array.prototype.map function.
+        * The matrix is processed row by row.
+        * The function is called with the following arguments:
+        * the entry at the current position, the number of the row,
+        * the number of the column and the complete matrix
+        *
+        * @param {function} f The function which is called on every argument
+        * @return {Matrix}
+        */
         Matrix.prototype.map = function (f) {
             var m = this;
             return new MathLib.Matrix(Array.prototype.map.call(this, function (x, i) {
@@ -6883,34 +7341,37 @@ var MathLib;
             }));
         };
 
-        // ### Matrix.prototype.minor()
-        // Calculates a minor
-        //
-        // *@param {number}* The row to be removed.
-        // *@param {number}* The column to be removed.
-        // *@return {Matrix}*
+        /**
+        * Calculates a minor
+        *
+        * @param {number} r The row to be removed.
+        * @param {number} c The column to be removed.
+        * @return {Matrix}
+        */
         Matrix.prototype.minor = function (r, c) {
             return this.remove(r, c).determinant();
         };
 
-        // ### Matrix.prototype.minus()
-        // Calculates the difference of two matrices
-        //
-        // *@param {Matrix}* The matrix to be subtracted.
-        // *@return {Matrix}*
-        Matrix.prototype.minus = function (m) {
-            if (this.rows === m.rows && this.cols === m.cols) {
-                return this.plus(m.negative());
+        /**
+        * Calculates the difference of two matrices
+        *
+        * @param {Matrix} subtrahend The matrix to be subtracted.
+        * @return {Matrix}
+        */
+        Matrix.prototype.minus = function (subtrahend) {
+            if (this.rows === subtrahend.rows && this.cols === subtrahend.cols) {
+                return this.plus(subtrahend.negative());
             } else {
                 MathLib.error({ message: 'Matrix sizes not matching', method: 'Matrix#minus' });
                 return;
             }
         };
 
-        // ### Matrix.prototype.negative()
-        // Returns the negative matrix
-        //
-        // *@return {Matrix}*
+        /**
+        * Returns the negative matrix
+        *
+        * @return {Matrix}
+        */
         Matrix.prototype.negative = function () {
             var i, ii, negative = [];
 
@@ -6920,20 +7381,21 @@ var MathLib;
             return new MathLib.Matrix(negative);
         };
 
-        // ### Matrix.prototype.plus()
-        // This function adds a matrix to the current matrix
-        // and returns the result as a new matrix.
-        //
-        // *@param {Matrix}* The matrix to be added.
-        // *@return {Matrix}*
-        Matrix.prototype.plus = function (m) {
+        /**
+        * This function adds a matrix to the current matrix
+        * and returns the result as a new matrix.
+        *
+        * @param {Matrix} summand The matrix to be added.
+        * @return {Matrix}
+        */
+        Matrix.prototype.plus = function (summand) {
             var i, ii, j, jj, sum = [];
 
-            if (this.rows === m.rows && this.cols === m.cols) {
+            if (this.rows === summand.rows && this.cols === summand.cols) {
                 for (i = 0, ii = this.rows; i < ii; i++) {
                     sum[i] = [];
                     for (j = 0, jj = this.cols; j < jj; j++) {
-                        sum[i][j] = MathLib.plus(this[i][j], m[i][j]);
+                        sum[i][j] = MathLib.plus(this[i][j], summand[i][j]);
                     }
                 }
                 return new MathLib.Matrix(sum);
@@ -6943,10 +7405,11 @@ var MathLib;
             }
         };
 
-        // ### Matrix.prototype.rank()
-        // Determines the rank of the matrix
-        //
-        // *@return {number}*
+        /**
+        * Determines the rank of the matrix
+        *
+        * @return {number}
+        */
         Matrix.prototype.rank = function () {
             var i, j, rank = 0, mat = this.rref();
 
@@ -6966,10 +7429,11 @@ var MathLib;
             return rank;
         };
 
-        // ### Matrix.prototype.reduce()
-        // This function works like the Array.prototype.reduce function.
-        //
-        // *@return {any}*
+        /**
+        * This function works like the Array.prototype.reduce function.
+        *
+        * @return {any}
+        */
         Matrix.prototype.reduce = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -6978,12 +7442,13 @@ var MathLib;
             return Array.prototype.reduce.apply(this, args);
         };
 
-        // ### Matrix.prototype.remove()
-        // This function removes the specified rows and/or columns for the matrix.
-        //
-        // *@param {number|array}* The row(s) to be removed.
-        // *@param {number|array}* The column(s) to be removed.
-        // *@return {Matrix}*
+        /**
+        * This function removes the specified rows and/or columns for the matrix.
+        *
+        * @param {number|array} row The row(s) to be removed.
+        * @param {number|array} col The column(s) to be removed.
+        * @return {Matrix}
+        */
         Matrix.prototype.remove = function (row, col) {
             var rest = this.toArray();
 
@@ -7012,10 +7477,11 @@ var MathLib;
             return new MathLib.Matrix(rest);
         };
 
-        // ### Matrix.prototype.rref()
-        // Calculate the reduced row echelon form (rref) of a matrix.
-        //
-        // *@return {Matrix}*
+        /**
+        * Calculate the reduced row echelon form (rref) of a matrix.
+        *
+        * @return {Matrix}
+        */
         Matrix.prototype.rref = function () {
             var i, ii, j, jj, k, kk, pivot, factor, swap, lead = 0, rref = this.toArray();
 
@@ -7064,10 +7530,11 @@ var MathLib;
             return new MathLib.Matrix(rref);
         };
 
-        // ### Matrix.prototype.slice()
-        // This function works like the Array.prototype.slice function.
-        //
-        // *@return {array}*
+        /**
+        * This function works like the Array.prototype.slice function.
+        *
+        * @return {array}
+        */
         Matrix.prototype.slice = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -7076,12 +7543,13 @@ var MathLib;
             return Array.prototype.slice.apply(this, args);
         };
 
-        // ### Matrix.prototype.solve()
-        // Solves the system of linear equations Ax = b
-        // given by the matrix A and a vector or point b.
-        //
-        // *@param {Vector|Point}* The b in Ax = b
-        // *@return {Vector|Point}*
+        /**
+        * Solves the system of linear equations Ax = b
+        * given by the matrix A and a vector or point b.
+        *
+        * @param {Vector} b The b in Ax = b
+        * @return {Vector}
+        */
         Matrix.prototype.solve = function (b) {
             // Ax = b -> LUx = b. Then y is defined to be Ux
             var LU = this.LU(), i, j, n = b.length, x = [], y = [];
@@ -7120,15 +7588,16 @@ var MathLib;
             }
         };
 
-        // ### Matrix.prototype.some()
-        // This function works like the Array.prototype.some function.
-        // The matrix is processed row by row.
-        // The function is called with the following arguments:
-        // the entry at the current position, the number of the row,
-        // the number of the column and the complete matrix
-        //
-        // *@param {function}* The function which is called on every argument
-        // *@return {boolean}*
+        /**
+        * This function works like the Array.prototype.some function.
+        * The matrix is processed row by row.
+        * The function is called with the following arguments:
+        * the entry at the current position, the number of the row,
+        * the number of the column and the complete matrix
+        *
+        * @param {function} f The function which is called on every argument
+        * @return {boolean}
+        */
         Matrix.prototype.some = function (f) {
             return Array.prototype.some.call(this, function (x, i) {
                 return Array.prototype.some.call(x, function (y, j) {
@@ -7137,11 +7606,12 @@ var MathLib;
             });
         };
 
-        // ### Matrix.prototype.times()
-        // Multiplies the current matrix with a number, a matrix, a point or a vector.
-        //
-        // *@param {number|Matrix|Point|Rational|Vector}*
-        // *@return {Matrix|Point|Vector}*
+        /**
+        * Multiplies the current matrix with a number, a matrix, a point or a vector.
+        *
+        * @param {number|Matrix|Point|Rational|Vector} a The object to multiply to the current matrix
+        * @return {Matrix|Point|Vector}
+        */
         Matrix.prototype.times = function (a) {
             var i, ii, j, jj, k, kk, product = [], entry;
 
@@ -7184,10 +7654,11 @@ var MathLib;
             }
         };
 
-        // ### Matrix.prototype.toArray()
-        // Converts the matrix to a two-dimensional array
-        //
-        // *@return {array}*
+        /**
+        * Converts the matrix to a two-dimensional array
+        *
+        * @return {array}
+        */
         Matrix.prototype.toArray = function () {
             return Array.prototype.map.call(this, function (x) {
                 return Array.prototype.map.call(x, function (y) {
@@ -7196,18 +7667,20 @@ var MathLib;
             });
         };
 
-        // ### Matrix.prototype.toColVectors()
-        // Converts the columns of the matrix to vectors
-        //
-        // *@return {array}*
+        /**
+        * Converts the columns of the matrix to vectors
+        *
+        * @return {array}
+        */
         Matrix.prototype.toColVectors = function () {
             return this.transpose().toRowVectors();
         };
 
-        // ### Matrix.prototype.toContentMathML()
-        // converting the matrix to content MathML
-        //
-        // *@return {string}*
+        /**
+        * converting the matrix to content MathML
+        *
+        * @return {string}
+        */
         Matrix.prototype.toContentMathML = function () {
             return this.reduce(function (str, x) {
                 return str + x.reduce(function (prev, cur) {
@@ -7216,10 +7689,11 @@ var MathLib;
             }, '<matrix>') + '</matrix>';
         };
 
-        // ### Matrix.prototype.toLaTeX()
-        // Converting the matrix to LaTeX
-        //
-        // *@return {string}*
+        /**
+        * Converting the matrix to LaTeX
+        *
+        * @return {string}
+        */
         Matrix.prototype.toLaTeX = function () {
             return '\\begin{pmatrix}\n' + this.reduce(function (str, x) {
                 return str + x.reduce(function (prev, cur) {
@@ -7228,10 +7702,11 @@ var MathLib;
             }, '').slice(0, -2) + '\n\\end{pmatrix}';
         };
 
-        // ### Matrix.prototype.toMathML()
-        // converting the matrix to (presentation) MathML
-        //
-        // *@return {string}*
+        /**
+        * converting the matrix to (presentation) MathML
+        *
+        * @return {string}
+        */
         Matrix.prototype.toMathML = function () {
             return this.reduce(function (str, x) {
                 return str + x.reduce(function (prev, cur) {
@@ -7240,20 +7715,22 @@ var MathLib;
             }, '<mrow><mo> ( </mo><mtable>') + '</mtable><mo> ) </mo></mrow>';
         };
 
-        // ### Matrix.prototype.toRowVectors()
-        // Converts the rows of the matrix to vectors
-        //
-        // *@return {array}*
+        /**
+        * Converts the rows of the matrix to vectors
+        *
+        * @return {array}
+        */
         Matrix.prototype.toRowVectors = function () {
             return this.toArray().map(function (v) {
                 return new MathLib.Vector(v);
             });
         };
 
-        // ### Matrix.prototype.toString()
-        // Creating a custom .toString() function
-        //
-        // *@return {string}*
+        /**
+        * Creating a custom .toString() function
+        *
+        * @return {string}
+        */
         Matrix.prototype.toString = function () {
             return this.reduce(function (str, x) {
                 return str + x.reduce(function (prev, cur) {
@@ -7262,10 +7739,11 @@ var MathLib;
             }, '').slice(0, -1);
         };
 
-        // ### Matrix.prototype.trace()
-        // Calculating the trace of the matrix
-        //
-        // *@return {number|Complex}*
+        /**
+        * Calculating the trace of the matrix
+        *
+        * @return {number|Complex}
+        */
         Matrix.prototype.trace = function () {
             var trace = MathLib.plus.apply(null, this.diag());
 
@@ -7275,11 +7753,12 @@ var MathLib;
             return trace;
         };
 
-        // ### Matrix.prototype.transpose()
-        // Calculating the transpose of the matrix
-        // The result is cached.
-        //
-        // *@return {Matrix}*
+        /**
+        * Calculating the transpose of the matrix
+        * The result is cached.
+        *
+        * @return {Matrix}
+        */
         Matrix.prototype.transpose = function () {
             var transposedMatrix, row, i, j, ii, jj, transpose = [];
 
@@ -7366,8 +7845,13 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Permutation"></a>Permutation
     /// import Functn, Matrix
+    /**
+    * The permutation class for MathLib
+    *
+    * @class
+    * @this {Permutation}
+    */
     var Permutation = (function () {
         function Permutation(p) {
             var _this = this;
@@ -7388,11 +7872,12 @@ var MathLib;
             this.length = permutation.length;
             this.cycle = cycle;
         }
-        // ### Permutation.prototype.applyTo()
-        // Applies the permutation to a number or a array/matrix/point/vector
-        //
-        // *@param {number|array|Matrix|Point|Vector}*
-        // *@return {number|array|Matrix|Point|Vector}*
+        /**
+        * Applies the permutation to a number or a array/matrix/point/vector
+        *
+        * @param {number|array|Matrix|Point|Vector} n The object to apply the permutation to
+        * @return {number|array|Matrix|Point|Vector}
+        */
         Permutation.prototype.applyTo = function (n) {
             var p, permutatedObj;
             if (typeof n === 'number') {
@@ -7410,11 +7895,12 @@ var MathLib;
             }
         };
 
-        // ### Permutation.prototype.compare()
-        // Compares two permutations.
-        //
-        // *@param {Permutation}* The permutation to compare
-        // *@return {number}*
+        /**
+        * Compares two permutations.
+        *
+        * @param {Permutation} p The permutation to compare
+        * @return {number}
+        */
         Permutation.prototype.compare = function (p) {
             var i, ii;
 
@@ -7431,11 +7917,12 @@ var MathLib;
             return 0;
         };
 
-        // ### Permutation.cycleToList()
-        // Converts a cycle representation to a list representation
-        //
-        // *@param {array}* cycle The cycle to be converted
-        // *@return {array}*
+        /**
+        * Converts a cycle representation to a list representation
+        *
+        * @param {array} cycle The cycle to be converted
+        * @return {array}
+        */
         Permutation.cycleToList = function (cycle) {
             var index, list = [], cur, i, ii, j, jj, max;
 
@@ -7457,10 +7944,11 @@ var MathLib;
             return list;
         };
 
-        // ### Permutation.prototype.inverse()
-        // Calculates the inverse of the permutation
-        //
-        // *@return {Permutation}*
+        /**
+        * Calculates the inverse of the permutation
+        *
+        * @return {Permutation}
+        */
         Permutation.prototype.inverse = function () {
             var cycle = this.cycle.slice(0);
             cycle.reverse().forEach(function (e) {
@@ -7469,11 +7957,12 @@ var MathLib;
             return new MathLib.Permutation(cycle);
         };
 
-        // ### Permutation.listToCycle()
-        // Converts a list representation to a cycle representation
-        //
-        // *@param {array}* list The list to be converted
-        // *@return {array}*
+        /**
+        * Converts a list representation to a cycle representation
+        *
+        * @param {array} list The list to be converted
+        * @return {array}
+        */
         Permutation.listToCycle = function (list) {
             var finished = [], cur, i, ii, cycle, cycles = [];
 
@@ -7492,10 +7981,11 @@ var MathLib;
             return cycles;
         };
 
-        // ### Permutation.prototype.map()
-        // Works like Array.prototype.map.
-        //
-        // *@return {Permutation}*
+        /**
+        * Works like Array.prototype.map.
+        *
+        * @return {Permutation}
+        */
         Permutation.prototype.map = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -7504,10 +7994,11 @@ var MathLib;
             return new MathLib.Permutation(Array.prototype.map.apply(this, args));
         };
 
-        // ### Permutation.prototype.sgn()
-        // Calculates the signum of the permutation
-        //
-        // *@return {number}*
+        /**
+        * Calculates the signum of the permutation
+        *
+        * @return {number}
+        */
         Permutation.prototype.sgn = function () {
             var i, ii, count = 0;
 
@@ -7518,10 +8009,12 @@ var MathLib;
             return -2 * (count % 2) + 1;
         };
 
-        // ### Permutation.prototype.times()
-        // Multiplies two permutations
-        //
-        // *@return {Permutation}*
+        /**
+        * Multiplies two permutations
+        *
+        * @param {Permutation} p The permutation to multiply
+        * @return {Permutation}
+        */
         Permutation.prototype.times = function (p) {
             var a = this;
             return p.map(function (x) {
@@ -7529,11 +8022,12 @@ var MathLib;
             });
         };
 
-        // ### Permutation.prototype.toMatrix()
-        // Converts the permuatation to a matrix.
-        //
-        // *@param {number}* [size] The size of the matrix
-        // *@return {Matrix}*
+        /**
+        * Converts the permuatation to a matrix.
+        *
+        * @param {number} n The size of the matrix
+        * @return {Matrix}
+        */
         Permutation.prototype.toMatrix = function (n) {
             var row = [], matrix = [], index, i, ii;
             n = n || this.length;
@@ -7549,10 +8043,11 @@ var MathLib;
             return new MathLib.Matrix(matrix);
         };
 
-        // ### Permutation.prototype.toString()
-        // String representation of the permutation.
-        //
-        // *@return {string}*
+        /**
+        * String representation of the permutation.
+        *
+        * @return {string}
+        */
         Permutation.prototype.toString = function () {
             var str = '';
             this.cycle.forEach(function (elem) {
@@ -7569,9 +8064,13 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Conic" href="http://mathlib.de/en/docs/Conic">Conic</a>
-    // The conic implementation of MathLib makes calculations with conics possible.
     /// import Functn, Matrix
+    /**
+    * The conic implementation of MathLib makes calculations with conics possible.
+    *
+    * @class Conic
+    * @this {Conic}
+    */
     var Conic = (function () {
         function Conic(primal, dual) {
             this.type = 'conic';
@@ -7602,12 +8101,14 @@ var MathLib;
                 this.dual = dual;
             }
         }
-        // ### [Conic.prototype.draw()](http://mathlib.de/en/docs/Conic/draw)
-        // Draws the conic on one or more screens
-        //
-        // *@param {Screen}* The screen to draw onto.
-        // *@param {object}* [options] Drawing options
-        // *@return {boolean}*
+        /**
+        * Draws the conic on one or more screens
+        *
+        * @param {Screen} screen The screen to draw onto.
+        * @param {object} options Drawing options
+        * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
+        * @return {boolean}
+        */
         Conic.prototype.draw = function (screen, options, redraw) {
             if (typeof redraw === "undefined") { redraw = false; }
             if (Array.isArray(screen)) {
@@ -7701,10 +8202,11 @@ var MathLib;
             return this;
         };
 
-        // ### [Conic.prototype.eccentricity()](http://mathlib.de/en/docs/Conic/eccentricity)
-        // Calculates the eccentricity of a conic.
-        //
-        // *@return {number}*
+        /**
+        * Calculates the eccentricity of a conic.
+        *
+        * @return {number}
+        */
         Conic.prototype.eccentricity = function () {
             var normalform = this.normalize(), a = normalform.primal[0][0], c = normalform.primal[1][1];
 
@@ -7720,21 +8222,23 @@ var MathLib;
             }
         };
 
-        // ### [Conic.prototype.isDegenerated()](http://mathlib.de/en/docs/Conic/isDegenerated)
-        // Determines if a conic is degenerated.
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if a conic is degenerated.
+        *
+        * @return {boolean}
+        */
         Conic.prototype.isDegenerated = function () {
             return this.primal.rank() !== 3;
         };
 
-        // ### [Conic.prototype.isEqual()](http://mathlib.de/en/docs/Conic/isEqual)
-        // Determines if two conics are equal.
-        //
-        // *@param {Conic}*
-        // *@return {boolean}*
-        Conic.prototype.isEqual = function (c) {
-            if (this === c) {
+        /**
+        * Determines if two conics are equal.
+        *
+        * @param {Conic} conic The conic to be compared
+        * @return {boolean}
+        */
+        Conic.prototype.isEqual = function (conic) {
+            if (this === conic) {
                 return true;
             }
 
@@ -7772,13 +8276,14 @@ var MathLib;
                 return true;
             };
 
-            return compare(this.primal, c.primal) && compare(this.dual, c.dual);
+            return compare(this.primal, conic.primal) && compare(this.dual, conic.dual);
         };
 
-        // ### [Conic.prototype.latusRectum()](http://mathlib.de/en/docs/Conic/latusRectum)
-        // Calculates the latusRectum of a conic.
-        //
-        // *@return {number}*
+        /**
+        * Calculates the latusRectum of a conic.
+        *
+        * @return {number}
+        */
         Conic.prototype.latusRectum = function () {
             var normalForm = this.normalize(), a = normalForm.primal[0][0], c = normalForm.primal[1][1], min = Math.min(Math.abs(a), Math.abs(c)), max = Math.max(Math.abs(a), Math.abs(c));
 
@@ -7792,10 +8297,11 @@ var MathLib;
             }
         };
 
-        // ### [Conic.prototype.linearEccentricity()](http://mathlib.de/en/docs/Conic/linearEccentricity)
-        // Calculates the linear eccentricity of a conic.
-        //
-        // *@return {number}*
+        /**
+        * Calculates the linear eccentricity of a conic.
+        *
+        * @return {number}
+        */
         Conic.prototype.linearEccentricity = function () {
             var normalForm = this.normalize(), a = normalForm.primal[0][0], c = normalForm.primal[1][1], max = Math.max(Math.abs(a), Math.abs(c)), min = Math.min(Math.abs(a), Math.abs(c));
 
@@ -7812,10 +8318,12 @@ var MathLib;
             }
         };
 
-        // ### [Conic.prototype.meet()](http://mathlib.de/en/docs/Conic/meet)
-        // Calculates the meet of the conic with a line or a conic.
-        //
-        // *@return {Point[]}*
+        /**
+        * Calculates the meet of the conic with a line or a conic.
+        *
+        * @param {Line|Conic} x The line or conic to intersect with
+        * @return {Point[]}
+        */
         Conic.prototype.meet = function (x) {
             var B, C, alpha, i, j, p1, p2, Ml, a, b, c, d, Delta0, Delta1, lambda, degenerated, lines, A = this.primal;
 
@@ -7922,10 +8430,11 @@ var MathLib;
             }
         };
 
-        // ### [Conic.prototype.normalize()](http://mathlib.de/en/docs/Conic/normalize)
-        // Calculates the normal form of a conic.
-        //
-        // *@return {Conic}*
+        /**
+        * Calculates the normal form of a conic.
+        *
+        * @return {Conic}
+        */
         Conic.prototype.normalize = function () {
             var A = this.primal[0][0], B = this.primal[0][1] * 2, C = this.primal[1][1], D = this.primal[0][2] * 2, E = this.primal[1][2] * 2, F = this.primal[2][2], r = Math.atan2(B, A - C) / 2, cos = Math.cos(r), sin = Math.sin(r), a = A * cos * cos + B * sin * cos + C * sin * sin, c = A * sin * sin - B * sin * cos + C * cos * cos, d = D * cos + E * sin, e = E * cos - D * sin, f = F;
 
@@ -7950,10 +8459,11 @@ var MathLib;
             return new MathLib.Conic(new MathLib.Matrix([[a, 0, d / 2], [0, c, e / 2], [d / 2, e / 2, f]]));
         };
 
-        // ### [Conic.prototype.polarity()](http://mathlib.de/en/docs/Conic/polarity)
-        // Calculates the four polarity of a conic.
-        //
-        // *@return {Point[]}*
+        /**
+        * Calculates the four polarity of a conic.
+        *
+        * @return {Point[]}
+        */
         Conic.prototype.polarity = function (x) {
             var object, m, c = this;
 
@@ -7998,10 +8508,11 @@ var MathLib;
             return object;
         };
 
-        // ### [Conic.prototype.splitDegenerated()](http://mathlib.de/en/docs/Conic/splitDegenerated)
-        // Splits a conic into one or two lines if the conic is degenerated.
-        //
-        // *@return {boolean}*
+        /**
+        * Splits a conic into one or two lines if the conic is degenerated.
+        *
+        * @return {boolean}
+        */
         Conic.prototype.splitDegenerated = function () {
             var n, i, j, B, C, p0, p1, p2, rank = this.primal.rank(), nonZeroSearch = function (C) {
                 for (i = 0; i < 3; i++) {
@@ -8042,10 +8553,16 @@ var MathLib;
             }
         };
 
-        // ### [Conic.prototype.throughFivePoints()](http://mathlib.de/en/docs/Conic/throughFivePoints)
-        // Calculates the conic through five points.
-        //
-        // *@return {Conic}*
+        /**
+        * Calculates the conic through five points.
+        *
+        * @param {Point} p The first point
+        * @param {Point} q The second point
+        * @param {Point} r The third point
+        * @param {Point} s The fourth point
+        * @param {Point} t The fifth point
+        * @return {Conic}
+        */
         Conic.throughFivePoints = function (p, q, r, s, t) {
             var conic = new MathLib.Conic(new MathLib.Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]));
 
@@ -8084,18 +8601,23 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Point"></a>Point
-    // The point implementation of MathLib makes calculations with point in
-    // arbitrary dimensions possible.
-    //
-    // MathLib uses the homogeneous form of a point for calculations and storage.
-    //
-    // To create the point (4, 2) on the two dimensional plane use
-    // `new MathLib.Point([4, 2, 1])`
-    // Alternatively you can use
-    // `new MathLib.Point(4, 2)`
-    // The 1 will be added for you.
     /// import Complex, Vector
+    /**
+    * The point implementation of MathLib makes calculations with point in
+    * arbitrary dimensions possible.
+    *
+    * MathLib uses the homogeneous form of a point for calculations and storage.
+    *
+    * To create the point (4, 2) on the two dimensional plane use
+    * `new MathLib.Point([4, 2, 1])`
+    * Alternatively you can use
+    * `new MathLib.Point(4, 2)`
+    * The 1 will be added for you.
+    *
+    * @class
+    * @augments Vector
+    * @this {Point}
+    */
     var Point = (function (_super) {
         __extends(Point, _super);
         function Point(coords) {
@@ -8104,27 +8626,29 @@ var MathLib;
 
             this.dimension = 2;
         }
-        // ### Point.prototype.crossRatio()
-        // Calculates the distance crossratio (A,B,C,D) of four points
-        // as seen from the current point.
-        //
-        // *@param {Point}* a The point A
-        // *@param {Point}* b The point B
-        // *@param {Point}* c The point C
-        // *@param {Point}* d The point D
-        // *@return {number}*
+        /**
+        * Calculates the distance crossratio (A,B,C,D) of four points
+        * as seen from the current point.
+        *
+        * @param {Point} a The point A
+        * @param {Point} b The point B
+        * @param {Point} c The point C
+        * @param {Point} d The point D
+        * @return {number}
+        */
         Point.prototype.crossRatio = function (a, b, c, d) {
             var xa = this.vectorProduct(a), xb = this.vectorProduct(b);
 
             return xa.scalarProduct(c) * xb.scalarProduct(d) / (xa.scalarProduct(d) * xb.scalarProduct(c));
         };
 
-        // ### Point.prototype.distanceTo()
-        // Calculates the distance to an other point.
-        // If no other point is provided, it calculates the distance to the origin.
-        //
-        // *@param {Point}* [point] The point to calculate the distance to
-        // *@return {number}*
+        /**
+        * Calculates the distance to an other point.
+        * If no other point is provided, it calculates the distance to the origin.
+        *
+        * @param {Point} p The point to calculate the distance to
+        * @return {number}
+        */
         Point.prototype.distanceTo = function (p /*, geom = MathLib.Geometry.active*/ ) {
             if (arguments.length === 0) {
                 return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
@@ -8143,12 +8667,13 @@ var MathLib;
             //	}
         };
 
-        // ### Point.prototype.draw()
-        // Draws the point on a canvas or svg element.
-        //
-        // *@param {Screen}* screen The screen to draw onto
-        // *@param {object}* [options] Drawing options
-        // *@return {Point}* The current point
+        /**
+        * Draws the point on a canvas or svg element.
+        *
+        * @param {Screen} screen The screen to draw onto
+        * @param {object} options Drawing options
+        * @return {Point} The current point
+        */
         Point.prototype.draw = function (screen, options) {
             if (Array.isArray(screen)) {
                 var point = this;
@@ -8162,11 +8687,12 @@ var MathLib;
             return this;
         };
 
-        // ### Point.prototype.isEqual()
-        // Determines if the point has the same coordinates as an other point
-        //
-        // *@param {Point}* The point to compare
-        // *@return {boolean}*
+        /**
+        * Determines if the point has the same coordinates as an other point
+        *
+        * @param {Point} q The point to compare
+        * @return {boolean}
+        */
         Point.prototype.isEqual = function (q) {
             var p = this.normalize();
             q = q.normalize();
@@ -8180,54 +8706,21 @@ var MathLib;
             });
         };
 
-        // ### Point.prototype.isFinite()
-        // Determines if the point is finite
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the point is finite
+        *
+        * @return {boolean}
+        */
         Point.prototype.isFinite = function () {
             return !MathLib.isZero(this[this.length - 1]);
         };
 
-        // ### Point.prototype.isInside()
-        // Determines wether a point is inside a circle
-        //
-        // *@param {Circle}*
-        // *@return {boolean}*
-        Point.prototype.isInside = function (a) {
-            if (a.type === 'circle') {
-                return this.distanceTo(a.center) < a.radius;
-            }
-        };
-
-        // ### Point.prototype.isOn()
-        // Determines wether a point is on a line or circle
-        //
-        // *@param {Line|Point}*
-        // *@return {boolean}*
-        Point.prototype.isOn = function (a) {
-            if (a.type === 'line') {
-                return this.distanceTo(a.center) === a.radius;
-            } else if (a.type === 'circle') {
-                return this.distanceTo(a.center) === a.radius;
-            }
-        };
-
-        // ### Point.prototype.isOutside()
-        // Determines wether a point is outside a circle
-        //
-        // *@param {Circle}*
-        // *@return {boolean}*
-        Point.prototype.isOutside = function (a) {
-            if (a.type === 'circle') {
-                return this.distanceTo(a.center) > a.radius;
-            }
-        };
-
-        // ### Point.prototype.join()
-        // Calculates a line connecting two points
-        //
-        // *@param {Point}* The point to calculate the line to
-        // *@return {Line}*
+        /**
+        * Calculates a line connecting two points
+        *
+        * @param {Point} q The point to calculate the line to
+        * @return {Line}
+        */
         Point.prototype.join = function (q) {
             var line, p = this;
 
@@ -8268,10 +8761,11 @@ var MathLib;
             }
         };
 
-        // ### Point.prototype.normalize()
-        // Normalizes the point.
-        //
-        // *@return {Point}*
+        /**
+        * Normalizes the point.
+        *
+        * @return {Point}
+        */
         Point.prototype.normalize = function () {
             var last = this[this.dimension] || 1;
             return this.map(function (x) {
@@ -8279,18 +8773,20 @@ var MathLib;
             });
         };
 
-        // ### Point.prototype.reflectAt()
-        // Reflects the point at an other point
-        //
-        // *@return {Point}*
-        Point.prototype.reflectAt = function (a) {
+        /**
+        * Reflects the point at an other point
+        *
+        * @param {Point} q The point to reflect the current point at.
+        * @return {Point}
+        */
+        Point.prototype.reflectAt = function (q) {
             var i, ii, reflectedPoint = [], p = this.normalize();
 
-            if (a.type === 'point') {
-                if (this.dimension === a.dimension) {
-                    a = a.normalize();
+            if (q.type === 'point') {
+                if (this.dimension === q.dimension) {
+                    q = q.normalize();
                     for (i = 0, ii = this.dimension; i < ii; i++) {
-                        reflectedPoint.push(2 * a[i] - p[i]);
+                        reflectedPoint.push(2 * q[i] - p[i]);
                     }
                     reflectedPoint.push(1);
                     return new MathLib.Point(reflectedPoint);
@@ -8298,10 +8794,11 @@ var MathLib;
             }
         };
 
-        // ### Point.prototype.restrictTo()
-        // Restricts the point to a line.
-        //
-        // *@param {Line}*
+        /**
+        * Restricts the point to a line.
+        *
+        * @param {Line} l The line to restrict the point to.
+        */
         Point.prototype.restrictTo = function (l) {
             var p = this.slice();
 
@@ -8339,10 +8836,11 @@ var MathLib;
             });
         };
 
-        // ### Point.prototype.toComplex()
-        // Converts a two dimensional point to the corresponding complex number.
-        //
-        // *@return {Complex}*
+        /**
+        * Converts a two dimensional point to the corresponding complex number.
+        *
+        * @return {Complex}
+        */
         Point.prototype.toComplex = function () {
             if (this.dimension === 2) {
                 if (MathLib.isZero(this[2])) {
@@ -8352,17 +8850,20 @@ var MathLib;
             }
         };
 
-        // ### Point.prototype.toContentMathML()
-        // Returns content MathML representation of the point
-        //
-        // *@return {string}*
-        /* toContentMathML(opt) { */
-        /* } */
-        // ### Point.prototype.toLaTeX()
-        // Returns LaTeX representation of the point
-        //
-        // *@param {boolean}* Optional parameter to indicate if the output should be projective.
-        // *@return {string}*
+        /**
+        * TODO: implement
+        * Returns content MathML representation of the point
+        *
+        * @return {string}
+        */
+        // toContentMathML(opt) {
+        // }
+        /**
+        * Returns LaTeX representation of the point
+        *
+        * @param {boolean} opt Optional parameter to indicate if the output should be projective.
+        * @return {string}
+        */
         Point.prototype.toLaTeX = function (opt) {
             if (typeof opt === "undefined") { opt = false; }
             var p = opt ? this.toArray() : this.normalize().slice(0, -1);
@@ -8372,11 +8873,12 @@ var MathLib;
             }) + '\\end{pmatrix}';
         };
 
-        // ### Point.prototype.toMathML()
-        // Returns (presentation) MathML representation of the point
-        //
-        // *@param {boolean}* Optional parameter to indicate if the output should be projective.
-        // *@return {string}*
+        /**
+        * Returns (presentation) MathML representation of the point
+        *
+        * @param {boolean} opt Optional parameter to indicate if the output should be projective.
+        * @return {string}
+        */
         Point.prototype.toMathML = function (opt) {
             if (typeof opt === "undefined") { opt = false; }
             var p = opt ? this.toArray() : this.normalize().slice(0, -1);
@@ -8386,11 +8888,12 @@ var MathLib;
             }, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
         };
 
-        // ### Point.prototype.toString()
-        // Returns string representation of the point
-        //
-        // *@param {boolean}* Optional parameter to indicate if the output should be projective.
-        // *@return {string}*
+        /**
+        * Returns string representation of the point
+        *
+        * @param {boolean} opt Optional parameter to indicate if the output should be projective.
+        * @return {string}
+        */
         Point.prototype.toString = function (opt) {
             if (typeof opt === "undefined") { opt = false; }
             var p = opt ? this.toArray() : this.normalize().slice(0, -1);
@@ -8410,21 +8913,25 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Polynomial"></a>Polynomial
-    // The polynomial implementation of MathLib makes calculations with polynomials.
-    // Both the coefficients and the arguments of a polynomial can be numbers,
-    // complex numbers and matrices.
-    //
-    // It is as easy as
-    // ```
-    // new MathLib.Polynomial([1, 2, 3])
-    // ```
-    // to create the polynomial 1 + 2x + 3x²
-    // The polynomial x¹⁰⁰ can be created with the following statement:
-    // ```
-    // new MathLib.Polynomial(100)
-    // ```
     /// import Functn
+    /**
+    * The polynomial implementation of MathLib makes calculations with polynomials.
+    * Both the coefficients and the arguments of a polynomial can be numbers,
+    * complex numbers and matrices.
+    *
+    * It is as easy as
+    * ```
+    * new MathLib.Polynomial([1, 2, 3])
+    * ```
+    * to create the polynomial 1 + 2x + 3x²
+    * The polynomial x¹⁰⁰ can be created with the following statement:
+    * ```
+    * new MathLib.Polynomial(100)
+    * ```
+    *
+    * @class
+    * @this {Polynomial}
+    */
     var Polynomial = (function () {
         function Polynomial(polynomial) {
             var _this = this;
@@ -8457,11 +8964,12 @@ var MathLib;
                 return Infinity;
             }(polynomial));
         }
-        // ### Polynomial.prototype.compare()
-        // Compares two polynomials.
-        //
-        // *@param {Polynomial}* The polynomial to compare
-        // *@return {number}*
+        /**
+        * Compares two polynomials.
+        *
+        * @param {Polynomial} p The polynomial to compare
+        * @return {number}
+        */
         Polynomial.prototype.compare = function (p) {
             var i, ii;
 
@@ -8478,11 +8986,12 @@ var MathLib;
             return 0;
         };
 
-        // ### Polynomial.prototype.differentiate()
-        // Differentiates the polynomial
-        //
-        // *@param {number}* [n] the number of times to differentiate the polynomial.
-        // *@return {Polynomial}*
+        /**
+        * Differentiates the polynomial
+        *
+        * @param {number} n the number of times to differentiate the polynomial.
+        * @return {Polynomial}
+        */
         Polynomial.prototype.differentiate = function (n) {
             if (typeof n === "undefined") { n = 1; }
             var i, ii, derivative = [];
@@ -8497,50 +9006,30 @@ var MathLib;
             return new MathLib.Polynomial(derivative);
         };
 
-        // ### Polynomial.prototype.draw()
-        // Draws the polynomial on the screen
-        //
-        // *@param {Screen}* The screen to draw the polynomial onto.
-        // *@param {object}* [options] Optional drawing options.
-        // *@return {Polynomial}*
+        /**
+        * Draws the polynomial on the screen
+        *
+        * @param {Screen} screen The screen to draw the polynomial onto.
+        * @param {object} options Optional drawing options.
+        * @return {Polynomial}
+        */
         Polynomial.prototype.draw = function (screen, options) {
-            var path = [], i, line = this;
-
-            if (this.deg < 2) {
-                if (Array.isArray(screen)) {
-                    screen.forEach(function (x) {
-                        x.line([[-50, line.valueAt(-50)], [50, line.valueAt(50)]], options);
-                    });
-                } else {
-                    screen.line([[-50, this.valueAt(-50)], [50, this.valueAt(50)]], options);
-                }
-            } else {
-                for (i = -50; i <= 50; i = Math.round((i + 0.01) * 100) / 100) {
-                    path.push([i, this.valueAt(i)]);
-                }
-                if (Array.isArray(screen)) {
-                    screen.forEach(function (x) {
-                        x.path(path, options);
-                    });
-                } else {
-                    screen.path(path, options);
-                }
-            }
-
-            return this;
+            return this.toFunctn().draw(screen, options);
         };
 
-        // ### Polynomial.prototype.every()
-        // Works like Array.prototype.every.
-        //
-        // *@return {boolean}*
+        /**
+        * Works like Array.prototype.every.
+        *
+        * @param {function} f The function to be applied to all the values
+        * @return {boolean}
+        */
         Polynomial.prototype.every = function (f) {
             return Array.prototype.every.call(this, f);
         };
 
-        // ### Polynomial.prototype.forEach()
-        // Works like the Array.prototype.forEach function
-        //
+        /**
+        * Works like the Array.prototype.forEach function
+        */
         Polynomial.prototype.forEach = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -8549,11 +9038,12 @@ var MathLib;
             Array.prototype.forEach.apply(this, args);
         };
 
-        // ### Polynomial.prototype.integrate()
-        // Integrates the polynomial
-        //
-        // *@param {number}* [n] the number of times to integrate the polynomial.
-        // *@return {Polynomial}*
+        /**
+        * Integrates the polynomial
+        *
+        * @param {number} n The number of times to integrate the polynomial.
+        * @return {Polynomial}
+        */
         Polynomial.prototype.integrate = function (n) {
             if (typeof n === "undefined") { n = 1; }
             var i, ii, antiderivative = [];
@@ -8572,10 +9062,11 @@ var MathLib;
             return new MathLib.Polynomial(antiderivative);
         };
 
-        // ### Polynomial.interpolation
-        // Interpolates points.
-        //
-        // *@return {Polynomial}*
+        /**
+        * Interpolates points.
+        *
+        * @return {Polynomial}
+        */
         Polynomial.interpolation = function (a, b) {
             var basisPolynomial, interpolant = new MathLib.Polynomial([0]), n = a.length, i, j;
 
@@ -8597,11 +9088,12 @@ var MathLib;
             return interpolant;
         };
 
-        // ### Polynomial.prototype.isEqual()
-        // Decides if two polynomials are equal.
-        //
-        // *@param {Polynomial}*
-        // *@return {boolean}*
+        /**
+        * Decides if two polynomials are equal.
+        *
+        * @param {Polynomial} p The polynomial to compare.
+        * @return {boolean}
+        */
         Polynomial.prototype.isEqual = function (p) {
             var i, ii;
             if (this.deg !== p.deg || this.subdeg !== p.subdeg) {
@@ -8615,26 +9107,31 @@ var MathLib;
             return true;
         };
 
-        // ### Polynomial.prototype.map()
-        // Works like the Array.prototype.map function
-        //
-        // *@return {Polynomial}*
+        /**
+        * Works like the Array.prototype.map function
+        *
+        * @param {function} f The function to be applied to all the values
+        * @return {Polynomial}
+        */
         Polynomial.prototype.map = function (f) {
             return new MathLib.Polynomial(Array.prototype.map.call(this, f));
         };
 
-        // ### Polynomial.prototype.negative()
-        // Returns the negative polynomial
-        //
-        // *@return {Polynomial}*
+        /**
+        * Returns the negative polynomial
+        *
+        * @return {Polynomial}
+        */
         Polynomial.prototype.negative = function () {
             return new MathLib.Polynomial(this.map(MathLib.negative));
         };
 
-        // ### Polynomial.prototype.plus()
-        // Adds a number or a polynomial
-        //
-        // *@return {Polynomial}*
+        /**
+        * Adds a number or a polynomial
+        *
+        * @param {number|Polynomial} a The number or polynomial to add to the current polynomial
+        * @return {Polynomial}
+        */
         Polynomial.prototype.plus = function (a) {
             var plus = [], i;
             if (typeof a === 'number') {
@@ -8649,10 +9146,13 @@ var MathLib;
             return new MathLib.Polynomial(plus);
         };
 
-        // ### Polynomial.regression
-        // Calculates the regression line for some points
-        //
-        // *@return {Polynomial}*
+        /**
+        * Calculates the regression line for some points
+        *
+        * @param {array} x The x values
+        * @param {array} y The y values
+        * @return {Polynomial}
+        */
         Polynomial.regression = function (x, y) {
             var length = x.length, xy = 0, xi = 0, yi = 0, x2 = 0, m, c, i;
 
@@ -8677,10 +9177,12 @@ var MathLib;
             return new MathLib.Polynomial([c, m]);
         };
 
-        // ### Polynomial.roots
-        // Returns a polynomial with the specified roots
-        //
-        // *@return {Polynomial}*
+        /**
+        * Returns a polynomial with the specified roots
+        *
+        * @param {array|Set} zeros The wished zeros.
+        * @return {Polynomial}
+        */
         Polynomial.roots = function (zeros) {
             var elemSymPoly, i, ii, coef = [];
 
@@ -8709,10 +9211,11 @@ var MathLib;
             return new MathLib.Polynomial(coef);
         };
 
-        // ### Polynomial.prototype.slice()
-        // Works like the Array.prototype.slice function
-        //
-        // *@return {array}*
+        /**
+        * Works like the Array.prototype.slice function
+        *
+        * @return {array}
+        */
         Polynomial.prototype.slice = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -8721,11 +9224,12 @@ var MathLib;
             return Array.prototype.slice.apply(this, args);
         };
 
-        // ### Polynomial.prototype.times()
-        // Multiplies the polynomial by a number or an other polynomial
-        //
-        // *@param {number|Polynomial}* The multiplicator
-        // *@return {Polynomial}*
+        /**
+        * Multiplies the polynomial by a number or an other polynomial
+        *
+        * @param {number|Polynomial} a The multiplicator
+        * @return {Polynomial}
+        */
         Polynomial.prototype.times = function (a) {
             var i, ii, j, jj, product = [];
 
@@ -8746,10 +9250,11 @@ var MathLib;
             });
         };
 
-        // ### Polynomial.prototype.toContentMathML()
-        // Returns a content MathML representation of the polynomial
-        //
-        // *@return {string}*
+        /**
+        * Returns a content MathML representation of the polynomial
+        *
+        * @return {string}
+        */
         Polynomial.prototype.toContentMathML = function (math) {
             var str = '<apply><csymbol cd="arith1">plus</csymbol>', i;
             for (i = this.deg; i >= 0; i--) {
@@ -8770,17 +9275,17 @@ var MathLib;
 
             str += '</apply>';
 
-            if (math) {
-                str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>';
-            }
-
+            //if (math) {
+            //	str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>';
+            //}
             return str;
         };
 
-        // ### Polynomial.prototype.toExpression()
-        // Custom toExpression function
-        //
-        // *@return {Expression}*
+        /**
+        * Custom toExpression function
+        *
+        * @return {Expression}
+        */
         Polynomial.prototype.toExpression = function () {
             var content = [], sum, i;
 
@@ -8852,10 +9357,11 @@ var MathLib;
             });
         };
 
-        // ### Polynomial.prototype.toFunctn()
-        // Converts the polynomial to a functn
-        //
-        // *@return {Functn}*
+        /**
+        * Converts the polynomial to a functn
+        *
+        * @return {Functn}
+        */
         Polynomial.prototype.toFunctn = function () {
             var str = '', i, ii;
             for (i = 0, ii = this.deg; i <= ii; i++) {
@@ -8879,10 +9385,11 @@ var MathLib;
             });
         };
 
-        // ### Polynomial.prototype.toLaTeX()
-        // Returns a LaTeX representation of the polynomial
-        //
-        // *@return {string}*
+        /**
+        * Returns a LaTeX representation of the polynomial
+        *
+        * @return {string}
+        */
         Polynomial.prototype.toLaTeX = function () {
             var str = MathLib.toString(this[this.deg]) + 'x^{' + this.deg + '}', i;
 
@@ -8905,10 +9412,11 @@ var MathLib;
             return str;
         };
 
-        // ### Polynomial.prototype.toMathML()
-        // Returns a MathML representation of the polynomial
-        //
-        // *@return {string}*
+        /**
+        * Returns a MathML representation of the polynomial
+        *
+        * @return {string}
+        */
         Polynomial.prototype.toMathML = function () {
             var str = '<mrow>' + MathLib.toMathML(this[this.deg]) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(this.deg) + '</msup>', i;
             for (i = this.deg - 1; i >= 0; i--) {
@@ -8933,10 +9441,11 @@ var MathLib;
             return str;
         };
 
-        // ### Polynomial.prototype.toString()
-        // Custom toString function
-        //
-        // *@return {string}*
+        /**
+        * Custom toString function
+        *
+        * @return {string}
+        */
         Polynomial.prototype.toString = function () {
             var str = MathLib.toString(this[this.deg]) + '*x^' + this.deg, i;
             for (i = this.deg - 1; i >= 0; i--) {
@@ -8953,11 +9462,12 @@ var MathLib;
             return str;
         };
 
-        // ### Polynomial.prototype.valueAt()
-        // Evaluates the polynomial at a given point
-        //
-        // *@param {number|Complex|Matrix}*
-        // *@return {number|Complex|Matrix}*
+        /**
+        * Evaluates the polynomial at a given point
+        *
+        * @param {number|Complex|Matrix} x The value to evaluate the polynomial at.
+        * @return {number|Complex|Matrix}
+        */
         Polynomial.prototype.valueAt = function (x) {
             // TODO: warn if x is non square matrix
             var pot = MathLib.is(x, 'matrix') ? MathLib.Matrix.identity(x.rows) : 1, value = MathLib.is(x, 'matrix') ? MathLib.Matrix.zero(x.rows, x.cols) : 0, i, ii;
@@ -8979,16 +9489,19 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Rational" href="http://mathlib.de/en/docs/Rational">Rational</a>
-    // MathLib.Rational is the MathLib implementation of rational numbers.
-    //
-    //
-    // #### Simple use case:
-    // ```
-    // // Create the rational number 2/3
-    // var r = new MathLib.Rational(2, 3);
-    // ```
     /// import Functn
+    /**
+    * MathLib.Rational is the MathLib implementation of rational numbers.
+    *
+    * #### Simple use case:
+    * ```
+    * // Create the rational number 2/3
+    * var r = new MathLib.Rational(2, 3);
+    * ```
+    *
+    * @class
+    * @this {Rational}
+    */
     var Rational = (function () {
         function Rational(numerator, denominator) {
             if (typeof denominator === "undefined") { denominator = 1; }
@@ -9000,158 +9513,174 @@ var MathLib;
             this.numerator = numerator;
             this.denominator = denominator;
         }
-        // ### [Rational.prototype.compare()](http://mathlib.de/en/docs/Rational/compare)
-        // Compares two rational numbers
-        //
-        // *@param {Rational}* The number to compare
-        // *@return {number}*
-        Rational.prototype.compare = function (r) {
-            return MathLib.sign(this.numerator * r.denominator - this.denominator * r.numerator);
+        /**
+        * Compares two rational numbers
+        *
+        * @param {Rational} rational The number to compare
+        * @return {number}
+        */
+        Rational.prototype.compare = function (rational) {
+            return MathLib.sign(this.numerator * rational.denominator - this.denominator * rational.numerator);
         };
 
-        // ### [Rational.prototype.divide()](http://mathlib.de/en/docs/Rational/divide)
-        // Divides rational numbers
-        //
-        // *@param {Rational|number}* The divisor
-        // *@return {Rational}*
-        Rational.prototype.divide = function (r) {
-            if (r.type === 'rational') {
-                return new MathLib.Rational(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));
-            } else if (typeof r === 'number') {
-                return new MathLib.Rational(this.numerator, MathLib.times(this.denominator, r));
+        /**
+        * Divides rational numbers
+        *
+        * @param {Rational|number} divisor The divisor
+        * @return {Rational}
+        */
+        Rational.prototype.divide = function (divisor) {
+            if (divisor.type === 'rational') {
+                return new MathLib.Rational(MathLib.times(this.numerator, divisor.denominator), MathLib.times(this.denominator, divisor.numerator));
+            } else if (typeof divisor === 'number') {
+                return new MathLib.Rational(this.numerator, MathLib.times(this.denominator, divisor));
             } else {
-                return r.inverse().times(this);
+                return divisor.inverse().times(this);
             }
         };
 
-        // ### [Rational.prototype.inverse()](http://mathlib.de/en/docs/Rational/inverse)
-        // Calculates the inverse of a rational number
-        //
-        // *@return {Rational}*
+        /**
+        * Calculates the inverse of a rational number
+        *
+        * @return {Rational}
+        */
         Rational.prototype.inverse = function () {
             if (!MathLib.isZero(this.numerator)) {
                 return new MathLib.Rational(this.denominator, this.numerator);
             }
         };
 
-        // ### [Rational.prototype.isEqual()](http://mathlib.de/en/docs/Rational/isEqual)
-        // Checks if the rational number is equal to an other number
-        //
-        // *@return {boolean}*
-        Rational.prototype.isEqual = function (r) {
-            return MathLib.isEqual(MathLib.times(this.numerator, r.denominator), MathLib.times(this.denominator, r.numerator));
+        /**
+        * Checks if the rational number is equal to an other number
+        *
+        * @param {Rational} number The number to compare
+        * @return {boolean}
+        */
+        Rational.prototype.isEqual = function (number) {
+            return MathLib.isEqual(MathLib.times(this.numerator, number.denominator), MathLib.times(this.denominator, number.numerator));
         };
 
-        // ### [Rational.prototype.isZero()](http://mathlib.de/en/docs/Rational/isZero)
-        // Checks if the rational number is zero
-        //
-        // *@return {boolean}*
+        /**
+        * Checks if the rational number is zero
+        *
+        * @return {boolean}
+        */
         Rational.prototype.isZero = function () {
             return MathLib.isZero(this.numerator);
         };
 
-        // ### [Rational.prototype.minus()](http://mathlib.de/en/docs/Rational/minus)
-        // Subtracts rational numbers
-        //
-        // *@param {Rational|number}* The number to be subtracted
-        // *@return {Rational}*
-        Rational.prototype.minus = function (r) {
+        /**
+        * Subtracts rational numbers
+        *
+        * @param {Rational|number} subtrahend The number to be subtracted
+        * @return {Rational}
+        */
+        Rational.prototype.minus = function (subtrahend) {
             var n = this.numerator, d = this.denominator;
 
-            if (r.type === 'rational') {
-                return new MathLib.Rational(MathLib.minus(MathLib.times(n, r.denominator), MathLib.times(d, r.numerator)), MathLib.times(d, r.denominator));
-            } else if (typeof r === 'number') {
-                return new MathLib.Rational(MathLib.minus(n, MathLib.times(r, d)), d);
+            if (subtrahend.type === 'rational') {
+                return new MathLib.Rational(MathLib.minus(MathLib.times(n, subtrahend.denominator), MathLib.times(d, subtrahend.numerator)), MathLib.times(d, subtrahend.denominator));
+            } else if (typeof subtrahend === 'number') {
+                return new MathLib.Rational(MathLib.minus(n, MathLib.times(subtrahend, d)), d);
             } else {
-                return r.minus(this).negative();
+                return subtrahend.minus(this).negative();
             }
         };
 
-        // ### [Rational.prototype.negative()](http://mathlib.de/en/docs/Rational/negative)
-        // Calculates the negative of a rational number
-        //
-        // *@return {Rational}*
+        /**
+        * Calculates the negative of a rational number
+        *
+        * @return {Rational}
+        */
         Rational.prototype.negative = function () {
             return new MathLib.Rational(-this.numerator, this.denominator);
         };
 
-        // ### [Rational.prototype.plus()](http://mathlib.de/en/docs/Rational/plus)
-        // Adds rational numbers
-        //
-        // *@param {Rational|number}* The number to be added
-        // *@return {Rational}*
-        Rational.prototype.plus = function (r) {
+        /**
+        * Adds rational numbers
+        *
+        * @param {Rational|number} summand The number to be added
+        * @return {Rational}
+        */
+        Rational.prototype.plus = function (summand) {
             var n = this.numerator, d = this.denominator;
 
-            if (r.type === 'rational') {
-                return new MathLib.Rational(MathLib.plus(MathLib.times(d, r.numerator), MathLib.times(n, r.denominator)), MathLib.times(d, r.denominator));
-            } else if (typeof r === 'number') {
-                return new MathLib.Rational(MathLib.plus(n, MathLib.times(r, d)), d);
+            if (summand.type === 'rational') {
+                return new MathLib.Rational(MathLib.plus(MathLib.times(d, summand.numerator), MathLib.times(n, summand.denominator)), MathLib.times(d, summand.denominator));
+            } else if (typeof summand === 'number') {
+                return new MathLib.Rational(MathLib.plus(n, MathLib.times(summand, d)), d);
             } else {
-                return r.plus(this);
+                return summand.plus(this);
             }
         };
 
-        // ### [Rational.prototype.reduce()](http://mathlib.de/en/docs/Rational/reduce)
-        // Reduces the rational number
-        //
-        // *@return {Rational}*
+        /**
+        * Reduces the rational number
+        *
+        * @return {Rational}
+        */
         Rational.prototype.reduce = function () {
             var gcd = MathLib.sign(this.denominator) * MathLib.gcd([this.numerator, this.denominator]);
             return new MathLib.Rational(this.numerator / gcd, this.denominator / gcd);
         };
 
-        // ### [Rational.prototype.times()](http://mathlib.de/en/docs/Rational/times)
-        // Multiplies rational numbers
-        //
-        // *@param {Rational|number}* The number to be multiplied
-        // *@return {Rational}*
-        Rational.prototype.times = function (r) {
-            if (r.type === 'rational') {
-                return new MathLib.Rational(MathLib.times(this.numerator, r.numerator), MathLib.times(this.denominator, r.denominator));
-            } else if (typeof r === 'number') {
-                return new MathLib.Rational(MathLib.times(this.numerator, r), this.denominator);
+        /**
+        * Multiplies rational numbers
+        *
+        * @param {Rational|number} factor The number to be multiplied
+        * @return {Rational}
+        */
+        Rational.prototype.times = function (factor) {
+            if (factor.type === 'rational') {
+                return new MathLib.Rational(MathLib.times(this.numerator, factor.numerator), MathLib.times(this.denominator, factor.denominator));
+            } else if (typeof factor === 'number') {
+                return new MathLib.Rational(MathLib.times(this.numerator, factor), this.denominator);
             } else {
-                return r.times(this);
+                return factor.times(this);
             }
         };
 
-        // ### [Rational.prototype.toContentMathML()](http://mathlib.de/en/docs/Rational/toContentMathML)
-        // Returns the Content MathML representation of the rational number
-        //
-        // *@return {string}*
+        /**
+        * Returns the Content MathML representation of the rational number
+        *
+        * @return {string}
+        */
         Rational.prototype.toContentMathML = function () {
             return '<cn type="rational">' + this.numerator + '<sep/>' + this.denominator + '</cn>';
         };
 
-        // ### [Rational.prototype.toLaTeX()](http://mathlib.de/en/docs/Rational/toLaTeX)
-        // Returns the LaTeX representation of the rational number
-        //
-        // *@return {string}*
+        /**
+        * Returns the LaTeX representation of the rational number
+        *
+        * @return {string}
+        */
         Rational.prototype.toLaTeX = function () {
             return '\\frac{' + MathLib.toLaTeX(this.numerator) + '}{' + MathLib.toLaTeX(this.denominator) + '}';
         };
 
-        // ### [Rational.prototype.toMathML()](http://mathlib.de/en/docs/Rational/toMathML)
-        // Returns the MathML representation of the rational number
-        //
-        // *@return {string}*
+        /**
+        * Returns the MathML representation of the rational number
+        *
+        * @return {string}
+        */
         Rational.prototype.toMathML = function () {
             return '<mfrac>' + MathLib.toMathML(this.numerator) + MathLib.toMathML(this.denominator) + '</mfrac>';
         };
 
-        // ### [Rational.prototype.toNumber()](http://mathlib.de/en/docs/Rational/toNumber)
-        // Returns the number represented by the rational number
-        //
-        // *@return {number}*
+        /**
+        * Returns the number represented by the rational number
+        *
+        * @return {number}
+        */
         Rational.prototype.toNumber = function () {
             return this.numerator / this.denominator;
         };
 
-        // ### [Rational.prototype.toString()](http://mathlib.de/en/docs/Rational/toString)
-        // Custom toString function
-        //
-        // *@return {string}*
+        /**
+        * Custom toString function
+        *
+        * @return {string}
+        */
         Rational.prototype.toString = function () {
             return MathLib.toString(this.numerator) + '/' + MathLib.toString(this.denominator);
         };
@@ -9163,40 +9692,48 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-    // ## <a id="Set"></a>Set
-    //
-    // To generate the set {1, 2, 3, 4, 5} you simply need to type
-    // ```
-    // new MathLib.Set([1, 2, 3, 4, 5])
-    // ```
     /// no import
+    /**
+    * The Implementation of sets in MathLib
+    *
+    * To generate the set {1, 2, 3, 4, 5} you simply need to type
+    * ```
+    * new MathLib.Set([1, 2, 3, 4, 5])
+    * ```
+    * @class
+    * @this {Set}
+    */
     var Set = (function () {
         function Set(elements) {
             var _this = this;
             this.type = 'set';
-            // ### Set.prototype.intersect()
-            // Returns the intersection of two sets.
-            //
-            // *@param {Set}*
-            // *@return {Set}*
+            /**
+            * Returns the intersection of two sets.
+            *
+            * @param {Set} set The set to intersect the current set with.
+            * @return {Set}
+            */
             this.intersect = Set.createSetOperation(false, true, false);
-            // ### Set.prototype.union()
-            // Returns the union of two sets.
-            //
-            // *@param {Set}*
-            // *@return {Set}*
+            /**
+            * Returns the union of two sets.
+            *
+            * @param {Set} set The set to join the current set with.
+            * @return {Set}
+            */
             this.union = Set.createSetOperation(true, true, true);
-            // ### Set.prototype.without()
-            // Returns all elements, which are in the first set, but not in the second.
-            //
-            // *@param {Set}*
-            // *@return {Set}*
+            /**
+            * Returns all elements, which are in the first set, but not in the second.
+            *
+            * @param {Set} set The set whose elements should be removed from the current set.
+            * @return {Set}
+            */
             this.without = Set.createSetOperation(true, false, false);
-            // ### Set.prototype.xor()
-            // Returns all elements which are in either the first or the second set.
-            //
-            // *@param {Set}*
-            // *@return {Set}*
+            /**
+            * Returns all elements which are in either the first or the second set.
+            *
+            * @param {Set} set The second set.
+            * @return {Set}
+            */
             this.xor = Set.createSetOperation(true, false, true);
             if (!elements) {
                 elements = [];
@@ -9212,10 +9749,12 @@ var MathLib;
             this.length = elements.length;
             this.card = elements.length;
         }
-        // ### Set.prototype.compare()
-        // Compare function for sets
-        //
-        // *@return {number}*
+        /**
+        * Compare function for sets
+        *
+        * @param {Set} x The set to compare the current set to
+        * @return {number}
+        */
         Set.prototype.compare = function (x) {
             var a, i, ii;
 
@@ -9232,10 +9771,11 @@ var MathLib;
             }
         };
 
-        // ### Set.prototype.every()
-        // Works like the Array.prototype.every function
-        //
-        // *@return {boolean}*
+        /**
+        * Works like the Array.prototype.every function
+        *
+        * @return {boolean}
+        */
         Set.prototype.every = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -9244,10 +9784,11 @@ var MathLib;
             return Array.prototype.every.apply(this, args);
         };
 
-        // ### Set.prototype.filter()
-        // Works like the Array.prototype.filter function
-        //
-        // *@return {Set}*
+        /**
+        * Works like the Array.prototype.filter function
+        *
+        * @return {Set}
+        */
         Set.prototype.filter = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -9256,10 +9797,9 @@ var MathLib;
             return new MathLib.Set(Array.prototype.filter.apply(this, args));
         };
 
-        // ### Set.prototype.forEach()
-        // Works like the Array.prototype.forEach function
-        //
-        //
+        /**
+        * Works like the Array.prototype.forEach function
+        */
         Set.prototype.forEach = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -9268,10 +9808,11 @@ var MathLib;
             Array.prototype.forEach.apply(this, args);
         };
 
-        // ### Set.prototype.indexOf()
-        // Works like the Array.prototype.indexOf function
-        //
-        // *@return {number}*
+        /**
+        * Works like the Array.prototype.indexOf function
+        *
+        * @return {number}
+        */
         Set.prototype.indexOf = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -9280,10 +9821,12 @@ var MathLib;
             return Array.prototype.indexOf.apply(this, args);
         };
 
-        // ### Set.prototype.insert()
-        // Inserts an element into the set.
-        //
-        // *@return {Set}* Returns the current set
+        /**
+        * Inserts an element into the set.
+        *
+        * @param{any} x The element to insert in the set.
+        * @return {Set} Returns the current set
+        */
         Set.prototype.insert = function (x) {
             var i = this.locate(x);
             if (this[i] !== x) {
@@ -9293,46 +9836,50 @@ var MathLib;
             return this;
         };
 
-        // ### Set.prototype.isEmpty()
-        // Determines if the set is empty.
-        //
-        // *@return {boolean}*
+        /**
+        * Determines if the set is empty.
+        *
+        * @return {boolean}
+        */
         Set.prototype.isEmpty = function () {
             return this.card === 0;
         };
 
-        // ### Set.prototype.isEqual()
-        // Determines if the set is equal to an other set.
-        //
-        // *@param {Set}* The set to compare
-        // *@return {boolean}*
-        Set.prototype.isEqual = function (x) {
-            if (this.card !== x.card) {
+        /**
+        * Determines if the set is equal to an other set.
+        *
+        * @param {Set} set The set to compare
+        * @return {boolean}
+        */
+        Set.prototype.isEqual = function (set) {
+            if (this.card !== set.card) {
                 return false;
             } else {
                 return this.every(function (y, i) {
-                    return MathLib.isEqual(y, x[i]);
+                    return MathLib.isEqual(y, set[i]);
                 });
             }
         };
 
-        // ### Set.prototype.isSubsetOf()
-        // Determines if the set is a subset of an other set.
-        //
-        // *@param {Set}* The potential superset
-        // *@return {boolean}*
-        Set.prototype.isSubsetOf = function (a) {
+        /**
+        * Determines if the set is a subset of an other set.
+        *
+        * @param {Set} set The potential superset
+        * @return {boolean}
+        */
+        Set.prototype.isSubsetOf = function (set) {
             return this.every(function (x) {
-                return a.indexOf(x) !== -1;
+                return set.indexOf(x) !== -1;
             });
         };
 
-        // ### Set.prototype.locate()
-        // Array.prototype.indexOf() returns only the position of an element in the
-        // array and not the position where one should be inserted.
-        //
-        // *@param {Set}* The element to locate
-        // *@return {number}*
+        /**
+        * Array.prototype.indexOf() returns only the position of an element in the
+        * array and not the position where one should be inserted.
+        *
+        * @param {Set} x The element to locate
+        * @return {number}
+        */
         Set.prototype.locate = function (x) {
             var left = 0, right = this.card - 1, middle, i = this.indexOf(x);
 
@@ -9353,11 +9900,12 @@ var MathLib;
             return left;
         };
 
-        // ### Set.prototype.map()
-        // Works like the Array.prototype.map function
-        //
-        // *@param {function}* The mapping function
-        // *@return {Set}*
+        /**
+        * Works like the Array.prototype.map function
+        *
+        * @param {function} The mapping function
+        * @return {Set}
+        */
         Set.prototype.map = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -9366,12 +9914,13 @@ var MathLib;
             return new MathLib.Set(Array.prototype.map.apply(this, args));
         };
 
-        // ### Set.prototype.plus()
-        // Adds the argument to all elements in the set,
-        // or if no argument is provided adds up all the elements in the set.
-        //
-        // *@param {number|MathLib object}*
-        // *@return {Set|any}*
+        /**
+        * Adds the argument to all elements in the set,
+        * or if no argument is provided adds up all the elements in the set.
+        *
+        * @param {number|MathLib object} n The object to add to the elements in the set.
+        * @return {Set|any}
+        */
         Set.prototype.plus = function (n) {
             var sum = [];
             if (!arguments.length) {
@@ -9391,10 +9940,11 @@ var MathLib;
             }
         };
 
-        // ### Set.prototype.powerset()
-        // Returns the powerset
-        //
-        // *@return {Set}*
+        /**
+        * Returns the powerset
+        *
+        * @return {Set}
+        */
         Set.prototype.powerset = function () {
             var flag, subset, i, ii, j, jj, powerset = [];
 
@@ -9412,10 +9962,11 @@ var MathLib;
             return new MathLib.Set(powerset);
         };
 
-        // ### Set.prototype.reduce()
-        // Works like the Array.prototype.reduce function
-        //
-        // *@return {any}*
+        /**
+        * Works like the Array.prototype.reduce function
+        *
+        * @return {any}
+        */
         Set.prototype.reduce = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -9424,12 +9975,14 @@ var MathLib;
             return Array.prototype.reduce.apply(this, arguments);
         };
 
-        // ### Set.prototype.remove()
-        // Removes a element from a set
-        //
-        // *@return {Set}*
-        Set.prototype.remove = function (a) {
-            var i = this.indexOf(a);
+        /**
+        * Removes a element from a set
+        *
+        * @param {any} element The element to remove from the set.
+        * @return {Set}
+        */
+        Set.prototype.remove = function (element) {
+            var i = this.indexOf(element);
             if (i !== -1) {
                 this.splice(i, 1);
                 this.card--;
@@ -9437,10 +9990,11 @@ var MathLib;
             return this;
         };
 
-        // ### Set.prototype.slice()
-        // Works like the Array.prototype.slice function
-        //
-        // *@return {array}*
+        /**
+        * Works like the Array.prototype.slice function
+        *
+        * @return {array}
+        */
         Set.prototype.slice = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -9449,10 +10003,11 @@ var MathLib;
             return Array.prototype.slice.apply(this, args);
         };
 
-        // ### Set.prototype.some()
-        // Works like the Array.prototype.some function
-        //
-        // *@return {boolean}*
+        /**
+        * Works like the Array.prototype.some function
+        *
+        * @return {boolean}
+        */
         Set.prototype.some = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -9461,10 +10016,11 @@ var MathLib;
             return Array.prototype.some.apply(this, args);
         };
 
-        // ### Set.prototype.splice()
-        // Works like the Array.prototype.splice function
-        //
-        // *@return {Set}*
+        /**
+        * Works like the Array.prototype.splice function
+        *
+        * @return {Set}
+        */
         Set.prototype.splice = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
@@ -9473,12 +10029,13 @@ var MathLib;
             return Array.prototype.splice.apply(this, args);
         };
 
-        // ### Set.prototype.times()
-        // Multiplies all elements in the set if no argument is passed.
-        // Multiplies all elements by a argument if one is passed.
-        //
-        // *@param {number|MathLib object}*
-        // *@return {Set}*
+        /**
+        * Multiplies all elements in the set if no argument is passed.
+        * Multiplies all elements by a argument if one is passed.
+        *
+        * @param {number|MathLib object} n The object to multiply the elements with
+        * @return {Set}
+        */
         Set.prototype.times = function (n) {
             if (!arguments.length) {
                 return MathLib.times.apply(null, this.toArray());
@@ -9489,18 +10046,20 @@ var MathLib;
             }
         };
 
-        // ### Set.prototype.toArray()
-        // Converts the set to an array
-        //
-        // *@return {array}*
+        /**
+        * Converts the set to an array
+        *
+        * @return {array}
+        */
         Set.prototype.toArray = function () {
             return Array.prototype.slice.call(this);
         };
 
-        // ### Set.prototype.toContentMathML()
-        // Returns the content MathML representation of the set
-        //
-        // *@return {string}*
+        /**
+        * Returns the content MathML representation of the set
+        *
+        * @return {string}
+        */
         Set.prototype.toContentMathML = function () {
             if (this.isEmpty()) {
                 return '<emptyset/>';
@@ -9511,10 +10070,11 @@ var MathLib;
             }
         };
 
-        // ### Set.prototype.toLaTeX()
-        // Returns the LaTeX representation of the set
-        //
-        // *@return {string}*
+        /**
+        * Returns the LaTeX representation of the set
+        *
+        * @return {string}
+        */
         Set.prototype.toLaTeX = function () {
             if (this.isEmpty()) {
                 return '\\emptyset';
@@ -9525,10 +10085,11 @@ var MathLib;
             }
         };
 
-        // ### Set.prototype.toMathML()
-        // Returns the (presentation) MathML representation of the set
-        //
-        // *@return {string}*
+        /**
+        * Returns the (presentation) MathML representation of the set
+        *
+        * @return {string}
+        */
         Set.prototype.toMathML = function () {
             if (this.isEmpty()) {
                 return '<mi>&#x2205;</mi>';
@@ -9539,21 +10100,23 @@ var MathLib;
             }
         };
 
-        // ### Set.prototype.toString()
-        // Returns a string representation of the set
-        //
-        // *@return {string}*
+        /**
+        * Returns a string representation of the set
+        *
+        * @return {string}
+        */
         Set.prototype.toString = function () {
             if (this.isEmpty()) {
                 return '∅';
             }
             return '{' + Array.prototype.join.call(this, ', ') + '}';
         };
-        Set.fromTo = function (f, t, s) {
-            if (typeof s === "undefined") { s = 1; }
+        Set.fromTo = function (start, end, step) {
+            if (typeof step === "undefined") { step = 1; }
             var i, set = [];
-            if (f <= t) {
-                for (i = f; i <= t; i += s) {
+
+            if (start <= end) {
+                for (i = start; i <= end; i += step) {
                     set.push(i);
                 }
                 return new MathLib.Set(set);

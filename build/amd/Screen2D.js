@@ -359,16 +359,22 @@ var __extends = this.__extends || function (d, b) {
             }
 
             // The ticks on the axes
-            // The x axes
+            // The x axis
             if (this.options.axes.x) {
-                for (i = left; i <= right; i += yTick) {
+                for (i = -yTick; i >= left; i -= yTick) {
+                    line([[i, -lengthY], [i, lengthY]], options, true);
+                }
+                for (i = yTick; i <= right; i += yTick) {
                     line([[i, -lengthY], [i, lengthY]], options, true);
                 }
             }
 
-            // The y axes
+            // The y axis
             if (this.options.axes.y) {
-                for (i = bottom; i <= top; i += xTick) {
+                for (i = -xTick; i >= bottom; i -= xTick) {
+                    line([[-lengthX, i], [lengthX, i]], options, true);
+                }
+                for (i = xTick; i <= top; i += xTick) {
                     line([[-lengthX, i], [lengthX, i]], options, true);
                 }
             }
