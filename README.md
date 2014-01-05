@@ -29,6 +29,11 @@ Alternatively you can use Bower:
 bower install MathLib
 ```
 
+or npm:
+```
+npm install MathLib
+```
+
 Include MathLib in your web page:
 
 ```
@@ -37,6 +42,8 @@ Include MathLib in your web page:
 // Your code goes here
 </script>
 ```
+
+Alternatively you can use the AMD, CommonJS or ES6 modules contained in the _build_ directory.
 
 If you want to use the plotting functionality you also need to download the [MathLib.css](https://raw.github.com/alawatthe/MathLib/master/build/MathLib.css) or the [MathLib.min.css](https://raw.github.com/alawatthe/MathLib/master/build/MathLib.min.css) file and link to it in the head of your document:
 ```
