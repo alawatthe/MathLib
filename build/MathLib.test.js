@@ -1,5 +1,5 @@
 /*!
- * MathLib JavaScript Library v0.6.1
+ * MathLib JavaScript Library v0.7.0
  * http://mathlib.de/
  *
  * Copyright 2012 - 2014 Alexander Zeilmann

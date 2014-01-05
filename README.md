@@ -89,6 +89,7 @@ New functionality should always be added with proper testing and documentation.
 
 
 ## Release History
+* v0.7.0: AMD, CommonJS, ES6 modules
 * v0.6.0: Conics module
 * v0.5.0: removed MathML module and improved Expression module
 * v0.4.0: Typescript, better plotting
