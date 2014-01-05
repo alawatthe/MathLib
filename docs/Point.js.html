@@ -98,12 +98,6 @@
               </li>
               <li><a href="#isFinite"><i class="alert alert-info"></i>isFinite</a>
               </li>
-              <li><a href="#isInside"><i class="alert alert-info"></i>isInside</a>
-              </li>
-              <li><a href="#isOn"><i class="alert alert-info"></i>isOn</a>
-              </li>
-              <li><a href="#isOutside"><i class="alert alert-info"></i>isOutside</a>
-              </li>
               <li><a href="#join"><i class="alert alert-info"></i>join</a>
               </li>
               <li><a href="#normalize"><i class="alert alert-info"></i>normalize</a>
@@ -332,101 +326,6 @@ function Point(coords) {
           <div class="description"><p>Determines if the point is finite</p> </div>
           <pre><code class="language-javascript">Point.prototype.isFinite = function () {
     return !MathLib.isZero(this[this.length - 1]);
-};</code></pre>
-          <section id="isInside">
-            <h1><a href="http://mathlib.de/en/docs/Point/isInside">isInside</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Point.prototype.isInside()</span> → <span>boolean</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td><a href="./Circle.js.html">Circle </a>
-                </td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Determines wether a point is inside a circle</p> </div>
-          <pre><code class="language-javascript">Point.prototype.isInside = function (a) {
-    if (a.type === 'circle') {
-        return this.distanceTo(a.center) &lt; a.radius;
-    }
-};</code></pre>
-          <section id="isOn">
-            <h1><a href="http://mathlib.de/en/docs/Point/isOn">isOn</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Point.prototype.isOn()</span> → <span>boolean</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td><a href="./Line.js.html">Line </a><a href="./Circle.js.html">Circle </a>
-                </td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Determines wether a point is on a line or circle</p> </div>
-          <pre><code class="language-javascript">Point.prototype.isOn = function (a) {
-    if (a.type === 'line') {
-        return this.distanceTo(a.center) === a.radius;
-    } else if (a.type === 'circle') {
-        return this.distanceTo(a.center) === a.radius;
-    }
-};</code></pre>
-          <section id="isOutside">
-            <h1><a href="http://mathlib.de/en/docs/Point/isOutside">isOutside</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Point.prototype.isOutside()</span> → <span>boolean</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td><a href="./Circle.js.html">Circle </a>
-                </td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Determines wether a point is outside a circle</p> </div>
-          <pre><code class="language-javascript">Point.prototype.isOutside = function (a) {
-    if (a.type === 'circle') {
-        return this.distanceTo(a.center) &gt; a.radius;
-    }
 };</code></pre>
           <section id="join">
             <h1><a href="http://mathlib.de/en/docs/Point/join">join</a>

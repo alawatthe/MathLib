@@ -129,44 +129,6 @@ var __extends = this.__extends || function (d, b) {
         };
 
         /**
-        * Determines wether a point is inside a circle
-        *
-        * @param {Circle}
-        * @return {boolean}
-        */
-        Point.prototype.isInside = function (a) {
-            if (a.type === 'circle') {
-                return this.distanceTo(a.center) < a.radius;
-            }
-        };
-
-        /**
-        * Determines wether a point is on a line or circle
-        *
-        * @param {Line|Circle}
-        * @return {boolean}
-        */
-        Point.prototype.isOn = function (a) {
-            if (a.type === 'line') {
-                return this.distanceTo(a.center) === a.radius;
-            } else if (a.type === 'circle') {
-                return this.distanceTo(a.center) === a.radius;
-            }
-        };
-
-        /**
-        * Determines wether a point is outside a circle
-        *
-        * @param {Circle}
-        * @return {boolean}
-        */
-        Point.prototype.isOutside = function (a) {
-            if (a.type === 'circle') {
-                return this.distanceTo(a.center) > a.radius;
-            }
-        };
-
-        /**
         * Calculates a line connecting two points
         *
         * @param {Point} q The point to calculate the line to

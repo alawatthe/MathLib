@@ -31,12 +31,14 @@ requirejs.config({
 		Point: './Point',
 		Polynomial: './Polynomial',
 		Rational: './Rational',
-		Set: './Set'
+		Set: './Set',
+		shimFullscreen: './fullscreen',
+		shimLineDash: './lineDash'
 	}
 })
 
-define(['meta', 'Expression',  'Functn',  'Screen',  'Layer',  'Canvas',  'SVG', 
-	'Screen2D', 'Screen3D',  'Vector',  'Circle',  'Complex',  'Line',  'Matrix', 
-	'Permutation',  'Conic', 'Point',  'Polynomial',  'Rational',  'Set'], function (MathLib) {
+define(['meta', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG', 
+	'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Line', 'Matrix', 
+	'Permutation', 'Conic', 'Point', 'Polynomial', 'Rational', 'Set'], function (MathLib) {
 	return MathLib;
 })

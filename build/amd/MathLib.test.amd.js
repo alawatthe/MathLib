@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-01-04
+ * build date: 2014-01-05
  */
 
 require(['../build/amd/MathLib.js'], function(MathLib) {
@@ -3666,33 +3666,6 @@ test('.isFinite()', 2, function () {
 			point2 = new MathLib.Point([6, 4, 0]);
 	equal(point1.isFinite(), true, '.isFinite()');
 	equal(point2.isFinite(), false, '.isFinite()');
-});
-test('.isInside()', 3, function () {
-	var p1 = new MathLib.Point([1, 0, 1]),
-			p2 = new MathLib.Point([2, 0, 1]),
-			p3 = new MathLib.Point([3, 0, 1]),
-			c = new MathLib.Circle(new MathLib.Point([0, 0, 1]), 2);
-	equal(p1.isInside(c), true, '.isInside()');
-	equal(p2.isInside(c), false, '.isInside()');
-	equal(p3.isInside(c), false, '.isInside()');
-});
-test('.isOn()', 3, function () {
-	var p1 = new MathLib.Point([1, 0, 1]),
-			p2 = new MathLib.Point([2, 0, 1]),
-			p3 = new MathLib.Point([3, 0, 1]),
-			c = new MathLib.Circle(new MathLib.Point([0, 0, 1]), 2);
-	equal(p1.isOn(c), false, '.isOn()');
-	equal(p2.isOn(c), true, '.isOn()');
-	equal(p3.isOn(c), false, '.isOn()');
-});
-test('.isOutside()', 3, function () {
-	var p1 = new MathLib.Point([1, 0, 1]),
-			p2 = new MathLib.Point([2, 0, 1]),
-			p3 = new MathLib.Point([3, 0, 1]),
-			c = new MathLib.Circle(new MathLib.Point([0, 0, 1]), 2);
-	equal(p1.isOutside(c), false, '.isOutside()');
-	equal(p2.isOutside(c), false, '.isOutside()');
-	equal(p3.isOutside(c), true, '.isOutside()');
 });
 test('.join()', 5, function () {
 	var p1 = new MathLib.Point([1, 0, 1]),
