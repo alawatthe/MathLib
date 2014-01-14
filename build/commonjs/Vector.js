@@ -231,7 +231,7 @@
         Vector.prototype.times = function (n) {
             var i, ii, colVectors, product = [];
             if (n.type === 'rational') {
-                n = n.toNumber();
+                n = n.coerceTo('number');
             }
             if (typeof n === 'number' || n.type === 'complex') {
                 return this.map(function (x) {

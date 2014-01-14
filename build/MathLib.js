@@ -335,7 +335,7 @@ var MathLib;
         }))];
 
         return args.map(function (x) {
-            return MathLib.coerceTo(x, numberType);
+            return _MathLib.coerceTo(x, numberType);
         });
     };
 
@@ -1660,8 +1660,11 @@ var MathLib;
                 };
             } else if (x.type === 'complex') {
                 return x[options.name].apply(x, Array.prototype.slice.call(arguments, 1));
-            } else if (x.type === 'rational') {
-                return f(x.toNumber());
+            } else if (x.type === 'integer' || x.type === 'rational') {
+                if (x[options.name]) {
+                    return x[options.name].apply(x, Array.prototype.slice.call(arguments, 1));
+                }
+                return f(x.coerceTo('number'));
             } else if (x.type === 'set') {
                 return x.map(f);
             } else if (MathLib.type(x) === 'array') {
@@ -5518,7 +5521,7 @@ var MathLib;
         Vector.prototype.times = function (n) {
             var i, ii, colVectors, product = [];
             if (n.type === 'rational') {
-                n = n.toNumber();
+                n = n.coerceTo('number');
             }
             if (typeof n === 'number' || n.type === 'complex') {
                 return this.map(function (x) {
@@ -6392,7 +6395,7 @@ var MathLib;
 
                 return new MathLib.Complex(MathLib.minus(MathLib.times(this.re, factor.re), MathLib.times(this.im, factor.im)), MathLib.plus(MathLib.times(this.re, factor.im), MathLib.times(this.im, factor.re)));
             } else if (factor.type === 'rational') {
-                factor = factor.toNumber();
+                factor = factor.coerceTo('number');
             }
             if (typeof factor === 'number') {
                 return new MathLib.Complex(MathLib.times(this.re, factor), MathLib.times(this.im, factor));
@@ -8166,7 +8169,7 @@ var MathLib;
             var i, ii, j, jj, k, kk, product = [], entry;
 
             if (a.type === 'rational') {
-                a = a.toNumber();
+                a = a.coerceTo('number');
             }
             if (typeof a === 'number' || a.type === 'complex') {
                 return this.map(function (x) {
@@ -9791,7 +9794,7 @@ var MathLib;
                 }
                 return new MathLib.Polynomial(product);
             } else if (a.type === 'rational') {
-                a = a.toNumber();
+                a = a.coerceTo('number');
             }
 
             // we we multiply it to every coefficient
@@ -10064,6 +10067,42 @@ var MathLib;
             this.denominator = denominator;
         }
         /**
+        * A content MathML string representation
+        *
+        * @return {string}
+        */
+        Rational.toContentMathML = function () {
+            return '<csymbol cd="setname1">Q</csymbol>';
+        };
+
+        /**
+        * A LaTeX string representation
+        *
+        * @return {string}
+        */
+        Rational.toLaTeX = function () {
+            return 'Rational Field $\\mathbb{Q}$';
+        };
+
+        /**
+        * A presentation MathML string representation
+        *
+        * @return {string}
+        */
+        Rational.toMathML = function () {
+            return '<mrow><mtext>Rational Field</mtext><mi mathvariant="double-struck">Q</mi></mrow>';
+        };
+
+        /**
+        * Custom toString function
+        *
+        * @return {string}
+        */
+        Rational.toString = function () {
+            return 'Rational Field ℚ';
+        };
+
+        /**
         * Coerces the rational to some other data type
         *
         * @return {Integer|Rational|number|Complex}
@@ -10252,9 +10291,11 @@ var MathLib;
         /**
         * Returns the number represented by the rational number
         *
+        * @deprecated Use .coerceTo('number') instead
         * @return {number}
         */
         Rational.prototype.toNumber = function () {
+            console.warn('Rational.prototype.toNumber() is deprecated. Use Rational.prototype.coerceTo("number") instead.');
             return this.numerator / this.denominator;
         };
 

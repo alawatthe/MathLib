@@ -1,4 +1,4 @@
-test('.isEqual()', 2, function () {
+test('.prototype.isEqual()', 2, function () {
 	var r = new MathLib.Rational(1, 2),
 			p = new MathLib.Rational(4, 8),
 			q = new MathLib.Rational(2, 3);

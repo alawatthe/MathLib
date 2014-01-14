@@ -26,6 +26,42 @@ var Rational = (function () {
         this.denominator = denominator;
     }
     /**
+    * A content MathML string representation
+    *
+    * @return {string}
+    */
+    Rational.toContentMathML = function () {
+        return '<csymbol cd="setname1">Q</csymbol>';
+    };
+
+    /**
+    * A LaTeX string representation
+    *
+    * @return {string}
+    */
+    Rational.toLaTeX = function () {
+        return 'Rational Field $\\mathbb{Q}$';
+    };
+
+    /**
+    * A presentation MathML string representation
+    *
+    * @return {string}
+    */
+    Rational.toMathML = function () {
+        return '<mrow><mtext>Rational Field</mtext><mi mathvariant="double-struck">Q</mi></mrow>';
+    };
+
+    /**
+    * Custom toString function
+    *
+    * @return {string}
+    */
+    Rational.toString = function () {
+        return 'Rational Field ℚ';
+    };
+
+    /**
     * Coerces the rational to some other data type
     *
     * @return {Integer|Rational|number|Complex}
@@ -214,9 +250,11 @@ var Rational = (function () {
     /**
     * Returns the number represented by the rational number
     *
+    * @deprecated Use .coerceTo('number') instead
     * @return {number}
     */
     Rational.prototype.toNumber = function () {
+        console.warn('Rational.prototype.toNumber() is deprecated. Use Rational.prototype.coerceTo("number") instead.');
         return this.numerator / this.denominator;
     };
 

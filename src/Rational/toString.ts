@@ -3,6 +3,6 @@
  *
  * @return {string}
  */
-toString() : string {
-	return MathLib.toString(this.numerator) + '/' + MathLib.toString(this.denominator);
+static toString() : string {
+	return 'Rational Field ℚ';
 }

@@ -1,4 +1,4 @@
-test('.divide()', 2, function () {
+test('.prototype.divide()', 2, function () {
 	var r = new MathLib.Rational(1, 2),
 			p = new MathLib.Rational(2, 3);
 

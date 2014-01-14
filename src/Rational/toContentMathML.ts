@@ -1,8 +1,8 @@
 /**
- * Returns the Content MathML representation of the rational number
+ * A content MathML string representation
  *
  * @return {string}
  */
-toContentMathML() : string {
-	return '<cn type="rational">' + this.numerator + '<sep/>' + this.denominator + '</cn>';
+static toContentMathML() : string {
+	return '<csymbol cd="setname1">Q</csymbol>';
 }

@@ -2804,6 +2804,38 @@ declare module MathLib {
         public denominator: any;
         constructor(numerator: any, denominator?: number);
         /**
+        * A content MathML string representation
+        *
+        * @return {string}
+        */
+
+declare module MathLib {
+        static toContentMathML(): string;
+        /**
+        * A LaTeX string representation
+        *
+        * @return {string}
+        */
+
+declare module MathLib {
+        static toLaTeX(): string;
+        /**
+        * A presentation MathML string representation
+        *
+        * @return {string}
+        */
+
+declare module MathLib {
+        static toMathML(): string;
+        /**
+        * Custom toString function
+        *
+        * @return {string}
+        */
+
+declare module MathLib {
+        static toString(): string;
+        /**
         * Coerces the rational to some other data type
         *
         * @return {Integer|Rational|number|Complex}
@@ -2932,6 +2964,7 @@ declare module MathLib {
         /**
         * Returns the number represented by the rational number
         *
+        * @deprecated Use .coerceTo('number') instead
         * @return {number}
         */
 

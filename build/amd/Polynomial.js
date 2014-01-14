@@ -327,7 +327,7 @@
                 }
                 return new MathLib.Polynomial(product);
             } else if (a.type === 'rational') {
-                a = a.toNumber();
+                a = a.coerceTo('number');
             }
 
             // we we multiply it to every coefficient

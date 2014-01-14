@@ -1,4 +1,4 @@
-test('.reduce()', 4, function () {
+test('.prototype.reduce()', 4, function () {
 	var r = (new MathLib.Rational(-4, -6)).reduce(),
 			p = (new MathLib.Rational(3, -6)).reduce();
 	equal(r.numerator, 2, '.reduce()');

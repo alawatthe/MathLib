@@ -113,7 +113,7 @@ define([], function () {
         }))];
 
         return args.map(function (x) {
-            return MathLib.coerceTo(x, numberType);
+            return _MathLib.coerceTo(x, numberType);
         });
     };
 

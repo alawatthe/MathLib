@@ -972,7 +972,7 @@ var Matrix = (function () {
         var i, ii, j, jj, k, kk, product = [], entry;
 
         if (a.type === 'rational') {
-            a = a.toNumber();
+            a = a.coerceTo('number');
         }
         if (typeof a === 'number' || a.type === 'complex') {
             return this.map(function (x) {

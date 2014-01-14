@@ -113,7 +113,7 @@
 					})
 				)];
 				
-		return args.map(x => MathLib.coerceTo(x, numberType));
+		return args.map(x => coerceTo(x, numberType));
 	}
 
 	var flatten = function (a) {

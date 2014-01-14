@@ -4102,7 +4102,19 @@ test('.type', 1, function () {
 	var r = new MathLib.Rational(2, 3);
 	equal(r.type, 'rational', 'Testing .type');
 });
-test('.compare()', 3, function () {
+test('.toContentMathML()', 1, function () {
+	equal(MathLib.Rational.toContentMathML(), '<csymbol cd="setname1">Q</csymbol>');
+});
+test('.toLaTeX()', 1, function () {
+	equal(MathLib.Rational.toLaTeX(), 'Rational Field $\\mathbb{Q}$');
+});
+test('.toMathML()', 1, function () {
+	equal(MathLib.Rational.toMathML(), '<mrow><mtext>Rational Field</mtext><mi mathvariant="double-struck">Q</mi></mrow>');
+});
+test('.toString()', 1, function () {
+	equal(MathLib.Rational.toString(), 'Rational Field ℚ');
+});
+test('.prototype.compare()', 3, function () {
 	var r1 = new MathLib.Rational(3, 2),
 			r2 = new MathLib.Rational(6, 4),
 			r3 = new MathLib.Rational(1, 1),
@@ -4111,20 +4123,20 @@ test('.compare()', 3, function () {
 	equal(r1.compare(r3), 1, '.compare()');
 	equal(r1.compare(r4), -1,  '.compare()');
 });
-test('.divide()', 2, function () {
+test('.prototype.divide()', 2, function () {
 	var r = new MathLib.Rational(1, 2),
 			p = new MathLib.Rational(2, 3);
 
 	equal(r.divide(p).isEqual(new MathLib.Rational(3, 4)), true, '.divide()');
 	equal(r.divide(2).isEqual(new MathLib.Rational(1, 4)), true, '.divide()');
 });
-test('.inverse()', 2, function () {
+test('.prototype.inverse()', 2, function () {
 	var r = (new MathLib.Rational(1, 2)).inverse(),
 			p = (new MathLib.Rational(0, 2)).inverse();
 	equal(r.isEqual(new MathLib.Rational(2, 1)), true, '.inverse()');
 	equal(p, undefined, '.inverse()');
 });
-test('.isEqual()', 2, function () {
+test('.prototype.isEqual()', 2, function () {
 	var r = new MathLib.Rational(1, 2),
 			p = new MathLib.Rational(4, 8),
 			q = new MathLib.Rational(2, 3);
@@ -4132,32 +4144,32 @@ test('.isEqual()', 2, function () {
 	equal(r.isEqual(p), true, '.isEqual()');
 	equal(r.isEqual(q), false, '.isEqual()');
 });
-test('.isZero()', 2, function () {
+test('.prototype.isZero()', 2, function () {
 	var r = new MathLib.Rational(0, 2),
 			p = new MathLib.Rational(1, 3);
 
 	equal(r.isZero(), true, '.isZero()');
 	equal(p.isZero(), false, '.isZero()');
 });
-test('.minus()', 2, function () {
+test('.prototype.minus()', 2, function () {
 	var r = new MathLib.Rational(1, 2),
 			p = new MathLib.Rational(2, 3);
 
 	equal(r.minus(p).isEqual(new MathLib.Rational(-1, 6)), true, '.minus()');
 	equal(r.minus(2), -1.5, '.minus()');
 });
-test('.negative()', 1, function () {
+test('.prototype.negative()', 1, function () {
 	var r = (new MathLib.Rational(1, 2)).negative();
 	equal(r.isEqual(new MathLib.Rational(-1, 2)), true, '.isEqual()');
 });
-test('.plus()', 2, function () {
+test('.prototype.plus()', 2, function () {
 	var r = new MathLib.Rational(1, 2),
 			p = new MathLib.Rational(2, 3);
 
 	equal(r.plus(p).isEqual(new MathLib.Rational(7, 6)), true, '.plus()');
 	equal(r.plus(2), 2.5, '.plus()');
 });
-test('.reduce()', 4, function () {
+test('.prototype.reduce()', 4, function () {
 	var r = (new MathLib.Rational(-4, -6)).reduce(),
 			p = (new MathLib.Rational(3, -6)).reduce();
 	equal(r.numerator, 2, '.reduce()');
@@ -4165,30 +4177,30 @@ test('.reduce()', 4, function () {
 	equal(p.numerator, -1, '.reduce()');
 	equal(p.denominator, 2, '.reduce()');
 });
-test('.times()', 2, function () {
+test('.prototype.times()', 2, function () {
 	var r = new MathLib.Rational(1, 2),
 			p = new MathLib.Rational(2, 3);
 
 	equal(r.times(p).isEqual(new MathLib.Rational(2, 6)), true, '.times()');
 	equal(r.times(2).isEqual(new MathLib.Rational(1, 1)), true, '.times()');
 });
-test('.toContentMathML()', 1, function () {
+test('.prototype.toContentMathML()', 1, function () {
 	var r = new MathLib.Rational(2, 3);
 	equal(r.toContentMathML(), '<cn type="rational">2<sep/>3</cn>', '.toContentMathML()');
 });
-test('.toLaTeX()', 1, function () {
+test('.prototype.toLaTeX()', 1, function () {
 	var r = new MathLib.Rational(2, 3);
 	equal(r.toLaTeX(), '\\frac{2}{3}', '.toLaTeX()');
 });
-test('.toMathML()', 1, function () {
+test('.prototype.toMathML()', 1, function () {
 	var r = new MathLib.Rational(2, 3);
 	equal(r.toMathML(), '<mfrac><mn>2</mn><mn>3</mn></mfrac>', '.toMathML()');
 });
-test('.toNumber()', 1, function () {
+test('.prototype.toNumber()', 1, function () {
 	var r = new MathLib.Rational(1, 2);
 	equal(r.toNumber(), 1 / 2, '.toNumber()');
 });
-test('.toString()', 1, function () {
+test('.prototype.toString()', 1, function () {
 	var r = new MathLib.Rational(2, 3);
 	equal(r.toString(), '2/3', '.toString()');
 });

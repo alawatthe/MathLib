@@ -73,7 +73,7 @@ module.exports = function (grunt) {
 				'test/Permutation/init.js', 'test/Permutation/!(init).js',
 				'test/Point/init.js', 'test/Point/!(init).js',
 				'test/Polynomial/init.js', 'test/Polynomial/!(init).js',
-				'test/Rational/init.js', 'test/Rational/!(init).js',
+				'test/Rational/init.js', 'test/Rational/!(init).js', 'test/Rational/prototype/*.js',
 				'test/Screen/init.js', 'test/Screen/!(init).js',
 				'test/Set/init.js', 'test/Set/!(init).js',
 				'test/Vector/init.js', 'test/Vector/!(init).js'
@@ -198,7 +198,7 @@ module.exports = function (grunt) {
 				dest: 'build/plain/Polynomial.ts'
 			},
 			Rational: {
-				src: ['src/Rational/init.ts', 'src/Rational/!(init).ts'],
+				src: ['src/Rational/init.ts', 'src/Rational/!(init).ts', 'src/Rational/prototype/*.ts'],
 				dest: 'build/plain/Rational.ts'
 			},
 			Set: {
@@ -1003,8 +1003,8 @@ module.exports = function (grunt) {
 	grunt.registerTask('generateAll', ['generatePlain', 'generateAMD', 'generateCommonjs', 'generateES6', 'generateDeclaration', 'clean']);
 
 
-	grunt.registerTask('runTests', ['nodeunit', 'qunit', 'qunit_amd']);
 	grunt.registerTask('generateTestFiles', ['concat:tests', 'concat:testsAmd', 'concat:testsCommonjs']);
+	grunt.registerTask('runTests', ['nodeunit', 'qunit', 'qunit_amd']);
 
 
 	grunt.registerTask('default', ['generatePlain']);

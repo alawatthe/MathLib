@@ -56,8 +56,11 @@ export var Functn = function (f, options) {
 		else if (x.type === 'complex') {
 			return x[options.name].apply(x, Array.prototype.slice.call(arguments, 1));
 		}
-		else if (x.type === 'rational') {
-			return f(x.toNumber());
+		else if (x.type === 'integer' || x.type === 'rational') {
+			if (x[options.name]) {
+				return x[options.name].apply(x, Array.prototype.slice.call(arguments, 1))
+			}
+			return f(x.coerceTo('number'));
 		}
 		else if (x.type === 'set') {
 			return x.map(f);
