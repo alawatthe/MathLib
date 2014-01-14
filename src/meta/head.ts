@@ -79,6 +79,43 @@
 	};
 
 
+	export var coerceTo = function (obj, type) {
+		
+		if (typeof obj === 'object') {
+			return obj.coerceTo(type);
+		}
+				
+		if (typeof obj === 'number') {
+			if (type === 'integer') {
+				return new MathLib.Integer(obj);
+			}
+			if (type === 'rational') {
+				return new MathLib.Rational(obj);
+			}
+			if (type === 'number') {
+				return obj;
+			}
+			if (type === 'complex') {
+				return new MathLib.Complex(obj);
+			}
+		}
+	}
+		
+	
+	export var coerce = function (...args) {
+		var type = function (x) {
+					return x.type || typeof x;
+				},
+				numberTypes = ['integer', 'rational', 'number', 'complex'],
+				numberType = numberTypes[
+					Math.max.apply(null, args.map(function (x) {
+						return numberTypes.indexOf(type(x));
+					})
+				)];
+				
+		return args.map(x => MathLib.coerceTo(x, numberType));
+	}
+
 	var flatten = function (a) {
 				var flattendArray = [];
 				a.forEach(function (x) {

@@ -1,15 +1,19 @@
 /**
  * Determines if the complex number is equal to another number.
  *
- * @param {Complex|number|Rational} number The number to be compared  
+ * @param {Integer|Rational|number|Complex} n The number to be compared  
  * @return {boolean}
  */
-isEqual(number) : boolean {
-	if (typeof number === 'number') {
-		return MathLib.isEqual(this.re, number) && MathLib.isZero(this.im);
+isEqual(n) : boolean {
+	if (n.type !== 'complex') {
+		if (MathLib.isZero(this.im)) {
+			return MathLib.isEqual.apply(null, MathLib.coerce(this.re, n));
+		}
+		else {
+			return false;
+		}
 	}
-	if (number.type === 'complex') {
-		return MathLib.isEqual(this.re, number.re) && MathLib.isEqual(this.im, number.im);
+	else {
+		return MathLib.isEqual(this.re, n.re) && MathLib.isEqual(this.im, n.im);
 	}
-	return false;
 }

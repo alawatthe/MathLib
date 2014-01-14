@@ -21,10 +21,10 @@ export class Complex {
 
 	type = 'complex';
 
-	re: number;
-	im: number;
+	re: any;
+	im: any;
 
-	constructor (re: number, im = 0) {
+	constructor (re, im = 0) {
 		if (MathLib.isNaN(re) || MathLib.isNaN(im)) {
 			this.re = NaN;
 			this.im = NaN;

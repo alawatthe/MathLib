@@ -16,10 +16,10 @@ export class Rational {
 
 	type = 'rational';
 
-	numerator: number;
-	denominator: number;
+	numerator: any;
+	denominator: any;
 
-	constructor (numerator: number, denominator = 1) {
+	constructor (numerator, denominator = 1) {
 		if (MathLib.isZero(denominator)) {
 			MathLib.error({message: 'The denominator cannot be zero.', method: 'Rational.constructor'});
 			throw 'The denominator cannot be zero.';

@@ -5,18 +5,11 @@
  * @return {Rational}
  */
 minus(subtrahend) {
-	var n = this.numerator,
-			d = this.denominator;
-
-	if (subtrahend.type === 'rational') {
-		return new MathLib.Rational(MathLib.minus(MathLib.times(n, subtrahend.denominator), MathLib.times(d, subtrahend.numerator)),
-			MathLib.times(d, subtrahend.denominator));
+	if (subtrahend.type !== 'rational') {
+		return MathLib.minus.apply(null, MathLib.coerce(this, subtrahend));
 	}
-	else if (typeof subtrahend === 'number') {
-		return new MathLib.Rational(MathLib.minus(n, MathLib.times(subtrahend, d)), d);
-	}
-	// For complex numbers
 	else {
-		return subtrahend.minus(this).negative();
+		return new MathLib.Rational(MathLib.minus(MathLib.times(this.numerator, subtrahend.denominator), MathLib.times(this.denominator, subtrahend.numerator)),
+			MathLib.times(this.denominator, subtrahend.denominator));
 	}
 }

@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-01-05
+ * build date: 2014-01-14
  */
 
 var MathLib = require('./MathLib.js'),
@@ -3028,6 +3028,210 @@ test('.xor()', 14, function () {
 	equal(MathLib.xor(false, false), false, 'false xor false = false');
 	equal(MathLib.xor([false, false]), false, 'false xor false = false');
 });
+module('Integer');
+test('init', 2, function () {
+	var p = new MathLib.Point(1, 2),
+			circle = new MathLib.Circle(p, 2);
+	equal(circle.radius, 2, 'Testing the radius');
+	deepEqual(circle.center, p, 'Testing the center');
+});
+
+
+
+// Properties
+test('.constructor', 1, function () {
+	var i = new MathLib.Integer('1234');
+	equal(i.constructor, MathLib.Integer, 'Testing .constructor');
+});
+
+test('.type', 1, function () {
+	var i = new MathLib.Integer('1234');
+	equal(i.type, 'integer', 'Testing .type');
+});
+test('.toContentMathML()', 1, function () {
+	equal(MathLib.Integer.toContentMathML(), '<csymbol cd="setname1">Z</csymbol>');
+});
+test('.toLaTeX()', 1, function () {
+	equal(MathLib.Integer.toLaTeX(), 'Integer Ring $\\mathbb{Z}$');
+});
+test('.toMathML()', 1, function () {
+	equal(MathLib.Integer.toMathML(), '<mrow><mtext>Integer Ring</mtext><mi mathvariant="double-struck">Z</mi></mrow>');
+});
+test('.toString()', 1, function () {
+	equal(MathLib.Integer.toString(), 'Integer Ring ℤ');
+});
+test('prototype.abs()', 5, function () {
+	ok(MathLib.isPosZero((new MathLib.Integer('+0')).abs().coerceTo('number')));
+	ok(MathLib.isPosZero((new MathLib.Integer('-0')).abs().coerceTo('number')));
+	equal((new MathLib.Integer('1234')).abs().toString(), '1234');
+	equal((new MathLib.Integer('+1234')).abs().toString(), '1234');
+	equal((new MathLib.Integer('-1234')).abs().toString(), '1234');
+});
+test('.prototype.coerceTo()', 10, function () {
+	// Rational
+	ok(MathLib.isEqual((new MathLib.Integer('0')).coerceTo('rational'), new MathLib.Rational(0)));
+	ok(MathLib.isEqual((new MathLib.Integer('+1234')).coerceTo('rational'), new MathLib.Rational(1234)));
+	ok(MathLib.isEqual((new MathLib.Integer('-1234')).coerceTo('rational'), new MathLib.Rational(-1234)));
+	
+	// number
+	ok(MathLib.isPosZero((new MathLib.Integer('+0')).coerceTo('number')));
+	ok(MathLib.isNegZero((new MathLib.Integer('-0')).coerceTo('number')));
+	equal((new MathLib.Integer('+1234')).coerceTo('number'), 1234);
+	equal((new MathLib.Integer('-1234')).coerceTo('number'), -1234);
+	
+	// Complex
+	ok(MathLib.isEqual((new MathLib.Integer('0')).coerceTo('complex'), new MathLib.Complex(0)));
+	ok(MathLib.isEqual((new MathLib.Integer('+1234')).coerceTo('complex'), new MathLib.Complex(1234)));
+	ok(MathLib.isEqual((new MathLib.Integer('-1234')).coerceTo('complex'), new MathLib.Complex(-1234)));
+});
+test('.prototype.compare()', 10, function () {
+	equal((new MathLib.Integer('0')).compare(new MathLib.Integer('-0')), 0);
+
+	equal((new MathLib.Integer('10')).compare(new MathLib.Integer('100')), -1);
+	equal((new MathLib.Integer('100')).compare(new MathLib.Integer('10')), 1);
+	equal((new MathLib.Integer('100')).compare(new MathLib.Integer('100')), 0);
+	
+	equal((new MathLib.Integer('10')).compare(new MathLib.Integer('-100')), 1);
+	equal((new MathLib.Integer('100')).compare(new MathLib.Integer('-10')), 1);
+	equal((new MathLib.Integer('100')).compare(new MathLib.Integer('-100')), 1);
+
+	equal((new MathLib.Integer('-10')).compare(new MathLib.Integer('-100')), 1);
+	equal((new MathLib.Integer('-100')).compare(new MathLib.Integer('-10')), -1);
+	equal((new MathLib.Integer('-100')).compare(new MathLib.Integer('-100')), 0);
+});
+test('.prototype.conjugate()', 1, function () {
+	var i = new MathLib.Integer('1234'),
+			j = i.conjugate();
+
+	ok(j.isEqual(i));
+});
+test('.prototype.copy()', 3, function () {
+	var i = new MathLib.Integer('1234'),
+			j = i.copy();
+
+	ok(j.isEqual(i));
+	
+	j.sign = '-';
+	j.data[0] = 4321;
+	
+	equal(i.sign, '+');
+	equal(i.data[0], 1234);
+});
+test('.prototype.isEqual()', 5, function () {
+	equal((new MathLib.Integer('+0')).isEqual(new MathLib.Integer('-0')), true);
+	equal((new MathLib.Integer('1234')).isEqual(new MathLib.Integer('1234')), true);
+	equal((new MathLib.Integer('1234')).isEqual(1234), true);
+	equal((new MathLib.Integer('1234')).isEqual(new MathLib.Integer('12')), false);
+	equal((new MathLib.Integer('1234')).isEqual(12), false);
+});
+test('.prototype.isUnit()', 4, function () {
+	equal((new MathLib.Integer('1')).isUnit(), true);
+	equal((new MathLib.Integer('-1')).isUnit(), true);
+	equal((new MathLib.Integer('+1234')).isUnit(), false);
+	equal((new MathLib.Integer('-1234')).isUnit(), false);
+});
+test('.prototype.isZero()', 5, function () {
+	equal((new MathLib.Integer('0')).isZero(), true);
+	equal((new MathLib.Integer('+0')).isZero(), true);
+	equal((new MathLib.Integer('-0')).isZero(), true);
+	equal((new MathLib.Integer('+1234')).isZero(), false);
+	equal((new MathLib.Integer('-1234')).isZero(), false);
+});
+test('.prototype.minus()', 21, function () {
+	// integer
+	equal((new MathLib.Integer('+10')).minus(new MathLib.Integer('+100')).toString(), '-90');
+	equal((new MathLib.Integer('+10')).minus(new MathLib.Integer('-100')).toString(), '110');
+	equal((new MathLib.Integer('-10')).minus(new MathLib.Integer('+100')).toString(), '-110');
+	equal((new MathLib.Integer('-10')).minus(new MathLib.Integer('-100')).toString(), '90');
+
+	equal((new MathLib.Integer('+100')).minus(new MathLib.Integer('+10')).toString(), '90');
+	equal((new MathLib.Integer('+100')).minus(new MathLib.Integer('-10')).toString(), '110');
+	equal((new MathLib.Integer('-100')).minus(new MathLib.Integer('+10')).toString(), '-110');
+	equal((new MathLib.Integer('-100')).minus(new MathLib.Integer('-10')).toString(), '-90');
+	
+	equal((new MathLib.Integer('+10000000')).minus(new MathLib.Integer('+10')).toString(), '9999990');
+	equal((new MathLib.Integer('+10000000')).minus(new MathLib.Integer('-10')).toString(), '10000010');
+	equal((new MathLib.Integer('-10000000')).minus(new MathLib.Integer('+10')).toString(), '-10000010');
+	equal((new MathLib.Integer('-10000000')).minus(new MathLib.Integer('-10')).toString(), '-9999990');
+
+	equal((new MathLib.Integer('1')).minus(new MathLib.Integer('100000000000000')).toString(), '-99999999999999');
+
+
+	// number
+	//ok(MathLib.isPosZero((new MathLib.Integer('+0')).plus()));
+	//ok(MathLib.isNegZero((new MathLib.Integer('-0')).plus()));
+	equal((new MathLib.Integer('+100')).minus(10), 90);
+	equal((new MathLib.Integer('+100')).minus(-10), 110);
+	equal((new MathLib.Integer('-100')).minus(10), -110);
+	equal((new MathLib.Integer('-100')).minus(-10), -90);
+	
+	equal((new MathLib.Integer('+10000000')).minus(10), 9999990);
+	equal((new MathLib.Integer('+10000000')).minus(-10), 10000010);
+	equal((new MathLib.Integer('-10000000')).minus(10), -10000010);
+	equal((new MathLib.Integer('-10000000')).minus(-10), -9999990);
+});
+test('prototype.negative()', 3, function () {
+	equal((new MathLib.Integer('1234')).negative().toString(), '-1234');
+	equal((new MathLib.Integer('+1234')).negative().toString(), '-1234');
+	equal((new MathLib.Integer('-1234')).negative().toString(), '1234');
+});
+test('.prototype.plus()', 13, function () {
+	// integer
+	equal((new MathLib.Integer('+10000000')).plus(new MathLib.Integer('+10')).toString(), '10000010');
+	equal((new MathLib.Integer('+10000000')).plus(new MathLib.Integer('-10')).toString(), '9999990');
+	equal((new MathLib.Integer('-10000000')).plus(new MathLib.Integer('+10')).toString(), '-9999990');
+	equal((new MathLib.Integer('-10000000')).plus(new MathLib.Integer('-10')).toString(), '-10000010');
+
+	// number
+	//ok(MathLib.isPosZero((new MathLib.Integer('+0')).plus()));
+	//ok(MathLib.isNegZero((new MathLib.Integer('-0')).plus()));
+	equal((new MathLib.Integer('+100')).plus(10), 110);
+	equal((new MathLib.Integer('+100')).plus(-10), 90);
+	equal((new MathLib.Integer('-100')).plus(10), -90);
+	equal((new MathLib.Integer('-100')).plus(-10), -110);
+	
+	equal((new MathLib.Integer('+10000000')).plus(10), 10000010);
+	equal((new MathLib.Integer('+10000000')).plus(-10), 9999990);
+	equal((new MathLib.Integer('-10000000')).plus(10), -9999990);
+	equal((new MathLib.Integer('-10000000')).plus(-10), -10000010);
+	
+	equal((new MathLib.Integer(5000000)).plus(new MathLib.Integer(5000000)).toString(), '10000000');
+});
+test('.prototype.times()', 8, function () {
+	// integer
+	equal((new MathLib.Integer('+10000000')).times(new MathLib.Integer('+10')).toString(),  '100000000');
+	equal((new MathLib.Integer('+10000000')).times(new MathLib.Integer('-10')).toString(), '-100000000');
+	equal((new MathLib.Integer('-10000000')).times(new MathLib.Integer('+10')).toString(), '-100000000');
+	equal((new MathLib.Integer('-10000000')).times(new MathLib.Integer('-10')).toString(),  '100000000');
+
+	// number
+	//ok(MathLib.isPosZero((new MathLib.Integer('+0')).plus()));
+	//ok(MathLib.isNegZero((new MathLib.Integer('-0')).plus()));
+	equal((new MathLib.Integer('+100')).times(10), 1000);
+	equal((new MathLib.Integer('+100')).times(-10), -1000);
+	equal((new MathLib.Integer('-100')).times(10), -1000);
+	equal((new MathLib.Integer('-100')).times(-10), 1000);
+});
+test('.prototype.toContentMathML()', 3, function () {
+	equal((new  MathLib.Integer('1234')).toContentMathML(), '<cn type="integer" base="10">1234</cn>');
+	equal((new  MathLib.Integer('+1234')).toContentMathML(), '<cn type="integer" base="10">1234</cn>');
+	equal((new  MathLib.Integer('-1234')).toContentMathML(), '<cn type="integer" base="10">-1234</cn>');
+});
+test('.prototype.toLaTeX()', 3, function () {
+	equal((new  MathLib.Integer('1234')).toLaTeX(), '1234');
+	equal((new  MathLib.Integer('+1234')).toLaTeX(), '1234');
+	equal((new  MathLib.Integer('-1234')).toLaTeX(), '-1234');
+});
+test('.prototype.toMathML()', 3, function () {
+	equal((new  MathLib.Integer('1234')).toMathML(), '<mn>1234</mn>');
+	equal((new  MathLib.Integer('+1234')).toMathML(), '<mn>1234</mn>');
+	equal((new  MathLib.Integer('-1234')).toMathML(), '<mn>-1234</mn>');
+});
+test('.prototype.toString()', 3, function () {
+	equal((new  MathLib.Integer('1234')).toString(), '1234');
+	equal((new  MathLib.Integer('+1234')).toString(), '1234');
+	equal((new  MathLib.Integer('-1234')).toString(), '-1234');
+});
 module('Line');
 test('init', 4, function () {
 	var line = new MathLib.Line([3, 2, 1]);
@@ -3539,6 +3743,7 @@ test('.trace()', 2, function () {
 			m = new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
 			n = new MathLib.Matrix([[1, 2], [3, c]]);
 	equal(m.trace(), 15, 'trace of a simple matrix');
+	debugger;
 	deepEqual(n.trace(), new MathLib.Complex(4, 4), 'trace of a complex matrix');
 });
 test('.transpose()', 2, function () {
@@ -3956,7 +4161,7 @@ test('.minus()', 2, function () {
 			p = new MathLib.Rational(2, 3);
 
 	equal(r.minus(p).isEqual(new MathLib.Rational(-1, 6)), true, '.minus()');
-	equal(r.minus(2).isEqual(new MathLib.Rational(-3, 2)), true, '.minus()');
+	equal(r.minus(2), -1.5, '.minus()');
 });
 test('.negative()', 1, function () {
 	var r = (new MathLib.Rational(1, 2)).negative();
@@ -3967,7 +4172,7 @@ test('.plus()', 2, function () {
 			p = new MathLib.Rational(2, 3);
 
 	equal(r.plus(p).isEqual(new MathLib.Rational(7, 6)), true, '.plus()');
-	equal(r.plus(2).isEqual(new MathLib.Rational(5, 2)), true, '.plus()');
+	equal(r.plus(2), 2.5, '.plus()');
 });
 test('.reduce()', 4, function () {
 	var r = (new MathLib.Rational(-4, -6)).reduce(),

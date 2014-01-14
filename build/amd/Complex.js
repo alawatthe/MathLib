@@ -171,6 +171,33 @@
         };
 
         /**
+        * Coerces the complex number to some other data type
+        *
+        * @return {Rational|number|Complex}
+        */
+        Complex.prototype.coerceTo = function (type) {
+            if (type === 'complex') {
+                return this.copy();
+            }
+
+            if (this.im !== 0) {
+                // TODO: coercion error
+            } else {
+                /*
+                if (type === 'integer') {
+                return new MathLib.Integer(this.re);
+                }
+                if (type === 'rational') {
+                return new MathLib.Rational(this.re);
+                }
+                */
+                if (type === 'number') {
+                    return MathLib.coerceTo(this.re, 'number');
+                }
+            }
+        };
+
+        /**
         * Compares two complex numbers
         *
         * @return {number}
@@ -332,17 +359,19 @@
         /**
         * Determines if the complex number is equal to another number.
         *
-        * @param {Complex|number|Rational} number The number to be compared
+        * @param {Integer|Rational|number|Complex} n The number to be compared
         * @return {boolean}
         */
-        Complex.prototype.isEqual = function (number) {
-            if (typeof number === 'number') {
-                return MathLib.isEqual(this.re, number) && MathLib.isZero(this.im);
+        Complex.prototype.isEqual = function (n) {
+            if (n.type !== 'complex') {
+                if (MathLib.isZero(this.im)) {
+                    return MathLib.isEqual.apply(null, MathLib.coerce(this.re, n));
+                } else {
+                    return false;
+                }
+            } else {
+                return MathLib.isEqual(this.re, n.re) && MathLib.isEqual(this.im, n.im);
             }
-            if (number.type === 'complex') {
-                return MathLib.isEqual(this.re, number.re) && MathLib.isEqual(this.im, number.im);
-            }
-            return false;
         };
 
         /**
@@ -397,17 +426,14 @@
         /**
         * Add complex numbers
         *
-        * @param {number|Complex|Rational} summand The number to be added
+        * @param {Integer|Rational|number|Complex} summand The number to be added
         * @return {Complex}
         */
         Complex.prototype.plus = function (summand) {
-            if (summand.type === 'complex') {
+            if (summand.type !== 'complex') {
+                return new MathLib.Complex(MathLib.plus.apply(null, MathLib.coerce(this.re, summand)), this.im);
+            } else {
                 return new MathLib.Complex(MathLib.plus(this.re, summand.re), MathLib.plus(this.im, summand.im));
-            } else if (summand.type === 'rational') {
-                summand = summand.toNumber();
-            }
-            if (typeof summand === 'number') {
-                return new MathLib.Complex(MathLib.plus(this.re, summand), this.im);
             }
         };
 

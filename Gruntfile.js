@@ -67,7 +67,8 @@ module.exports = function (grunt) {
 				'test/Conic/init.js', 'test/Conic/!(init).js',
 				'test/Expression/init.js', 'test/Expression/!(init).js',
 				'test/Functn/init.js', 'test/Functn/!(init).js',
-				'test/Line/init.js','test/Line/!(init).js',
+				'test/Integer/init.js', 'test/Integer/!(init).js', 'test/Integer/prototype/*.js',
+				'test/Line/init.js', 'test/Line/!(init).js',
 				'test/Matrix/init.js', 'test/Matrix/!(init).js',
 				'test/Permutation/init.js', 'test/Permutation/!(init).js',
 				'test/Point/init.js', 'test/Point/!(init).js',
@@ -168,6 +169,10 @@ module.exports = function (grunt) {
 				src: ['src/Complex/init.ts', 'src/Complex/!(init).ts'],
 				dest: 'build/plain/Complex.ts'
 			},
+			Integer: {
+				src: ['src/Integer/init.ts', 'src/Integer/!(init).ts', 'src/Integer/prototype/*.ts'],
+				dest: 'build/plain/Integer.ts'
+			},
 			Line: {
 				src: ['src/Line/init.ts', 'src/Line/!(init).ts'],
 				dest: 'build/plain/Line.ts'
@@ -202,7 +207,11 @@ module.exports = function (grunt) {
 			},
 
 			plain: {
-				src: ['build/plain/fullscreen.js', 'build/plain/lineDash.js', 'build/plain/meta.js', 'build/plain/Expression.js', 'build/plain/Functn.js', 'build/plain/Screen.js', 'build/plain/Layer.js', 'build/plain/Canvas.js', 'build/plain/SVG.js', 'build/plain/Screen2D.js', 'build/plain/Screen3D.js', 'build/plain/Vector.js', 'build/plain/Circle.js', 'build/plain/Complex.js', 'build/plain/Line.js', 'build/plain/Matrix.js', 'build/plain/Permutation.js', 'build/plain/Conic.js', 'build/plain/Point.js', 'build/plain/Polynomial.js', 'build/plain/Rational.js', 'build/plain/Set.js'],
+				src: ['build/plain/fullscreen.js', 'build/plain/lineDash.js', 'build/plain/meta.js', 'build/plain/Expression.js', 'build/plain/Functn.js', 
+						'build/plain/Screen.js', 'build/plain/Layer.js', 'build/plain/Canvas.js', 'build/plain/SVG.js', 'build/plain/Screen2D.js',
+						'build/plain/Screen3D.js', 'build/plain/Vector.js', 'build/plain/Circle.js', 'build/plain/Complex.js', 'build/plain/Integer.js', 
+						'build/plain/Line.js', 'build/plain/Matrix.js', 'build/plain/Permutation.js', 'build/plain/Conic.js', 'build/plain/Point.js',
+						'build/plain/Polynomial.js', 'build/plain/Rational.js', 'build/plain/Set.js'],
 				dest: 'build/MathLib.js',
 				options: {
 					banner: banner,
@@ -213,7 +222,7 @@ module.exports = function (grunt) {
 			declaration: {
 				src: ['build/plain/meta.d.ts', 'build/plain/Expression.d.ts', 'build/plain/Functn.d.ts', 'build/plain/Screen.d.ts', 'build/plain/Layer.d.ts', 
 				'build/plain/Canvas.d.ts', 'build/plain/SVG.d.ts', 'build/plain/Screen2D.d.ts', 'build/plain/Screen3D.d.ts', 'build/plain/Vector.d.ts',
-				'build/plain/Circle.d.ts', 'build/plain/Complex.d.ts', 'build/plain/Line.d.ts', 'build/plain/Matrix.d.ts', 'build/plain/Permutation.d.ts',
+				'build/plain/Circle.d.ts', 'build/plain/Complex.d.ts', 'build/plain/Integer.d.ts', 'build/plain/Line.d.ts', 'build/plain/Matrix.d.ts', 'build/plain/Permutation.d.ts',
 				'build/plain/Conic.d.ts', 'build/plain/Point.d.ts', 'build/plain/Polynomial.d.ts', 'build/plain/Rational.d.ts', 'build/plain/Set.d.ts'],
 				dest: 'build/MathLib.d.ts',
 				options: {
@@ -983,14 +992,15 @@ module.exports = function (grunt) {
 
 
 	grunt.registerTask('generatePlain', ['clean:plain', 'generateTestFiles', 'concat:meta', 'concat:Expression', 'concat:Functn', 'concat:Screen', 'concat:Layer',
-			'concat:Canvas', 'concat:SVG', 'concat:Screen2D', 'concat:Screen3D', 'concat:Vector', 'concat:Circle', 'concat:Complex', 'concat:Line',
+			'concat:Canvas', 'concat:SVG', 'concat:Screen2D', 'concat:Screen3D', 'concat:Vector', 'concat:Circle', 'concat:Complex', 'concat:Integer', 'concat:Line',
 			'concat:Matrix', 'concat:Permutation', 'concat:Conic', 'concat:Point', 'concat:Polynomial', 'concat:Rational', 'concat:Set', 'ts', 'copy:shims',
 			'concat:plain', 'uglify', 'regex-replace:plainHead', 'regex-replace:plain', 'clean:reference']);
 	grunt.registerTask('generateAMD', ['copy:amd', 'regex-replace:amdHead', 'regex-replace:amd']);
 	grunt.registerTask('generateCommonjs', ['copy:commonjs', 'regex-replace:commonjsHead', 'regex-replace:commonjs']);
 	grunt.registerTask('generateES6', ['copy:es6', 'regex-replace:es6Head', 'regex-replace:es6']);
+	grunt.registerTask('generateDeclaration', ['concat:declaration', 'regex-replace:declaration']);
 
-	grunt.registerTask('generateAll', ['generatePlain', 'generateAMD', 'generateCommonjs', 'generateES6', 'clean']);
+	grunt.registerTask('generateAll', ['generatePlain', 'generateAMD', 'generateCommonjs', 'generateES6', 'generateDeclaration', 'clean']);
 
 
 	grunt.registerTask('runTests', ['nodeunit', 'qunit', 'qunit_amd']);
@@ -998,6 +1008,6 @@ module.exports = function (grunt) {
 
 
 	grunt.registerTask('default', ['generatePlain']);
-	grunt.registerTask('release', ['generateAll', 'concat:declaration', 'regex-replace:declaration', 'cssmin' /*, 'docco'*/]);
+	grunt.registerTask('release', ['generateAll', 'cssmin' /*, 'docco'*/]);
 	grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);
 };

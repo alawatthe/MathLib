@@ -3,5 +3,6 @@ test('.trace()', 2, function () {
 			m = new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
 			n = new MathLib.Matrix([[1, 2], [3, c]]);
 	equal(m.trace(), 15, 'trace of a simple matrix');
+	debugger;
 	deepEqual(n.trace(), new MathLib.Complex(4, 4), 'trace of a complex matrix');
 });

@@ -1,17 +1,14 @@
 /**
  * Add complex numbers
  *
- * @param {number|Complex|Rational} summand The number to be added
+ * @param {Integer|Rational|number|Complex} summand The number to be added
  * @return {Complex}
  */
-plus(summand) : Complex {
-	if (summand.type === 'complex') {
+plus(summand) {
+	if (summand.type !== 'complex') {
+		return new MathLib.Complex(MathLib.plus.apply(null, MathLib.coerce(this.re, summand)), this.im);
+	}
+	else {
 		return new MathLib.Complex(MathLib.plus(this.re, summand.re), MathLib.plus(this.im, summand.im));
-	}
-	else if (summand.type === 'rational') {
-		summand = summand.toNumber();
-	}
-	if (typeof summand === 'number') {
-		return new MathLib.Complex(MathLib.plus(this.re, summand), this.im);
 	}
 }

@@ -26,6 +26,33 @@ var Rational = (function () {
         this.denominator = denominator;
     }
     /**
+    * Coerces the rational to some other data type
+    *
+    * @return {Integer|Rational|number|Complex}
+    */
+    Rational.prototype.coerceTo = function (type) {
+        if (type === 'rational') {
+            if (this.denominator === 1) {
+                return new MathLib.Integer(this.numerator);
+            }
+            // TODO: coercion error
+        }
+
+        if (type === 'rational') {
+            return this.copy();
+        }
+
+        if (type === 'number') {
+            return this.numerator / this.denominator;
+        }
+
+        if (type === 'complex') {
+            //		return new MathLib.Complex(this, new MathLib.Rational(0));
+            return new MathLib.Complex(this, 0);
+        }
+    };
+
+    /**
     * Compares two rational numbers
     *
     * @param {Rational} rational The number to compare
@@ -33,6 +60,15 @@ var Rational = (function () {
     */
     Rational.prototype.compare = function (rational) {
         return MathLib.sign(this.numerator * rational.denominator - this.denominator * rational.numerator);
+    };
+
+    /**
+    * Copy the rational number
+    *
+    * @return {Rational}
+    */
+    Rational.prototype.copy = function () {
+        return new MathLib.Rational(MathLib.copy(this.numerator), MathLib.copy(this.denominator));
     };
 
     /**
@@ -65,11 +101,15 @@ var Rational = (function () {
     /**
     * Checks if the rational number is equal to an other number
     *
-    * @param {Rational} number The number to compare
+    * @param {Integer|Rational|number|Complex} n The number to compare
     * @return {boolean}
     */
-    Rational.prototype.isEqual = function (number) {
-        return MathLib.isEqual(MathLib.times(this.numerator, number.denominator), MathLib.times(this.denominator, number.numerator));
+    Rational.prototype.isEqual = function (n) {
+        if (n.type !== 'rational') {
+            return MathLib.isEqual.apply(null, MathLib.coerce(this, n));
+        } else {
+            return MathLib.isEqual(MathLib.times(this.numerator, n.denominator), MathLib.times(this.denominator, n.numerator));
+        }
     };
 
     /**
@@ -88,14 +128,10 @@ var Rational = (function () {
     * @return {Rational}
     */
     Rational.prototype.minus = function (subtrahend) {
-        var n = this.numerator, d = this.denominator;
-
-        if (subtrahend.type === 'rational') {
-            return new MathLib.Rational(MathLib.minus(MathLib.times(n, subtrahend.denominator), MathLib.times(d, subtrahend.numerator)), MathLib.times(d, subtrahend.denominator));
-        } else if (typeof subtrahend === 'number') {
-            return new MathLib.Rational(MathLib.minus(n, MathLib.times(subtrahend, d)), d);
+        if (subtrahend.type !== 'rational') {
+            return MathLib.minus.apply(null, MathLib.coerce(this, subtrahend));
         } else {
-            return subtrahend.minus(this).negative();
+            return new MathLib.Rational(MathLib.minus(MathLib.times(this.numerator, subtrahend.denominator), MathLib.times(this.denominator, subtrahend.numerator)), MathLib.times(this.denominator, subtrahend.denominator));
         }
     };
 
@@ -111,18 +147,14 @@ var Rational = (function () {
     /**
     * Adds rational numbers
     *
-    * @param {Rational|number} summand The number to be added
-    * @return {Rational}
+    * @param {Integer|Rational|number|Complex} summand The number to be added
+    * @return {Rational|number|Complex}
     */
     Rational.prototype.plus = function (summand) {
-        var n = this.numerator, d = this.denominator;
-
-        if (summand.type === 'rational') {
-            return new MathLib.Rational(MathLib.plus(MathLib.times(d, summand.numerator), MathLib.times(n, summand.denominator)), MathLib.times(d, summand.denominator));
-        } else if (typeof summand === 'number') {
-            return new MathLib.Rational(MathLib.plus(n, MathLib.times(summand, d)), d);
+        if (summand.type !== 'rational') {
+            return MathLib.plus.apply(null, MathLib.coerce(this, summand));
         } else {
-            return summand.plus(this);
+            return new MathLib.Rational(MathLib.plus(MathLib.times(this.denominator, summand.numerator), MathLib.times(this.numerator, summand.denominator)), MathLib.times(this.denominator, summand.denominator));
         }
     };
 

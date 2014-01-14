@@ -9,7 +9,6 @@
  * build date: 2013-12-29
  */
 
-
 var MathLib = require('./meta.js'),
 		Functn = require('./Functn.js');
 		
@@ -27,6 +26,7 @@ MathLib.Screen3D = require('./Screen3D.js');
 MathLib.Vector = require('./Vector.js');
 MathLib.Circle = require('./Circle.js');
 MathLib.Complex = require('./Complex.js');
+MathLib.Integer = require('./Integer.js');
 MathLib.Line = require('./Line.js');
 MathLib.Matrix = require('./Matrix.js');
 MathLib.Permutation = require('./Permutation.js');

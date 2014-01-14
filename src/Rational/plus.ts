@@ -1,22 +1,15 @@
 /**
  * Adds rational numbers
  *
- * @param {Rational|number} summand The number to be added  
- * @return {Rational}
+ * @param {Integer|Rational|number|Complex} summand The number to be added  
+ * @return {Rational|number|Complex}
  */
 plus(summand) {
-	var n = this.numerator,
-			d = this.denominator;
-
-	if (summand.type === 'rational') {
-		return new MathLib.Rational(MathLib.plus(MathLib.times(d, summand.numerator), MathLib.times(n, summand.denominator)),
-			MathLib.times(d, summand.denominator));
+	if (summand.type !== 'rational') {
+		return MathLib.plus.apply(null, MathLib.coerce(this, summand));
 	}
-	else if (typeof summand === 'number') {
-		return new MathLib.Rational(MathLib.plus(n, MathLib.times(summand, d)), d);
-	}
-	// For complex numbers
 	else {
-		return summand.plus(this);
+		return new MathLib.Rational(MathLib.plus(MathLib.times(this.denominator, summand.numerator), MathLib.times(this.numerator, summand.denominator)),
+			MathLib.times(this.denominator, summand.denominator));
 	}
 }

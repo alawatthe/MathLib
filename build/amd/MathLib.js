@@ -24,6 +24,7 @@ requirejs.config({
 		Vector: './Vector',
 		Circle: './Circle',
 		Complex: './Complex',
+		Integer: './Integer',
 		Line: './Line',
 		Matrix: './Matrix',
 		Permutation: './Permutation',
@@ -38,7 +39,7 @@ requirejs.config({
 })
 
 define(['meta', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG', 
-	'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Line', 'Matrix', 
+	'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Integer', 'Line', 'Matrix', 
 	'Permutation', 'Conic', 'Point', 'Polynomial', 'Rational', 'Set'], function (MathLib) {
 	return MathLib;
 })
