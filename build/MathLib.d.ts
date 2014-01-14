@@ -10,7 +10,6 @@
  */
 
 declare module MathLib {
-
     var version: string;
     var apery: number;
     var e: number;
@@ -32,8 +31,6 @@ declare module MathLib {
     * @param {string} The name of the event.
     * @param {function} The callback function.
     */
-
-declare module MathLib {
     var on: (type: any, callback: any) => void;
     /**
     * ### [MathLib.off()](http://mathlib.de/en/docs/off)
@@ -42,8 +39,6 @@ declare module MathLib {
     * @param {string} The name of the event.
     * @param {function} The callback function.
     */
-
-declare module MathLib {
     var off: (type: any, callback: any) => void;
     /**
     * ### MathLib.error()
@@ -51,8 +46,6 @@ declare module MathLib {
     *
     * @param {oject} An object describing the error further.
     */
-
-declare module MathLib {
     var error: (details: any) => void;
     /**
     * ### MathLib.warning()
@@ -60,8 +53,6 @@ declare module MathLib {
     *
     * @param {object} An object describing the warning further.
     */
-
-declare module MathLib {
     var warning: (details: any) => void;
 
 
@@ -71,8 +62,6 @@ declare module MathLib {
     * @class
     * @this {Expression}
     */
-
-declare module MathLib {
     class Expression {
         public type: string;
         public arguments: string[];
@@ -89,8 +78,6 @@ declare module MathLib {
         * @param {Expression} expr The expression to compare
         * @return {number}
         */
-
-declare module MathLib {
         public compare(expr: any): any;
         /**
         * Constructs a constant expression.
@@ -98,16 +85,12 @@ declare module MathLib {
         * @param {String} n The constant to generate an expression from
         * @return {Expression}
         */
-
-declare module MathLib {
         static constant(n: any): Expression;
         /**
         * Evaluates the symbolic expression
         *
         * @return {any}
         */
-
-declare module MathLib {
         public evaluate(): any;
         /**
         * Maps the expression tree over to an other expression tree.
@@ -115,8 +98,6 @@ declare module MathLib {
         * @param {function} f The function to apply to all the nodes in the tree.
         * @return {Expression}
         */
-
-declare module MathLib {
         public map(f: any): Expression;
         /**
         * Constructs a number expression.
@@ -124,8 +105,6 @@ declare module MathLib {
         * @param {String} n The number to generate an expression from
         * @return {Expression}
         */
-
-declare module MathLib {
         static number(n: String): Expression;
         /**
         * Heavily based on Ariya Hidayat's [tapdigit library](https://code.google.com/p/tapdigit/)
@@ -137,8 +116,6 @@ declare module MathLib {
         * @param {String} str The string to parse
         * @return {Expression}
         */
-
-declare module MathLib {
         static parse: (str: any) => Expression;
         /**
         * Parses a content MathML string and returns an Expression.
@@ -146,40 +123,30 @@ declare module MathLib {
         * @param {string} MathMLString The string to be parsed as MathML
         * @return {Expression}
         */
-
-declare module MathLib {
         static parseContentMathML(MathMLString: string): Expression;
         /**
         * Convert the Expression to MathML.
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toContentMathML(): string;
         /**
         * Convert the expression to a LaTeX string
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toLaTeX(): string;
         /**
         * Convert the Expression to MathML.
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toMathML(): string;
         /**
         * A custom toString function
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toString(): string;
         /**
         * Constructs a variable expression.
@@ -187,16 +154,12 @@ declare module MathLib {
         * @param {String} n The variable to generate an expression from
         * @return {Expression}
         */
-
-declare module MathLib {
         static variable(n: any): Expression;
         /**
         * Stores all the values of variables in symbolic expressions.
         *
         * @return {Expression}
         */
-
-declare module MathLib {
         static variables: {};
     }
 
@@ -210,8 +173,6 @@ declare module MathLib {
     * @class
     * @this {Functn}
     */
-
-declare module MathLib {
     var Functn: (f: any, options: any) => (x: any) => any;
     var compare: (a: any, b: any) => any;
     var type: (x: any) => any;
@@ -222,8 +183,6 @@ declare module MathLib {
     *
     * @return {boolean}
     */
-
-declare module MathLib {
     var isMathMLSupported: () => boolean;
     /**
     * ### MathLib.writeMathML()
@@ -232,8 +191,6 @@ declare module MathLib {
     * @param {string} id The id of the element in which the MathML should be inserted.
     * @param {string} math The MathML to be inserted.
     */
-
-declare module MathLib {
     var writeMathML: (id: string, math: string) => void;
     /**
     * ### MathLib.loadMathJax()
@@ -241,8 +198,6 @@ declare module MathLib {
     *
     * @param {string} config Optional config options
     */
-
-declare module MathLib {
     var loadMathJax: (config: string) => void;
     var abs: any;
     var arccos: any;
@@ -339,8 +294,6 @@ declare module MathLib {
     * @class
     * @this {Screen}
     */
-
-declare module MathLib {
     class Screen {
         public type: string;
         public container: any;
@@ -363,8 +316,6 @@ declare module MathLib {
         *
         * @param {event} evt The event object
         */
-
-declare module MathLib {
         public oncontextmenu(evt: any): void;
     }
 
@@ -375,8 +326,6 @@ declare module MathLib {
     * @class Layer
     * @this {Layer}
     */
-
-declare module MathLib {
     class Layer {
         public ctx: any;
         public element: any;
@@ -399,8 +348,6 @@ declare module MathLib {
         *
         * @return {Layer} Returns the current Layer
         */
-
-declare module MathLib {
         public clear(): Layer;
     }
 
@@ -408,8 +355,6 @@ declare module MathLib {
     /**
     * The Canvas renderer for 2D plotting
     */
-
-declare module MathLib {
     var Canvas: {
         applyTransformation: () => void;
         circle: (circle: Circle, options?: {}, redraw?: boolean) => any;
@@ -426,8 +371,6 @@ declare module MathLib {
     /**
     * The SVG renderer for 2D plotting
     */
-
-declare module MathLib {
     var SVG: {
         applyTransformation: () => void;
         circle: (circle: any, options?: {}, redraw?: boolean) => any;
@@ -448,8 +391,6 @@ declare module MathLib {
     * @augments Screen
     * @this {Screen2D}
     */
-
-declare module MathLib {
     class Screen2D extends MathLib.Screen {
         public type: string;
         public applyTransformation: any;
@@ -481,16 +422,12 @@ declare module MathLib {
         *
         * @return {Screen2D}
         */
-
-declare module MathLib {
         public drawAxes(): Screen2D;
         /**
         * Draws the grid.
         *
         * @return {Screen2D}
         */
-
-declare module MathLib {
         public drawGrid(): Screen2D;
         /**
         * Creates a point based on the coordinates of an event.
@@ -498,8 +435,6 @@ declare module MathLib {
         * @param {event} evt The event object
         * @return {Point}
         */
-
-declare module MathLib {
         public getEventPoint(evt: any): MathLib.Point;
         /**
         * Calculates the both endpoints for the line
@@ -508,40 +443,30 @@ declare module MathLib {
         * @param {Line|array} l The Line to calculate the end points to
         * @return {array} The array has the format [[x1, y1], [x2, y2]]
         */
-
-declare module MathLib {
         public getLineEndPoints(l: any): any;
         /**
         * Handles the mousedown event
         *
         * @param {event} evt The event object
         */
-
-declare module MathLib {
         public onmousedown(evt: any): void;
         /**
         * Handles the mousemove event
         *
         * @param {event} evt The event object
         */
-
-declare module MathLib {
         public onmousemove(evt: any): void;
         /**
         * Handles the mouseup event
         *
         * @param {event} evt The event object
         */
-
-declare module MathLib {
         public onmouseup(evt: any): void;
         /**
         * Handles the mousewheel event
         *
         * @param {event} evt The event object
         */
-
-declare module MathLib {
         public onmousewheel(evt: any): void;
         /**
         * Adjust the rendering if the screen is resized
@@ -550,8 +475,6 @@ declare module MathLib {
         * @param {number} height The new height
         * @return {Screen2D}
         */
-
-declare module MathLib {
         public resize(width: number, height: number): Screen2D;
     }
 
@@ -563,8 +486,6 @@ declare module MathLib {
     * @augments Screen
     * @this {Screen3D}
     */
-
-declare module MathLib {
     class Screen3D extends MathLib.Screen {
         public type: string;
         public grid: any;
@@ -579,8 +500,6 @@ declare module MathLib {
         *
         * @return {Screen3D}
         */
-
-declare module MathLib {
         public drawGrid(): Screen3D;
         /**
         * Creates a parametric plot
@@ -589,8 +508,6 @@ declare module MathLib {
         * @param {object} options Optional drawing options
         * @return {Screen3D}
         */
-
-declare module MathLib {
         public parametricPlot3D(f: any, options: any): Screen3D;
         /**
         * Creates a plot of a three dimensional function
@@ -599,8 +516,6 @@ declare module MathLib {
         * @param {object} options Optional drawing options
         * @return {Screen3D}
         */
-
-declare module MathLib {
         public plot3D(f: any, options: any): Screen3D;
         /**
         * Adjust the rendering if the screen is resized
@@ -609,8 +524,6 @@ declare module MathLib {
         * @param {number} height The new height
         * @return {Screen3D}
         */
-
-declare module MathLib {
         public resize(width: number, height: number): Screen3D;
         /**
         * Creates a surface plot.
@@ -619,8 +532,6 @@ declare module MathLib {
         * @param {object} options Optional drawing options
         * @return {Screen3D}
         */
-
-declare module MathLib {
         public surfacePlot3D(f: any, options: any): Screen3D;
     }
 
@@ -640,8 +551,6 @@ declare module MathLib {
     * @class
     * @this {Vector}
     */
-
-declare module MathLib {
     class Vector {
         public type: string;
         public length: number;
@@ -652,8 +561,6 @@ declare module MathLib {
         * @param {array} vectors An array containing the vectors.
         * @return {boolean}
         */
-
-declare module MathLib {
         static areLinearIndependent: (vectors: Vector[]) => boolean;
         /**
         * Compares two vectors.
@@ -661,8 +568,6 @@ declare module MathLib {
         * @param {Vector} v The vector to compare
         * @return {number}
         */
-
-declare module MathLib {
         public compare(v: Vector): number;
         /**
         * Works like Array.prototype.every.
@@ -670,16 +575,12 @@ declare module MathLib {
         * @param {function} f The function to be applied to all the values
         * @return {boolean}
         */
-
-declare module MathLib {
         public every(f: (value: any, index: number, vector: Vector) => boolean): boolean;
         /**
         * Works like Array.prototype.forEach.
         *
         * @param {function} f The function to be applied to all the values
         */
-
-declare module MathLib {
         public forEach(f: (value: any, index: number, vector: Vector) => void): void;
         /**
         * Determines if two vectors are equal
@@ -687,16 +588,12 @@ declare module MathLib {
         * @param {Vector} v The vector to compare
         * @return {boolean}
         */
-
-declare module MathLib {
         public isEqual(v: Vector): boolean;
         /**
         * Determines if the vector is the zero vector.
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isZero(): boolean;
         /**
         * Works like Array.prototype.map.
@@ -704,8 +601,6 @@ declare module MathLib {
         * @param {function} f The function to be applied to all the values
         * @return {Vector}
         */
-
-declare module MathLib {
         public map(f: (value: any, index: number, vector: Vector) => any): any;
         /**
         * Calculates the difference of two vectors.
@@ -713,16 +608,12 @@ declare module MathLib {
         * @param {Vector} v The vector to be subtracted.
         * @return {Vector}
         */
-
-declare module MathLib {
         public minus(v: Vector): Vector;
         /**
         * Returns the negative vector.
         *
         * @return {Vector}
         */
-
-declare module MathLib {
         public negative(): Vector;
         /**
         * Calcultes the norm of the vector.
@@ -730,8 +621,6 @@ declare module MathLib {
         * @param {number} p The p for the p-norm
         * @return {number}
         */
-
-declare module MathLib {
         public norm(p?: number): number;
         /**
         * Calculates the outer product of two vectors.
@@ -739,8 +628,6 @@ declare module MathLib {
         * @param {Vector} v The second vector to calculate the outer product with.
         * @return {Matrix}
         */
-
-declare module MathLib {
         public outerProduct(v: Vector): MathLib.Matrix;
         /**
         * Calculates the sum of two vectors.
@@ -748,16 +635,12 @@ declare module MathLib {
         * @param {Vector} v The vector to add to the current vector.
         * @return {Vector}
         */
-
-declare module MathLib {
         public plus(v: Vector): Vector;
         /**
         * Works like Array.prototype.reduce.
         *
         * @return {any}
         */
-
-declare module MathLib {
         public reduce(...args: any[]): any;
         /**
         * Calculates the scalar product of two vectors.
@@ -765,16 +648,12 @@ declare module MathLib {
         * @param {Vector} v The second vector to calculate the scalar product with.
         * @return {number|Complex}
         */
-
-declare module MathLib {
         public scalarProduct(v: Vector): any;
         /**
         * Works like the Array.prototype.slice function
         *
         * @return {array}
         */
-
-declare module MathLib {
         public slice(...args: any[]): any[];
         /**
         * Multiplies the vector by a (complex) number or a matrix.
@@ -785,48 +664,36 @@ declare module MathLib {
         * @param {number|Complex|Matrix} n The object to multiply to the vector
         * @return {Vector}
         */
-
-declare module MathLib {
         public times(n: any): any;
         /**
         * Converts the vector to an array.
         *
         * @return {array}
         */
-
-declare module MathLib {
         public toArray(): any[];
         /**
         * Returns the content MathML representation of the vector.
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toContentMathML(): string;
         /**
         * Returns a LaTeX representation of the vector.
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toLaTeX(): string;
         /**
         * Returns the (presentation) MathML representation of the vector.
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toMathML(): string;
         /**
         * Returns a string representation of the vector.
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toString(): string;
         /**
         * Calculates the vector product of two vectors.
@@ -834,8 +701,6 @@ declare module MathLib {
         * @param {Vector} v The second vector to calculate the vector product with.
         * @return {Vector}
         */
-
-declare module MathLib {
         public vectorProduct(v: Vector): Vector;
         /**
         * Returns a zero vector of given size.
@@ -843,8 +708,6 @@ declare module MathLib {
         * @param {number} n The number of entries in the vector.
         * @return {Vector}
         */
-
-declare module MathLib {
         static zero: (n: number) => Vector;
     }
 
@@ -866,8 +729,6 @@ declare module MathLib {
     * @class
     * @this {Circle}
     */
-
-declare module MathLib {
     class Circle {
         public type: string;
         public center: MathLib.Point;
@@ -878,16 +739,12 @@ declare module MathLib {
         *
         * @return {number} The area of the circle
         */
-
-declare module MathLib {
         public area(): number;
         /**
         * Calculates the circumference of the circle.
         *
         * @return {number} The circumference of the circle
         */
-
-declare module MathLib {
         public circumference(): number;
         /**
         * Compares two circles
@@ -895,8 +752,6 @@ declare module MathLib {
         * @param {Circle} circle The circle to compare
         * @return {number}
         */
-
-declare module MathLib {
         public compare(circle: Circle): number;
         /**
         * Draw the circle onto the screen.
@@ -905,8 +760,6 @@ declare module MathLib {
         * @param {object} options Optional drawing options
         * @return {Circle} Returns the circle for chaining
         */
-
-declare module MathLib {
         public draw(screen: any, options: any): Circle;
         /**
         * Checks if two circles are equal
@@ -914,8 +767,6 @@ declare module MathLib {
         * @param {Circle} circle The circle to compare
         * @return {boolean}
         */
-
-declare module MathLib {
         public isEqual(circle: Circle): boolean;
         /**
         * Determine if a point is in, on or outside a circle.
@@ -923,32 +774,24 @@ declare module MathLib {
         * @param {Point} point The Point to determine the position of
         * @return {string}
         */
-
-declare module MathLib {
         public positionOf(point: MathLib.Point): string;
         /**
         * Reflect the circle at a point or line
         *
         * @return {Circle}
         */
-
-declare module MathLib {
         public reflectAt(a: any): Circle;
         /**
         * Returns a LaTeX expression of the circle
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toLaTeX(): string;
         /**
         * Converts the circle to the corresponding matrix.
         *
         * @return {Matrix}
         */
-
-declare module MathLib {
         public toMatrix(): MathLib.Matrix;
     }
 
@@ -970,124 +813,118 @@ declare module MathLib {
     * @class
     * @this {Complex}
     */
-
-declare module MathLib {
     class Complex {
         public type: string;
         public re: any;
         public im: any;
         constructor(re: any, im?: number);
         /**
+        * A content MathML string representation
+        *
+        * @return {string}
+        */
+        static toContentMathML(): string;
+        /**
+        * A LaTeX string representation
+        *
+        * @return {string}
+        */
+        static toLaTeX(): string;
+        /**
+        * A presentation MathML string representation
+        *
+        * @return {string}
+        */
+        static toMathML(): string;
+        /**
+        * Custom toString function
+        *
+        * @return {string}
+        */
+        static toString(): string;
+        /**
         * Returns the absolute value of the number.
         *
         * @return {number}
         */
-
-declare module MathLib {
         public abs(): number;
         /**
         * Returns the inverse cosine of the number.
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public arccos(): Complex;
         /**
         * Returns the inverse cotangent of the number.
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public arccot(): Complex;
         /**
         * Returns the inverse cosecant of the number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public arccsc(): Complex;
         /**
         * Returns the inverse secant of the number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public arcsec(): Complex;
         /**
         * Returns the inverse sine of the number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public arcsin(): Complex;
         /**
         * Returns the inverse tangent of the number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public arctan(): Complex;
         /**
         * Returns the argument (= the angle) of the complex number
         *
         * @return {number}
         */
-
-declare module MathLib {
         public arg(): number;
         /**
         * Returns the inverse hyperbolic tangent of the number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public artanh(): Complex;
         /**
         * Coerces the complex number to some other data type
         *
         * @return {Rational|number|Complex}
         */
-
-declare module MathLib {
         public coerceTo(type: any): any;
         /**
         * Compares two complex numbers
         *
         * @return {number}
         */
-
-declare module MathLib {
         public compare(x: any): number;
         /**
         * Calculates the conjugate of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public conjugate(): Complex;
         /**
         * Copies the complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public copy(): Complex;
         /**
         * Calculates the cosine of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public cos(): Complex;
         public cosh(): Complex;
         /**
@@ -1095,32 +932,24 @@ declare module MathLib {
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public cot(): Complex;
         /**
         * Calculates the hyperbolic cotangent of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public coth(): Complex;
         /**
         * Calculates the cosecant of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public csc(): Complex;
         /**
         * Calculates the hyperbolic cosecant of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public csch(): Complex;
         /**
         * Divides a complex number by an other
@@ -1128,24 +957,18 @@ declare module MathLib {
         * @param {number|Complex} divisor The divisor
         * @return {Complex}
         */
-
-declare module MathLib {
         public divide(divisor: any): Complex;
         /**
         * Evaluates the exponential function with a complex argument
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public exp(): Complex;
         /**
         * Calculates the inverse of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public inverse(): Complex;
         /**
         * Determines if the complex number is equal to another number.
@@ -1153,24 +976,18 @@ declare module MathLib {
         * @param {Integer|Rational|number|Complex} n The number to be compared
         * @return {boolean}
         */
-
-declare module MathLib {
         public isEqual(n: any): boolean;
         /**
         * Determines if the complex number is finite.
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isFinite(): boolean;
         /**
         * Determines if the complex number is equal to 0.
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isZero(): boolean;
         public ln(): Complex;
         /**
@@ -1179,16 +996,12 @@ declare module MathLib {
         * @param {number|Complex} subtrahend The subtrahend
         * @return {Complex}
         */
-
-declare module MathLib {
         public minus(subtrahend: any): Complex;
         /**
         * Calculates the negative of the complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public negative(): Complex;
         /**
         * Add complex numbers
@@ -1196,16 +1009,12 @@ declare module MathLib {
         * @param {Integer|Rational|number|Complex} summand The number to be added
         * @return {Complex}
         */
-
-declare module MathLib {
         public plus(summand: any): Complex;
         /**
         * Construct a complex number out of the absolute value and the argument
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         static polar: (abs: any, arg: any) => Complex;
         /**
         * Calculates the complex number raised to some power
@@ -1213,72 +1022,54 @@ declare module MathLib {
         * @param {numeric} c The power to which the complex number should be raised
         * @return {Complex}
         */
-
-declare module MathLib {
         public pow(c: any): Complex;
         /**
         * Calculates the secant of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public sec(): Complex;
         /**
         * Calculates the hyperbolic secant of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public sech(): Complex;
         /**
         * Calculates the signum of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public sign(): Complex;
         /**
         * Calculates the sine of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public sin(): Complex;
         /**
         * Calculates the hyperbolic sine of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public sinh(): Complex;
         /**
         * Takes the square root of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public sqrt(): Complex;
         /**
         * Calculates the tangent of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public tan(): Complex;
         /**
         * Calculates the hyperbolic tangent of a complex number
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public tanh(): Complex;
         /**
         * Multiplies complex numbers
@@ -1286,48 +1077,36 @@ declare module MathLib {
         * @param {Complex|number|Rational} factor The number to be multiplied
         * @return {Complex}
         */
-
-declare module MathLib {
         public times(factor: any): Complex;
         /**
         * Returns the content MathML representation of the number
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toContentMathML(): string;
         /**
         * Returns the LaTeX representation of the complex number
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toLaTeX(): string;
         /**
         * Returns the (presentation) MathML representation of the number
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toMathML(): string;
         /**
         * Interprets the complex number as point in the two dimensional plane
         *
         * @return {Point}
         */
-
-declare module MathLib {
         public toPoint(): MathLib.Point;
         /**
         * Custom toString function
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toString(): string;
     }
 
@@ -1345,8 +1124,6 @@ declare module MathLib {
     * @class
     * @this {Integer}
     */
-
-declare module MathLib {
     class Integer {
         public type: string;
         public data: number[];
@@ -1357,72 +1134,54 @@ declare module MathLib {
         *
         * @return {string}
         */
-
-declare module MathLib {
         static toContentMathML(): string;
         /**
         * A LaTeX string representation
         *
         * @return {string}
         */
-
-declare module MathLib {
         static toLaTeX(): string;
         /**
         * A presentation MathML string representation
         *
         * @return {string}
         */
-
-declare module MathLib {
         static toMathML(): string;
         /**
         * Custom toString function
         *
         * @return {string}
         */
-
-declare module MathLib {
         static toString(): string;
         /**
         * Calculates the absolute value of the integer
         *
         * @return {Integer}
         */
-
-declare module MathLib {
         public abs(): Integer;
         /**
         * Coerces the integer to some other data type
         *
         * @return {Integer|Rational|number|Complex}
         */
-
-declare module MathLib {
         public coerceTo(type: any): any;
         /**
         * Compares the integer
         *
         * @return {Integer}
         */
-
-declare module MathLib {
         public compare(n: Integer): number;
         /**
         * Calculates the complex conjugate of the integer
         *
         * @return {Integer}
         */
-
-declare module MathLib {
         public conjugate(): Integer;
         /**
         * Copy the integer
         *
         * @return {Integer}
         */
-
-declare module MathLib {
         public copy(): Integer;
         /**
         * Checks if the current integer is equal to some other number
@@ -1430,104 +1189,78 @@ declare module MathLib {
         * @param {any} n The number to check
         * @return {boolean}
         */
-
-declare module MathLib {
         public isEqual(n: any): boolean;
         /**
         * All integers are finite
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isFinite(): boolean;
         /**
         * No Integer is NaN
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isNaN(): boolean;
         /**
         * Checks if the integer is a unit in the ring of integers or not
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isUnit(): boolean;
         /**
         * Checks if the integer is zero or not
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isZero(): boolean;
         /**
         * Adds a number to the current integer
         *
         * @return {Integer}
         */
-
-declare module MathLib {
         public minus(n: any): Integer;
         /**
         * Calculates the negative integer
         *
         * @return {Integer}
         */
-
-declare module MathLib {
         public negative(): Integer;
         /**
         * Adds a number to the current integer
         *
         * @return {Integer}
         */
-
-declare module MathLib {
         public plus(n: any): Integer;
         /**
         * Multiplies a number to the current integer
         *
         * @return {Integer}
         */
-
-declare module MathLib {
         public times(n: any): Integer;
         /**
         * A content MathML string representation
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toContentMathML(): string;
         /**
         * A LaTeX string representation
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toLaTeX(): string;
         /**
         * A presentation MathML string representation
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toMathML(): string;
         /**
         * Custom toString function
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toString(): string;
     }
 
@@ -1540,8 +1273,6 @@ declare module MathLib {
     * @augments Vector
     * @this {Line}
     */
-
-declare module MathLib {
     class Line extends MathLib.Vector {
         public type: string;
         public dimension: number;
@@ -1553,8 +1284,6 @@ declare module MathLib {
         * @param {object} options Drawing options
         * @return {boolean}
         */
-
-declare module MathLib {
         public draw(screen: any, options: any): Line;
         /**
         * Determines if two lines are equal.
@@ -1562,16 +1291,12 @@ declare module MathLib {
         * @param {Line} l The line to compare with
         * @return {boolean}
         */
-
-declare module MathLib {
         public isEqual(l: Line): boolean;
         /**
         * Determines if the line is finite
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isFinite(): boolean;
         /**
         * Determines if two lines are parallel.
@@ -1579,8 +1304,6 @@ declare module MathLib {
         * @param {Line} l The other line
         * @return {boolean}
         */
-
-declare module MathLib {
         public isParallelTo(l: Line): boolean;
         /**
         * Calculates the meeting point of two lines
@@ -1588,16 +1311,12 @@ declare module MathLib {
         * @param {Line} l The line to intersect the current line with
         * @return {Point}
         */
-
-declare module MathLib {
         public meet(l: Line): MathLib.Point;
         /**
         * Normalizes the line.
         *
         * @return {Line}
         */
-
-declare module MathLib {
         public normalize(): Line;
         /**
         * Determines an parallel line through a given point.
@@ -1605,8 +1324,6 @@ declare module MathLib {
         * @param {Point} p The Point through which the line should go through
         * @return {Line}
         */
-
-declare module MathLib {
         public parallelThrough(p: MathLib.Point): Line;
     }
 
@@ -1628,8 +1345,6 @@ declare module MathLib {
     * @class
     * @this {Matrix}
     */
-
-declare module MathLib {
     class Matrix {
         public type: string;
         public length: number;
@@ -1643,24 +1358,18 @@ declare module MathLib {
         *
         * @return {Matrix}
         */
-
-declare module MathLib {
         public LU(): any;
         /**
         * Calculates the adjoint matrix
         *
         * @return {Matrix}
         */
-
-declare module MathLib {
         public adjoint(): Matrix;
         /**
         * Calculates the adjugate matrix
         *
         * @return {Matrix}
         */
-
-declare module MathLib {
         public adjugate(): Matrix;
         /**
         * The cholesky decomposition of a matrix
@@ -1670,8 +1379,6 @@ declare module MathLib {
         *
         * @return {Matrix}
         */
-
-declare module MathLib {
         public cholesky(): Matrix;
         /**
         * Compares the matrix to an other matrix.
@@ -1679,16 +1386,12 @@ declare module MathLib {
         * @param {Matrix} m The matrix to compare.
         * @return {number}
         */
-
-declare module MathLib {
         public compare(m: Matrix): number;
         /**
         * Copies the matrix
         *
         * @return {Matrix}
         */
-
-declare module MathLib {
         public copy(): Matrix;
         /**
         * Calculates the determinant of the matrix via the LU decomposition.
@@ -1696,24 +1399,18 @@ declare module MathLib {
         *
         * @return {number|Complex}
         */
-
-declare module MathLib {
         public determinant(): any;
         /**
         * Returns the entries on the diagonal in an array
         *
         * @return {array}
         */
-
-declare module MathLib {
         public diag(): any[];
         /**
         * Multiplies the matrix by the inverse of a number or a matrix
         *
         * @return {Matrix|number} n The number or Matrix to be inverted and multiplied
         */
-
-declare module MathLib {
         public divide(n: any): Matrix;
         /**
         * This function works like the Array.prototype.every function.
@@ -1725,8 +1422,6 @@ declare module MathLib {
         * @param {function} f The function which is called on every argument
         * @return {boolean}
         */
-
-declare module MathLib {
         public every(f: any): boolean;
         /**
         * This function works like the Array.prototype.forEach function.
@@ -1737,24 +1432,18 @@ declare module MathLib {
         *
         * @param {function} f The function which is called on every argument
         */
-
-declare module MathLib {
         public forEach(f: any): void;
         /**
         * Returns the Gershgorin circles of the matrix.
         *
         * @return {array} Returns an array of circles
         */
-
-declare module MathLib {
         public gershgorin(): any[];
         /**
         * QR decomposition with the givens method.
         *
         * @return {[Matrix, Matrix]}
         */
-
-declare module MathLib {
         public givens(): Matrix[];
         /**
         * This function returns a givens matrix
@@ -1765,8 +1454,6 @@ declare module MathLib {
         * @param {number} phi The angle (in radians).
         * @return {Matrix}
         */
-
-declare module MathLib {
         static givensMatrix: (n: any, i: any, k: any, phi: any) => Matrix;
         /**
         * Returns the identity matrix.
@@ -1774,16 +1461,12 @@ declare module MathLib {
         * @param {number} n The number of rows and columns.
         * @return {Matrix}
         */
-
-declare module MathLib {
         static identity: (n: number) => Matrix;
         /**
         * Calculates the inverse matrix.
         *
         * @return {Matrix}
         */
-
-declare module MathLib {
         public inverse(): any;
         /**
         * Determines if the matrix is a band matrix.
@@ -1792,16 +1475,12 @@ declare module MathLib {
         * @param {number} u The wished upper bandwidth
         * @return {boolean}
         */
-
-declare module MathLib {
         public isBandMatrix(l: number, u: number): boolean;
         /**
         * Determines if the matrix is a diagonal matrix.
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isDiag(): boolean;
         /**
         * Determines if the matrix is equal to an other matrix.
@@ -1809,72 +1488,54 @@ declare module MathLib {
         * @param {Matrix} matrix The matrix to compare with
         * @return {boolean}
         */
-
-declare module MathLib {
         public isEqual(matrix: any): boolean;
         /**
         * Determines if the matrix is a identity matrix.
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isIdentity(): boolean;
         /**
         * Determines if the matrix is invertible.
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isInvertible(): boolean;
         /**
         * Determines if the matrix is a lower triangular matrix.
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isLower(): boolean;
         /**
         * Determines if the matrix is negative definite
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isNegDefinite(): boolean;
         /**
         * Determines if the matrix is a orthogonal.
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isOrthogonal(): boolean;
         /**
         * Determines if the matrix is a permutation matrix
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isPermutation(): boolean;
         /**
         * Determines if the matrix is positive definite
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isPosDefinite(): boolean;
         /**
         * Determines if the matrix has only real entries
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isReal(): boolean;
         /**
         * Determines if the matrix is a scalar matrix
@@ -1882,32 +1543,24 @@ declare module MathLib {
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isScalar(): boolean;
         /**
         * Determines if the matrix is a square matrix
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isSquare(): boolean;
         /**
         * Determines if the matrix is symmetric
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isSymmetric(): boolean;
         /**
         * Determines if the matrix is a upper triangular matrix
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isUpper(): boolean;
         /**
         * Determines if the matrix is a vector
@@ -1915,8 +1568,6 @@ declare module MathLib {
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isVector(): boolean;
         /**
         * Determines if the matrix the zero matrix
@@ -1924,8 +1575,6 @@ declare module MathLib {
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isZero(): boolean;
         /**
         * This function works like the Array.prototype.map function.
@@ -1937,8 +1586,6 @@ declare module MathLib {
         * @param {function} f The function which is called on every argument
         * @return {Matrix}
         */
-
-declare module MathLib {
         public map(f: any): Matrix;
         /**
         * Calculates a minor
@@ -1947,8 +1594,6 @@ declare module MathLib {
         * @param {number} c The column to be removed.
         * @return {Matrix}
         */
-
-declare module MathLib {
         public minor(r: number, c: number): any;
         /**
         * Calculates the difference of two matrices
@@ -1956,16 +1601,12 @@ declare module MathLib {
         * @param {Matrix} subtrahend The matrix to be subtracted.
         * @return {Matrix}
         */
-
-declare module MathLib {
         public minus(subtrahend: any): Matrix;
         /**
         * Returns the negative matrix
         *
         * @return {Matrix}
         */
-
-declare module MathLib {
         public negative(): Matrix;
         /**
         * Returns a matrix consisting completely of a given number
@@ -1975,8 +1616,6 @@ declare module MathLib {
         * @param {number} c The number of columns.
         * @return {Matrix}
         */
-
-declare module MathLib {
         static numbers: (n: any, r: number, c: number) => Matrix;
         /**
         * Returns a matrix consisting completely of ones.
@@ -1985,8 +1624,6 @@ declare module MathLib {
         * @param {number} c The number of columns.
         * @return {Matrix}
         */
-
-declare module MathLib {
         static one: (r: number, c: number) => Matrix;
         /**
         * This function adds a matrix to the current matrix
@@ -1995,8 +1632,6 @@ declare module MathLib {
         * @param {Matrix} summand The matrix to be added.
         * @return {Matrix}
         */
-
-declare module MathLib {
         public plus(summand: any): Matrix;
         /**
         * Returns a matrix consisting completely of random numbers between 0 and 1
@@ -2005,24 +1640,18 @@ declare module MathLib {
         * @param {number} c The number of columns.
         * @return {Matrix}
         */
-
-declare module MathLib {
         static random: (r: number, c: number) => Matrix;
         /**
         * Determines the rank of the matrix
         *
         * @return {number}
         */
-
-declare module MathLib {
         public rank(): number;
         /**
         * This function works like the Array.prototype.reduce function.
         *
         * @return {any}
         */
-
-declare module MathLib {
         public reduce(...args: any[]): any;
         /**
         * This function removes the specified rows and/or columns for the matrix.
@@ -2031,24 +1660,18 @@ declare module MathLib {
         * @param {number|array} col The column(s) to be removed.
         * @return {Matrix}
         */
-
-declare module MathLib {
         public remove(row: any, col: any): Matrix;
         /**
         * Calculate the reduced row echelon form (rref) of a matrix.
         *
         * @return {Matrix}
         */
-
-declare module MathLib {
         public rref(): Matrix;
         /**
         * This function works like the Array.prototype.slice function.
         *
         * @return {array}
         */
-
-declare module MathLib {
         public slice(...args: any[]): any;
         /**
         * Solves the system of linear equations Ax = b
@@ -2057,8 +1680,6 @@ declare module MathLib {
         * @param {Vector} b The b in Ax = b
         * @return {Vector}
         */
-
-declare module MathLib {
         public solve(b: any): any;
         /**
         * This function works like the Array.prototype.some function.
@@ -2070,8 +1691,6 @@ declare module MathLib {
         * @param {function} f The function which is called on every argument
         * @return {boolean}
         */
-
-declare module MathLib {
         public some(f: any): boolean;
         /**
         * Multiplies the current matrix with a number, a matrix, a point or a vector.
@@ -2079,72 +1698,54 @@ declare module MathLib {
         * @param {number|Matrix|Point|Rational|Vector} a The object to multiply to the current matrix
         * @return {Matrix|Point|Vector}
         */
-
-declare module MathLib {
         public times(a: any): any;
         /**
         * Converts the matrix to a two-dimensional array
         *
         * @return {array}
         */
-
-declare module MathLib {
         public toArray(): any;
         /**
         * Converts the columns of the matrix to vectors
         *
         * @return {array}
         */
-
-declare module MathLib {
         public toColVectors(): string;
         /**
         * converting the matrix to content MathML
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toContentMathML(): string;
         /**
         * Converting the matrix to LaTeX
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toLaTeX(): string;
         /**
         * converting the matrix to (presentation) MathML
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toMathML(): string;
         /**
         * Converts the rows of the matrix to vectors
         *
         * @return {array}
         */
-
-declare module MathLib {
         public toRowVectors(): string;
         /**
         * Creating a custom .toString() function
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toString(): string;
         /**
         * Calculating the trace of the matrix
         *
         * @return {number|Complex}
         */
-
-declare module MathLib {
         public trace(): any;
         /**
         * Calculating the transpose of the matrix
@@ -2152,8 +1753,6 @@ declare module MathLib {
         *
         * @return {Matrix}
         */
-
-declare module MathLib {
         public transpose(): Matrix;
         /**
         * Returns a matrix consisting completely of zeros.
@@ -2162,8 +1761,6 @@ declare module MathLib {
         * @param {number} c The number of columns.
         * @return {Matrix}
         */
-
-declare module MathLib {
         static zero: (r: number, c: number) => Matrix;
     }
 
@@ -2174,8 +1771,6 @@ declare module MathLib {
     * @class
     * @this {Permutation}
     */
-
-declare module MathLib {
     class Permutation {
         public type: string;
         public length: number;
@@ -2187,8 +1782,6 @@ declare module MathLib {
         * @param {number|array|Matrix|Point|Vector} n The object to apply the permutation to
         * @return {number|array|Matrix|Point|Vector}
         */
-
-declare module MathLib {
         public applyTo(n: any): any;
         /**
         * Compares two permutations.
@@ -2196,8 +1789,6 @@ declare module MathLib {
         * @param {Permutation} p The permutation to compare
         * @return {number}
         */
-
-declare module MathLib {
         public compare(p: Permutation): number;
         /**
         * Converts a cycle representation to a list representation
@@ -2205,24 +1796,18 @@ declare module MathLib {
         * @param {array} cycle The cycle to be converted
         * @return {array}
         */
-
-declare module MathLib {
         static cycleToList(cycle: any): number[];
         /**
         * The id permutation
         *
         * @return {Permutation}
         */
-
-declare module MathLib {
         static id: Permutation;
         /**
         * Calculates the inverse of the permutation
         *
         * @return {Permutation}
         */
-
-declare module MathLib {
         public inverse(): Permutation;
         /**
         * Converts a list representation to a cycle representation
@@ -2230,24 +1815,18 @@ declare module MathLib {
         * @param {array} list The list to be converted
         * @return {array}
         */
-
-declare module MathLib {
         static listToCycle(list: number[]): any;
         /**
         * Works like Array.prototype.map.
         *
         * @return {Permutation}
         */
-
-declare module MathLib {
         public map(...args: any[]): Permutation;
         /**
         * Calculates the signum of the permutation
         *
         * @return {number}
         */
-
-declare module MathLib {
         public sgn(): number;
         /**
         * Multiplies two permutations
@@ -2255,8 +1834,6 @@ declare module MathLib {
         * @param {Permutation} p The permutation to multiply
         * @return {Permutation}
         */
-
-declare module MathLib {
         public times(p: Permutation): Permutation;
         /**
         * Converts the permuatation to a matrix.
@@ -2264,16 +1841,12 @@ declare module MathLib {
         * @param {number} n The size of the matrix
         * @return {Matrix}
         */
-
-declare module MathLib {
         public toMatrix(n: number): MathLib.Matrix;
         /**
         * String representation of the permutation.
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toString(): string;
     }
 
@@ -2284,8 +1857,6 @@ declare module MathLib {
     * @class Conic
     * @this {Conic}
     */
-
-declare module MathLib {
     class Conic {
         public type: string;
         public primal: MathLib.Matrix;
@@ -2299,24 +1870,18 @@ declare module MathLib {
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {boolean}
         */
-
-declare module MathLib {
         public draw(screen: any, options: any, redraw?: boolean): Conic;
         /**
         * Calculates the eccentricity of a conic.
         *
         * @return {number}
         */
-
-declare module MathLib {
         public eccentricity(): number;
         /**
         * Determines if a conic is degenerated.
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isDegenerated(): boolean;
         /**
         * Determines if two conics are equal.
@@ -2324,24 +1889,18 @@ declare module MathLib {
         * @param {Conic} conic The conic to be compared
         * @return {boolean}
         */
-
-declare module MathLib {
         public isEqual(conic: Conic): boolean;
         /**
         * Calculates the latusRectum of a conic.
         *
         * @return {number}
         */
-
-declare module MathLib {
         public latusRectum(): number;
         /**
         * Calculates the linear eccentricity of a conic.
         *
         * @return {number}
         */
-
-declare module MathLib {
         public linearEccentricity(): number;
         /**
         * Calculates the meet of the conic with a line or a conic.
@@ -2349,32 +1908,24 @@ declare module MathLib {
         * @param {Line|Conic} x The line or conic to intersect with
         * @return {Point[]}
         */
-
-declare module MathLib {
         public meet(x: any): any;
         /**
         * Calculates the normal form of a conic.
         *
         * @return {Conic}
         */
-
-declare module MathLib {
         public normalize(): Conic;
         /**
         * Calculates the four polarity of a conic.
         *
         * @return {Point[]}
         */
-
-declare module MathLib {
         public polarity(x: any): any;
         /**
         * Splits a conic into one or two lines if the conic is degenerated.
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public splitDegenerated(): MathLib.Line[];
         /**
         * Calculates the conic through five points.
@@ -2386,8 +1937,6 @@ declare module MathLib {
         * @param {Point} t The fifth point
         * @return {Conic}
         */
-
-declare module MathLib {
         static throughFivePoints(p: MathLib.Point, q: MathLib.Point, r: MathLib.Point, s: MathLib.Point, t: MathLib.Point): Conic;
     }
 
@@ -2408,8 +1957,6 @@ declare module MathLib {
     * @augments Vector
     * @this {Point}
     */
-
-declare module MathLib {
     class Point extends MathLib.Vector {
         public type: string;
         public dimension: number;
@@ -2420,16 +1967,12 @@ declare module MathLib {
         *
         * @static
         */
-
-declare module MathLib {
         static I: Point;
         /**
         * The Point J = (i, 0, 1).
         *
         * @static
         */
-
-declare module MathLib {
         static J: Point;
         /**
         * Calculates the distance crossratio (A,B,C,D) of four points
@@ -2441,8 +1984,6 @@ declare module MathLib {
         * @param {Point} d The point D
         * @return {number}
         */
-
-declare module MathLib {
         public crossRatio(a: Point, b: Point, c: Point, d: Point): number;
         /**
         * Calculates the distance to an other point.
@@ -2451,8 +1992,6 @@ declare module MathLib {
         * @param {Point} p The point to calculate the distance to
         * @return {number}
         */
-
-declare module MathLib {
         public distanceTo(p: Point): number;
         /**
         * Draws the point on a canvas or svg element.
@@ -2461,8 +2000,6 @@ declare module MathLib {
         * @param {object} options Drawing options
         * @return {Point} The current point
         */
-
-declare module MathLib {
         public draw(screen: any, options: any): Point;
         /**
         * Determines if the point has the same coordinates as an other point
@@ -2470,16 +2007,12 @@ declare module MathLib {
         * @param {Point} q The point to compare
         * @return {boolean}
         */
-
-declare module MathLib {
         public isEqual(q: Point): boolean;
         /**
         * Determines if the point is finite
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isFinite(): boolean;
         /**
         * Calculates a line connecting two points
@@ -2487,16 +2020,12 @@ declare module MathLib {
         * @param {Point} q The point to calculate the line to
         * @return {Line}
         */
-
-declare module MathLib {
         public join(q: Point): MathLib.Line;
         /**
         * Normalizes the point.
         *
         * @return {Point}
         */
-
-declare module MathLib {
         public normalize(): Point;
         /**
         * Reflects the point at an other point
@@ -2504,24 +2033,18 @@ declare module MathLib {
         * @param {Point} q The point to reflect the current point at.
         * @return {Point}
         */
-
-declare module MathLib {
         public reflectAt(q: Point): Point;
         /**
         * Restricts the point to a line.
         *
         * @param {Line} l The line to restrict the point to.
         */
-
-declare module MathLib {
         public restrictTo(l: MathLib.Line): void;
         /**
         * Converts a two dimensional point to the corresponding complex number.
         *
         * @return {Complex}
         */
-
-declare module MathLib {
         public toComplex(): MathLib.Complex;
         /**
         * Returns LaTeX representation of the point
@@ -2529,8 +2052,6 @@ declare module MathLib {
         * @param {boolean} opt Optional parameter to indicate if the output should be projective.
         * @return {string}
         */
-
-declare module MathLib {
         public toLaTeX(opt?: boolean): string;
         /**
         * Returns (presentation) MathML representation of the point
@@ -2538,8 +2059,6 @@ declare module MathLib {
         * @param {boolean} opt Optional parameter to indicate if the output should be projective.
         * @return {string}
         */
-
-declare module MathLib {
         public toMathML(opt?: boolean): string;
         /**
         * Returns string representation of the point
@@ -2547,8 +2066,6 @@ declare module MathLib {
         * @param {boolean} opt Optional parameter to indicate if the output should be projective.
         * @return {string}
         */
-
-declare module MathLib {
         public toString(opt?: boolean): string;
     }
 
@@ -2571,8 +2088,6 @@ declare module MathLib {
     * @class
     * @this {Polynomial}
     */
-
-declare module MathLib {
     class Polynomial {
         public type: string;
         public deg: number;
@@ -2585,8 +2100,6 @@ declare module MathLib {
         * @param {Polynomial} p The polynomial to compare
         * @return {number}
         */
-
-declare module MathLib {
         public compare(p: Polynomial): number;
         /**
         * Differentiates the polynomial
@@ -2594,8 +2107,6 @@ declare module MathLib {
         * @param {number} n the number of times to differentiate the polynomial.
         * @return {Polynomial}
         */
-
-declare module MathLib {
         public differentiate(n?: number): Polynomial;
         /**
         * Draws the polynomial on the screen
@@ -2604,8 +2115,6 @@ declare module MathLib {
         * @param {object} options Optional drawing options.
         * @return {Polynomial}
         */
-
-declare module MathLib {
         public draw(screen: any, options: any): any;
         /**
         * Works like Array.prototype.every.
@@ -2613,14 +2122,10 @@ declare module MathLib {
         * @param {function} f The function to be applied to all the values
         * @return {boolean}
         */
-
-declare module MathLib {
         public every(f: (value: any, index: number, vector: MathLib.Vector) => boolean): boolean;
         /**
         * Works like the Array.prototype.forEach function
         */
-
-declare module MathLib {
         public forEach(...args: any[]): void;
         /**
         * Integrates the polynomial
@@ -2628,16 +2133,12 @@ declare module MathLib {
         * @param {number} n The number of times to integrate the polynomial.
         * @return {Polynomial}
         */
-
-declare module MathLib {
         public integrate(n?: number): Polynomial;
         /**
         * Interpolates points.
         *
         * @return {Polynomial}
         */
-
-declare module MathLib {
         static interpolation(a: any, b: any): Polynomial;
         /**
         * Decides if two polynomials are equal.
@@ -2645,8 +2146,6 @@ declare module MathLib {
         * @param {Polynomial} p The polynomial to compare.
         * @return {boolean}
         */
-
-declare module MathLib {
         public isEqual(p: Polynomial): boolean;
         /**
         * Works like the Array.prototype.map function
@@ -2654,23 +2153,17 @@ declare module MathLib {
         * @param {function} f The function to be applied to all the values
         * @return {Polynomial}
         */
-
-declare module MathLib {
         public map(f: any): Polynomial;
         /**
         * Returns the negative polynomial
         *
         * @return {Polynomial}
         */
-
-declare module MathLib {
         public negative(): Polynomial;
         /**
         * Returns the one polynomial
         * @static
         */
-
-declare module MathLib {
         static one: Polynomial;
         /**
         * Adds a number or a polynomial
@@ -2678,8 +2171,6 @@ declare module MathLib {
         * @param {number|Polynomial} a The number or polynomial to add to the current polynomial
         * @return {Polynomial}
         */
-
-declare module MathLib {
         public plus(a: any): Polynomial;
         /**
         * Calculates the regression line for some points
@@ -2688,8 +2179,6 @@ declare module MathLib {
         * @param {array} y The y values
         * @return {Polynomial}
         */
-
-declare module MathLib {
         static regression(x: any, y: any): Polynomial;
         /**
         * Returns a polynomial with the specified roots
@@ -2697,16 +2186,12 @@ declare module MathLib {
         * @param {array|Set} zeros The wished zeros.
         * @return {Polynomial}
         */
-
-declare module MathLib {
         static roots(zeros: any): Polynomial;
         /**
         * Works like the Array.prototype.slice function
         *
         * @return {array}
         */
-
-declare module MathLib {
         public slice(...args: any[]): any[];
         /**
         * Multiplies the polynomial by a number or an other polynomial
@@ -2714,56 +2199,42 @@ declare module MathLib {
         * @param {number|Polynomial} a The multiplicator
         * @return {Polynomial}
         */
-
-declare module MathLib {
         public times(a: any): Polynomial;
         /**
         * Returns a content MathML representation of the polynomial
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toContentMathML(math: any): string;
         /**
         * Custom toExpression function
         *
         * @return {Expression}
         */
-
-declare module MathLib {
         public toExpression(): MathLib.Expression;
         /**
         * Converts the polynomial to a functn
         *
         * @return {Functn}
         */
-
-declare module MathLib {
         public toFunctn(): (x: any) => any;
         /**
         * Returns a LaTeX representation of the polynomial
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toLaTeX(): string;
         /**
         * Returns a MathML representation of the polynomial
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toMathML(): string;
         /**
         * Custom toString function
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toString(): string;
         /**
         * Evaluates the polynomial at a given point
@@ -2771,15 +2242,11 @@ declare module MathLib {
         * @param {number|Complex|Matrix} x The value to evaluate the polynomial at.
         * @return {number|Complex|Matrix}
         */
-
-declare module MathLib {
         public valueAt(x: any): any;
         /**
         * Returns the zero polynomial
         * @static
         */
-
-declare module MathLib {
         static zero: Polynomial;
     }
 
@@ -2796,8 +2263,6 @@ declare module MathLib {
     * @class
     * @this {Rational}
     */
-
-declare module MathLib {
     class Rational {
         public type: string;
         public numerator: any;
@@ -2808,40 +2273,30 @@ declare module MathLib {
         *
         * @return {string}
         */
-
-declare module MathLib {
         static toContentMathML(): string;
         /**
         * A LaTeX string representation
         *
         * @return {string}
         */
-
-declare module MathLib {
         static toLaTeX(): string;
         /**
         * A presentation MathML string representation
         *
         * @return {string}
         */
-
-declare module MathLib {
         static toMathML(): string;
         /**
         * Custom toString function
         *
         * @return {string}
         */
-
-declare module MathLib {
         static toString(): string;
         /**
         * Coerces the rational to some other data type
         *
         * @return {Integer|Rational|number|Complex}
         */
-
-declare module MathLib {
         public coerceTo(type: any): any;
         /**
         * Compares two rational numbers
@@ -2849,16 +2304,12 @@ declare module MathLib {
         * @param {Rational} rational The number to compare
         * @return {number}
         */
-
-declare module MathLib {
         public compare(rational: Rational): number;
         /**
         * Copy the rational number
         *
         * @return {Rational}
         */
-
-declare module MathLib {
         public copy(): Rational;
         /**
         * Divides rational numbers
@@ -2866,16 +2317,12 @@ declare module MathLib {
         * @param {Rational|number} divisor The divisor
         * @return {Rational}
         */
-
-declare module MathLib {
         public divide(divisor: any): any;
         /**
         * Calculates the inverse of a rational number
         *
         * @return {Rational}
         */
-
-declare module MathLib {
         public inverse(): Rational;
         /**
         * Checks if the rational number is equal to an other number
@@ -2883,16 +2330,12 @@ declare module MathLib {
         * @param {Integer|Rational|number|Complex} n The number to compare
         * @return {boolean}
         */
-
-declare module MathLib {
         public isEqual(n: any): boolean;
         /**
         * Checks if the rational number is zero
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isZero(): boolean;
         /**
         * Subtracts rational numbers
@@ -2900,16 +2343,12 @@ declare module MathLib {
         * @param {Rational|number} subtrahend The number to be subtracted
         * @return {Rational}
         */
-
-declare module MathLib {
         public minus(subtrahend: any): any;
         /**
         * Calculates the negative of a rational number
         *
         * @return {Rational}
         */
-
-declare module MathLib {
         public negative(): Rational;
         /**
         * Adds rational numbers
@@ -2917,16 +2356,12 @@ declare module MathLib {
         * @param {Integer|Rational|number|Complex} summand The number to be added
         * @return {Rational|number|Complex}
         */
-
-declare module MathLib {
         public plus(summand: any): any;
         /**
         * Reduces the rational number
         *
         * @return {Rational}
         */
-
-declare module MathLib {
         public reduce(): Rational;
         /**
         * Multiplies rational numbers
@@ -2934,32 +2369,24 @@ declare module MathLib {
         * @param {Rational|number} factor The number to be multiplied
         * @return {Rational}
         */
-
-declare module MathLib {
         public times(factor: any): any;
         /**
         * Returns the Content MathML representation of the rational number
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toContentMathML(): string;
         /**
         * Returns the LaTeX representation of the rational number
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toLaTeX(): string;
         /**
         * Returns the MathML representation of the rational number
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toMathML(): string;
         /**
         * Returns the number represented by the rational number
@@ -2967,16 +2394,12 @@ declare module MathLib {
         * @deprecated Use .coerceTo('number') instead
         * @return {number}
         */
-
-declare module MathLib {
         public toNumber(): number;
         /**
         * Custom toString function
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toString(): string;
     }
 
@@ -2991,8 +2414,6 @@ declare module MathLib {
     * @class
     * @this {Set}
     */
-
-declare module MathLib {
     class Set {
         public type: string;
         public length: number;
@@ -3004,30 +2425,22 @@ declare module MathLib {
         * @param {Set} x The set to compare the current set to
         * @return {number}
         */
-
-declare module MathLib {
         public compare(x: Set): number;
         /**
         * Works like the Array.prototype.every function
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public every(...args: any[]): boolean;
         /**
         * Works like the Array.prototype.filter function
         *
         * @return {Set}
         */
-
-declare module MathLib {
         public filter(...args: any[]): Set;
         /**
         * Works like the Array.prototype.forEach function
         */
-
-declare module MathLib {
         public forEach(...args: any[]): void;
         /**
         * Creates a set containing the numbers from a start value to a end value.
@@ -3037,16 +2450,12 @@ declare module MathLib {
         * @param {number} step The stepsize (default = 1)
         * @return {Set}
         */
-
-declare module MathLib {
         static fromTo: (start: number, end: number, step?: number) => Set;
         /**
         * Works like the Array.prototype.indexOf function
         *
         * @return {number}
         */
-
-declare module MathLib {
         public indexOf(...args: any[]): number;
         /**
         * Inserts an element into the set.
@@ -3054,8 +2463,6 @@ declare module MathLib {
         * @param{any} x The element to insert in the set.
         * @return {Set} Returns the current set
         */
-
-declare module MathLib {
         public insert(x: any): Set;
         /**
         * Returns the intersection of two sets.
@@ -3063,16 +2470,12 @@ declare module MathLib {
         * @param {Set} set The set to intersect the current set with.
         * @return {Set}
         */
-
-declare module MathLib {
         public intersect: (a: any) => Set;
         /**
         * Determines if the set is empty.
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public isEmpty(): boolean;
         /**
         * Determines if the set is equal to an other set.
@@ -3080,8 +2483,6 @@ declare module MathLib {
         * @param {Set} set The set to compare
         * @return {boolean}
         */
-
-declare module MathLib {
         public isEqual(set: Set): boolean;
         /**
         * Determines if the set is a subset of an other set.
@@ -3089,8 +2490,6 @@ declare module MathLib {
         * @param {Set} set The potential superset
         * @return {boolean}
         */
-
-declare module MathLib {
         public isSubsetOf(set: Set): boolean;
         /**
         * Array.prototype.indexOf() returns only the position of an element in the
@@ -3099,8 +2498,6 @@ declare module MathLib {
         * @param {Set} x The element to locate
         * @return {number}
         */
-
-declare module MathLib {
         public locate(x: any): number;
         /**
         * Works like the Array.prototype.map function
@@ -3108,8 +2505,6 @@ declare module MathLib {
         * @param {function} The mapping function
         * @return {Set}
         */
-
-declare module MathLib {
         public map(...args: any[]): any;
         /**
         * Adds the argument to all elements in the set,
@@ -3118,24 +2513,18 @@ declare module MathLib {
         * @param {number|MathLib object} n The object to add to the elements in the set.
         * @return {Set|any}
         */
-
-declare module MathLib {
         public plus(n: any): any;
         /**
         * Returns the powerset
         *
         * @return {Set}
         */
-
-declare module MathLib {
         public powerset(): Set;
         /**
         * Works like the Array.prototype.reduce function
         *
         * @return {any}
         */
-
-declare module MathLib {
         public reduce(...args: any[]): any;
         /**
         * Removes a element from a set
@@ -3143,8 +2532,6 @@ declare module MathLib {
         * @param {any} element The element to remove from the set.
         * @return {Set}
         */
-
-declare module MathLib {
         public remove(element: any): Set;
         /**
         * Function to create the intersect, union, without, xor methods
@@ -3154,32 +2541,24 @@ declare module MathLib {
         * @param {boolean} right Should the elements which are only in the right set be included in the result.
         * @return {function}
         */
-
-declare module MathLib {
         static createSetOperation: (left: any, both: any, right: any) => (a: any) => Set;
         /**
         * Works like the Array.prototype.slice function
         *
         * @return {array}
         */
-
-declare module MathLib {
         public slice(...args: any[]): any;
         /**
         * Works like the Array.prototype.some function
         *
         * @return {boolean}
         */
-
-declare module MathLib {
         public some(...args: any[]): boolean;
         /**
         * Works like the Array.prototype.splice function
         *
         * @return {Set}
         */
-
-declare module MathLib {
         public splice(...args: any[]): any;
         /**
         * Multiplies all elements in the set if no argument is passed.
@@ -3188,48 +2567,36 @@ declare module MathLib {
         * @param {number|MathLib object} n The object to multiply the elements with
         * @return {Set}
         */
-
-declare module MathLib {
         public times(n: any): any;
         /**
         * Converts the set to an array
         *
         * @return {array}
         */
-
-declare module MathLib {
         public toArray(): any[];
         /**
         * Returns the content MathML representation of the set
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toContentMathML(): string;
         /**
         * Returns the LaTeX representation of the set
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toLaTeX(): string;
         /**
         * Returns the (presentation) MathML representation of the set
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toMathML(): string;
         /**
         * Returns a string representation of the set
         *
         * @return {string}
         */
-
-declare module MathLib {
         public toString(): string;
         /**
         * Returns the union of two sets.
@@ -3237,8 +2604,6 @@ declare module MathLib {
         * @param {Set} set The set to join the current set with.
         * @return {Set}
         */
-
-declare module MathLib {
         public union: (a: any) => Set;
         /**
         * Returns all elements, which are in the first set, but not in the second.
@@ -3246,8 +2611,6 @@ declare module MathLib {
         * @param {Set} set The set whose elements should be removed from the current set.
         * @return {Set}
         */
-
-declare module MathLib {
         public without: (a: any) => Set;
         /**
         * Returns all elements which are in either the first or the second set.
@@ -3255,8 +2618,6 @@ declare module MathLib {
         * @param {Set} set The second set.
         * @return {Set}
         */
-
-declare module MathLib {
         public xor: (a: any) => Set;
     }
 }

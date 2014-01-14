@@ -36,6 +36,42 @@ var Complex = (function () {
         }
     }
     /**
+    * A content MathML string representation
+    *
+    * @return {string}
+    */
+    Complex.toContentMathML = function () {
+        return '<csymbol cd="setname1">C</csymbol>';
+    };
+
+    /**
+    * A LaTeX string representation
+    *
+    * @return {string}
+    */
+    Complex.toLaTeX = function () {
+        return 'Complex Field $\\mathbb{C}$';
+    };
+
+    /**
+    * A presentation MathML string representation
+    *
+    * @return {string}
+    */
+    Complex.toMathML = function () {
+        return '<mrow><mtext>Complex Field</mtext><mi mathvariant="double-struck">C</mi></mrow>';
+    };
+
+    /**
+    * Custom toString function
+    *
+    * @return {string}
+    */
+    Complex.toString = function () {
+        return 'Complex Field ℂ';
+    };
+
+    /**
     * Returns the absolute value of the number.
     *
     * @return {number}

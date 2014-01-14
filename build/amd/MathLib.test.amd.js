@@ -300,6 +300,18 @@ test('.type', 1, function () {
 	var c = new MathLib.Complex(3, 4);
 	equal(c.type, 'complex', 'Testing .type');
 });
+test('.toContentMathML()', 1, function () {
+	equal(MathLib.Complex.toContentMathML(), '<csymbol cd="setname1">C</csymbol>');
+});
+test('.toLaTeX()', 1, function () {
+	equal(MathLib.Complex.toLaTeX(), 'Complex Field $\\mathbb{C}$');
+});
+test('.toMathML()', 1, function () {
+	equal(MathLib.Complex.toMathML(), '<mrow><mtext>Complex Field</mtext><mi mathvariant="double-struck">C</mi></mrow>');
+});
+test('.toString()', 1, function () {
+	equal(MathLib.Complex.toString(), 'Complex Field ℂ');
+});
 test('.abs()', 4, function () {
 	ok(MathLib.isNaN((new MathLib.Complex(NaN)).abs()));
 	equal((new MathLib.Complex(Infinity)).abs(), Infinity);

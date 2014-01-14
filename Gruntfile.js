@@ -63,7 +63,7 @@ module.exports = function (grunt) {
 			testFiles = [
 				'test/meta/general.js', 'test/meta/!(general).js',
 				'test/Circle/init.js', 'test/Circle/!(init).js',
-				'test/Complex/init.js', 'test/Complex/!(init).js',
+				'test/Complex/init.js', 'test/Complex/!(init).js', 'test/Complex/prototype/*.js',
 				'test/Conic/init.js', 'test/Conic/!(init).js',
 				'test/Expression/init.js', 'test/Expression/!(init).js',
 				'test/Functn/init.js', 'test/Functn/!(init).js',
@@ -166,7 +166,7 @@ module.exports = function (grunt) {
 				dest: 'build/plain/Circle.ts'
 			},
 			Complex: {
-				src: ['src/Complex/init.ts', 'src/Complex/!(init).ts'],
+				src: ['src/Complex/init.ts', 'src/Complex/!(init).ts', 'src/Complex/prototype/*.ts'],
 				dest: 'build/plain/Complex.ts'
 			},
 			Integer: {
@@ -958,8 +958,8 @@ module.exports = function (grunt) {
 						replace: ''
 					},
 					{
-						search: /\*\/\n/g,
-						replace: '*/\n\ndeclare module MathLib \{\n'
+						search: /    var version: string;/g,
+						replace: 'declare module MathLib {\n    var version: string;'
 					},
 					{
 						search: /public xor: \(a: any\) => Set;\n    \}/,

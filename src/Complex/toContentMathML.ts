@@ -1,16 +1,8 @@
 /**
- * Returns the content MathML representation of the number
+ * A content MathML string representation
  *
  * @return {string}
  */
-toContentMathML() : string {
-
-	if (!this.isFinite()) {
-		return '<csymbol cd="nums1">' + 
-			(this.re === Infinity ? 'infinity' : 'NaN') +
-			'</csymbol>';
-	}
-
-	return '<apply><plus />' + MathLib.toContentMathML(this.re) + '<apply><times />'
-					+ MathLib.toContentMathML(this.im) + '<imaginaryi /></apply></apply>'
+static toContentMathML() : string {
+	return '<csymbol cd="setname1">C</csymbol>';
 }
