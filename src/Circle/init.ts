@@ -17,7 +17,7 @@
  * @class
  * @this {Circle}
  */
-export class Circle {
+export class Circle implements Drawable {
 
 	type = 'circle';
 

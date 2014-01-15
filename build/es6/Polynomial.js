@@ -343,7 +343,7 @@ var Polynomial = (function () {
     *
     * @return {string}
     */
-    Polynomial.prototype.toContentMathML = function (math) {
+    Polynomial.prototype.toContentMathML = function () {
         var str = '<apply><csymbol cd="arith1">plus</csymbol>', i;
         for (i = this.deg; i >= 0; i--) {
             if (!MathLib.isZero(this[i])) {
@@ -363,9 +363,6 @@ var Polynomial = (function () {
 
         str += '</apply>';
 
-        //if (math) {
-        //	str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>';
-        //}
         return str;
     };
 

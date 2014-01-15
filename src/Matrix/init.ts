@@ -17,7 +17,7 @@
  * @class
  * @this {Matrix}
  */
-export class Matrix {
+export class Matrix implements Printable  {
 	type = 'matrix';
 
 	length: number;

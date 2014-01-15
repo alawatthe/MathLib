@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-01-14
+ * build date: 2014-01-16
  */
 
 declare module MathLib {
@@ -551,7 +551,7 @@ declare module MathLib {
     * @class
     * @this {Vector}
     */
-    class Vector {
+    class Vector implements Printable {
         public type: string;
         public length: number;
         constructor(coords: number[]);
@@ -729,7 +729,7 @@ declare module MathLib {
     * @class
     * @this {Circle}
     */
-    class Circle {
+    class Circle implements Drawable {
         public type: string;
         public center: MathLib.Point;
         public radius: number;
@@ -813,7 +813,7 @@ declare module MathLib {
     * @class
     * @this {Complex}
     */
-    class Complex {
+    class Complex implements FieldElement, Printable {
         public type: string;
         public re: any;
         public im: any;
@@ -1109,6 +1109,7 @@ declare module MathLib {
         */
         public toString(): string;
     }
+declare var Complex: Field;
 
 
     /**
@@ -1124,7 +1125,7 @@ declare module MathLib {
     * @class
     * @this {Integer}
     */
-    class Integer {
+    class Integer implements Printable, RingElement {
         public type: string;
         public data: number[];
         public sign: string;
@@ -1263,6 +1264,7 @@ declare module MathLib {
         */
         public toString(): string;
     }
+declare var Integer: Ring;
 
 
     /**
@@ -1273,7 +1275,7 @@ declare module MathLib {
     * @augments Vector
     * @this {Line}
     */
-    class Line extends MathLib.Vector {
+    class Line extends MathLib.Vector implements Drawable {
         public type: string;
         public dimension: number;
         constructor(coords: number[]);
@@ -1345,7 +1347,7 @@ declare module MathLib {
     * @class
     * @this {Matrix}
     */
-    class Matrix {
+    class Matrix implements Printable {
         public type: string;
         public length: number;
         public cols: number;
@@ -1857,7 +1859,7 @@ declare module MathLib {
     * @class Conic
     * @this {Conic}
     */
-    class Conic {
+    class Conic implements Drawable {
         public type: string;
         public primal: MathLib.Matrix;
         public dual: MathLib.Matrix;
@@ -1957,7 +1959,7 @@ declare module MathLib {
     * @augments Vector
     * @this {Point}
     */
-    class Point extends MathLib.Vector {
+    class Point extends MathLib.Vector implements Drawable, Printable {
         public type: string;
         public dimension: number;
         constructor(coords: any[]);
@@ -2088,7 +2090,7 @@ declare module MathLib {
     * @class
     * @this {Polynomial}
     */
-    class Polynomial {
+    class Polynomial implements Drawable, Printable {
         public type: string;
         public deg: number;
         public length: number;
@@ -2205,7 +2207,7 @@ declare module MathLib {
         *
         * @return {string}
         */
-        public toContentMathML(math: any): string;
+        public toContentMathML(): string;
         /**
         * Custom toExpression function
         *
@@ -2263,7 +2265,7 @@ declare module MathLib {
     * @class
     * @this {Rational}
     */
-    class Rational {
+    class Rational implements FieldElement, Printable {
         public type: string;
         public numerator: any;
         public denominator: any;
@@ -2402,6 +2404,7 @@ declare module MathLib {
         */
         public toString(): string;
     }
+declare var Rational: Field;
 
 
     /**
@@ -2414,7 +2417,7 @@ declare module MathLib {
     * @class
     * @this {Set}
     */
-    class Set {
+    class Set implements Printable {
         public type: string;
         public length: number;
         public card: number;

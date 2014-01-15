@@ -10,7 +10,7 @@
  * @class
  * @this {Set}
  */
-export class Set {
+export class Set implements Printable  {
 
 	type = 'set';
 

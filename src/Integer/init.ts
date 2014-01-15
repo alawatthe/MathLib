@@ -13,7 +13,8 @@
  * @class
  * @this {Integer}
  */
-export class Integer {
+
+export class Integer implements Printable, RingElement {
 
 	type = 'integer';
 

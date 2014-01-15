@@ -122,6 +122,14 @@ module.exports = function (grunt) {
 					footer: '\n// end meta\n}'
 				}
 			},
+			Interfaces: {
+				src: ['src/Interfaces/*.ts'],
+				dest: 'build/plain/Interfaces.ts',
+				options: {
+					banner: '',
+					footer: ''
+				}
+			},
 			Expression: {
 				src: ['src/Expression/init.ts', 'src/Expression/!(init).ts'],
 				dest: 'build/plain/Expression.ts'
@@ -167,11 +175,17 @@ module.exports = function (grunt) {
 			},
 			Complex: {
 				src: ['src/Complex/init.ts', 'src/Complex/!(init).ts', 'src/Complex/prototype/*.ts'],
-				dest: 'build/plain/Complex.ts'
+				dest: 'build/plain/Complex.ts',
+				options: {
+					footer: '\n}}declare var Complex : Field'
+				}
 			},
 			Integer: {
 				src: ['src/Integer/init.ts', 'src/Integer/!(init).ts', 'src/Integer/prototype/*.ts'],
-				dest: 'build/plain/Integer.ts'
+				dest: 'build/plain/Integer.ts',
+				options: {
+					footer: '\n}}declare var Integer : Ring'
+				}
 			},
 			Line: {
 				src: ['src/Line/init.ts', 'src/Line/!(init).ts'],
@@ -199,7 +213,10 @@ module.exports = function (grunt) {
 			},
 			Rational: {
 				src: ['src/Rational/init.ts', 'src/Rational/!(init).ts', 'src/Rational/prototype/*.ts'],
-				dest: 'build/plain/Rational.ts'
+				dest: 'build/plain/Rational.ts',
+				options: {
+					footer: '\n}}declare var Rational : Field'
+				}
 			},
 			Set: {
 				src: ['src/Set/init.ts', 'src/Set/!(init).ts'],
@@ -991,7 +1008,7 @@ module.exports = function (grunt) {
 	});
 
 
-	grunt.registerTask('generatePlain', ['clean:plain', 'generateTestFiles', 'concat:meta', 'concat:Expression', 'concat:Functn', 'concat:Screen', 'concat:Layer',
+	grunt.registerTask('generatePlain', ['clean:plain', 'generateTestFiles', 'concat:meta', 'concat:Interfaces', 'concat:Expression', 'concat:Functn', 'concat:Screen', 'concat:Layer',
 			'concat:Canvas', 'concat:SVG', 'concat:Screen2D', 'concat:Screen3D', 'concat:Vector', 'concat:Circle', 'concat:Complex', 'concat:Integer', 'concat:Line',
 			'concat:Matrix', 'concat:Permutation', 'concat:Conic', 'concat:Point', 'concat:Polynomial', 'concat:Rational', 'concat:Set', 'ts', 'copy:shims',
 			'concat:plain', 'uglify', 'regex-replace:plainHead', 'regex-replace:plain', 'clean:reference']);

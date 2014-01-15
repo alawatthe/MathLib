@@ -15,7 +15,7 @@
  * @class
  * @this {Vector}
  */
-export class Vector {
+export class Vector implements Printable  {
 	type = 'vector';
 
 	length: number;

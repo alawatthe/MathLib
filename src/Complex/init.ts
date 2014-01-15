@@ -17,7 +17,7 @@
  * @class
  * @this {Complex}
  */
-export class Complex {
+export class Complex implements FieldElement, Printable {
 
 	type = 'complex';
 

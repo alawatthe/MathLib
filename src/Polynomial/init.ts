@@ -18,7 +18,7 @@
  * @class
  * @this {Polynomial}
  */
-export class Polynomial {
+export class Polynomial implements Drawable, Printable {
 
 	type = 'polynomial';
 

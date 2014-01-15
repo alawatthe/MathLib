@@ -12,7 +12,7 @@
  * @class
  * @this {Rational}
  */
-export class Rational {
+export class Rational implements FieldElement, Printable {
 
 	type = 'rational';
 

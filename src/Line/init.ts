@@ -8,7 +8,7 @@
  * @augments Vector
  * @this {Line}
  */
-export class Line extends Vector {
+export class Line extends Vector implements Drawable {
 	type = 'line';
 
 	dimension: number;

@@ -6,7 +6,7 @@
  * @class Conic
  * @this {Conic}
  */
-export class Conic {
+export class Conic implements Drawable {
 	type = 'conic';
 
 	primal: Matrix;

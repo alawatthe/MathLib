@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-01-14
+ * build date: 2014-01-16
  */
 // [Specification](https://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html)
 // Chrome: ~
@@ -9844,7 +9844,7 @@ var MathLib;
         *
         * @return {string}
         */
-        Polynomial.prototype.toContentMathML = function (math) {
+        Polynomial.prototype.toContentMathML = function () {
             var str = '<apply><csymbol cd="arith1">plus</csymbol>', i;
             for (i = this.deg; i >= 0; i--) {
                 if (!MathLib.isZero(this[i])) {
@@ -9864,9 +9864,6 @@ var MathLib;
 
             str += '</apply>';
 
-            //if (math) {
-            //	str = '<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication>' + str + '</lambda></math>';
-            //}
             return str;
         };
 

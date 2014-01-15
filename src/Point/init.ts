@@ -16,7 +16,7 @@
  * @augments Vector
  * @this {Point}
  */
-export class Point extends Vector {
+export class Point extends Vector implements Drawable, Printable  {
 	type = 'point';
 
 	dimension: number;
