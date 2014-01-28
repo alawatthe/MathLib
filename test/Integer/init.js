@@ -1,9 +1,31 @@
 module('Integer');
-test('init', 2, function () {
-	var p = new MathLib.Point(1, 2),
-			circle = new MathLib.Circle(p, 2);
-	equal(circle.radius, 2, 'Testing the radius');
-	deepEqual(circle.center, p, 'Testing the center');
+test('init', 18, function () {
+	// string
+	equal((new MathLib.Integer('0')).sign, '+');
+	equal((new MathLib.Integer('+0')).sign, '+');
+	equal((new MathLib.Integer('-0')).sign, '-');
+	equal((new MathLib.Integer('1')).sign, '+');
+	equal((new MathLib.Integer('+1')).sign, '+');
+	equal((new MathLib.Integer('-1')).sign, '-');
+
+	deepEqual((new MathLib.Integer('67108863')).data, [67108863]);
+	deepEqual((new MathLib.Integer('67108864')).data, [0, 1]);
+	deepEqual((new MathLib.Integer('67108865')).data, [1, 1]);
+
+	deepEqual((new MathLib.Integer('111', {base: 2})).data, [7]);
+	deepEqual((new MathLib.Integer('zzzzzzz', {base: 36})).data, [48119807, 1167]);
+
+
+
+	// number
+	equal((new MathLib.Integer(+0)).sign, '+');
+	equal((new MathLib.Integer(-0)).sign, '-');
+	equal((new MathLib.Integer(+1)).sign, '+');
+	equal((new MathLib.Integer(-1)).sign, '-');
+	
+	deepEqual((new MathLib.Integer(67108863)).data, [67108863]);
+	deepEqual((new MathLib.Integer(67108864)).data, [0, 1]);
+	deepEqual((new MathLib.Integer(67108865)).data, [1, 1]);
 });
 
 

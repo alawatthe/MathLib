@@ -4,18 +4,29 @@
  * @return {string}
  */
 toString() : string {
-	var i, ii,
+	var div, rem, temp,
+			n = this.abs(),
+			factor = new MathLib.Integer(1e7),
 			str = '';
-	
-	for (i = 0, ii = this.data.length-1; i < ii; i++) {
-		str	= ('000000' + this.data[i]).slice(-7) + str;
+
+	if (n.isZero()) {
+		return '0';
 	}
-	
-	str = this.data[i] + str;
-	
+
+	while (!n.isZero()) {
+		temp = n.divrem(factor)
+		div = temp[0];
+		rem = temp[1];
+
+		str	= ('000000' + rem.data[0]).slice(-7) + str;
+		n = div;
+	}
+
+	str = str.replace(/^0+/, '');
+
 	if (this.sign === '-') {
 		str = '-' + str;
 	}
-	
+
 	return str;
 }

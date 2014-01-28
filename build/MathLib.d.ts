@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-01-16
+ * build date: 2014-01-28
  */
 
 declare module MathLib {
@@ -1119,7 +1119,7 @@ declare var Complex: Field;
     * #### Simple example:
     * ```
     * // Create the integer
-    * var c = new MathLib.Complex(1, 2);
+    * var int = new MathLib.Integer('123456789');
     * ```
     *
     * @class
@@ -1185,6 +1185,24 @@ declare var Complex: Field;
         */
         public copy(): Integer;
         /**
+        * Divides the integer by some other number.
+        *
+        * @param {Integer|Rational|number|Complex} divisor - The divisor
+        * @return {Integer|Rational|number|Complex}
+        */
+        public divide(divisor: any): any;
+        /**
+        * Returns an array containing the quotient and the remainder of the division.
+        *
+        * Based on the "Schoolbook Division" in
+        * Karl Hasselström's "Fast Division of Large Integers"
+        * http://www.treskal.com/kalle/exjobb/original-report.pdf
+        *
+        * @param {Integer} divisor - The divisor
+        * @return {Integer[]}
+        */
+        public divrem(divisor: Integer): Integer[];
+        /**
         * Checks if the current integer is equal to some other number
         *
         * @param {any} n The number to check
@@ -1216,11 +1234,19 @@ declare var Complex: Field;
         */
         public isZero(): boolean;
         /**
-        * Adds a number to the current integer
+        * Subtracts a number from the current integer
         *
+        * @param {Integer|Rational|number|Complex} n - The number to subtract
         * @return {Integer}
         */
         public minus(n: any): Integer;
+        /**
+        * Reduces the integer modulo an other number.
+        *
+        * @param {Integer|number} n - The number with which the current integer should be reduced
+        * @return {Integer|number}
+        */
+        public mod(n: Integer): any;
         /**
         * Calculates the negative integer
         *
@@ -1230,12 +1256,21 @@ declare var Complex: Field;
         /**
         * Adds a number to the current integer
         *
+        * @param {Integer|Rational|number|Complex} n - The number to add
         * @return {Integer}
         */
         public plus(n: any): Integer;
         /**
+        * Raises the integer to a certain power.
+        *
+        * @param {Integer|Rational|number|Complex} exponent - The exponent
+        * @return {Integer|Rational}
+        */
+        public pow(exponent: any): any;
+        /**
         * Multiplies a number to the current integer
         *
+        * @param {Integer|Rational|number|Complex} n - The number to multiply
         * @return {Integer}
         */
         public times(n: any): Integer;
@@ -2269,7 +2304,7 @@ declare var Integer: Ring;
         public type: string;
         public numerator: any;
         public denominator: any;
-        constructor(numerator: any, denominator?: number);
+        constructor(numerator: any, denominator?: any);
         /**
         * A content MathML string representation
         *

@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-01-16
+ * build date: 2014-01-28
  */
 
 var MathLib = require('./MathLib.js'),
@@ -2627,6 +2627,29 @@ test('.ln()', 8, function () {
 	equal(MathLib.isNaN(MathLib.ln(-Infinity)), true, 'MathLib.ln(-Infinity) should be NaN');
 	equal(MathLib.isNaN(MathLib.ln(NaN)), true, 'MathLib.ln(NaN) should be NaN');
 });
+test('.logGamma()', 8, function () {
+	// Spec. 1: MathLib.logGamma(NaN) = NaN
+	equal(MathLib.isNaN(MathLib.logGamma(NaN)), true, 'Spec. 1: MathLib.logGamma(NaN) = NaN');
+
+	// Spec. 2: MathLib.logGamma(+0) = +∞
+	equal(MathLib.logGamma(+0), Infinity, 'Spec. 2: MathLib.logGamma(+0) = +∞');
+
+	// Spec. 3: MathLib.logGamma(-0) = NaN
+	equal(MathLib.isNaN(MathLib.logGamma(-0)), true, 'Spec. 3: MathLib.logGamma(-0) = NaN');
+
+	// Spec. 4: MathLib.logGamma(+∞) = +∞
+	equal(MathLib.logGamma(+Infinity), +Infinity, 'Spec. 4: MathLib.logGamma(+∞) = +∞');
+
+	// Spec. 5: MathLib.logGamma(-∞) = NaN
+	equal(MathLib.isNaN(MathLib.logGamma(-Infinity)), true, 'Spec. 5: MathLib.logGamma(-∞) = NaN');
+
+	// Spec. 6: MathLib.logGamma(x) = NaN (if x < 0)
+	equal(MathLib.isNaN(MathLib.logGamma(-8)), true, 'Spec. 6: MathLib.logGamma(x) = NaN (if x < 0)');
+
+	// Spec. 7: otherwise MathLib.logGamma(x) = logarithm of the gamma function of x
+	equal(MathLib.logGamma(8), 8.5251613610654143002, 'Spec. 7: otherwise MathLib.logGamma(x) = logarithm of the gamma function of x');
+	equal(MathLib.logGamma(10000), 82099.717496442377273, 'Spec. 7: otherwise MathLib.logGamma(x) = logarithm of the gamma function of x');
+});
 test('.max()', 3, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]);
 	equal(MathLib.max([1, 42, 17, 4]), 42);
@@ -3041,11 +3064,33 @@ test('.xor()', 14, function () {
 	equal(MathLib.xor([false, false]), false, 'false xor false = false');
 });
 module('Integer');
-test('init', 2, function () {
-	var p = new MathLib.Point(1, 2),
-			circle = new MathLib.Circle(p, 2);
-	equal(circle.radius, 2, 'Testing the radius');
-	deepEqual(circle.center, p, 'Testing the center');
+test('init', 18, function () {
+	// string
+	equal((new MathLib.Integer('0')).sign, '+');
+	equal((new MathLib.Integer('+0')).sign, '+');
+	equal((new MathLib.Integer('-0')).sign, '-');
+	equal((new MathLib.Integer('1')).sign, '+');
+	equal((new MathLib.Integer('+1')).sign, '+');
+	equal((new MathLib.Integer('-1')).sign, '-');
+
+	deepEqual((new MathLib.Integer('67108863')).data, [67108863]);
+	deepEqual((new MathLib.Integer('67108864')).data, [0, 1]);
+	deepEqual((new MathLib.Integer('67108865')).data, [1, 1]);
+
+	deepEqual((new MathLib.Integer('111', {base: 2})).data, [7]);
+	deepEqual((new MathLib.Integer('zzzzzzz', {base: 36})).data, [48119807, 1167]);
+
+
+
+	// number
+	equal((new MathLib.Integer(+0)).sign, '+');
+	equal((new MathLib.Integer(-0)).sign, '-');
+	equal((new MathLib.Integer(+1)).sign, '+');
+	equal((new MathLib.Integer(-1)).sign, '-');
+	
+	deepEqual((new MathLib.Integer(67108863)).data, [67108863]);
+	deepEqual((new MathLib.Integer(67108864)).data, [0, 1]);
+	deepEqual((new MathLib.Integer(67108865)).data, [1, 1]);
 });
 
 
@@ -3129,6 +3174,44 @@ test('.prototype.copy()', 3, function () {
 	equal(i.sign, '+');
 	equal(i.data[0], 1234);
 });
+test('.prototype.divide()', 12, function () {
+	// integer
+	equal((new MathLib.Integer('+10000000')).divide(new MathLib.Integer('+10')).toString(),  '1000000');
+	equal((new MathLib.Integer('+10000000')).divide(new MathLib.Integer('-10')).toString(), '-1000000');
+	equal((new MathLib.Integer('-10000000')).divide(new MathLib.Integer('+10')).toString(), '-1000000');
+	equal((new MathLib.Integer('-10000000')).divide(new MathLib.Integer('-10')).toString(),  '1000000');
+	
+	equal((new MathLib.Integer('+10000001')).divide(new MathLib.Integer('+10')).toString(),  '10000001/10');
+	equal((new MathLib.Integer('+10000001')).divide(new MathLib.Integer('-10')).toString(), '-10000001/10');
+	equal((new MathLib.Integer('-10000001')).divide(new MathLib.Integer('+10')).toString(), '-10000001/10');
+	equal((new MathLib.Integer('-10000001')).divide(new MathLib.Integer('-10')).toString(),  '10000001/10');
+
+	// number
+	equal((new MathLib.Integer('+100')).divide(10), 10);
+	equal((new MathLib.Integer('+100')).divide(-10), -10);
+	equal((new MathLib.Integer('-100')).divide(10), -10);
+	equal((new MathLib.Integer('-100')).divide(-10), 10);
+});
+test('prototype.divrem()', 15, function () {
+	deepEqual((new MathLib.Integer(+0)).divrem(new MathLib.Integer(+3)), [new MathLib.Integer(0), new MathLib.Integer(0)]);
+	deepEqual((new MathLib.Integer(+0)).divrem(new MathLib.Integer(-3)), [new MathLib.Integer(0), new MathLib.Integer(0)]);
+	deepEqual((new MathLib.Integer(-0)).divrem(new MathLib.Integer(+3)), [new MathLib.Integer(0), new MathLib.Integer(0)]);
+	deepEqual((new MathLib.Integer(-0)).divrem(new MathLib.Integer(-3)), [new MathLib.Integer(0), new MathLib.Integer(0)]);
+
+	deepEqual((new MathLib.Integer(+10)).divrem(new MathLib.Integer(+3)), [new MathLib.Integer(+3), new MathLib.Integer(1)]);
+	deepEqual((new MathLib.Integer(+10)).divrem(new MathLib.Integer(-3)), [new MathLib.Integer(-3), new MathLib.Integer(1)]);
+	deepEqual((new MathLib.Integer(-10)).divrem(new MathLib.Integer(+3)), [new MathLib.Integer(-4), new MathLib.Integer(2)]);
+	deepEqual((new MathLib.Integer(-10)).divrem(new MathLib.Integer(-3)), [new MathLib.Integer(+4), new MathLib.Integer(2)]);
+	
+	deepEqual((new MathLib.Integer('+10000000')).divrem(new MathLib.Integer('+3')),  [new MathLib.Integer('3333333'), new MathLib.Integer('1')]);
+	deepEqual((new MathLib.Integer('+10000000')).divrem(new MathLib.Integer('-3')),  [new MathLib.Integer('-3333333'), new MathLib.Integer('1')]);
+	deepEqual((new MathLib.Integer('-10000000')).divrem(new MathLib.Integer('+3')),  [new MathLib.Integer('-3333334'), new MathLib.Integer('2')]);
+	deepEqual((new MathLib.Integer('-10000000')).divrem(new MathLib.Integer('-3')),  [new MathLib.Integer('3333334'), new MathLib.Integer('2')]);
+
+	deepEqual((new MathLib.Integer('+10000000')).divrem(new MathLib.Integer('+10')),  [new MathLib.Integer('+1000000'), new MathLib.Integer('0')]);
+	deepEqual((new MathLib.Integer('+10000001')).divrem(new MathLib.Integer('+10')),  [new MathLib.Integer('+1000000'), new MathLib.Integer('1')]);
+	deepEqual((new MathLib.Integer('+10000002')).divrem(new MathLib.Integer('+10')),  [new MathLib.Integer('+1000000'), new MathLib.Integer('2')]);
+});
 test('.prototype.isEqual()', 5, function () {
 	equal((new MathLib.Integer('+0')).isEqual(new MathLib.Integer('-0')), true);
 	equal((new MathLib.Integer('1234')).isEqual(new MathLib.Integer('1234')), true);
@@ -3182,6 +3265,23 @@ test('.prototype.minus()', 21, function () {
 	equal((new MathLib.Integer('-10000000')).minus(10), -10000010);
 	equal((new MathLib.Integer('-10000000')).minus(-10), -9999990);
 });
+test('prototype.mod()', 14, function () {
+	deepEqual((new MathLib.Integer(-3)).mod(new MathLib.Integer(+3)), new MathLib.Integer(0));
+	deepEqual((new MathLib.Integer(-2)).mod(new MathLib.Integer(+3)), new MathLib.Integer(1));
+	deepEqual((new MathLib.Integer(-1)).mod(new MathLib.Integer(+3)), new MathLib.Integer(2));
+	deepEqual((new MathLib.Integer(+0)).mod(new MathLib.Integer(+3)), new MathLib.Integer(0));
+	deepEqual((new MathLib.Integer(+1)).mod(new MathLib.Integer(+3)), new MathLib.Integer(1));
+	deepEqual((new MathLib.Integer(+2)).mod(new MathLib.Integer(+3)), new MathLib.Integer(2));
+	deepEqual((new MathLib.Integer(+3)).mod(new MathLib.Integer(+3)), new MathLib.Integer(0));
+	
+	deepEqual((new MathLib.Integer(-3)).mod(+3), 0);
+	deepEqual((new MathLib.Integer(-2)).mod(+3), 1);
+	deepEqual((new MathLib.Integer(-1)).mod(+3), 2);
+	deepEqual((new MathLib.Integer(+0)).mod(+3), 0);
+	deepEqual((new MathLib.Integer(+1)).mod(+3), 1);
+	deepEqual((new MathLib.Integer(+2)).mod(+3), 2);
+	deepEqual((new MathLib.Integer(+3)).mod(+3), 0);
+});
 test('prototype.negative()', 3, function () {
 	equal((new MathLib.Integer('1234')).negative().toString(), '-1234');
 	equal((new MathLib.Integer('+1234')).negative().toString(), '-1234');
@@ -3208,6 +3308,22 @@ test('.prototype.plus()', 13, function () {
 	equal((new MathLib.Integer('-10000000')).plus(-10), -10000010);
 	
 	equal((new MathLib.Integer(5000000)).plus(new MathLib.Integer(5000000)).toString(), '10000000');
+});
+test('.prototype.pow()', 12, function () {
+	// integer
+	equal((new MathLib.Integer('+2')).pow(new MathLib.Integer('+30')).toString(),   '1073741824');
+	equal((new MathLib.Integer('+2')).pow(new MathLib.Integer('-30')).toString(), '1/1073741824');
+	equal((new MathLib.Integer('-2')).pow(new MathLib.Integer('+30')).toString(),   '1073741824');
+	equal((new MathLib.Integer('-2')).pow(new MathLib.Integer('-30')).toString(), '1/1073741824');
+	equal((new MathLib.Integer('-2')).pow(new MathLib.Integer('+31')).toString(),   '-2147483648');
+	equal((new MathLib.Integer('-2')).pow(new MathLib.Integer('-31')).toString(), '-1/2147483648');
+	// number
+	equal((new MathLib.Integer('+2')).pow(3), 8);
+	equal((new MathLib.Integer('+2')).pow(-3), 1/8);
+	equal((new MathLib.Integer('-2')).pow(3), -8);
+	equal((new MathLib.Integer('-2')).pow(-3), -1/8);
+	equal((new MathLib.Integer('-2')).pow(4), 16);
+	equal((new MathLib.Integer('-2')).pow(-4), 1/16);
 });
 test('.prototype.times()', 8, function () {
 	// integer
@@ -3239,10 +3355,15 @@ test('.prototype.toMathML()', 3, function () {
 	equal((new  MathLib.Integer('+1234')).toMathML(), '<mn>1234</mn>');
 	equal((new  MathLib.Integer('-1234')).toMathML(), '<mn>-1234</mn>');
 });
-test('.prototype.toString()', 3, function () {
+test('.prototype.toString()', 6, function () {
+	equal((new  MathLib.Integer('0')).toString(), '0');
+	equal((new  MathLib.Integer('-0')).toString(), '0');
+
 	equal((new  MathLib.Integer('1234')).toString(), '1234');
 	equal((new  MathLib.Integer('+1234')).toString(), '1234');
 	equal((new  MathLib.Integer('-1234')).toString(), '-1234');
+	
+	equal((new  MathLib.Integer('123456789101112131415')).toString(), '123456789101112131415');
 });
 module('Line');
 test('init', 4, function () {
