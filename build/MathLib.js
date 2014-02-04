@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-01-28
+ * build date: 2014-02-04
  */
 // [Specification](https://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html)
 // Chrome: ~
@@ -1892,47 +1892,130 @@ var MathLib;
         trunc: function (x, n) {
             return x.toFixed(n || 0);
         },
-        toContentMathML: function (x) {
-            if (typeof x === 'number') {
-                return '<cn>' + x + '</cn>';
-            } else {
-                return x.toContentMathML();
+        toContentMathML: function (x, options) {
+            if (typeof options === "undefined") { options = {}; }
+            var base = options.base || 10;
+
+            if (MathLib.isNaN(x)) {
+                if (options.strict) {
+                    return '<csymbol cd="nums1">NaN</csymbol>';
+                } else {
+                    return '<notanumber/>';
+                }
+            } else if (!MathLib.isFinite(x)) {
+                if (x === Infinity) {
+                    if (options.strict) {
+                        return '<csymbol cd="nums1">infinity</csymbol>';
+                    } else {
+                        return '<infinity/>';
+                    }
+                } else {
+                    if (options.strict) {
+                        return '<apply><csymbol cd="arith1">times</csymbol><cn>-1</cn><csymbol cd="nums1">infinity</csymbol></apply>';
+                    } else {
+                        return '<apply><times/><cn>-1</cn><infinity/></apply>';
+                    }
+                }
             }
+
+            if (base === 10) {
+                return '<cn type="double">' + MathLib.toString(x) + '</cn>';
+            }
+
+            if (options.strict) {
+                return '<apply><csymbol cd="nums1">based_float</csymbol>' + '<cn type="integer">' + base + '</cn>' + '<cs>' + MathLib.toString(x, { base: base }) + '</cs>' + '</apply>';
+            }
+
+            return '<cn type="real" base="' + base + '">' + MathLib.toString(x, { base: base }) + '</cn>';
         },
-        toLaTeX: function (x, plus) {
-            if (plus) {
-                return (x < 0 ? '-' : '+') + Math.abs(x);
-            } else {
-                return (x < 0 ? '-' : '') + Math.abs(x);
+        toLaTeX: function (x, options) {
+            if (typeof options === "undefined") { options = {}; }
+            var base = options.base || 10, str = MathLib.toString(x, { base: base, sign: options.sign });
+
+            if (MathLib.isNaN(x)) {
+                return '\\text{ NaN }';
+            } else if (x === Infinity) {
+                return '\\infty';
+            } else if (x === -Infinity) {
+                return '-\\infty';
             }
+
+            if (options.baseSubscript) {
+                str += '_{' + base + '}';
+            }
+
+            return str;
         },
-        toMathML: function (x, plus) {
-            if (plus) {
-                return '<mo>' + (x < 0 ? '-' : '+') + '</mo><mn>' + Math.abs(x) + '</mn>';
+        toMathML: function (x, options) {
+            if (typeof options === "undefined") { options = {}; }
+            var str, base = options.base || 10;
+
+            if (options.sign) {
+                str = MathLib.toString(Math.abs(x), { base: base });
             } else {
-                return (x < 0 ? '<mo>-</mo>' : '') + '<mn>' + Math.abs(x) + '</mn>';
+                str = MathLib.toString(x, { base: base });
             }
+
+            str = '<mn>' + str + '</mn>';
+
+            if (MathLib.isNaN(x)) {
+                return '<mi>NaN</mi>';
+            } else if (x === Infinity) {
+                return '<mi>&#x221e;</mi>';
+            } else if (x === -Infinity) {
+                return '<mrow><mo>-</mo><mi>&#x221e;</mi></mrow>';
+            }
+
+            if (options.baseSubscript) {
+                str = '<msub>' + str + '<mn>' + base + '</mn></msub>';
+            }
+
+            if (options.sign) {
+                if (x < 0) {
+                    str = '<mo>-</mo>' + str;
+                } else {
+                    str = '<mo>+</mo>' + str;
+                }
+            }
+
+            return str;
         },
-        toString: function (x, plus) {
-            if (plus) {
-                return (x < 0 ? '-' : '+') + Math.abs(x);
-            } else {
-                return (x < 0 ? '-' : '') + Math.abs(x);
+        toString: function (x, options) {
+            if (typeof options === "undefined") { options = {}; }
+            var base = options.base || 10, str = Math.abs(x).toString(base);
+
+            if (!MathLib.isFinite(x)) {
+                return x.toString();
             }
+
+            if (x < 0) {
+                str = '-' + str;
+            } else if (options.sign) {
+                str = '+' + str;
+            }
+
+            if (options.baseSubscript) {
+                if (base > 9) {
+                    str += '&#x208' + Math.floor(base / 10) + ';';
+                }
+                str += '&#x208' + (base % 10) + ';';
+            }
+
+            return str;
         }
     };
 
     var createFunction1 = function (f, name) {
         return function (x) {
             if (typeof x === 'number') {
-                return f.apply('', arguments);
+                return f.apply(null, arguments);
             } else if (typeof x === 'function') {
                 return function (y) {
                     return f(x(y));
                 };
             } else if (x.type === 'set') {
                 return new MathLib.Set(x.map(f));
-            } else if (x.type === 'complex') {
+            } else if (x.type === 'complex' || x.type === 'integer' || x.type === 'rational') {
                 return x[name].apply(x, Array.prototype.slice.call(arguments, 1));
             } else if (Array.isArray(x)) {
                 return x.map(f);
@@ -5558,44 +5641,58 @@ var MathLib;
         /**
         * Returns the content MathML representation of the vector.
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Vector.prototype.toContentMathML = function () {
-            return this.reduce(function (old, cur) {
-                return old + MathLib.toContentMathML(cur);
-            }, '<vector>') + '</vector>';
+        Vector.prototype.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            if (options.strict) {
+                return this.reduce(function (old, cur) {
+                    return old + MathLib.toContentMathML(cur, options);
+                }, '<apply><csymbol cd="linalg2">vector</csymbol>') + '</apply>';
+            } else {
+                return this.reduce(function (old, cur) {
+                    return old + MathLib.toContentMathML(cur, options);
+                }, '<vector>') + '</vector>';
+            }
         };
 
         /**
         * Returns a LaTeX representation of the vector.
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Vector.prototype.toLaTeX = function () {
+        Vector.prototype.toLaTeX = function (options) {
+            if (typeof options === "undefined") { options = {}; }
             return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
-                return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
+                return old + '\\\\\n\t' + MathLib.toLaTeX(cur, options);
             }) + '\n\\end{pmatrix}';
         };
 
         /**
         * Returns the (presentation) MathML representation of the vector.
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Vector.prototype.toMathML = function () {
+        Vector.prototype.toMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
             return this.reduce(function (old, cur) {
-                return old + '<mtr><mtd>' + MathLib.toMathML(cur) + '</mtd></mtr>';
+                return old + '<mtr><mtd>' + MathLib.toMathML(cur, options) + '</mtd></mtr>';
             }, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
         };
 
         /**
         * Returns a string representation of the vector.
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Vector.prototype.toString = function () {
+        Vector.prototype.toString = function (options) {
+            if (typeof options === "undefined") { options = {}; }
             return '(' + this.reduce(function (old, cur) {
-                return old + ', ' + MathLib.toString(cur);
+                return old + ', ' + MathLib.toString(cur, options);
             }) + ')';
         };
 
@@ -5827,8 +5924,12 @@ var MathLib;
         *
         * @return {string}
         */
-        Complex.toContentMathML = function () {
-            return '<csymbol cd="setname1">C</csymbol>';
+        Complex.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            if (options.strict) {
+                return '<csymbol cd="setname1">C</csymbol>';
+            }
+            return '<complexes/>';
         };
 
         /**
@@ -6458,50 +6559,54 @@ var MathLib;
         /**
         * Returns the LaTeX representation of the complex number
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Complex.prototype.toLaTeX = function () {
-            var str = '', reFlag = false;
+        Complex.prototype.toLaTeX = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var str = '', reFlag = !MathLib.isZero(this.re);
 
             if (!this.isFinite()) {
-                return '\\text{Complex' + this.re + '}';
+                return (options.sign ? '+' : '') + '\\text{Complex' + this.re + '}';
             }
 
-            if (!MathLib.isZero(this.re)) {
-                str = MathLib.toLaTeX(this.re);
-                reFlag = true;
-            }
             if (!MathLib.isZero(this.im)) {
-                str += MathLib.toLaTeX(this.im, reFlag) + 'i';
+                str += MathLib.toLaTeX(this.im, { base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign }) + 'i';
             }
-            if (str.length === 0) {
-                str = '0';
+
+            if (reFlag || str.length === 0) {
+                str = MathLib.toLaTeX(this.re, options) + str;
             }
+
             return str;
         };
 
         /**
         * Returns the (presentation) MathML representation of the number
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Complex.prototype.toMathML = function () {
-            var str = '', reFlag = false;
+        Complex.prototype.toMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var str = '', reFlag = !MathLib.isZero(this.re);
 
             if (!this.isFinite()) {
-                return '<mi>Complex' + this.re + '</mi>';
+                return (options.sign ? '<mo>+</mo>' : '') + '<mi>Complex' + this.re + '</mi>';
             }
 
-            if (!MathLib.isZero(this.re)) {
-                str = MathLib.toMathML(this.re);
-                reFlag = true;
-            }
             if (!MathLib.isZero(this.im)) {
-                str += MathLib.toMathML(this.im, reFlag) + '<mo>&#x2062;</mo><mi>i</mi>';
+                if (reFlag || options.sign) {
+                    str += '<mo>' + MathLib.toString(this.im, { sign: true }).slice(0, 1) + '</mo><mrow>' + MathLib.toMathML(MathLib.abs(this.im), { base: options.base, baseSubscript: options.baseSubscript, sign: false }) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
+                } else {
+                    str += '<mrow>' + MathLib.toMathML(this.im, { base: options.base, baseSubscript: options.baseSubscript }) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
+                }
             }
-            if (str.length === 0) {
-                str = '<mn>0</mn>';
+
+            if (reFlag || str.length === 0) {
+                str = MathLib.toMathML(this.re, options) + str;
             }
+
             return str;
         };
 
@@ -6521,24 +6626,25 @@ var MathLib;
         /**
         * Custom toString function
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Complex.prototype.toString = function () {
-            var str = '';
+        Complex.prototype.toString = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var str = '', reFlag = !MathLib.isZero(this.re);
 
             if (!this.isFinite()) {
-                return 'Complex' + this.re;
+                return (options.sign ? '+' : '') + 'Complex' + this.re;
             }
 
-            if (!MathLib.isZero(this.re)) {
-                str = MathLib.toString(this.re);
-            }
             if (!MathLib.isZero(this.im)) {
-                str += (this.im > 0 ? (str.length ? '+' : '') : '-') + MathLib.toString(Math.abs(this.im)) + 'i';
+                str += MathLib.toString(this.im, { base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign }) + 'i';
             }
-            if (str.length === 0) {
-                str = '0';
+
+            if (reFlag || str.length === 0) {
+                str = MathLib.toString(this.re, options) + str;
             }
+
             return str;
         };
         Complex.polar = function (abs, arg) {
@@ -6613,7 +6719,7 @@ var MathLib;
                 data.push(new MathLib.Integer(parseInt(integer, inputBase)));
 
                 res = data[data.length - 1];
-                factor = new MathLib.Integer(Math.pow(10, blocksize));
+                factor = new MathLib.Integer(Math.pow(inputBase, blocksize));
                 for (i = data.length - 2; i >= 0; i--) {
                     res = res.times(factor).plus(data[i]);
                 }
@@ -6646,8 +6752,12 @@ var MathLib;
         *
         * @return {string}
         */
-        Integer.toContentMathML = function () {
-            return '<csymbol cd="setname1">Z</csymbol>';
+        Integer.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            if (options.strict) {
+                return '<csymbol cd="setname1">Z</csymbol>';
+            }
+            return '<integers/>';
         };
 
         /**
@@ -7219,55 +7329,97 @@ var MathLib;
         /**
         * A content MathML string representation
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Integer.prototype.toContentMathML = function () {
-            return '<cn type="integer" base="10">' + this.toString() + '</cn>';
+        Integer.prototype.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var base = options.base || 10;
+
+            // In section 4.2.1.3 in the MathML 3 specification
+            // under "Rewrite: cn based_integer" it says
+            // "A base attribute with value 10 is simply removed"
+            if (base === 10) {
+                return '<cn type="integer">' + this.toString() + '</cn>';
+            } else if (options.strict) {
+                return '<apply><csymbol cd="nums1">based_integer</csymbol><cn>' + base + '</cn><cs>' + this.toString({ base: base }) + '</cs></apply>';
+            } else {
+                return '<cn type="integer" base="' + base + '">' + this.toString({ base: base }) + '</cn>';
+            }
         };
 
         /**
         * A LaTeX string representation
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Integer.prototype.toLaTeX = function () {
-            return this.toString();
+        Integer.prototype.toLaTeX = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var base = options.base || 10, str = this.toString({ base: base, sign: options.sign });
+
+            if (options.baseSubscript) {
+                str += '_{' + base + '}';
+            }
+
+            return str;
         };
 
         /**
         * A presentation MathML string representation
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Integer.prototype.toMathML = function () {
-            return '<mn>' + this.toString() + '</mn>';
+        Integer.prototype.toMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var base = options.base || 10, str = '<mn>' + this.toString({ base: base, sign: options.sign }) + '</mn>';
+
+            if (options.baseSubscript) {
+                str = '<msub>' + str + '<mn>' + base + '</mn></msub>';
+            }
+
+            return str;
         };
 
         /**
         * Custom toString function
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Integer.prototype.toString = function () {
-            var div, rem, temp, n = this.abs(), factor = new MathLib.Integer(1e7), str = '';
+        Integer.prototype.toString = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var div, rem, temp, base = options.base || 10, blocksize = Math.floor(Math.log(Math.pow(2, 26) - 1) / Math.log(base)), factor = new MathLib.Integer(Math.pow(base, blocksize)), n = this.abs(), str = '';
 
             if (n.isZero()) {
-                return '0';
+                str = '0';
+            } else {
+                while (!n.isZero()) {
+                    temp = n.divrem(factor);
+                    div = temp[0];
+                    rem = temp[1];
+
+                    str = ('000000' + rem.data[0].toString(base)).slice(-blocksize) + str;
+                    n = div;
+                }
+
+                str = str.replace(/^0+/, '');
+
+                if (this.sign === '-') {
+                    str = '-' + str;
+                }
             }
 
-            while (!n.isZero()) {
-                temp = n.divrem(factor);
-                div = temp[0];
-                rem = temp[1];
-
-                str = ('000000' + rem.data[0]).slice(-7) + str;
-                n = div;
+            if (options.sign && (this.sign === '+' || this.isZero())) {
+                str = '+' + str;
             }
 
-            str = str.replace(/^0+/, '');
-
-            if (this.sign === '-') {
-                str = '-' + str;
+            if (options.baseSubscript) {
+                if (base > 9) {
+                    str += '&#x208' + Math.floor(base / 10) + ';';
+                }
+                str += '&#x208' + (base % 10) + ';';
             }
 
             return str;
@@ -8510,39 +8662,57 @@ var MathLib;
         /**
         * converting the matrix to content MathML
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Matrix.prototype.toContentMathML = function () {
-            return this.reduce(function (str, x) {
-                return str + x.reduce(function (prev, cur) {
-                    return prev + MathLib.toContentMathML(cur);
-                }, '<matrixrow>') + '</matrixrow>';
-            }, '<matrix>') + '</matrix>';
+        Matrix.prototype.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            if (options.strict) {
+                return this.reduce(function (str, x) {
+                    return str + '<apply><csymbol cd="linalg2">matrixrow</csymbol>' + x.map(function (entry) {
+                        return MathLib.toContentMathML(entry, options);
+                    }).join('') + '</apply>';
+                }, '<apply><csymbol cd="linalg2">matrix</csymbol>') + '</apply>';
+            } else {
+                return this.reduce(function (str, x) {
+                    return str + '<matrixrow>' + x.map(function (entry) {
+                        return MathLib.toContentMathML(entry, options);
+                    }).join('') + '</matrixrow>';
+                }, '<matrix>') + '</matrix>';
+            }
         };
 
         /**
         * Converting the matrix to LaTeX
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Matrix.prototype.toLaTeX = function () {
+        Matrix.prototype.toLaTeX = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var passOptions = { base: options.base, baseSubscript: options.baseSubscript };
+
             return '\\begin{pmatrix}\n' + this.reduce(function (str, x) {
-                return str + x.reduce(function (prev, cur) {
-                    return prev + ' & ' + MathLib.toLaTeX(cur);
-                }) + '\\\n';
+                return str + x.map(function (entry) {
+                    return MathLib.toLaTeX(entry, passOptions);
+                }).join(' & ') + '\\\n';
             }, '').slice(0, -2) + '\n\\end{pmatrix}';
         };
 
         /**
         * converting the matrix to (presentation) MathML
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Matrix.prototype.toMathML = function () {
+        Matrix.prototype.toMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var passOptions = { base: options.base, baseSubscript: options.baseSubscript };
+
             return this.reduce(function (str, x) {
-                return str + x.reduce(function (prev, cur) {
-                    return prev + '<mtd>' + MathLib.toMathML(cur) + '</mtd>';
-                }, '<mtr>') + '</mtr>';
+                return str + '<mtr><mtd>' + x.map(function (entry) {
+                    return MathLib.toMathML(entry, passOptions);
+                }).join('</mtd><mtd>') + '</mtd></mtr>';
             }, '<mrow><mo> ( </mo><mtable>') + '</mtable><mo> ) </mo></mrow>';
         };
 
@@ -8560,13 +8730,17 @@ var MathLib;
         /**
         * Creating a custom .toString() function
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Matrix.prototype.toString = function () {
+        Matrix.prototype.toString = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var passOptions = { base: options.base, baseSubscript: options.baseSubscript };
+
             return this.reduce(function (str, x) {
-                return str + x.reduce(function (prev, cur) {
-                    return prev + '\t' + MathLib.toString(cur);
-                }) + '\n';
+                return str + x.map(function (entry) {
+                    return MathLib.toString(entry, passOptions);
+                }).join('\t') + '\n';
             }, '').slice(0, -1);
         };
 
@@ -10197,7 +10371,7 @@ var MathLib;
                     if (i === 0) {
                         str += MathLib.toString(this[i]);
                     } else {
-                        str += MathLib.toString(this[i], true);
+                        str += MathLib.toString(this[i], { sign: true });
                     }
 
                     if (i > 1) {
@@ -10227,7 +10401,7 @@ var MathLib;
                     //   str += MathLib.toLaTeX(this[i]);
                     // }
                     // else {
-                    str += MathLib.toLaTeX(this[i], true);
+                    str += MathLib.toLaTeX(this[i], { sign: true });
 
                     // }
                     if (i > 1) {
@@ -10253,11 +10427,11 @@ var MathLib;
                     //   str += MathLib.toMathML(this[i]);
                     // }
                     // else {
-                    str += MathLib.toMathML(this[i], true);
+                    str += MathLib.toMathML(this[i], { sign: true });
 
                     // }
                     if (i > 1) {
-                        str += '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(i) + '</msup>';
+                        str += '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(i).slice(6, -7) + '</msup>';
                     } else if (i === 1) {
                         str += '<mo>&#x2062;</mo><mi>x</mi>';
                     }
@@ -10275,10 +10449,11 @@ var MathLib;
         * @return {string}
         */
         Polynomial.prototype.toString = function () {
-            var str = MathLib.toString(this[this.deg]) + '*x^' + this.deg, i;
+            var i, str = MathLib.toString(this[this.deg]) + '*x^' + this.deg;
+
             for (i = this.deg - 1; i >= 0; i--) {
                 if (!MathLib.isZero(this[i])) {
-                    str += MathLib.toString(this[i], true);
+                    str += MathLib.toString(this[i], { sign: true });
 
                     if (i > 1) {
                         str += '*x^' + MathLib.toString(i);
@@ -10352,8 +10527,12 @@ var MathLib;
         *
         * @return {string}
         */
-        Rational.toContentMathML = function () {
-            return '<csymbol cd="setname1">Q</csymbol>';
+        Rational.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            if (options.strict) {
+                return '<csymbol cd="setname1">Q</csymbol>';
+            }
+            return '<rationals/>';
         };
 
         /**
@@ -10545,28 +10724,61 @@ var MathLib;
         /**
         * Returns the Content MathML representation of the rational number
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Rational.prototype.toContentMathML = function () {
-            return '<cn type="rational">' + this.numerator + '<sep/>' + this.denominator + '</cn>';
+        Rational.prototype.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var base;
+
+            if (options.strict) {
+                return '<apply><csymbol cd="nums1">rational</csymbol>' + MathLib.toContentMathML(this.numerator, options) + MathLib.toContentMathML(this.denominator, options) + '</apply>';
+            } else {
+                base = (options.base || 10);
+                return '<cn type="rational"' + ((base !== 10) ? ' base="' + base + '"' : '') + '>' + MathLib.toString(this.numerator, { base: base }) + '<sep/>' + MathLib.toString(this.denominator, { base: base }) + '</cn>';
+            }
         };
 
         /**
         * Returns the LaTeX representation of the rational number
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Rational.prototype.toLaTeX = function () {
+        Rational.prototype.toLaTeX = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var numerator, str = '', passOptions = { base: options.base, baseSubscript: options.baseSubscript };
+
+            if (options.sign) {
+                str = MathLib.toString(this.numerator, { sign: true }).slice(0, 1);
+                numerator = MathLib.toLaTeX(MathLib.abs(this.numerator), passOptions);
+            } else {
+                numerator = MathLib.toLaTeX(this.numerator, passOptions);
+            }
+
+            return str + '\\frac{' + numerator + '}{' + MathLib.toLaTeX(this.denominator, passOptions) + '}';
+
             return '\\frac{' + MathLib.toLaTeX(this.numerator) + '}{' + MathLib.toLaTeX(this.denominator) + '}';
         };
 
         /**
         * Returns the MathML representation of the rational number
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Rational.prototype.toMathML = function () {
-            return '<mfrac>' + MathLib.toMathML(this.numerator) + MathLib.toMathML(this.denominator) + '</mfrac>';
+        Rational.prototype.toMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var numerator, str = '', passOptions = { base: options.base, baseSubscript: options.baseSubscript };
+
+            if (options.sign) {
+                str = '<mo>' + MathLib.toString(this.numerator, { sign: true }).slice(0, 1) + '</mo>';
+                numerator = MathLib.toMathML(MathLib.abs(this.numerator), passOptions);
+            } else {
+                numerator = MathLib.toMathML(this.numerator, passOptions);
+            }
+
+            return str + '<mfrac>' + numerator + MathLib.toMathML(this.denominator, passOptions) + '</mfrac>';
         };
 
         /**
@@ -10583,10 +10795,12 @@ var MathLib;
         /**
         * Custom toString function
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Rational.prototype.toString = function () {
-            return MathLib.toString(this.numerator) + '/' + MathLib.toString(this.denominator);
+        Rational.prototype.toString = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            return MathLib.toString(this.numerator, options) + '/' + MathLib.toString(this.denominator, { base: options.base, baseSubscript: options.baseSubscript });
         };
         return Rational;
     })();
@@ -10962,29 +11176,43 @@ var MathLib;
         /**
         * Returns the content MathML representation of the set
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Set.prototype.toContentMathML = function () {
-            if (this.isEmpty()) {
-                return '<emptyset/>';
+        Set.prototype.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            if (options.strict) {
+                if (this.isEmpty()) {
+                    return '<csymbol cd="set1">emptyset</csymbol>';
+                } else {
+                    return this.reduce(function (old, cur) {
+                        return old + MathLib.toContentMathML(cur, options);
+                    }, '<apply><csymbol cd="set1">set</csymbol>') + '</apply>';
+                }
             } else {
-                return this.reduce(function (old, cur) {
-                    return old + MathLib.toContentMathML(cur);
-                }, '<set>') + '</set>';
+                if (this.isEmpty()) {
+                    return '<emptyset/>';
+                } else {
+                    return this.reduce(function (old, cur) {
+                        return old + MathLib.toContentMathML(cur, options);
+                    }, '<set>') + '</set>';
+                }
             }
         };
 
         /**
         * Returns the LaTeX representation of the set
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Set.prototype.toLaTeX = function () {
+        Set.prototype.toLaTeX = function (options) {
+            if (typeof options === "undefined") { options = {}; }
             if (this.isEmpty()) {
                 return '\\emptyset';
             } else {
                 return this.reduce(function (old, cur) {
-                    return old + MathLib.toLaTeX(cur) + ', ';
+                    return old + MathLib.toLaTeX(cur, options) + ', ';
                 }, '\\{').slice(0, -2) + '\\}';
             }
         };
@@ -10992,14 +11220,16 @@ var MathLib;
         /**
         * Returns the (presentation) MathML representation of the set
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Set.prototype.toMathML = function () {
+        Set.prototype.toMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
             if (this.isEmpty()) {
                 return '<mi>&#x2205;</mi>';
             } else {
                 return this.reduce(function (old, cur) {
-                    return old + MathLib.toMathML(cur) + '<mo>,</mo>';
+                    return old + MathLib.toMathML(cur, options) + '<mo>,</mo>';
                 }, '<mrow><mo>{</mo>').slice(0, -10) + '<mo>}</mo></mrow>';
             }
         };
@@ -11007,13 +11237,18 @@ var MathLib;
         /**
         * Returns a string representation of the set
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Set.prototype.toString = function () {
+        Set.prototype.toString = function (options) {
+            if (typeof options === "undefined") { options = {}; }
             if (this.isEmpty()) {
                 return '∅';
+            } else {
+                return this.reduce(function (old, cur) {
+                    return old + MathLib.toString(cur, options) + ', ';
+                }, '{').slice(0, -2) + '}';
             }
-            return '{' + Array.prototype.join.call(this, ', ') + '}';
         };
         Set.fromTo = function (start, end, step) {
             if (typeof step === "undefined") { step = 1; }

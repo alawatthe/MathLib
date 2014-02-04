@@ -13,7 +13,7 @@ toLaTeX() : string {
 			//   str += MathLib.toLaTeX(this[i]);
 			// }
 			// else {
-				str += MathLib.toLaTeX(this[i], true);
+				str += MathLib.toLaTeX(this[i], {sign: true});
 			// }
 
 			if (i > 1) {

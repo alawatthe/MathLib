@@ -365,29 +365,43 @@
         /**
         * Returns the content MathML representation of the set
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Set.prototype.toContentMathML = function () {
-            if (this.isEmpty()) {
-                return '<emptyset/>';
+        Set.prototype.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            if (options.strict) {
+                if (this.isEmpty()) {
+                    return '<csymbol cd="set1">emptyset</csymbol>';
+                } else {
+                    return this.reduce(function (old, cur) {
+                        return old + MathLib.toContentMathML(cur, options);
+                    }, '<apply><csymbol cd="set1">set</csymbol>') + '</apply>';
+                }
             } else {
-                return this.reduce(function (old, cur) {
-                    return old + MathLib.toContentMathML(cur);
-                }, '<set>') + '</set>';
+                if (this.isEmpty()) {
+                    return '<emptyset/>';
+                } else {
+                    return this.reduce(function (old, cur) {
+                        return old + MathLib.toContentMathML(cur, options);
+                    }, '<set>') + '</set>';
+                }
             }
         };
 
         /**
         * Returns the LaTeX representation of the set
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Set.prototype.toLaTeX = function () {
+        Set.prototype.toLaTeX = function (options) {
+            if (typeof options === "undefined") { options = {}; }
             if (this.isEmpty()) {
                 return '\\emptyset';
             } else {
                 return this.reduce(function (old, cur) {
-                    return old + MathLib.toLaTeX(cur) + ', ';
+                    return old + MathLib.toLaTeX(cur, options) + ', ';
                 }, '\\{').slice(0, -2) + '\\}';
             }
         };
@@ -395,14 +409,16 @@
         /**
         * Returns the (presentation) MathML representation of the set
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Set.prototype.toMathML = function () {
+        Set.prototype.toMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
             if (this.isEmpty()) {
                 return '<mi>&#x2205;</mi>';
             } else {
                 return this.reduce(function (old, cur) {
-                    return old + MathLib.toMathML(cur) + '<mo>,</mo>';
+                    return old + MathLib.toMathML(cur, options) + '<mo>,</mo>';
                 }, '<mrow><mo>{</mo>').slice(0, -10) + '<mo>}</mo></mrow>';
             }
         };
@@ -410,13 +426,18 @@
         /**
         * Returns a string representation of the set
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Set.prototype.toString = function () {
+        Set.prototype.toString = function (options) {
+            if (typeof options === "undefined") { options = {}; }
             if (this.isEmpty()) {
                 return '∅';
+            } else {
+                return this.reduce(function (old, cur) {
+                    return old + MathLib.toString(cur, options) + ', ';
+                }, '{').slice(0, -2) + '}';
             }
-            return '{' + Array.prototype.join.call(this, ', ') + '}';
         };
         Set.fromTo = function (start, end, step) {
             if (typeof step === "undefined") { step = 1; }

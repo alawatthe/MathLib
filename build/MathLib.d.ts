@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-01-28
+ * build date: 2014-02-04
  */
 
 declare module MathLib {
@@ -674,27 +674,31 @@ declare module MathLib {
         /**
         * Returns the content MathML representation of the vector.
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toContentMathML(): string;
+        public toContentMathML(options?: toContentMathMLOptions): string;
         /**
         * Returns a LaTeX representation of the vector.
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toLaTeX(): string;
+        public toLaTeX(options?: toPresentationOptions): string;
         /**
         * Returns the (presentation) MathML representation of the vector.
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toMathML(): string;
+        public toMathML(options?: toPresentationOptions): string;
         /**
         * Returns a string representation of the vector.
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toString(): string;
+        public toString(options?: toPresentationOptions): string;
         /**
         * Calculates the vector product of two vectors.
         *
@@ -823,7 +827,7 @@ declare module MathLib {
         *
         * @return {string}
         */
-        static toContentMathML(): string;
+        static toContentMathML(options?: toContentMathMLOptions): string;
         /**
         * A LaTeX string representation
         *
@@ -1087,15 +1091,17 @@ declare module MathLib {
         /**
         * Returns the LaTeX representation of the complex number
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toLaTeX(): string;
+        public toLaTeX(options?: toPresentationOptions): string;
         /**
         * Returns the (presentation) MathML representation of the number
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toMathML(): string;
+        public toMathML(options?: toPresentationOptions): string;
         /**
         * Interprets the complex number as point in the two dimensional plane
         *
@@ -1105,9 +1111,10 @@ declare module MathLib {
         /**
         * Custom toString function
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toString(): string;
+        public toString(options?: toPresentationOptions): string;
     }
 declare var Complex: Field;
 
@@ -1135,7 +1142,7 @@ declare var Complex: Field;
         *
         * @return {string}
         */
-        static toContentMathML(): string;
+        static toContentMathML(options?: toContentMathMLOptions): string;
         /**
         * A LaTeX string representation
         *
@@ -1277,27 +1284,31 @@ declare var Complex: Field;
         /**
         * A content MathML string representation
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toContentMathML(): string;
+        public toContentMathML(options?: toContentMathMLOptions): string;
         /**
         * A LaTeX string representation
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toLaTeX(): string;
+        public toLaTeX(options?: toPresentationOptions): string;
         /**
         * A presentation MathML string representation
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toMathML(): string;
+        public toMathML(options?: toPresentationOptions): string;
         /**
         * Custom toString function
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toString(): string;
+        public toString(options?: toPresentationOptions): string;
     }
 declare var Integer: Ring;
 
@@ -1751,21 +1762,24 @@ declare var Integer: Ring;
         /**
         * converting the matrix to content MathML
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toContentMathML(): string;
+        public toContentMathML(options?: toContentMathMLOptions): string;
         /**
         * Converting the matrix to LaTeX
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toLaTeX(): string;
+        public toLaTeX(options?: toPresentationOptions): string;
         /**
         * converting the matrix to (presentation) MathML
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toMathML(): string;
+        public toMathML(options?: toPresentationOptions): string;
         /**
         * Converts the rows of the matrix to vectors
         *
@@ -1775,9 +1789,10 @@ declare var Integer: Ring;
         /**
         * Creating a custom .toString() function
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toString(): string;
+        public toString(options?: toPresentationOptions): string;
         /**
         * Calculating the trace of the matrix
         *
@@ -2310,7 +2325,7 @@ declare var Integer: Ring;
         *
         * @return {string}
         */
-        static toContentMathML(): string;
+        static toContentMathML(options?: toContentMathMLOptions): string;
         /**
         * A LaTeX string representation
         *
@@ -2410,21 +2425,24 @@ declare var Integer: Ring;
         /**
         * Returns the Content MathML representation of the rational number
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toContentMathML(): string;
+        public toContentMathML(options?: toContentMathMLOptions): string;
         /**
         * Returns the LaTeX representation of the rational number
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toLaTeX(): string;
+        public toLaTeX(options?: toPresentationOptions): string;
         /**
         * Returns the MathML representation of the rational number
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toMathML(): string;
+        public toMathML(options?: toPresentationOptions): string;
         /**
         * Returns the number represented by the rational number
         *
@@ -2435,9 +2453,10 @@ declare var Integer: Ring;
         /**
         * Custom toString function
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toString(): string;
+        public toString(options?: toPresentationOptions): string;
     }
 declare var Rational: Field;
 
@@ -2615,27 +2634,31 @@ declare var Rational: Field;
         /**
         * Returns the content MathML representation of the set
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toContentMathML(): string;
+        public toContentMathML(options?: toContentMathMLOptions): string;
         /**
         * Returns the LaTeX representation of the set
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toLaTeX(): string;
+        public toLaTeX(options?: toPresentationOptions): string;
         /**
         * Returns the (presentation) MathML representation of the set
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toMathML(): string;
+        public toMathML(options?: toPresentationOptions): string;
         /**
         * Returns a string representation of the set
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        public toString(): string;
+        public toString(options?: toPresentationOptions): string;
         /**
         * Returns the union of two sets.
         *

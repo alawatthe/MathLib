@@ -1,25 +1,24 @@
 /**
  * Returns the LaTeX representation of the complex number
  *
+ * @param {object} [options] - Optional options to style the output
  * @return {string}
  */
-toLaTeX() : string {
+toLaTeX(options : toPresentationOptions = {}) : string {
 	var str = '',
-			reFlag = false;
+			reFlag = !MathLib.isZero(this.re);
 
 	if (!this.isFinite()) {
-		return '\\text{Complex' + this.re + '}';
+		return (options.sign ? '+' : '') + '\\text{Complex' + this.re + '}';
 	}
 
-	if (!MathLib.isZero(this.re)) {
-		str = MathLib.toLaTeX(this.re);
-		reFlag = true;
-	}
 	if (!MathLib.isZero(this.im)) {
-		str += MathLib.toLaTeX(this.im, reFlag) + 'i';
+		str += MathLib.toLaTeX(this.im, {base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign}) + 'i';
 	}
-	if (str.length === 0) {
-		str = '0';
+
+	if (reFlag || str.length === 0) {
+		str = MathLib.toLaTeX(this.re, options) + str;
 	}
+
 	return str;
 }

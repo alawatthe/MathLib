@@ -40,8 +40,12 @@
         *
         * @return {string}
         */
-        Complex.toContentMathML = function () {
-            return '<csymbol cd="setname1">C</csymbol>';
+        Complex.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            if (options.strict) {
+                return '<csymbol cd="setname1">C</csymbol>';
+            }
+            return '<complexes/>';
         };
 
         /**
@@ -671,50 +675,54 @@
         /**
         * Returns the LaTeX representation of the complex number
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Complex.prototype.toLaTeX = function () {
-            var str = '', reFlag = false;
+        Complex.prototype.toLaTeX = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var str = '', reFlag = !MathLib.isZero(this.re);
 
             if (!this.isFinite()) {
-                return '\\text{Complex' + this.re + '}';
+                return (options.sign ? '+' : '') + '\\text{Complex' + this.re + '}';
             }
 
-            if (!MathLib.isZero(this.re)) {
-                str = MathLib.toLaTeX(this.re);
-                reFlag = true;
-            }
             if (!MathLib.isZero(this.im)) {
-                str += MathLib.toLaTeX(this.im, reFlag) + 'i';
+                str += MathLib.toLaTeX(this.im, { base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign }) + 'i';
             }
-            if (str.length === 0) {
-                str = '0';
+
+            if (reFlag || str.length === 0) {
+                str = MathLib.toLaTeX(this.re, options) + str;
             }
+
             return str;
         };
 
         /**
         * Returns the (presentation) MathML representation of the number
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Complex.prototype.toMathML = function () {
-            var str = '', reFlag = false;
+        Complex.prototype.toMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var str = '', reFlag = !MathLib.isZero(this.re);
 
             if (!this.isFinite()) {
-                return '<mi>Complex' + this.re + '</mi>';
+                return (options.sign ? '<mo>+</mo>' : '') + '<mi>Complex' + this.re + '</mi>';
             }
 
-            if (!MathLib.isZero(this.re)) {
-                str = MathLib.toMathML(this.re);
-                reFlag = true;
-            }
             if (!MathLib.isZero(this.im)) {
-                str += MathLib.toMathML(this.im, reFlag) + '<mo>&#x2062;</mo><mi>i</mi>';
+                if (reFlag || options.sign) {
+                    str += '<mo>' + MathLib.toString(this.im, { sign: true }).slice(0, 1) + '</mo><mrow>' + MathLib.toMathML(MathLib.abs(this.im), { base: options.base, baseSubscript: options.baseSubscript, sign: false }) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
+                } else {
+                    str += '<mrow>' + MathLib.toMathML(this.im, { base: options.base, baseSubscript: options.baseSubscript }) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
+                }
             }
-            if (str.length === 0) {
-                str = '<mn>0</mn>';
+
+            if (reFlag || str.length === 0) {
+                str = MathLib.toMathML(this.re, options) + str;
             }
+
             return str;
         };
 
@@ -734,24 +742,25 @@
         /**
         * Custom toString function
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Complex.prototype.toString = function () {
-            var str = '';
+        Complex.prototype.toString = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var str = '', reFlag = !MathLib.isZero(this.re);
 
             if (!this.isFinite()) {
-                return 'Complex' + this.re;
+                return (options.sign ? '+' : '') + 'Complex' + this.re;
             }
 
-            if (!MathLib.isZero(this.re)) {
-                str = MathLib.toString(this.re);
-            }
             if (!MathLib.isZero(this.im)) {
-                str += (this.im > 0 ? (str.length ? '+' : '') : '-') + MathLib.toString(Math.abs(this.im)) + 'i';
+                str += MathLib.toString(this.im, { base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign }) + 'i';
             }
-            if (str.length === 0) {
-                str = '0';
+
+            if (reFlag || str.length === 0) {
+                str = MathLib.toString(this.re, options) + str;
             }
+
             return str;
         };
         Complex.polar = function (abs, arg) {

@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-01-28
+ * build date: 2014-02-04
  */
 
 module('MathLib');
@@ -131,6 +131,91 @@ test('.on()', 1, function () {
 
 	MathLib.off('error', callback);
 	MathLib.off('warning', callback);
+});
+test('.toContentMathML()', 12, function () {
+	equal(MathLib.toContentMathML(NaN), '<notanumber/>');
+	equal(MathLib.toContentMathML(NaN, {strict: true}), '<csymbol cd="nums1">NaN</csymbol>');
+
+	equal(MathLib.toContentMathML(Infinity), '<infinity/>');
+	equal(MathLib.toContentMathML(Infinity, {strict: true}), '<csymbol cd="nums1">infinity</csymbol>');		
+
+	equal(MathLib.toContentMathML(-Infinity), '<apply><times/><cn>-1</cn><infinity/></apply>');
+	equal(MathLib.toContentMathML(-Infinity, {strict: true}), '<apply><csymbol cd="arith1">times</csymbol><cn>-1</cn><csymbol cd="nums1">infinity</csymbol></apply>');
+
+	equal(MathLib.toContentMathML(123), '<cn type="double">123</cn>');
+	equal(MathLib.toContentMathML(123, {base: 10}), '<cn type="double">123</cn>');
+	equal(MathLib.toContentMathML(123, {base: 2}), '<cn type="real" base="2">1111011</cn>');
+	
+	equal(MathLib.toContentMathML(123, {strict: true}), '<cn type="double">123</cn>');
+	equal(MathLib.toContentMathML(123, {base: 10, strict: true}), '<cn type="double">123</cn>');
+	equal(MathLib.toContentMathML(123, {base: 2, strict: true}), '<apply><csymbol cd="nums1">based_float</csymbol><cn type="integer">2</cn><cs>1111011</cs></apply>');
+});
+test('.toLaTeX()', 15, function () {
+	equal(MathLib.toLaTeX(NaN), '\\text{ NaN }');	
+	equal(MathLib.toLaTeX(Infinity), '\\infty');
+	equal(MathLib.toLaTeX(-Infinity), '-\\infty');
+	
+	equal(MathLib.toLaTeX(123), '123');
+	equal(MathLib.toLaTeX(-123), '-123');
+	
+	equal(MathLib.toLaTeX(123, {sign: true}), '+123');
+	equal(MathLib.toLaTeX(-123, {sign: true}), '-123');
+	
+	equal(MathLib.toLaTeX(123, {base: 2}), '1111011');
+	equal(MathLib.toLaTeX(-123, {base: 2}), '-1111011');
+	equal(MathLib.toLaTeX(123, {base: 2, sign: true}), '+1111011');
+	equal(MathLib.toLaTeX(-123, {base: 2, sign: true}), '-1111011');
+	
+	equal(MathLib.toLaTeX(123, {base: 2, baseSubscript: true}), '1111011_{2}');
+	equal(MathLib.toLaTeX(-123, {base: 2, baseSubscript: true}), '-1111011_{2}');
+
+	equal(MathLib.toLaTeX(123, {base: 2, baseSubscript: true, sign: true}), '+1111011_{2}');
+	equal(MathLib.toLaTeX(-123, {base: 2, baseSubscript: true, sign: true}), '-1111011_{2}');
+});
+test('.toMathML()', 15, function () {
+	equal(MathLib.toMathML(NaN), '<mi>NaN</mi>');
+	equal(MathLib.toMathML(Infinity), '<mi>&#x221e;</mi>');
+	equal(MathLib.toMathML(-Infinity), '<mrow><mo>-</mo><mi>&#x221e;</mi></mrow>');
+
+	equal(MathLib.toMathML(123), '<mn>123</mn>');
+	equal(MathLib.toMathML(-123), '<mn>-123</mn>');
+
+	equal(MathLib.toMathML(123, {sign: true}), '<mo>+</mo><mn>123</mn>');
+	equal(MathLib.toMathML(-123, {sign: true}), '<mo>-</mo><mn>123</mn>');
+
+	equal(MathLib.toMathML(123, {base: 2}), '<mn>1111011</mn>');
+	equal(MathLib.toMathML(-123, {base: 2}), '<mn>-1111011</mn>');
+	
+	equal(MathLib.toMathML(123, {base: 2, sign: true}), '<mo>+</mo><mn>1111011</mn>');
+	equal(MathLib.toMathML(-123, {base: 2, sign: true}), '<mo>-</mo><mn>1111011</mn>');
+
+	equal(MathLib.toMathML(123, {base: 2, baseSubscript: true}), '<msub><mn>1111011</mn><mn>2</mn></msub>');
+	equal(MathLib.toMathML(-123, {base: 2, baseSubscript: true}), '<msub><mn>-1111011</mn><mn>2</mn></msub>');
+
+	equal(MathLib.toMathML(123, {base: 2, baseSubscript: true, sign: true}), '<mo>+</mo><msub><mn>1111011</mn><mn>2</mn></msub>');
+	equal(MathLib.toMathML(-123, {base: 2, baseSubscript: true, sign: true}), '<mo>-</mo><msub><mn>1111011</mn><mn>2</mn></msub>');
+});
+test('.toString()', 15, function () {
+	equal(MathLib.toString(NaN), 'NaN');	
+	equal(MathLib.toString(Infinity), 'Infinity');
+	equal(MathLib.toString(-Infinity), '-Infinity');
+	
+	equal(MathLib.toString(123), '123');
+	equal(MathLib.toString(-123), '-123');
+	
+	equal(MathLib.toString(123, {sign: true}), '+123');
+	equal(MathLib.toString(-123, {sign: true}), '-123');
+	
+	equal(MathLib.toString(123, {base: 2}), '1111011');
+	equal(MathLib.toString(-123, {base: 2}), '-1111011');
+	equal(MathLib.toString(123, {base: 2, sign: true}), '+1111011');
+	equal(MathLib.toString(-123, {base: 2, sign: true}), '-1111011');
+	
+	equal(MathLib.toString(123, {base: 2, baseSubscript: true}), '1111011&#x2082;');
+	equal(MathLib.toString(-123, {base: 2, baseSubscript: true}), '-1111011&#x2082;');
+
+	equal(MathLib.toString(123, {base: 2, baseSubscript: true, sign: true}), '+1111011&#x2082;');
+	equal(MathLib.toString(-123, {base: 2, baseSubscript: true, sign: true}), '-1111011&#x2082;');
 });
 test('.type()', 10, function () {
 	equal(MathLib.type(new MathLib.Complex([2, 3])), 'complex', 'MathLib.type(MathLib.complex([2, 3])) = "complex"');
@@ -299,8 +384,9 @@ test('.type', 1, function () {
 	var c = new MathLib.Complex(3, 4);
 	equal(c.type, 'complex', 'Testing .type');
 });
-test('.toContentMathML()', 1, function () {
-	equal(MathLib.Complex.toContentMathML(), '<csymbol cd="setname1">C</csymbol>');
+test('.toContentMathML()', 2, function () {
+	equal(MathLib.Complex.toContentMathML(), '<complexes/>');
+	equal(MathLib.Complex.toContentMathML({strict: true}), '<csymbol cd="setname1">C</csymbol>');
 });
 test('.toLaTeX()', 1, function () {
 	equal(MathLib.Complex.toLaTeX(), 'Complex Field $\\mathbb{C}$');
@@ -1219,43 +1305,95 @@ test('.toContentMathML()', 7, function () {
 	equal((new MathLib.Complex(NaN)).toContentMathML(), '<csymbol cd="nums1">NaN</csymbol>');
 	equal((new MathLib.Complex(Infinity)).toContentMathML(), '<csymbol cd="nums1">infinity</csymbol>');
 
-	equal(c.toContentMathML(), '<apply><plus /><cn>3</cn><apply><times /><cn>4</cn><imaginaryi /></apply></apply>', 'Normal complex number.');
-	equal(d.toContentMathML(), '<apply><plus /><cn>0</cn><apply><times /><cn>7</cn><imaginaryi /></apply></apply>', 'Real part is zero.');
-	equal(e.toContentMathML(), '<apply><plus /><cn>4</cn><apply><times /><cn>0</cn><imaginaryi /></apply></apply>', 'Complex part is zero.');
-	equal(f.toContentMathML(), '<apply><plus /><cn>4</cn><apply><times /><cn>-5</cn><imaginaryi /></apply></apply>', 'Complex part is negative.');
-	equal(g.toContentMathML(), '<apply><plus /><cn>0</cn><apply><times /><cn>0</cn><imaginaryi /></apply></apply>', 'Number is zero.');
+	equal(c.toContentMathML(), '<apply><plus /><cn type="double">3</cn><apply><times /><cn type="double">4</cn><imaginaryi /></apply></apply>', 'Normal complex number.');
+	equal(d.toContentMathML(), '<apply><plus /><cn type="double">0</cn><apply><times /><cn type="double">7</cn><imaginaryi /></apply></apply>', 'Real part is zero.');
+	equal(e.toContentMathML(), '<apply><plus /><cn type="double">4</cn><apply><times /><cn type="double">0</cn><imaginaryi /></apply></apply>', 'Complex part is zero.');
+	equal(f.toContentMathML(), '<apply><plus /><cn type="double">4</cn><apply><times /><cn type="double">-5</cn><imaginaryi /></apply></apply>', 'Complex part is negative.');
+	equal(g.toContentMathML(), '<apply><plus /><cn type="double">0</cn><apply><times /><cn type="double">0</cn><imaginaryi /></apply></apply>', 'Number is zero.');
 });
-test('.toLaTeX()', 7, function () {
-	var c = new MathLib.Complex(3, 4),
-			d = new MathLib.Complex(0, 7),
-			e = new MathLib.Complex(4, 0),
-			f = new MathLib.Complex(4, -5),
-			g = new MathLib.Complex(0, 0);
+test('.toLaTeX()', 22, function () {
+	var c1 = new MathLib.Complex(3, 4),
+		 	c2 = new MathLib.Complex(-3, 4),
+			c3 = new MathLib.Complex(3, -4),
+			c4 = new MathLib.Complex(-3, -4),
+			d1 = new MathLib.Complex(0, 7),
+			d2 = new MathLib.Complex(0, -7),
+			e1 = new MathLib.Complex(4, 0),
+			e2 = new MathLib.Complex(-4, 0),
+			f = new MathLib.Complex(0, 0);
 
 	equal((new MathLib.Complex(NaN)).toLaTeX(), '\\text{ComplexNaN}');
+	equal((new MathLib.Complex(NaN)).toLaTeX({sign: true}), '+\\text{ComplexNaN}');
 	equal((new MathLib.Complex(Infinity)).toLaTeX(), '\\text{ComplexInfinity}');
+	equal((new MathLib.Complex(Infinity)).toLaTeX({sign: true}), '+\\text{ComplexInfinity}');
 
-	equal(c.toLaTeX(), '3+4i', 'Normal complex number.');
-	equal(d.toLaTeX(), '7i', 'Real part is zero.');
-	equal(e.toLaTeX(), '4', 'Complex part is zero.');
-	equal(f.toLaTeX(), '4-5i', 'Complex part is negative.');
-	equal(g.toLaTeX(), '0', 'Number is zero.');
+	equal(c1.toLaTeX(), '3+4i', 'Normal complex number.');
+	equal(c1.toLaTeX({sign: true}), '+3+4i', 'Normal complex number.');
+
+	equal(c2.toLaTeX(), '-3+4i', 'Normal complex number.');
+	equal(c2.toLaTeX({sign: true}), '-3+4i', 'Normal complex number.');
+
+	equal(c3.toLaTeX(), '3-4i', 'Normal complex number.');
+	equal(c3.toLaTeX({sign: true}), '+3-4i', 'Normal complex number.');
+
+	equal(c4.toLaTeX(), '-3-4i', 'Normal complex number.');
+	equal(c4.toLaTeX({sign: true}), '-3-4i', 'Normal complex number.');
+
+	equal(d1.toLaTeX(), '7i', 'Real part is zero.');
+	equal(d1.toLaTeX({sign: true}), '+7i', 'Real part is zero.');
+
+	equal(d2.toLaTeX(), '-7i', 'Real part is zero.');
+	equal(d2.toLaTeX({sign: true}), '-7i', 'Real part is zero.');
+
+	equal(e1.toLaTeX(), '4', 'Complex part is zero.');
+	equal(e1.toLaTeX({sign: true}), '+4', 'Complex part is zero.');
+	equal(e2.toLaTeX(), '-4', 'Complex part is zero.');
+	equal(e2.toLaTeX({sign: true}), '-4', 'Complex part is zero.');
+
+	equal(f.toLaTeX(), '0', 'Number is zero.');
+	equal(f.toLaTeX({sign: true}), '+0', 'Number is zero.');
 });
-test('.toMathML()', 7, function () {
-	var c = new MathLib.Complex(3, 4),
-			d = new MathLib.Complex(0, 7),
-			e = new MathLib.Complex(4, 0),
-			f = new MathLib.Complex(4, -5),
-			g = new MathLib.Complex(0, 0);
+test('.toMathML()', 22, function () {
+	var c1 = new MathLib.Complex(3, 4),
+		 	c2 = new MathLib.Complex(-3, 4),
+			c3 = new MathLib.Complex(3, -4),
+			c4 = new MathLib.Complex(-3, -4),
+			d1 = new MathLib.Complex(0, 7),
+			d2 = new MathLib.Complex(0, -7),
+			e1 = new MathLib.Complex(4, 0),
+			e2 = new MathLib.Complex(-4, 0),
+			f = new MathLib.Complex(0, 0);
 
 	equal((new MathLib.Complex(NaN)).toMathML(), '<mi>ComplexNaN</mi>');
+	equal((new MathLib.Complex(NaN)).toMathML({sign: true}), '<mo>+</mo><mi>ComplexNaN</mi>');
 	equal((new MathLib.Complex(Infinity)).toMathML(), '<mi>ComplexInfinity</mi>');
+	equal((new MathLib.Complex(Infinity)).toMathML({sign: true}), '<mo>+</mo><mi>ComplexInfinity</mi>');
 
-	equal(c.toMathML(), '<mn>3</mn><mo>+</mo><mn>4</mn><mo>&#x2062;</mo><mi>i</mi>', 'Normal complex number.');
-	equal(d.toMathML(), '<mn>7</mn><mo>&#x2062;</mo><mi>i</mi>', 'Real part is zero.');
-	equal(e.toMathML(), '<mn>4</mn>', 'Complex part is zero.');
-	equal(f.toMathML(), '<mn>4</mn><mo>-</mo><mn>5</mn><mo>&#x2062;</mo><mi>i</mi>', 'Complex part is negative.');
-	equal(g.toMathML(), '<mn>0</mn>', 'Number is zero.');
+	equal(c1.toMathML(), '<mn>3</mn><mo>+</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
+	equal(c1.toMathML({sign: true}), '<mo>+</mo><mn>3</mn><mo>+</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
+
+	equal(c2.toMathML(), '<mn>-3</mn><mo>+</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
+	equal(c2.toMathML({sign: true}), '<mo>-</mo><mn>3</mn><mo>+</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
+
+	equal(c3.toMathML(), '<mn>3</mn><mo>-</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
+	equal(c3.toMathML({sign: true}), '<mo>+</mo><mn>3</mn><mo>-</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
+
+	equal(c4.toMathML(), '<mn>-3</mn><mo>-</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
+	equal(c4.toMathML({sign: true}), '<mo>-</mo><mn>3</mn><mo>-</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
+
+	equal(d1.toMathML(), '<mrow><mn>7</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Real part is zero.');
+	equal(d1.toMathML({sign: true}), '<mo>+</mo><mrow><mn>7</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Real part is zero.');
+
+	equal(d2.toMathML(), '<mrow><mn>-7</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Real part is zero.');
+	equal(d2.toMathML({sign: true}), '<mo>-</mo><mrow><mn>7</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Real part is zero.');
+
+	equal(e1.toMathML(), '<mn>4</mn>', 'Complex part is zero.');
+	equal(e1.toMathML({sign: true}), '<mo>+</mo><mn>4</mn>', 'Complex part is zero.');
+	equal(e2.toMathML(), '<mn>-4</mn>', 'Complex part is zero.');
+	equal(e2.toMathML({sign: true}), '<mo>-</mo><mn>4</mn>', 'Complex part is zero.');
+
+	equal(f.toMathML(), '<mn>0</mn>', 'Number is zero.');
+	equal(f.toMathML({sign: true}), '<mo>+</mo><mn>0</mn>', 'Number is zero.');
 });
 test('.toPoint()', 5, function () {
 	var c = new MathLib.Complex(3, -4),
@@ -1268,21 +1406,47 @@ test('.toPoint()', 5, function () {
 	ok((new MathLib.Complex(NaN)).toPoint().isEqual(new MathLib.Point([0, 0, 0])), 'ComplexNaN.toPoint() = (0,0,0)');
 	ok((new MathLib.Complex(Infinity)).toPoint().isEqual(new MathLib.Point([0, 0, 0])), 'ComplexInfinity.toPoint() = (0,0,0)');
 });
-test('.toString()', 7, function () {
-	var c = new MathLib.Complex(3, 4),
-			d = new MathLib.Complex(0, 7),
-			e = new MathLib.Complex(4, 0),
-			f = new MathLib.Complex(4, -5),
-			g = new MathLib.Complex(0, 0);
+test('.toString()', 22, function () {
+	var c1 = new MathLib.Complex(3, 4),
+		 	c2 = new MathLib.Complex(-3, 4),
+			c3 = new MathLib.Complex(3, -4),
+			c4 = new MathLib.Complex(-3, -4),
+			d1 = new MathLib.Complex(0, 7),
+			d2 = new MathLib.Complex(0, -7),
+			e1 = new MathLib.Complex(4, 0),
+			e2 = new MathLib.Complex(-4, 0),
+			f = new MathLib.Complex(0, 0);
 
 	equal((new MathLib.Complex(NaN)).toString(), 'ComplexNaN');
+	equal((new MathLib.Complex(NaN)).toString({sign: true}), '+ComplexNaN');
 	equal((new MathLib.Complex(Infinity)).toString(), 'ComplexInfinity');
+	equal((new MathLib.Complex(Infinity)).toString({sign: true}), '+ComplexInfinity');
 
-	equal(c.toString(), '3+4i', 'Normal complex number.');
-	equal(d.toString(), '7i', 'Real part is zero.');
-	equal(e.toString(), '4', 'Complex part is zero.');
-	equal(f.toString(), '4-5i', 'Complex part is negative.');
-	equal(g.toString(), '0', 'Number is zero.');
+	equal(c1.toString(), '3+4i', 'Normal complex number.');
+	equal(c1.toString({sign: true}), '+3+4i', 'Normal complex number.');
+
+	equal(c2.toString(), '-3+4i', 'Normal complex number.');
+	equal(c2.toString({sign: true}), '-3+4i', 'Normal complex number.');
+	
+	equal(c3.toString(), '3-4i', 'Normal complex number.');
+	equal(c3.toString({sign: true}), '+3-4i', 'Normal complex number.');
+	
+	equal(c4.toString(), '-3-4i', 'Normal complex number.');
+	equal(c4.toString({sign: true}), '-3-4i', 'Normal complex number.');
+	
+	equal(d1.toString(), '7i', 'Real part is zero.');
+	equal(d1.toString({sign: true}), '+7i', 'Real part is zero.');
+	
+	equal(d2.toString(), '-7i', 'Real part is zero.');
+	equal(d2.toString({sign: true}), '-7i', 'Real part is zero.');
+	
+	equal(e1.toString(), '4', 'Complex part is zero.');
+	equal(e1.toString({sign: true}), '+4', 'Complex part is zero.');
+	equal(e2.toString(), '-4', 'Complex part is zero.');
+	equal(e2.toString({sign: true}), '-4', 'Complex part is zero.');
+
+	equal(f.toString(), '0', 'Number is zero.');
+	equal(f.toString({sign: true}), '+0', 'Number is zero.');
 });
 module('Conic');
 test('init', 1, function () {
@@ -3088,8 +3252,9 @@ test('.type', 1, function () {
 	var i = new MathLib.Integer('1234');
 	equal(i.type, 'integer', 'Testing .type');
 });
-test('.toContentMathML()', 1, function () {
-	equal(MathLib.Integer.toContentMathML(), '<csymbol cd="setname1">Z</csymbol>');
+test('.toContentMathML()', 2, function () {
+	equal(MathLib.Integer.toContentMathML(), '<integers/>');
+	equal(MathLib.Integer.toContentMathML({strict: true}), '<csymbol cd="setname1">Z</csymbol>');
 });
 test('.toLaTeX()', 1, function () {
 	equal(MathLib.Integer.toLaTeX(), 'Integer Ring $\\mathbb{Z}$');
@@ -3323,30 +3488,60 @@ test('.prototype.times()', 8, function () {
 	equal((new MathLib.Integer('-100')).times(10), -1000);
 	equal((new MathLib.Integer('-100')).times(-10), 1000);
 });
-test('.prototype.toContentMathML()', 3, function () {
-	equal((new  MathLib.Integer('1234')).toContentMathML(), '<cn type="integer" base="10">1234</cn>');
-	equal((new  MathLib.Integer('+1234')).toContentMathML(), '<cn type="integer" base="10">1234</cn>');
-	equal((new  MathLib.Integer('-1234')).toContentMathML(), '<cn type="integer" base="10">-1234</cn>');
-});
-test('.prototype.toLaTeX()', 3, function () {
-	equal((new  MathLib.Integer('1234')).toLaTeX(), '1234');
-	equal((new  MathLib.Integer('+1234')).toLaTeX(), '1234');
-	equal((new  MathLib.Integer('-1234')).toLaTeX(), '-1234');
-});
-test('.prototype.toMathML()', 3, function () {
-	equal((new  MathLib.Integer('1234')).toMathML(), '<mn>1234</mn>');
-	equal((new  MathLib.Integer('+1234')).toMathML(), '<mn>1234</mn>');
-	equal((new  MathLib.Integer('-1234')).toMathML(), '<mn>-1234</mn>');
-});
-test('.prototype.toString()', 6, function () {
-	equal((new  MathLib.Integer('0')).toString(), '0');
-	equal((new  MathLib.Integer('-0')).toString(), '0');
-
-	equal((new  MathLib.Integer('1234')).toString(), '1234');
-	equal((new  MathLib.Integer('+1234')).toString(), '1234');
-	equal((new  MathLib.Integer('-1234')).toString(), '-1234');
+test('.prototype.toContentMathML()', 6, function () {
+	equal((new MathLib.Integer(+1234)).toContentMathML(), '<cn type="integer">1234</cn>');
+	equal((new MathLib.Integer(-1234)).toContentMathML(), '<cn type="integer">-1234</cn>');
 	
-	equal((new  MathLib.Integer('123456789101112131415')).toString(), '123456789101112131415');
+	equal((new MathLib.Integer(+1234)).toContentMathML({base: 10}), '<cn type="integer">1234</cn>');
+	equal((new MathLib.Integer(7)).toContentMathML({base: 2}), '<cn type="integer" base="2">111</cn>');
+	
+	equal((new MathLib.Integer(+1234)).toContentMathML({base: 10, strict: true}), '<cn type="integer">1234</cn>');
+	equal((new MathLib.Integer(7)).toContentMathML({base: 2, strict: true}), '<apply><csymbol cd="nums1">based_integer</csymbol><cn>2</cn><cs>111</cs></apply>');
+});
+test('.prototype.toLaTeX()', 9, function () {
+	equal((new MathLib.Integer('1234')).toLaTeX(), '1234');
+	equal((new MathLib.Integer('+1234')).toLaTeX(), '1234');
+	equal((new MathLib.Integer('-1234')).toLaTeX(), '-1234');
+
+	equal((new MathLib.Integer(7)).toLaTeX({base: 2}), '111');
+	equal((new MathLib.Integer(7)).toLaTeX({baseSubscript: true}), '7_{10}');
+	equal((new MathLib.Integer(7)).toLaTeX({base: 2, baseSubscript: true}), '111_{2}');
+
+	equal((new MathLib.Integer(0)).toLaTeX({sign: true}), '+0');
+	equal((new MathLib.Integer(-0)).toLaTeX({sign: true}), '+0');
+	equal((new MathLib.Integer(1)).toLaTeX({sign: true}), '+1');
+});
+test('.prototype.toMathML()', 9, function () {
+	equal((new MathLib.Integer('1234')).toMathML(), '<mn>1234</mn>');
+	equal((new MathLib.Integer('+1234')).toMathML(), '<mn>1234</mn>');
+	equal((new MathLib.Integer('-1234')).toMathML(), '<mn>-1234</mn>');
+
+	equal((new MathLib.Integer(7)).toMathML({base: 2}), '<mn>111</mn>');
+	equal((new MathLib.Integer(7)).toMathML({baseSubscript: true}), '<msub><mn>7</mn><mn>10</mn></msub>');
+	equal((new MathLib.Integer(7)).toMathML({base: 2, baseSubscript: true}), '<msub><mn>111</mn><mn>2</mn></msub>');
+
+	equal((new MathLib.Integer(0)).toMathML({sign: true}), '<mn>+0</mn>');
+	equal((new MathLib.Integer(-0)).toMathML({sign: true}), '<mn>+0</mn>');
+	equal((new MathLib.Integer(1)).toMathML({sign: true}), '<mn>+1</mn>');
+});
+test('.prototype.toString()', 13, function () {
+	equal((new MathLib.Integer('0')).toString(), '0');
+	equal((new MathLib.Integer('-0')).toString(), '0');
+
+	equal((new MathLib.Integer('1234')).toString(), '1234');
+	equal((new MathLib.Integer('+1234')).toString(), '1234');
+	equal((new MathLib.Integer('-1234')).toString(), '-1234');
+	
+	equal((new MathLib.Integer('123456789101112131415')).toString(), '123456789101112131415');
+
+	equal((new MathLib.Integer(7)).toString({base: 2}), '111');
+	equal((new MathLib.Integer(7)).toString({baseSubscript: true}), '7&#x2081;&#x2080;');
+	equal((new MathLib.Integer(7)).toString({base: 2, baseSubscript: true}), '111&#x2082;');
+	equal((new MathLib.Integer('10000000001', {base: 36})).toString({base: 36}), '10000000001');
+	
+	equal((new MathLib.Integer(0)).toString({sign: true}), '+0');
+	equal((new MathLib.Integer(-0)).toString({sign: true}), '+0');
+	equal((new MathLib.Integer(1)).toString({sign: true}), '+1');
 });
 module('Line');
 test('init', 4, function () {
@@ -3834,9 +4029,11 @@ test('.toColVectors()', 1, function () {
 	var m = new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
 	deepEqual(m.toColVectors(), [new MathLib.Vector([1, 4, 7]), new MathLib.Vector([2, 5, 8]), new MathLib.Vector([3, 6, 9])], '.toColVectors()');
 });
-test('.toContentMathML()', 1, function () {
+test('.toContentMathML()', 2, function () {
 	var m = new MathLib.Matrix([[1, 2], [3, 4]]);
-	deepEqual(m.toContentMathML(), '<matrix><matrixrow><cn>1</cn><cn>2</cn></matrixrow><matrixrow><cn>3</cn><cn>4</cn></matrixrow></matrix>', '.toContentMathML()');
+
+	equal(m.toContentMathML(), '<matrix><matrixrow><cn type="double">1</cn><cn type="double">2</cn></matrixrow><matrixrow><cn type="double">3</cn><cn type="double">4</cn></matrixrow></matrix>', '.toContentMathML()');
+	equal(m.toContentMathML({strict: true}), '<apply><csymbol cd="linalg2">matrix</csymbol><apply><csymbol cd="linalg2">matrixrow</csymbol><cn type="double">1</cn><cn type="double">2</cn></apply><apply><csymbol cd="linalg2">matrixrow</csymbol><cn type="double">3</cn><cn type="double">4</cn></apply></apply>', '.toContentMathML()');
 });
 test('.toLaTeX()', 1, function () {
 	var m = new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
@@ -4163,8 +4360,8 @@ test('.times()', 4, function () {
 test('.toContentMathML()', 2, function () {
 	var p = new MathLib.Polynomial([1, 2, 3]),
 			q = new MathLib.Polynomial([-1, 0, 1]);
-	deepEqual(p.toContentMathML(), '<apply><csymbol cd="arith1">plus</csymbol><apply><csymbol cd="arith1">times</csymbol><cn>3</cn><apply><csymbol cd="arith1">power</csymbol><ci>x</ci><cn>2</cn></apply></apply><apply><csymbol cd="arith1">times</csymbol><cn>2</cn><ci>x</ci></apply><cn>1</cn></apply>', '.toContentMathML()');
-	deepEqual(q.toContentMathML(), '<apply><csymbol cd="arith1">plus</csymbol><apply><csymbol cd="arith1">times</csymbol><cn>1</cn><apply><csymbol cd="arith1">power</csymbol><ci>x</ci><cn>2</cn></apply></apply><cn>-1</cn></apply>', '.toContentMathML()');
+	deepEqual(p.toContentMathML(), '<apply><csymbol cd="arith1">plus</csymbol><apply><csymbol cd="arith1">times</csymbol><cn type="double">3</cn><apply><csymbol cd="arith1">power</csymbol><ci>x</ci><cn type="double">2</cn></apply></apply><apply><csymbol cd="arith1">times</csymbol><cn type="double">2</cn><ci>x</ci></apply><cn type="double">1</cn></apply>', '.toContentMathML()');
+	deepEqual(q.toContentMathML(), '<apply><csymbol cd="arith1">plus</csymbol><apply><csymbol cd="arith1">times</csymbol><cn type="double">1</cn><apply><csymbol cd="arith1">power</csymbol><ci>x</ci><cn type="double">2</cn></apply></apply><cn type="double">-1</cn></apply>', '.toContentMathML()');
 });
 test('.toFunctn()', 3, function () {
 	var p = new MathLib.Polynomial([1, 2, 3]),
@@ -4235,8 +4432,9 @@ test('.type', 1, function () {
 	var r = new MathLib.Rational(2, 3);
 	equal(r.type, 'rational', 'Testing .type');
 });
-test('.toContentMathML()', 1, function () {
-	equal(MathLib.Rational.toContentMathML(), '<csymbol cd="setname1">Q</csymbol>');
+test('.toContentMathML()', 2, function () {
+	equal(MathLib.Rational.toContentMathML(), '<rationals/>');
+	equal(MathLib.Rational.toContentMathML({strict: true}), '<csymbol cd="setname1">Q</csymbol>');
 });
 test('.toLaTeX()', 1, function () {
 	equal(MathLib.Rational.toLaTeX(), 'Rational Field $\\mathbb{Q}$');
@@ -4317,25 +4515,56 @@ test('.prototype.times()', 2, function () {
 	equal(r.times(p).isEqual(new MathLib.Rational(2, 6)), true, '.times()');
 	equal(r.times(2).isEqual(new MathLib.Rational(1, 1)), true, '.times()');
 });
-test('.prototype.toContentMathML()', 1, function () {
+test('.prototype.toContentMathML()', 2, function () {
 	var r = new MathLib.Rational(2, 3);
 	equal(r.toContentMathML(), '<cn type="rational">2<sep/>3</cn>', '.toContentMathML()');
+	equal(r.toContentMathML({strict: true}), '<apply><csymbol cd="nums1">rational</csymbol><cn type="double">2</cn><cn type="double">3</cn></apply>', '.toContentMathML()');
 });
-test('.prototype.toLaTeX()', 1, function () {
-	var r = new MathLib.Rational(2, 3);
+test('.prototype.toLaTeX()', 8, function () {
+	var r = new MathLib.Rational(2, 3),
+			p = new MathLib.Rational(-2, 3);
+
 	equal(r.toLaTeX(), '\\frac{2}{3}', '.toLaTeX()');
+	equal(r.toLaTeX({sign: true}), '+\\frac{2}{3}', '.toLaTeX()');
+	equal(r.toLaTeX({base: 2}), '\\frac{10}{11}', '.toLaTeX()');
+	equal(r.toLaTeX({base: 2, baseSubscript: true}), '\\frac{10_{2}}{11_{2}}', '.toLaTeX()');
+	
+	equal(p.toLaTeX(), '\\frac{-2}{3}', '.toLaTeX()');
+	equal(p.toLaTeX({sign: true}), '-\\frac{2}{3}', '.toLaTeX()');
+	equal(p.toLaTeX({base: 2}), '\\frac{-10}{11}', '.toLaTeX()');
+	equal(p.toLaTeX({base: 2, baseSubscript: true}), '\\frac{-10_{2}}{11_{2}}', '.toLaTeX()');
 });
-test('.prototype.toMathML()', 1, function () {
-	var r = new MathLib.Rational(2, 3);
+test('.prototype.toMathML()', 8, function () {
+	var r = new MathLib.Rational(2, 3),
+			p = new MathLib.Rational(-2, 3);
+
 	equal(r.toMathML(), '<mfrac><mn>2</mn><mn>3</mn></mfrac>', '.toMathML()');
+	equal(r.toMathML({sign: true}), '<mo>+</mo><mfrac><mn>2</mn><mn>3</mn></mfrac>', '.toMathML()');
+	equal(r.toMathML({base: 2}), '<mfrac><mn>10</mn><mn>11</mn></mfrac>', '.toMathML()');
+	equal(r.toMathML({base: 2, baseSubscript: true}), '<mfrac><msub><mn>10</mn><mn>2</mn></msub><msub><mn>11</mn><mn>2</mn></msub></mfrac>', '.toMathML()');
+	
+	equal(p.toMathML(), '<mfrac><mn>-2</mn><mn>3</mn></mfrac>', '.toMathML()');
+	equal(p.toMathML({sign: true}), '<mo>-</mo><mfrac><mn>2</mn><mn>3</mn></mfrac>', '.toMathML()');
+	equal(p.toMathML({base: 2}), '<mfrac><mn>-10</mn><mn>11</mn></mfrac>', '.toMathML()');
+	equal(p.toMathML({base: 2, baseSubscript: true}), '<mfrac><msub><mn>-10</mn><mn>2</mn></msub><msub><mn>11</mn><mn>2</mn></msub></mfrac>', '.toMathML()');
 });
 test('.prototype.toNumber()', 1, function () {
 	var r = new MathLib.Rational(1, 2);
 	equal(r.toNumber(), 1 / 2, '.toNumber()');
 });
-test('.prototype.toString()', 1, function () {
-	var r = new MathLib.Rational(2, 3);
+test('.prototype.toString()', 8, function () {
+	var r = new MathLib.Rational(2, 3),
+			p = new MathLib.Rational(-2, 3);
+
 	equal(r.toString(), '2/3', '.toString()');
+	equal(r.toString({sign: true}), '+2/3', '.toString()');
+	equal(r.toString({base: 2}), '10/11', '.toString()');
+	equal(r.toString({base: 2, baseSubscript: true}), '10&#x2082;/11&#x2082;', '.toString()');
+	
+	equal(p.toString(), '-2/3', '.toString()');
+	equal(p.toString({sign: true}), '-2/3', '.toString()');
+	equal(p.toString({base: 2}), '-10/11', '.toString()');
+	equal(p.toString({base: 2, baseSubscript: true}), '-10&#x2082;/11&#x2082;', '.toString()');
 });
 module('Screen', {
 	setup: function () {
@@ -4552,11 +4781,15 @@ test('.toArray()', 2, function () {
 	deepEqual(s.toArray(), [2, 3, 4, 8, 9], 'Testing .toArray() (set)');
 	deepEqual(n.toArray(), [], 'Testing .toArray() (empty set)');
 });
-test('.toContentMathML()', 2, function () {
+test('.toContentMathML()', 4, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
 			e = new MathLib.Set();
-	equal(s.toContentMathML(), '<set><cn>2</cn><cn>3</cn><cn>4</cn><cn>8</cn><cn>9</cn></set>', 'Testing .toContentMathML() (set)');
+
+	equal(s.toContentMathML(), '<set><cn type="double">2</cn><cn type="double">3</cn><cn type="double">4</cn><cn type="double">8</cn><cn type="double">9</cn></set>', 'Testing .toContentMathML() (set)');
+	equal(s.toContentMathML({strict: true}), '<apply><csymbol cd="set1">set</csymbol><cn type="double">2</cn><cn type="double">3</cn><cn type="double">4</cn><cn type="double">8</cn><cn type="double">9</cn></apply>', 'Testing .toContentMathML() (set)');
+
 	equal(e.toContentMathML(), '<emptyset/>', 'Testing .toContentMathML() (empty set)');
+	equal(e.toContentMathML({strict: true}), '<csymbol cd="set1">emptyset</csymbol>', 'Testing .toContentMathML() (empty set)');
 });
 test('.toLaTeX()', 2, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
@@ -4771,10 +5004,11 @@ test('.toArray()', 2, function () {
 	deepEqual(v.toArray(), [1, 2, 3], '.toArray()');
 	equal(MathLib.type(v.toArray()), 'array', '.toArray()');
 });
-test('.toContentMathML()', 1, function () {
+test('.toContentMathML()', 2, function () {
 	var v = new MathLib.Vector([1, 2, 3]);
 
-	equal(v.toContentMathML(), '<vector><cn>1</cn><cn>2</cn><cn>3</cn></vector>', '.toContentMathML()');
+	equal(v.toContentMathML(), '<vector><cn type="double">1</cn><cn type="double">2</cn><cn type="double">3</cn></vector>', '.toContentMathML()');
+	equal(v.toContentMathML({strict: true}), '<apply><csymbol cd="linalg2">vector</csymbol><cn type="double">1</cn><cn type="double">2</cn><cn type="double">3</cn></apply>', '.toContentMathML()');
 });
 test('.toLaTeX()', 1, function () {
 	var v = new MathLib.Vector([1, 2, 3]);

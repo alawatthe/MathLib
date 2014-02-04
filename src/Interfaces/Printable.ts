@@ -1,6 +1,6 @@
 interface Printable {
-	toContentMathML() : string;
-	toLaTeX() : string;
-	toMathML() : string;
-	toString() : string;
+	toContentMathML(options? : toContentMathMLOptions) : string;
+	toLaTeX(options? : toPresentationOptions) : string;
+	toMathML(options? : toPresentationOptions) : string;
+	toString(options? : toPresentationOptions) : string;
 }

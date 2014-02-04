@@ -3,6 +3,9 @@
  *
  * @return {string}
  */
-static toContentMathML() : string {
-	return '<csymbol cd="setname1">Z</csymbol>';
+static toContentMathML(options : toContentMathMLOptions = {}) : string {
+	if (options.strict) {
+		return '<csymbol cd="setname1">Z</csymbol>';
+	}
+	return '<integers/>';
 }

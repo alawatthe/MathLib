@@ -70,7 +70,7 @@ export class Integer implements Printable, RingElement {
 			data.push(new MathLib.Integer(parseInt(integer, inputBase)));
 
 			res = data[data.length - 1];
-			factor = new MathLib.Integer(Math.pow(10, blocksize));
+			factor = new MathLib.Integer(Math.pow(inputBase, blocksize));
 			for (i = data.length - 2; i >= 0; i--) {
 				res = res.times(factor).plus(data[i]);
 			}

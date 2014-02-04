@@ -57,7 +57,7 @@
                 data.push(new MathLib.Integer(parseInt(integer, inputBase)));
 
                 res = data[data.length - 1];
-                factor = new MathLib.Integer(Math.pow(10, blocksize));
+                factor = new MathLib.Integer(Math.pow(inputBase, blocksize));
                 for (i = data.length - 2; i >= 0; i--) {
                     res = res.times(factor).plus(data[i]);
                 }
@@ -90,8 +90,12 @@
         *
         * @return {string}
         */
-        Integer.toContentMathML = function () {
-            return '<csymbol cd="setname1">Z</csymbol>';
+        Integer.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            if (options.strict) {
+                return '<csymbol cd="setname1">Z</csymbol>';
+            }
+            return '<integers/>';
         };
 
         /**
@@ -663,55 +667,97 @@
         /**
         * A content MathML string representation
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Integer.prototype.toContentMathML = function () {
-            return '<cn type="integer" base="10">' + this.toString() + '</cn>';
+        Integer.prototype.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var base = options.base || 10;
+
+            // In section 4.2.1.3 in the MathML 3 specification
+            // under "Rewrite: cn based_integer" it says
+            // "A base attribute with value 10 is simply removed"
+            if (base === 10) {
+                return '<cn type="integer">' + this.toString() + '</cn>';
+            } else if (options.strict) {
+                return '<apply><csymbol cd="nums1">based_integer</csymbol><cn>' + base + '</cn><cs>' + this.toString({ base: base }) + '</cs></apply>';
+            } else {
+                return '<cn type="integer" base="' + base + '">' + this.toString({ base: base }) + '</cn>';
+            }
         };
 
         /**
         * A LaTeX string representation
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Integer.prototype.toLaTeX = function () {
-            return this.toString();
+        Integer.prototype.toLaTeX = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var base = options.base || 10, str = this.toString({ base: base, sign: options.sign });
+
+            if (options.baseSubscript) {
+                str += '_{' + base + '}';
+            }
+
+            return str;
         };
 
         /**
         * A presentation MathML string representation
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Integer.prototype.toMathML = function () {
-            return '<mn>' + this.toString() + '</mn>';
+        Integer.prototype.toMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var base = options.base || 10, str = '<mn>' + this.toString({ base: base, sign: options.sign }) + '</mn>';
+
+            if (options.baseSubscript) {
+                str = '<msub>' + str + '<mn>' + base + '</mn></msub>';
+            }
+
+            return str;
         };
 
         /**
         * Custom toString function
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Integer.prototype.toString = function () {
-            var div, rem, temp, n = this.abs(), factor = new MathLib.Integer(1e7), str = '';
+        Integer.prototype.toString = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var div, rem, temp, base = options.base || 10, blocksize = Math.floor(Math.log(Math.pow(2, 26) - 1) / Math.log(base)), factor = new MathLib.Integer(Math.pow(base, blocksize)), n = this.abs(), str = '';
 
             if (n.isZero()) {
-                return '0';
+                str = '0';
+            } else {
+                while (!n.isZero()) {
+                    temp = n.divrem(factor);
+                    div = temp[0];
+                    rem = temp[1];
+
+                    str = ('000000' + rem.data[0].toString(base)).slice(-blocksize) + str;
+                    n = div;
+                }
+
+                str = str.replace(/^0+/, '');
+
+                if (this.sign === '-') {
+                    str = '-' + str;
+                }
             }
 
-            while (!n.isZero()) {
-                temp = n.divrem(factor);
-                div = temp[0];
-                rem = temp[1];
-
-                str = ('000000' + rem.data[0]).slice(-7) + str;
-                n = div;
+            if (options.sign && (this.sign === '+' || this.isZero())) {
+                str = '+' + str;
             }
 
-            str = str.replace(/^0+/, '');
-
-            if (this.sign === '-') {
-                str = '-' + str;
+            if (options.baseSubscript) {
+                if (base > 9) {
+                    str += '&#x208' + Math.floor(base / 10) + ';';
+                }
+                str += '&#x208' + (base % 10) + ';';
             }
 
             return str;

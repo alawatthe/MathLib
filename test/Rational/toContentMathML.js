@@ -1,3 +1,4 @@
-test('.toContentMathML()', 1, function () {
-	equal(MathLib.Rational.toContentMathML(), '<csymbol cd="setname1">Q</csymbol>');
+test('.toContentMathML()', 2, function () {
+	equal(MathLib.Rational.toContentMathML(), '<rationals/>');
+	equal(MathLib.Rational.toContentMathML({strict: true}), '<csymbol cd="setname1">Q</csymbol>');
 });

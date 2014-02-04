@@ -1,23 +1,24 @@
 /**
  * Custom toString function
  *
+ * @param {object} [options] - Optional options to style the output
  * @return {string}
  */
-toString() : string {
-	var str = '';
+toString(options : toPresentationOptions = {}) : string {
+	var str = '',
+			reFlag = !MathLib.isZero(this.re);
 
 	if (!this.isFinite()) {
-		return 'Complex' + this.re;
+		return (options.sign ? '+' : '') + 'Complex' + this.re;
 	}
 
-	if (!MathLib.isZero(this.re)) {
-		str = MathLib.toString(this.re);
-	}
 	if (!MathLib.isZero(this.im)) {
-		str += (this.im > 0 ? (str.length ? '+' : '') : '-') + MathLib.toString(Math.abs(this.im)) + 'i';
+		str += MathLib.toString(this.im, {base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign}) + 'i';
 	}
-	if (str.length === 0) {
-		str = '0';
+
+	if (reFlag || str.length === 0) {
+		str = MathLib.toString(this.re, options) + str;
 	}
+
 	return str;
 }

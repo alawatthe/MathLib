@@ -454,7 +454,7 @@
                     if (i === 0) {
                         str += MathLib.toString(this[i]);
                     } else {
-                        str += MathLib.toString(this[i], true);
+                        str += MathLib.toString(this[i], { sign: true });
                     }
 
                     if (i > 1) {
@@ -484,7 +484,7 @@
                     //   str += MathLib.toLaTeX(this[i]);
                     // }
                     // else {
-                    str += MathLib.toLaTeX(this[i], true);
+                    str += MathLib.toLaTeX(this[i], { sign: true });
 
                     // }
                     if (i > 1) {
@@ -510,11 +510,11 @@
                     //   str += MathLib.toMathML(this[i]);
                     // }
                     // else {
-                    str += MathLib.toMathML(this[i], true);
+                    str += MathLib.toMathML(this[i], { sign: true });
 
                     // }
                     if (i > 1) {
-                        str += '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(i) + '</msup>';
+                        str += '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(i).slice(6, -7) + '</msup>';
                     } else if (i === 1) {
                         str += '<mo>&#x2062;</mo><mi>x</mi>';
                     }
@@ -532,10 +532,11 @@
         * @return {string}
         */
         Polynomial.prototype.toString = function () {
-            var str = MathLib.toString(this[this.deg]) + '*x^' + this.deg, i;
+            var i, str = MathLib.toString(this[this.deg]) + '*x^' + this.deg;
+
             for (i = this.deg - 1; i >= 0; i--) {
                 if (!MathLib.isZero(this[i])) {
-                    str += MathLib.toString(this[i], true);
+                    str += MathLib.toString(this[i], { sign: true });
 
                     if (i > 1) {
                         str += '*x^' + MathLib.toString(i);

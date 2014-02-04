@@ -285,47 +285,130 @@ var functionList1 = {
     trunc: function (x, n) {
         return x.toFixed(n || 0);
     },
-    toContentMathML: function (x) {
-        if (typeof x === 'number') {
-            return '<cn>' + x + '</cn>';
-        } else {
-            return x.toContentMathML();
+    toContentMathML: function (x, options) {
+        if (typeof options === "undefined") { options = {}; }
+        var base = options.base || 10;
+
+        if (MathLib.isNaN(x)) {
+            if (options.strict) {
+                return '<csymbol cd="nums1">NaN</csymbol>';
+            } else {
+                return '<notanumber/>';
+            }
+        } else if (!MathLib.isFinite(x)) {
+            if (x === Infinity) {
+                if (options.strict) {
+                    return '<csymbol cd="nums1">infinity</csymbol>';
+                } else {
+                    return '<infinity/>';
+                }
+            } else {
+                if (options.strict) {
+                    return '<apply><csymbol cd="arith1">times</csymbol><cn>-1</cn><csymbol cd="nums1">infinity</csymbol></apply>';
+                } else {
+                    return '<apply><times/><cn>-1</cn><infinity/></apply>';
+                }
+            }
         }
+
+        if (base === 10) {
+            return '<cn type="double">' + MathLib.toString(x) + '</cn>';
+        }
+
+        if (options.strict) {
+            return '<apply><csymbol cd="nums1">based_float</csymbol>' + '<cn type="integer">' + base + '</cn>' + '<cs>' + MathLib.toString(x, { base: base }) + '</cs>' + '</apply>';
+        }
+
+        return '<cn type="real" base="' + base + '">' + MathLib.toString(x, { base: base }) + '</cn>';
     },
-    toLaTeX: function (x, plus) {
-        if (plus) {
-            return (x < 0 ? '-' : '+') + Math.abs(x);
-        } else {
-            return (x < 0 ? '-' : '') + Math.abs(x);
+    toLaTeX: function (x, options) {
+        if (typeof options === "undefined") { options = {}; }
+        var base = options.base || 10, str = MathLib.toString(x, { base: base, sign: options.sign });
+
+        if (MathLib.isNaN(x)) {
+            return '\\text{ NaN }';
+        } else if (x === Infinity) {
+            return '\\infty';
+        } else if (x === -Infinity) {
+            return '-\\infty';
         }
+
+        if (options.baseSubscript) {
+            str += '_{' + base + '}';
+        }
+
+        return str;
     },
-    toMathML: function (x, plus) {
-        if (plus) {
-            return '<mo>' + (x < 0 ? '-' : '+') + '</mo><mn>' + Math.abs(x) + '</mn>';
+    toMathML: function (x, options) {
+        if (typeof options === "undefined") { options = {}; }
+        var str, base = options.base || 10;
+
+        if (options.sign) {
+            str = MathLib.toString(Math.abs(x), { base: base });
         } else {
-            return (x < 0 ? '<mo>-</mo>' : '') + '<mn>' + Math.abs(x) + '</mn>';
+            str = MathLib.toString(x, { base: base });
         }
+
+        str = '<mn>' + str + '</mn>';
+
+        if (MathLib.isNaN(x)) {
+            return '<mi>NaN</mi>';
+        } else if (x === Infinity) {
+            return '<mi>&#x221e;</mi>';
+        } else if (x === -Infinity) {
+            return '<mrow><mo>-</mo><mi>&#x221e;</mi></mrow>';
+        }
+
+        if (options.baseSubscript) {
+            str = '<msub>' + str + '<mn>' + base + '</mn></msub>';
+        }
+
+        if (options.sign) {
+            if (x < 0) {
+                str = '<mo>-</mo>' + str;
+            } else {
+                str = '<mo>+</mo>' + str;
+            }
+        }
+
+        return str;
     },
-    toString: function (x, plus) {
-        if (plus) {
-            return (x < 0 ? '-' : '+') + Math.abs(x);
-        } else {
-            return (x < 0 ? '-' : '') + Math.abs(x);
+    toString: function (x, options) {
+        if (typeof options === "undefined") { options = {}; }
+        var base = options.base || 10, str = Math.abs(x).toString(base);
+
+        if (!MathLib.isFinite(x)) {
+            return x.toString();
         }
+
+        if (x < 0) {
+            str = '-' + str;
+        } else if (options.sign) {
+            str = '+' + str;
+        }
+
+        if (options.baseSubscript) {
+            if (base > 9) {
+                str += '&#x208' + Math.floor(base / 10) + ';';
+            }
+            str += '&#x208' + (base % 10) + ';';
+        }
+
+        return str;
     }
 };
 
 var createFunction1 = function (f, name) {
     return function (x) {
         if (typeof x === 'number') {
-            return f.apply('', arguments);
+            return f.apply(null, arguments);
         } else if (typeof x === 'function') {
             return function (y) {
                 return f(x(y));
             };
         } else if (x.type === 'set') {
             return new MathLib.Set(x.map(f));
-        } else if (x.type === 'complex') {
+        } else if (x.type === 'complex' || x.type === 'integer' || x.type === 'rational') {
             return x[name].apply(x, Array.prototype.slice.call(arguments, 1));
         } else if (Array.isArray(x)) {
             return x.map(f);

@@ -36,8 +36,12 @@ var Rational = (function () {
     *
     * @return {string}
     */
-    Rational.toContentMathML = function () {
-        return '<csymbol cd="setname1">Q</csymbol>';
+    Rational.toContentMathML = function (options) {
+        if (typeof options === "undefined") { options = {}; }
+        if (options.strict) {
+            return '<csymbol cd="setname1">Q</csymbol>';
+        }
+        return '<rationals/>';
     };
 
     /**
@@ -229,28 +233,61 @@ var Rational = (function () {
     /**
     * Returns the Content MathML representation of the rational number
     *
+    * @param {object} [options] - Optional options to style the output
     * @return {string}
     */
-    Rational.prototype.toContentMathML = function () {
-        return '<cn type="rational">' + this.numerator + '<sep/>' + this.denominator + '</cn>';
+    Rational.prototype.toContentMathML = function (options) {
+        if (typeof options === "undefined") { options = {}; }
+        var base;
+
+        if (options.strict) {
+            return '<apply><csymbol cd="nums1">rational</csymbol>' + MathLib.toContentMathML(this.numerator, options) + MathLib.toContentMathML(this.denominator, options) + '</apply>';
+        } else {
+            base = (options.base || 10);
+            return '<cn type="rational"' + ((base !== 10) ? ' base="' + base + '"' : '') + '>' + MathLib.toString(this.numerator, { base: base }) + '<sep/>' + MathLib.toString(this.denominator, { base: base }) + '</cn>';
+        }
     };
 
     /**
     * Returns the LaTeX representation of the rational number
     *
+    * @param {object} [options] - Optional options to style the output
     * @return {string}
     */
-    Rational.prototype.toLaTeX = function () {
+    Rational.prototype.toLaTeX = function (options) {
+        if (typeof options === "undefined") { options = {}; }
+        var numerator, str = '', passOptions = { base: options.base, baseSubscript: options.baseSubscript };
+
+        if (options.sign) {
+            str = MathLib.toString(this.numerator, { sign: true }).slice(0, 1);
+            numerator = MathLib.toLaTeX(MathLib.abs(this.numerator), passOptions);
+        } else {
+            numerator = MathLib.toLaTeX(this.numerator, passOptions);
+        }
+
+        return str + '\\frac{' + numerator + '}{' + MathLib.toLaTeX(this.denominator, passOptions) + '}';
+
         return '\\frac{' + MathLib.toLaTeX(this.numerator) + '}{' + MathLib.toLaTeX(this.denominator) + '}';
     };
 
     /**
     * Returns the MathML representation of the rational number
     *
+    * @param {object} [options] - Optional options to style the output
     * @return {string}
     */
-    Rational.prototype.toMathML = function () {
-        return '<mfrac>' + MathLib.toMathML(this.numerator) + MathLib.toMathML(this.denominator) + '</mfrac>';
+    Rational.prototype.toMathML = function (options) {
+        if (typeof options === "undefined") { options = {}; }
+        var numerator, str = '', passOptions = { base: options.base, baseSubscript: options.baseSubscript };
+
+        if (options.sign) {
+            str = '<mo>' + MathLib.toString(this.numerator, { sign: true }).slice(0, 1) + '</mo>';
+            numerator = MathLib.toMathML(MathLib.abs(this.numerator), passOptions);
+        } else {
+            numerator = MathLib.toMathML(this.numerator, passOptions);
+        }
+
+        return str + '<mfrac>' + numerator + MathLib.toMathML(this.denominator, passOptions) + '</mfrac>';
     };
 
     /**
@@ -267,10 +304,12 @@ var Rational = (function () {
     /**
     * Custom toString function
     *
+    * @param {object} [options] - Optional options to style the output
     * @return {string}
     */
-    Rational.prototype.toString = function () {
-        return MathLib.toString(this.numerator) + '/' + MathLib.toString(this.denominator);
+    Rational.prototype.toString = function (options) {
+        if (typeof options === "undefined") { options = {}; }
+        return MathLib.toString(this.numerator, options) + '/' + MathLib.toString(this.denominator, { base: options.base, baseSubscript: options.baseSubscript });
     };
     return Rational;
 })();

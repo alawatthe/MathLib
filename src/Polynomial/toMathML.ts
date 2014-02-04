@@ -12,11 +12,11 @@ toMathML() : string {
 			//   str += MathLib.toMathML(this[i]);
 			// }
 			// else {
-				str += MathLib.toMathML(this[i], true);
+				str += MathLib.toMathML(this[i], {sign: true});
 			// }
 
 			if (i > 1) {
-				str += '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(i) + '</msup>';
+				str += '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(i).slice(6, -7) + '</msup>';
 			}
 			else if (i === 1) {
 				str += '<mo>&#x2062;</mo><mi>x</mi>';

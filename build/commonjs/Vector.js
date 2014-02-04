@@ -264,44 +264,58 @@
         /**
         * Returns the content MathML representation of the vector.
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Vector.prototype.toContentMathML = function () {
-            return this.reduce(function (old, cur) {
-                return old + MathLib.toContentMathML(cur);
-            }, '<vector>') + '</vector>';
+        Vector.prototype.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            if (options.strict) {
+                return this.reduce(function (old, cur) {
+                    return old + MathLib.toContentMathML(cur, options);
+                }, '<apply><csymbol cd="linalg2">vector</csymbol>') + '</apply>';
+            } else {
+                return this.reduce(function (old, cur) {
+                    return old + MathLib.toContentMathML(cur, options);
+                }, '<vector>') + '</vector>';
+            }
         };
 
         /**
         * Returns a LaTeX representation of the vector.
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Vector.prototype.toLaTeX = function () {
+        Vector.prototype.toLaTeX = function (options) {
+            if (typeof options === "undefined") { options = {}; }
             return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
-                return old + '\\\\\n\t' + MathLib.toLaTeX(cur);
+                return old + '\\\\\n\t' + MathLib.toLaTeX(cur, options);
             }) + '\n\\end{pmatrix}';
         };
 
         /**
         * Returns the (presentation) MathML representation of the vector.
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Vector.prototype.toMathML = function () {
+        Vector.prototype.toMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
             return this.reduce(function (old, cur) {
-                return old + '<mtr><mtd>' + MathLib.toMathML(cur) + '</mtd></mtr>';
+                return old + '<mtr><mtd>' + MathLib.toMathML(cur, options) + '</mtd></mtr>';
             }, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
         };
 
         /**
         * Returns a string representation of the vector.
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Vector.prototype.toString = function () {
+        Vector.prototype.toString = function (options) {
+            if (typeof options === "undefined") { options = {}; }
             return '(' + this.reduce(function (old, cur) {
-                return old + ', ' + MathLib.toString(cur);
+                return old + ', ' + MathLib.toString(cur, options);
             }) + ')';
         };
 

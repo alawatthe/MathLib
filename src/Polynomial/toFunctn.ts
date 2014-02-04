@@ -11,7 +11,7 @@ toFunctn() {
 				str += MathLib.toString(this[i]);
 			}
 			else {
-				str += MathLib.toString(this[i], true);
+				str += MathLib.toString(this[i], {sign: true});
 			}
 
 			if (i > 1) {

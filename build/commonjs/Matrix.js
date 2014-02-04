@@ -1035,39 +1035,57 @@
         /**
         * converting the matrix to content MathML
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Matrix.prototype.toContentMathML = function () {
-            return this.reduce(function (str, x) {
-                return str + x.reduce(function (prev, cur) {
-                    return prev + MathLib.toContentMathML(cur);
-                }, '<matrixrow>') + '</matrixrow>';
-            }, '<matrix>') + '</matrix>';
+        Matrix.prototype.toContentMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            if (options.strict) {
+                return this.reduce(function (str, x) {
+                    return str + '<apply><csymbol cd="linalg2">matrixrow</csymbol>' + x.map(function (entry) {
+                        return MathLib.toContentMathML(entry, options);
+                    }).join('') + '</apply>';
+                }, '<apply><csymbol cd="linalg2">matrix</csymbol>') + '</apply>';
+            } else {
+                return this.reduce(function (str, x) {
+                    return str + '<matrixrow>' + x.map(function (entry) {
+                        return MathLib.toContentMathML(entry, options);
+                    }).join('') + '</matrixrow>';
+                }, '<matrix>') + '</matrix>';
+            }
         };
 
         /**
         * Converting the matrix to LaTeX
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Matrix.prototype.toLaTeX = function () {
+        Matrix.prototype.toLaTeX = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var passOptions = { base: options.base, baseSubscript: options.baseSubscript };
+
             return '\\begin{pmatrix}\n' + this.reduce(function (str, x) {
-                return str + x.reduce(function (prev, cur) {
-                    return prev + ' & ' + MathLib.toLaTeX(cur);
-                }) + '\\\n';
+                return str + x.map(function (entry) {
+                    return MathLib.toLaTeX(entry, passOptions);
+                }).join(' & ') + '\\\n';
             }, '').slice(0, -2) + '\n\\end{pmatrix}';
         };
 
         /**
         * converting the matrix to (presentation) MathML
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Matrix.prototype.toMathML = function () {
+        Matrix.prototype.toMathML = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var passOptions = { base: options.base, baseSubscript: options.baseSubscript };
+
             return this.reduce(function (str, x) {
-                return str + x.reduce(function (prev, cur) {
-                    return prev + '<mtd>' + MathLib.toMathML(cur) + '</mtd>';
-                }, '<mtr>') + '</mtr>';
+                return str + '<mtr><mtd>' + x.map(function (entry) {
+                    return MathLib.toMathML(entry, passOptions);
+                }).join('</mtd><mtd>') + '</mtd></mtr>';
             }, '<mrow><mo> ( </mo><mtable>') + '</mtable><mo> ) </mo></mrow>';
         };
 
@@ -1085,13 +1103,17 @@
         /**
         * Creating a custom .toString() function
         *
+        * @param {object} [options] - Optional options to style the output
         * @return {string}
         */
-        Matrix.prototype.toString = function () {
+        Matrix.prototype.toString = function (options) {
+            if (typeof options === "undefined") { options = {}; }
+            var passOptions = { base: options.base, baseSubscript: options.baseSubscript };
+
             return this.reduce(function (str, x) {
-                return str + x.reduce(function (prev, cur) {
-                    return prev + '\t' + MathLib.toString(cur);
-                }) + '\n';
+                return str + x.map(function (entry) {
+                    return MathLib.toString(entry, passOptions);
+                }).join('\t') + '\n';
             }, '').slice(0, -1);
         };
 

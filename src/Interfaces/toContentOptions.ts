@@ -1,0 +1,2 @@
+interface toContentOptions extends toOutputOptions {
+}
