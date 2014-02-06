@@ -1,6 +1,6 @@
 
 	import MathLib from './meta.js';
-import screen2D from './screen2D';
+import Screen2D from './Screen2D';
 
 	/**
 	* The SVG renderer for 2D plotting

@@ -1,5 +1,5 @@
 
-	define(['meta', 'screen2D'], function(MathLib) {
+	define(['meta', 'Screen2D'], function(MathLib) {
 	/**
 	* The SVG renderer for 2D plotting
 	*/

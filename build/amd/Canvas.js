@@ -1,5 +1,5 @@
 
-	define(['meta', 'screen2d'], function(MathLib) {
+	define(['meta', 'Screen2d'], function(MathLib) {
 	/**
 	* The Canvas renderer for 2D plotting
 	*/

@@ -1,6 +1,6 @@
 
 	import MathLib from './meta.js';
-import screen2d from './screen2d';
+import Screen2d from './Screen2d';
 
 	/**
 	* The Canvas renderer for 2D plotting

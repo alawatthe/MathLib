@@ -3498,7 +3498,7 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-	/// import screen2d
+	/// import Screen2d
 	/**
 	* The Canvas renderer for 2D plotting
 	*/
@@ -3966,7 +3966,7 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-	/// import screen2D
+	/// import Screen2D
 	/**
 	* The SVG renderer for 2D plotting
 	*/

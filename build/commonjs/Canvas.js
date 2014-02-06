@@ -1,6 +1,6 @@
 
 	var MathLib = require('./meta.js'),
-		screen2d = require('./screen2d');
+		Screen2d = require('./Screen2d');
 
 	/**
 	* The Canvas renderer for 2D plotting

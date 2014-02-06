@@ -1,6 +1,6 @@
 
 	var MathLib = require('./meta.js'),
-		screen2D = require('./screen2D');
+		Screen2D = require('./Screen2D');
 
 	/**
 	* The SVG renderer for 2D plotting
