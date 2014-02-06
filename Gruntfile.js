@@ -37,16 +37,13 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
-	grunt.loadNpmTasks('grunt-docco');
 	grunt.loadNpmTasks('grunt-notify');
 	grunt.loadNpmTasks('grunt-jscs-checker');
 	grunt.loadNpmTasks('grunt-karma');
 	grunt.loadNpmTasks('grunt-qunit-amd');
 	grunt.loadNpmTasks('grunt-regex-replace');
-	grunt.loadNpmTasks('grunt-requirejs');
 	grunt.loadNpmTasks('grunt-saucelabs');
 	grunt.loadNpmTasks('grunt-stamp');
-	grunt.loadNpmTasks('grunt-typescript');
 	grunt.loadNpmTasks('grunt-ts');
 
 	var bannerMin = '/*! MathLib v<%= pkg.version %> MathLib.de | MathLib.de/en/license */\n',

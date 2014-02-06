@@ -1,16 +1,16 @@
 {
-  "name": "mathlib",
-  "version": "0.7.0",
-  "description": "JavaScript library for mathematical computations.",
-  "main": "./build/MathLib.js",
-  "directories": {
-    "doc": "docs",
-    "test": "test"
-  },
-  "dependencies": {
-    "xmldom": "~0.1.17"
-  },
-  "devDependencies": {
+	"name": "mathlib",
+	"version": "0.7.0",
+	"description": "JavaScript library for mathematical computations.",
+	"main": "./build/MathLib.js",
+	"directories": {
+		"doc": "docs",
+		"test": "test"
+	},
+	"dependencies": {
+		"xmldom": "~0.1.17"
+	},
+	"devDependencies": {
 		"grunt": "~0.4.2",
 		"grunt-lib-contrib": "~0.6.1",
 		"grunt-contrib-clean": "~0.5.0",
@@ -28,6 +28,7 @@
 		"grunt-jscs-checker": "~0.3.2",
 		"grunt-karma": "~0.6.2",
 		"grunt-notify": "~0.2.4",
+		"grunt-qunit-amd": "~0.1.1",
 		"grunt-regex-replace" : "~0.2.5",
 		"grunt-saucelabs": "~4.1.2",
 		"grunt-stamp": "~0.1.0",
@@ -36,27 +37,27 @@
 		"karma-qunit": "~0.1.1",
 		"qunitjs": "~1.12.0",
 		"requirejs": "~2.1.10"
-  },
-  "scripts": {
-    "test": "grunt nodeunit"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/alawatthe/MathLib.git"
-  },
-  "keywords": [
-    "math",
-    "mathematics",
-    "functions",
-    "numeric",
-    "parser",
-    "expression",
-    "number",
-    "complex",
-    "matrix"
-  ],
-  "author": "Alexander Zeilmann",
-  "license": "MIT",
-  "gitHead": "7e22fbb5cb66a2ebf95049d54f3eea368f53ff4d",
-  "readmeFilename": "README.md"
+	},
+	"scripts": {
+		"test": "grunt nodeunit"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/alawatthe/MathLib.git"
+	},
+	"keywords": [
+		"math",
+		"mathematics",
+		"functions",
+		"numeric",
+		"parser",
+		"expression",
+		"number",
+		"complex",
+		"matrix"
+	],
+	"author": "Alexander Zeilmann",
+	"license": "MIT",
+	"gitHead": "7e22fbb5cb66a2ebf95049d54f3eea368f53ff4d",
+	"readmeFilename": "README.md"
 }
