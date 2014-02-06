@@ -1,4 +1,4 @@
-/// import Screen2d
+/// import Screen2D
 
 /**
  * The Canvas renderer for 2D plotting

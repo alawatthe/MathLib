@@ -3498,7 +3498,7 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
-	/// import Screen2d
+	/// import Screen2D
 	/**
 	* The Canvas renderer for 2D plotting
 	*/
