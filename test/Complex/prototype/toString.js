@@ -1,6 +1,6 @@
 test('.toString()', 22, function () {
 	var c1 = new MathLib.Complex(3, 4),
-		 	c2 = new MathLib.Complex(-3, 4),
+			c2 = new MathLib.Complex(-3, 4),
 			c3 = new MathLib.Complex(3, -4),
 			c4 = new MathLib.Complex(-3, -4),
 			d1 = new MathLib.Complex(0, 7),
@@ -19,19 +19,19 @@ test('.toString()', 22, function () {
 
 	equal(c2.toString(), '-3+4i', 'Normal complex number.');
 	equal(c2.toString({sign: true}), '-3+4i', 'Normal complex number.');
-	
+
 	equal(c3.toString(), '3-4i', 'Normal complex number.');
 	equal(c3.toString({sign: true}), '+3-4i', 'Normal complex number.');
-	
+
 	equal(c4.toString(), '-3-4i', 'Normal complex number.');
 	equal(c4.toString({sign: true}), '-3-4i', 'Normal complex number.');
-	
+
 	equal(d1.toString(), '7i', 'Real part is zero.');
 	equal(d1.toString({sign: true}), '+7i', 'Real part is zero.');
-	
+
 	equal(d2.toString(), '-7i', 'Real part is zero.');
 	equal(d2.toString({sign: true}), '-7i', 'Real part is zero.');
-	
+
 	equal(e1.toString(), '4', 'Complex part is zero.');
 	equal(e1.toString({sign: true}), '+4', 'Complex part is zero.');
 	equal(e2.toString(), '-4', 'Complex part is zero.');

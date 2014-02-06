@@ -484,16 +484,16 @@ static parse = function (str) : Expression {
 
 			// TODO: support assignments
 			// if (typeof expr !== 'undefined' && expr.Identifier) {
-			// 	token = lexer.peek();
-			// 	if (matchOp(token, '=')) {
-			// 		lexer.next();
-			// 		return new MathLib.Expression({
-			// 				subtype: 'Assignment',
-			// 				name: expr,
-			// 				value: parseAssignment()
-			// 			});
-			// 	}
-			// 	return expr;
+			//	token = lexer.peek();
+			//	if (matchOp(token, '=')) {
+			//		lexer.next();
+			//		return new MathLib.Expression({
+			//				subtype: 'Assignment',
+			//				name: expr,
+			//				value: parseAssignment()
+			//			});
+			//	}
+			//	return expr;
 			// }
 
 			return expr;

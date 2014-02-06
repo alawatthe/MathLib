@@ -36,31 +36,5 @@ surfacePlot3D(f, options) : Screen3D {
 
 	this.scene.add(mesh);
 
-	// if (options.datGUI) {
-	//   guiObj = {
-	//     color: [mesh.material.color.r, mesh.material.color.g, mesh.material.color.b]
-	//   };
-
-	//   var folder = _3D.datGUI.addFolder(options.datGUI.name);
-	//   if (options.datGUI.visible) {
-	//     folder.add(mesh, 'visible');
-	//   }
-
-	//   if (options.datGUI.wireframe) {
-	//     folder.add(mesh.material, 'wireframe');
-	//   }
-
-
-	//   if (options.datGUI.color) {
-	//     color = mesh.material.color.getHex();
-	//     var guiObj = {
-	//       color: color
-	//     };
-
-	//     folder.addColor(guiObj, 'color').name('color')
-	//       .onChange(function (value) {mesh.material.color = new THREE.Color(value);});
-	//   }
-	// }
-
 	return this;
 }

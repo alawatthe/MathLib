@@ -13,7 +13,6 @@ test('.join()', 5, function () {
 
 	p1[0] = 2;
 	deepEqual(l1, new MathLib.Line([-1, -2, 2]), 'The coordinates of the line should change if those of the point change.');
-	
 
 	MathLib.on('warning', f);
 	l1[0] = 42;

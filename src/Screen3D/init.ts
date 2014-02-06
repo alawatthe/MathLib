@@ -98,10 +98,6 @@ export class Screen3D extends Screen {
 		this.wrapper.innerHTML = '';
 		this.wrapper.appendChild(renderer.domElement);
 
-
-		// Storing the the original renderer to recover it easily when leaving anaglyph mode
-		var origRenderer = renderer;
-
 		// Overwrite the renderer with the anaglyph mode renderer
 		if (opts.anaglyphMode) {
 			renderer = new THREE.AnaglyphEffect(renderer);

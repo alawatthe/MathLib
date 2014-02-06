@@ -18,6 +18,6 @@ test('.negative()', 11, function () {
 
 	ok(MathLib.isPosZero(nn.re));
 	ok(MathLib.isPosZero(nn.im));
-	
+
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).negative(), new MathLib.Complex(3, -4)));
 });

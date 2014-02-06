@@ -14,12 +14,12 @@ static parseContentMathML(MathMLString : string) : Expression {
 	MathMLString = MathMLString.split('cs>').map(function (x, i) {
 		// We are not in an cs element.
 		// 1. normalize multiple spaces to one space 
-		// 		("whitespace internal to content of the element is collapsed canonically,
-		// 		i.e., each sequence of 1 or more whitespace characters is replaced with one space character")
+		//    ("whitespace internal to content of the element is collapsed canonically,
+		//    i.e., each sequence of 1 or more whitespace characters is replaced with one space character")
 		// 2. Remove whitespace outside of token elements
-		// 		("MathML ignores whitespace occurring outside token elements.")
-		// 		and remove whitespace at the beginning and end of elements
-		// 		("All whitespace at the beginning and end of the content is removed").
+		//    ("MathML ignores whitespace occurring outside token elements.")
+		//    and remove whitespace at the beginning and end of elements
+		//    ("All whitespace at the beginning and end of the content is removed").
 		if (i % 2 === 0) {
 			return x.replace(/\s+/g, ' ').replace(/ </g, '<').replace(/> /g, '>');
 		}
@@ -71,7 +71,7 @@ static parseContentMathML(MathMLString : string) : Expression {
 		},
 		cn: function (node) {
       var type = node.getAttribute('type') 
-			
+
 			if (type === null || type === '') {
 				type = 'number';
 			}

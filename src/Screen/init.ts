@@ -44,9 +44,7 @@ export class Screen {
 				opts = extendObject(defaults, options),
 				container = document.getElementById(id),
 				innerHTMLContextMenu = '',
-				uuid = +Date.now(),
-				fullscreenchange,
-				innerHTML;
+				fullscreenchange;
 
 
 		container.innerHTML = template(opts);
@@ -149,10 +147,7 @@ export class Screen {
 					(<any>that).draw();
 				}
 			}
-
-
 		}
-
 
 
 		fullscreenchange = function () {

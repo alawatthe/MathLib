@@ -9,12 +9,12 @@ test('.plus()', 18, function () {
 	ok(MathLib.isNaN(nan.plus(inf).re), 'ComplexNaN + ComplexInfinity = ComplexNaN');
 	ok(MathLib.isNaN(nan.plus(zero).re), 'ComplexNaN + 0 = ComplexNaN');
 	ok(MathLib.isNaN(nan.plus(c).re), 'ComplexNaN + (2+5i) = ComplexNaN');
-	
+
 	ok(MathLib.isNaN(inf.plus(nan).re), 'ComplexInfinity + ComplexNaN = ComplexNaN');
 	deepEqual(inf.plus(inf), inf, 'ComplexInfinity + ComplexInfinity = ComplexInfinity');
 	deepEqual(inf.plus(zero), inf, 'ComplexInfinity + 0 = ComplexInfinity');
 	deepEqual(inf.plus(c), inf, 'ComplexInfinity + (2+5i) = ComplexInfinity');
-	
+
 	ok(MathLib.isNaN(zero.plus(nan).re), '0 + ComplexNaN = ComplexNaN');
 	deepEqual(zero.plus(inf), inf, '0 + ComplexInfinity = ComplexInfinity');
 	deepEqual(zero.plus(zero), zero, '0 + 0 = 0');

@@ -10,12 +10,12 @@ test('.times()', 19, function () {
 	ok(MathLib.isNaN(nan.times(inf).re), 'ComplexNaN * ComplexInfinity = ComplexNaN');
 	ok(MathLib.isNaN(nan.times(zero).re), 'ComplexNaN * 0 = ComplexNaN');
 	ok(MathLib.isNaN(nan.times(c).re), 'ComplexNaN * (2+5i) = ComplexNaN');
-	
+
 	ok(MathLib.isNaN(inf.times(nan).re), 'ComplexInfinity * ComplexNaN = ComplexNaN');
 	deepEqual(inf.times(inf), inf, 'ComplexInfinity * ComplexInfinity = ComplexInfinity');
 	ok(MathLib.isNaN(inf.times(zero).re), 'ComplexInfinity * 0 = ComplexNaN');
 	deepEqual(inf.times(c), inf, 'ComplexInfinity * (2+5i) = ComplexInfinity');
-	
+
 	ok(MathLib.isNaN(zero.times(nan).re), '0 * ComplexNaN = ComplexNaN');
 	ok(MathLib.isNaN(zero.times(inf).re), '0 * ComplexInfinity = ComplexNaN');
 	deepEqual(zero.times(zero), zero, '0 * 0 = 0');

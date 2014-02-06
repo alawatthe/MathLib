@@ -45,7 +45,7 @@ test('.arccos()', 26, function () {
 	ok(MathLib.isPosZero(p2n0.re));
 	ok(MathLib.isEqual(p2n0.im, 1.3169578969248167086));
 
-	
+
 	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arccos(), new MathLib.Complex(1.1437177404024204938, -1.5285709194809981613)));
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arccos(), new MathLib.Complex(2.2047801924340733356, -2.3055090312434769420)));
 });

@@ -22,7 +22,7 @@ test('init', 18, function () {
 	equal((new MathLib.Integer(-0)).sign, '-');
 	equal((new MathLib.Integer(+1)).sign, '+');
 	equal((new MathLib.Integer(-1)).sign, '-');
-	
+
 	deepEqual((new MathLib.Integer(67108863)).data, [67108863]);
 	deepEqual((new MathLib.Integer(67108864)).data, [0, 1]);
 	deepEqual((new MathLib.Integer(67108865)).data, [1, 1]);

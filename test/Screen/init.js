@@ -25,7 +25,7 @@ test('init', 2, function () {
 // Properties
 test('.constructor', 1, function () {
 	var screen = new MathLib.Screen('screen', {});
-	
+
 	equal(screen.constructor, MathLib.Screen, 'Testing .constructor');
 });
 

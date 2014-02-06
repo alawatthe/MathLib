@@ -20,7 +20,6 @@ var functionList1 = {
 			n = n / 2;
 			factors.push(2);
 		}
-
 		i = 3;
 		while (n !== 1) {
 			while (n % i === 0) {
@@ -130,12 +129,12 @@ var functionList1 = {
 	},
 	toMathML: function (x, options : toPresentationOptions = {}) {
 		var str,
-				base = options.base || 10;		
+				base = options.base || 10;
 
 		if (options.sign) {
 			str = MathLib.toString(Math.abs(x), {base: base});
 		}
-		else {				
+		else {
 			str = MathLib.toString(x, {base: base});
 		}
 
@@ -268,20 +267,24 @@ export var is = function (obj, type) {
 			},
 			// Trick Typescript to believe that global exists
 			global = global,
-			// Do the same for Node and window 
+			// Do the same for Node and window
 			window = window,
 			glbl = {
 				Object: Object,
 				Function: Function,
 				RegExp: RegExp,
 				Array: Array
-			}
+			},
+			classes = [
+				'circle', 'complex', 'conic', 'expression', 'functn', 'integer', 'line', 'matrix', 'permutation',
+				'point', 'polynomial', 'rational', 'screen', 'screen2d', 'screen3d', 'set', 'vector'
+			];
+
 
 	if (MathLib.type(obj) === type) {
 		return true;
 	}
-	else if (['circle', 'complex', 'expression', 'functn', 'line', 'matrix', 'permutation', 'point',
-			'polynomial', 'rational', 'screen', 'screen2d', 'screen3d', 'set', 'vector'].indexOf(type) !== -1) {
+	else if (classes.indexOf(type) !== -1) {
 		return obj instanceof MathLib[ucfirst(type)];
 	}
 	else {
@@ -289,7 +292,7 @@ export var is = function (obj, type) {
 			return obj instanceof glbl[ucfirst(type)];
 		// }
 		// if (global) {
-		// 	return obj instanceof global[ucfirst(type)];
+		//	return obj instanceof global[ucfirst(type)];
 		// }
 	}
 }

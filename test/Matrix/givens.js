@@ -19,7 +19,7 @@ test('.givens()', 9, function () {
 			Ro = QRo[1],
 			Q3 = new MathLib.Matrix([[0, -0.581238193719096, -0.813733471206735], [0.6, 0.650986776965388, -0.464990554975277], [0.8, -0.488240082724041, 0.348742916231458]]),
 			R3 = new MathLib.Matrix([[5, 10.2, 5.8], [0, -1.720465053408526, 0.09299811099505462], [0, 0, -7.439848879604435]]);
-	
+
 	ok(Qm.isEqual(Q1), 'Q is original matrix');
 	ok(Rm.isEqual(R1), 'R is original matrix');
 	ok(Qm.times(Rm).isEqual(m), 'Q*R is original matrix');

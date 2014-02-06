@@ -3,7 +3,6 @@ test('.divide()', 18, function () {
 			nan = new MathLib.Complex(NaN),
 			zero = new MathLib.Complex(0, 0),
 			c = new MathLib.Complex(2, 5),
-			c = new MathLib.Complex(2, 5),
 			d = new MathLib.Complex(3, 6),
 			e = new MathLib.Complex(3, 7);
 

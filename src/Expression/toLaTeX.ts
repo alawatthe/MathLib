@@ -4,7 +4,7 @@
  * @return {string}
  */
 toLaTeX() : string {
-	var op;
+	var op, amsmath;
 
 	if (this.subtype === 'binaryOperator') {
 		var str;
@@ -72,8 +72,11 @@ toLaTeX() : string {
 	if (this.subtype === 'functionCall') {
 		// These operators are predefined by amsmath.
 		// (There are more predefined ones, but these are the useful ones.)
-		if (['arccos', 'arcsin', 'arctan', 'arg', 'cos', 'cosh', 'cot', 'coth', 'csc', 'deg', 'det', 'dim', 
-		'gcd', 'lg', 'ln', 'log', 'max', 'min', 'sec', 'sin', 'sinh', 'tan', 'tanh'].indexOf(this.value) + 1) {
+		amsmath = [
+			'arccos', 'arcsin', 'arctan', 'arg', 'cos', 'cosh', 'cot', 'coth', 'csc', 'deg', 'det', 'dim', 
+			'gcd', 'lg', 'ln', 'log', 'max', 'min', 'sec', 'sin', 'sinh', 'tan', 'tanh'
+		];
+		if (amsmath.indexOf(this.value) + 1) {
 			return '\\' + this.value + '\\left(' +
 				(this.content.length
 				? this.content.reduce((old, cur, idx) => old + (idx ? ',' : '') + cur.toLaTeX(), '')
@@ -100,7 +103,7 @@ toLaTeX() : string {
 		return (this.arguments.length === 1
 			? this.arguments[0]
 			: '\\left(' + this.arguments.join(', ') + '\\right)') +
-			
+
 			' \\longmapsto ' +
 
 			(this.content.length === 1

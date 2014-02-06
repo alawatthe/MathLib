@@ -96,9 +96,11 @@ export class Screen2D extends Screen {
 					range: {x: 1, y: 1},
 					figcaption: '',
 					renderer: 'Canvas',
-					transformation: new MathLib.Matrix([[Math.min(this.height, this.width) / 2, 0, this.width / 2],
-																							[0, -Math.min(this.height, this.width) / 2, this.height / 2],
-																							[0, 0, 1]])
+					transformation: new MathLib.Matrix([
+						[Math.min(this.height, this.width) / 2, 0, this.width / 2],
+						[0, -Math.min(this.height, this.width) / 2, this.height / 2],
+						[0, 0, 1]
+					])
 				},
 				opts = extendObject(defaults, options),
 				element,

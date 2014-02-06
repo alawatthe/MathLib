@@ -15,7 +15,6 @@ functnPrototype.toString = function () {
 						return handlers[x.nodeName](x);
 					}),
 					str = '';
-
 			if (f.nodeName === 'plus') {
 				str = args.join('+');
 			}
@@ -42,7 +41,6 @@ functnPrototype.toString = function () {
 		}, 
 		'#text': function (n) {return n.innerMathML;}
 	};
-
 	/ / Start the node handling with the first real element (not the <math> element)
 	return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
 	*/

@@ -9,7 +9,7 @@ drawGrid() {
 		return this;
 	}
 
-	var i, ii,
+	var i, ii, min, max,
 			line   = (...args : any[]) => this.renderer.line.apply(this.layer.grid, args),
 			circle = (...args : any[]) => this.renderer.circle.apply(this.layer.grid, args),
 			top    = (            - this.translation.y) / this.scale.y,
@@ -48,8 +48,8 @@ drawGrid() {
 
 	}
 	else if (this.options.grid.type === 'polar') {
-		var max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right)),
-				min = 0; // TODO: improve this estimate
+		max = Math.sqrt(Math.max(top * top, bottom * bottom) + Math.max(left * left, right * right));
+		min = 0; // TODO: improve this estimate
 
 		if (this.options.grid.angle) {
 			for (i = 0, ii = 2 * Math.PI; i < ii; i += this.options.grid.angle.tick) {

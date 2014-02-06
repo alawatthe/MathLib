@@ -5,7 +5,6 @@
 	"forin"         : true,
 	"immed"         : true,
 	"latedef"       : true,
-	"newcap"        : true,
 	"noarg"         : true,
 	"noempty"       : true,
 	"nonew"         : true,
@@ -13,7 +12,6 @@
 	"undef"         : true,
 	"unused"        : true,
 	"strict"        : false,
-	"trailing"      : true,
 	"camelcase"     : true,
 
 	"asi"           : false,
@@ -35,7 +33,6 @@
 	"proto"         : false,
 	"regexdash"     : false,
 	"scripturl"     : false,
-	"smarttabs"     : false,
 	"shadow"        : false,
 	"sub"           : false,
 	"supernew"      : false,
@@ -52,17 +49,18 @@
 	"prototypejs"   : false,
 	"rhino"         : false,
 	"wsh"           : false,
-	
-	"nomen"         : false,
+	"esnext"        : false,
 	"onevar"        : false,
-	"passfail"      : false,
-	"white"         : false,
+
+	"-W031"         : true,
+	"-W004"         : true,
 
 	"maxerr"        : 100,
 	"globals"       : {
 		"asyncTest"	  : true,
-		"deepEqual"   : true,
 		"CanvasRenderingContext2D": true,
+		"console"     : true,
+		"deepEqual"   : true,
 		"DOMParser"   : true,
 		"equal"       : true,
 		"MathLib"     : true,

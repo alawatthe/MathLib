@@ -3,7 +3,7 @@
 
 [![Selenium Test Status](https://saucelabs.com/buildstatus/alawatthe)](https://saucelabs.com/u/alawatthe) [![Dependency Status](https://gemnasium.com/alawatthe/MathLib.png)](https://gemnasium.com/alawatthe/MathLib)
 
-MathLib.js is a JavaScript library for mathematical computations. It can handle circles, complex numbers, expressions, functions, lines, matrices, permutations, points, polynomials, rational numbers, sets, and vectors.
+MathLib.js is a JavaScript library for mathematical computations. It can handle circles, complex numbers, expressions, functions, lines, integers, matrices, permutations, points, polynomials, rational numbers, sets, and vectors.
 
 There is a SVG and Canvas renderer for 2D plotting. 3D plotting is supported with [Three.js](https://github.com/mrdoob/three.js).
 
@@ -11,7 +11,7 @@ Further it can parse Content MathML and write Content MathML, Presentation MathM
 
 
 ## Test Suite
-MathLib has an extensive QUnit test suite with more than 1800 tests. Crossbrowser tests are automated with Sauce Labs' Open Sauce.
+MathLib has an extensive QUnit test suite with more than 2100 tests. Crossbrowser tests are automated with Sauce Labs' Open Sauce.
 
 IE9, Android and Opera don't work with the automated test runner. Their passing of the test suite was confirmed using a manual testing session.
 
@@ -73,11 +73,11 @@ npm install
 to install the development dependencies (For this you need to have [Node.js](http://nodejs.org) installed).
 
 
-The grunt default task
+Run
 ```
-grunt
+grunt help
 ```
-will concat all the source and test files, convert the TypeScript to JavaScript, create a minified version of the library and run the tests on the minified and unminified libraries.
+to get an overview of the available grunt tasks.
 
 
 ### Making Changes

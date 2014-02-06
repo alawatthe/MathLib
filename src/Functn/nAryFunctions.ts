@@ -3,11 +3,11 @@ var nAryFunctions = {
 	/**
 	 * Returns true iff all arguments are true.
 	 *
-	 * @param {...boolean} n Expects an arbitrary number of boolean arguments  
+	 * @param {...boolean} args - Expects an arbitrary number of boolean arguments  
 	 * @return {boolean}
 	 */
-	and: function (n) {
-		return n.every(function (x) {return !!x;});
+	and: function (args) {
+		return args.every(function (x) {return !!x;});
 	},
 	arithMean: function (n) {
 		return MathLib.plus(n) / n.length;
@@ -129,11 +129,11 @@ var nAryFunctions = {
 	 * ### MathLib.or()
 	 * Returns true iff at least one argument is true.
 	 *
-	 * @param {...boolean} Expects an arbitrary number of boolean arguments  
+	 * @param {...boolean} args - Expects an arbitrary number of boolean arguments  
 	 * @return {boolean}
 	 */
-	or: function (n) {
-		return n.some(function (x) {return !!x;});
+	or: function (args) {
+		return args.some(function (x) {return !!x;});
 	},
 	plus: function (n) {
 		if (n.length === 0) {
@@ -255,11 +255,11 @@ var nAryFunctions = {
 	 * ### MathLib.xor()
 	 * Returns true iff an odd number of the arguments is true.
 	 *
-	 * @param {...boolean} Expects an arbitrary number of boolean arguments  
+	 * @param {...boolean} args - Expects an arbitrary number of boolean arguments  
 	 * @return {boolean}
 	 */
-	xor: function (n) {
-		return n.reduce(function (x, y) {return x + !!y;}, 0) % 2 !== 0;
+	xor: function (args) {
+		return args.reduce(function (x, y) {return x + !!y;}, 0) % 2 !== 0;
 	}
 };
 

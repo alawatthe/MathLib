@@ -10,15 +10,15 @@ drawGrid() {
 
 	var _this = this,
 			gridDrawer = function (opts, rotX, rotY) {
-				var size = 10,
+				var i, ii, tickX, tickY, lines, circles, rays,
+						size = 10,
 						grid = new THREE.Object3D(),
-						color = new THREE.Color(opts.color),
-						i, ii;
+						color = new THREE.Color(opts.color);
 
 				if (opts.type === 'cartesian') {
-					var tickX = 'x' in opts.tick ? opts.tick.x : opts.tick.y,
-							tickY = 'z' in opts.tick ? opts.tick.z : opts.tick.y,
-							lines = new THREE.Shape();
+					tickX = 'x' in opts.tick ? opts.tick.x : opts.tick.y;
+					tickY = 'z' in opts.tick ? opts.tick.z : opts.tick.y;
+					lines = new THREE.Shape();
 
 					for (i = -size; i <= size; i += tickX) {
 						lines.moveTo(-size, i);
@@ -40,8 +40,8 @@ drawGrid() {
 
 				else if (opts.type === 'polar') {
 
-					var circles = new THREE.Shape(),
-							rays = new THREE.Shape();
+					circles = new THREE.Shape();
+					rays = new THREE.Shape();
 
 					for (i = 0; i <= size; i += opts.tick.r) {
 						circles.moveTo(i, 0);

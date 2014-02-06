@@ -3,7 +3,6 @@ test('.off()', 1, function () {
 			callback = function () {
 				i++;
 			};
-	
 
 	MathLib.on('error', callback);
 	MathLib.on('warning', callback);

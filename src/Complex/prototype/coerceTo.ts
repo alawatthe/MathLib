@@ -9,21 +9,12 @@ coerceTo(type) {
 		return this.copy();
 	}
 
-	if (this.im !== 0) {
+	if (this.im === 0) {
+		return MathLib.coerceTo(this.re, type);
+	}
+	/*
+	else {
 		// TODO: coercion error
 	}
-	else {
-		/*
-		if (type === 'integer') {
-			return new MathLib.Integer(this.re);
-		}
-		if (type === 'rational') {
-			return new MathLib.Rational(this.re);
-		}
-		*/
-	
-		if (type === 'number') {
-			return MathLib.coerceTo(this.re, 'number');
-		}
-	}
+	*/
 }

@@ -82,9 +82,7 @@ toMathML() : string {
 			(this.arguments.length === 1
 			? '<mi>' + this.arguments[0] + '</mi>'
 			: '<mrow><mo>(</mo><mi>' + this.arguments.join('</mi><mo>,<mo><mi>') + '</mi><mo>)</mo></mrow>') +
-			
 			'<mo>&#x27FC;</mo>' +
-
 			(this.content.length === 1
 			? this.content[0].toMathML()
 			: '<mrow><mo>(</mo>' + this.content.map(expr => expr.toMathML()) + '<mo>)</mo></mrow>') +

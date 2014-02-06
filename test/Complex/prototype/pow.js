@@ -10,12 +10,12 @@ test('.pow()', 29, function () {
 	ok(MathLib.isNaN(nan.pow(inf).re), 'ComplexNaN ^ ComplexInfinity = ComplexNaN');
 	ok(MathLib.isNaN(nan.pow(zero).re), 'ComplexNaN ^ 0 = ComplexNaN');
 	ok(MathLib.isNaN(nan.pow(c).re), 'ComplexNaN ^ (2+5i) = ComplexNaN');
-	
+
 	ok(MathLib.isNaN(inf.pow(nan).re), 'ComplexInfinity ^ ComplexNaN = ComplexNaN');
 	ok(MathLib.isNaN(inf.pow(inf).re), 'ComplexInfinity ^ ComplexInfinity = ComplexNaN');
 	ok(MathLib.isNaN(inf.pow(zero).re), 'ComplexInfinity ^ 0 = ComplexNaN');
 	deepEqual(inf.pow(c), inf, 'ComplexInfinity ^ (2+5i) = ComplexInfinity');
-	
+
 	ok(MathLib.isNaN(zero.pow(nan).re), '0 ^ ComplexNaN = ComplexNaN');
 	ok(MathLib.isNaN(zero.pow(inf).re), '0 ^ ComplexInfinity = ComplexNaN');
 	ok(MathLib.isNaN(zero.pow(zero).re), '0 ^ 0 = ComplexNaN');
@@ -29,10 +29,10 @@ test('.pow()', 29, function () {
 
 
 	// number exponent
-	equal(c.pow(0).re, 1, '(2+5i) ^ 0 = 1 + 0i')
+	equal(c.pow(0).re, 1, '(2+5i) ^ 0 = 1 + 0i');
 	ok(MathLib.isPosZero(c.pow(0).im), '(2+5i) ^ 0 = 1 + 0i');
 
-	equal(c.pow(-0).re, 1, '(2+5i) ^ -0 = 1 - 0i')
+	equal(c.pow(-0).re, 1, '(2+5i) ^ -0 = 1 - 0i');
 	ok(MathLib.isNegZero(c.pow(-0).im), '(2+5i) ^ -0 = 1 - 0i');
 
 
@@ -43,11 +43,10 @@ test('.pow()', 29, function () {
 
 	ok(c.pow(3).isEqual(new MathLib.Complex(-142, -65)), '(2+5i) ^ 3 = -142 -65i');
 	ok(c.pow(-3).isEqual(new MathLib.Complex(-0.0058222969371437943335, 0.0026651359219320185329)), '(2+5i) ^ -3 = -0.0058223 + 0.00266514 i');
-	
+
 	// TODO: Fix the pow method and rewrite this test with .isEqual
 	ok(Math.abs(c.pow(3.24).re + 176.64664988162751823) < 1e-12, '(2+5i) ^ 3.24 = -176.647 -153.359i');
 	ok(Math.abs(c.pow(3.24).im + 153.35877082892785196) < 1e-12, '(2+5i) ^ 3.24 = -176.647 -153.359i');
-	
-	ok(c.pow(-3.24).isEqual(new MathLib.Complex(-0.0032280175872257475063, 0.0028024579561675012682)), '(2+5i) ^ -3.24 = -0.00322802 + 0.00280246i');
 
+	ok(c.pow(-3.24).isEqual(new MathLib.Complex(-0.0032280175872257475063, 0.0028024579561675012682)), '(2+5i) ^ -3.24 = -0.00322802 + 0.00280246i');
 });

@@ -5,7 +5,7 @@
  */
 toPoint() : Point {
 
-	if (this.re == Infinity || MathLib.isNaN(this.re)) {
+	if (this.re === Infinity || MathLib.isNaN(this.re)) {
 		return new MathLib.Point([0, 0, 0]);
 	}
 

@@ -3,14 +3,10 @@ test('.arccot()', 25, function () {
 			n0n2 = (new MathLib.Complex(-0, -2)).arccot(),
 			p0n1 = (new MathLib.Complex(+0, -1)).arccot(),
 			n0n1 = (new MathLib.Complex(-0, -1)).arccot(),
-			p0n5 = (new MathLib.Complex(+0, -0.5)).arccot(),
-			n0n5 = (new MathLib.Complex(-0, -0.5)).arccot(),
 			p0p0 = (new MathLib.Complex(+0, +0)).arccot(),
 			p0n0 = (new MathLib.Complex(+0, -0)).arccot(),
 			n0p0 = (new MathLib.Complex(-0, +0)).arccot(),
 			n0n0 = (new MathLib.Complex(-0, -0)).arccot(),
-			p0p5 = (new MathLib.Complex(+0, +0.5)).arccot(),
-			n0p5 = (new MathLib.Complex(-0, +0.5)).arccot(),
 			p0p1 = (new MathLib.Complex(+0, 1)).arccot(),
 			n0p1 = (new MathLib.Complex(-0, 1)).arccot(),
 			p0p2 = (new MathLib.Complex(+0, 2)).arccot(),
@@ -28,11 +24,6 @@ test('.arccot()', 25, function () {
 	equal(p0n1.re, Infinity, '(+0 -1i).arccot().re = ComplexInfinity');
 	equal(n0n1.re, Infinity, '(-0 -1i).arccot().re = ComplexInfinity');
 
-	//ok(MathLib.isPosZero(p0n5.re), '(+0 -0.5i).arctan().re = +0');
-	//equal(p0n5.im, -0.5493061443340548457, '(+0 -0.5i).arctan().im = +0.549');
-	//ok(MathLib.isNegZero(n0n5.re), '(-0 -0.5i).arctan().re = -0');
-	//equal(n0n5.im, -0.5493061443340548457, '(-0 -0.5i).arctan().im = -0.549');
-
 	equal(p0p0.re, Math.PI / 2, '(+0 +0i).arccot().re = +&pi;/2');
 	ok(MathLib.isNegZero(p0p0.im), '(+0 +0i).arccot().im = -0');
 	equal(p0n0.re, Math.PI / 2, '(+0 -0i).arccot().re = +&pi;/2');
@@ -41,11 +32,6 @@ test('.arccot()', 25, function () {
 	ok(MathLib.isNegZero(n0p0.im), '(-0 +0i).arccot().im = -0');
 	equal(n0n0.re, -Math.PI / 2, '(-0 -0i).arccot().re = -&pi;/2');
 	ok(MathLib.isPosZero(n0n0.im), '(-0 -0i).arccot().im = +0');
-
-	//ok(MathLib.isPosZero(p0p5.re), '(+0 +0.5i).arctan().re = +0');
-	//equal(p0p5.im, +0.5493061443340548457, '(+0 +0.5i).arctan().im = +0.549');
-	//ok(MathLib.isNegZero(n0p5.re), '(-0 +0.5i).arctan().re = -0');
-	//equal(n0p5.im, +0.5493061443340548457, '(-0 +0.5i).arctan().im = -0.549');
 
 	equal(p0p1.re, Infinity, '(+0 +1i).arccot().re = ComplexInfinity');
 	equal(n0p1.re, Infinity, '(-0 +1i).arccot().re = ComplexInfinity');

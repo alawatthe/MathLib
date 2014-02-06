@@ -4,7 +4,7 @@ test('.prototype.divide()', 12, function () {
 	equal((new MathLib.Integer('+10000000')).divide(new MathLib.Integer('-10')).toString(), '-1000000');
 	equal((new MathLib.Integer('-10000000')).divide(new MathLib.Integer('+10')).toString(), '-1000000');
 	equal((new MathLib.Integer('-10000000')).divide(new MathLib.Integer('-10')).toString(),  '1000000');
-	
+
 	equal((new MathLib.Integer('+10000001')).divide(new MathLib.Integer('+10')).toString(),  '10000001/10');
 	equal((new MathLib.Integer('+10000001')).divide(new MathLib.Integer('-10')).toString(), '-10000001/10');
 	equal((new MathLib.Integer('-10000001')).divide(new MathLib.Integer('+10')).toString(), '-10000001/10');

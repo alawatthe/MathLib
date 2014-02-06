@@ -13,7 +13,6 @@ test('.parallelThrough()', 5, function () {
 	deepEqual(parallel, new MathLib.Line([-2, 0, 2]), 'The coordinates of the parallel should change if those of the line change.');
 	p[0] = 2;
 	deepEqual(parallel, new MathLib.Line([-2, 0, 4]), 'The coordinates of the parallel should change if those of the point change.');
-	
 
 	MathLib.on('warning', f);
 	parallel[0] = 42;

@@ -12,11 +12,11 @@ test('.prototype.plus()', 13, function () {
 	equal((new MathLib.Integer('+100')).plus(-10), 90);
 	equal((new MathLib.Integer('-100')).plus(10), -90);
 	equal((new MathLib.Integer('-100')).plus(-10), -110);
-	
+
 	equal((new MathLib.Integer('+10000000')).plus(10), 10000010);
 	equal((new MathLib.Integer('+10000000')).plus(-10), 9999990);
 	equal((new MathLib.Integer('-10000000')).plus(10), -9999990);
 	equal((new MathLib.Integer('-10000000')).plus(-10), -10000010);
-	
+
 	equal((new MathLib.Integer(5000000)).plus(new MathLib.Integer(5000000)).toString(), '10000000');
 });

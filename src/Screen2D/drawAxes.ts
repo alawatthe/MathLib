@@ -4,8 +4,8 @@
  * @return {Screen2D}
  */
 drawAxes() {
-
-	var line = (...args : any[]) => this.renderer.line.apply(this.layer.axes, args),
+	var i,
+			line = (...args : any[]) => this.renderer.line.apply(this.layer.axes, args),
 			text = (...args : any[]) => this.renderer.text.apply(this.layer.axes, args),
 			options = {
 				lineColor: MathLib.colorConvert(this.options.axes.color),
@@ -29,7 +29,8 @@ drawAxes() {
 			xExp = 1 - Math.floor(Math.log( this.transformation[0][0]) / Math.LN10 - 0.3),
 			yTick = Math.pow(10, yExp),
 			xTick = Math.pow(10, xExp),
-			i;
+			xLen = Math.max(0, Math.min(20, -xExp)),
+			yLen = Math.max(0, Math.min(20, -yExp));
 
   if (!this.options.axes) {
 		return this;
@@ -43,7 +44,6 @@ drawAxes() {
 	if (this.options.axes.y) {
 		line([[0, bottom], [0, top]], options, true);
 	}
-
 
 
 	// The ticks on the axes
@@ -72,9 +72,6 @@ drawAxes() {
 	// The x axes
 	// .toFixed() is necessary to display 0.3 as "0.3" and not as "0.30000000000000004".
 	// .toFixed expects arguments between 0 and 20.
-	var xLen = Math.max(0, Math.min(20, -xExp)),
-			yLen = Math.max(0, Math.min(20, -yExp));
-
 	if (this.options.axes.label) {
 		if (this.options.axes.x) {
 			for (i = -yTick; i >= left; i -= yTick) {
@@ -95,7 +92,7 @@ drawAxes() {
 			}
 		}
 		else {
-			text(0..toFixed(yLen), 0, -2 * lengthY, textOptions, true);
+			text((0).toFixed(yLen), 0, -2 * lengthY, textOptions, true);
 		}
 	}
 

@@ -11,7 +11,7 @@ test('.toMathML()', 15, function () {
 
 	equal(MathLib.toMathML(123, {base: 2}), '<mn>1111011</mn>');
 	equal(MathLib.toMathML(-123, {base: 2}), '<mn>-1111011</mn>');
-	
+
 	equal(MathLib.toMathML(123, {base: 2, sign: true}), '<mo>+</mo><mn>1111011</mn>');
 	equal(MathLib.toMathML(-123, {base: 2, sign: true}), '<mo>-</mo><mn>1111011</mn>');
 

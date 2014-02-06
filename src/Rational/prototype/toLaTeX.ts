@@ -22,8 +22,5 @@ toLaTeX(options : toPresentationOptions = {}) : string {
 					+ numerator
 					+ '}{'
 					+ MathLib.toLaTeX(this.denominator, passOptions)
-					+ '}';	
-					
-					
-	return '\\frac{' + MathLib.toLaTeX(this.numerator) + '}{' + MathLib.toLaTeX(this.denominator) + '}';
+					+ '}';
 }

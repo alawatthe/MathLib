@@ -1,6 +1,7 @@
 test('.is()', 12, function () {
 	var p = new MathLib.Point([1, 2, 3]),
 			v = new MathLib.Vector([1, 2, 3]);
+
 	equal(MathLib.is(2, 'number'), true);
 	equal(MathLib.is(p, 'point'), true);
 	equal(MathLib.is(p, 'vector'), true);

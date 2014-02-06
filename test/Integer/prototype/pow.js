@@ -8,9 +8,9 @@ test('.prototype.pow()', 12, function () {
 	equal((new MathLib.Integer('-2')).pow(new MathLib.Integer('-31')).toString(), '-1/2147483648');
 	// number
 	equal((new MathLib.Integer('+2')).pow(3), 8);
-	equal((new MathLib.Integer('+2')).pow(-3), 1/8);
+	equal((new MathLib.Integer('+2')).pow(-3), 1 / 8);
 	equal((new MathLib.Integer('-2')).pow(3), -8);
-	equal((new MathLib.Integer('-2')).pow(-3), -1/8);
+	equal((new MathLib.Integer('-2')).pow(-3), -1 / 8);
 	equal((new MathLib.Integer('-2')).pow(4), 16);
-	equal((new MathLib.Integer('-2')).pow(-4), 1/16);
+	equal((new MathLib.Integer('-2')).pow(-4), 1 / 16);
 });

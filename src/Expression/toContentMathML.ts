@@ -35,14 +35,6 @@ toContentMathML() : string {
 		}
 		return this.content.toContentMathML();
 	}
-
-	/*
-	var transc1 = ['arccos', 'arccosh', 'arccot', 'arccoth', 'arccsc', 'arccsch', 'arcsec',
-			'arcsech', 'arcsin', 'arcsinh', 'arctan', 'arctanh', 'cos', 'cosh', 'cot', 'coth',
-			'csc', 'csch', 'exp', 'ln', 'log', 'sec', 'sech', 'sin', 'sinh', 'tan', 'tanh'];
-	*/
-
-
 	if (this.subtype === 'functionCall') {
 		// There are some functions which have different names in MathML
 		var conversion = {

@@ -1,9 +1,9 @@
-// [Specification](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#line-styles)  
-// Chrome: ✓ [Implement canvas v5 line dash feature](http://trac.webkit.org/changeset/128116)  
-// Firefox: ~ [Implement canvasRenderingContext2D.get/setLineDash](https://bugzilla.mozilla.org/show_bug.cgi?id=768067)  
-// Safari: ✗  
-// Internet Explorer: ✗  
-// Opera: ✗  
+// [Specification](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#line-styles)
+// Chrome: ✓ [Implement canvas v5 line dash feature](http://trac.webkit.org/changeset/128116)
+// Firefox: ~ [Implement canvasRenderingContext2D.get/setLineDash](https://bugzilla.mozilla.org/show_bug.cgi?id=768067)
+// Safari: ✗
+// Internet Explorer: ✗
+// Opera: ✗
 
 (function () {
 	if (!('setLineDash' in CanvasRenderingContext2D.prototype)) {
@@ -24,8 +24,15 @@
 			getLineDashOffset = function () {
 				return this.mozDashOffset;
 			};
-
 		}
+		else {
+			prototype = CanvasRenderingContext2D.prototype;
+			setLineDash = function () {};
+			getLineDash = function () {};
+			setLineDashOffset = function () {};
+			getLineDashOffset = function () {};
+		}
+
 
 		// Safari isn't supporting webkitLineDash any longer, but it also has no support for setLineDash.
 		// Additionally extending the CanvasRenderingContext2D.prototype is only possible with a weird hack.
@@ -47,13 +54,7 @@
 			};
 		}
 		*/
-		else {
-			prototype = CanvasRenderingContext2D.prototype;
-			setLineDash = function () {};
-			getLineDash = function () {};
-			setLineDashOffset = function () {};
-			getLineDashOffset = function () {};
-		}
+
 
 
 		Object.defineProperty(prototype, 'setLineDash', {

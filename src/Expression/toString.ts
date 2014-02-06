@@ -74,7 +74,7 @@ toString() : string {
 		return (this.arguments.length === 1
 			? this.arguments[0]
 			: '(' + this.arguments.join(', ') + ')') +
-			
+
 			' ⟼ ' +
 
 			(this.content.length === 1

@@ -1,7 +1,7 @@
 /**
  * Inserts an element into the set.
  *
- * @param{any} x The element to insert in the set.
+ * @param {any} x The element to insert in the set.
  * @return {Set} Returns the current set
  */
 insert(x : any) : Set {

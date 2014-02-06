@@ -1,10 +1,4 @@
-
-	// Typescript is throwing the following error otherwise:
-	// The property 'methodname' does not exist on value of type 'MathLib'
-	// see [http://typescript.codeplex.com/discussions/397908](http://typescript.codeplex.com/discussions/397908)
-	declare var MathLib : any;
-
-	export var version = '0.6.1';
+	export var version = '%MathLibVersion';
 	export var apery = 1.2020569031595942;
 	export var e = Math.E;
 	// Number.EPSILON is probably coming in ES6
@@ -29,33 +23,33 @@
 	};
 
 	export var argToRgba = function (h){
-  	var r, g, b;
-  	h = -h / (2 * Math.PI);
+		var r, g, b;
+		h = -h / (2 * Math.PI);
 
-  	function hue2rgb(t){
-   	  if (t < 0) {
-   	  	t += 1;
-   	  }
-     	if (t > 1) {
-     		t -= 1;
-     	}
-     	if (t < 1/6) {
-     		return 6 * t;
-     	}
-     	if (t < 1/2) {
-     		return 1;
-     	}
-     	if (t < 2/3) {
-     		return 4 - 6*t;
-     	}
-      return 0;
+		function hue2rgb(t){
+			if (t < 0) {
+				t += 1;
+			}
+			if (t > 1) {
+				t -= 1;
+			}
+			if (t < 1/6) {
+				return 6 * t;
+			}
+			if (t < 1/2) {
+				return 1;
+			}
+			if (t < 2/3) {
+				return 4 - 6*t;
+			}
+			return 0;
  	 }
 
-  	r = hue2rgb(h + 1/3);
-  	g = hue2rgb(h);
-  	b = hue2rgb(h - 1/3);
+	 r = hue2rgb(h + 1/3);
+		g = hue2rgb(h);
+		b = hue2rgb(h - 1/3);
 
-  	return [r * 255, g * 255, b * 255, 255];
+		return [r * 255, g * 255, b * 255, 255];
 	};
 
 	export var extendObject = function (dest, src) {

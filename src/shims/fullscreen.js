@@ -21,12 +21,12 @@ are permitted provided that the following conditions are met:
 	* Redistributions of source code must retain the above copyright notice, this
 	list of conditions and the following disclaimer.
 	* Redistributions in binary form must reproduce the above copyright notice,
-	this list of conditions and the following disclaimer in the documentation 
+	this list of conditions and the following disclaimer in the documentation
 	and/or other materials provided with the distribution.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
 ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
@@ -38,95 +38,93 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 (function (global) {
 	'use strict';
 
-	var elementPrototype = (global.HTMLElement || global.Element)['prototype'];
+	var elementPrototype = (global.HTMLElement || global.Element).prototype;
 	var getter;
 
 
 	// document.fullscreenEnabled
-	if(!document.hasOwnProperty("fullscreenEnabled")) {
-		getter = (function() {
+	if (!document.hasOwnProperty('fullscreenEnabled')) {
+		getter = (function () {
 			// These are the functions that match the spec, and should be preferred
-			if("webkitIsFullScreen" in document) {
-				return function() { return document.webkitFullscreenEnabled; };
+			if ('webkitIsFullScreen' in document) {
+				return function () { return document.webkitFullscreenEnabled; };
 			}
-			if("mozFullScreenEnabled" in document) {
-				return function() { return document.mozFullScreenEnabled; };
+			if ('mozFullScreenEnabled' in document) {
+				return function () { return document.mozFullScreenEnabled; };
 			}
 
-			return function() { return false; }; // not supported, never fullscreen
+			return function () { return false; }; // not supported, never fullscreen
 		})();
-		
-		Object.defineProperty(document, "fullscreenEnabled", {
+
+		Object.defineProperty(document, 'fullscreenEnabled', {
 			enumerable: true, configurable: false, writeable: false,
 			get: getter
 		});
 	}
-	
-	if(!document.hasOwnProperty("fullscreenElement")) {
-		getter = (function() {
+
+	if (!document.hasOwnProperty('fullscreenElement')) {
+		getter = (function () {
 			// These are the functions that match the spec, and should be preferred
-			var i=0, name=["webkitCurrentFullScreenElement", "webkitFullscreenElement", "mozFullScreenElement"];
-			for (; i<name.length; i++)
-			{
-				if (name[i] in document)
-				{
-					return function() { return document[name[i]]; };
+			var i = 0, name = ['webkitCurrentFullScreenElement', 'webkitFullscreenElement', 'mozFullScreenElement'];
+			for (; i < name.length; i++) {
+				if (name[i] in document) {
+					return function () { return document[name[i]]; };
 				}
 			}
-			return function() { return null; }; // not supported
+			return function () { return null; }; // not supported
 		})();
-		
-		Object.defineProperty(document, "fullscreenElement", {
+
+		Object.defineProperty(document, 'fullscreenElement', {
 			enumerable: true, configurable: false, writeable: false,
 			get: getter
 		});
 	}
-	
+
 	// Document event: fullscreenchange
-	function fullscreenchange(oldEvent) {
-		var newEvent = document.createEvent("CustomEvent");
-		newEvent.initCustomEvent("fullscreenchange", true, false, null);
+	function fullscreenchange () {
+		var newEvent = document.createEvent('CustomEvent');
+		newEvent.initCustomEvent('fullscreenchange', true, false, null);
 		// TODO: Any need for variable copy?
 		document.dispatchEvent(newEvent);
 	}
-	document.addEventListener("webkitfullscreenchange", fullscreenchange, false);
-	document.addEventListener("mozfullscreenchange", fullscreenchange, false);
-	
+	document.addEventListener('webkitfullscreenchange', fullscreenchange, false);
+	document.addEventListener('mozfullscreenchange', fullscreenchange, false);
+
 	// Document event: fullscreenerror
-	function fullscreenerror(oldEvent) {
-		var newEvent = document.createEvent("CustomEvent");
-		newEvent.initCustomEvent("fullscreenerror", true, false, null);
+	function fullscreenerror () {
+		var newEvent = document.createEvent('CustomEvent');
+		newEvent.initCustomEvent('fullscreenerror', true, false, null);
 		// TODO: Any need for variable copy?
 		document.dispatchEvent(newEvent);
 	}
-	document.addEventListener("webkitfullscreenerror", fullscreenerror, false);
-	document.addEventListener("mozfullscreenerror", fullscreenerror, false);
-	
+	document.addEventListener('webkitfullscreenerror', fullscreenerror, false);
+	document.addEventListener('mozfullscreenerror', fullscreenerror, false);
+
 	// element.requestFullScreen
-	if(!elementPrototype.requestFullScreen) {
-		elementPrototype.requestFullScreen = (function() {
-			if(elementPrototype.webkitRequestFullScreen) {
-				return function() {
+	if (!elementPrototype.requestFullScreen) {
+		elementPrototype.requestFullScreen = (function () {
+			if (elementPrototype.webkitRequestFullScreen) {
+				return function () {
 					this.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
 				};
 			}
 
-			if(elementPrototype.mozRequestFullScreen) {
-				return function() {
+			if (elementPrototype.mozRequestFullScreen) {
+				return function () {
 					this.mozRequestFullScreen();
 				};
 			}
-			
-			return function(){ /* unsupported, fail silently */ };
+
+			return function () { /* unsupported, fail silently */ };
 		})();
 	}
-	
+
 	// document.cancelFullScreen
-	if(!document.cancelFullScreen) {
-		document.cancelFullScreen = (function() {
+	if (!document.cancelFullScreen) {
+		document.cancelFullScreen = (function () {
 			return document.webkitCancelFullScreen ||
 					document.mozCancelFullScreen ||
-					function(){ /* unsupported, fail silently */ };
+					function () { /* unsupported, fail silently */ };
 		})();
 	}
 

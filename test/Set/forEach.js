@@ -4,6 +4,6 @@ test('.forEach()', 1, function () {
 	s.forEach(function (x) {
 		arr.push(x);
 	});
-	
+
 	deepEqual(arr, [1, 2, 3, 4], '.forEach()');
 });

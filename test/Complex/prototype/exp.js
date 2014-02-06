@@ -18,7 +18,7 @@ test('.exp()', 12, function () {
 
 	equal(nn.re, 1, '(-0 -0i).exp().re = 1');
 	ok(MathLib.isNegZero(nn.im), '(-0 -0i).exp().im = 0');
-	
+
 	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).exp(), new MathLib.Complex(-1.1312043837568136384, 2.4717266720048189276)));
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).exp(), new MathLib.Complex(-0.032542999640154784794, -0.037678977574865854771)));
 });

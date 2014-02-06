@@ -18,7 +18,7 @@ test('.copy()', 12, function () {
 
 	ok(MathLib.isNegZero(nn.re));
 	ok(MathLib.isNegZero(nn.im));
-	
+
 	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).copy(), new MathLib.Complex(1, 2)));
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).copy(), new MathLib.Complex(-3, 4)));
 });

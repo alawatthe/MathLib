@@ -56,8 +56,7 @@ divrem(divisor : Integer) : Integer[] {
 		// Algorithm 3.2 Schoolbook division
 		main = function (A, B) {
 
-			var q, r, q1, r1, sign,
-					temp, A1, s,
+			var q, r, q1, r1, temp, A1, s,
 					m = A.data.length - 1,
 					n = B.data.length - 1;
 

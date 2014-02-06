@@ -78,7 +78,36 @@ module.exports = function (grunt) {
 				'test/Set/init.js', 'test/Set/!(init).js',
 				'test/Vector/init.js', 'test/Vector/!(init).js'
 			];
-			
+
+	grunt.registerTask('help', function () {
+		grunt.log.subhead('Release');
+		grunt.log.writeln('grunt release\t\t\tRun this task before committing something. ');
+
+		grunt.log.subhead('Building');
+		grunt.log.writeln('grunt generateAll\t\tThis tasks generates all of the files mentioned below. ');
+		grunt.log.writeln('grunt generatePlain\t\tThis task generates the plain JavaScript files. ');
+		grunt.log.writeln('grunt generateCommonjs\t\tThis task generates the Commonjs JavaScript files. ');
+		grunt.log.writeln('grunt generateAMD\t\tThis task generates the AMD JavaScript files. ');
+		grunt.log.writeln('grunt generateES6\t\tThis task generates the ES6 JavaScript files. ');
+		grunt.log.writeln('grunt generateDeclaration\tThis task generates the TypeScript declaration files. ');
+		grunt.log.writeln('grunt generateTests\t\tThis task generates the JavaScript Test files. ');
+
+		grunt.log.subhead('Tests');
+		grunt.log.writeln('grunt testsAll\t\t\tRuns all the tests in all configurations');
+		grunt.log.writeln('grunt testPlain\t\t\tRun the tests for the plain JavaScript files (Possible arguments: MathLib, min)');
+		grunt.log.writeln('grunt testCommonjs\t\tRun the tests for the Commonjs JavaScript files');
+		grunt.log.writeln('grunt testAMD\t\t\tRun the tests for the AMD JavaScript files');
+
+		grunt.log.subhead('Code quality checks');
+		grunt.log.writeln('grunt jshint\t\t\tRuns the JSHint (Possible arguments: MathLib, Tests, grunt)');
+		grunt.log.writeln('grunt jscs\t\t\tRuns the JavaScript Code Style checker (Possible arguments: MathLib, Tests, grunt)');
+	});
+
+
+	grunt.registerTask('qunit_amd_warning', function () {
+		grunt.log.subhead('The grunt qunit_amd task currently fails for an unknown reason.');
+		grunt.log.subhead('Please check the passing of the tests by going to ./test/test.amd.html');
+	});
 
 
 	grunt.registerTask('template', 'A simple task to convert HTML templates', function () {
@@ -224,11 +253,12 @@ module.exports = function (grunt) {
 			},
 
 			plain: {
-				src: ['build/plain/fullscreen.js', 'build/plain/lineDash.js', 'build/plain/meta.js', 'build/plain/Expression.js', 'build/plain/Functn.js', 
-						'build/plain/Screen.js', 'build/plain/Layer.js', 'build/plain/Canvas.js', 'build/plain/SVG.js', 'build/plain/Screen2D.js',
-						'build/plain/Screen3D.js', 'build/plain/Vector.js', 'build/plain/Circle.js', 'build/plain/Complex.js', 'build/plain/Integer.js', 
-						'build/plain/Line.js', 'build/plain/Matrix.js', 'build/plain/Permutation.js', 'build/plain/Conic.js', 'build/plain/Point.js',
-						'build/plain/Polynomial.js', 'build/plain/Rational.js', 'build/plain/Set.js'],
+				src: ['build/plain/fullscreen.js', 'build/plain/lineDash.js', 'build/plain/meta.js', 'build/plain/Expression.js', 'build/plain/Functn.js',
+					'build/plain/Screen.js', 'build/plain/Layer.js', 'build/plain/Canvas.js', 'build/plain/SVG.js', 'build/plain/Screen2D.js',
+					'build/plain/Screen3D.js', 'build/plain/Vector.js', 'build/plain/Circle.js', 'build/plain/Complex.js', 'build/plain/Integer.js',
+					'build/plain/Line.js', 'build/plain/Matrix.js', 'build/plain/Permutation.js', 'build/plain/Conic.js', 'build/plain/Point.js',
+					'build/plain/Polynomial.js', 'build/plain/Rational.js', 'build/plain/Set.js'
+				],
 				dest: 'build/MathLib.js',
 				options: {
 					banner: banner,
@@ -237,18 +267,19 @@ module.exports = function (grunt) {
 			},
 
 			declaration: {
-				src: ['build/plain/meta.d.ts', 'build/plain/Expression.d.ts', 'build/plain/Functn.d.ts', 'build/plain/Screen.d.ts', 'build/plain/Layer.d.ts', 
-				'build/plain/Canvas.d.ts', 'build/plain/SVG.d.ts', 'build/plain/Screen2D.d.ts', 'build/plain/Screen3D.d.ts', 'build/plain/Vector.d.ts',
-				'build/plain/Circle.d.ts', 'build/plain/Complex.d.ts', 'build/plain/Integer.d.ts', 'build/plain/Line.d.ts', 'build/plain/Matrix.d.ts', 'build/plain/Permutation.d.ts',
-				'build/plain/Conic.d.ts', 'build/plain/Point.d.ts', 'build/plain/Polynomial.d.ts', 'build/plain/Rational.d.ts', 'build/plain/Set.d.ts'],
+				src: ['build/plain/meta.d.ts', 'build/plain/Expression.d.ts', 'build/plain/Functn.d.ts', 'build/plain/Screen.d.ts', 'build/plain/Layer.d.ts',
+					'build/plain/Canvas.d.ts', 'build/plain/SVG.d.ts', 'build/plain/Screen2D.d.ts', 'build/plain/Screen3D.d.ts', 'build/plain/Vector.d.ts',
+					'build/plain/Circle.d.ts', 'build/plain/Complex.d.ts', 'build/plain/Integer.d.ts', 'build/plain/Line.d.ts', 'build/plain/Matrix.d.ts', 'build/plain/Permutation.d.ts',
+					'build/plain/Conic.d.ts', 'build/plain/Point.d.ts', 'build/plain/Polynomial.d.ts', 'build/plain/Rational.d.ts', 'build/plain/Set.d.ts'
+				],
 				dest: 'build/MathLib.d.ts',
 				options: {
 					banner: banner,
 					footer: ''
 				}
 			},
-			
-			
+
+
 			// Generate the files for testing MathLib in different environments
 			tests: {
 				src: testFiles,
@@ -268,7 +299,7 @@ module.exports = function (grunt) {
 					footer: '\n});'
 				}
 			},
-			
+
 			testsCommonjs: {
 				// The Screen module is not yet supported in non browser environments.
 				src: testFiles.filter(function (x) {return !x.match('Screen');}),
@@ -319,34 +350,35 @@ module.exports = function (grunt) {
 				]
 			}
 		},
-	
+
 
 
 		/*
-		
+
 		Testing
 		=======
-		
+
 		You can run all tests for all platforms using the command
-			grunt runTests
-		
+			grunt testAll
+
 		The tests for the plain JavaScript:
-			grunt qunit
-		
+			grunt testPlain
+
 		The tests for AMD modules:
-			grunt qunit_amd
-		
+			grunt testAMD
+
 		The tests for Commonjs modules:
-			grunt nodeunit
-		
+			grunt testCommonjs
+
 		The test coverage:
 			grunt karma
-		
+
 		*/
 
 
 		qunit: {
-			index: ['test/test.html', 'test/test.min.html']
+			MathLib: ['test/test.html'],
+			min: ['test/test.min.html']
 		},
 
 		'qunit_amd': {
@@ -373,8 +405,8 @@ module.exports = function (grunt) {
 				runnerPort: 9999,
 				singleRun: true,
 				// PhantomJS currently complains about an security error:
-				// 	 SECURITY_ERR: DOM Exception 18: An attempt was made to break through the security policy of the user agent.
-				browsers: ['Chrome', /*'PhantomJS'*/]
+				//   SECURITY_ERR: DOM Exception 18: An attempt was made to break through the security policy of the user agent.
+				browsers: ['Chrome']/*, 'PhantomJS'*/
 			}
 		},
 
@@ -410,7 +442,7 @@ module.exports = function (grunt) {
 							version: '28',
 							platform: 'Linux'
 						},
-						
+
 
 						// Firefox
 						// =======
@@ -550,29 +582,29 @@ module.exports = function (grunt) {
 
 
 		/*
-		
-		Testing
-		=======
-		
-		You can run all tests for all platforms using the command
-			grunt runTests
-		
-		The tests for the plain JavaScript:
-			grunt qunit
-		
-		The tests for AMD modules:
-		
+		Code Quality
+		============
+
+		Run jshint
+			grunt jshint
+
+		Run the JavaScript Code Style checker
+			grunt jscs
 		*/
 		jshint: {
 			options: {
 				jshintrc: '.jshintrc'
 			},
 			MathLib: {
-				src: ['build/MathLib.js', 'build/MathLib.test.js']
+				src: ['build/MathLib.js']
+			},
+			Tests: {
+				src: ['build/MathLib.test.js']
 			},
 			grunt: {
 				src: ['Gruntfile.js']
 			},
+			/*
 			es6: {
 				files: {
 					src: ['build/es6/*.js'],
@@ -581,6 +613,7 @@ module.exports = function (grunt) {
 					esnext: true
 				}
 			}
+			*/
 		},
 
 
@@ -706,37 +739,54 @@ module.exports = function (grunt) {
 					{
 						name: '',
 						search: /\/\/\/ <reference path='reference\.ts'\/>/,
-						replace: 
-						'/**\n'+
-						' *\n'+
-						' * @module MathLib\n'+
+						replace: '/**\n' +
+						' *\n' +
+						' * @module MathLib\n' +
 						' */'
+					},
+					{
+						name: '',
+						search: '%MathLibVersion',
+						replace: '<%= pkg.version %>'
 					}
 				]
 			},
-			
-			plain: {
+
+
+			plainBefore: {
 				src: ['build/plain/*.js'],
 				actions: [
 					{
-						search: "/// <reference path='reference.ts'/>\n",
+						search: '/// <reference path=\'reference.ts\'/>\n',
 						replace: ''
 					},
 				]
 			},
-			
+
+			plainAfter: {
+				src: ['build/MathLib.js'],
+				actions: [
+					{
+						name: '',
+						search: /\t'export MathLib';/,
+						replace: '',
+						flag: 'g'
+					}
+				]
+			},
+
 			amdHead: {
 				src: ['build/amd/meta.js'],
 				actions: [
 					{
 						name: '',
-						search: /var MathLib;\n\(function \(_MathLib\) \{/,
-						replace: 'define([], function () {\n\tvar _MathLib = {};'
+						search: /var MathLib;\n\(function \(MathLib\) \{/,
+						replace: 'define([], function () {\n\tvar MathLib = {};'
 					},
 					{
 						name: '',
 						search: /'export MathLib';/,
-						replace: '\treturn _MathLib;',
+						replace: 'return MathLib;',
 						flag: 'g'
 					}
 				]
@@ -745,7 +795,7 @@ module.exports = function (grunt) {
 				src: ['build/amd/*.js'],
 				actions: [
 					{
-						search: "/// <reference path='reference.ts'/>\n",
+						search: '/// <reference path=\'reference.ts\'/>\n',
 						replace: ''
 					},
 					{
@@ -794,7 +844,7 @@ module.exports = function (grunt) {
 					},
 					{
 						name: '',
-						search: /\(function \(_MathLib\) \{/,
+						search: /\(function \(MathLib\) \{/,
 						replace: ''
 					},
 					{
@@ -819,7 +869,7 @@ module.exports = function (grunt) {
 				src: ['build/commonjs/*.js'],
 				actions: [
 					{
-						search: "/// <reference path='reference.ts'/>\n",
+						search: '/// <reference path=\'reference.ts\'/>\n',
 						replace: ''
 					},
 					{
@@ -838,9 +888,9 @@ module.exports = function (grunt) {
 						search: /\/\/\/ import (.*)/,
 						replace: function (_, match) {
 							return 'var MathLib = require(\'./meta.js\'),' +
-								match.split(', ').reduce(function (old, cur) {
-									return old + '\n\t\t' + cur  + ' = require(\'./' + cur + '\'),';
-								}, '').slice(0,-1) + ';\n';
+							match.split(', ').reduce(function (old, cur) {
+								return old + '\n\t\t' + cur  + ' = require(\'./' + cur + '\'),';
+							}, '').slice(0,-1) + ';\n';
 						},
 						flags: 'g'
 					},
@@ -900,7 +950,7 @@ module.exports = function (grunt) {
 				src: ['build/es6/!(MathLib).js'],
 				actions: [
 					{
-						search: "/// <reference path='reference.ts'/>\n",
+						search: '/// <reference path=\'reference.ts\'/>\n',
 						replace: ''
 					},
 					{
@@ -924,9 +974,9 @@ module.exports = function (grunt) {
 						search: /\/\/\/ import (.*)/,
 						replace: function (_, match) {
 							return 'import MathLib from \'./meta.js\';' +
-								match.split(', ').reduce(function (old, cur) {
-									return old + '\nimport ' + cur  + ' from \'./' + cur + '\';';
-								}, '').slice(0,-1) + ';\n';
+							match.split(', ').reduce(function (old, cur) {
+								return old + '\nimport ' + cur  + ' from \'./' + cur + '\';';
+							}, '').slice(0,-1) + ';\n';
 						},
 						flags: 'g'
 					},
@@ -985,7 +1035,7 @@ module.exports = function (grunt) {
 				]
 			}
 		},
-		
+
 		watch: {
 			src: {
 				files: ['src/*/*.ts'],
@@ -1004,27 +1054,30 @@ module.exports = function (grunt) {
 				tasks: ['template']
 			}
 		}
-		
+
 	});
 
 
-	grunt.registerTask('generatePlain', ['clean:plain', 'generateTestFiles', 'concat:meta', 'concat:Interfaces', 'concat:Expression', 'concat:Functn', 'concat:Screen', 'concat:Layer',
-			'concat:Canvas', 'concat:SVG', 'concat:Screen2D', 'concat:Screen3D', 'concat:Vector', 'concat:Circle', 'concat:Complex', 'concat:Integer', 'concat:Line',
-			'concat:Matrix', 'concat:Permutation', 'concat:Conic', 'concat:Point', 'concat:Polynomial', 'concat:Rational', 'concat:Set', 'ts', 'copy:shims',
-			'concat:plain', 'uglify', 'regex-replace:plainHead', 'regex-replace:plain', 'clean:reference']);
+	grunt.registerTask('generatePlain', ['clean:plain', 'concat:meta', 'concat:Interfaces', 'concat:Expression', 'concat:Functn', 'concat:Screen', 'concat:Layer',
+		'concat:Canvas', 'concat:SVG', 'concat:Screen2D', 'concat:Screen3D', 'concat:Vector', 'concat:Circle', 'concat:Complex', 'concat:Integer', 'concat:Line',
+		'concat:Matrix', 'concat:Permutation', 'concat:Conic', 'concat:Point', 'concat:Polynomial', 'concat:Rational', 'concat:Set', 'ts', 'copy:shims',
+		'concat:plain', 'uglify', 'regex-replace:plainHead', 'regex-replace:plainBefore', 'clean:reference'
+	]);
 	grunt.registerTask('generateAMD', ['copy:amd', 'regex-replace:amdHead', 'regex-replace:amd']);
 	grunt.registerTask('generateCommonjs', ['copy:commonjs', 'regex-replace:commonjsHead', 'regex-replace:commonjs']);
 	grunt.registerTask('generateES6', ['copy:es6', 'regex-replace:es6Head', 'regex-replace:es6']);
 	grunt.registerTask('generateDeclaration', ['concat:declaration', 'regex-replace:declaration']);
+	grunt.registerTask('generateTests', ['concat:tests', 'concat:testsAmd', 'concat:testsCommonjs']);
+	grunt.registerTask('generateAll', ['generatePlain', 'generateAMD', 'generateCommonjs', 'generateES6', 'generateDeclaration', 'generateTests', 'regex-replace:plainAfter']);
 
-	grunt.registerTask('generateAll', ['generatePlain', 'generateAMD', 'generateCommonjs', 'generateES6', 'generateDeclaration', 'clean']);
 
-
-	grunt.registerTask('generateTestFiles', ['concat:tests', 'concat:testsAmd', 'concat:testsCommonjs']);
-	grunt.registerTask('runTests', ['nodeunit', 'qunit', 'qunit_amd']);
+	grunt.registerTask('testPlain', ['qunit']);
+	grunt.registerTask('testCommonjs', ['nodeunit']);
+	grunt.registerTask('testAMD', ['qunit_amd_warning', 'qunit_amd']);
+	grunt.registerTask('testAll', ['testPlain', 'testCommonjs', 'testAMD']);
 
 
 	grunt.registerTask('default', ['generatePlain']);
-	grunt.registerTask('release', ['generateAll', 'cssmin' /*, 'docco'*/]);
+	grunt.registerTask('release', ['generateAll', 'clean', 'cssmin', 'testPlain', 'testCommonjs', 'jshint', 'jscs']);/*, 'docco'*/
 	grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);
 };

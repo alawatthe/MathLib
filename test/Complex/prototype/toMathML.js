@@ -1,6 +1,6 @@
 test('.toMathML()', 22, function () {
 	var c1 = new MathLib.Complex(3, 4),
-		 	c2 = new MathLib.Complex(-3, 4),
+			c2 = new MathLib.Complex(-3, 4),
 			c3 = new MathLib.Complex(3, -4),
 			c4 = new MathLib.Complex(-3, -4),
 			d1 = new MathLib.Complex(0, 7),
