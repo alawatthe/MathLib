@@ -427,134 +427,186 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 54,
+					build: 55,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
 					browsers: [
 						// Chrome
 						// ======
+
 						{
-							browserName: 'chrome',
-							version: '27',
-							platform: 'OS X 10.8'
+							browser: 'googlechrome',
+							os: 'Windows 8.1',
+							'browser-version': '31'
 						},
 						{
-							browserName: 'chrome',
-							version: '27',
-							platform: 'XP'
+							browser: 'googlechrome',
+							os: 'Windows 8',
+							'browser-version': '31'
 						},
 						{
-							browserName: 'chrome',
-							version: '28',
-							platform: 'Linux'
+							browser: 'googlechrome',
+							os: 'Windows 7',
+							'browser-version': '31'
+						},
+						{
+							browser: 'googlechrome',
+							os: 'Windows XP',
+							'browser-version': '31'
+						},
+						{
+							browser: 'googlechrome',
+							os: 'OS X 10.6',
+							'browser-version': '31'
+						},
+						{
+							browser: 'googlechrome',
+							os: 'OS X 10.8',
+							'browser-version': '31'
+						},
+						{
+							browser: 'googlechrome',
+							os: 'OS X 10.9',
+							'browser-version': '31'
+						},
+						{
+							browser: 'googlechrome',
+							os: 'Linux',
+							'browser-version': '30'
 						},
 
 
 						// Firefox
 						// =======
 						{
-							browserName: 'firefox',
-							version: '19',
-							platform: 'OS X 10.6'
+							browser: 'firefox',
+							os: 'Windows 8.1',
+							'browser-version': '26'
 						},
 						{
-							browserName: 'firefox',
-							version: '20',
-							platform: 'OS X 10.6'
+							browser: 'firefox',
+							os: 'Windows 8',
+							'browser-version': '26'
 						},
 						{
-							browserName: 'firefox',
-							version: '21',
-							platform: 'OS X 10.6'
-						},
-
-						{
-							browserName: 'firefox',
-							version: '19',
-							platform: 'XP'
+							browser: 'firefox',
+							os: 'Windows 7',
+							'browser-version': '26'
 						},
 						{
-							browserName: 'firefox',
-							version: '20',
-							platform: 'XP'
+							browser: 'firefox',
+							os: 'Windows XP',
+							'browser-version': '26'
 						},
 						{
-							browserName: 'firefox',
-							version: '21',
-							platform: 'XP'
+							browser: 'firefox',
+							os: 'OS X 10.6',
+							'browser-version': '26'
+						},
+						{
+							browser: 'firefox',
+							os: 'OS X 10.9',
+							'browser-version': '26'
+						},
+						{
+							browser: 'firefox',
+							os: 'Linux',
+							'browser-version': '26'
 						},
 
 
 						// Safari
 						// ======
 						{
-							browserName: 'safari',
-							version: '5',
-							platform: 'OS X 10.6'
+							browser: 'safari',
+							os: 'Windows 7',
+							'browser-version': '5'
 						},
 						{
-							browserName: 'safari',
-							version: '6',
-							platform: 'OS X 10.8'
+							browser: 'safari',
+							os: 'Windows XP',
+							'browser-version': '5'
+						},
+						{
+							browser: 'safari',
+							os: 'OS X 10.6',
+							'browser-version': '5'
+						},
+						{
+							browser: 'safari',
+							os: 'OS X 10.8',
+							'browser-version': '6'
 						},
 
 
 						// Opera
 						// =====
-						// Opera does not work with the automated tests.
-						// {
-						//	browserName: 'opera',
-						//	version: '11',
-						//	platform: 'Windows 7'
-						//},
-						//{
-						//	browserName: 'opera',
-						//	version: '12',
-						//	platform: 'Windows 7'
-						//},
-
-						//{
-						//	browserName: 'opera',
-						//	version: '12',
-						//	platform: 'Linux'
-						//},
+						{
+							browser: 'opera',
+							os: 'Windows 8.1',
+							'browser-version': '10'
+						},
+						{
+							browser: 'opera',
+							os: 'Windows 8',
+							'browser-version': '10'
+						},
+						{
+							browser: 'opera',
+							os: 'Windows 7',
+							'browser-version': '12'
+						},
+						{
+							browser: 'opera',
+							os: 'Windows XP',
+							'browser-version': '12'
+						},
+						{
+							browser: 'opera',
+							os: 'Linux',
+							'browser-version': '12'
+						},
 
 
 						// Internet Explorer
 						// =================
-						//{
-						//	browserName: 'internet explorer',
-						//	version: '9',
-						//	platform: 'Windows 7'
-						//},
 						{
-							browserName: 'internet explorer',
-							version: '10',
-							platform: 'Windows 8'
+							browser: 'iehta',
+							os: 'Windows 7',
+							'browser-version': '10'
+						},
+						{
+							browser: 'iehta',
+							os: 'Windows 7',
+							'browser-version': '9'
 						},
 
 
 						// Android
 						// =======
-						// Android does not work with the automated tests.
-						//{
-						//	browserName: 'android',
-						//	version: '4.0',
-						//	platform: 'Linux'
-						//},
+						{
+							browserName: 'android',
+							version: '4.0',
+							platform: 'Linux'
+						},
 
 
 						// iPhone
 						// ======
 						{
 							browserName: 'iphone',
-							version: '5.1',
+							version: '7.0',
+							platform: 'OS X 10.9'
+						},
+						{
+							browserName: 'iphone',
+							version: '6.0',
 							platform: 'OS X 10.8'
 						},
 						{
 							browserName: 'iphone',
-							version: '6',
+							version: '6.0',
 							platform: 'OS X 10.8'
 						},
 
@@ -563,12 +615,17 @@ module.exports = function (grunt) {
 						// ====
 						{
 							browserName: 'ipad',
-							version: '5.1',
+							version: '7.0',
+							platform: 'OS X 10.9'
+						},
+						{
+							browserName: 'ipad',
+							version: '6.0',
 							platform: 'OS X 10.8'
 						},
 						{
 							browserName: 'ipad',
-							version: '6',
+							version: '6.0',
 							platform: 'OS X 10.8'
 						}
 					]
@@ -1040,7 +1097,21 @@ module.exports = function (grunt) {
 						replace: 'public xor: (a: any) => Set;\n    }\n}'
 					}
 				]
+			},
+
+
+			saucebuildnumber: {
+				src: ['Gruntfile.js'],
+				actions: [
+					{
+						search: /build: (\d+)/,
+						replace: function (_, match) {
+							return 'build: ' + (parseInt(match, 10) + 1);
+						}
+					},
+				]
 			}
+
 		},
 
 		watch: {
@@ -1085,7 +1156,7 @@ module.exports = function (grunt) {
 
 
 	grunt.registerTask('default', ['generatePlain']);
-	grunt.registerTask('release', ['generateAll', 'clean', 'cssmin', 'testPlain', 'testCommonjs', 'jshint', 'jscs']);/*, 'docco'*/
+	grunt.registerTask('release', ['generateAll', 'clean', 'cssmin', 'testPlain', 'testCommonjs', 'jshint', 'jscs', 'regex-replace:saucebuildnumber']);/*, 'docco'*/
 
 	grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);
 	grunt.registerTask('continuousIntegration', ['nodeunit', 'jshint', 'jscs', 'saucelabs']);
