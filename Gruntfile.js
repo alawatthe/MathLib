@@ -1076,5 +1076,7 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('default', ['generatePlain']);
 	grunt.registerTask('release', ['generateAll', 'clean', 'cssmin', 'testPlain', 'testCommonjs', 'jshint', 'jscs']);/*, 'docco'*/
+	
 	grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);
+	grunt.registerTask('continuousIntegration', ['nodeunit', 'jshint', 'jscs', 'saucelabs']);
 };

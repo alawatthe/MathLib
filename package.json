@@ -39,7 +39,7 @@
 		"requirejs": "~2.1.10"
 	},
 	"scripts": {
-		"test": "grunt nodeunit"
+		"test": "grunt continuousIntegration"
 	},
 	"repository": {
 		"type": "git",
