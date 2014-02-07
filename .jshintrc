@@ -67,6 +67,7 @@
 		"MathJax"     : true,
 		"module"      : true,
 		"ok"          : true,
+		"process"     : true,
 		"requestAnimationFrame": true,
 		"test"        : true,
 		"throws"      : true,

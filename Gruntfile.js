@@ -130,6 +130,16 @@ module.exports = function (grunt) {
 		grunt.log.writeln('template.ts created successfully');
 	});
 
+	var sauceuser = null,
+			saucekey = null;
+
+	if (typeof process.env.SAUCE_ACCESS_KEY !== 'undefined') {
+		saucekey = process.env.SAUCE_ACCESS_KEY;
+	}
+
+	if (typeof process.env.SAUCE_USERNAME !== 'undefined') {
+		sauceuser = process.env.SAUCE_USERNAME;
+	}
 
 
 	grunt.initConfig({
@@ -411,8 +421,8 @@ module.exports = function (grunt) {
 		'saucelabs-qunit': {
 			MathLib: {
 				options: {
-					username: '<%= saucelabs.username %>',
-					key: '<%= saucelabs.key %>',
+					username: sauceuser, //'<%= saucelabs.username %>',
+					key: saucekey, //'<%= saucelabs.key %>',
 					urls: ['http://localhost:9999/test/test.html'],
 					concurrency: 3,
 					detailedError: true,
