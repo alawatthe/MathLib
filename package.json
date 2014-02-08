@@ -1,6 +1,6 @@
 {
 	"name": "mathlib",
-	"version": "0.7.0",
+	"version": "0.7.1",
 	"description": "JavaScript library for mathematical computations.",
 	"main": "./build/MathLib.js",
 	"directories": {
@@ -54,7 +54,8 @@
 		"expression",
 		"number",
 		"complex",
-		"matrix"
+		"matrix",
+		"integer"
 	],
 	"author": "Alexander Zeilmann",
 	"license": "MIT",

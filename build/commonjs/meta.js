@@ -4,7 +4,7 @@
  */
 var MathLib = {};
 
-	MathLib.version = '0.7.0';
+	MathLib.version = '0.7.1';
 	MathLib.apery = 1.2020569031595942;
 	MathLib.e = Math.E;
 
