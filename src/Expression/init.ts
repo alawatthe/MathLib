@@ -13,9 +13,11 @@ export class Expression {
 
 	type = 'expression';
 
-	arguments: string[];
+	args: string[];
+	cdgroup: string;
 	content: any;
 	isMethod: boolean;
+	contentMathMLName: string;
 	mode: string;
 	name: string;
 	subtype: string;

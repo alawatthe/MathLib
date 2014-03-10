@@ -37,8 +37,9 @@ static parseContentMathML(MathMLString : string) : Expression {
 
 	var handler = {
 		apply: function (node) {
-			var children = Array.prototype.slice.call(node.childNodes),
-					functnName = children.shift().nodeName,
+			var functnName = '', expr,
+					children = Array.prototype.slice.call(node.childNodes),
+					functnNameNode = children.shift(),
 					isMethod = true,
 					functnNames = {
 						ident: 'identity',
@@ -46,6 +47,13 @@ static parseContentMathML(MathMLString : string) : Expression {
 						rem: 'mod',
 						setdifference: 'without' 
 					};
+
+			if (functnNameNode.nodeName === 'csymbol') {
+				functnName = functnNameNode.textContent;
+			}
+			else {
+				functnName = functnNameNode.nodeName;
+			}
 
 			// Change some function names for functions with different names in MathLib
 			if (functnName in functnNames) {
@@ -56,12 +64,40 @@ static parseContentMathML(MathMLString : string) : Expression {
 				isMethod = false;
 			}
 
-			return new MathLib.Expression({
+			expr = new MathLib.Expression({
 				subtype: 'functionCall',
 				value: functnName,
 				isMethod: isMethod,
 				content: parser(children)
 			});
+
+			if (functnName in MathLib && MathLib[(<string>functnName)].type === 'functn') {
+				if (MathLib[functnName].expression.content[0].hasOwnProperty('cdgroup')) {
+					expr.cdgroup = MathLib[functnName].expression.content[0].cdgroup;
+				}
+
+				if (MathLib[functnName].expression.content[0].hasOwnProperty('contentMathMLName')) {
+					expr.contentMathMLName = MathLib[functnName].expression.content[0].contentMathMLName;
+				}
+
+				if (MathLib[functnName].expression.content[0].hasOwnProperty('toContentMathML')) {
+					expr.toContentMathML = MathLib[functnName].expression.content[0].toContentMathML;
+				}
+
+				if (MathLib[functnName].expression.content[0].hasOwnProperty('toLaTeX')) {
+					expr.toLaTeX = MathLib[functnName].expression.content[0].toLaTeX;
+				}
+
+				if (MathLib[functnName].expression.content[0].hasOwnProperty('toMathML')) {
+					expr.toMathML = MathLib[functnName].expression.content[0].toMathML;
+				}
+
+				if (MathLib[functnName].expression.content[0].hasOwnProperty('toString')) {
+					expr.toString = MathLib[functnName].expression.content[0].toString;
+				}
+			}
+
+			return expr;
 		},
 		ci: function (node) {
 			return new MathLib.Expression({
@@ -69,95 +105,135 @@ static parseContentMathML(MathMLString : string) : Expression {
 				value: node.textContent
 			});
 		},
-		cn: function (node) {
+		cn: function (node) : any {
       var type = node.getAttribute('type') 
 
-			if (type === null || type === '') {
-				type = 'number';
+			if (type === 'integer') {
+				var base = node.getAttribute('base') !== null ? Number(node.getAttributes('base')) : 10;
+				return new MathLib.Integer(node.textContent.trim(), {base: base})
 			}
-
-			if (type === 'number') {
-				// TODO: base conversions
-				// var base = node.getAttribute('base') !== null ? node.getAttributes('base') : '10';
-				return parser(node.childNodes[0]);
+			else if (type === 'real' || type === null || type === '') {
+				// TODO: adapt this, once the Real class exists
+				return Number(node.textContent);
 			}
+			else if (type === 'double') {
+				return Number(node.textContent);
+			}
+			//else if (type === 'hexdouble') {
+				// TODO: implement
+			//}
+			//else if (type === 'e-notation') {
+				// TODO: implement
+			//}
 			else if (type === 'rational') {
-				return new MathLib.Expression({
-					value: [parser(node.childNodes[0]), parser(node.childNodes[2])],
-					subtype: 'rationalNumber'
-				});
+				return new MathLib.Rational(new MathLib.Integer(node.childNodes[0].textContent), new MathLib.Integer(node.childNodes[2].textContent));
 			}
 			else if (type === 'complex-cartesian') {
-				return new MathLib.Expression({
-					value: [parser(node.childNodes[0]), parser(node.childNodes[2])],
-					subtype: 'complexNumber',
-					mode: 'cartesian'
-				});
+				return new MathLib.Complex(Number(node.childNodes[0].textContent), Number(node.childNodes[2].textContent));
 			}
 			else if (type === 'complex-polar') {
+				return MathLib.Complex.polar(Number(node.childNodes[0].textContent), Number(node.childNodes[2].textContent));
+
+				/*
 				return new MathLib.Expression({
 					value: [parser(node.childNodes[0]), parser(node.childNodes[2])],
 					subtype: 'complexNumber',
 					mode: 'polar'
 				});
+				*/
 			}
+			//else if (type === 'constant') {
+				// TODO: implement
+			//}
 		},
 		cs: function (node) {
-			return new MathLib.Expression({
-				subtype: 'string',
-				value: node.textContent
-			});
+			return node.textContent;
+		},
+		csymbol: function (node) {
+			var cd = node.getAttribute('cd');
+
+			if (cd === 'logic1') {
+				if (node.textContent === 'true') {
+					return true;
+				}
+				if (node.textContent === 'false') {
+					return false;
+				}
+
+//and, equivalent, false, implies, not, or, true, xor
+			}
 		},
 		lambda: function (node) {
-			var bvar = node.childNodes[0],
-					doa = node.childNodes[1],
-					apply = node.childNodes[2];
+			var doa, apply,
+					bvar = [],
+					i = 0;
 
-			return new MathLib.Expression({
-				subtype: 'functionDefinition',
-				domain: doa.childNodes[0].nodeName,
-				arguments: Array.prototype.map.call(bvar.childNodes, variable => MathLib.Expression.variable(variable.textContent)),
-				content: [parser(apply)]
-			})
+			while (node.childNodes[i].nodeName === 'bvar') {
+				bvar.push(MathLib.Expression.variable(node.childNodes[i].childNodes[0].textContent));
+				i++;
+			}
+
+			if (node.childNodes[i].nodeName === 'domainofapplication') {
+				doa = node.childNodes[i].childNodes[0].nodeName;
+
+				if (doa === 'integers') {
+					doa = MathLib.Integer;
+				}
+				else if (doa === 'rationals') {
+					doa = MathLib.Rational;
+				}
+				else if (doa === 'complexes') {
+					doa = MathLib.Complex;
+				}
+				i++;
+			}
+
+			apply = node.childNodes[i];
+
+			if (doa) {
+				return new MathLib.Expression({
+					subtype: 'functionDefinition',
+					domain: doa,
+					args: bvar,
+					content: [parser(apply)]
+				});
+			}
+			else {
+				return new MathLib.Expression({
+					subtype: 'functionDefinition',
+					args: bvar,
+					content: [parser(apply)]
+				});
+			}
 		},
 		math: function (node) {
 			return parser(node.childNodes[0]);
 		},
 		matrix: function (node) {
-			return new MathLib.Expression({
-				value: Array.prototype.slice.call(node.childNodes).map(handler.matrixrow),
-				subtype: 'matrix'
-			});
+			return new MathLib.Matrix(
+				Array.prototype.slice.call(node.childNodes).map(handler.matrixrow)
+			);
 		},
 		matrixrow: function (node) {
 			return Array.prototype.map.call(node.childNodes, parser);
 		},
 		set: function (node) {
-			return new MathLib.Expression({
-				value: parser(Array.prototype.slice.call(node.childNodes)),
-				subtype: 'set'
-			});
+			return new MathLib.Set(parser(Array.prototype.slice.call(node.childNodes)));
 		},
 		'#text': function (node) {
-			if (node.parentNode.nodeName === 'cn') {
-				return MathLib.Expression.number(node.nodeValue.trim());
-			}
 			return node.nodeValue;
 		},
 		vector: function (node) {
-			return new MathLib.Expression({
-				value: parser(Array.prototype.slice.call(node.childNodes)),
-				subtype: 'vector'
-			});
+			return new MathLib.Vector(parser(Array.prototype.slice.call(node.childNodes)));
 		},
 		false: function () {
-			return MathLib.Expression.constant('false');
+			return false;
 		},
 		pi: function () {
 			return MathLib.Expression.constant('pi');
 		},
 		true: function () {
-			return MathLib.Expression.constant('true');
+			return true;
 		}
 	}
 

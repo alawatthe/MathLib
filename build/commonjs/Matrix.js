@@ -235,6 +235,15 @@
 		};
 
 		/**
+		* Evaluates the entries of the matrix
+		*
+		* @return {Matrix}
+		*/
+		Matrix.prototype.evaluate = function () {
+			return this.map(MathLib.evaluate);
+		};
+
+		/**
 		* This function works like the Array.prototype.every function.
 		* The matrix is processed row by row.
 		* The function is called with the following arguments:

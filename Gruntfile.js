@@ -63,7 +63,7 @@ module.exports = function (grunt) {
 				'test/Complex/init.js', 'test/Complex/!(init).js', 'test/Complex/prototype/*.js',
 				'test/Conic/init.js', 'test/Conic/!(init).js',
 				'test/Expression/init.js', 'test/Expression/!(init).js',
-				'test/Functn/init.js', 'test/Functn/!(init).js',
+				'test/Functn/init.js', 'test/Functn/!(init).js', 'test/Functn/*/*.js',
 				'test/Integer/init.js', 'test/Integer/!(init).js', 'test/Integer/prototype/*.js',
 				'test/Line/init.js', 'test/Line/!(init).js',
 				'test/Matrix/init.js', 'test/Matrix/!(init).js',
@@ -81,7 +81,7 @@ module.exports = function (grunt) {
 		grunt.log.writeln('grunt release\t\t\tRun this task before committing something. ');
 
 		grunt.log.subhead('Building');
-		grunt.log.writeln('grunt generateAll\t\tThis tasks generates all of the files mentioned below. ');
+		grunt.log.writeln('grunt generateAll\t\tThis task generates all of the files mentioned below. ');
 		grunt.log.writeln('grunt generatePlain\t\tThis task generates the plain JavaScript files. ');
 		grunt.log.writeln('grunt generateCommonjs\t\tThis task generates the Commonjs JavaScript files. ');
 		grunt.log.writeln('grunt generateAMD\t\tThis task generates the AMD JavaScript files. ');
@@ -152,10 +152,10 @@ module.exports = function (grunt) {
 				footer: '\n}}'
 			},
 			meta: {
-				src: ['src/meta/head.ts', 'src/meta/errorSystem.ts'],
+				src: ['src/meta/head.ts', 'src/meta/!(head).ts'],
 				dest: 'build/plain/meta.ts',
 				options: {
-					footer: '\n// end meta\n}'
+					footer: '\n\'export MathLib\';\n// end meta\n}'
 				}
 			},
 			Interfaces: {
@@ -171,7 +171,7 @@ module.exports = function (grunt) {
 				dest: 'build/plain/Expression.ts'
 			},
 			Functn: {
-				src: ['src/Functn/init.ts', 'src/Functn/!(init).ts'],
+				src: ['src/Functn/init.ts', 'src/Functn/*/*.ts', 'src/Functn/!(init).ts'],
 				dest: 'build/plain/Functn.ts',
 				options: {
 					footer: '\n}'
@@ -427,7 +427,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 56,
+					build: 57,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -769,7 +769,7 @@ module.exports = function (grunt) {
 					sourceMap: false,
 					sourceRoot: '',
 					mapRoot: '',
-					declaration: !false,
+					declaration: true,
 				}
 			},
 		},
@@ -1156,6 +1156,7 @@ module.exports = function (grunt) {
 
 
 	grunt.registerTask('default', ['generatePlain']);
+	grunt.registerTask('commit', ['generateAll', 'clean', 'cssmin', 'testPlain', 'testCommonjs', 'jshint', 'jscs']);
 	grunt.registerTask('release', ['generateAll', 'clean', 'cssmin', 'testPlain', 'testCommonjs', 'jshint', 'jscs', 'regex-replace:saucebuildnumber']);/*, 'docco'*/
 
 	grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);

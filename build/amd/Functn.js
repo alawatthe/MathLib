@@ -14,7 +14,13 @@
 	MathLib.Functn = function  (f, options) {
 		options = options || {};
 
-		var functn = function  (x) {
+		var functn = function  () {
+			var args = [];
+			for (var _i = 0; _i < (arguments.length - 0); _i++) {
+				args[_i] = arguments[_i + 0];
+			}
+			var x = args[0];
+
 			if (typeof x === 'number' || typeof x === 'boolean') {
 				return f.apply('', arguments);
 			}
@@ -22,7 +28,7 @@
 				// x -> f(x)
 				// y -> g(y)
 				// y -> f(g(y))
-				var bvar = options.expression.arguments[0].value, composition = options.expression.map(function  (expr) {
+				var bvar = options.expression.args[0].value, composition = options.expression.map(function  (expr) {
 					if (expr.subtype === 'variable' && expr.value === bvar) {
 						expr = x.expression.content[0];
 					}
@@ -34,7 +40,7 @@
 				}, {
 					expression: new MathLib.Expression({
 						subtype: 'functionDefinition',
-						arguments: x.expression.arguments,
+						args: x.expression.args,
 						content: composition.content
 					})
 				});
@@ -43,7 +49,7 @@
 				return new MathLib.Functn(f, {
 					expression: new MathLib.Expression({
 						subtype: 'functionDefinition',
-						arguments: x,
+						args: x,
 						content: x
 					})
 				});
@@ -82,6 +88,7 @@
 		functn.constructor = MathLib.Functn;
 
 		Object.defineProperties(functn, {
+			args: {value: options.args},
 			id: {value: options.name},
 			expression: {value: options.expression}
 		});
@@ -90,9 +97,185 @@
 	};
 
 	var exports = {};
-	var binaryFunctions = {
-		arctan2: Math.atan2,
-		binomial: function  (n, k) {
+	var fns = {};
+
+	/**
+	* The absolute value
+	*
+	*/
+	fns.abs = {
+		functn: Math.abs,
+		cdgroup: 'arith1',
+		toLaTeX: ['\\left|', '\\right|'],
+		toMathML: ['<mo>|</mo>', '<mo>|</mo>'],
+		toString: ['|', '|']
+	};
+
+	/**
+	* The inverse cosine function
+	*
+	*/
+	fns.arccos = {
+		functn: Math.acos,
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The inverse cotangent function
+	*
+	*/
+	fns.arccot = {
+		functn: function (x) {
+			return 1.5707963267948966 - Math.atan(x);
+		},
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The inverse cosecant function
+	*
+	*/
+	fns.arccsc = {
+		functn: function (x) {
+			return Math.asin(1 / x);
+		},
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The inverse hyperbolic cosine function
+	*
+	*/
+	fns.arcosh = {
+		functn: MathLib.isNative(Math.acosh) || function  (x) {
+			return Math.log(x + Math.sqrt(x * x - 1));
+		},
+		cdgroup: 'transc1',
+		toContentMathMLName: 'arccosh'
+	};
+
+	/**
+	* The inverse hyperbolic cotangent function
+	*
+	*/
+	fns.arcoth = {
+		functn: function (x) {
+			// Handle ±∞
+			if (!MathLib.isFinite(x)) {
+				return 1 / x;
+			}
+			return 0.5 * Math.log((x + 1) / (x - 1));
+		},
+		cdgroup: 'transc1',
+		toContentMathMLName: 'arccoth'
+	};
+
+	/**
+	* The inverse hyperbolic cosecant function
+	*
+	*/
+	fns.arcsch = {
+		functn: function  (x) {
+			// Handle ±0 and ±∞ separately
+			if (x === 0 || !MathLib.isFinite(x)) {
+				return 1 / x;
+			}
+			return Math.log(1 / x + Math.sqrt(1 / (x * x) + 1));
+		},
+		cdgroup: 'transc1',
+		toContentMathMLName: 'arccsch'
+	};
+
+	/**
+	* The inverse secant function
+	*
+	*/
+	fns.arcsec = {
+		functn: function (x) {
+			return Math.acos(1 / x);
+		},
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The inverse sine function
+	*
+	*/
+	fns.arcsin = {
+		functn: Math.asin,
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The inverse tangent function
+	*
+	*/
+	fns.arctan = {
+		functn: Math.atan,
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The arctan2 function
+	*
+	*/
+	fns.arctan2 = {
+		functn: Math.atan2,
+		arity: 2,
+		cdgroup: 'transc2',
+		contentMathMLName: 'arctan'
+	};
+
+	/**
+	* The inverse hyperbolic secant function
+	*
+	*/
+	fns.arsech = {
+		functn: function  (x) {
+			return Math.log((1 + Math.sqrt(1 - x * x)) / x);
+		},
+		cdgroup: 'transc1',
+		toContentMathMLName: 'arcsech'
+	};
+
+	/**
+	* The inverse hyperbolic sine function
+	*
+	*/
+	fns.arsinh = {
+		functn: MathLib.isNative(Math.asinh) || function  (x) {
+			// Handle ±0 and ±∞ separately
+			if (x === 0 || !MathLib.isFinite(x)) {
+				return x;
+			}
+			return Math.log(x + Math.sqrt(x * x + 1));
+		},
+		cdgroup: 'transc1',
+		toContentMathMLName: 'arcsinh'
+	};
+
+	/**
+	* The inverse hyperbolic tangent function
+	*
+	*/
+	fns.artanh = {
+		functn: MathLib.isNative(Math.atanh) || function  (x) {
+			// Handle ±0
+			if (x === 0) {
+				return x;
+			}
+			return 0.5 * Math.log((1 + x) / (1 - x));
+		},
+		cdgroup: 'transc1',
+		toContentMathMLName: 'arctanh'
+	};
+
+	/**
+	* The binomial coefficient
+	*
+	*/
+	fns.binomial = {
+		functn: function (n, k) {
 			// TODO: non integer values
 			// What should be done with very big numbers?
 			var binomial = 1, i, sign;
@@ -133,71 +316,659 @@
 			}
 			return binomial;
 		},
-		divide: function  (a, b) {
-			return MathLib.times(a, MathLib.inverse(b));
-		},
-		log: function  (base, x) {
-			if (arguments.length === 1) {
-				x = base;
-				base = 10;
+		args: ['n', 'k'],
+		cdgroup: 'combinat1',
+		toLaTeX: ['{', ' \\choose ', '}'],
+		toMathML: ['<mfenced><mfrac linethickness=\"0\">', '', '</mfrac></mfenced>']
+	};
+
+	/**
+	* The cube root function
+	*
+	*/
+	fns.cbrt = {
+		functn: function (x) {
+			var a3, a3x, an, a;
+
+			// Handle ±0, NaN, ±∞
+			if (x === 0 || x !== x || x === Infinity || x === -Infinity) {
+				return x;
 			}
-			return Math.log(x) / Math.log(base);
+
+			// Get an approximation
+			a = MathLib.sign(x) * Math.pow(Math.abs(x), 1 / 3);
+
+			while (true) {
+				a3 = Math.pow(a, 3);
+				a3x = a3 + x;
+				an = a * (a3x + x) / (a3x + a3);
+				if (MathLib.isZero(an - a)) {
+					break;
+				}
+				a = an;
+			}
+			return an;
 		},
-		minus: function  (a, b) {
-			return MathLib.plus(a, MathLib.negative(b));
+		cdgroup: 'arith1',
+		toContentMathML: ['<csymbol cd="arith1">root</csymbol>', '<cn>3</cn>'],
+		toLaTeX: ['\\sqrt[3]{', '}'],
+		toMathML: ['<mroot>', '<mn>3</mn></mroot>']
+	};
+
+	/**
+	* The ceil function
+	*
+	*/
+	fns.ceil = {
+		functn: function (x) {
+			// Some implementations have a bug where Math.ceil(-0) = +0 (instead of -0)
+			if (x === 0) {
+				return x;
+			}
+			return Math.ceil(x);
 		},
-		mod: function  (n, m) {
-			var nm = n % m;
-			return nm >= 0 ? nm : nm + m;
+		cdgroup: 'rounding1',
+		contentMathMLName: 'ceiling',
+		toLaTeX: ['\\lceil', '\\rceil'],
+		toMathML: ['<mo>&lceil;</mo>', '<mo>&rceil;</mo>'],
+		toString: ['⌈', '⌉']
+	};
+
+	/**
+	* The conjugate function
+	*
+	*/
+	fns.conjugate = {
+		functn: function (x) {
+			return x;
 		},
-		pow: function  (x, y) {
+		cdgroup: 'complex1',
+		toLaTeX: ['\\overline{', '}'],
+		toMathML: ['<mover>', '<mo>‾</mo></mover>']
+	};
+
+	/**
+	* The copy function
+	*
+	*/
+	fns.copy = {
+		functn: function (x) {
+			return x;
+		},
+		toContentMathML: ['<ci>copy</ci>']
+	};
+
+	/**
+	* The cosine function
+	*
+	*/
+	fns.cos = {
+		functn: Math.cos,
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The hyperbolic cosine function
+	*
+	*/
+	fns.cosh = {
+		functn: MathLib.isNative(Math.cosh) || function  (x) {
+			return (Math.exp(x) + Math.exp(-x)) / 2;
+		},
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The cotangent function
+	*
+	*/
+	fns.cot = {
+		functn: function (x) {
+			// Handle ±0 separate, because tan(pi/2 ± 0) is not ±∞
+			if (x === 0) {
+				return 1 / x;
+			}
+
+			// cot(x) = tan(pi/2 - x) is better than 1/tan(x)
+			return Math.tan(1.5707963267948966 - x);
+		},
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The hyperbolic cotangent function
+	*
+	*/
+	fns.coth = {
+		functn: function (x) {
+			// Handle ±0
+			if (x === 0) {
+				return 1 / x;
+			}
+
+			// Handle ±∞
+			if (!MathLib.isFinite(x)) {
+				return MathLib.sign(x);
+			}
+
+			return (Math.exp(x) + Math.exp(-x)) / (Math.exp(x) - Math.exp(-x));
+		},
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The cosecant function
+	*
+	*/
+	fns.csc = {
+		functn: function (x) {
+			return 1 / Math.sin(x);
+		},
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The hyperbolic cosecant function
+	*
+	*/
+	fns.csch = {
+		functn: function (x) {
+			// csch(-0) should be -∞ not ∞
+			if (x === 0) {
+				return 1 / x;
+			}
+			return 2 / (Math.exp(x) - Math.exp(-x));
+		},
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* A function converting from degree to radian
+	*
+	*/
+	fns.degToRad = {
+		functn: function (x) {
+			// Math.PI / 180 = 0.017453292519943295
+			return x * 0.017453292519943295;
+		},
+		toContentMathML: ['<csymbol cd="arith1">times</csymbol><apply><csymbol cd="arith1">divide</csymbol><csymbol cd="nums1">pi</csymbol><cn>180</cn></apply>', ''],
+		toLaTeX: ['\\frac{\\pi}{180}', ''],
+		toMathML: ['<mfrac><mi>&pi;</mi><mn>180</mn></mfrac><mo>&#x2062;</mo>', ''],
+		toString: ['π/180*', '']
+	};
+
+	/**
+	* The digitsum function
+	*
+	*/
+	fns.digitsum = {
+		functn: function (x) {
+			var out = 0;
+			while (x > 9) {
+				out += x % 10;
+				x = Math.floor(x / 10);
+			}
+			return out + x;
+		},
+		toContentMathML: ['<ci>digitsum</ci>']
+	};
+
+	/**
+	* The division function
+	*
+	*/
+	fns.divide = {
+		functn: function (x, y) {
+			return MathLib.times(x, MathLib.inverse(y));
+		},
+		arity: 2,
+		cdgroup: 'arith1',
+		toLaTeX: ['\\frac{', '}{', '}'],
+		toMathML: ['<mfrac>', '', '</mfrac>'],
+		toString: ['', '/', '']
+	};
+
+	/**
+	* This function determines if the arguments are equivalent as booleans
+	*
+	*/
+	fns.equivalent = {
+		functn: function (x, y) {
+			return Boolean(x) === Boolean(y);
+		},
+		arity: 2,
+		cdgroup: 'logic1',
+		toLaTeX: ['', ' \\Leftrightarrow ', ''],
+		toMathML: ['', '<mo>&#x21D4;</mo>', ''],
+		toString: ['', ' ⇔ ', '']
+	};
+
+	/**
+	* The exponential function
+	*
+	*/
+	fns.exp = {
+		functn: Math.exp,
+		cdgroup: 'transc1',
+		toLaTeX: ['e^{', '}']
+	};
+
+	/**
+	* The cosine function
+	*
+	*/
+	fns.factorial = {
+		functn: function (x) {
+			var factorial = 1, i;
+			if ((x > 170 && MathLib.isInt(x)) || x === Infinity) {
+				return Infinity;
+			}
+			if (x < 0 || !MathLib.isInt(x) || MathLib.isNaN(x)) {
+				return NaN;
+			}
+			for (i = 1; i <= x; i++) {
+				factorial *= i;
+			}
+			return factorial;
+		},
+		args: ['n'],
+		cdgroup: 'integer1',
+		toLaTeX: ['', '!'],
+		toMathML: ['', '<mo>!</mo>'],
+		toString: ['', '!']
+	};
+
+	/**
+	* The floor function
+	*
+	*/
+	fns.floor = {
+		functn: Math.floor,
+		cdgroup: 'rounding1',
+		toLaTeX: ['\\lfloor', '\\rfloor'],
+		toMathML: ['<mo>&lfloor;</mo>', '<mo>&rfloor;</mo>'],
+		toString: ['⌊', '⌋']
+	};
+
+	/**
+	* The identity function
+	*
+	*/
+	fns.identity = {
+		functn: function (x) {
+			return x;
+		},
+		cdgroup: 'fns1',
+		toLaTeX: ['', ''],
+		toMathML: ['', ''],
+		toString: ['', '']
+	};
+
+	/**
+	* The logic implies function
+	*
+	*/
+	fns.implies = {
+		functn: function (x, y) {
+			if (Boolean(x) && !Boolean(y)) {
+				return false;
+			}
+			return true;
+		},
+		arity: 2,
+		cdgroup: 'logic1',
+		toLaTeX: ['', ' \\Rightarrow ', ''],
+		toMathML: ['', '<mo>&#x21D2;</mo>', ''],
+		toString: ['', ' ⇒ ', '']
+	};
+
+	/**
+	* This function calculates the multiplicative inverse
+	*
+	*/
+	fns.inverse = {
+		functn: function (x) {
+			return 1 / x;
+		},
+		toContentMathML: ['<csymbol cd="arith1">divide</csymbol><cn>1</cn>', ''],
+		toLaTeX: ['\\frac{1}{', '}'],
+		toMathML: ['<mfrac><mn>1</mn>', '</mfrac>'],
+		toString: ['1/', '']
+	};
+
+	/**
+	* Checks whether a number is NaN or not
+	*
+	*/
+	fns.isNaN = {
+		functn: function (x) {
+			return x !== x;
+		},
+		toContentMathML: ['<csymbol cd="relation1">eq</csymbol>', '<csymbol cd="nums1">NaN</csymbol>']
+	};
+
+	/**
+	* Checks whether a number is a prime or not
+	*
+	*/
+	fns.isPrime = {
+		functn: function (x) {
+			var sqrt = Math.sqrt(x), i;
+			if (x % 1 === 0 && x > 1) {
+				if (x === 2) {
+					return true;
+				}
+				if (x % 2 === 0) {
+					return false;
+				}
+				for (i = 3; i <= sqrt; i += 2) {
+					if (x % i === 0) {
+						return false;
+					}
+				}
+				return true;
+			}
+			return false;
+		},
+		toContentMathML: ['<csymbol cd="set1">in</csymbol>', '<csymbol cd="setname1">P</csymbol>']
+	};
+
+	/**
+	* The lg function
+	*
+	*/
+	fns.lg = {
+		functn: function (x) {
+			return Math.log(x) / Math.LN10;
+		},
+		toContentMathML: ['<csymbol cd="transc1">log</csymbol><cn>10</cn>', ''],
+		toLaTeX: ['\\lg\\left(', '\\right)'],
+		toMathML: ['<mi>lg</mi><mo>&#x2061;</mo><mo>(</mo>', '<mo>)</mo>'],
+		toString: ['lg(', ')']
+	};
+
+	/**
+	* The natural logarithm function
+	*
+	*/
+	fns.ln = {
+		functn: Math.log,
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The log function
+	*
+	*/
+	fns.log = {
+		functn: function (b, x) {
+			return Math.log(x) / Math.log(b);
+		},
+		args: ['b', 'x'],
+		cdgroup: 'transc1',
+		toLaTeX: ['\\log_{', '}\\left(', '\\right)'],
+		toMathML: ['<msub><mi>log</mi>', '</msub><mo>&#x2061;</mo><mo>(</mo>', '<mo>)</mo>'],
+		toString: ['log_', '(', ')']
+	};
+
+	/**
+	* The logarithm of the gamma function
+	*
+	* Algorithm based on [Numerical Recipes Vol. 3, p. 257](www.nr.com)
+	*/
+	fns.logGamma = {
+		functn: function (x) {
+			var j, tmp, y, ser, cof = [
+				57.1562356658629235, -59.5979603554754912, 14.1360979747417471, -0.491913816097620199, 0.339946499848118887e-4,
+				0.465236289270485756e-4, -0.983744753048795646e-4, 0.158088703224912494e-3, -0.210264441724104883e-3, 0.217439618115212643e-3,
+				-0.164318106536763890e-3, 0.844182239838527433e-4, -0.261908384015814087e-4, 0.368991826595316234e-5
+			];
+
+			if (x === Infinity) {
+				return Infinity;
+			}
+
+			y = x;
+			tmp = x + 5.24218750000000000; // Rational 671/128.
+			tmp = (x + 0.5) * Math.log(tmp) - tmp;
+			ser = 0.999999999999997092;
+			for (j = 0; j < 14; j++) {
+				ser += cof[j] / ++y;
+			}
+			return tmp + Math.log(2.5066282746310005 * ser / x);
+		},
+		toContentMathML: ['<csymbol cd="transc1">ln</csymbol><apply><ci>Gamma</ci>', '</apply>'],
+		toLaTeX: ['\\log\\left(\\Gamma\\left(', '\\right)\\right)'],
+		toMathML: ['<mi>log</mi><mo>&#x2061;</mo><mo>(</mo><mi mathvariant="normal">&#x0393;</mi><mo>&#x2061;</mo><mo>(</mo>', '<mo>)</mo><mo>)</mo>'],
+		toString: ['log(Γ(', '))']
+	};
+
+	/**
+	* The subtraction function
+	*
+	*/
+	fns.minus = {
+		functn: function (x, y) {
+			return MathLib.plus(x, MathLib.negative(y));
+		},
+		arity: 2,
+		cdgroup: 'arith1',
+		toLaTeX: ['', '-', ''],
+		toMathML: ['', '<mo>-</mo>', ''],
+		toString: ['', '-', '']
+	};
+
+	/**
+	* The modulo function
+	*
+	*/
+	fns.mod = {
+		functn: function (n, m) {
+			return n - (m * Math.floor(n / m));
+		},
+		args: ['n', 'm'],
+		toContentMathML: ['<ci>mod</ci>', '', ''],
+		toLaTeX: ['', ' \\mod ', ''],
+		toMathML: ['', '<mi>mod</mi>', ''],
+		toString: ['', ' mod ', '']
+	};
+
+	/**
+	* The negative function
+	*
+	*/
+	fns.negative = {
+		functn: function (x) {
+			return -x;
+		},
+		cdgroup: 'arith1',
+		contentMathMLName: 'unary_minus',
+		toLaTeX: ['-', ''],
+		toMathML: ['<mo>&#x2212;</mo>', ''],
+		toString: ['-', '']
+	};
+
+	/**
+	* The logic not function
+	*
+	*/
+	fns.not = {
+		functn: function (x) {
+			return !x;
+		},
+		cdgroup: 'logic1',
+		toLaTeX: ['\\neg ', ''],
+		toMathML: ['<mo>&#xac;</mo>', ''],
+		toString: ['¬', '']
+	};
+
+	/**
+	* The pow function
+	*
+	*/
+	fns.pow = {
+		functn: function (x, y) {
 			if (x === 1 || (x === -1 && (y === Infinity || y === -Infinity))) {
 				return 1;
 			}
 			return Math.pow(x, y);
 		},
-		root: function  (x, root) {
-			if (arguments.length === 1) {
-				return Math.sqrt(x);
-			}
-			return Math.pow(x, 1 / root);
-		}
+		arity: 2,
+		cdgroup: 'arith1',
+		toContentMathML: ['<csymbol cd="arith1">power</csymbol>', '', ''],
+		toLaTeX: ['\\left(', '\\right)^{', '}'],
+		toMathML: ['<msup>', '', '</msup>'],
+		toString: ['(', ')^(', ')']
 	};
 
-	var createBinaryFunction = function  (f, name) {
-		return function  (x) {
-			if (typeof x === 'number') {
-				return f.apply('', arguments);
-			}
-			else if (typeof x === 'function') {
-				return function  (y) {
-					return f(x(y));
-				};
-			}
-			else if (x.type === 'set') {
-				return new MathLib.Set(x.map(f));
-			}
-			else if (x.type === 'complex') {
-				return x[name].apply(x, Array.prototype.slice.call(arguments, 1));
-			}
-			else if (Array.isArray(x)) {
-				return x.map(f);
-			}
-			else {
-				return x[name]();
-			}
-		};
+	/**
+	* A function converting from radian to degree
+	*
+	*/
+	fns.radToDeg = {
+		functn: function (x) {
+			// 180 / Math.PI = 57.29577951308232
+			return x * 57.29577951308232;
+		},
+		toContentMathML: ['<csymbol cd="arith1">times</csymbol><apply><csymbol cd="arith1">divide</csymbol><cn>180</cn><csymbol cd="nums1">pi</csymbol></apply>', ''],
+		toLaTeX: ['\\frac{180}{\\pi}', ''],
+		toMathML: ['<mfrac><mn>180</mn><mi>&pi;</mi></mfrac><mo>&#x2062;</mo>', ''],
+		toString: ['180/π*', '']
 	};
 
-	var func, cur;
-	for (func in binaryFunctions) {
-		if (binaryFunctions.hasOwnProperty(func)) {
-			cur = binaryFunctions[func];
-			Object.defineProperty(exports, func, {
-				value: createBinaryFunction(binaryFunctions[func], func)
-			});
-		}
-	}
+	/**
+	* The remainder function
+	*
+	*/
+	fns.rem = {
+		functn: function (n, m) {
+			if (!MathLib.isFinite(m)) {
+				return NaN;
+			}
+			return n % m;
+		},
+		args: ['n', 'm'],
+		cdgroup: 'integer1',
+		contentMathMLName: 'remainder',
+		toLaTeX: ['', ' \\operatorname{rem} ', ''],
+		toMathML: ['', '<mi>rem</mi>', ''],
+		toString: ['', ' rem ', '']
+	};
+
+	/**
+	* The root function
+	*
+	*/
+	fns.root = {
+		functn: function (x, y) {
+			return Math.pow(x, 1 / y);
+		},
+		arity: 2,
+		cdgroup: 'arith1',
+		// toLaTeX can't use \sqrt since this requires the arguments in reverse order.
+		//toLaTeX: ['\\sqrt[', ']{', '}'],
+		toLaTeX: ['\\left(', '\\right)^{\\frac{1}{', '}}'],
+		toMathML: ['<mroot>', '', '</mroot>'],
+		toString: ['(', ')^(1/', ')']
+	};
+
+	/**
+	* The secant function
+	*
+	*/
+	fns.sec = {
+		functn: function (x) {
+			return 1 / Math.cos(x);
+		},
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The hyperbolic secant function
+	*
+	*/
+	fns.sech = {
+		functn: function (x) {
+			return 2 / (Math.exp(x) + Math.exp(-x));
+		},
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The sign function
+	*
+	*/
+	fns.sign = {
+		functn: function (x) {
+			return x && (x < 0 ? -1 : 1);
+		},
+		toContentMathML: ['<ci>sign</ci>']
+	};
+
+	/**
+	* The sine function
+	*
+	*/
+	fns.sin = {
+		functn: Math.sin,
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The hyperbolic sine function
+	*
+	*/
+	fns.sinh = {
+		functn: MathLib.isNative(Math.sinh) || function  (x) {
+			// sinh(-0) should be -0
+			if (x === 0) {
+				return x;
+			}
+			return (Math.exp(x) - Math.exp(-x)) / 2;
+		},
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The square root function
+	*
+	*/
+	fns.sqrt = {
+		functn: Math.sqrt,
+		cdgroup: 'arith1',
+		toContentMathML: ['<csymbol cd="arith1">root</csymbol>', '<cn>2</cn>'],
+		toLaTeX: ['\\sqrt{', '}'],
+		toMathML: ['<msqrt>', '</msqrt>']
+	};
+
+	/**
+	* The tangent function
+	*
+	*/
+	fns.tan = {
+		functn: Math.tan,
+		cdgroup: 'transc1'
+	};
+
+	/**
+	* The hyperbolic tangent function
+	*
+	*/
+	fns.tanh = {
+		functn: MathLib.isNative(Math.tanh) || function  (x) {
+			var p;
+
+			// Handle ±0 and ±∞ separately
+			// Their values happen to coincide with sign
+			if (x === 0 || !MathLib.isFinite(x)) {
+				return MathLib.sign(x);
+			}
+
+			p = Math.exp(x);
+			return (p * p - 1) / (p * p + 1);
+		},
+		cdgroup: 'transc1'
+	};
 
 	/**
 	* Numeric derivative at a given point
@@ -233,6 +1004,215 @@
 		return this;
 	};
 
+	/**
+	* Partial application for functions
+	*
+	* @return {Functn}
+	*/
+	/*
+	functnPrototype.partialApply = function () {
+	var args = Array.prototype.slice.call(arguments, 0);
+	return MathLib.Functn(function() {
+	return this.apply(this, args.concat(Array.prototype.slice.call(arguments)));
+	});
+	}
+	*/
+	/**
+	* Numeric evaluation of an integral using an adative simpson approach.
+	*
+	* Inspired by "adaptsim.m" by Walter Gander
+	* and MatLab's "quad.m"
+	*
+	* @param {number} a The starting point
+	* @param {number} b The end point
+	* @param {number} options Optional options
+	* @return {number}
+	*/
+	functnPrototype.quad = function  (a, b, options) {
+		if (typeof options === 'undefined') { options = {}; }
+		var f = this, warnMessage = [
+			'Calculation succeded',
+			'Minimum step size reached',
+			'Maximum function count exceeded',
+			'Infinite or NaN function value encountered'
+		], Q;
+
+		options.calls = 3;
+		options.warn = 0;
+
+		if (a === -Infinity) {
+			a = -Number.MAX_VALUE;
+		}
+
+		if (b === Infinity) {
+			b = Number.MAX_VALUE;
+		}
+
+		if (!('minStep' in options)) {
+			options.minStep = 1e-15;
+		}
+
+		if (!('maxCalls' in options)) {
+			options.maxCalls = 10000;
+		}
+
+		if (!('tolerance' in options)) {
+			options.tolerance = 1e-5;
+		}
+
+		Q = quadstep(f, a, b, f(a), f((a + b) / 2), f(b), options);
+
+		options.warnMessage = warnMessage[options.warn];
+
+		return Q;
+	};
+
+	// Recursive function for the quad method
+	var quadstep = function  (f, a, b, fa, fc, fb, options) {
+		var h = b - a, c = (a + b) / 2, fd = f((a + c) / 2), fe = f((c + b) / 2), Q1 = (h / 6) * (fa + 4 * fc + fb), Q2 = (h / 12) * (fa + 4 * fd + 2 * fc + 4 * fe + fb), Q = Q2 + (Q2 - Q1) / 15;
+
+		options.calls = options.calls + 2;
+
+		// Infinite or Not-a-Number function value encountered
+		if (!MathLib.isFinite(Q)) {
+			options.warn = Math.max(options.warn, 3);
+			return Q;
+		}
+
+		// Maximum function count exceeded; singularity likely
+		if (options.calls > options.maxCalls) {
+			options.warn = Math.max(options.warn, 2);
+			return Q;
+		}
+
+		// Accuracy over this subinterval is acceptable
+		if (Math.abs(Q2 - Q) <= options.tolerance) {
+			return Q;
+		}
+
+		// Minimum step size reached; singularity possible
+		if (Math.abs(h) < options.minStep || c === a || c === b) {
+			options.warn = Math.max(options.warn, 1);
+			return Q;
+		}
+
+		// Otherwise, divide the interval into two subintervals
+		return quadstep(f, a, c, fa, fd, fc, options) + quadstep(f, c, b, fc, fe, fb, options);
+	};
+
+	/**
+	* Returns a content MathML representation of the function
+	*
+	* @return {MathML}
+	*/
+	functnPrototype.toContentMathML = function  () {
+		return this.expression.toContentMathML();
+	};
+
+	/**
+	* Returns a LaTeX representation of the function
+	*
+	* @return {string}
+	*/
+	functnPrototype.toLaTeX = function  () {
+		return this.expression.toLaTeX();
+		/*
+		/ / List of functions to be executed on the specified node type
+		var handlers = {
+		apply: function (n) {
+		var f = n.childNodes[0],
+		args = n.childNodes.slice(1).map(function (x) {
+		return handlers[x.nodeName](x);
+		}),
+		str = '';
+		if (f.nodeName === 'plus') {
+		str = args.join('+');
+		}
+		else if (f.nodeName === 'times') {
+		str = args.join('*');
+		}
+		else if (f.nodeName === 'power') {
+		str = args[0] + '^{' + args[1] + '}';
+		}
+		else {
+		/ / TODO: not all functions can be written like \sin some have to be written like \operatorname{argmax}
+		str = '\\' + f.nodeName + '(' + args.join(', ') + ')';
+		}
+		return str;
+		},
+		bvar: function () {return '';},
+		ci: function (n) {return bvar || n.innerMathML;},
+		cn: function (n) {return n.innerMathML;},
+		cs: function (n) {return n.innerMathML;},
+		domainofapplication: function () {return '';},
+		lambda: function (n) {
+		return n.childNodes.reduce(function (old, cur) {
+		return old + handlers[cur.nodeName](cur);
+		}, '');
+		},
+		'#text': function (n) {return n.innerMathML;}
+		};
+		/ / Start the node handling with the first real element (not the <math> element)
+		return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
+		*/
+	};
+
+	/**
+	* Returns a MathML representation of the function
+	*
+	* @return {string}
+	*/
+	functnPrototype.toMathML = function  () {
+		return this.expression.toMathML();
+	};
+
+	/**
+	* Returns a string representation of the function
+	*
+	* @return {string}
+	*/
+	functnPrototype.toString = function  () {
+		return this.expression.toString();
+	};
+
+	/*
+	/ / List of functions to be executed on the specified node type
+	var handlers = {
+	apply: function (n) {
+	var f = n.childNodes[0],
+	args = n.childNodes.slice(1).map(function (x) {
+	return handlers[x.nodeName](x);
+	}),
+	str = '';
+	if (f.nodeName === 'plus') {
+	str = args.join('+');
+	}
+	else if (f.nodeName === 'times') {
+	str = args.join('*');
+	}
+	else if (f.nodeName === 'power') {
+	str = args[0] + '^' + args[1];
+	}
+	else {
+	str = f.nodeName + '(' + args.join(', ') + ')';
+	}
+	return str;
+	},
+	bvar: function () {return '';},
+	ci: function (n) {return bvar || n.innerMathML;},
+	cn: function (n) {return n.innerMathML;},
+	cs: function (n) {return n.innerMathML;},
+	domainofapplication: function () {return '';},
+	lambda: function (n) {
+	return n.childNodes.reduce(function (old, cur) {
+	return old + handlers[cur.nodeName](cur);
+	}, '');
+	},
+	'#text': function (n) {return n.innerMathML;}
+	};
+	/ / Start the node handling with the first real element (not the <math> element)
+	return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
+	*/
 	// These functions will be added to the functn prototype soon.
 	var functionList1 = {
 		/*
@@ -278,6 +1258,27 @@
 		fibonacci: function  (n) {
 			return Math.floor(Math.pow(MathLib.goldenRatio, n) / Math.sqrt(5));
 		},
+		isFinite: function  (x) {
+			return Math.abs(x) < Infinity;
+		},
+		isInt: function  (x) {
+			return x % 1 === 0;
+		},
+		isNegZero: function  (x) {
+			return 1 / x === -Infinity;
+		},
+		isOne: function  (a) {
+			return Math.abs(a - 1) < MathLib.epsilon;
+		},
+		isPosZero: function  (x) {
+			return 1 / x === Infinity;
+		},
+		isReal: function  (x) {
+			return Math.abs(x) < Infinity;
+		},
+		isZero: function  (x) {
+			return Math.abs(x) < MathLib.epsilon;
+		},
 		random: Math.random,
 		risingFactorial: function  (n, m, s) {
 			var factorial = 1, j;
@@ -297,129 +1298,6 @@
 		},
 		trunc: function  (x, n) {
 			return x.toFixed(n || 0);
-		},
-		toContentMathML: function  (x, options) {
-			if (typeof options === 'undefined') { options = {}; }
-			var base = options.base || 10;
-
-			if (MathLib.isNaN(x)) {
-				if (options.strict) {
-					return '<csymbol cd="nums1">NaN</csymbol>';
-				}
-				else {
-					return '<notanumber/>';
-				}
-			}
-			else if (!MathLib.isFinite(x)) {
-				if (x === Infinity) {
-					if (options.strict) {
-						return '<csymbol cd="nums1">infinity</csymbol>';
-					}
-					else {
-						return '<infinity/>';
-					}
-				}
-				else {
-					if (options.strict) {
-						return '<apply><csymbol cd="arith1">times</csymbol><cn>-1</cn><csymbol cd="nums1">infinity</csymbol></apply>';
-					}
-					else {
-						return '<apply><times/><cn>-1</cn><infinity/></apply>';
-					}
-				}
-			}
-
-			if (base === 10) {
-				return '<cn type="double">' + MathLib.toString(x) + '</cn>';
-			}
-
-			if (options.strict) {
-				return '<apply><csymbol cd="nums1">based_float</csymbol>' + '<cn type="integer">' + base + '</cn>' + '<cs>' + MathLib.toString(x, {base: base}) + '</cs>' + '</apply>';
-			}
-
-			return '<cn type="real" base="' + base + '">' + MathLib.toString(x, {base: base}) + '</cn>';
-		},
-		toLaTeX: function  (x, options) {
-			if (typeof options === 'undefined') { options = {}; }
-			var base = options.base || 10, str = MathLib.toString(x, {base: base, sign: options.sign});
-
-			if (MathLib.isNaN(x)) {
-				return '\\text{ NaN }';
-			}
-			else if (x === Infinity) {
-				return '\\infty';
-			}
-			else if (x === -Infinity) {
-				return '-\\infty';
-			}
-
-			if (options.baseSubscript) {
-				str += '_{' + base + '}';
-			}
-
-			return str;
-		},
-		toMathML: function  (x, options) {
-			if (typeof options === 'undefined') { options = {}; }
-			var str, base = options.base || 10;
-
-			if (options.sign) {
-				str = MathLib.toString(Math.abs(x), {base: base});
-			}
-			else {
-				str = MathLib.toString(x, {base: base});
-			}
-
-			str = '<mn>' + str + '</mn>';
-
-			if (MathLib.isNaN(x)) {
-				return '<mi>NaN</mi>';
-			}
-			else if (x === Infinity) {
-				return '<mi>&#x221e;</mi>';
-			}
-			else if (x === -Infinity) {
-				return '<mrow><mo>-</mo><mi>&#x221e;</mi></mrow>';
-			}
-
-			if (options.baseSubscript) {
-				str = '<msub>' + str + '<mn>' + base + '</mn></msub>';
-			}
-
-			if (options.sign) {
-				if (x < 0) {
-					str = '<mo>-</mo>' + str;
-				}
-				else {
-					str = '<mo>+</mo>' + str;
-				}
-			}
-
-			return str;
-		},
-		toString: function  (x, options) {
-			if (typeof options === 'undefined') { options = {}; }
-			var base = options.base || 10, str = Math.abs(x).toString(base);
-
-			if (!MathLib.isFinite(x)) {
-				return x.toString();
-			}
-
-			if (x < 0) {
-				str = '-' + str;
-			}
-			else if (options.sign) {
-				str = '+' + str;
-			}
-
-			if (options.baseSubscript) {
-				if (base > 9) {
-					str += '&#x208' + Math.floor(base / 10) + ';';
-				}
-				str += '&#x208' + (base % 10) + ';';
-			}
-
-			return str;
 		}
 	};
 
@@ -448,6 +1326,8 @@
 		};
 	};
 
+	var func, cur;
+
 	for (func in functionList1) {
 		if (functionList1.hasOwnProperty(func)) {
 			cur = functionList1[func];
@@ -468,6 +1348,18 @@
 			return a.localeCompare(b);
 		}
 		return a.compare(b);
+	};
+
+	MathLib.evaluate = function  (x) {
+		if (Array.isArray(x)) {
+			return x.map(MathLib.evaluate);
+		}
+		else if (typeof x === 'object' && 'evaluate' in Object.getPrototypeOf(x)) {
+			return x.evaluate();
+		}
+		else {
+			return x;
+		}
 	};
 
 	MathLib.type = function  (x) {
@@ -753,7 +1645,7 @@
 					}, {
 						expression: new MathLib.Expression({
 							subtype: 'functionDefinition',
-							arguments: ['x'],
+							args: ['x'],
 							content: [
 								new MathLib.Expression({
 									content: [aExpr, bExpr],
@@ -811,7 +1703,7 @@
 					}, {
 						expression: new MathLib.Expression({
 							subtype: 'functionDefinition',
-							arguments: ['x'],
+							args: ['x'],
 							content: [
 								new MathLib.Expression({
 									content: [aExpr, bExpr],
@@ -864,490 +1756,39 @@
 			});
 		}
 	}
+	var args, fn;
+	for (var fnName in fns) {
+		if (fns.hasOwnProperty(fnName)) {
+			fn = fns[fnName];
 
-	/**
-	* Numeric evaluation of an integral using an adative simpson approach.
-	*
-	* Inspired by "adaptsim.m" by Walter Gander
-	* and MatLab's "quad.m"
-	*
-	* @param {number} a The starting point
-	* @param {number} b The end point
-	* @param {number} options Optional options
-	* @return {number}
-	*/
-	functnPrototype.quad = function  (a, b, options) {
-		if (typeof options === 'undefined') { options = {}; }
-		var f = this, warnMessage = [
-			'Calculation succeded',
-			'Minimum step size reached',
-			'Maximum function count exceeded',
-			'Infinite or NaN function value encountered'
-		], Q;
-
-		options.calls = 3;
-		options.warn = 0;
-
-		if (a === -Infinity) {
-			a = -Number.MAX_VALUE;
-		}
-
-		if (b === Infinity) {
-			b = Number.MAX_VALUE;
-		}
-
-		if (!('minStep' in options)) {
-			options.minStep = 1e-15;
-		}
-
-		if (!('maxCalls' in options)) {
-			options.maxCalls = 10000;
-		}
-
-		if (!('tolerance' in options)) {
-			options.tolerance = 1e-5;
-		}
-
-		Q = quadstep(f, a, b, f(a), f((a + b) / 2), f(b), options);
-
-		options.warnMessage = warnMessage[options.warn];
-
-		return Q;
-	};
-
-	// Recursive function for the quad method
-	var quadstep = function  (f, a, b, fa, fc, fb, options) {
-		var h = b - a, c = (a + b) / 2, fd = f((a + c) / 2), fe = f((c + b) / 2), Q1 = (h / 6) * (fa + 4 * fc + fb), Q2 = (h / 12) * (fa + 4 * fd + 2 * fc + 4 * fe + fb), Q = Q2 + (Q2 - Q1) / 15;
-
-		options.calls = options.calls + 2;
-
-		// Infinite or Not-a-Number function value encountered
-		if (!MathLib.isFinite(Q)) {
-			options.warn = Math.max(options.warn, 3);
-			return Q;
-		}
-
-		// Maximum function count exceeded; singularity likely
-		if (options.calls > options.maxCalls) {
-			options.warn = Math.max(options.warn, 2);
-			return Q;
-		}
-
-		// Accuracy over this subinterval is acceptable
-		if (Math.abs(Q2 - Q) <= options.tolerance) {
-			return Q;
-		}
-
-		// Minimum step size reached; singularity possible
-		if (Math.abs(h) < options.minStep || c === a || c === b) {
-			options.warn = Math.max(options.warn, 1);
-			return Q;
-		}
-
-		// Otherwise, divide the interval into two subintervals
-		return quadstep(f, a, c, fa, fd, fc, options) + quadstep(f, c, b, fc, fe, fb, options);
-	};
-
-	/**
-	* Returns a content MathML representation of the function
-	*
-	* @return {MathML}
-	*/
-	functnPrototype.toContentMathML = function  () {
-		return this.expression.toContentMathML();
-	};
-
-	/**
-	* Returns a LaTeX representation of the function
-	*
-	* @return {string}
-	*/
-	functnPrototype.toLaTeX = function  () {
-		return this.expression.toLaTeX();
-		/*
-		/ / List of functions to be executed on the specified node type
-		var handlers = {
-		apply: function (n) {
-		var f = n.childNodes[0],
-		args = n.childNodes.slice(1).map(function (x) {
-		return handlers[x.nodeName](x);
-		}),
-		str = '';
-		if (f.nodeName === 'plus') {
-		str = args.join('+');
-		}
-		else if (f.nodeName === 'times') {
-		str = args.join('*');
-		}
-		else if (f.nodeName === 'power') {
-		str = args[0] + '^{' + args[1] + '}';
-		}
-		else {
-		/ / TODO: not all functions can be written like \sin some have to be written like \operatorname{argmax}
-		str = '\\' + f.nodeName + '(' + args.join(', ') + ')';
-		}
-		return str;
-		},
-		bvar: function () {return '';},
-		ci: function (n) {return bvar || n.innerMathML;},
-		cn: function (n) {return n.innerMathML;},
-		cs: function (n) {return n.innerMathML;},
-		domainofapplication: function () {return '';},
-		lambda: function (n) {
-		return n.childNodes.reduce(function (old, cur) {
-		return old + handlers[cur.nodeName](cur);
-		}, '');
-		},
-		'#text': function (n) {return n.innerMathML;}
-		};
-		/ / Start the node handling with the first real element (not the <math> element)
-		return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
-		*/
-	};
-
-	/**
-	* Returns a MathML representation of the function
-	*
-	* @return {string}
-	*/
-	functnPrototype.toMathML = function  () {
-		return this.expression.toMathML();
-	};
-
-	/**
-	* Returns a string representation of the function
-	*
-	* @return {string}
-	*/
-	functnPrototype.toString = function  () {
-		return this.expression.toString();
-		/*
-		/ / List of functions to be executed on the specified node type
-		var handlers = {
-		apply: function (n) {
-		var f = n.childNodes[0],
-		args = n.childNodes.slice(1).map(function (x) {
-		return handlers[x.nodeName](x);
-		}),
-		str = '';
-		if (f.nodeName === 'plus') {
-		str = args.join('+');
-		}
-		else if (f.nodeName === 'times') {
-		str = args.join('*');
-		}
-		else if (f.nodeName === 'power') {
-		str = args[0] + '^' + args[1];
-		}
-		else {
-		str = f.nodeName + '(' + args.join(', ') + ')';
-		}
-		return str;
-		},
-		bvar: function () {return '';},
-		ci: function (n) {return bvar || n.innerMathML;},
-		cn: function (n) {return n.innerMathML;},
-		cs: function (n) {return n.innerMathML;},
-		domainofapplication: function () {return '';},
-		lambda: function (n) {
-		return n.childNodes.reduce(function (old, cur) {
-		return old + handlers[cur.nodeName](cur);
-		}, '');
-		},
-		'#text': function (n) {return n.innerMathML;}
-		};
-		/ / Start the node handling with the first real element (not the <math> element)
-		return handlers[this.contentMathML.childNodes[0].nodeName](this.contentMathML.childNodes[0]);
-		*/
-	};
-
-	// ## unary functions
-	// Some functions for the functn prototype
-	var unaryFunctions = {
-		abs: Math.abs,
-		arccos: Math.acos,
-		arccot: function  (x) {
-			return 1.5707963267948966 - Math.atan(x);
-		},
-		arccsc: function  (x) {
-			return Math.asin(1 / x);
-		},
-		arcosh: MathLib.isNative(Math.acosh) || function  (x) {
-			return Math.log(x + Math.sqrt(x * x - 1));
-		},
-		arcoth: function  (x) {
-			// Handle ±∞
-			if (!MathLib.isFinite(x)) {
-				return 1 / x;
+			if ('args' in fn) {
+				args = fn.args.map(function (x) {
+					return MathLib.Expression.variable(x);
+				});
 			}
-			return 0.5 * Math.log((x + 1) / (x - 1));
-		},
-		arcsch: function  (x) {
-			// Handle ±0 and ±∞ separately
-			if (x === 0 || !MathLib.isFinite(x)) {
-				return 1 / x;
+			else if ('arity' in fn) {
+				args = ['x', 'y', 'z'].slice(0, fn.arity).map(function (x) {
+					return MathLib.Expression.variable(x);
+				});
 			}
-			return Math.log(1 / x + Math.sqrt(1 / (x * x) + 1));
-		},
-		arcsec: function  (x) {
-			return Math.acos(1 / x);
-		},
-		arcsin: Math.asin,
-		arctan: Math.atan,
-		arsech: function  (x) {
-			return Math.log((1 + Math.sqrt(1 - x * x)) / x);
-		},
-		arsinh: MathLib.isNative(Math.asinh) || function  (x) {
-			// Handle ±0 and ±∞ separately
-			if (x === 0 || !MathLib.isFinite(x)) {
-				return x;
-			}
-			return Math.log(x + Math.sqrt(x * x + 1));
-		},
-		artanh: MathLib.isNative(Math.atanh) || function  (x) {
-			// Handle ±0
-			if (x === 0) {
-				return x;
-			}
-			return 0.5 * Math.log((1 + x) / (1 - x));
-		},
-		ceil: function  (x) {
-			// Some implementations have a bug where Math.ceil(-0) = +0 (instead of -0)
-			if (x === 0) {
-				return x;
-			}
-			return Math.ceil(x);
-		},
-		cbrt: function  (x) {
-			var a3, a3x, an, a;
-
-			// Handle ±0, NaN, ±∞
-			if (x === 0 || x !== x || x === Infinity || x === -Infinity) {
-				return x;
+			else {
+				args = [MathLib.Expression.variable('x')];
 			}
 
-			// Get an approximation
-			a = MathLib.sign(x) * Math.pow(Math.abs(x), 1 / 3);
-
-			while (true) {
-				a3 = Math.pow(a, 3);
-				a3x = a3 + x;
-				an = a * (a3x + x) / (a3x + a3);
-				if (MathLib.isZero(an - a)) {
-					break;
-				}
-				a = an;
-			}
-			return an;
-		},
-		conjugate: function  (x) {
-			return x;
-		},
-		copy: function  (x) {
-			return x;
-		},
-		cos: Math.cos,
-		cosh: MathLib.isNative(Math.cosh) || function  (x) {
-			return (Math.exp(x) + Math.exp(-x)) / 2;
-		},
-		cot: function  (x) {
-			// Handle ±0 separate, because tan(pi/2 ± 0) is not ±∞
-			if (x === 0) {
-				return 1 / x;
-			}
-
-			// cot(x) = tan(pi/2 - x) is better than 1/tan(x)
-			return Math.tan(1.5707963267948966 - x);
-		},
-		coth: function  (x) {
-			// Handle ±0
-			if (x === 0) {
-				return 1 / x;
-			}
-
-			// Handle ±∞
-			if (!MathLib.isFinite(x)) {
-				return MathLib.sign(x);
-			}
-
-			return (Math.exp(x) + Math.exp(-x)) / (Math.exp(x) - Math.exp(-x));
-		},
-		csc: function  (x) {
-			return 1 / Math.sin(x);
-		},
-		csch: function  (x) {
-			// csch(-0) should be -∞ not ∞
-			if (x === 0) {
-				return 1 / x;
-			}
-			return 2 / (Math.exp(x) - Math.exp(-x));
-		},
-		degToRad: function  (x) {
-			// Math.PI / 180 = 0.017453292519943295
-			return x * 0.017453292519943295;
-		},
-		digitsum: function  (x) {
-			var out = 0;
-			while (x > 9) {
-				out += x % 10;
-				x = Math.floor(x / 10);
-			}
-			return out + x;
-		},
-		exp: Math.exp,
-		factorial: function  (x) {
-			var factorial = 1, i;
-			if ((x > 170 && MathLib.isInt(x)) || x === Infinity) {
-				return Infinity;
-			}
-			if (x < 0 || !MathLib.isInt(x) || MathLib.isNaN(x)) {
-				return NaN;
-			}
-			for (i = 1; i <= x; i++) {
-				factorial *= i;
-			}
-			return factorial;
-		},
-		floor: Math.floor,
-		identity: function  (x) {
-			return x;
-		},
-		inverse: function  (x) {
-			return 1 / x;
-		},
-		isFinite: function  (x) {
-			return Math.abs(x) < Infinity;
-		},
-		isInt: function  (x) {
-			return x % 1 === 0;
-		},
-		isNaN: function  (x) {
-			return x !== x;
-		},
-		isNegZero: function  (x) {
-			return 1 / x === -Infinity;
-		},
-		isOne: function  (a) {
-			return Math.abs(a - 1) < MathLib.epsilon;
-		},
-		isPosZero: function  (x) {
-			return 1 / x === Infinity;
-		},
-		isPrime: function  (x) {
-			var sqrt = Math.sqrt(x), i;
-			if (x % 1 === 0 && x > 1) {
-				if (x === 2) {
-					return true;
-				}
-				if (x % 2 === 0) {
-					return false;
-				}
-				for (i = 3; i <= sqrt; i += 2) {
-					if (x % i === 0) {
-						return false;
-					}
-				}
-				return true;
-			}
-			return false;
-		},
-		isReal: function  (x) {
-			return Math.abs(x) < Infinity;
-		},
-		isZero: function  (x) {
-			return Math.abs(x) < MathLib.epsilon;
-		},
-		lg: function  (x) {
-			return Math.log(x) / Math.LN10;
-		},
-		ln: Math.log,
-		// Algorithm based on [Numerical Recipes Vol. 3, p. 257](www.nr.com)
-		logGamma: function  (x) {
-			var j, tmp, y, ser, cof = [
-				57.1562356658629235, -59.5979603554754912, 14.1360979747417471, -0.491913816097620199, 0.339946499848118887e-4,
-				0.465236289270485756e-4, -0.983744753048795646e-4, 0.158088703224912494e-3, -0.210264441724104883e-3, 0.217439618115212643e-3,
-				-0.164318106536763890e-3, 0.844182239838527433e-4, -0.261908384015814087e-4, 0.368991826595316234e-5
-			];
-
-			if (x === Infinity) {
-				return Infinity;
-			}
-
-			y = x;
-			tmp = x + 5.24218750000000000; // Rational 671/128.
-			tmp = (x + 0.5) * Math.log(tmp) - tmp;
-			ser = 0.999999999999997092;
-			for (j = 0; j < 14; j++) {
-				ser += cof[j] / ++y;
-			}
-			return tmp + Math.log(2.5066282746310005 * ser / x);
-		},
-		negative: function  (x) {
-			return -x;
-		},
-		not: function  (x) {
-			return !x;
-		},
-		radToDeg: function  (x) {
-			// 180 / Math.PI = 57.29577951308232
-			return x * 57.29577951308232;
-		},
-		sec: function  (x) {
-			return 1 / Math.cos(x);
-		},
-		sech: function  (x) {
-			return 2 / (Math.exp(x) + Math.exp(-x));
-		},
-		sign: function  (x) {
-			return x && (x < 0 ? -1 : 1);
-		},
-		sin: Math.sin,
-		sinh: MathLib.isNative(Math.sinh) || function  (x) {
-			// sinh(-0) should be -0
-			if (x === 0) {
-				return x;
-			}
-			return (Math.exp(x) - Math.exp(-x)) / 2;
-		},
-		sqrt: Math.sqrt,
-		tan: Math.tan,
-		tanh: MathLib.isNative(Math.tanh) || function  (x) {
-			var p;
-
-			// Handle ±0 and ±∞ separately
-			// Their values happen to coincide with sign
-			if (x === 0 || !MathLib.isFinite(x)) {
-				return MathLib.sign(x);
-			}
-
-			p = Math.exp(x);
-			return (p * p - 1) / (p * p + 1);
-		}
-	};
-
-	for (var elemfn in unaryFunctions) {
-		if (unaryFunctions.hasOwnProperty(elemfn)) {
-			Object.defineProperty(exports, elemfn, {
-				value: MathLib.Functn(unaryFunctions[elemfn], {
-					name: elemfn,
+			Object.defineProperty(exports, fnName, {
+				value: MathLib.Functn(fns[fnName].functn, {
+					name: fnName,
+					arity: fn.arity || 1,
 					expression: new MathLib.Expression({
 						subtype: 'functionDefinition',
-						arguments: [
-							new MathLib.Expression({
-								subtype: 'variable',
-								value: 'x'
-							})
-						],
+						args: args,
 						content: [
 							new MathLib.Expression({
 								subtype: 'functionCall',
-								content: [
-									new MathLib.Expression({
-										subtype: 'variable',
-										value: 'x'
-									})
-								],
-								value: elemfn
+								content: args,
+								value: fnName,
+								cdgroup: fn.cdgroup,
+								contentMathMLName: fn.contentMathMLName || fnName
 							})
 						]
 					})
@@ -1356,6 +1797,72 @@
 				enumerable: true,
 				configurable: true
 			});
+
+			if ('toContentMathML' in fn) {
+				exports[fnName].expression.content[0].toContentMathML = (function  (fn) {
+					return function  () {
+						var MathML = '<apply>';
+
+						for (var i = 0, ii = fn.toContentMathML.length - 1; i < ii; i++) {
+							MathML += fn.toContentMathML[i] + this.content[i].toContentMathML();
+						}
+
+						MathML += fn.toContentMathML[i];
+						MathML += '</apply>';
+
+						return MathML;
+					};
+				})(fn);
+			}
+
+			if ('toLaTeX' in fn) {
+				exports[fnName].expression.content[0].toLaTeX = (function  (fn) {
+					return function  () {
+						var LaTeX = '';
+
+						for (var i = 0, ii = fn.toLaTeX.length - 1; i < ii; i++) {
+							LaTeX += fn.toLaTeX[i] + this.content[i].toLaTeX();
+						}
+
+						LaTeX += fn.toLaTeX[i];
+
+						return LaTeX;
+					};
+				})(fn);
+			}
+
+			if ('toMathML' in fn) {
+				exports[fnName].expression.content[0].toMathML = (function  (fn) {
+					return function  () {
+						var MathML = '<mrow>';
+
+						for (var i = 0, ii = fn.toMathML.length - 1; i < ii; i++) {
+							MathML += fn.toMathML[i] + this.content[i].toMathML();
+						}
+
+						MathML += fn.toMathML[i];
+						MathML += '</mrow>';
+
+						return MathML;
+					};
+				})(fn);
+			}
+
+			if (fn.hasOwnProperty('toString')) {
+				exports[fnName].expression.content[0].toString = (function  (fn) {
+					return function  () {
+						var str = '';
+
+						for (var i = 0, ii = fn.toString.length - 1; i < ii; i++) {
+							str += fn.toString[i] + this.content[i].toString();
+						}
+
+						str += fn.toString[i];
+
+						return str;
+					};
+				})(fn);
+			}
 		}
 	}
 
@@ -1372,6 +1879,7 @@
 	MathLib.arsech = exports.arsech;
 	MathLib.arsinh = exports.arsinh;
 	MathLib.artanh = exports.artanh;
+	MathLib.binomial = exports.binomial;
 	MathLib.ceil = exports.ceil;
 	MathLib.cbrt = exports.cbrt;
 	MathLib.conjugate = exports.conjugate;
@@ -1404,6 +1912,7 @@
 	MathLib.negative = exports.negative;
 	MathLib.not = exports.not;
 	MathLib.radToDeg = exports.radToDeg;
+	MathLib.rem = exports.rem;
 	MathLib.sec = exports.sec;
 	MathLib.sech = exports.sech;
 	MathLib.sign = exports.sign;
@@ -1414,8 +1923,9 @@
 	MathLib.tanh = exports.tanh;
 
 	MathLib.arctan2 = exports.arctan2;
-	MathLib.binomial = exports.binomial;
 	MathLib.divide = exports.divide;
+	MathLib.equivalent = exports.equivalent;
+	MathLib.implies = exports.implies;
 	MathLib.log = exports.log;
 	MathLib.minus = exports.minus;
 	MathLib.mod = exports.mod;
@@ -1429,10 +1939,6 @@
 	MathLib.risingFactorial = exports.risingFactorial;
 	MathLib.round = exports.round;
 	MathLib.trunc = exports.trunc;
-	MathLib.toContentMathML = exports.toContentMathML;
-	MathLib.toLaTeX = exports.toLaTeX;
-	MathLib.toMathML = exports.toMathML;
-	MathLib.toString = exports.toString;
 
 	MathLib.and = exports.and;
 	MathLib.arithMean = exports.arithMean;

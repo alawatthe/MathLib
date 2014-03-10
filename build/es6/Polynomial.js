@@ -445,7 +445,7 @@ import Functn from './Functn';
 
 			return new MathLib.Expression({
 				subtype: 'functionDefinition',
-				arguments: ['x'],
+				args: ['x'],
 				content: [sum]
 			});
 		};

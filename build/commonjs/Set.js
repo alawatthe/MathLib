@@ -80,6 +80,15 @@
 		};
 
 		/**
+		* Evaluates the elements of the set
+		*
+		* @return {Set}
+		*/
+		Set.prototype.evaluate = function () {
+			return this.map(MathLib.evaluate);
+		};
+
+		/**
 		* Works like the Array.prototype.every function
 		*
 		* @return {boolean}
@@ -410,7 +419,7 @@
 			else {
 				return this.reduce(function  (old, cur) {
 					return old + MathLib.toLaTeX(cur, options) + ', ';
-				}, '\\{').slice(0, -2) + '\\}';
+				}, '\\left{').slice(0, -2) + '\\right}';
 			}
 		};
 

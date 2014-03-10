@@ -1,4 +1,4 @@
-test('.toString()', 15, function () {
+test('.toString()', 19, function () {
 	equal(MathLib.toString(NaN), 'NaN');
 	equal(MathLib.toString(Infinity), 'Infinity');
 	equal(MathLib.toString(-Infinity), '-Infinity');
@@ -19,4 +19,10 @@ test('.toString()', 15, function () {
 
 	equal(MathLib.toString(123, {base: 2, baseSubscript: true, sign: true}), '+1111011&#x2082;');
 	equal(MathLib.toString(-123, {base: 2, baseSubscript: true, sign: true}), '-1111011&#x2082;');
+
+	equal(MathLib.toString(true), 'true');
+	equal(MathLib.toString(false), 'false');
+	equal(MathLib.toString('MathLib'), '"MathLib"');
+
+	equal(MathLib.toString(new MathLib.Rational(1, 2)), '1/2');
 });

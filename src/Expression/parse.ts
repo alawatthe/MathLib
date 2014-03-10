@@ -268,7 +268,7 @@ static parse = function (str) : Expression {
 		// FunctionCall ::= Identifier '(' ')' ||
 		//                  Identifier '(' ArgumentList ')'
 		function parseFunctionCall(name) {
-			var token, args = [];
+			var token, expr, args = [];
 
 			token = lexer.next();
 			if (!matchOp(token, '(')) {
@@ -285,11 +285,39 @@ static parse = function (str) : Expression {
 				throw new SyntaxError('Expecting ) in a function call "' + name + '"');
 			}
 
-			return new MathLib.Expression({
-					subtype: 'functionCall',
-					value: name,
-					content: args
-				});
+			expr = new MathLib.Expression({
+				subtype: 'functionCall',
+				value: name,
+				content: args
+			});
+
+			if (name in MathLib && MathLib[name].type === 'functn') {			
+				if (MathLib[name].expression.content[0].hasOwnProperty('cdgroup')) {
+					expr.cdgroup = MathLib[name].expression.content[0].cdgroup;
+				}
+
+				if (MathLib[name].expression.content[0].hasOwnProperty('contentMathMLName')) {
+					expr.contentMathMLName = MathLib[name].expression.content[0].contentMathMLName;
+				}
+
+				if (MathLib[name].expression.content[0].hasOwnProperty('toContentMathML')) {
+					expr.toContentMathML = MathLib[name].expression.content[0].toContentMathML;
+				}
+
+				if (MathLib[name].expression.content[0].hasOwnProperty('toLaTeX')) {
+					expr.toLaTeX = MathLib[name].expression.content[0].toLaTeX;
+				}
+
+				if (MathLib[name].expression.content[0].hasOwnProperty('toMathML')) {
+					expr.toMathML = MathLib[name].expression.content[0].toMathML;
+				}
+
+				if (MathLib[name].expression.content[0].hasOwnProperty('toString')) {
+					expr.toString = MathLib[name].expression.content[0].toString;
+				}
+			}
+
+			return expr;
 		}
 
 		// Primary ::= Identifier |
@@ -444,7 +472,7 @@ static parse = function (str) : Expression {
 
 
 
-				// Addition and subtractio is left associative:
+				// Addition and subtraction is left associative:
 				// a-b-c should be (a-b)-c and not a-(b-c)
 				if (right.value === '+' || right.value === '-') {
 					r = right;

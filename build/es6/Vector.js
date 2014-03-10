@@ -49,6 +49,15 @@ import Functn from './Functn';
 		};
 
 		/**
+		* Evaluates the entries of the vector
+		*
+		* @return {Vector}
+		*/
+		Vector.prototype.evaluate = function () {
+			return this.map(MathLib.evaluate);
+		};
+
+		/**
 		* Works like Array.prototype.every.
 		*
 		* @param {function} f The function to be applied to all the values

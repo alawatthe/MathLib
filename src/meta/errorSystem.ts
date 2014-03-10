@@ -58,6 +58,3 @@ export var warning = function (details) {
 		cb(details);
 	});
 };
-
-
-'export MathLib';

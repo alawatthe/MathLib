@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-02-08
+ * build date: 2014-03-10
  */
 
 	var version: string;
@@ -53,6 +53,38 @@
 	* @param {object} details - An object describing the warning further.
 	*/
 	var warning: (details: any) => void;
+	/**
+	* A content MathML string representation
+	*
+	* @param {any} x - The value to which the MathML should be generated
+	* @param {object} [options] - Optional options to style the output
+	* @return {string}
+	*/
+	var toContentMathML: (x: any, options?: toContentMathMLOptions) => any;
+	/**
+	* A LaTeX string representation
+	*
+	* @param {any} x - The value to which the LaTeX should be generated
+	* @param {object} [options] - Optional options to style the output
+	* @return {string}
+	*/
+	var toLaTeX: (x: any, options?: toPresentationOptions) => any;
+	/**
+	* A presentation MathML string representation
+	*
+	* @param {any} x - The value to which the MathML should be generated
+	* @param {object} [options] - Optional options to style the output
+	* @return {string}
+	*/
+	var toMathML: (x: any, options?: toPresentationOptions) => any;
+	/**
+	* Custom toString function
+	*
+	* @param {any} x - The value to which the String should be generated
+	* @param {object} [options] - Optional options to style the output
+	* @return {string}
+	*/
+	var toString: (x: any, options?: toPresentationOptions) => any;
 
 
 	/**
@@ -63,9 +95,11 @@
 	*/
 	class Expression {
 		public type: string;
-		public arguments: string[];
+		public args: string[];
+		public cdgroup: string;
 		public content: any;
 		public isMethod: boolean;
+		public contentMathMLName: string;
 		public mode: string;
 		public name: string;
 		public subtype: string;
@@ -85,6 +119,11 @@
 		* @return {Expression}
 		*/
 		static constant(n: any): Expression;
+		/**
+		* Copies the Expression
+		* @return {Expression} The copied expression
+		*/
+		public copy(): Expression;
 		/**
 		* Evaluates the symbolic expression
 		*
@@ -172,8 +211,9 @@
 	* @class
 	* @this {Functn}
 	*/
-	var Functn: (f: any, options: any) => (x: any) => any;
+	var Functn: (f: any, options: any) => (...args: any[]) => any;
 	var compare: (a: any, b: any) => any;
+	var evaluate: (x: any) => any;
 	var type: (x: any) => any;
 	var is: (obj: any, type: any) => boolean;
 	/**
@@ -211,6 +251,7 @@
 	var arsech: any;
 	var arsinh: any;
 	var artanh: any;
+	var binomial: any;
 	var ceil: any;
 	var cbrt: any;
 	var conjugate: any;
@@ -243,6 +284,7 @@
 	var negative: any;
 	var not: any;
 	var radToDeg: any;
+	var rem: any;
 	var sec: any;
 	var sech: any;
 	var sign: any;
@@ -252,8 +294,9 @@
 	var tan: any;
 	var tanh: any;
 	var arctan2: any;
-	var binomial: any;
 	var divide: any;
+	var equivalent: any;
+	var implies: any;
 	var log: any;
 	var minus: any;
 	var mod: any;
@@ -266,10 +309,6 @@
 	var risingFactorial: any;
 	var round: any;
 	var trunc: any;
-	var toContentMathML: any;
-	var toLaTeX: any;
-	var toMathML: any;
-	var toString: any;
 	var and: any;
 	var arithMean: any;
 	var gcd: any;
@@ -569,6 +608,12 @@
 		* @return {number}
 		*/
 		public compare(v: Vector): number;
+		/**
+		* Evaluates the entries of the vector
+		*
+		* @return {Vector}
+		*/
+		public evaluate(): Vector;
 		/**
 		* Works like Array.prototype.every.
 		*
@@ -1461,6 +1506,12 @@ declare var Integer: Ring;
 		*/
 		public divide(n: any): Matrix;
 		/**
+		* Evaluates the entries of the matrix
+		*
+		* @return {Matrix}
+		*/
+		public evaluate(): Matrix;
+		/**
 		* This function works like the Array.prototype.every function.
 		* The matrix is processed row by row.
 		* The function is called with the following arguments:
@@ -2269,7 +2320,7 @@ declare var Integer: Ring;
 		*
 		* @return {Functn}
 		*/
-		public toFunctn(): (x: any) => any;
+		public toFunctn(): (...args: any[]) => any;
 		/**
 		* Returns a LaTeX representation of the polynomial
 		*
@@ -2483,6 +2534,12 @@ declare var Rational: Field;
 		* @return {number}
 		*/
 		public compare(x: Set): number;
+		/**
+		* Evaluates the elements of the set
+		*
+		* @return {Set}
+		*/
+		public evaluate(): Set;
 		/**
 		* Works like the Array.prototype.every function
 		*

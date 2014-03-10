@@ -173,7 +173,7 @@ var nAryFunctions = {
 				}, {
 					expression: new MathLib.Expression({
 						subtype: 'functionDefinition',
-						arguments: ['x'],
+						args: ['x'],
 						content: [new MathLib.Expression({
 								content: [aExpr, bExpr],
 								subtype: 'naryOperator',
@@ -231,7 +231,7 @@ var nAryFunctions = {
 				}, {
 					expression: new MathLib.Expression({
 						subtype: 'functionDefinition',
-						arguments: ['x'],
+						args: ['x'],
 						content: [new MathLib.Expression({
 								content: [aExpr, bExpr],
 								subtype: 'naryOperator',

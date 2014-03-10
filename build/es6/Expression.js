@@ -47,6 +47,16 @@
 		};
 
 		/**
+		* Copies the Expression
+		* @return {Expression} The copied expression
+		*/
+		Expression.prototype.copy = function () {
+			return this.map(function  (x) {
+				return x;
+			});
+		};
+
+		/**
 		* Evaluates the symbolic expression
 		*
 		* @return {any}
@@ -54,11 +64,11 @@
 		Expression.prototype.evaluate = function () {
 			if (this.subtype === 'binaryOperator') {
 				return MathLib[this.name].apply(null, this.content.map(function (x) {
-					return x.evaluate();
+					return MathLib.evaluate(x);
 				}));
 			}
 			if (this.subtype === 'brackets') {
-				return this.content.evaluate();
+				return MathLib.evaluate(this.content);
 			}
 			if (this.subtype === 'complexNumber') {
 				if (this.mode === 'cartesian') {
@@ -69,72 +79,46 @@
 				}
 			}
 			if (this.subtype === 'constant') {
-				if (this.value === 'false') {
-					return false;
-				}
 				if (this.value === 'pi') {
 					return Math.PI;
-				}
-				if (this.value === 'true') {
-					return true;
 				}
 			}
 			if (this.subtype === 'functionCall') {
 				if (this.isMethod) {
 					var args = this.content.map(function (x) {
-						return x.evaluate();
+						return MathLib.evaluate(x);
 					}), _this = args.shift();
 
 					return _this[this.value].apply(_this, args);
 				}
 				else {
 					return MathLib[this.value].apply(null, this.content.map(function (x) {
-						return x.evaluate();
+						return MathLib.evaluate(x);
 					}));
 				}
 			}
 			if (this.subtype === 'functionDefinition') {
 				return MathLib.Functn(this.content[0].evaluate(), {
 					name: 'f',
-					expression: this.value
+					expression: this
 				});
-			}
-			if (this.subtype === 'matrix') {
-				return new MathLib.Matrix(this.value.map(function (r) {
-					return r.map(function (c) {
-						return c.evaluate();
-					});
-				}));
 			}
 			if (this.subtype === 'number') {
 				return parseFloat(this.value);
 			}
 			if (this.subtype === 'naryOperator') {
 				return MathLib[this.name].apply(null, this.content.map(function (x) {
-					return x.evaluate();
+					return MathLib.evaluate(x);
 				}));
 			}
 			if (this.subtype === 'rationalNumber') {
 				return new MathLib.Rational(this.value[0].evaluate(), this.value[1].evaluate());
-			}
-			if (this.subtype === 'set') {
-				return new MathLib.Set(this.value.map(function (x) {
-					return x.evaluate();
-				}));
-			}
-			if (this.subtype === 'string') {
-				return this.value;
 			}
 			if (this.subtype === 'variable') {
 				if (this.value in MathLib.Expression.variables) {
 					return MathLib.Expression.variables[this.value];
 				}
 				return this;
-			}
-			if (this.subtype === 'vector') {
-				return new MathLib.Vector(this.value.map(function (x) {
-					return x.evaluate();
-				}));
 			}
 			if (this.subtype === 'unaryOperator') {
 				if (this.value === '-') {
@@ -219,12 +203,19 @@
 
 			var handler = {
 				apply: function  (node) {
-					var children = Array.prototype.slice.call(node.childNodes), functnName = children.shift().nodeName, isMethod = true, functnNames = {
+					var functnName = '', expr, children = Array.prototype.slice.call(node.childNodes), functnNameNode = children.shift(), isMethod = true, functnNames = {
 						ident: 'identity',
 						power: 'pow',
 						rem: 'mod',
 						setdifference: 'without'
 					};
+
+					if (functnNameNode.nodeName === 'csymbol') {
+						functnName = functnNameNode.textContent;
+					}
+					else {
+						functnName = functnNameNode.nodeName;
+					}
 
 					// Change some function names for functions with different names in MathLib
 					if (functnName in functnNames) {
@@ -235,12 +226,40 @@
 						isMethod = false;
 					}
 
-					return new MathLib.Expression({
+					expr = new MathLib.Expression({
 						subtype: 'functionCall',
 						value: functnName,
 						isMethod: isMethod,
 						content: parser(children)
 					});
+
+					if (functnName in MathLib && MathLib[functnName].type === 'functn') {
+						if (MathLib[functnName].expression.content[0].hasOwnProperty('cdgroup')) {
+							expr.cdgroup = MathLib[functnName].expression.content[0].cdgroup;
+						}
+
+						if (MathLib[functnName].expression.content[0].hasOwnProperty('contentMathMLName')) {
+							expr.contentMathMLName = MathLib[functnName].expression.content[0].contentMathMLName;
+						}
+
+						if (MathLib[functnName].expression.content[0].hasOwnProperty('toContentMathML')) {
+							expr.toContentMathML = MathLib[functnName].expression.content[0].toContentMathML;
+						}
+
+						if (MathLib[functnName].expression.content[0].hasOwnProperty('toLaTeX')) {
+							expr.toLaTeX = MathLib[functnName].expression.content[0].toLaTeX;
+						}
+
+						if (MathLib[functnName].expression.content[0].hasOwnProperty('toMathML')) {
+							expr.toMathML = MathLib[functnName].expression.content[0].toMathML;
+						}
+
+						if (MathLib[functnName].expression.content[0].hasOwnProperty('toString')) {
+							expr.toString = MathLib[functnName].expression.content[0].toString;
+						}
+					}
+
+					return expr;
 				},
 				ci: function  (node) {
 					return new MathLib.Expression({
@@ -251,92 +270,120 @@
 				cn: function  (node) {
 					var type = node.getAttribute('type');
 
-					if (type === null || type === '') {
-						type = 'number';
+					if (type === 'integer') {
+						var base = node.getAttribute('base') !== null ? Number(node.getAttributes('base')) : 10;
+						return new MathLib.Integer(node.textContent.trim(), {base: base});
 					}
-
-					if (type === 'number') {
-						// TODO: base conversions
-						// var base = node.getAttribute('base') !== null ? node.getAttributes('base') : '10';
-						return parser(node.childNodes[0]);
+					else if (type === 'real' || type === null || type === '') {
+						// TODO: adapt this, once the Real class exists
+						return Number(node.textContent);
+					}
+					else if (type === 'double') {
+						return Number(node.textContent);
 					}
 					else if (type === 'rational') {
-						return new MathLib.Expression({
-							value: [parser(node.childNodes[0]), parser(node.childNodes[2])],
-							subtype: 'rationalNumber'
-						});
+						return new MathLib.Rational(new MathLib.Integer(node.childNodes[0].textContent), new MathLib.Integer(node.childNodes[2].textContent));
 					}
 					else if (type === 'complex-cartesian') {
-						return new MathLib.Expression({
-							value: [parser(node.childNodes[0]), parser(node.childNodes[2])],
-							subtype: 'complexNumber',
-							mode: 'cartesian'
-						});
+						return new MathLib.Complex(Number(node.childNodes[0].textContent), Number(node.childNodes[2].textContent));
 					}
 					else if (type === 'complex-polar') {
+						return MathLib.Complex.polar(Number(node.childNodes[0].textContent), Number(node.childNodes[2].textContent));
+						/*
 						return new MathLib.Expression({
-							value: [parser(node.childNodes[0]), parser(node.childNodes[2])],
-							subtype: 'complexNumber',
-							mode: 'polar'
+						value: [parser(node.childNodes[0]), parser(node.childNodes[2])],
+						subtype: 'complexNumber',
+						mode: 'polar'
 						});
+						*/
 					}
+					//else if (type === 'constant') {
+					// TODO: implement
+					//}
 				},
 				cs: function  (node) {
-					return new MathLib.Expression({
-						subtype: 'string',
-						value: node.textContent
-					});
+					return node.textContent;
+				},
+				csymbol: function  (node) {
+					var cd = node.getAttribute('cd');
+
+					if (cd === 'logic1') {
+						if (node.textContent === 'true') {
+							return true;
+						}
+						if (node.textContent === 'false') {
+							return false;
+						}
+						//and, equivalent, false, implies, not, or, true, xor
+					}
 				},
 				lambda: function  (node) {
-					var bvar = node.childNodes[0], doa = node.childNodes[1], apply = node.childNodes[2];
+					var doa, apply, bvar = [], i = 0;
 
-					return new MathLib.Expression({
-						subtype: 'functionDefinition',
-						domain: doa.childNodes[0].nodeName,
-						arguments: Array.prototype.map.call(bvar.childNodes, function (variable) {
-							return MathLib.Expression.variable(variable.textContent);
-						}),
-						content: [parser(apply)]
-					});
+					while (node.childNodes[i].nodeName === 'bvar') {
+						bvar.push(MathLib.Expression.variable(node.childNodes[i].childNodes[0].textContent));
+						i++;
+					}
+
+					if (node.childNodes[i].nodeName === 'domainofapplication') {
+						doa = node.childNodes[i].childNodes[0].nodeName;
+
+						if (doa === 'integers') {
+							doa = MathLib.Integer;
+						}
+						else if (doa === 'rationals') {
+							doa = MathLib.Rational;
+						}
+						else if (doa === 'complexes') {
+							doa = MathLib.Complex;
+						}
+						i++;
+					}
+
+					apply = node.childNodes[i];
+
+					if (doa) {
+						return new MathLib.Expression({
+							subtype: 'functionDefinition',
+							domain: doa,
+							args: bvar,
+							content: [parser(apply)]
+						});
+					}
+					else {
+						return new MathLib.Expression({
+							subtype: 'functionDefinition',
+							args: bvar,
+							content: [parser(apply)]
+						});
+					}
 				},
 				math: function  (node) {
 					return parser(node.childNodes[0]);
 				},
 				matrix: function  (node) {
-					return new MathLib.Expression({
-						value: Array.prototype.slice.call(node.childNodes).map(handler.matrixrow),
-						subtype: 'matrix'
-					});
+					return new MathLib.Matrix(Array.prototype.slice.call(node.childNodes).map(handler.matrixrow));
 				},
 				matrixrow: function  (node) {
 					return Array.prototype.map.call(node.childNodes, parser);
 				},
 				set: function  (node) {
-					return new MathLib.Expression({
-						value: parser(Array.prototype.slice.call(node.childNodes)),
-						subtype: 'set'
-					});
+					return new MathLib.Set(parser(Array.prototype.slice.call(node.childNodes)));
 				},
 				'#text': function  (node) {
-					if (node.parentNode.nodeName === 'cn') {
-						return MathLib.Expression.number(node.nodeValue.trim());
-					}
 					return node.nodeValue;
 				},
 				vector: function  (node) {
-					return new MathLib.Expression({
-						value: parser(Array.prototype.slice.call(node.childNodes)),
-						subtype: 'vector'
-					});
+					return new MathLib.Vector(parser(Array.prototype.slice.call(node.childNodes)));
 				},
 				false: function  () {
-					return MathLib.Expression.constant('false');
+					return false;
 				},
 				pi: function  () {
 					return MathLib.Expression.constant('pi');
 				},
 				true: function  () {
-					return MathLib.Expression.constant('true');
+					return true;
 				}
 			};
 
@@ -402,13 +449,13 @@
 					funcName = this.value;
 				}
 
-				return '<apply><csymbol cd="transc1">' + funcName + '</csymbol>' + this.content.map(function (expr) {
+				return '<apply><csymbol cd="' + this.cdgroup + '">' + this.contentMathMLName + '</csymbol>' + this.content.map(function (expr) {
 					return expr.toContentMathML();
 				}).join('') + '</apply>';
 			}
 
 			if (this.subtype === 'functionDefinition') {
-				return '<lambda><bvar><ci>' + this.arguments.join('</ci></bvar><bvar><ci>') + '</ci></bvar>' + this.content.map(function (expr) {
+				return '<lambda><bvar><ci>' + this.args.join('</ci></bvar><bvar><ci>') + '</ci></bvar>' + this.content.map(function (expr) {
 					return expr.toContentMathML();
 				}) + '</lambda>';
 			}
@@ -454,13 +501,6 @@
 					return '\\pi';
 				}
 			}
-			if (this.subtype === 'matrix') {
-				return '\\begin{pmatrix}' + this.value.map(function (row) {
-					return row.map(function (col) {
-						return col.toLaTeX();
-					}).join('&');
-				}).join('\\\\') + '\\end{pmatrix}';
-			}
 			if (this.subtype === 'number' || this.subtype === 'variable') {
 				return this.value;
 			}
@@ -469,14 +509,6 @@
 				return this.content.reduce(function (old, cur, idx) {
 					return old + (idx ? op : '') + cur.toLaTeX();
 				}, '');
-			}
-			if (this.subtype === 'rationalNumber') {
-				return '\\frac{' + this.value[0].toLaTeX() + '}{' + this.value[1].toLaTeX() + '}';
-			}
-			if (this.subtype === 'set') {
-				return '\\left{' + this.value.map(function (x) {
-					return x.toLaTeX();
-				}).join(', ') + '\\right}';
 			}
 			if (this.subtype === 'string') {
 				return '\\texttt{"{}' + this.value + '"}';
@@ -487,12 +519,6 @@
 				}
 				return this.content.toLaTeX();
 			}
-			if (this.subtype === 'vector') {
-				return '\\begin{pmatrix}' + this.value.map(function (x) {
-					return x.toLaTeX();
-				}).join('\\\\') + '\\end{pmatrix}';
-			}
-
 			if (this.subtype === 'functionCall') {
 				// These operators are predefined by amsmath.
 				// (There are more predefined ones, but these are the useful ones.)
@@ -502,24 +528,18 @@
 				];
 				if (amsmath.indexOf(this.value) + 1) {
 					return '\\' + this.value + '\\left(' + (this.content.length ? this.content.reduce(function (old, cur, idx) {
-						return old + (idx ? ',' : '') + cur.toLaTeX();
+						return old + (idx ? ', ' : '') + MathLib.toLaTeX(cur);
 					}, '') : 'x') + '\\right)';
-				}
-				else if (this.value === 'exp') {
-					return 'e^{' + (this.content.length ? this.content[0].toLaTeX() : 'x') + '}';
-				}
-				else if (this.value === 'sqrt') {
-					return '\\' + this.value + '{' + (this.content.length ? this.content[0].toLaTeX() : 'x') + '}';
 				}
 				else {
 					return '\\operatorname{' + this.value + '}\\left(' + (this.content.length ? this.content.reduce(function (old, cur, idx) {
-						return old + (idx ? ',' : '') + cur.toLaTeX();
+						return old + (idx ? ', ' : '') + cur.toLaTeX();
 					}, '') : 'x') + '\\right)';
 				}
 			}
 
 			if (this.subtype === 'functionDefinition') {
-				return (this.arguments.length === 1 ? this.arguments[0] : '\\left(' + this.arguments.join(', ') + '\\right)') + ' \\longmapsto ' + (this.content.length === 1 ? this.content[0].toLaTeX() : '\\left(' + this.content.map(function (expr) {
+				return (this.args.length === 1 ? this.args[0] : '\\left(' + this.args.join(', ') + '\\right)') + ' \\longmapsto ' + (this.content.length === 1 ? this.content[0].toLaTeX() : '\\left(' + this.content.map(function (expr) {
 					return expr.toLaTeX();
 				}).join(', ') + '\\right)');
 			}
@@ -558,34 +578,11 @@
 					return '<mi>&pi;</mi>';
 				}
 			}
-			if (this.subtype === 'matrix') {
-				return '<mrow><mo>(</mo><mtable><mtr><mtd>' + this.value.map(function (row) {
-					return row.map(function (col) {
-						return col.toMathML();
-					}).join('</mtd><mtd>');
-				}).join('</mtd></mtr><mtr><mtd>') + '</mtd></mtr></mtable><mo>)</mo></mrow>';
-			}
 			if (this.subtype === 'number') {
 				return '<mn>' + this.value + '</mn>';
 			}
-			if (this.subtype === 'rationalNumber') {
-				return '<mfrac>' + this.value[0].toMathML() + this.value[1].toMathML() + '</mfrac>';
-			}
-			if (this.subtype === 'set') {
-				return '<mrow><mo>{</mo>' + this.value.map(function (x) {
-					return x.toMathML();
-				}).join('<mo>,</mo>') + '<mo>}</mo></mrow>';
-			}
-			if (this.subtype === 'string') {
-				return '<ms>' + this.value + '</ms>';
-			}
 			if (this.subtype === 'variable') {
 				return '<mi>' + this.value + '</mi>';
-			}
-			if (this.subtype === 'vector') {
-				return '<mrow><mo>(</mo><mtable><mtr><mtd>' + this.value.map(function (x) {
-					return x.toMathML();
-				}).join('</mtd></mtr><mtr><mtd>') + '</mtd></mtr></mtable><mo>)</mo></mrow>';
 			}
 			if (this.subtype === 'naryOperator') {
 				return '<mrow>' + this.content.map(function (expr) {
@@ -601,11 +598,11 @@
 			if (this.subtype === 'functionCall') {
 				return '<mrow><mi>' + this.value + '</mi><mo>&af;</mo><mrow><mo>(</mo>' + (this.content.length ? this.content.map(function (expr) {
 					return expr.toMathML();
-				}).join('') : '<mi>x</mi>') + '<mo>)</mo></mrow></mrow>';
+				}).join('<mo>,</mo>') : '<mi>x</mi>') + '<mo>)</mo></mrow></mrow>';
 			}
 
 			if (this.subtype === 'functionDefinition') {
-				return '<mrow>' + (this.arguments.length === 1 ? '<mi>' + this.arguments[0] + '</mi>' : '<mrow><mo>(</mo><mi>' + this.arguments.join('</mi><mo>,<mo><mi>') + '</mi><mo>)</mo></mrow>') + '<mo>&#x27FC;</mo>' + (this.content.length === 1 ? this.content[0].toMathML() : '<mrow><mo>(</mo>' + this.content.map(function (expr) {
+				return '<mrow>' + (this.args.length === 1 ? '<mi>' + this.args[0] + '</mi>' : '<mrow><mo>(</mo><mi>' + this.args.join('</mi><mo>,</mo><mi>') + '</mi><mo>)</mo></mrow>') + '<mo>&#x27FC;</mo>' + (this.content.length === 1 ? this.content[0].toMathML() : '<mrow><mo>(</mo>' + this.content.map(function (expr) {
 					return expr.toMathML();
 				}) + '<mo>)</mo></mrow>') + '</mrow>';
 			}
@@ -637,24 +634,6 @@
 					return 'π';
 				}
 			}
-			if (this.subtype === 'matrix') {
-				var length = this.value.length;
-				return this.value.map(function (row) {
-					return row.map(function (col) {
-						return col.toString();
-					}).join('\t');
-				}).map(function  (row, index) {
-					if (index === 0) {
-						return '⎛' + row + '⎞';
-					}
-					else if (index === length - 1) {
-						return '⎝' + row + '⎠';
-					}
-					else {
-						return '⎜' + row + '⎟';
-					}
-				}).join('\n');
-			}
 			if (this.subtype === 'number' || this.subtype === 'variable') {
 				return this.value;
 			}
@@ -663,27 +642,11 @@
 					return old + _this.value + cur;
 				});
 			}
-			if (this.subtype === 'rationalNumber') {
-				return this.value[0].toString() + '/' + this.value[1].toString();
-			}
-			if (this.subtype === 'set') {
-				return '{' + this.value.map(function (x) {
-					return x.toString();
-				}).join(', ') + '}';
-			}
-			if (this.subtype === 'string') {
-				return '"' + this.value + '"';
-			}
 			if (this.subtype === 'unaryOperator') {
 				if (this.value === '-') {
 					return '-' + this.content.toString();
 				}
 				return this.content.toString();
-			}
-			if (this.subtype === 'vector') {
-				return '(' + this.value.map(function (x) {
-					return x.toString();
-				}).join(', ') + ')';
 			}
 			if (this.subtype === 'functionCall') {
 				return this.value + '(' + (this.content.length ? this.content.map(function (expr) {
@@ -691,7 +654,7 @@
 				}).join(', ') : 'x') + ')';
 			}
 			if (this.subtype === 'functionDefinition') {
-				return (this.arguments.length === 1 ? this.arguments[0] : '(' + this.arguments.join(', ') + ')') + ' ⟼ ' + (this.content.length === 1 ? this.content[0].toString() : '(' + this.content.map(function (expr) {
+				return (this.args.length === 1 ? this.args[0] : '(' + this.args.join(', ') + ')') + ' ⟼ ' + (this.content.length === 1 ? this.content[0].toString() : '(' + this.content.map(function (expr) {
 					return expr.toString();
 				}).join(', ') + ')');
 			}
@@ -952,7 +915,7 @@
 				// FunctionCall ::= Identifier '(' ')' ||
 				//                  Identifier '(' ArgumentList ')'
 				function parseFunctionCall (name) {
-					var token, args = [];
+					var token, expr, args = [];
 
 					token = lexer.next();
 					if (!matchOp(token, '(')) {
@@ -969,11 +932,39 @@
 						throw new SyntaxError('Expecting ) in a function call "' + name + '"');
 					}
 
-					return new MathLib.Expression({
+					expr = new MathLib.Expression({
 						subtype: 'functionCall',
 						value: name,
 						content: args
 					});
+
+					if (name in MathLib && MathLib[name].type === 'functn') {
+						if (MathLib[name].expression.content[0].hasOwnProperty('cdgroup')) {
+							expr.cdgroup = MathLib[name].expression.content[0].cdgroup;
+						}
+
+						if (MathLib[name].expression.content[0].hasOwnProperty('contentMathMLName')) {
+							expr.contentMathMLName = MathLib[name].expression.content[0].contentMathMLName;
+						}
+
+						if (MathLib[name].expression.content[0].hasOwnProperty('toContentMathML')) {
+							expr.toContentMathML = MathLib[name].expression.content[0].toContentMathML;
+						}
+
+						if (MathLib[name].expression.content[0].hasOwnProperty('toLaTeX')) {
+							expr.toLaTeX = MathLib[name].expression.content[0].toLaTeX;
+						}
+
+						if (MathLib[name].expression.content[0].hasOwnProperty('toMathML')) {
+							expr.toMathML = MathLib[name].expression.content[0].toMathML;
+						}
+
+						if (MathLib[name].expression.content[0].hasOwnProperty('toString')) {
+							expr.toString = MathLib[name].expression.content[0].toString;
+						}
+					}
+
+					return expr;
 				}
 
 				// Primary ::= Identifier |
@@ -1120,7 +1111,7 @@
 						token = lexer.next();
 						right = parseAdditive();
 
-						// Addition and subtractio is left associative:
+						// Addition and subtraction is left associative:
 						// a-b-c should be (a-b)-c and not a-(b-c)
 						if (right.value === '+' || right.value === '-') {
 							r = right;

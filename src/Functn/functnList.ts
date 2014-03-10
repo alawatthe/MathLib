@@ -43,6 +43,27 @@ var functionList1 = {
 	fibonacci: function (n) {
 		return Math.floor(Math.pow(MathLib.goldenRatio, n) / Math.sqrt(5));
 	},
+	isFinite: function (x) {
+		return Math.abs(x) < Infinity;
+	},
+	isInt: function (x) {
+		return x % 1 === 0;
+	},
+	isNegZero: function (x) {
+		return 1 / x === -Infinity;
+	},
+	isOne: function (a)    {
+		return Math.abs(a - 1) < MathLib.epsilon;
+	},
+	isPosZero: function (x) {
+		return 1 / x === Infinity;
+	},
+	isReal: function (x)    {
+		return Math.abs(x) < Infinity;
+	},
+	isZero: function (x) {
+		return Math.abs(x) < MathLib.epsilon;
+	},
 	random: Math.random,
 	risingFactorial: function (n, m, s) {
 		var factorial = 1, j;
@@ -62,132 +83,6 @@ var functionList1 = {
 	},
 	trunc: function (x, n) {
 		return x.toFixed(n || 0);
-	},
-	toContentMathML: function (x, options : toContentMathMLOptions = {}) {
-		var base = options.base || 10;
-		
-		if (MathLib.isNaN(x)) {
-			if (options.strict) {
-				return '<csymbol cd="nums1">NaN</csymbol>';
-			}
-			else {
-				return '<notanumber/>';
-			}
-		}
-		
-		else if (!MathLib.isFinite(x)) {
-			if (x === Infinity) {
-				if (options.strict) {
-					return '<csymbol cd="nums1">infinity</csymbol>';
-				}
-				else {
-					return '<infinity/>';
-				}
-			}
-			else {
-				if (options.strict) {
-					return '<apply><csymbol cd="arith1">times</csymbol><cn>-1</cn><csymbol cd="nums1">infinity</csymbol></apply>';
-				}
-				else {
-					return '<apply><times/><cn>-1</cn><infinity/></apply>';
-				}
-			}
-		}
-
-		if (base === 10) {
-			return '<cn type="double">' + MathLib.toString(x) + '</cn>';
-		}
-		
-		if (options.strict) {
-			return '<apply><csymbol cd="nums1">based_float</csymbol>'
-				 			+ '<cn type="integer">' + base + '</cn>'
-							+ '<cs>' + MathLib.toString(x, {base: base}) + '</cs>'
-							+ '</apply>'
-		}
-
-		return '<cn type="real" base="' + base + '">' + MathLib.toString(x, {base: base}) + '</cn>';
-	},
-	toLaTeX: function (x, options : toPresentationOptions = {}) {
-		var base = options.base || 10,
-				str = MathLib.toString(x, {base: base, sign: options.sign});
-
-		if (MathLib.isNaN(x)) {
-			return '\\text{ NaN }';
-		}
-		else if (x === Infinity) {
-			return '\\infty';
-		}
-		else if (x === -Infinity) {
-			return '-\\infty';
-		}
-
-		if (options.baseSubscript) {
-			str += '_{' + base + '}';
-		}
-
-		return str;
-	},
-	toMathML: function (x, options : toPresentationOptions = {}) {
-		var str,
-				base = options.base || 10;
-
-		if (options.sign) {
-			str = MathLib.toString(Math.abs(x), {base: base});
-		}
-		else {
-			str = MathLib.toString(x, {base: base});
-		}
-
-		str = '<mn>' + str + '</mn>';
-
-		if (MathLib.isNaN(x)) {
-			return '<mi>NaN</mi>';
-		}
-		else if (x === Infinity) {
-			return '<mi>&#x221e;</mi>';
-		}
-		else if (x === -Infinity) {
-			return '<mrow><mo>-</mo><mi>&#x221e;</mi></mrow>';
-		}
-
-		if (options.baseSubscript) {
-			str = '<msub>' + str + '<mn>' + base + '</mn></msub>';
-		}
-
-		if (options.sign) {
-			if (x < 0) {
-				str = '<mo>-</mo>' + str;
-			}
-			else {				
-				str = '<mo>+</mo>' + str;
-			}
-		}
-
-		return str;
-	},
-	toString: function (x, options : toPresentationOptions = {}) {
-		var base = options.base || 10,
-				str = Math.abs(x).toString(base);
-				
-		if (!MathLib.isFinite(x)) {
-			return x.toString();
-		}
-
-		if (x < 0) {
-			str = '-' + str;
-		}
-		else if (options.sign) {
-			str = '+' + str;
-		}
-
-		if (options.baseSubscript) {
-			if (base > 9) {
-				str += '&#x208' + Math.floor(base / 10) + ';';
-			}
-			str += '&#x208' + (base % 10) + ';';
-		}
-
-		return str;
 	}
 };
 
@@ -217,6 +112,7 @@ var createFunction1 = function (f, name) {
 	};
 };
 
+var func, cur;
 
 // Add the functions to the MathLib object
 for (func in functionList1) {
@@ -247,6 +143,19 @@ export var compare = function (a, b) {
 		return a.localeCompare(b);
 	}
 	return a.compare(b);
+};
+
+
+export var evaluate = function (x) {
+	if (Array.isArray(x)) {
+		return x.map(MathLib.evaluate);
+	}
+	else if (typeof x === 'object' && 'evaluate' in Object.getPrototypeOf(x)) {
+		return x.evaluate();
+	}
+	else {
+		return x;
+	}
 };
 
 

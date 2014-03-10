@@ -16,7 +16,9 @@ declare var MathJax : any;
 export var Functn = function (f, options) {
 	options = options || {};
 
-	var functn = function (x) {
+	var functn = function (...args) {
+		var x = args[0];
+
 		if (typeof x === 'number' || typeof x === 'boolean') {
 			return f.apply('', arguments);
 		}
@@ -25,7 +27,7 @@ export var Functn = function (f, options) {
 			// x -> f(x)
 			// y -> g(y)
 			// y -> f(g(y))
-			var bvar = options.expression.arguments[0].value,
+			var bvar = options.expression.args[0].value,
 					composition = options.expression.map(function (expr) {
 						if (expr.subtype === 'variable' && expr.value === bvar) {
 							expr = x.expression.content[0];
@@ -36,7 +38,7 @@ export var Functn = function (f, options) {
 			return new MathLib.Functn(function (y) {return f(x(y));}, {
 					expression: new MathLib.Expression({
 						subtype: 'functionDefinition',
-						arguments: x.expression.arguments,
+						args: x.expression.args,
 						content: composition.content
 					})
 				});
@@ -45,7 +47,7 @@ export var Functn = function (f, options) {
 			return new MathLib.Functn(f, {
 					expression: new MathLib.Expression({
 						subtype: 'functionDefinition',
-						arguments: x,
+						args: x,
 						content: x
 					})
 				});
@@ -83,6 +85,7 @@ export var Functn = function (f, options) {
 
 
 	Object.defineProperties(functn, {
+		args: { value: options.args},
 		id: { value: options.name},
 		expression: {value: options.expression}
 	});
@@ -91,3 +94,4 @@ export var Functn = function (f, options) {
 };
 
 var exports = {};
+var fns:any = {};

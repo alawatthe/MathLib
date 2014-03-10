@@ -11,6 +11,6 @@ toLaTeX(options : toPresentationOptions = {}) : string {
 	else {
 		return this.reduce(function (old, cur) {
 			return old + MathLib.toLaTeX(cur, options) + ', ';
-		}, '\\{').slice(0, -2) + '\\}';
+		}, '\\left{').slice(0, -2) + '\\right}';
 	}
 }

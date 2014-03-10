@@ -191,5 +191,218 @@ var MathLib = {};
 		});
 	};
 
+	/**
+	* A content MathML string representation
+	*
+	* @param {any} x - The value to which the MathML should be generated
+	* @param {object} [options] - Optional options to style the output
+	* @return {string}
+	*/
+	MathLib.toContentMathML = function  (x, options) {
+		if (typeof options === 'undefined') { options = {}; }
+		var base = options.base || 10;
+
+		if (typeof x === 'object' && 'toContentMathML' in x) {
+			return x.toContentMathML(options);
+		}
+
+		if (typeof x === 'number') {
+			if (MathLib.isNaN(x)) {
+				if (options.strict) {
+					return '<csymbol cd="nums1">NaN</csymbol>';
+				}
+				else {
+					return '<notanumber/>';
+				}
+			}
+			else if (!MathLib.isFinite(x)) {
+				if (x === Infinity) {
+					if (options.strict) {
+						return '<csymbol cd="nums1">infinity</csymbol>';
+					}
+					else {
+						return '<infinity/>';
+					}
+				}
+				else {
+					if (options.strict) {
+						return '<apply><csymbol cd="arith1">times</csymbol><cn>-1</cn><csymbol cd="nums1">infinity</csymbol></apply>';
+					}
+					else {
+						return '<apply><times/><cn>-1</cn><infinity/></apply>';
+					}
+				}
+			}
+
+			if (base === 10) {
+				return '<cn type="double">' + MathLib.toString(x) + '</cn>';
+			}
+
+			if (options.strict) {
+				return '<apply><csymbol cd="nums1">based_float</csymbol>' + '<cn type="integer">' + base + '</cn>' + '<cs>' + MathLib.toString(x, {base: base}) + '</cs>' + '</apply>';
+			}
+
+			return '<cn type="real" base="' + base + '">' + MathLib.toString(x, {base: base}) + '</cn>';
+		}
+
+		if (typeof x === 'boolean') {
+			if (options.strict) {
+				return '<csymbol cd="logic1">' + x + '</csymbol>';
+			}
+			return '<' + x + '/>';
+		}
+
+		if (typeof x === 'string') {
+			return '<cs>' + x + '</cs>';
+		}
+	};
+
+	/**
+	* A LaTeX string representation
+	*
+	* @param {any} x - The value to which the LaTeX should be generated
+	* @param {object} [options] - Optional options to style the output
+	* @return {string}
+	*/
+	MathLib.toLaTeX = function  (x, options) {
+		if (typeof options === 'undefined') { options = {}; }
+		var base = options.base || 10, str = MathLib.toString(x, {base: base, sign: options.sign});
+
+		if (typeof x === 'object' && 'toLaTeX' in x) {
+			return x.toLaTeX(options);
+		}
+
+		if (typeof x === 'number') {
+			if (MathLib.isNaN(x)) {
+				return '\\text{ NaN }';
+			}
+			else if (x === Infinity) {
+				return '\\infty';
+			}
+			else if (x === -Infinity) {
+				return '-\\infty';
+			}
+
+			if (options.baseSubscript) {
+				str += '_{' + base + '}';
+			}
+
+			return str;
+		}
+
+		if (typeof x === 'boolean') {
+			return '\\text{ ' + x + ' }';
+		}
+
+		if (typeof x === 'string') {
+			return '"' + x + '"';
+		}
+	};
+
+	/**
+	* A presentation MathML string representation
+	*
+	* @param {any} x - The value to which the MathML should be generated
+	* @param {object} [options] - Optional options to style the output
+	* @return {string}
+	*/
+	MathLib.toMathML = function  (x, options) {
+		if (typeof options === 'undefined') { options = {}; }
+		var str, base = options.base || 10;
+
+		if (typeof x === 'object' && 'toMathML' in x) {
+			return x.toMathML(options);
+		}
+
+		if (typeof x === 'number') {
+			if (options.sign) {
+				str = MathLib.toString(Math.abs(x), {base: base});
+			}
+			else {
+				str = MathLib.toString(x, {base: base});
+			}
+
+			str = '<mn>' + str + '</mn>';
+
+			if (MathLib.isNaN(x)) {
+				return '<mi>NaN</mi>';
+			}
+			else if (x === Infinity) {
+				return '<mi>&#x221e;</mi>';
+			}
+			else if (x === -Infinity) {
+				return '<mrow><mo>-</mo><mi>&#x221e;</mi></mrow>';
+			}
+
+			if (options.baseSubscript) {
+				str = '<msub>' + str + '<mn>' + base + '</mn></msub>';
+			}
+
+			if (options.sign) {
+				if (x < 0) {
+					str = '<mo>-</mo>' + str;
+				}
+				else {
+					str = '<mo>+</mo>' + str;
+				}
+			}
+
+			return str;
+		}
+
+		if (typeof x === 'boolean') {
+			return '<mi>' + x + '</mi>';
+		}
+
+		if (typeof x === 'string') {
+			return '<ms>' + x + '</ms>';
+		}
+	};
+
+	/**
+	* Custom toString function
+	*
+	* @param {any} x - The value to which the String should be generated
+	* @param {object} [options] - Optional options to style the output
+	* @return {string}
+	*/
+	MathLib.toString = function  (x, options) {
+		if (typeof options === 'undefined') { options = {}; }
+		var base = options.base || 10, str = Math.abs(x).toString(base);
+
+		if (typeof x === 'object') {
+			return x.toString(options);
+		}
+
+		if (typeof x === 'number') {
+			if (!MathLib.isFinite(x)) {
+				return x.toString();
+			}
+
+			if (x < 0) {
+				str = '-' + str;
+			}
+			else if (options.sign) {
+				str = '+' + str;
+			}
+
+			if (options.baseSubscript) {
+				if (base > 9) {
+					str += '&#x208' + Math.floor(base / 10) + ';';
+				}
+				str += '&#x208' + (base % 10) + ';';
+			}
+
+			return str;
+		}
+
+		if (typeof x === 'boolean') {
+			return x.toString();
+		}
+
+		if (typeof x === 'string') {
+			return '"' + x + '"';
+		}
+	};
 	module.exports = MathLib
 

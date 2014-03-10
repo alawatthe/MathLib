@@ -1,4 +1,4 @@
-test('.toMathML()', 15, function () {
+test('.toMathML()', 19, function () {
 	equal(MathLib.toMathML(NaN), '<mi>NaN</mi>');
 	equal(MathLib.toMathML(Infinity), '<mi>&#x221e;</mi>');
 	equal(MathLib.toMathML(-Infinity), '<mrow><mo>-</mo><mi>&#x221e;</mi></mrow>');
@@ -20,4 +20,10 @@ test('.toMathML()', 15, function () {
 
 	equal(MathLib.toMathML(123, {base: 2, baseSubscript: true, sign: true}), '<mo>+</mo><msub><mn>1111011</mn><mn>2</mn></msub>');
 	equal(MathLib.toMathML(-123, {base: 2, baseSubscript: true, sign: true}), '<mo>-</mo><msub><mn>1111011</mn><mn>2</mn></msub>');
+
+	equal(MathLib.toMathML(true), '<mi>true</mi>');
+	equal(MathLib.toMathML(false), '<mi>false</mi>');
+	equal(MathLib.toMathML('MathLib'), '<ms>MathLib</ms>');
+
+	equal(MathLib.toMathML(new MathLib.Rational(1, 2)), '<mfrac><mn>1</mn><mn>2</mn></mfrac>');
 });

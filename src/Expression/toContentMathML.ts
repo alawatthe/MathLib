@@ -55,14 +55,14 @@ toContentMathML() : string {
 			funcName = this.value;
 		}
 
-		return '<apply><csymbol cd="transc1">' + funcName + '</csymbol>' +
+		return '<apply><csymbol cd="' + this.cdgroup + '">' + this.contentMathMLName + '</csymbol>' +
 			this.content.map(expr => expr.toContentMathML()).join('') +
 			'</apply>';
 	}
 
 	if (this.subtype === 'functionDefinition') {
 		return '<lambda><bvar><ci>' +
-			this.arguments.join('</ci></bvar><bvar><ci>') +
+			this.args.join('</ci></bvar><bvar><ci>') +
 			'</ci></bvar>' +
 			this.content.map(expr => expr.toContentMathML()) +
 			'</lambda>';

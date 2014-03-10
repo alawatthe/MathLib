@@ -33,28 +33,11 @@ toMathML() : string {
 			return '<mi>&pi;</mi>';
 		}
 	}
-	if (this.subtype === 'matrix') {
-		return '<mrow><mo>(</mo><mtable><mtr><mtd>' 
-			+ this.value.map(row => row.map(col => col.toMathML()).join('</mtd><mtd>') ).join('</mtd></mtr><mtr><mtd>') 
-			+ '</mtd></mtr></mtable><mo>)</mo></mrow>';
-	}
 	if (this.subtype === 'number') {
 		return '<mn>' + this.value + '</mn>';
 	}
-	if (this.subtype === 'rationalNumber') {
-		return '<mfrac>' + this.value[0].toMathML() + this.value[1].toMathML() + '</mfrac>';
-	}
-	if (this.subtype === 'set') {
-		return '<mrow><mo>{</mo>' + this.value.map(x => x.toMathML()).join('<mo>,</mo>') + '<mo>}</mo></mrow>';
-	}
-	if (this.subtype === 'string') {
-		return '<ms>' + this.value + '</ms>';
-	}
 	if (this.subtype === 'variable') {
 		return '<mi>' + this.value + '</mi>';
-	}
-	if (this.subtype === 'vector') {
-		return '<mrow><mo>(</mo><mtable><mtr><mtd>' + this.value.map(x => x.toMathML()).join('</mtd></mtr><mtr><mtd>') + '</mtd></mtr></mtable><mo>)</mo></mrow>';
 	}
 	if (this.subtype === 'naryOperator') {
 		return '<mrow>' + this.content.map(expr => expr.toMathML()).join('<mo>' + 
@@ -72,16 +55,16 @@ toMathML() : string {
 	if (this.subtype === 'functionCall') {
 		return '<mrow><mi>' + this.value + '</mi><mo>&af;</mo><mrow><mo>(</mo>' +
 		( this.content.length
-		? this.content.map(expr => expr.toMathML()).join('')
+		? this.content.map(expr => expr.toMathML()).join('<mo>,</mo>')
 		: '<mi>x</mi>') +
 		'<mo>)</mo></mrow></mrow>';
 	}
 
 	if (this.subtype === 'functionDefinition') {
 		return '<mrow>' +
-			(this.arguments.length === 1
-			? '<mi>' + this.arguments[0] + '</mi>'
-			: '<mrow><mo>(</mo><mi>' + this.arguments.join('</mi><mo>,<mo><mi>') + '</mi><mo>)</mo></mrow>') +
+			(this.args.length === 1
+			? '<mi>' + this.args[0] + '</mi>'
+			: '<mrow><mo>(</mo><mi>' + this.args.join('</mi><mo>,</mo><mi>') + '</mi><mo>)</mo></mrow>') +
 			'<mo>&#x27FC;</mo>' +
 			(this.content.length === 1
 			? this.content[0].toMathML()
