@@ -7,9 +7,9 @@
 		/**
 		* Applies the current transformations to the screen
 		*/
-		applyTransformation: function  () {
+		applyTransformation: function () {
 			var m = this.transformation;
-			this.layer.forEach(function  (l) {
+			this.layer.forEach(function (l) {
 				l.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
 			});
 		},
@@ -21,7 +21,7 @@
 		* @param {boolean} redraw Indicates if the current draw call is happening during a redraw
 		* @return {Screen} Returns the screen
 		*/
-		circle: function  (circle, options, redraw) {
+		circle: function (circle, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, ctx = this.ctx, prop, opts;
@@ -69,7 +69,7 @@
 		*
 		* @param {Layer} layer The layer to be cleared
 		*/
-		clear: function  (layer) {
+		clear: function (layer) {
 			var screen = layer.screen, left = -screen.translation.x / screen.scale.x, top = -screen.translation.y / screen.scale.y, width = screen.width / screen.scale.x, height = screen.height / screen.scale.y;
 
 			layer.ctx.clearRect(left, top, width, height);
@@ -80,7 +80,7 @@
 		* @param {object} options The drawing options
 		* @return {object} The converted options
 		*/
-		convertOptions: function  (options) {
+		convertOptions: function (options) {
 			var convertedOptions = {};
 			if ('fillColor' in options) {
 				convertedOptions.fillStyle = MathLib.colorConvert(options.fillColor);
@@ -114,7 +114,7 @@
 		* @param {boolean} redraw Indicates if the current draw call is happening during a redraw
 		* @return {Screen} Returns the screen
 		*/
-		line: function  (line, options, redraw) {
+		line: function (line, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, points, ctx = this.ctx, prop, opts;
@@ -173,7 +173,7 @@
 		* @param {boolean} redraw Indicates if the current draw call is happening during a redraw
 		* @return {Screen} Returns the scren
 		*/
-		path: function  (curve, options, redraw) {
+		path: function (curve, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, ctx = this.ctx, prop, opts, path, paths = [], x, y, i, fx, fxold, step = 2 / (screen.scale.x - screen.scale.y), from, to;
@@ -250,10 +250,10 @@
 			if (options.fillColor || options.fillColor !== 'transparent') {
 				ctx.beginPath();
 				ctx.lineTo(from, 0);
-				paths.forEach(function  (path) {
+				paths.forEach(function (path) {
 					// The following line (and the line four lines afterwards) fixes the fill at holes in the path.
 					ctx.lineTo(path[0][0], 0);
-					path.forEach(function  (x) {
+					path.forEach(function (x) {
 						ctx.lineTo(x[0], x[1]);
 					});
 					ctx.lineTo(path[path.length - 1][0], 0);
@@ -264,9 +264,9 @@
 
 			if (options.lineColor || options.lineColor !== 'transparent') {
 				ctx.beginPath();
-				paths.forEach(function  (path) {
+				paths.forEach(function (path) {
 					ctx.moveTo(path[0][0], path[0][1]);
-					path.forEach(function  (x) {
+					path.forEach(function (x) {
 						ctx.lineTo(x[0], x[1]);
 					});
 				});
@@ -307,7 +307,7 @@
 		* @param {boolean} redraw Indicates if the current draw call is happening during a redraw
 		* @return {Screen} Returns the screen
 		*/
-		pixel: function  (f, t, r, b, l, options, redraw) {
+		pixel: function (f, t, r, b, l, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x, ctx = this.ctx, x, y, i;
@@ -353,7 +353,7 @@
 		* @param {boolean} redraw Indicates if the current draw call is happening during a redraw
 		* @return {Screen} Returns the screen
 		*/
-		point: function  (point, options, redraw) {
+		point: function (point, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, ctx = this.ctx, prop, opts, dist;
@@ -415,7 +415,7 @@
 		* @param {object} options Optional drawing options
 		* @return {Screen} Returns the screen
 		*/
-		text: function  (str, x, y, options, redraw) {
+		text: function (str, x, y, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var defaults = {

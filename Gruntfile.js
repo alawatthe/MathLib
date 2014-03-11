@@ -427,7 +427,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 57,
+					build: 58,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -1157,7 +1157,7 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('default', ['generatePlain']);
 	grunt.registerTask('commit', ['generateAll', 'clean', 'cssmin', 'testPlain', 'testCommonjs', 'jshint', 'jscs']);
-	grunt.registerTask('release', ['generateAll', 'clean', 'cssmin', 'testPlain', 'testCommonjs', 'jshint', 'jscs', 'regex-replace:saucebuildnumber']);/*, 'docco'*/
+	grunt.registerTask('release', ['generateAll', 'clean', 'cssmin', 'testPlain', 'testCommonjs', /*'jshint', 'jscs',*/ 'regex-replace:saucebuildnumber']);/*, 'docco'*/
 
 	grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);
 	grunt.registerTask('continuousIntegration', ['nodeunit', 'jshint', 'jscs', 'saucelabs']);

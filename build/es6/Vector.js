@@ -87,7 +87,7 @@ import Functn from './Functn';
 				return false;
 			}
 
-			return this.every(function  (x, i) {
+			return this.every(function (x, i) {
 				return MathLib.isEqual(x, v[i]);
 			});
 		};
@@ -151,7 +151,7 @@ import Functn from './Functn';
 				return Math.max.apply(null, this.map(Math.abs).toArray());
 			}
 			else {
-				return MathLib.root(this.reduce(function  (prev, curr) {
+				return MathLib.root(this.reduce(function (prev, curr) {
 					return prev + Math.pow(Math.abs(curr), p);
 				}, 0), p);
 			}
@@ -164,8 +164,8 @@ import Functn from './Functn';
 		* @return {Matrix}
 		*/
 		Vector.prototype.outerProduct = function (v) {
-			return new MathLib.Matrix(this.map(function  (x) {
-				return v.map(function  (y) {
+			return new MathLib.Matrix(this.map(function (x) {
+				return v.map(function (y) {
 					return MathLib.times(x, y);
 				});
 			}));
@@ -179,7 +179,7 @@ import Functn from './Functn';
 		*/
 		Vector.prototype.plus = function (v) {
 			if (this.length === v.length) {
-				return new MathLib.Vector(this.map(function  (x, i) {
+				return new MathLib.Vector(this.map(function (x, i) {
 					return MathLib.plus(x, v[i]);
 				}));
 			}
@@ -210,7 +210,7 @@ import Functn from './Functn';
 		*/
 		Vector.prototype.scalarProduct = function (v) {
 			if (this.length === v.length) {
-				return this.reduce(function  (old, cur, i, w) {
+				return this.reduce(function (old, cur, i, w) {
 					return MathLib.plus(old, MathLib.times(w[i], v[i]));
 				}, 0);
 			}
@@ -248,7 +248,7 @@ import Functn from './Functn';
 				n = n.coerceTo('number');
 			}
 			if (typeof n === 'number' || n.type === 'complex') {
-				return this.map(function  (x) {
+				return this.map(function (x) {
 					return MathLib.times(n, x);
 				});
 			}
@@ -285,12 +285,12 @@ import Functn from './Functn';
 		Vector.prototype.toContentMathML = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (options.strict) {
-				return this.reduce(function  (old, cur) {
+				return this.reduce(function (old, cur) {
 					return old + MathLib.toContentMathML(cur, options);
 				}, '<apply><csymbol cd="linalg2">vector</csymbol>') + '</apply>';
 			}
 			else {
-				return this.reduce(function  (old, cur) {
+				return this.reduce(function (old, cur) {
 					return old + MathLib.toContentMathML(cur, options);
 				}, '<vector>') + '</vector>';
 			}
@@ -304,7 +304,7 @@ import Functn from './Functn';
 		*/
 		Vector.prototype.toLaTeX = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			return '\\begin{pmatrix}\n\t' + this.reduce(function  (old, cur) {
+			return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
 				return old + '\\\\\n\t' + MathLib.toLaTeX(cur, options);
 			}) + '\n\\end{pmatrix}';
 		};
@@ -317,7 +317,7 @@ import Functn from './Functn';
 		*/
 		Vector.prototype.toMathML = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			return this.reduce(function  (old, cur) {
+			return this.reduce(function (old, cur) {
 				return old + '<mtr><mtd>' + MathLib.toMathML(cur, options) + '</mtd></mtr>';
 			}, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
 		};
@@ -330,7 +330,7 @@ import Functn from './Functn';
 		*/
 		Vector.prototype.toString = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			return '(' + this.reduce(function  (old, cur) {
+			return '(' + this.reduce(function (old, cur) {
 				return old + ', ' + MathLib.toString(cur, options);
 			}) + ')';
 		};
@@ -355,14 +355,14 @@ import Functn from './Functn';
 				return;
 			}
 		};
-		Vector.areLinearIndependent = function  (vectors) {
+		Vector.areLinearIndependent = function (vectors) {
 			var n = vectors.length, m = vectors[0].length;
 
 			if (n > m) {
 				return false;
 			}
 
-			if (!vectors.every(function  (x) {
+			if (!vectors.every(function (x) {
 				return x.length === m;
 			})) {
 				return undefined;
@@ -371,7 +371,7 @@ import Functn from './Functn';
 			return (new MathLib.Matrix(vectors)).rank() === n;
 		};
 
-		Vector.zero = function  (n) {
+		Vector.zero = function (n) {
 			var vector = [], i;
 			for (i = 0; i < n; i++) {
 				vector.push(0);

@@ -46,7 +46,7 @@
 				elements = [];
 			}
 
-			elements = elements.sort(MathLib.compare).filter(function  (x, i, a) {
+			elements = elements.sort(MathLib.compare).filter(function (x, i, a) {
 				return (a.length === i + 1) || !MathLib.isEqual(x, a[i + 1]) || (typeof x.isEqual !== 'undefined' && !x.isEqual(a[i + 1]));
 			});
 
@@ -173,7 +173,7 @@
 				return false;
 			}
 			else {
-				return this.every(function  (y, i) {
+				return this.every(function (y, i) {
 					return MathLib.isEqual(y, set[i]);
 				});
 			}
@@ -186,7 +186,7 @@
 		* @return {boolean}
 		*/
 		Set.prototype.isSubsetOf = function (set) {
-			return this.every(function  (x) {
+			return this.every(function (x) {
 				return set.indexOf(x) !== -1;
 			});
 		};
@@ -244,8 +244,8 @@
 				return MathLib.plus.apply(null, this.toArray());
 			}
 			else if (n.type === 'set') {
-				this.forEach(function  (x) {
-					n.forEach(function  (y) {
+				this.forEach(function (x) {
+					n.forEach(function (y) {
 						sum.push(MathLib.plus(x, y));
 					});
 				});
@@ -253,7 +253,7 @@
 				return new MathLib.Set(sum);
 			}
 			else {
-				return this.map(function  (x) {
+				return this.map(function (x) {
 					return MathLib.plus(x, n);
 				});
 			}
@@ -360,7 +360,7 @@
 				return MathLib.times.apply(null, this.toArray());
 			}
 			else {
-				return this.map(function  (x) {
+				return this.map(function (x) {
 					return MathLib.times(x, n);
 				});
 			}
@@ -388,7 +388,7 @@
 					return '<csymbol cd="set1">emptyset</csymbol>';
 				}
 				else {
-					return this.reduce(function  (old, cur) {
+					return this.reduce(function (old, cur) {
 						return old + MathLib.toContentMathML(cur, options);
 					}, '<apply><csymbol cd="set1">set</csymbol>') + '</apply>';
 				}
@@ -398,7 +398,7 @@
 					return '<emptyset/>';
 				}
 				else {
-					return this.reduce(function  (old, cur) {
+					return this.reduce(function (old, cur) {
 						return old + MathLib.toContentMathML(cur, options);
 					}, '<set>') + '</set>';
 				}
@@ -417,7 +417,7 @@
 				return '\\emptyset';
 			}
 			else {
-				return this.reduce(function  (old, cur) {
+				return this.reduce(function (old, cur) {
 					return old + MathLib.toLaTeX(cur, options) + ', ';
 				}, '\\left{').slice(0, -2) + '\\right}';
 			}
@@ -435,7 +435,7 @@
 				return '<mi>&#x2205;</mi>';
 			}
 			else {
-				return this.reduce(function  (old, cur) {
+				return this.reduce(function (old, cur) {
 					return old + MathLib.toMathML(cur, options) + '<mo>,</mo>';
 				}, '<mrow><mo>{</mo>').slice(0, -10) + '<mo>}</mo></mrow>';
 			}
@@ -453,12 +453,12 @@
 				return '∅';
 			}
 			else {
-				return this.reduce(function  (old, cur) {
+				return this.reduce(function (old, cur) {
 					return old + MathLib.toString(cur, options) + ', ';
 				}, '{').slice(0, -2) + '}';
 			}
 		};
-		Set.fromTo = function  (start, end, step) {
+		Set.fromTo = function (start, end, step) {
 			if (typeof step === 'undefined') { step = 1; }
 			var i, set = [];
 
@@ -470,8 +470,8 @@
 			}
 		};
 
-		Set.createSetOperation = function  (left, both, right) {
-			return function  (a) {
+		Set.createSetOperation = function (left, both, right) {
+			return function (a) {
 				var set = [], i = 0, j = 0, tl = this.card, al = a.card;
 
 				while (i < tl && j < al) {

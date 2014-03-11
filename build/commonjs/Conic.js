@@ -26,10 +26,10 @@
 			if (primal.rank() > 1) {
 				Object.defineProperties(this, {
 					'dual': {
-						get: function  () {
+						get: function () {
 							return this.primal.adjugate();
 						},
-						set: function  () {
+						set: function () {
 						},
 						enumerable: true,
 						configurable: true
@@ -52,7 +52,7 @@
 			if (typeof redraw === 'undefined') { redraw = false; }
 			if (Array.isArray(screen)) {
 				var conic = this;
-				screen.forEach(function  (x) {
+				screen.forEach(function (x) {
 					conic.draw(x, options);
 				});
 			}
@@ -105,7 +105,7 @@
 
 						// This function changes the direction of the path for the second branch.
 						// Otherwise we get some lines which shouldn't be there.
-						sgn = function  (t) {
+						sgn = function (t) {
 							return +((t + Math.PI / 2) % (2 * Math.PI) < Math.PI) * 2 - 1;
 						};
 
@@ -187,7 +187,7 @@
 				return true;
 			}
 
-			var compare = function  (M, N) {
+			var compare = function (M, N) {
 				var i, j, m, n;
 
 				if (M === N) {
@@ -273,9 +273,9 @@
 			var B, C, alpha, i, j, p1, p2, Ml, a, b, c, d, Delta0, Delta1, lambda, degenerated, lines, A = this.primal;
 
 			if (x.type === 'line') {
-				var setter = function  () {
+				var setter = function () {
 					MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Conic#meet'});
-				}, recalculate = function  () {
+				}, recalculate = function () {
 					Ml = new MathLib.Matrix([[0, x[2], -x[1]], [-x[2], 0, x[0]], [x[1], -x[0], 0]]);
 					B = Ml.transpose().times(A).times(Ml);
 
@@ -306,7 +306,7 @@
 				p1 = new MathLib.Point(C[i]);
 				Object.defineProperties(p1, {
 					'0': {
-						get: function  () {
+						get: function () {
 							recalculate();
 							return C[i][0];
 						},
@@ -314,7 +314,7 @@
 						enumerable: true
 					},
 					'1': {
-						get: function  () {
+						get: function () {
 							recalculate();
 							return C[i][1];
 						},
@@ -322,7 +322,7 @@
 						enumerable: true
 					},
 					'2': {
-						get: function  () {
+						get: function () {
 							recalculate();
 							return C[i][2];
 						},
@@ -334,7 +334,7 @@
 				p2 = new MathLib.Point([C[0][j], C[1][j], C[2][j]]);
 				Object.defineProperties(p2, {
 					'0': {
-						get: function  () {
+						get: function () {
 							recalculate();
 							return C[0][j];
 						},
@@ -342,7 +342,7 @@
 						enumerable: true
 					},
 					'1': {
-						get: function  () {
+						get: function () {
 							recalculate();
 							return C[1][j];
 						},
@@ -350,7 +350,7 @@
 						enumerable: true
 					},
 					'2': {
-						get: function  () {
+						get: function () {
 							recalculate();
 							return C[2][j];
 						},
@@ -426,28 +426,28 @@
 
 			Object.defineProperties(object, {
 				'0': {
-					get: function  () {
+					get: function () {
 						return c[m][0][0] * x[0] + c[m][0][1] * x[1] + c[m][0][2] * x[2];
 					},
-					set: function  () {
+					set: function () {
 						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity'});
 					},
 					enumerable: true
 				},
 				'1': {
-					get: function  () {
+					get: function () {
 						return c[m][1][0] * x[0] + c[m][1][1] * x[1] + c[m][1][2] * x[2];
 					},
-					set: function  () {
+					set: function () {
 						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity'});
 					},
 					enumerable: true
 				},
 				'2': {
-					get: function  () {
+					get: function () {
 						return c[m][2][0] * x[0] + c[m][2][1] * x[1] + c[m][2][2] * x[2];
 					},
-					set: function  () {
+					set: function () {
 						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity'});
 					},
 					enumerable: true
@@ -463,7 +463,7 @@
 		* @return {boolean}
 		*/
 		Conic.prototype.splitDegenerated = function () {
-			var n, i, j, B, C, p0, p1, p2, rank = this.primal.rank(), nonZeroSearch = function  (C) {
+			var n, i, j, B, C, p0, p1, p2, rank = this.primal.rank(), nonZeroSearch = function (C) {
 				for (i = 0; i < 3; i++) {
 					for (j = 0; j < 3; j++) {
 						if (C[i][j] !== 0) {
@@ -521,11 +521,11 @@
 
 			Object.defineProperties(conic, {
 				'primal': {
-					get: function  () {
+					get: function () {
 						var G = p.vectorProduct(r).outerProduct(q.vectorProduct(s)), H = p.vectorProduct(s).outerProduct(q.vectorProduct(r)), M = G.times(t.times(H).scalarProduct(t)).minus(H.times(t.times(G).scalarProduct(t)));
 						return M.transpose().plus(M);
 					},
-					set: function  () {
+					set: function () {
 					},
 					enumerable: true,
 					configurable: true

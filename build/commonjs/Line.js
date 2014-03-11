@@ -40,7 +40,7 @@ var __extends = this.__extends || function (d, b) {
 		Line.prototype.draw = function (screen, options) {
 			if (Array.isArray(screen)) {
 				var line = this;
-				screen.forEach(function  (x) {
+				screen.forEach(function (x) {
 					x.line(line, options);
 				});
 			}
@@ -64,7 +64,7 @@ var __extends = this.__extends || function (d, b) {
 				return false;
 			}
 
-			return p.every(function  (x, i) {
+			return p.every(function (x, i) {
 				return MathLib.isEqual(x, l[i]);
 			});
 		};
@@ -102,28 +102,28 @@ var __extends = this.__extends || function (d, b) {
 
 				Object.defineProperties(point, {
 					'0': {
-						get: function  () {
+						get: function () {
 							return k[1] * l[2] - k[2] * l[1];
 						},
-						set: function  () {
+						set: function () {
 							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet'});
 						},
 						enumerable: true
 					},
 					'1': {
-						get: function  () {
+						get: function () {
 							return k[2] * l[0] - k[0] * l[2];
 						},
-						set: function  () {
+						set: function () {
 							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet'});
 						},
 						enumerable: true
 					},
 					'2': {
-						get: function  () {
+						get: function () {
 							return k[0] * l[1] - k[1] * l[0];
 						},
-						set: function  () {
+						set: function () {
 							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet'});
 						},
 						enumerable: true
@@ -143,7 +143,7 @@ var __extends = this.__extends || function (d, b) {
 			var h = MathLib.hypot(this[0], this[1]);
 
 			if (h !== 0) {
-				return this.map(function  (x) {
+				return this.map(function (x) {
 					return x / h;
 				});
 			}
@@ -163,28 +163,28 @@ var __extends = this.__extends || function (d, b) {
 
 			Object.defineProperties(parallel, {
 				'0': {
-					get: function  () {
+					get: function () {
 						return -l[0] * p[2];
 					},
-					set: function  () {
+					set: function () {
 						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough'});
 					},
 					enumerable: true
 				},
 				'1': {
-					get: function  () {
+					get: function () {
 						return -l[1] * p[2];
 					},
-					set: function  () {
+					set: function () {
 						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough'});
 					},
 					enumerable: true
 				},
 				'2': {
-					get: function  () {
+					get: function () {
 						return l[1] * p[1] + l[0] * p[0];
 					},
-					set: function  () {
+					set: function () {
 						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough'});
 					},
 					enumerable: true

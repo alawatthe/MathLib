@@ -156,7 +156,7 @@ import Functn from './Functn';
 
 			if (type === 'number') {
 				//TODO Warn when the number is bigger that 2^53
-				num = this.data.reduce(function  (old, cur, i) {
+				num = this.data.reduce(function (old, cur, i) {
 					return old + cur * Math.pow(1e7, i);
 				}, 0);
 
@@ -267,7 +267,7 @@ import Functn from './Functn';
 			var main, subroutine, quot, mult, temp, rem, base = Math.pow(2, 26);
 
 			// Algorithm 3.1 Schoolbook division subroutine
-			subroutine = function  (A, B) {
+			subroutine = function (A, B) {
 				var q, T, temp, B1, n = A.data.length - 1;
 
 				// Step 1
@@ -303,7 +303,7 @@ import Functn from './Functn';
 			};
 
 			// Algorithm 3.2 Schoolbook division
-			main = function  (A, B) {
+			main = function (A, B) {
 				var q, r, q1, r1, temp, A1, s, m = A.data.length - 1, n = B.data.length - 1;
 
 				// Step 1
@@ -614,7 +614,7 @@ import Functn from './Functn';
 				return MathLib.pow.apply(null, MathLib.coerce(this, exponent));
 			}
 			else {
-				powInt = function  (b, e) {
+				powInt = function (b, e) {
 					var res, i, half = [], carry = 0;
 
 					if (e.data.length === 1 && e.data[0] === 1) {

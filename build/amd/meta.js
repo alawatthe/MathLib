@@ -10,7 +10,7 @@ define([], function () {
 
 	// Number.EPSILON is probably coming in ES6
 	// (see section 20.1.2.1 in the current draft)
-	MathLib.epsilon = Number.EPSILON || (function  () {
+	MathLib.epsilon = Number.EPSILON || (function () {
 		var next, result;
 		for (next = 1; 1 + next !== 1; next = next / 2) {
 			result = next;
@@ -21,15 +21,15 @@ define([], function () {
 	MathLib.goldenRatio = 1.618033988749895;
 	MathLib.pi = Math.PI;
 
-	MathLib.isArrayLike = function  (x) {
+	MathLib.isArrayLike = function (x) {
 		return typeof x === 'object' && 'length' in x;
 	};
 
-	MathLib.isNative = function  (fn) {
+	MathLib.isNative = function (fn) {
 		return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
 	};
 
-	MathLib.argToRgba = function  (h) {
+	MathLib.argToRgba = function (h) {
 		var r, g, b;
 		h = -h / (2 * Math.PI);
 
@@ -59,7 +59,7 @@ define([], function () {
 		return [r * 255, g * 255, b * 255, 255];
 	};
 
-	MathLib.extendObject = function  (dest, src) {
+	MathLib.extendObject = function (dest, src) {
 		for (var prop in src) {
 			if (typeof dest[prop] === 'object' && typeof src[prop] === 'object') {
 				dest[prop] = MathLib.extendObject(dest[prop], src[prop]);
@@ -71,7 +71,7 @@ define([], function () {
 		return dest;
 	};
 
-	MathLib.colorConvert = function  (n) {
+	MathLib.colorConvert = function (n) {
 		if (typeof n === 'number') {
 			n = Math.max(Math.min(Math.floor(n), 0xffffff), 0);
 			return '#' + ('00000' + n.toString(16)).slice(-6);
@@ -79,7 +79,7 @@ define([], function () {
 		return n;
 	};
 
-	MathLib.coerceTo = function  (obj, type) {
+	MathLib.coerceTo = function (obj, type) {
 		if (typeof obj === 'object') {
 			return obj.coerceTo(type);
 		}
@@ -100,14 +100,14 @@ define([], function () {
 		}
 	};
 
-	MathLib.coerce = function  () {
+	MathLib.coerce = function () {
 		var args = [];
 		for (var _i = 0; _i < (arguments.length - 0); _i++) {
 			args[_i] = arguments[_i + 0];
 		}
-		var type = function  (x) {
+		var type = function (x) {
 			return x.type || typeof x;
-		}, numberTypes = ['integer', 'rational', 'number', 'complex'], numberType = numberTypes[Math.max.apply(null, args.map(function  (x) {
+		}, numberTypes = ['integer', 'rational', 'number', 'complex'], numberType = numberTypes[Math.max.apply(null, args.map(function (x) {
 			return numberTypes.indexOf(type(x));
 		}))];
 
@@ -116,9 +116,9 @@ define([], function () {
 		});
 	};
 
-	var flatten = function  (a) {
+	var flatten = function (a) {
 		var flattendArray = [];
-		a.forEach(function  (x) {
+		a.forEach(function (x) {
 			if (Array.isArray(x)) {
 				flattendArray = flattendArray.concat(flatten(x));
 			}
@@ -138,7 +138,7 @@ define([], function () {
 	* @param {string} type - The name of the event.
 	* @param {function} callback - The callback function.
 	*/
-	MathLib.on = function  (type, callback) {
+	MathLib.on = function (type, callback) {
 		if (type === 'error') {
 			errors.push(callback);
 		}
@@ -154,7 +154,7 @@ define([], function () {
 	* @param {string} type - The name of the event.
 	* @param {function} callback - The callback function.
 	*/
-	MathLib.off = function  (type, callback) {
+	MathLib.off = function (type, callback) {
 		if (type === 'error') {
 			errors = errors.filter(function (x) {
 				return x !== callback;
@@ -173,8 +173,8 @@ define([], function () {
 	*
 	* @param {oject} details - An object describing the error further.
 	*/
-	MathLib.error = function  (details) {
-		errors.forEach(function  (cb) {
+	MathLib.error = function (details) {
+		errors.forEach(function (cb) {
 			cb(details);
 		});
 	};
@@ -185,8 +185,8 @@ define([], function () {
 	*
 	* @param {object} details - An object describing the warning further.
 	*/
-	MathLib.warning = function  (details) {
-		warnings.forEach(function  (cb) {
+	MathLib.warning = function (details) {
+		warnings.forEach(function (cb) {
 			cb(details);
 		});
 	};
@@ -198,7 +198,7 @@ define([], function () {
 	* @param {object} [options] - Optional options to style the output
 	* @return {string}
 	*/
-	MathLib.toContentMathML = function  (x, options) {
+	MathLib.toContentMathML = function (x, options) {
 		if (typeof options === 'undefined') { options = {}; }
 		var base = options.base || 10;
 
@@ -264,7 +264,7 @@ define([], function () {
 	* @param {object} [options] - Optional options to style the output
 	* @return {string}
 	*/
-	MathLib.toLaTeX = function  (x, options) {
+	MathLib.toLaTeX = function (x, options) {
 		if (typeof options === 'undefined') { options = {}; }
 		var base = options.base || 10, str = MathLib.toString(x, {base: base, sign: options.sign});
 
@@ -306,7 +306,7 @@ define([], function () {
 	* @param {object} [options] - Optional options to style the output
 	* @return {string}
 	*/
-	MathLib.toMathML = function  (x, options) {
+	MathLib.toMathML = function (x, options) {
 		if (typeof options === 'undefined') { options = {}; }
 		var str, base = options.base || 10;
 
@@ -366,7 +366,7 @@ define([], function () {
 	* @param {object} [options] - Optional options to style the output
 	* @return {string}
 	*/
-	MathLib.toString = function  (x, options) {
+	MathLib.toString = function (x, options) {
 		if (typeof options === 'undefined') { options = {}; }
 		var base = options.base || 10, str = Math.abs(x).toString(base);
 

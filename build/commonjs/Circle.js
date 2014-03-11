@@ -67,7 +67,7 @@
 		Circle.prototype.draw = function (screen, options) {
 			if (Array.isArray(screen)) {
 				var circle = this;
-				screen.forEach(function  (x) {
+				screen.forEach(function (x) {
 					x.circle(circle, options);
 				});
 			}

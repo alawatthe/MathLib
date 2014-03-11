@@ -7,9 +7,9 @@
 		/**
 		* Applies the current transformations to the screen
 		*/
-		applyTransformation: function  () {
+		applyTransformation: function () {
 			var m = this.transformation;
-			this.layer.forEach(function  (l) {
+			this.layer.forEach(function (l) {
 				l.ctx.setAttribute('transform', 'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')');
 			});
 		},
@@ -21,7 +21,7 @@
 		* @param {boolean} redraw Indicates if the current draw call is happening during a redraw
 		* @return {Screen} Returns the screen
 		*/
-		circle: function  (circle, options, redraw) {
+		circle: function (circle, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, prop, opts, svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -57,7 +57,7 @@
 		*
 		* @param {Layer} layer The layer to be cleared
 		*/
-		clear: function  (layer) {
+		clear: function (layer) {
 			layer.ctx.textContent = '';
 		},
 		/**
@@ -66,7 +66,7 @@
 		* @param {object} options The drawing options
 		* @return {object} The converted options
 		*/
-		convertOptions: function  (options) {
+		convertOptions: function (options) {
 			var convertedOptions = {};
 			if ('fillColor' in options) {
 				convertedOptions.fill = MathLib.colorConvert(options.fillColor);
@@ -108,7 +108,7 @@
 		* @param {boolean} redraw Indicates if the current draw call is happening during a redraw
 		* @return {Canvas} Returns the screen
 		*/
-		line: function  (line, options, redraw) {
+		line: function (line, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, points, prop, opts, svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -156,7 +156,7 @@
 		* @param {boolean} redraw Indicates if the current draw call is happening during a redraw
 		* @return {Screen} Returns the screen
 		*/
-		path: function  (curve, options, redraw) {
+		path: function (curve, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, svgPathStroke = document.createElementNS('http://www.w3.org/2000/svg', 'path'), svgPathFill = document.createElementNS('http://www.w3.org/2000/svg', 'path'), step = 2 / (screen.scale.x - screen.scale.y), pathStringFill, pathStringStroke, from, to, prop, opts, x, y, i, path, paths = [], fx, fxold;
@@ -203,14 +203,14 @@
 				path = curve;
 			}
 
-			pathStringFill = 'M' + from + ' 0 ' + paths.reduce(function  (previ, path) {
-				return previ + ' L ' + path[0][0] + ' 0 ' + path.reduce(function  (prev, cur) {
+			pathStringFill = 'M' + from + ' 0 ' + paths.reduce(function (previ, path) {
+				return previ + ' L ' + path[0][0] + ' 0 ' + path.reduce(function (prev, cur) {
 					return prev + ' L ' + cur.join(' ');
 				}, '') + ' L ' + path[path.length - 1][0] + ' 0 ';
 			}, '');
 
-			pathStringStroke = paths.reduce(function  (previ, path) {
-				return previ + ' M ' + path[0].join(' ') + path.reduce(function  (prev, cur) {
+			pathStringStroke = paths.reduce(function (previ, path) {
+				return previ + ' M ' + path[0].join(' ') + path.reduce(function (prev, cur) {
 					return prev + ' L ' + cur.join(' ');
 				}, '');
 			}, '');
@@ -271,7 +271,7 @@
 		* @param {boolean} redraw Indicates if the current draw call is happening during a redraw
 		* @return {Screen} Returns the screen
 		*/
-		pixel: function  (f, t, r, b, l, options, redraw) {
+		pixel: function (f, t, r, b, l, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x, canvas = document.createElement('canvas'), canvasCtx = canvas.getContext('2d'), svgImage = document.createElementNS('http://www.w3.org/2000/svg', 'image'), svgContainer = document.createElementNS('http://www.w3.org/2000/svg', 'g'), x, y, i, pxl, m = screen.transformation;
@@ -332,7 +332,7 @@
 		* @param {boolean} redraw Indicates if the current draw call is happening during a redraw
 		* @return {Screen} Returns the screen
 		*/
-		point: function  (point, options, redraw) {
+		point: function (point, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var screen = this.screen, prop, opts, dist, svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -364,18 +364,18 @@
 				svgPoint.setAttribute('cursor', 'move');
 
 				// mousedown
-				svgPoint.addEventListener('mousedown', function  () {
+				svgPoint.addEventListener('mousedown', function () {
 					screen.options.interaction.type = 'move';
 					var invTransformation = screen.transformation.inverse();
 
-					var move = function  (evt) {
+					var move = function (evt) {
 						evt.stopPropagation();
 
 						var evtPoint = invTransformation.times(screen.getEventPoint(evt));
 						point[0] = evtPoint[0];
 						point[1] = evtPoint[1];
 						screen.draw();
-					}, up = function  () {
+					}, up = function () {
 						screen.options.interaction.type = '';
 
 						document.body.removeEventListener('mousemove', move);
@@ -397,7 +397,7 @@
 				screen.text(options.label, point[0] / point[2] + dist / (screen.scale.x - screen.scale.y), point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), options, true);
 			}
 
-			svgPoint.addEventListener('contextmenu', function  () {
+			svgPoint.addEventListener('contextmenu', function () {
 				screen.options.interaction.type = 'contextmenu';
 				var x = svgPoint.cx.baseVal.value, y = svgPoint.cy.baseVal.value;
 
@@ -424,7 +424,7 @@
 		* @param {boolean} redraw Indicates if the current draw call is happening during a redraw
 		* @return {Screen} Returns the screen
 		*/
-		text: function  (str, x, y, options, redraw) {
+		text: function (str, x, y, options, redraw) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			var defaults = {

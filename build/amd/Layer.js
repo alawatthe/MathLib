@@ -29,7 +29,7 @@
 
 				// Get the context and apply the transformations
 				this.ctx = element.getContext('2d');
-				this.applyTransformation = function  () {
+				this.applyTransformation = function () {
 					var m = _this.transformation;
 					_this.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
 				};
@@ -37,14 +37,14 @@
 
 				// Set the drawing functions
 				if (id === 'back') {
-					this.draw = function  () {
+					this.draw = function () {
 						var top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x;
 
 						// Draw the background
 						this.ctx.fillStyle = MathLib.colorConvert(screen.options.background);
 						this.ctx.fillRect(left, bottom, right - left, top - bottom);
 
-						this.stack.forEach(function  (x) {
+						this.stack.forEach(function (x) {
 							if (x.type === 'conic') {
 								x.object.draw(_this, x.options, true);
 							}
@@ -64,7 +64,7 @@
 					this.ctx.strokeStyle = MathLib.colorConvert(screen.options.grid.color) || '#cccccc';
 					this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
-					this.draw = function  () {
+					this.draw = function () {
 						//					_this.ctx.lineWidth = (screen.options.grid.lineWidth || 4) / (screen.scale.x - screen.scale.y);
 						_this.screen.drawGrid();
 					};
@@ -72,7 +72,7 @@
 				else if (id === 'axes') {
 					this.ctx.strokeStyle = MathLib.colorConvert(screen.options.axes.color) || '#000000';
 
-					this.draw = function  () {
+					this.draw = function () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 						_this.screen.drawAxes();
 					};
@@ -81,10 +81,10 @@
 					this.ctx.strokeStyle = '#000000';
 					this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
-					this.draw = function  () {
+					this.draw = function () {
 						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 
-						this.stack.forEach(function  (x) {
+						this.stack.forEach(function (x) {
 							if (x.type === 'conic') {
 								x.object.draw(_this, x.options, true);
 							}
@@ -118,8 +118,8 @@
 
 				// Set the drawing functions
 				if (id === 'back') {
-					this.draw = function  () {
-						this.stack.forEach(function  (x) {
+					this.draw = function () {
+						this.stack.forEach(function (x) {
 							if (x.type === 'conic') {
 								x.object.draw(_this, x.options, true);
 							}
@@ -138,7 +138,7 @@
 				else if (id === 'grid') {
 					ctx.setAttribute('stroke', MathLib.colorConvert(screen.options.grid.color) || '#cccccc');
 
-					this.draw = function  () {
+					this.draw = function () {
 						ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
 						_this.screen.drawGrid();
 					};
@@ -146,14 +146,14 @@
 				else if (id === 'axes') {
 					ctx.setAttribute('stroke', MathLib.colorConvert(screen.options.axes.color) || '#000000');
 
-					this.draw = function  () {
+					this.draw = function () {
 						ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
 						_this.screen.drawAxes();
 					};
 				}
 				else {
-					this.draw = function  () {
-						this.stack.forEach(function  (x) {
+					this.draw = function () {
+						this.stack.forEach(function (x) {
 							if (x.type === 'conic') {
 								x.object.draw(_this, x.options, true);
 							}

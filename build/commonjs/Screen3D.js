@@ -12,7 +12,7 @@ var __extends = this.__extends || function (d, b) {
 };
 
 	// A function converting arrays to THREE.js vectors
-	var to3js = function  (x) {
+	var to3js = function (x) {
 		if (x.length === 2) {
 			return new THREE.Vector2(x[0], x[1]);
 		}
@@ -115,7 +115,7 @@ var __extends = this.__extends || function (d, b) {
 			}
 			else {
 				controls = {
-					update: function  () {
+					update: function () {
 					}
 				};
 			}
@@ -185,7 +185,7 @@ var __extends = this.__extends || function (d, b) {
 				return this;
 			}
 
-			var _this = this, gridDrawer = function  (opts, rotX, rotY) {
+			var _this = this, gridDrawer = function (opts, rotX, rotY) {
 				var i, ii, tickX, tickY, lines, circles, rays, size = 10, grid = new THREE.Object3D(), color = new THREE.Color(opts.color);
 
 				if (opts.type === 'cartesian') {
@@ -260,8 +260,8 @@ var __extends = this.__extends || function (d, b) {
 				material: {
 					type: 'MeshLambert'
 				}
-			}, opts = MathLib.extendObject(defaults, options), Curve = THREE.Curve.create(function  () {
-			}, function  (t) {
+			}, opts = MathLib.extendObject(defaults, options), Curve = THREE.Curve.create(function () {
+			}, function (t) {
 				t = (opts.max - opts.min) * t + opts.min;
 				var ft = f(t);
 				return new THREE.Vector3(ft[0], ft[1], ft[2]);
@@ -280,7 +280,7 @@ var __extends = this.__extends || function (d, b) {
 		* @return {Screen3D}
 		*/
 		Screen3D.prototype.plot3D = function (f, options) {
-			return this.surfacePlot3D(function  (u, v) {
+			return this.surfacePlot3D(function (u, v) {
 				return [u, v, f(u, v)];
 			}, options);
 		};
@@ -318,7 +318,7 @@ var __extends = this.__extends || function (d, b) {
 				xmax: 1,
 				ymin: 0,
 				ymax: 1
-			}, opts = MathLib.extendObject(defaults, options), map = function  (u, v) {
+			}, opts = MathLib.extendObject(defaults, options), map = function (u, v) {
 				u = (opts.xmax - opts.xmin) * u + opts.xmin;
 				v = (opts.ymax - opts.ymin) * v + opts.ymin;
 				var fuv = f(u, v);

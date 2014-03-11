@@ -78,7 +78,7 @@ import Permutation from './Permutation';
 				}
 			}
 			LU = new MathLib.Matrix(LU);
-			this.LU = function  () {
+			this.LU = function () {
 				return LU;
 			};
 			this.LUpermutation = new MathLib.Permutation(permutation);
@@ -100,7 +100,7 @@ import Permutation from './Permutation';
 		* @return {Matrix}
 		*/
 		Matrix.prototype.adjugate = function () {
-			return this.map(function  (x, r, c, m) {
+			return this.map(function (x, r, c, m) {
 				return MathLib.times(m.remove(c, r).determinant(), 1 - ((r + c) % 2) * 2);
 			});
 		};
@@ -141,7 +141,7 @@ import Permutation from './Permutation';
 			}
 			choleskyMatrix = new MathLib.Matrix(cholesky);
 
-			this.cholesky = function  () {
+			this.cholesky = function () {
 				return choleskyMatrix;
 			};
 			return choleskyMatrix;
@@ -206,7 +206,7 @@ import Permutation from './Permutation';
 				determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, LU.diag()));
 			}
 
-			this.determinant = function  () {
+			this.determinant = function () {
 				return determinant;
 			};
 			return determinant;
@@ -254,8 +254,8 @@ import Permutation from './Permutation';
 		* @return {boolean}
 		*/
 		Matrix.prototype.every = function (f) {
-			return Array.prototype.every.call(this, function  (x, i) {
-				return Array.prototype.every.call(x, function  (y, j) {
+			return Array.prototype.every.call(this, function (x, i) {
+				return Array.prototype.every.call(x, function (y, j) {
 					return f(y, i, j, this);
 				});
 			});
@@ -271,8 +271,8 @@ import Permutation from './Permutation';
 		* @param {function} f The function which is called on every argument
 		*/
 		Matrix.prototype.forEach = function (f) {
-			Array.prototype.forEach.call(this, function  (x, i) {
-				return Array.prototype.forEach.call(x, function  (y, j) {
+			Array.prototype.forEach.call(this, function (x, i) {
+				return Array.prototype.forEach.call(x, function (y, j) {
 					return f(y, i, j, this);
 				});
 			});
@@ -291,7 +291,7 @@ import Permutation from './Permutation';
 				rr.push(0);
 			}
 
-			this.forEach(function  (x, i, j) {
+			this.forEach(function (x, i, j) {
 				if (i === j) {
 					if (MathLib.is(x, 'complex')) {
 						c.push(x.toPoint());
@@ -390,13 +390,13 @@ import Permutation from './Permutation';
 					return;
 				}
 
-				res.forEach(function  (x, i) {
+				res.forEach(function (x, i) {
 					matrix[i].push(x);
 				});
 			}
 
 			inverse = new MathLib.Matrix(matrix);
-			this.inverse = function  () {
+			this.inverse = function () {
 				return inverse;
 			};
 			return inverse;
@@ -415,7 +415,7 @@ import Permutation from './Permutation';
 				u = l;
 			}
 
-			return this.every(function  (x, i, j) {
+			return this.every(function (x, i, j) {
 				return (i - l <= j && i + u >= j) || MathLib.isZero(x);
 			});
 			// for (i = 0, ii = this.rows; i < ii; i++) {
@@ -482,11 +482,11 @@ import Permutation from './Permutation';
 				return false;
 			}
 
-			var isIdentity = this.every(function  (x, r, c) {
+			var isIdentity = this.every(function (x, r, c) {
 				return r === c ? MathLib.isOne(x) : MathLib.isZero(x);
 			});
 
-			this.isIdentity = function  () {
+			this.isIdentity = function () {
 				return isIdentity;
 			};
 			return isIdentity;
@@ -507,7 +507,7 @@ import Permutation from './Permutation';
 		* @return {boolean}
 		*/
 		Matrix.prototype.isLower = function () {
-			return this.slice(0, -1).every(function  (x, i) {
+			return this.slice(0, -1).every(function (x, i) {
 				return x.slice(i + 1).every(MathLib.isZero);
 			});
 		};
@@ -551,7 +551,7 @@ import Permutation from './Permutation';
 		Matrix.prototype.isPermutation = function () {
 			var rows = [], cols = [];
 
-			return this.every(function  (x, r, c) {
+			return this.every(function (x, r, c) {
 				if (MathLib.isOne(x)) {
 					if (rows[r] || cols[c]) {
 						return false;
@@ -654,7 +654,7 @@ import Permutation from './Permutation';
 				}
 			}
 
-			this.isSymmetric = function  () {
+			this.isSymmetric = function () {
 				return isSymmetric;
 			};
 			return isSymmetric;
@@ -666,7 +666,7 @@ import Permutation from './Permutation';
 		* @return {boolean}
 		*/
 		Matrix.prototype.isUpper = function () {
-			return this.slice(1).every(function  (x, i) {
+			return this.slice(1).every(function (x, i) {
 				return x.slice(0, i + 1).every(MathLib.isZero);
 			});
 		};
@@ -690,7 +690,7 @@ import Permutation from './Permutation';
 		Matrix.prototype.isZero = function () {
 			var isZero = this.every(MathLib.isZero);
 
-			this.isZero = function  () {
+			this.isZero = function () {
 				return isZero;
 			};
 			return isZero;
@@ -708,8 +708,8 @@ import Permutation from './Permutation';
 		*/
 		Matrix.prototype.map = function (f) {
 			var m = this;
-			return new MathLib.Matrix(Array.prototype.map.call(this, function  (x, i) {
-				return Array.prototype.map.call(x, function  (y, j) {
+			return new MathLib.Matrix(Array.prototype.map.call(this, function (x, i) {
+				return Array.prototype.map.call(x, function (y, j) {
 					return f(y, i, j, m);
 				});
 			}));
@@ -799,7 +799,7 @@ import Permutation from './Permutation';
 				}
 			}
 
-			this.rank = function  () {
+			this.rank = function () {
 				return rank;
 			};
 			return rank;
@@ -832,7 +832,7 @@ import Permutation from './Permutation';
 				if (typeof row === 'number') {
 					row = [row];
 				}
-				rest = rest.filter(function  (x, i) {
+				rest = rest.filter(function (x, i) {
 					return row.indexOf(i) === -1;
 				});
 			}
@@ -842,8 +842,8 @@ import Permutation from './Permutation';
 					col = [col];
 				}
 				col = col.sort().reverse();
-				col.forEach(function  (n) {
-					rest = rest.map(function  (x) {
+				col.forEach(function (n) {
+					rest = rest.map(function (x) {
 						x.splice(n, 1);
 						return x;
 					});
@@ -978,8 +978,8 @@ import Permutation from './Permutation';
 		* @return {boolean}
 		*/
 		Matrix.prototype.some = function (f) {
-			return Array.prototype.some.call(this, function  (x, i) {
-				return Array.prototype.some.call(x, function  (y, j) {
+			return Array.prototype.some.call(this, function (x, i) {
+				return Array.prototype.some.call(x, function (y, j) {
 					return f(y, i, j, this);
 				});
 			});
@@ -998,7 +998,7 @@ import Permutation from './Permutation';
 				a = a.coerceTo('number');
 			}
 			if (typeof a === 'number' || a.type === 'complex') {
-				return this.map(function  (x) {
+				return this.map(function (x) {
 					return MathLib.times(x, a);
 				});
 			}
@@ -1042,8 +1042,8 @@ import Permutation from './Permutation';
 		* @return {array}
 		*/
 		Matrix.prototype.toArray = function () {
-			return Array.prototype.map.call(this, function  (x) {
-				return Array.prototype.map.call(x, function  (y) {
+			return Array.prototype.map.call(this, function (x) {
+				return Array.prototype.map.call(x, function (y) {
 					return MathLib.copy(y);
 				});
 			});
@@ -1067,14 +1067,14 @@ import Permutation from './Permutation';
 		Matrix.prototype.toContentMathML = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
 			if (options.strict) {
-				return this.reduce(function  (str, x) {
+				return this.reduce(function (str, x) {
 					return str + '<apply><csymbol cd="linalg2">matrixrow</csymbol>' + x.map(function (entry) {
 						return MathLib.toContentMathML(entry, options);
 					}).join('') + '</apply>';
 				}, '<apply><csymbol cd="linalg2">matrix</csymbol>') + '</apply>';
 			}
 			else {
-				return this.reduce(function  (str, x) {
+				return this.reduce(function (str, x) {
 					return str + '<matrixrow>' + x.map(function (entry) {
 						return MathLib.toContentMathML(entry, options);
 					}).join('') + '</matrixrow>';
@@ -1092,7 +1092,7 @@ import Permutation from './Permutation';
 			if (typeof options === 'undefined') { options = {}; }
 			var passOptions = {base: options.base, baseSubscript: options.baseSubscript};
 
-			return '\\begin{pmatrix}\n' + this.reduce(function  (str, x) {
+			return '\\begin{pmatrix}\n' + this.reduce(function (str, x) {
 				return str + x.map(function (entry) {
 					return MathLib.toLaTeX(entry, passOptions);
 				}).join(' & ') + '\\\n';
@@ -1109,7 +1109,7 @@ import Permutation from './Permutation';
 			if (typeof options === 'undefined') { options = {}; }
 			var passOptions = {base: options.base, baseSubscript: options.baseSubscript};
 
-			return this.reduce(function  (str, x) {
+			return this.reduce(function (str, x) {
 				return str + '<mtr><mtd>' + x.map(function (entry) {
 					return MathLib.toMathML(entry, passOptions);
 				}).join('</mtd><mtd>') + '</mtd></mtr>';
@@ -1122,7 +1122,7 @@ import Permutation from './Permutation';
 		* @return {array}
 		*/
 		Matrix.prototype.toRowVectors = function () {
-			return this.toArray().map(function  (v) {
+			return this.toArray().map(function (v) {
 				return new MathLib.Vector(v);
 			});
 		};
@@ -1137,7 +1137,7 @@ import Permutation from './Permutation';
 			if (typeof options === 'undefined') { options = {}; }
 			var passOptions = {base: options.base, baseSubscript: options.baseSubscript};
 
-			return this.reduce(function  (str, x) {
+			return this.reduce(function (str, x) {
 				return str + x.map(function (entry) {
 					return MathLib.toString(entry, passOptions);
 				}).join('\t') + '\n';
@@ -1152,7 +1152,7 @@ import Permutation from './Permutation';
 		Matrix.prototype.trace = function () {
 			var trace = MathLib.plus.apply(null, this.diag());
 
-			this.trace = function  () {
+			this.trace = function () {
 				return trace;
 			};
 			return trace;
@@ -1176,12 +1176,12 @@ import Permutation from './Permutation';
 			}
 
 			transposedMatrix = new MathLib.Matrix(transpose);
-			this.transpose = function  () {
+			this.transpose = function () {
 				return transposedMatrix;
 			};
 			return transposedMatrix;
 		};
-		Matrix.givensMatrix = function  (n, i, k, phi) {
+		Matrix.givensMatrix = function (n, i, k, phi) {
 			var givens = MathLib.Matrix.identity(n);
 			givens[k][k] = givens[i][i] = Math.cos(phi);
 			givens[i][k] = Math.sin(phi);
@@ -1189,7 +1189,7 @@ import Permutation from './Permutation';
 			return givens;
 		};
 
-		Matrix.identity = function  (n) {
+		Matrix.identity = function (n) {
 			var row = [], matrix = [], i, ii;
 			n = n || 1;
 
@@ -1207,7 +1207,7 @@ import Permutation from './Permutation';
 			return new MathLib.Matrix(matrix);
 		};
 
-		Matrix.numbers = function  (n, r, c) {
+		Matrix.numbers = function (n, r, c) {
 			var i, ii, row = [], matrix = [];
 
 			for (i = 0, ii = c || r || 1; i < ii; i++) {
@@ -1219,13 +1219,13 @@ import Permutation from './Permutation';
 			return new MathLib.Matrix(matrix);
 		};
 
-		Matrix.one = function  (r, c) {
+		Matrix.one = function (r, c) {
 			r = r || 1;
 			c = c || 1;
 			return MathLib.Matrix.numbers(1, r, c);
 		};
 
-		Matrix.random = function  (r, c) {
+		Matrix.random = function (r, c) {
 			var row, matrix = [], i, j, ii, jj;
 			for (i = 0, ii = r || 1; i < ii; i++) {
 				row = [];
@@ -1237,7 +1237,7 @@ import Permutation from './Permutation';
 			return new MathLib.Matrix(matrix);
 		};
 
-		Matrix.zero = function  (r, c) {
+		Matrix.zero = function (r, c) {
 			r = r || 1;
 			c = c || 1;
 			return MathLib.Matrix.numbers(0, r, c);

@@ -51,7 +51,7 @@
 		* @return {Expression} The copied expression
 		*/
 		Expression.prototype.copy = function () {
-			return this.map(function  (x) {
+			return this.map(function (x) {
 				return x;
 			});
 		};
@@ -180,7 +180,7 @@
 
 			// Whitespace normalization (see section 2.1.7 of the MathML 3 specification)
 			// TODO: Find a better way of normalizing whitespace.
-			MathMLString = MathMLString.split('cs>').map(function  (x, i) {
+			MathMLString = MathMLString.split('cs>').map(function (x, i) {
 				// We are not in an cs element.
 				// 1. normalize multiple spaces to one space
 				//    ("whitespace internal to content of the element is collapsed canonically,
@@ -202,7 +202,7 @@
 			MathMLdoc = tokenizer.parseFromString(MathMLString, 'application/xml');
 
 			var handler = {
-				apply: function  (node) {
+				apply: function (node) {
 					var functnName = '', expr, children = Array.prototype.slice.call(node.childNodes), functnNameNode = children.shift(), isMethod = true, functnNames = {
 						ident: 'identity',
 						power: 'pow',
@@ -261,13 +261,13 @@
 
 					return expr;
 				},
-				ci: function  (node) {
+				ci: function (node) {
 					return new MathLib.Expression({
 						subtype: 'variable',
 						value: node.textContent
 					});
 				},
-				cn: function  (node) {
+				cn: function (node) {
 					var type = node.getAttribute('type');
 
 					if (type === 'integer') {
@@ -301,10 +301,10 @@
 					// TODO: implement
 					//}
 				},
-				cs: function  (node) {
+				cs: function (node) {
 					return node.textContent;
 				},
-				csymbol: function  (node) {
+				csymbol: function (node) {
 					var cd = node.getAttribute('cd');
 
 					if (cd === 'logic1') {
@@ -317,7 +317,7 @@
 						//and, equivalent, false, implies, not, or, true, xor
 					}
 				},
-				lambda: function  (node) {
+				lambda: function (node) {
 					var doa, apply, bvar = [], i = 0;
 
 					while (node.childNodes[i].nodeName === 'bvar') {
@@ -358,36 +358,36 @@
 						});
 					}
 				},
-				math: function  (node) {
+				math: function (node) {
 					return parser(node.childNodes[0]);
 				},
-				matrix: function  (node) {
+				matrix: function (node) {
 					return new MathLib.Matrix(Array.prototype.slice.call(node.childNodes).map(handler.matrixrow));
 				},
-				matrixrow: function  (node) {
+				matrixrow: function (node) {
 					return Array.prototype.map.call(node.childNodes, parser);
 				},
-				set: function  (node) {
+				set: function (node) {
 					return new MathLib.Set(parser(Array.prototype.slice.call(node.childNodes)));
 				},
-				'#text': function  (node) {
+				'#text': function (node) {
 					return node.nodeValue;
 				},
-				vector: function  (node) {
+				vector: function (node) {
 					return new MathLib.Vector(parser(Array.prototype.slice.call(node.childNodes)));
 				},
-				false: function  () {
+				false: function () {
 					return false;
 				},
-				pi: function  () {
+				pi: function () {
 					return MathLib.Expression.constant('pi');
 				},
-				true: function  () {
+				true: function () {
 					return true;
 				}
 			};
 
-			var parser = function  (node) {
+			var parser = function (node) {
 				if (Array.isArray(node)) {
 					var nodes = node.map(parser);
 					return nodes;
@@ -672,7 +672,7 @@
 				value: n
 			});
 		};
-		Expression.parse = function  (str) {
+		Expression.parse = function (str) {
 			var Token, Lexer, Parser;
 
 			Token = {
@@ -681,7 +681,7 @@
 				Number: 'Number'
 			};
 
-			Lexer = function  () {
+			Lexer = function () {
 				var expression = '', length = 0, index = 0, marker = 0, T = Token;
 
 				function peekNextChar () {
@@ -884,7 +884,7 @@
 				};
 			};
 
-			Parser = function  () {
+			Parser = function () {
 				var lexer = new Lexer(), T = Token;
 
 				function matchOp (token, op) {

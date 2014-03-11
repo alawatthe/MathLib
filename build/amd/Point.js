@@ -87,7 +87,7 @@ var __extends = this.__extends || function (d, b) {
 		Point.prototype.draw = function (screen, options) {
 			if (Array.isArray(screen)) {
 				var point = this;
-				screen.forEach(function  (x) {
+				screen.forEach(function (x) {
 					x.point(point, options);
 				});
 			}
@@ -112,7 +112,7 @@ var __extends = this.__extends || function (d, b) {
 				return false;
 			}
 
-			return p.every(function  (x, i) {
+			return p.every(function (x, i) {
 				return MathLib.isEqual(x, q[i]);
 			});
 		};
@@ -140,28 +140,28 @@ var __extends = this.__extends || function (d, b) {
 
 				Object.defineProperties(line, {
 					'0': {
-						get: function  () {
+						get: function () {
 							return p[1] * q[2] - p[2] * q[1];
 						},
-						set: function  () {
+						set: function () {
 							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join'});
 						},
 						enumerable: true
 					},
 					'1': {
-						get: function  () {
+						get: function () {
 							return p[2] * q[0] - p[0] * q[2];
 						},
-						set: function  () {
+						set: function () {
 							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join'});
 						},
 						enumerable: true
 					},
 					'2': {
-						get: function  () {
+						get: function () {
 							return p[0] * q[1] - p[1] * q[0];
 						},
-						set: function  () {
+						set: function () {
 							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join'});
 						},
 						enumerable: true
@@ -179,7 +179,7 @@ var __extends = this.__extends || function (d, b) {
 		*/
 		Point.prototype.normalize = function () {
 			var last = this[this.dimension] || 1;
-			return this.map(function  (x) {
+			return this.map(function (x) {
 				return x / last;
 			});
 		};
@@ -215,30 +215,30 @@ var __extends = this.__extends || function (d, b) {
 
 			Object.defineProperties(this, {
 				'0': {
-					get: function  () {
+					get: function () {
 						return l[1] * l[1] * p[0] - l[0] * (l[1] * p[1] + l[2] * p[2]);
 					},
-					set: function  (point) {
+					set: function (point) {
 						p[0] = point;
 					},
 					enumerable: true,
 					configurable: true
 				},
 				'1': {
-					get: function  () {
+					get: function () {
 						return -l[1] * l[2] * p[2] + l[0] * (l[0] * p[1] - l[1] * p[0]);
 					},
-					set: function  (point) {
+					set: function (point) {
 						p[1] = point;
 					},
 					enumerable: true,
 					configurable: true
 				},
 				'2': {
-					get: function  () {
+					get: function () {
 						return l[1] * l[1] * p[2] + l[0] * l[0] * p[2];
 					},
-					set: function  (point) {
+					set: function (point) {
 						p[2] = point;
 					},
 					enumerable: true,
@@ -279,7 +279,7 @@ var __extends = this.__extends || function (d, b) {
 			if (typeof opt === 'undefined') { opt = false; }
 			var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
-			return '\\begin{pmatrix}' + p.reduce(function  (old, cur) {
+			return '\\begin{pmatrix}' + p.reduce(function (old, cur) {
 				return old + '\\\\' + MathLib.toLaTeX(cur);
 			}) + '\\end{pmatrix}';
 		};
@@ -294,7 +294,7 @@ var __extends = this.__extends || function (d, b) {
 			if (typeof opt === 'undefined') { opt = false; }
 			var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
-			return p.reduce(function  (old, cur) {
+			return p.reduce(function (old, cur) {
 				return old + '<mtr><mtd>' + MathLib.toMathML(cur) + '</mtd></mtr>';
 			}, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
 		};
@@ -309,7 +309,7 @@ var __extends = this.__extends || function (d, b) {
 			if (typeof opt === 'undefined') { opt = false; }
 			var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
-			return '(' + p.reduce(function  (old, cur) {
+			return '(' + p.reduce(function (old, cur) {
 				return old + ', ' + MathLib.toString(cur);
 			}) + ')';
 		};

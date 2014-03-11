@@ -1,5 +1,5 @@
 
-	var template = function  (data) {
+	var template = function (data) {
 		var p = [];
 		p.push(' <figure class="MathLib_figure">     <div class="MathLib_wrapper" style="width: ');
 		p.push(data.width);
@@ -79,7 +79,7 @@
 				};
 
 				if (opts.contextMenu.screenshot && !('opera' in window)) {
-					this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function  () {
+					this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function () {
 						var dataURI, a = document.createElement('a');
 
 						if (that.options.renderer === 'Canvas' && that.type === 'screen2D') {
@@ -131,7 +131,7 @@
 				}
 
 				if (opts.contextMenu.fullscreen && 'requestFullScreen' in document.body) {
-					this.contextMenu.getElementsByClassName('MathLib_fullscreen')[0].onclick = function  () {
+					this.contextMenu.getElementsByClassName('MathLib_fullscreen')[0].onclick = function () {
 						if (document.fullscreenElement) {
 							document.exitFullScreen();
 						}
@@ -142,22 +142,22 @@
 				}
 
 				if (opts.contextMenu.grid) {
-					this.contextMenu.getElementsByClassName('MathLib_grid_type')[0].onchange = function  () {
+					this.contextMenu.getElementsByClassName('MathLib_grid_type')[0].onchange = function () {
 						that.options.grid.type = 'cartesian';
 						that.draw();
 					};
-					this.contextMenu.getElementsByClassName('MathLib_grid_type')[1].onchange = function  () {
+					this.contextMenu.getElementsByClassName('MathLib_grid_type')[1].onchange = function () {
 						that.options.grid.type = 'polar';
 						that.draw();
 					};
-					this.contextMenu.getElementsByClassName('MathLib_grid_type')[2].onchange = function  () {
+					this.contextMenu.getElementsByClassName('MathLib_grid_type')[2].onchange = function () {
 						that.options.grid.type = false;
 						that.draw();
 					};
 				}
 			}
 
-			fullscreenchange = function  () {
+			fullscreenchange = function () {
 				if (document.fullscreenElement) {
 					that.origWidth = that.width;
 					that.origHeight = that.height;
@@ -197,10 +197,10 @@
 			menu.style.setProperty('left', evt.clientX + 'px');
 			overlay.style.setProperty('display', 'block');
 
-			listener = function  () {
+			listener = function () {
 				overlay.style.setProperty('display', 'none');
 
-				Array.prototype.forEach.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem'), function  (x) {
+				Array.prototype.forEach.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem'), function (x) {
 					_this.contextMenu.removeChild(x);
 				});
 

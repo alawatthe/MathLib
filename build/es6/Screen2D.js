@@ -134,7 +134,7 @@ import Screen from './Screen';
 
 			// This is just a dummy method for the following few lines.
 			// The real applyTransformation method is specified after the creation of the layers.
-			this.applyTransformation = function  () {
+			this.applyTransformation = function () {
 			};
 
 			// The interaction methods
@@ -143,40 +143,40 @@ import Screen from './Screen';
 			this.transformation = transformation;
 
 			Object.defineProperty(this.translation, 'x', {
-				get: function  () {
+				get: function () {
 					return that.transformation[0][2];
 				},
-				set: function  (x) {
+				set: function (x) {
 					that.transformation[0][2] = x;
 					that.applyTransformation();
 				}
 			});
 
 			Object.defineProperty(this.translation, 'y', {
-				get: function  () {
+				get: function () {
 					return that.transformation[1][2];
 				},
-				set: function  (y) {
+				set: function (y) {
 					that.transformation[1][2] = y;
 					that.applyTransformation();
 				}
 			});
 
 			Object.defineProperty(this.scale, 'x', {
-				get: function  () {
+				get: function () {
 					return that.transformation[0][0];
 				},
-				set: function  (x) {
+				set: function (x) {
 					that.transformation[0][0] = x;
 					that.applyTransformation();
 				}
 			});
 
 			Object.defineProperty(this.scale, 'y', {
-				get: function  () {
+				get: function () {
 					return that.transformation[1][1];
 				},
-				set: function  (y) {
+				set: function (y) {
 					that.transformation[1][1] = y;
 					that.applyTransformation();
 				}
@@ -185,40 +185,40 @@ import Screen from './Screen';
 			this.lookAt = {};
 			this.range = {};
 			Object.defineProperty(this.lookAt, 'x', {
-				get: function  () {
+				get: function () {
 					return (that.width / 2 - that.transformation[0][2]) / that.transformation[0][0];
 				},
-				set: function  (x) {
+				set: function (x) {
 					that.transformation[0][2] = that.width / 2 - x * that.transformation[0][0];
 					that.applyTransformation();
 				}
 			});
 
 			Object.defineProperty(this.lookAt, 'y', {
-				get: function  () {
+				get: function () {
 					return (that.height / 2 - that.transformation[1][2]) / that.transformation[1][1];
 				},
-				set: function  (y) {
+				set: function (y) {
 					that.transformation[1][2] = that.height / 2 - y * that.transformation[1][1];
 					that.applyTransformation();
 				}
 			});
 
 			Object.defineProperty(this.range, 'x', {
-				get: function  () {
+				get: function () {
 					return that.width / (2 * that.transformation[0][0]);
 				},
-				set: function  (x) {
+				set: function (x) {
 					that.transformation[0][0] = 0.5 * that.width / x;
 					that.applyTransformation();
 				}
 			});
 
 			Object.defineProperty(this.range, 'y', {
-				get: function  () {
+				get: function () {
 					return -that.height / (2 * that.transformation[1][1]);
 				},
-				set: function  (y) {
+				set: function (y) {
 					that.transformation[1][1] = -0.5 * that.height / y;
 					that.applyTransformation();
 				}
@@ -293,12 +293,12 @@ import Screen from './Screen';
 
 			this.applyTransformation = this.renderer.applyTransformation;
 
-			this.draw = function  (x, options) {
+			this.draw = function (x, options) {
 				if (typeof options === 'undefined') { options = {}; }
 				var _this = this;
 				// Clear and redraw the screen
 				if (arguments.length === 0) {
-					this.layer.forEach(function  (l) {
+					this.layer.forEach(function (l) {
 						l.clear().draw();
 					});
 				}

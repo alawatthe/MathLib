@@ -46,7 +46,7 @@ import Matrix from './Matrix';
 			}
 			else {
 				p = this;
-				permutatedObj = n.map(function  (x, i) {
+				permutatedObj = n.map(function (x, i) {
 					return n[p.applyTo(i)];
 				});
 
@@ -85,7 +85,7 @@ import Matrix from './Matrix';
 		Permutation.cycleToList = function (cycle) {
 			var index, list = [], cur, i, ii, j, jj, max;
 
-			max = cycle.map(function  (b) {
+			max = cycle.map(function (b) {
 				return Math.max.apply(null, b);
 			});
 			max = Math.max.apply(null, max);
@@ -110,7 +110,7 @@ import Matrix from './Matrix';
 		*/
 		Permutation.prototype.inverse = function () {
 			var cycle = this.cycle.slice(0);
-			cycle.reverse().forEach(function  (e) {
+			cycle.reverse().forEach(function (e) {
 				e.reverse();
 			});
 			return new MathLib.Permutation(cycle);
@@ -176,7 +176,7 @@ import Matrix from './Matrix';
 		*/
 		Permutation.prototype.times = function (p) {
 			var a = this;
-			return p.map(function  (x) {
+			return p.map(function (x) {
 				return a[x];
 			});
 		};
@@ -209,7 +209,7 @@ import Matrix from './Matrix';
 		*/
 		Permutation.prototype.toString = function () {
 			var str = '';
-			this.cycle.forEach(function  (elem) {
+			this.cycle.forEach(function (elem) {
 				str += '(' + elem.toString() + ')';
 			});
 			return str;

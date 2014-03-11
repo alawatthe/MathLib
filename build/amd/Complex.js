@@ -138,7 +138,7 @@
 		* @return {Complex}
 		*/
 		Complex.prototype.arcsin = function () {
-			var a = this.re, b = this.im, aa = a * a, bb = b * b, sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb), sgn = function  (x) {
+			var a = this.re, b = this.im, aa = a * a, bb = b * b, sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb), sgn = function (x) {
 				if (x > 0) {
 					return 1;
 				}
@@ -764,7 +764,7 @@
 
 			return str;
 		};
-		Complex.polar = function  (abs, arg) {
+		Complex.polar = function (abs, arg) {
 			if (abs === Infinity) {
 				return new MathLib.Complex(Infinity);
 			}

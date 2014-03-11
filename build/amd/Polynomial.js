@@ -40,7 +40,7 @@
 			});
 			this.length = polynomial.length;
 			this.deg = polynomial.length - 1;
-			this.subdeg = (function  (a) {
+			this.subdeg = (function (a) {
 				var i = 0;
 				if (a.length > 1 || a[0]) {
 					while (i < a.length && MathLib.isZero(a[i])) {
@@ -158,7 +158,7 @@
 			var basisPolynomial, interpolant = new MathLib.Polynomial([0]), n = a.length, i, j;
 
 			if (arguments.length === 2) {
-				a = a.map(function  (x, i) {
+				a = a.map(function (x, i) {
 					return [x, b[i]];
 				});
 			}
@@ -285,11 +285,11 @@
 			}
 
 			// Vieta's theorem
-			elemSymPoly.slice(1).forEach(function  (x) {
+			elemSymPoly.slice(1).forEach(function (x) {
 				coef[ii - x.card] = MathLib.plus(coef[ii - x.card], x.times());
 			});
 
-			coef = coef.map(function  (x, i) {
+			coef = coef.map(function (x, i) {
 				if ((ii - i) % 2) {
 					return MathLib.negative(x);
 				}

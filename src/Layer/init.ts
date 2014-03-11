@@ -141,7 +141,7 @@ export class Layer {
 
 		}
 		else if (screen.options.renderer === 'SVG') {
-			var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g'),
+			var ctx = (<SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g')),
 					m = screen.transformation;
 			
 			ctx.className.baseVal = 'MathLib_layer_' + id;
