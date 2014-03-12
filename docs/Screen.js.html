@@ -69,6 +69,7 @@
             <li class=""><a href="Conic.js.html"><span>Conic</span></a></li>
             <li class=""><a href="Expression.js.html"><span>Expression</span></a></li>
             <li class=""><a href="Functn.js.html"><span>Functn</span></a></li>
+            <li class=""><a href="Integer.js.html"><span>Integer</span></a></li>
             <li class=""><a href="Layer.js.html"><span>Layer</span></a></li>
             <li class=""><a href="Line.js.html"><span>Line</span></a></li>
             <li class=""><a href="Matrix.js.html"><span>Matrix</span></a></li>
@@ -82,6 +83,8 @@
             <li class=""><a href="Screen3D.js.html"><span>Screen3D</span></a></li>
             <li class=""><a href="Set.js.html"><span>Set</span></a></li>
             <li class=""><a href="Vector.js.html"><span>Vector</span></a></li>
+            <li class=""><a href="fullscreen.js.html"><span>fullscreen</span></a></li>
+            <li class=""><a href="lineDash.js.html"><span>lineDash</span></a></li>
             <li class=""><a href="meta.js.html"><span>meta</span></a></li>
           </ul>
           <div class="scrollspy">
@@ -104,133 +107,141 @@
           </section>
           <div class="description"><p>This module contains the common methods of all drawing modules.</p> </div>
           <pre><code class="language-javascript">var Screen = (function () {
-function Screen(id, options) {
-    if (typeof options === &quot;undefined&quot;) { options = {}; }
-    var _this = this;
-    this.type = 'screen';
-    var that = this, defaults = {
-        height: 500,
-        width: 500,
-        contextMenu: {
-            screenshot: true,
-            fullscreen: true,
-            grid: true
-        },
-        figcaption: ''
-    }, opts = MathLib.extendObject(defaults, options), container = document.getElementById(id), innerHTMLContextMenu = '', uuid = +Date.now(), fullscreenchange, innerHTML;
+		function Screen (id, options) {
+			if (typeof options === 'undefined') { options = {}; }
+			var _this = this;
+			this.type = 'screen';
+			var that = this, defaults = {
+				height: 500,
+				width: 500,
+				contextMenu: {
+					screenshot: true,
+					fullscreen: true,
+					grid: true
+				},
+				figcaption: ''
+			}, opts = MathLib.extendObject(defaults, options), container = document.getElementById(id), innerHTMLContextMenu = '', fullscreenchange;
 
-    container.innerHTML = template(opts);
-    container.classList.add('MathLib_container');
+			container.innerHTML = template(opts);
+			container.classList.add('MathLib_container');
 
-    this.height = opts.height;
-    this.width = opts.width;
-    this.options = opts;
-    this.container = container;
-    this.figure = container.getElementsByClassName('MathLib_figure')[0];
-    this.wrapper = container.getElementsByClassName('MathLib_wrapper')[0];
-    this.contextMenu = container.getElementsByClassName('MathLib_mainmenu')[0];
-    this.contextMenuOverlay = container.getElementsByClassName('MathLib_contextMenuOverlay')[0];
-    this.innerHTMLContextMenu = innerHTMLContextMenu;
+			this.height = opts.height;
+			this.width = opts.width;
+			this.options = opts;
+			this.container = container;
+			this.figure = container.getElementsByClassName('MathLib_figure')[0];
+			this.wrapper = container.getElementsByClassName('MathLib_wrapper')[0];
+			this.contextMenu = container.getElementsByClassName('MathLib_mainmenu')[0];
+			this.contextMenuOverlay = container.getElementsByClassName('MathLib_contextMenuOverlay')[0];
+			this.innerHTMLContextMenu = innerHTMLContextMenu;
 
-    if (options.contextMenu) {
-        this.wrapper.oncontextmenu = function (evt) {
-            return _this.oncontextmenu(evt);
-        };
+			if (options.contextMenu) {
+				this.wrapper.oncontextmenu = function (evt) {
+					return _this.oncontextmenu(evt);
+				};
 
-        if (opts.contextMenu.screenshot &amp;&amp; !('opera' in window)) {
-            this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function () {
-                var dataURI, a = document.createElement('a');
+				if (opts.contextMenu.screenshot &amp;&amp; !('opera' in window)) {
+					this.contextMenu.getElementsByClassName('MathLib_screenshot')[0].onclick = function () {
+						var dataURI, a = document.createElement('a');
 
-                if (that.options.renderer === 'Canvas' &amp;&amp; that.type === 'screen2D') {
-                    var canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
+						if (that.options.renderer === 'Canvas' &amp;&amp; that.type === 'screen2D') {
+							var canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
 
-                    canvas.height = that.height;
-                    canvas.width = that.width;
+							canvas.height = that.height;
+							canvas.width = that.width;
 
-                    ctx.drawImage(that.layer.back.element, 0, 0);
-                    ctx.drawImage(that.layer.grid.element, 0, 0);
-                    ctx.drawImage(that.layer.axes.element, 0, 0);
-                    ctx.drawImage(that.layer.main.element, 0, 0);
+							ctx.drawImage(that.layer.back.element, 0, 0);
+							ctx.drawImage(that.layer.grid.element, 0, 0);
+							ctx.drawImage(that.layer.axes.element, 0, 0);
+							ctx.drawImage(that.layer.main.element, 0, 0);
 
-                    dataURI = canvas.toDataURL('image/png');
-                    if ('download' in a) {
-                        a.href = dataURI;
-                        a.download = 'plot.png';
-                        a.click();
-                    } else {
-                        window.location.href = dataURI.replace('image/png', 'image/octet-stream');
-                    }
-                }
+							dataURI = canvas.toDataURL('image/png');
+							if ('download' in a) {
+								a.href = dataURI;
+								a.download = 'plot.png';
+								a.click();
+							}
+							else {
+								window.location.href = dataURI.replace('image/png', 'image/octet-stream');
+							}
+						}
 
-                if (that.options.renderer === 'WebGL' &amp;&amp; that.type === 'screen3D') {
-                    dataURI = that.element.toDataURL('image/png');
-                    if ('download' in a) {
-                        a.href = dataURI;
-                        a.download = 'plot.png';
-                        a.click();
-                    } else {
-                        window.location.href = dataURI.replace('image/png', 'image/octet-stream');
-                    }
-                } else if (that.options.renderer === 'SVG') {
-                    dataURI = 'data:image/svg+xml,' + that.element.parentElement.innerHTML;
+						if (that.options.renderer === 'WebGL' &amp;&amp; that.type === 'screen3D') {
+							dataURI = that.element.toDataURL('image/png');
+							if ('download' in a) {
+								a.href = dataURI;
+								a.download = 'plot.png';
+								a.click();
+							}
+							else {
+								window.location.href = dataURI.replace('image/png', 'image/octet-stream');
+							}
+						}
+						else if (that.options.renderer === 'SVG') {
+							dataURI = 'data:image/svg+xml,' + that.element.parentElement.innerHTML;
 
-                    if ('download' in a) {
-                        a.href = dataURI;
-                        a.download = 'plot.svg';
-                        a.click();
-                    } else {
-                        window.location.href = dataURI.replace('image/svg+xml', 'image/octet-stream');
-                    }
-                }
-            };
-        }
+							if ('download' in a) {
+								a.href = dataURI;
+								a.download = 'plot.svg';
+								a.click();
+							}
+							else {
+								window.location.href = dataURI.replace('image/svg+xml', 'image/octet-stream');
+							}
+						}
+					};
+				}
 
-        if (opts.contextMenu.fullscreen &amp;&amp; 'requestFullScreen' in document.body) {
-            this.contextMenu.getElementsByClassName('MathLib_fullscreen')[0].onclick = function () {
-                if (document.fullscreenElement) {
-                    document.exitFullScreen();
-                } else {
-                    that.container.requestFullScreen();
-                }
-            };
-        }
+				if (opts.contextMenu.fullscreen &amp;&amp; 'requestFullScreen' in document.body) {
+					this.contextMenu.getElementsByClassName('MathLib_fullscreen')[0].onclick = function () {
+						if (document.fullscreenElement) {
+							document.exitFullScreen();
+						}
+						else {
+							that.container.requestFullScreen();
+						}
+					};
+				}
 
-        if (opts.contextMenu.grid) {
-            this.contextMenu.getElementsByClassName('MathLib_grid_type')[0].onchange = function () {
-                that.options.grid.type = 'cartesian';
-                that.draw();
-            };
-            this.contextMenu.getElementsByClassName('MathLib_grid_type')[1].onchange = function () {
-                that.options.grid.type = 'polar';
-                that.draw();
-            };
-            this.contextMenu.getElementsByClassName('MathLib_grid_type')[2].onchange = function () {
-                that.options.grid.type = false;
-                that.draw();
-            };
-        }
-    }
+				if (opts.contextMenu.grid) {
+					this.contextMenu.getElementsByClassName('MathLib_grid_type')[0].onchange = function () {
+						that.options.grid.type = 'cartesian';
+						that.draw();
+					};
+					this.contextMenu.getElementsByClassName('MathLib_grid_type')[1].onchange = function () {
+						that.options.grid.type = 'polar';
+						that.draw();
+					};
+					this.contextMenu.getElementsByClassName('MathLib_grid_type')[2].onchange = function () {
+						that.options.grid.type = false;
+						that.draw();
+					};
+				}
+			}
 
-    fullscreenchange = function () {
-        if (document.fullscreenElement) {
-            that.origWidth = that.width;
-            that.origHeight = that.height;
-            that.resize(window.outerWidth, window.outerHeight);
-        } else {
-            that.resize(that.origWidth, that.origHeight);
-            delete that.origWidth;
-            delete that.origHeight;
-        }
-    };
+			fullscreenchange = function () {
+				if (document.fullscreenElement) {
+					that.origWidth = that.width;
+					that.origHeight = that.height;
+					that.resize(window.outerWidth, window.outerHeight);
+				}
+				else {
+					that.resize(that.origWidth, that.origHeight);
+					delete that.origWidth;
+					delete that.origHeight;
+				}
+			};
 
-    if ('onfullscreenchange' in this.container) {
-        this.container.addEventListener('fullscreenchange', fullscreenchange);
-    } else if ('onmozfullscreenchange' in this.container) {
-        this.container.addEventListener('mozfullscreenchange', fullscreenchange);
-    } else if ('onwebkitfullscreenchange' in this.container) {
-        this.container.addEventListener('webkitfullscreenchange', fullscreenchange);
-    }
-}</code></pre>
+			if ('onfullscreenchange' in this.container) {
+				this.container.addEventListener('fullscreenchange', fullscreenchange);
+			}
+			else if ('onmozfullscreenchange' in this.container) {
+				this.container.addEventListener('mozfullscreenchange', fullscreenchange);
+			}
+			else if ('onwebkitfullscreenchange' in this.container) {
+				this.container.addEventListener('webkitfullscreenchange', fullscreenchange);
+			}
+		}</code></pre>
           <section id="oncontextmenu">
             <h1><a href="http://mathlib.de/en/docs/Screen/oncontextmenu">oncontextmenu</a>
             </h1>
@@ -258,32 +269,32 @@ function Screen(id, options) {
           </table>
           <div class="description"><p>Handles the contextmenu event</p> </div>
           <pre><code class="language-javascript">Screen.prototype.oncontextmenu = function (evt) {
-    var listener, _this = this, menu = this.contextMenu, overlay = this.contextMenuOverlay;
+			var listener, _this = this, menu = this.contextMenu, overlay = this.contextMenuOverlay;
 
-    if (evt.preventDefault) {
-        evt.preventDefault();
-    }
-    evt.returnValue = false;
+			if (evt.preventDefault) {
+				evt.preventDefault();
+			}
+			evt.returnValue = false;
 
-    menu.style.setProperty('top', (evt.clientY - 20) + 'px');
-    menu.style.setProperty('left', evt.clientX + 'px');
-    overlay.style.setProperty('display', 'block');
+			menu.style.setProperty('top', (evt.clientY - 20) + 'px');
+			menu.style.setProperty('left', evt.clientX + 'px');
+			overlay.style.setProperty('display', 'block');
 
-    listener = function () {
-        overlay.style.setProperty('display', 'none');
+			listener = function () {
+				overlay.style.setProperty('display', 'none');
 
-        Array.prototype.forEach.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem'), function (x) {
-            _this.contextMenu.removeChild(x);
-        });
+				Array.prototype.forEach.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem'), function (x) {
+					_this.contextMenu.removeChild(x);
+				});
 
-        overlay.removeEventListener('click', listener);
-    };
+				overlay.removeEventListener('click', listener);
+			};
 
-    overlay.addEventListener('click', listener);
-};
-return Screen;
-    })();
-    MathLib.Screen = Screen;
+			overlay.addEventListener('click', listener);
+		};
+		return Screen;
+	})();
+	MathLib.Screen = Screen;
 })(MathLib || (MathLib = {}));</code></pre>
         </div>
       </div>

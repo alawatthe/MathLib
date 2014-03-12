@@ -69,6 +69,7 @@
             <li class=""><a href="Conic.js.html"><span>Conic</span></a></li>
             <li class=""><a href="Expression.js.html"><span>Expression</span></a></li>
             <li class=""><a href="Functn.js.html"><span>Functn</span></a></li>
+            <li class=""><a href="Integer.js.html"><span>Integer</span></a></li>
             <li class=""><a href="Layer.js.html"><span>Layer</span></a></li>
             <li class=""><a href="Line.js.html"><span>Line</span></a></li>
             <li class=""><a href="Matrix.js.html"><span>Matrix</span></a></li>
@@ -82,8 +83,9 @@
             <li class=""><a href="Screen3D.js.html"><span>Screen3D</span></a></li>
             <li class=""><a href="Set.js.html"><span>Set</span></a></li>
             <li class=""><a href="Vector.js.html"><span>Vector</span></a></li>
+            <li class=""><a href="fullscreen.js.html"><span>fullscreen</span></a></li>
+            <li class="active"><a href="lineDash.js.html"><span>lineDash</span></a></li>
             <li class=""><a href="meta.js.html"><span>meta</span></a></li>
-            <li class="active"><a href="reference.js.html"><span>reference</span></a></li>
           </ul>
           <div class="scrollspy">
             <ul class="nav nav-list bs-docs-sidenav affix-top">
@@ -91,7 +93,40 @@
           </div>
         </div>
         <div class="span9">
-          <div class="description"> </div>
+          <div class="description"><p>else if ('webkitLineDash' in CanvasRenderingContext2D.prototype) {<br />            prototype = document.createElement('canvas').getContext('2d').<strong>proto</strong>;<br />            setLineDash = function (dash) {<br />                this.webkitLineDash = dash;<br />            };<br />            getLineDash = function () {<br />                return this.webkitLineDash;<br />            };</p>
+
+<pre><code>        setLineDashOffset = function (dashOffset) {
+            this.webkitLineDashOffset = dashOffset;
+        };
+        getLineDashOffset = function () {
+            return this.webkitLineDashOffset;
+        };
+    }
+</code></pre> </div>
+          <pre><code class="language-javascript">Object.defineProperty(prototype, 'setLineDash', {
+			value: setLineDash,
+			enumerable: true,
+			configurable: false,
+			writeable: false
+		});
+
+		Object.defineProperty(prototype, 'getLineDash', {
+			value: getLineDash,
+			enumerable: true,
+			configurable: false,
+			writeable: false
+		});
+
+		Object.defineProperty(prototype, 'lineDashOffset', {
+			set: setLineDashOffset,
+			get: getLineDashOffset,
+			enumerable: true,
+			configurable: false,
+			writeable: false
+		});
+
+	}
+})();</code></pre>
         </div>
       </div>
     </div>

@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" charset="utf-8">
+    <title>MathLib</title>
+    <link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css">
+    <link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/docs.css">
+    <style>
+      body > .navbar .brand {
+        float:left;
+        text-shadow: rgba(255, 255, 255, 0.0980392) 0px 1px 0px, rgba(255, 255, 255, 0.4) 0px 0px 30px;
+        color: white;
+        margin-left:0px;
+        font-weight:normal;
+      }
+      
+      .bs-docs-sidenav i{
+        width: 8px;
+        height: 8px;
+        padding: 0px;
+        margin: 0px;
+        display: inline-block;
+        margin-right:0.5em;
+      }
+      
+      .bs-docs-sidenav > li:first-child > a {
+        border-top-right-radius: 6px;
+        border-top-left-radius: 6px;
+      }
+      
+      code[class*="language-"],pre[class*="language-"]{color:black;text-shadow:0 1px white;font-family:Consolas,Monaco,'Andale Mono',monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*="language-"]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*="language-"],pre[class*="language-"]{background:#f5f2f0}:not(pre)>code[class*="language-"]{padding:.1em;border-radius:.3em}.token.comment,.token.prolog,.token.doctype,.token.cdata{color:slategray}.token.punctuation{color:#999}.namespace{opacity:.7}.token.property,.token.tag,.token.boolean,.token.number{color:#905}.token.selector,.token.attr-name,.token.string{color:#690}.token.operator,.token.entity,.token.url,.language-css .token.string,.style .token.string{color:#a67f59;background:hsla(0,0%,100%,.5)}.token.atrule,.token.attr-value,.token.keyword{color:#07a}.token.regex,.token.important{color:#e90}.token.important{font-weight:bold}.token.entity{cursor:help}
+      div.description {margin: 14px 0; padding-top: 14px; border-bottom:1px solid #eee; }
+      .tags {}
+      .ctx-type {
+        display:inline-block;
+        margin-right:0.5em;
+        //- float:right; margin-top:8px
+      }
+      
+      footer iframe{vertical-align:middle;}
+      
+    </style>
+  </head>
+  <body data-spy="scroll" data-target=".scrollspy">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container"><a class="brand">Doxx</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right sponsored"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header id="overview" class="jumbotron subhead">
+      <div class="container">
+        <h1>MathLib</h1>
+        <p class="lead"></p>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li class=""><a href="index.html">Main</a></li>
+            <li class=""><a href="Canvas.js.html"><span>Canvas</span></a></li>
+            <li class=""><a href="Circle.js.html"><span>Circle</span></a></li>
+            <li class=""><a href="Complex.js.html"><span>Complex</span></a></li>
+            <li class=""><a href="Conic.js.html"><span>Conic</span></a></li>
+            <li class=""><a href="Expression.js.html"><span>Expression</span></a></li>
+            <li class=""><a href="Functn.js.html"><span>Functn</span></a></li>
+            <li class="active"><a href="Integer.js.html"><span>Integer</span></a></li>
+            <li class=""><a href="Layer.js.html"><span>Layer</span></a></li>
+            <li class=""><a href="Line.js.html"><span>Line</span></a></li>
+            <li class=""><a href="Matrix.js.html"><span>Matrix</span></a></li>
+            <li class=""><a href="Permutation.js.html"><span>Permutation</span></a></li>
+            <li class=""><a href="Point.js.html"><span>Point</span></a></li>
+            <li class=""><a href="Polynomial.js.html"><span>Polynomial</span></a></li>
+            <li class=""><a href="Rational.js.html"><span>Rational</span></a></li>
+            <li class=""><a href="SVG.js.html"><span>SVG</span></a></li>
+            <li class=""><a href="Screen.js.html"><span>Screen</span></a></li>
+            <li class=""><a href="Screen2D.js.html"><span>Screen2D</span></a></li>
+            <li class=""><a href="Screen3D.js.html"><span>Screen3D</span></a></li>
+            <li class=""><a href="Set.js.html"><span>Set</span></a></li>
+            <li class=""><a href="Vector.js.html"><span>Vector</span></a></li>
+            <li class=""><a href="fullscreen.js.html"><span>fullscreen</span></a></li>
+            <li class=""><a href="lineDash.js.html"><span>lineDash</span></a></li>
+            <li class=""><a href="meta.js.html"><span>meta</span></a></li>
+          </ul>
+          <div class="scrollspy">
+            <ul class="nav nav-list bs-docs-sidenav affix-top">
+              <li><a href="#Integer"><i class="alert alert-success"></i>Integer</a>
+              </li>
+              <li><a href="#toContentMathML"><i class="alert alert-info"></i>toContentMathML</a>
+              </li>
+              <li><a href="#toLaTeX"><i class="alert alert-info"></i>toLaTeX</a>
+              </li>
+              <li><a href="#toMathML"><i class="alert alert-info"></i>toMathML</a>
+              </li>
+              <li><a href="#toString"><i class="alert alert-info"></i>toString</a>
+              </li>
+              <li><a href="#abs"><i class="alert alert-info"></i>abs</a>
+              </li>
+              <li><a href="#coerceTo"><i class="alert alert-info"></i>coerceTo</a>
+              </li>
+              <li><a href="#compare"><i class="alert alert-info"></i>compare</a>
+              </li>
+              <li><a href="#conjugate"><i class="alert alert-info"></i>conjugate</a>
+              </li>
+              <li><a href="#copy"><i class="alert alert-info"></i>copy</a>
+              </li>
+              <li><a href="#divide"><i class="alert alert-info"></i>divide</a>
+              </li>
+              <li><a href="#divrem"><i class="alert alert-info"></i>divrem</a>
+              </li>
+              <li><a href="#isEqual"><i class="alert alert-info"></i>isEqual</a>
+              </li>
+              <li><a href="#isFinite"><i class="alert alert-info"></i>isFinite</a>
+              </li>
+              <li><a href="#isNaN"><i class="alert alert-info"></i>isNaN</a>
+              </li>
+              <li><a href="#isUnit"><i class="alert alert-info"></i>isUnit</a>
+              </li>
+              <li><a href="#isZero"><i class="alert alert-info"></i>isZero</a>
+              </li>
+              <li><a href="#minus"><i class="alert alert-info"></i>minus</a>
+              </li>
+              <li><a href="#mod"><i class="alert alert-info"></i>mod</a>
+              </li>
+              <li><a href="#negative"><i class="alert alert-info"></i>negative</a>
+              </li>
+              <li><a href="#plus"><i class="alert alert-info"></i>plus</a>
+              </li>
+              <li><a href="#pow"><i class="alert alert-info"></i>pow</a>
+              </li>
+              <li><a href="#times"><i class="alert alert-info"></i>times</a>
+              </li>
+              <li><a href="#toContentMathML"><i class="alert alert-info"></i>toContentMathML</a>
+              </li>
+              <li><a href="#toLaTeX"><i class="alert alert-info"></i>toLaTeX</a>
+              </li>
+              <li><a href="#toMathML"><i class="alert alert-info"></i>toMathML</a>
+              </li>
+              <li><a href="#toString"><i class="alert alert-info"></i>toString</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+          <section id="Integer">
+            <h1><a href="http://mathlib.de/en/docs/Integer">Integer</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">declaration</div><span>Integer</span>
+            </p>
+          </section>
+          <div class="description"><p>MathLib.Integer is the MathLib implementation of (arbitrary precision) integers.</p>
+
+<h4>Simple example:</h4>
+
+<div class="highlight"><pre lang="">// Create the integer
+var int = new MathLib.Integer('123456789');
+</pre></div> </div>
+          <pre><code class="language-javascript">var Integer = (function () {
+		function Integer (integer, options) {
+			if (typeof options === 'undefined') { options = {}; }
+			this.type = 'integer';
+			var i, res, factor, blocksize, inputBase = options.base || 10, base = Math.pow(2, 26), data = [], sign = '+';
+
+			if (Array.isArray(integer)) {
+				i = integer.length - 1;
+				while (integer[i] === 0) {
+					i--;
+				}
+				data = integer.slice(0, i + 1);
+			}
+
+			if (typeof integer === 'number') {
+				if (integer === 0) {
+					sign = MathLib.isPosZero(integer) ? '+' : '-';
+					data.push(0);
+				}
+				else {
+					if (integer &lt; 0) {
+						sign = '-';
+						integer = -integer;
+					}
+					while (integer) {
+						data.push(integer % base);
+						integer = Math.floor(integer / base);
+					}
+				}
+			}
+			else if (typeof integer === 'string') {
+				if (integer[0] === '+' || integer[0] === '-') {
+					sign = integer[0];
+					integer = integer.slice(1);
+				}
+
+				data = [];
+				blocksize = Math.floor(Math.log(Math.pow(2, 53)) / Math.log(inputBase));
+
+				while (integer.length &gt; blocksize) {
+					data.push(new MathLib.Integer(parseInt(integer.slice(-blocksize), inputBase)));
+					integer = integer.slice(0, -blocksize);
+				}
+				data.push(new MathLib.Integer(parseInt(integer, inputBase)));
+
+				res = data[data.length - 1];
+				factor = new MathLib.Integer(Math.pow(inputBase, blocksize));
+				for (i = data.length - 2; i &gt;= 0; i--) {
+					res = res.times(factor).plus(data[i]);
+				}
+
+				data = res.data;</code></pre>
+          <div class="description"><p>data.push(<br />                Number(<br />                Array.prototype.reduceRight.call(integer, function (old, cur) {<br />                if (old.length === blocksize) {<br />                data.push(Number(cur + old));<br />                return '';<br />                }<br />                return cur + old;<br />                })<br />                )<br />                )</p> </div>
+          <pre><code class="language-javascript">}
+
+			if ('sign' in options) {
+				sign = options.sign;
+			}
+
+			this.data = data;
+			this.sign = sign;
+		}</code></pre>
+          <section id="toContentMathML">
+            <h1><a href="http://mathlib.de/en/docs/Integer/toContentMathML">toContentMathML</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.toContentMathML()</span> → <span>string</span>
+            </p>
+          </section>
+          <div class="description"><p>A content MathML string representation</p> </div>
+          <pre><code class="language-javascript">Integer.toContentMathML = function (options) {
+			if (typeof options === 'undefined') { options = {}; }
+			if (options.strict) {
+				return '&lt;csymbol cd=&quot;setname1&quot;&gt;Z&lt;/csymbol&gt;';
+			}
+			return '&lt;integers/&gt;';
+		};</code></pre>
+          <section id="toLaTeX">
+            <h1><a href="http://mathlib.de/en/docs/Integer/toLaTeX">toLaTeX</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.toLaTeX()</span> → <span>string</span>
+            </p>
+          </section>
+          <div class="description"><p>A LaTeX string representation</p> </div>
+          <pre><code class="language-javascript">Integer.toLaTeX = function () {
+			return 'Integer Ring $\\mathbb{Z}$';
+		};</code></pre>
+          <section id="toMathML">
+            <h1><a href="http://mathlib.de/en/docs/Integer/toMathML">toMathML</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.toMathML()</span> → <span>string</span>
+            </p>
+          </section>
+          <div class="description"><p>A presentation MathML string representation</p> </div>
+          <pre><code class="language-javascript">Integer.toMathML = function () {
+			return '&lt;mrow&gt;&lt;mtext&gt;Integer Ring&lt;/mtext&gt;&lt;mi mathvariant=&quot;double-struck&quot;&gt;Z&lt;/mi&gt;&lt;/mrow&gt;';
+		};</code></pre>
+          <section id="toString">
+            <h1><a href="http://mathlib.de/en/docs/Integer/toString">toString</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.toString()</span> → <span>string</span>
+            </p>
+          </section>
+          <div class="description"><p>Custom toString function</p> </div>
+          <pre><code class="language-javascript">Integer.toString = function () {
+			return 'Integer Ring ℤ';
+		};</code></pre>
+          <section id="abs">
+            <h1><a href="http://mathlib.de/en/docs/Integer/abs">abs</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.abs()</span> → <span>Integer</span>
+            </p>
+          </section>
+          <div class="description"><p>Calculates the absolute value of the integer</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.abs = function () {
+			return new MathLib.Integer(this.data, {sign: '+'});
+		};</code></pre>
+          <section id="coerceTo">
+            <h1><a href="http://mathlib.de/en/docs/Integer/coerceTo">coerceTo</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.coerceTo()</span> → <span>Integer Rational number Complex</span>
+            </p>
+          </section>
+          <div class="description"><p>Coerces the integer to some other data type</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.coerceTo = function (type) {
+			var num;
+
+			if (type === 'integer') {
+				return this.copy();
+			}
+
+			if (type === 'rational') {
+				return new MathLib.Rational(this, 1);
+			}
+
+			if (type === 'number') {
+				//TODO Warn when the number is bigger that 2^53
+				num = this.data.reduce(function (old, cur, i) {
+					return old + cur * Math.pow(1e7, i);
+				}, 0);
+
+				if (this.sign === '-') {
+					num = -num;
+				}
+
+				return num;
+			}
+
+			if (type === 'complex') {
+				return new MathLib.Complex(this, 0);
+			}
+		};</code></pre>
+          <section id="compare">
+            <h1><a href="http://mathlib.de/en/docs/Integer/compare">compare</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.compare()</span> → <span>Integer</span>
+            </p>
+          </section>
+          <div class="description"><p>Compares the integer</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.compare = function (n) {
+			var i;
+			if (this.sign !== n.sign) {
+				if (this.isZero() &amp;&amp; n.isZero()) {
+					return 0;
+				}
+				if (this.sign === '+') {
+					return 1;
+				}
+				return -1;
+			}
+
+			if (this.data.length !== n.data.length) {
+				if (this.sign === '+') {
+					return MathLib.sign(this.data.length - n.data.length);
+				}
+				else {
+					return MathLib.sign(n.data.length - this.data.length);
+				}
+			}
+			else {
+				for (i = this.data.length - 1; i &gt;= 0; i--) {
+					if (this.data[i] !== n.data[i]) {
+						if (this.sign === '+') {
+							return MathLib.sign(this.data[i] - n.data[i]);
+						}
+						else {
+							return MathLib.sign(n.data[i] - this.data[i]);
+						}
+					}
+				}
+				return 0;
+			}
+		};</code></pre>
+          <section id="conjugate">
+            <h1><a href="http://mathlib.de/en/docs/Integer/conjugate">conjugate</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.conjugate()</span> → <span>Integer</span>
+            </p>
+          </section>
+          <div class="description"><p>Calculates the complex conjugate of the integer</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.conjugate = function () {
+			return this.copy();
+		};</code></pre>
+          <section id="copy">
+            <h1><a href="http://mathlib.de/en/docs/Integer/copy">copy</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.copy()</span> → <span>Integer</span>
+            </p>
+          </section>
+          <div class="description"><p>Copy the integer</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.copy = function () {
+			return new MathLib.Integer(this.data, {sign: this.sign});
+		};</code></pre>
+          <section id="divide">
+            <h1><a href="http://mathlib.de/en/docs/Integer/divide">divide</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.divide()</span> → <span>Integer Rational number Complex</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>divisor</td>
+                <td><span>Integer </span><a href="./Rational.js.html">Rational </a><span>number </span><a href="./Complex.js.html">Complex </a>
+                </td>
+                <td>- The divisor</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Divides the integer by some other number.</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.divide = function (divisor) {
+			var divrem;
+
+			if (divisor.type !== 'integer') {
+				return MathLib.divide.apply(null, MathLib.coerce(this, divisor));
+			}
+			else {
+				divrem = this.divrem(divisor);
+
+				if (divrem[1].isZero()) {
+					return divrem[0];
+				}
+
+				return new MathLib.Rational(this, divisor);
+			}
+		};</code></pre>
+          <section id="divrem">
+            <h1><a href="http://mathlib.de/en/docs/Integer/divrem">divrem</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.divrem()</span> → <span>Integer[]</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>divisor</td>
+                <td><span>Integer </span>
+                </td>
+                <td>- The divisor</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Returns an array containing the quotient and the remainder of the division.</p>
+
+<p>Based on the "Schoolbook Division" in<br />Karl Hasselström's "Fast Division of Large Integers"<br /><a href='http://www.treskal.com/kalle/exjobb/original-report.pdf'>http://www.treskal.com/kalle/exjobb/original-report.pdf</a></p> </div>
+          <pre><code class="language-javascript">Integer.prototype.divrem = function (divisor) {
+			var main, subroutine, quot, mult, temp, rem, base = Math.pow(2, 26);
+
+			// Algorithm 3.1 Schoolbook division subroutine
+			subroutine = function (A, B) {
+				var q, T, temp, B1, n = A.data.length - 1;
+
+				// Step 1
+				if (A.data[n] &gt;= B.data[n - 1]) {
+					B1 = B.copy();
+					B1.data.unshift(0);
+					temp = subroutine(A.minus(B1), B);
+					return [temp[0].plus(new MathLib.Integer(base)), temp[1]];
+				}
+
+				// Step 2
+				// nothing to do
+				// Step 3
+				q = new MathLib.Integer(Math.min(Math.floor((A.data[n] * base + A.data[n - 1]) / B.data[n - 1]), base - 1));
+
+				// Step 4
+				T = B.times(q);
+
+				// Step 5
+				if (T.compare(A) === 1) {
+					q = q.minus(new MathLib.Integer(1));
+					T = T.minus(B);
+				}
+
+				// Step 6
+				if (T.compare(A) === 1) {
+					q = q.minus(new MathLib.Integer(1));
+					T = T.minus(B);
+				}
+
+				// Step 7
+				return [q, A.minus(T)];
+			};
+
+			// Algorithm 3.2 Schoolbook division
+			main = function (A, B) {
+				var q, r, q1, r1, temp, A1, s, m = A.data.length - 1, n = B.data.length - 1;
+
+				// Step 1
+				if (m &lt; n) {
+					return [new MathLib.Integer(0), A.copy()];
+				}
+
+				// Step 2
+				if (m === n) {
+					if (A.compare(B) === -1) {
+						return [new MathLib.Integer(0), A.copy()];
+					}
+					else {
+						return [new MathLib.Integer(1), A.minus(B)];
+					}
+				}
+
+				// Step 3
+				if (m === n + 1) {
+					return subroutine(A, B);
+				}
+
+				// Step 4
+				// A1 = floor(A / base^(m-n-1))
+				A1 = new MathLib.Integer(A.data.slice(m - n - 1));
+				s = new MathLib.Integer(A.data.slice(0, m - n - 1));
+
+				// Step 5
+				temp = subroutine(A1, B);
+				q1 = temp[0];
+				r1 = temp[1];
+
+				// Step 6
+				temp = main(new MathLib.Integer(s.data.concat(r1.data)), B);
+				q = temp[0];
+				r = temp[1];
+
+				// Step 7
+				return [new MathLib.Integer(q.data.concat(q1.data)), r];
+			};
+
+			if (this.isZero()) {
+				return [new MathLib.Integer(0), new MathLib.Integer(0)];
+			}
+
+			if (divisor.data[divisor.data.length - 1] &lt; base / 2) {
+				mult = new MathLib.Integer(Math.ceil(base / (2 * divisor.data[divisor.data.length - 1])));
+				temp = main(this.abs().times(mult), divisor.abs().times(mult));
+				quot = temp[0];
+				rem = new MathLib.Integer(temp[1].data[0] / mult.data[0]);
+			}
+			else {
+				temp = main(this.abs(), divisor.abs());
+				quot = temp[0];
+				rem = temp[1];
+			}
+
+			if (this.sign === '-' &amp;&amp; !rem.isZero()) {
+				quot = quot.plus(new MathLib.Integer(1));
+				rem = divisor.abs().minus(rem);
+			}
+
+			if (this.sign !== divisor.sign) {
+				quot = quot.negative();
+			}
+
+			return [quot, rem];
+		};</code></pre>
+          <section id="isEqual">
+            <h1><a href="http://mathlib.de/en/docs/Integer/isEqual">isEqual</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.isEqual()</span> → <span>boolean</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>n</td>
+                <td><span>any </span>
+                </td>
+                <td>The number to check</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Checks if the current integer is equal to some other number</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.isEqual = function (n) {
+			var i, ii;
+
+			if (n.type !== 'integer') {
+				return MathLib.isEqual(MathLib.coerce(this, n));
+			}
+			else {
+				if (this.sign !== n.sign) {
+					if (this.isZero() &amp;&amp; n.isZero()) {
+						return true;
+					}
+					return false;
+				}
+
+				if (this.data.length !== n.data.length) {
+					return false;
+				}
+
+				for (i = 0, ii = this.data.length; i &lt; ii; i++) {
+					if (this.data[i] !== n.data[i]) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+		};</code></pre>
+          <section id="isFinite">
+            <h1><a href="http://mathlib.de/en/docs/Integer/isFinite">isFinite</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.isFinite()</span> → <span>boolean</span>
+            </p>
+          </section>
+          <div class="description"><p>All integers are finite</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.isFinite = function () {
+			return true;
+		};</code></pre>
+          <section id="isNaN">
+            <h1><a href="http://mathlib.de/en/docs/Integer/isNaN">isNaN</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.isNaN()</span> → <span>boolean</span>
+            </p>
+          </section>
+          <div class="description"><p>No Integer is NaN</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.isNaN = function () {
+			return false;
+		};</code></pre>
+          <section id="isUnit">
+            <h1><a href="http://mathlib.de/en/docs/Integer/isUnit">isUnit</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.isUnit()</span> → <span>boolean</span>
+            </p>
+          </section>
+          <div class="description"><p>Checks if the integer is a unit in the ring of integers or not</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.isUnit = function () {
+			var i, ii;
+
+			for (i = 1, ii = this.data.length; i &lt; ii; i++) {
+				if (this.data[i] !== 0) {
+					return false;
+				}
+			}
+
+			if (this.data[0] === 1) {
+				return true;
+			}
+
+			return false;
+		};</code></pre>
+          <section id="isZero">
+            <h1><a href="http://mathlib.de/en/docs/Integer/isZero">isZero</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.isZero()</span> → <span>boolean</span>
+            </p>
+          </section>
+          <div class="description"><p>Checks if the integer is zero or not</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.isZero = function () {
+			return this.data.every(function (x) {
+				return x === 0;
+			});
+		};</code></pre>
+          <section id="minus">
+            <h1><a href="http://mathlib.de/en/docs/Integer/minus">minus</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.minus()</span> → <span>Integer</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>n</td>
+                <td><span>Integer </span><a href="./Rational.js.html">Rational </a><span>number </span><a href="./Complex.js.html">Complex </a>
+                </td>
+                <td>- The number to subtract</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Subtracts a number from the current integer</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.minus = function (n) {
+			var i, ii, temp, resPos, A, B, data = [], carry = 0, sign = '+', base = Math.pow(2, 26);
+
+			if (n.type !== 'integer') {
+				return MathLib.minus.apply(null, MathLib.coerce(this, n));
+			}
+			else {
+				if (this.sign === '-') {
+					if (n.sign === '-') {
+						return n.negative().minus(this.negative());
+					}
+					else {
+						temp = this.negative().plus(n);
+						temp.sign = '-';
+						return temp;
+					}
+				}
+				else {
+					if (n.sign === '-') {
+						return this.plus(n.negative());
+					}
+				}
+
+				if (this.data.length !== n.data.length) {
+					resPos = this.data.length &gt; n.data.length;
+
+					while (this.data.length &lt; n.data.length) {
+						this.data.push(0);
+					}
+					while (this.data.length &gt; n.data.length) {
+						n.data.push(0);
+					}
+				}
+				else {
+					for (i = this.data.length - 1; i &gt;= 0; i--) {
+						if (this.data[i] !== n.data[i]) {
+							resPos = this.data[i] &gt; n.data[i];
+							break;
+						}
+					}
+					if (typeof resPos === 'undefined') {
+						return new MathLib.Integer(0);
+					}
+				}
+
+				if (resPos) {
+					A = this;
+					B = n;
+					sign = '+';
+				}
+				else {
+					A = n;
+					B = this;
+					sign = '-';
+				}
+
+				for (i = 0, ii = A.data.length; i &lt; ii; i++) {
+					temp = A.data[i] - B.data[i] + carry;
+					carry = Math.floor(temp / base);
+					data[i] = MathLib.mod(temp, base);
+				}
+
+				return new MathLib.Integer(data, {sign: sign});
+			}
+		};</code></pre>
+          <section id="mod">
+            <h1><a href="http://mathlib.de/en/docs/Integer/mod">mod</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.mod()</span> → <span>Integer number</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>n</td>
+                <td><span>Integer </span><span>number </span>
+                </td>
+                <td>- The number with which the current integer should be reduced</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Reduces the integer modulo an other number.</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.mod = function (n) {
+			if (n.type !== 'integer') {
+				return MathLib.mod.apply(null, MathLib.coerce(this, n));
+			}
+			else {
+				return this.divrem(n)[1];
+			}
+		};</code></pre>
+          <section id="negative">
+            <h1><a href="http://mathlib.de/en/docs/Integer/negative">negative</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.negative()</span> → <span>Integer</span>
+            </p>
+          </section>
+          <div class="description"><p>Calculates the negative integer</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.negative = function () {
+			return new MathLib.Integer(this.data, {sign: this.sign === '-' ? '+' : '-'});
+		};</code></pre>
+          <section id="plus">
+            <h1><a href="http://mathlib.de/en/docs/Integer/plus">plus</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.plus()</span> → <span>Integer</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>n</td>
+                <td><span>Integer </span><a href="./Rational.js.html">Rational </a><span>number </span><a href="./Complex.js.html">Complex </a>
+                </td>
+                <td>- The number to add</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Adds a number to the current integer</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.plus = function (n) {
+			var i, ii, temp, data = [], carry = 0, base = Math.pow(2, 26);
+
+			if (n.type !== 'integer') {
+				return MathLib.plus(MathLib.coerce(this, n));
+			}
+			else {
+				if (this.sign === '-') {
+					if (n.sign === '+') {
+						this.sign = '+';
+						return n.minus(this);
+					}
+				}
+				else if (n.sign === '-') {
+					n.sign = '+';
+					return this.minus(n);
+				}
+
+				if (this.data.length !== n.data.length) {
+					while (this.data.length &lt; n.data.length) {
+						this.data.push(0);
+					}
+					while (this.data.length &gt; n.data.length) {
+						n.data.push(0);
+					}
+				}
+
+				for (i = 0, ii = this.data.length; i &lt; ii; i++) {
+					temp = this.data[i] + n.data[i] + carry;
+
+					data[i] = temp % base;
+					carry = Math.floor(temp / base);
+				}
+
+				if (carry !== 0) {
+					data[i] = carry;
+				}
+
+				return new MathLib.Integer(data, {sign: this.sign});
+			}
+		};</code></pre>
+          <section id="pow">
+            <h1><a href="http://mathlib.de/en/docs/Integer/pow">pow</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.pow()</span> → <span>Integer Rational</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>exponent</td>
+                <td><span>Integer </span><a href="./Rational.js.html">Rational </a><span>number </span><a href="./Complex.js.html">Complex </a>
+                </td>
+                <td>- The exponent</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Raises the integer to a certain power.</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.pow = function (exponent) {
+			var powInt, result;
+
+			if (exponent.type !== 'integer') {
+				return MathLib.pow.apply(null, MathLib.coerce(this, exponent));
+			}
+			else {
+				powInt = function (b, e) {
+					var res, i, half = [], carry = 0;
+
+					if (e.data.length === 1 &amp;&amp; e.data[0] === 1) {
+						return b;
+					}
+
+					for (i = e.data.length - 1; i &gt;= 0; i--) {
+						half[i] = Math.floor(e.data[i] / 2) + carry;
+
+						if (e.data[i] % 2) {
+							carry = 5e6;
+						}
+						else {
+							carry = 0;
+						}
+					}
+
+					res = powInt(b, new MathLib.Integer(half));
+					res = res.times(res);
+
+					if (e.data[0] % 2) {
+						res = res.times(b);
+					}
+
+					return res;
+				};
+
+				result = powInt(this, exponent);
+
+				if (exponent.sign === '-') {
+					return new MathLib.Rational(new MathLib.Integer('1'), result);
+				}
+
+				return result;
+			}
+		};</code></pre>
+          <section id="times">
+            <h1><a href="http://mathlib.de/en/docs/Integer/times">times</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.times()</span> → <span>Integer</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>n</td>
+                <td><span>Integer </span><a href="./Rational.js.html">Rational </a><span>number </span><a href="./Complex.js.html">Complex </a>
+                </td>
+                <td>- The number to multiply</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Multiplies a number to the current integer</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.times = function (n) {
+			var i, ii, j, jj, temp, data = [], carry = 0, base = Math.pow(2, 26);
+
+			if (n.type !== 'integer') {
+				return MathLib.times(MathLib.coerce(this, n));
+			}
+			else {
+				for (i = 0, ii = this.data.length; i &lt; ii; i++) {
+					for (j = 0, jj = n.data.length; j &lt; jj; j++) {
+						if (data[i + j] === undefined) {
+							data[i + j] = this.data[i] * n.data[j];
+						}
+						else {
+							data[i + j] += this.data[i] * n.data[j];
+						}
+					}
+				}
+
+				for (i = 0, ii = this.data.length + n.data.length - 1; i &lt; ii; i++) {
+					temp = data[i] + carry;
+					carry = Math.floor(temp / base);
+					data[i] = temp % base;
+				}
+				data[i] = carry;
+
+				return new MathLib.Integer(data, {sign: this.sign === n.sign ? '+' : '-'});
+			}
+		};</code></pre>
+          <section id="toContentMathML">
+            <h1><a href="http://mathlib.de/en/docs/Integer/toContentMathML">toContentMathML</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.toContentMathML()</span> → <span>string</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>[options]</td>
+                <td><span>object </span>
+                </td>
+                <td>- Optional options to style the output</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>A content MathML string representation</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.toContentMathML = function (options) {
+			if (typeof options === 'undefined') { options = {}; }
+			var base = options.base || 10;
+
+			// In section 4.2.1.3 in the MathML 3 specification
+			// under &quot;Rewrite: cn based_integer&quot; it says
+			// &quot;A base attribute with value 10 is simply removed&quot;
+			if (base === 10) {
+				return '&lt;cn type=&quot;integer&quot;&gt;' + this.toString() + '&lt;/cn&gt;';
+			}
+			else if (options.strict) {
+				return '&lt;apply&gt;&lt;csymbol cd=&quot;nums1&quot;&gt;based_integer&lt;/csymbol&gt;&lt;cn&gt;' + base + '&lt;/cn&gt;&lt;cs&gt;' + this.toString({base: base}) + '&lt;/cs&gt;&lt;/apply&gt;';
+			}
+			else {
+				return '&lt;cn type=&quot;integer&quot; base=&quot;' + base + '&quot;&gt;' + this.toString({base: base}) + '&lt;/cn&gt;';
+			}
+		};</code></pre>
+          <section id="toLaTeX">
+            <h1><a href="http://mathlib.de/en/docs/Integer/toLaTeX">toLaTeX</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.toLaTeX()</span> → <span>string</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>[options]</td>
+                <td><span>object </span>
+                </td>
+                <td>- Optional options to style the output</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>A LaTeX string representation</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.toLaTeX = function (options) {
+			if (typeof options === 'undefined') { options = {}; }
+			var base = options.base || 10, str = this.toString({base: base, sign: options.sign});
+
+			if (options.baseSubscript) {
+				str += '_{' + base + '}';
+			}
+
+			return str;
+		};</code></pre>
+          <section id="toMathML">
+            <h1><a href="http://mathlib.de/en/docs/Integer/toMathML">toMathML</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.toMathML()</span> → <span>string</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>[options]</td>
+                <td><span>object </span>
+                </td>
+                <td>- Optional options to style the output</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>A presentation MathML string representation</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.toMathML = function (options) {
+			if (typeof options === 'undefined') { options = {}; }
+			var base = options.base || 10, str = '&lt;mn&gt;' + this.toString({base: base, sign: options.sign}) + '&lt;/mn&gt;';
+
+			if (options.baseSubscript) {
+				str = '&lt;msub&gt;' + str + '&lt;mn&gt;' + base + '&lt;/mn&gt;&lt;/msub&gt;';
+			}
+
+			return str;
+		};</code></pre>
+          <section id="toString">
+            <h1><a href="http://mathlib.de/en/docs/Integer/toString">toString</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Integer.prototype.toString()</span> → <span>string</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>[options]</td>
+                <td><span>object </span>
+                </td>
+                <td>- Optional options to style the output</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Custom toString function</p> </div>
+          <pre><code class="language-javascript">Integer.prototype.toString = function (options) {
+			if (typeof options === 'undefined') { options = {}; }
+			var div, rem, temp, base = options.base || 10, blocksize = Math.floor(Math.log(Math.pow(2, 26) - 1) / Math.log(base)), factor = new MathLib.Integer(Math.pow(base, blocksize)), n = this.abs(), str = '';
+
+			if (n.isZero()) {
+				str = '0';
+			}
+			else {
+				while (!n.isZero()) {
+					temp = n.divrem(factor);
+					div = temp[0];
+					rem = temp[1];
+
+					str = ('000000' + rem.data[0].toString(base)).slice(-blocksize) + str;
+					n = div;
+				}
+
+				str = str.replace(/^0+/, '');
+
+				if (this.sign === '-') {
+					str = '-' + str;
+				}
+			}
+
+			if (options.sign &amp;&amp; (this.sign === '+' || this.isZero())) {
+				str = '+' + str;
+			}
+
+			if (options.baseSubscript) {
+				if (base &gt; 9) {
+					str += '&amp;#x208' + Math.floor(base / 10) + ';';
+				}
+				str += '&amp;#x208' + (base % 10) + ';';
+			}
+
+			return str;
+		};
+		return Integer;
+	})();
+	MathLib.Integer = Integer;
+})(MathLib || (MathLib = {}));</code></pre>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p>Documentation generated with <a href="https://github.com/FGRibreau/doxx">Doxx </a>created by Francois-Guillaume Ribreaun</p>
+        <p>Theme borrowed from Twitter Bootstrap</p>
+      </div>
+    </footer>
+    <script src="http://platform.twitter.com/widgets.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+    <script src="http://leaverou.github.com/prefixfree/prefixfree.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-transition.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-dropdown.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-collapse.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-affix.js"></script>
+    <script>
+      /**
+       * Prism: Lightweight, robust, elegant syntax highlighting
+       * MIT license http://www.opensource.org/licenses/mit-license.php/
+       * @author Lea Verou http://lea.verou.me
+       */(function(){var e=/\blang(?:uage)?-(?!\*)(\w+)\b/i,t=self.Prism={util:{type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},clone:function(e){var n=t.util.type(e);switch(n){case"Object":var r={};for(var i in e)e.hasOwnProperty(i)&&(r[i]=t.util.clone(e[i]));return r;case"Array":return e.slice()}return e}},languages:{extend:function(e,n){var r=t.util.clone(t.languages[e]);for(var i in n)r[i]=n[i];return r},insertBefore:function(e,n,r,i){i=i||t.languages;var s=i[e],o={};for(var u in s)if(s.hasOwnProperty(u)){if(u==n)for(var a in r)r.hasOwnProperty(a)&&(o[a]=r[a]);o[u]=s[u]}return i[e]=o},DFS:function(e,n){for(var r in e){n.call(e,r,e[r]);t.util.type(e)==="Object"&&t.languages.DFS(e[r],n)}}},highlightAll:function(e,n){var r=document.querySelectorAll('code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code');for(var i=0,s;s=r[i++];)t.highlightElement(s,e===!0,n)},highlightElement:function(r,i,s){var o,u,a=r;while(a&&!e.test(a.className))a=a.parentNode;if(a){o=(a.className.match(e)||[,""])[1];u=t.languages[o]}if(!u)return;r.className=r.className.replace(e,"").replace(/\s+/g," ")+" language-"+o;a=r.parentNode;/pre/i.test(a.nodeName)&&(a.className=a.className.replace(e,"").replace(/\s+/g," ")+" language-"+o);var f=r.textContent;if(!f)return;f=f.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\u00a0/g," ");var l={element:r,language:o,grammar:u,code:f};t.hooks.run("before-highlight",l);if(i&&self.Worker){var c=new Worker(t.filename);c.onmessage=function(e){l.highlightedCode=n.stringify(JSON.parse(e.data));l.element.innerHTML=l.highlightedCode;s&&s.call(l.element);t.hooks.run("after-highlight",l)};c.postMessage(JSON.stringify({language:l.language,code:l.code}))}else{l.highlightedCode=t.highlight(l.code,l.grammar);l.element.innerHTML=l.highlightedCode;s&&s.call(r);t.hooks.run("after-highlight",l)}},highlight:function(e,r){return n.stringify(t.tokenize(e,r))},tokenize:function(e,n){var r=t.Token,i=[e],s=n.rest;if(s){for(var o in s)n[o]=s[o];delete n.rest}e:for(var o in n){if(!n.hasOwnProperty(o)||!n[o])continue;var u=n[o],a=u.inside,f=!!u.lookbehind||0;u=u.pattern||u;for(var l=0;l<i.length;l++){var c=i[l];if(i.length>e.length)break e;if(c instanceof r)continue;u.lastIndex=0;var h=u.exec(c);if(h){f&&(f=h[1].length);var p=h.index-1+f,h=h[0].slice(f),d=h.length,v=p+d,m=c.slice(0,p+1),g=c.slice(v+1),y=[l,1];m&&y.push(m);var b=new r(o,a?t.tokenize(h,a):h);y.push(b);g&&y.push(g);Array.prototype.splice.apply(i,y)}}}return i},hooks:{all:{},add:function(e,n){var r=t.hooks.all;r[e]=r[e]||[];r[e].push(n)},run:function(e,n){var r=t.hooks.all[e];if(!r||!r.length)return;for(var i=0,s;s=r[i++];)s(n)}}},n=t.Token=function(e,t){this.type=e;this.content=t};n.stringify=function(e){if(typeof e=="string")return e;if(Object.prototype.toString.call(e)=="[object Array]"){for(var r=0;r<e.length;r++)e[r]=n.stringify(e[r]);return e.join("")}var i={type:e.type,content:n.stringify(e.content),tag:"span",classes:["token",e.type],attributes:{}};i.type=="comment"&&(i.attributes.spellcheck="true");t.hooks.run("wrap",i);var s="";for(var o in i.attributes)s+=o+'="'+(i.attributes[o]||"")+'"';return"<"+i.tag+' class="'+i.classes.join(" ")+'" '+s+">"+i.content+"</"+i.tag+">"};if(!self.document){self.addEventListener("message",function(e){var n=JSON.parse(e.data),r=n.language,i=n.code;self.postMessage(JSON.stringify(t.tokenize(i,t.languages[r])));self.close()},!1);return}var r=document.getElementsByTagName("script");r=r[r.length-1];if(r){t.filename=r.src;document.addEventListener&&!r.hasAttribute("data-manual")&&document.addEventListener("DOMContentLoaded",t.highlightAll)}})();;
+      Prism.languages.markup={comment:/&lt;!--[\w\W]*?--(&gt;|&gt;)/g,prolog:/&lt;\?.+?\?&gt;/,doctype:/&lt;!DOCTYPE.+?&gt;/,cdata:/&lt;!\[CDATA\[[\w\W]+?]]&gt;/i,tag:{pattern:/&lt;\/?[\w:-]+\s*(?:\s+[\w:-]+(?:=(?:("|')(\\?[\w\W])*?\1|\w+))?\s*)*\/?&gt;/gi,inside:{tag:{pattern:/^&lt;\/?[\w:-]+/i,inside:{punctuation:/^&lt;\/?/,namespace:/^[\w-]+?:/}},"attr-value":{pattern:/=(?:('|")[\w\W]*?(\1)|[^\s>]+)/gi,inside:{punctuation:/=|&gt;|"/g}},punctuation:/\/?&gt;/g,"attr-name":{pattern:/[\w:-]+/g,inside:{namespace:/^[\w-]+?:/}}}},entity:/&amp;#?[\da-z]{1,8};/gi};Prism.hooks.add("wrap",function(e){e.type==="entity"&&(e.attributes.title=e.content.replace(/&amp;/,"&"))});;
+      Prism.languages.css={comment:/\/\*[\w\W]*?\*\//g,atrule:/@[\w-]+?(\s+[^;{]+)?(?=\s*{|\s*;)/gi,url:/url\((["']?).*?\1\)/gi,selector:/[^\{\}\s][^\{\}]*(?=\s*\{)/g,property:/(\b|\B)[a-z-]+(?=\s*:)/ig,string:/("|')(\\?.)*?\1/g,important:/\B!important\b/gi,ignore:/&(lt|gt|amp);/gi,punctuation:/[\{\};:]/g};Prism.languages.markup&&Prism.languages.insertBefore("markup","tag",{style:{pattern:/(&lt;|<)style[\w\W]*?(>|&gt;)[\w\W]*?(&lt;|<)\/style(>|&gt;)/ig,inside:{tag:{pattern:/(&lt;|<)style[\w\W]*?(>|&gt;)|(&lt;|<)\/style(>|&gt;)/ig,inside:Prism.languages.markup.tag.inside},rest:Prism.languages.css}}});;
+      Prism.languages.clike={comment:{pattern:/(^|[^\\])(\/\*[\w\W]*?\*\/|\/\/.*?(\r?\n|$))/g,lookbehind:!0},string:/("|')(\\?.)*?\1/g,keyword:/\b(if|else|while|do|for|return|in|instanceof|function|new|try|catch|finally|null|break|continue)\b/g,"boolean":/\b(true|false)\b/g,number:/\b-?(0x)?\d*\.?[\da-f]+\b/g,operator:/[-+]{1,2}|!|=?&lt;|=?&gt;|={1,2}|(&amp;){1,2}|\|?\||\?|\*|\//g,ignore:/&(lt|gt|amp);/gi,punctuation:/[{}[\];(),.:]/g};;
+      Prism.languages.javascript=Prism.languages.extend("clike",{keyword:/\b(var|let|if|else|while|do|for|return|in|instanceof|function|new|with|typeof|try|catch|finally|null|break|continue)\b/g,number:/\b(-?(0x)?\d*\.?[\da-f]+|NaN|-?Infinity)\b/g});Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:/(^|[^/])\/(?!\/)(\[.+?]|\\.|[^/\r\n])+\/[gim]{0,3}(?=\s*($|[\r\n,.;})]))/g,lookbehind:!0}});Prism.languages.markup&&Prism.languages.insertBefore("markup","tag",{script:{pattern:/(&lt;|<)script[\w\W]*?(>|&gt;)[\w\W]*?(&lt;|<)\/script(>|&gt;)/ig,inside:{tag:{pattern:/(&lt;|<)script[\w\W]*?(>|&gt;)|(&lt;|<)\/script(>|&gt;)/ig,inside:Prism.languages.markup.tag.inside},rest:Prism.languages.javascript}}});;
+      
+    </script>
+    <!-- App js-->
+    <script>
+      $(function(){
+        var $window = $(window);
+        $('.scrollspy .nav').affix({
+          offset: {
+            top: function () { return $window.width() <= 980 ? 480 : 400 }
+          , bottom: 50
+          }
+        });
+      })
+    </script>
+  </body>
+</html>

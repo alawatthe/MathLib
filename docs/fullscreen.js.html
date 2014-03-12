@@ -70,7 +70,7 @@
             <li class=""><a href="Expression.js.html"><span>Expression</span></a></li>
             <li class=""><a href="Functn.js.html"><span>Functn</span></a></li>
             <li class=""><a href="Integer.js.html"><span>Integer</span></a></li>
-            <li class="active"><a href="Layer.js.html"><span>Layer</span></a></li>
+            <li class=""><a href="Layer.js.html"><span>Layer</span></a></li>
             <li class=""><a href="Line.js.html"><span>Line</span></a></li>
             <li class=""><a href="Matrix.js.html"><span>Matrix</span></a></li>
             <li class=""><a href="Permutation.js.html"><span>Permutation</span></a></li>
@@ -83,221 +83,122 @@
             <li class=""><a href="Screen3D.js.html"><span>Screen3D</span></a></li>
             <li class=""><a href="Set.js.html"><span>Set</span></a></li>
             <li class=""><a href="Vector.js.html"><span>Vector</span></a></li>
-            <li class=""><a href="fullscreen.js.html"><span>fullscreen</span></a></li>
+            <li class="active"><a href="fullscreen.js.html"><span>fullscreen</span></a></li>
             <li class=""><a href="lineDash.js.html"><span>lineDash</span></a></li>
             <li class=""><a href="meta.js.html"><span>meta</span></a></li>
           </ul>
           <div class="scrollspy">
             <ul class="nav nav-list bs-docs-sidenav affix-top">
-              <li><a href="#Layer"><i class="alert alert-success"></i>Layer</a>
-              </li>
-              <li><a href="#clear"><i class="alert alert-info"></i>clear</a>
-              </li>
             </ul>
           </div>
         </div>
         <div class="span9">
-          <section id="Layer">
-            <h1><a href="http://mathlib.de/en/docs/Layer">Layer</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-success radius ctx-type">declaration</div><span>Layer</span>
-            </p>
-          </section>
-          <div class="description"><p>Layers for two dimensional plotting</p> </div>
-          <pre><code class="language-javascript">var Layer = (function () {
-		function Layer (screen, id, zIndex) {
-			var _this = this;
-			this.screen = screen;
-			this.id = id;
-			this.zIndex = zIndex;
+          <div class="description"><p>@fileoverview game-shim - Shims to normalize gaming-related APIs to their respective specs</p> </div>
+          <div class="description"><p>Copyright (c) 2012, Brandon Jones. All rights reserved.</p>
 
-			this.stack = [];
-			this.transformation = screen.transformation;
+<p>Redistribution and use in source and binary forms, with or without modification,<br />are permitted provided that the following conditions are met:</p>
 
-			var element;
+<p>Redistributions of source code must retain the above copyright notice, this<br />    list of conditions and the following disclaimer.<br />Redistributions in binary form must reproduce the above copyright notice,<br />    this list of conditions and the following disclaimer in the documentation<br />    and/or other materials provided with the distribution.</p>
 
-			if (screen.options.renderer === 'Canvas') {
-				// Create the canvas
-				element = document.createElement('canvas');
-				element.classList.add('MathLib_screen');
-				element.width = screen.width;
-				element.height = screen.height;
-				screen.wrapper.appendChild(element);
-				this.element = element;
+<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND<br />ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED<br />WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE<br />DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR<br />ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES<br />(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;<br />LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON<br />ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT<br />(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS<br />SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p> </div>
+          <pre><code class="language-javascript">(function (global) {
+	'use strict';
 
-				// Get the context and apply the transformations
-				this.ctx = element.getContext('2d');
-				this.applyTransformation = function () {
-					var m = _this.transformation;
-					_this.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+	var elementPrototype = (global.HTMLElement || global.Element).prototype;
+	var getter;
+
+
+	// document.fullscreenEnabled
+	if (!document.hasOwnProperty('fullscreenEnabled')) {
+		getter = (function () {
+			// These are the functions that match the spec, and should be preferred
+			if ('webkitIsFullScreen' in document) {
+				return function () { return document.webkitFullscreenEnabled; };
+			}
+			if ('mozFullScreenEnabled' in document) {
+				return function () { return document.mozFullScreenEnabled; };
+			}
+
+			return function () { return false; }; // not supported, never fullscreen
+		})();
+
+		Object.defineProperty(document, 'fullscreenEnabled', {
+			enumerable: true, configurable: false, writeable: false,
+			get: getter
+		});
+	}
+
+	if (!document.hasOwnProperty('fullscreenElement')) {
+		getter = (function () {
+			// These are the functions that match the spec, and should be preferred
+			var i = 0, name = ['webkitCurrentFullScreenElement', 'webkitFullscreenElement', 'mozFullScreenElement'];
+			for (; i &lt; name.length; i++) {
+				if (name[i] in document) {
+					return function () { return document[name[i]]; };
+				}
+			}
+			return function () { return null; }; // not supported
+		})();
+
+		Object.defineProperty(document, 'fullscreenElement', {
+			enumerable: true, configurable: false, writeable: false,
+			get: getter
+		});
+	}
+
+	// Document event: fullscreenchange
+	function fullscreenchange () {
+		var newEvent = document.createEvent('CustomEvent');
+		newEvent.initCustomEvent('fullscreenchange', true, false, null);
+		// TODO: Any need for variable copy?
+		document.dispatchEvent(newEvent);
+	}
+	document.addEventListener('webkitfullscreenchange', fullscreenchange, false);
+	document.addEventListener('mozfullscreenchange', fullscreenchange, false);
+
+	// Document event: fullscreenerror
+	function fullscreenerror () {
+		var newEvent = document.createEvent('CustomEvent');
+		newEvent.initCustomEvent('fullscreenerror', true, false, null);
+		// TODO: Any need for variable copy?
+		document.dispatchEvent(newEvent);
+	}
+	document.addEventListener('webkitfullscreenerror', fullscreenerror, false);
+	document.addEventListener('mozfullscreenerror', fullscreenerror, false);
+
+	// element.requestFullScreen
+	if (!elementPrototype.requestFullScreen) {
+		elementPrototype.requestFullScreen = (function () {
+			if (elementPrototype.webkitRequestFullScreen) {
+				return function () {
+					this.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
 				};
-				this.applyTransformation();
-
-				// Set the drawing functions
-				if (id === 'back') {
-					this.draw = function () {
-						var top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x;
-
-						// Draw the background
-						this.ctx.fillStyle = MathLib.colorConvert(screen.options.background);
-						this.ctx.fillRect(left, bottom, right - left, top - bottom);
-
-						this.stack.forEach(function (x) {
-							if (x.type === 'conic') {
-								x.object.draw(_this, x.options, true);
-							}
-							else if (x.type === 'text') {
-								_this.text(x.object, x.x, x.y, x.options, true);
-							}
-							else if (x.type === 'pixel') {
-								_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
-							}
-							else {
-								_this[x.type](x.object, x.options, true);
-							}
-						});
-					};
-				}
-				else if (id === 'grid') {
-					this.ctx.strokeStyle = MathLib.colorConvert(screen.options.grid.color) || '#cccccc';
-					this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-
-					this.draw = function () {
-						//					_this.ctx.lineWidth = (screen.options.grid.lineWidth || 4) / (screen.scale.x - screen.scale.y);
-						_this.screen.drawGrid();
-					};
-				}
-				else if (id === 'axes') {
-					this.ctx.strokeStyle = MathLib.colorConvert(screen.options.axes.color) || '#000000';
-
-					this.draw = function () {
-						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
-						_this.screen.drawAxes();
-					};
-				}
-				else {
-					this.ctx.strokeStyle = '#000000';
-					this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-
-					this.draw = function () {
-						_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
-
-						this.stack.forEach(function (x) {
-							if (x.type === 'conic') {
-								x.object.draw(_this, x.options, true);
-							}
-							else if (x.type === 'text') {
-								_this.text(x.object, x.x, x.y, x.options, true);
-							}
-							else if (x.type === 'pixel') {
-								_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
-							}
-							else {
-								_this[x.type](x.object, x.options, true);
-							}
-						});
-					};
-				}
-
-				this.circle = MathLib.Canvas.circle;
-				this.line = MathLib.Canvas.line;
-				this.path = MathLib.Canvas.path;
-				this.pixel = MathLib.Canvas.pixel;
-				this.point = MathLib.Canvas.point;
-				this.text = MathLib.Canvas.text;
-			}
-			else if (screen.options.renderer === 'SVG') {
-				var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g'), m = screen.transformation;
-
-				ctx.className.baseVal = 'MathLib_layer_' + id;
-				ctx.setAttribute('transform', 'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')');
-				screen.element.appendChild(ctx);
-				this.ctx = ctx;
-
-				// Set the drawing functions
-				if (id === 'back') {
-					this.draw = function () {
-						this.stack.forEach(function (x) {
-							if (x.type === 'conic') {
-								x.object.draw(_this, x.options, true);
-							}
-							else if (x.type === 'text') {
-								_this.text(x.object, x.x, x.y, x.options, true);
-							}
-							else if (x.type === 'pixel') {
-								_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
-							}
-							else {
-								_this[x.type](x.object, x.options, true);
-							}
-						});
-					};
-				}
-				else if (id === 'grid') {
-					ctx.setAttribute('stroke', MathLib.colorConvert(screen.options.grid.color) || '#cccccc');
-
-					this.draw = function () {
-						ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
-						_this.screen.drawGrid();
-					};
-				}
-				else if (id === 'axes') {
-					ctx.setAttribute('stroke', MathLib.colorConvert(screen.options.axes.color) || '#000000');
-
-					this.draw = function () {
-						ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
-						_this.screen.drawAxes();
-					};
-				}
-				else {
-					this.draw = function () {
-						this.stack.forEach(function (x) {
-							if (x.type === 'conic') {
-								x.object.draw(_this, x.options, true);
-							}
-							else if (x.type === 'text') {
-								_this.text(x.object, x.x, x.y, x.options, true);
-							}
-							else if (x.type === 'pixel') {
-								_this.pixel(x.object, x.t, x.r, x.b, x.l, x.options, true);
-							}
-							else {
-								_this[x.type](x.object, x.options, true);
-							}
-						});
-					};
-				}
-
-				this.circle = MathLib.SVG.circle;
-				this.line = MathLib.SVG.line;
-				this.path = MathLib.SVG.path;
-				this.pixel = MathLib.SVG.pixel;
-				this.point = MathLib.SVG.point;
-				this.text = MathLib.SVG.text;
 			}
 
-			// Insert the layer into the layer array of the screen object.
-			screen.layer.splice(zIndex, 0, this);
-		}</code></pre>
-          <section id="clear">
-            <h1><a href="http://mathlib.de/en/docs/Layer/clear">clear</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Layer.prototype.clear()</span> → <a href="./Layer.js.html">Layer</a>
-            </p>
-          </section>
-          <div class="description"><p>Clears the Layer</p> </div>
-          <pre><code class="language-javascript">Layer.prototype.clear = function () {
-			this.screen.renderer.clear(this);
-			return this;
-		};
-		return Layer;
-	})();
-	MathLib.Layer = Layer;
-})(MathLib || (MathLib = {}));</code></pre>
+			if (elementPrototype.mozRequestFullScreen) {
+				return function () {
+					this.mozRequestFullScreen();
+				};
+			}
+
+			return function () {</code></pre>
+          <div class="description"><p>unsupported, fail silently</p> </div>
+          <pre><code class="language-javascript">};
+		})();
+	}
+
+	// document.cancelFullScreen
+	if (!document.cancelFullScreen) {
+		document.cancelFullScreen = (function () {
+			return document.webkitCancelFullScreen ||
+					document.mozCancelFullScreen ||
+					function () {</code></pre>
+          <div class="description"><p>unsupported, fail silently</p> </div>
+          <pre><code class="language-javascript">};
+		})();
+	}
+
+})(window);</code></pre>
         </div>
       </div>
     </div>

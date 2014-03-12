@@ -69,6 +69,7 @@
             <li class=""><a href="Conic.js.html"><span>Conic</span></a></li>
             <li class=""><a href="Expression.js.html"><span>Expression</span></a></li>
             <li class=""><a href="Functn.js.html"><span>Functn</span></a></li>
+            <li class=""><a href="Integer.js.html"><span>Integer</span></a></li>
             <li class=""><a href="Layer.js.html"><span>Layer</span></a></li>
             <li class=""><a href="Line.js.html"><span>Line</span></a></li>
             <li class=""><a href="Matrix.js.html"><span>Matrix</span></a></li>
@@ -82,6 +83,8 @@
             <li class=""><a href="Screen3D.js.html"><span>Screen3D</span></a></li>
             <li class=""><a href="Set.js.html"><span>Set</span></a></li>
             <li class=""><a href="Vector.js.html"><span>Vector</span></a></li>
+            <li class=""><a href="fullscreen.js.html"><span>fullscreen</span></a></li>
+            <li class=""><a href="lineDash.js.html"><span>lineDash</span></a></li>
             <li class=""><a href="meta.js.html"><span>meta</span></a></li>
           </ul>
           <div class="scrollspy">
@@ -92,24 +95,25 @@
         <div class="span9">
           <section id="Main"><h1 id="mathlib">MathLib</h1>
 <p><a href="http://mathlib.de/en/">Homepage</a> - <a href="http://mathlib.de/en/download">Download</a> - <a href="http://mathlib.de/en/demos">Demonstrations</a> - <a href="http://mathlib.de/en/docs">Documentation</a></p>
-<p><a href="https://saucelabs.com/u/alawatthe"><img src="https://saucelabs.com/buildstatus/alawatthe" alt="Selenium Test Status"></a> <a href="https://gemnasium.com/alawatthe/MathLib"><img src="https://gemnasium.com/alawatthe/MathLib.png" alt="Dependency Status"></a></p>
-<p>MathLib.js is a JavaScript library for mathematical computations. It can handle circles, complex numbers, expressions, functions, lines, matrices, permutations, points, polynomials, rational numbers, sets, and vectors.</p>
+<p><a href="https://travis-ci.org/alawatthe/MathLib"><img src="https://travis-ci.org/alawatthe/MathLib.png?branch=master" alt="Build Status"></a> <a href="https://gemnasium.com/alawatthe/MathLib"><img src="https://gemnasium.com/alawatthe/MathLib.png" alt="Dependency Status"></a> <a href="http://badge.fury.io/js/mathlib"><img src="https://badge.fury.io/js/mathlib.png" alt="NPM version"></a></p>
+<p>MathLib.js is a JavaScript library for mathematical computations. It can handle circles, complex numbers, expressions, functions, lines, integers, matrices, permutations, points, polynomials, rational numbers, sets, and vectors.</p>
 <p>There is a SVG and Canvas renderer for 2D plotting. 3D plotting is supported with <a href="https://github.com/mrdoob/three.js">Three.js</a>.</p>
 <p>Further it can parse Content MathML and write Content MathML, Presentation MathML and LaTeX.</p>
 <h2 id="test-suite">Test Suite</h2>
-<p>MathLib has an extensive QUnit test suite with more than 1800 tests. Crossbrowser tests are automated with Sauce Labs&#39; Open Sauce.</p>
-<p>IE9, Android and Opera don&#39;t work with the automated test runner. Their passing of the test suite was confirmed using a manual testing session.</p>
-<p><a href="https://saucelabs.com/u/alawatthe"><img src="https://saucelabs.com/browser-matrix/alawatthe.svg" alt="Selenium Test Status"></a></p>
+<p>MathLib has an extensive QUnit test suite with more than 2100 tests. Crossbrowser tests are automated with Sauce Labs&#39; Open Sauce and are run by Travis on every commit.</p>
 <h2 id="getting-started">Getting Started</h2>
 <h3 id="in-the-browser">In the browser</h3>
 <p>Download the <a href="https://raw.github.com/alawatthe/MathLib/master/build/MathLib.min.js">production version</a> or the <a href="https://raw.github.com/alawatthe/MathLib/master/build/MathLib.js">development version</a>.</p>
 <p>Alternatively you can use Bower:</p>
 <pre><code>bower install MathLib</code></pre>
+<p>or npm:</p>
+<pre><code>npm install MathLib</code></pre>
 <p>Include MathLib in your web page:</p>
 <pre><code>&lt;script src=&quot;path/to/MathLib.min.js&quot;&gt;&lt;/script&gt;
 &lt;script&gt;
 // Your code goes here
 &lt;/script&gt;</code></pre>
+<p>Alternatively you can use the AMD, CommonJS or ES6 modules contained in the <em>build</em> directory.</p>
 <p>If you want to use the plotting functionality you also need to download the <a href="https://raw.github.com/alawatthe/MathLib/master/build/MathLib.css">MathLib.css</a> or the <a href="https://raw.github.com/alawatthe/MathLib/master/build/MathLib.min.css">MathLib.min.css</a> file and link to it in the head of your document:</p>
 <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;path/to/MathLib.min.css&quot; charset=&quot;utf-8&quot;&gt;</code></pre>
 <h2 id="contributing">Contributing</h2>
@@ -121,14 +125,15 @@
 <p>and run</p>
 <pre><code>npm install</code></pre>
 <p>to install the development dependencies (For this you need to have <a href="http://nodejs.org">Node.js</a> installed).</p>
-<p>The grunt default task</p>
-<pre><code>grunt</code></pre>
-<p>will concat all the source and test files, convert the TypeScript to JavaScript, create a minified version of the library and run the tests on the minified and unminified libraries.</p>
+<p>Run</p>
+<pre><code>grunt help</code></pre>
+<p>to get an overview of the available grunt tasks.</p>
 <h3 id="making-changes">Making Changes</h3>
 <p>Make your changes to the files in the <em>src</em> directory. Do not edit the files in the <em>build</em> directory, these files will be generated via grunt.</p>
 <p>Please maintain the current coding style and stick to the <a href="http://mathlib.de/en/meta/styleguide">style guide</a>.<br>New functionality should always be added with proper testing and documentation.</p>
 <h2 id="release-history">Release History</h2>
 <ul>
+<li>v0.7.0: AMD, CommonJS, ES6 modules</li>
 <li>v0.6.0: Conics module</li>
 <li>v0.5.0: removed MathML module and improved Expression module</li>
 <li>v0.4.0: Typescript, better plotting</li>

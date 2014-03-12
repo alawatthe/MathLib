@@ -52,7 +52,7 @@ static parseContentMathML(MathMLString : string) : Expression {
 						ident: 'identity',
 						power: 'pow',
 						remainder: 'rem',
-						setdifference: 'without' ,
+						setdifference: 'without',
 						unary_minus: 'negative'
 					};
 

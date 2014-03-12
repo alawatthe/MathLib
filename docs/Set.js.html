@@ -69,6 +69,7 @@
             <li class=""><a href="Conic.js.html"><span>Conic</span></a></li>
             <li class=""><a href="Expression.js.html"><span>Expression</span></a></li>
             <li class=""><a href="Functn.js.html"><span>Functn</span></a></li>
+            <li class=""><a href="Integer.js.html"><span>Integer</span></a></li>
             <li class=""><a href="Layer.js.html"><span>Layer</span></a></li>
             <li class=""><a href="Line.js.html"><span>Line</span></a></li>
             <li class=""><a href="Matrix.js.html"><span>Matrix</span></a></li>
@@ -82,6 +83,8 @@
             <li class=""><a href="Screen3D.js.html"><span>Screen3D</span></a></li>
             <li class="active"><a href="Set.js.html"><span>Set</span></a></li>
             <li class=""><a href="Vector.js.html"><span>Vector</span></a></li>
+            <li class=""><a href="fullscreen.js.html"><span>fullscreen</span></a></li>
+            <li class=""><a href="lineDash.js.html"><span>lineDash</span></a></li>
             <li class=""><a href="meta.js.html"><span>meta</span></a></li>
           </ul>
           <div class="scrollspy">
@@ -97,6 +100,8 @@
               <li><a href="#xor"><i class="alert alert-success"></i>xor</a>
               </li>
               <li><a href="#compare"><i class="alert alert-info"></i>compare</a>
+              </li>
+              <li><a href="#evaluate"><i class="alert alert-info"></i>evaluate</a>
               </li>
               <li><a href="#every"><i class="alert alert-info"></i>every</a>
               </li>
@@ -163,9 +168,9 @@
 <div class="highlight"><pre lang="">new MathLib.Set([1, 2, 3, 4, 5])
 </pre></div> </div>
           <pre><code class="language-javascript">var Set = (function () {
-function Set(elements) {
-    var _this = this;
-    this.type = 'set';</code></pre>
+		function Set (elements) {
+			var _this = this;
+			this.type = 'set';</code></pre>
           <section id="intersect">
             <h1><a href="http://mathlib.de/en/docs/Set/intersect">intersect</a>
             </h1>
@@ -274,20 +279,20 @@ function Set(elements) {
           </table>
           <div class="description"><p>Returns all elements which are in either the first or the second set.</p> </div>
           <pre><code class="language-javascript">this.xor = Set.createSetOperation(true, false, true);
-    if (!elements) {
-        elements = [];
-    }
+			if (!elements) {
+				elements = [];
+			}
 
-    elements = elements.sort(MathLib.compare).filter(function (x, i, a) {
-        return (a.length === i + 1) || !MathLib.isEqual(x, a[i + 1]) || (typeof x.isEqual !== 'undefined' &amp;&amp; !x.isEqual(a[i + 1]));
-    });
+			elements = elements.sort(MathLib.compare).filter(function (x, i, a) {
+				return (a.length === i + 1) || !MathLib.isEqual(x, a[i + 1]) || (typeof x.isEqual !== 'undefined' &amp;&amp; !x.isEqual(a[i + 1]));
+			});
 
-    elements.forEach(function (x, i) {
-        _this[i] = x;
-    });
-    this.length = elements.length;
-    this.card = elements.length;
-}</code></pre>
+			elements.forEach(function (x, i) {
+				_this[i] = x;
+			});
+			this.length = elements.length;
+			this.card = elements.length;
+		}</code></pre>
           <section id="compare">
             <h1><a href="http://mathlib.de/en/docs/Set/compare">compare</a>
             </h1>
@@ -315,20 +320,33 @@ function Set(elements) {
           </table>
           <div class="description"><p>Compare function for sets</p> </div>
           <pre><code class="language-javascript">Set.prototype.compare = function (x) {
-    var a, i, ii;
+			var a, i, ii;
 
-    if (this.card !== x.card) {
-        return MathLib.sign(this.card - x.card);
-    } else {
-        for (i = 0, ii = this.card; i &lt; ii; i++) {
-            a = MathLib.compare(this[i], x[i]);
-            if (a !== 0) {
-                return a;
-            }
-        }
-        return 0;
-    }
-};</code></pre>
+			if (this.card !== x.card) {
+				return MathLib.sign(this.card - x.card);
+			}
+			else {
+				for (i = 0, ii = this.card; i &lt; ii; i++) {
+					a = MathLib.compare(this[i], x[i]);
+					if (a !== 0) {
+						return a;
+					}
+				}
+				return 0;
+			}
+		};</code></pre>
+          <section id="evaluate">
+            <h1><a href="http://mathlib.de/en/docs/Set/evaluate">evaluate</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.evaluate()</span> → <a href="./Set.js.html">Set</a>
+            </p>
+          </section>
+          <div class="description"><p>Evaluates the elements of the set</p> </div>
+          <pre><code class="language-javascript">Set.prototype.evaluate = function () {
+			return this.map(MathLib.evaluate);
+		};</code></pre>
           <section id="every">
             <h1><a href="http://mathlib.de/en/docs/Set/every">every</a>
             </h1>
@@ -339,12 +357,12 @@ function Set(elements) {
           </section>
           <div class="description"><p>Works like the Array.prototype.every function</p> </div>
           <pre><code class="language-javascript">Set.prototype.every = function () {
-    var args = [];
-    for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
-        args[_i] = arguments[_i + 0];
-    }
-    return Array.prototype.every.apply(this, args);
-};</code></pre>
+			var args = [];
+			for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
+				args[_i] = arguments[_i + 0];
+			}
+			return Array.prototype.every.apply(this, args);
+		};</code></pre>
           <section id="filter">
             <h1><a href="http://mathlib.de/en/docs/Set/filter">filter</a>
             </h1>
@@ -355,12 +373,12 @@ function Set(elements) {
           </section>
           <div class="description"><p>Works like the Array.prototype.filter function</p> </div>
           <pre><code class="language-javascript">Set.prototype.filter = function () {
-    var args = [];
-    for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
-        args[_i] = arguments[_i + 0];
-    }
-    return new MathLib.Set(Array.prototype.filter.apply(this, args));
-};</code></pre>
+			var args = [];
+			for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
+				args[_i] = arguments[_i + 0];
+			}
+			return new MathLib.Set(Array.prototype.filter.apply(this, args));
+		};</code></pre>
           <section id="forEach">
             <h1><a href="http://mathlib.de/en/docs/Set/forEach">forEach</a>
             </h1>
@@ -371,12 +389,12 @@ function Set(elements) {
           </section>
           <div class="description"><p>Works like the Array.prototype.forEach function</p> </div>
           <pre><code class="language-javascript">Set.prototype.forEach = function () {
-    var args = [];
-    for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
-        args[_i] = arguments[_i + 0];
-    }
-    Array.prototype.forEach.apply(this, args);
-};</code></pre>
+			var args = [];
+			for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
+				args[_i] = arguments[_i + 0];
+			}
+			Array.prototype.forEach.apply(this, args);
+		};</code></pre>
           <section id="indexOf">
             <h1><a href="http://mathlib.de/en/docs/Set/indexOf">indexOf</a>
             </h1>
@@ -387,12 +405,12 @@ function Set(elements) {
           </section>
           <div class="description"><p>Works like the Array.prototype.indexOf function</p> </div>
           <pre><code class="language-javascript">Set.prototype.indexOf = function () {
-    var args = [];
-    for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
-        args[_i] = arguments[_i + 0];
-    }
-    return Array.prototype.indexOf.apply(this, args);
-};</code></pre>
+			var args = [];
+			for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
+				args[_i] = arguments[_i + 0];
+			}
+			return Array.prototype.indexOf.apply(this, args);
+		};</code></pre>
           <section id="insert">
             <h1><a href="http://mathlib.de/en/docs/Set/insert">insert</a>
             </h1>
@@ -401,15 +419,32 @@ function Set(elements) {
               <div class="label label-info radius ctx-type">method</div><span>Set.prototype.insert()</span> → <a href="./Set.js.html">Set</a>
             </p>
           </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>x</td>
+                <td><span>any </span>
+                </td>
+                <td>The element to insert in the set.</td>
+              </tr>
+            </tbody>
+          </table>
           <div class="description"><p>Inserts an element into the set.</p> </div>
           <pre><code class="language-javascript">Set.prototype.insert = function (x) {
-    var i = this.locate(x);
-    if (this[i] !== x) {
-        this.splice(i, 0, x);
-        this.card++;
-    }
-    return this;
-};</code></pre>
+			var i = this.locate(x);
+			if (this[i] !== x) {
+				this.splice(i, 0, x);
+				this.card++;
+			}
+			return this;
+		};</code></pre>
           <section id="isEmpty">
             <h1><a href="http://mathlib.de/en/docs/Set/isEmpty">isEmpty</a>
             </h1>
@@ -420,8 +455,8 @@ function Set(elements) {
           </section>
           <div class="description"><p>Determines if the set is empty.</p> </div>
           <pre><code class="language-javascript">Set.prototype.isEmpty = function () {
-    return this.card === 0;
-};</code></pre>
+			return this.card === 0;
+		};</code></pre>
           <section id="isEqual">
             <h1><a href="http://mathlib.de/en/docs/Set/isEqual">isEqual</a>
             </h1>
@@ -449,14 +484,15 @@ function Set(elements) {
           </table>
           <div class="description"><p>Determines if the set is equal to an other set.</p> </div>
           <pre><code class="language-javascript">Set.prototype.isEqual = function (set) {
-    if (this.card !== set.card) {
-        return false;
-    } else {
-        return this.every(function (y, i) {
-            return MathLib.isEqual(y, set[i]);
-        });
-    }
-};</code></pre>
+			if (this.card !== set.card) {
+				return false;
+			}
+			else {
+				return this.every(function (y, i) {
+					return MathLib.isEqual(y, set[i]);
+				});
+			}
+		};</code></pre>
           <section id="isSubsetOf">
             <h1><a href="http://mathlib.de/en/docs/Set/isSubsetOf">isSubsetOf</a>
             </h1>
@@ -484,10 +520,10 @@ function Set(elements) {
           </table>
           <div class="description"><p>Determines if the set is a subset of an other set.</p> </div>
           <pre><code class="language-javascript">Set.prototype.isSubsetOf = function (set) {
-    return this.every(function (x) {
-        return set.indexOf(x) !== -1;
-    });
-};</code></pre>
+			return this.every(function (x) {
+				return set.indexOf(x) !== -1;
+			});
+		};</code></pre>
           <section id="locate">
             <h1><a href="http://mathlib.de/en/docs/Set/locate">locate</a>
             </h1>
@@ -515,24 +551,26 @@ function Set(elements) {
           </table>
           <div class="description"><p>Array.prototype.indexOf() returns only the position of an element in the<br />array and not the position where one should be inserted.</p> </div>
           <pre><code class="language-javascript">Set.prototype.locate = function (x) {
-    var left = 0, right = this.card - 1, middle, i = this.indexOf(x);
+			var left = 0, right = this.card - 1, middle, i = this.indexOf(x);
 
-    if (i !== -1) {
-        return i;
-    }
+			if (i !== -1) {
+				return i;
+			}
 
-    while (left &lt;= right) {
-        middle = left + Math.floor((right - left) / 2);
-        if (this[middle] &lt; x) {
-            left = middle + 1;
-        } else if (this[middle] &gt; x) {
-            right = middle - 1;
-        } else {
-            return middle;
-        }
-    }
-    return left;
-};</code></pre>
+			while (left &lt;= right) {
+				middle = left + Math.floor((right - left) / 2);
+				if (this[middle] &lt; x) {
+					left = middle + 1;
+				}
+				else if (this[middle] &gt; x) {
+					right = middle - 1;
+				}
+				else {
+					return middle;
+				}
+			}
+			return left;
+		};</code></pre>
           <section id="map">
             <h1><a href="http://mathlib.de/en/docs/Set/map">map</a>
             </h1>
@@ -551,21 +589,23 @@ function Set(elements) {
             </thead>
             <tbody>
               <tr>
-                <td>The</td>
+                <td>callback</td>
                 <td><span>function </span>
                 </td>
-                <td>mapping function</td>
+                <td>- The mapping function</td>
+              </tr>
+              <tr>
+                <td>[thisArg]</td>
+                <td><span>object </span>
+                </td>
+                <td>- The value to use as this when executing the callback.</td>
               </tr>
             </tbody>
           </table>
           <div class="description"><p>Works like the Array.prototype.map function</p> </div>
-          <pre><code class="language-javascript">Set.prototype.map = function () {
-    var args = [];
-    for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
-        args[_i] = arguments[_i + 0];
-    }
-    return new MathLib.Set(Array.prototype.map.apply(this, args));
-};</code></pre>
+          <pre><code class="language-javascript">Set.prototype.map = function (callback, thisArg) {
+			return new MathLib.Set(Array.prototype.map.call(this, callback, thisArg));
+		};</code></pre>
           <section id="plus">
             <h1><a href="http://mathlib.de/en/docs/Set/plus">plus</a>
             </h1>
@@ -593,23 +633,25 @@ function Set(elements) {
           </table>
           <div class="description"><p>Adds the argument to all elements in the set,<br />or if no argument is provided adds up all the elements in the set.</p> </div>
           <pre><code class="language-javascript">Set.prototype.plus = function (n) {
-    var sum = [];
-    if (!arguments.length) {
-        return MathLib.plus.apply(null, this.toArray());
-    } else if (n.type === 'set') {
-        this.forEach(function (x) {
-            n.forEach(function (y) {
-                sum.push(MathLib.plus(x, y));
-            });
-        });
+			var sum = [];
+			if (!arguments.length) {
+				return MathLib.plus.apply(null, this.toArray());
+			}
+			else if (n.type === 'set') {
+				this.forEach(function (x) {
+					n.forEach(function (y) {
+						sum.push(MathLib.plus(x, y));
+					});
+				});
 
-        return new MathLib.Set(sum);
-    } else {
-        return this.map(function (x) {
-            return MathLib.plus(x, n);
-        });
-    }
-};</code></pre>
+				return new MathLib.Set(sum);
+			}
+			else {
+				return this.map(function (x) {
+					return MathLib.plus(x, n);
+				});
+			}
+		};</code></pre>
           <section id="powerset">
             <h1><a href="http://mathlib.de/en/docs/Set/powerset">powerset</a>
             </h1>
@@ -620,21 +662,21 @@ function Set(elements) {
           </section>
           <div class="description"><p>Returns the powerset</p> </div>
           <pre><code class="language-javascript">Set.prototype.powerset = function () {
-    var flag, subset, i, ii, j, jj, powerset = [];
+			var flag, subset, i, ii, j, jj, powerset = [];
 
-    for (i = 0, ii = Math.pow(2, this.card); i &lt; ii; i++) {
-        flag = i.toString(2).split('').reverse();
-        subset = [];
-        for (j = 0, jj = this.card; j &lt; jj; j++) {
-            if (flag[j] === '1') {
-                subset.push(this[j]);
-            }
-        }
-        powerset.push(new MathLib.Set(subset));
-    }
+			for (i = 0, ii = Math.pow(2, this.card); i &lt; ii; i++) {
+				flag = i.toString(2).split('').reverse();
+				subset = [];
+				for (j = 0, jj = this.card; j &lt; jj; j++) {
+					if (flag[j] === '1') {
+						subset.push(this[j]);
+					}
+				}
+				powerset.push(new MathLib.Set(subset));
+			}
 
-    return new MathLib.Set(powerset);
-};</code></pre>
+			return new MathLib.Set(powerset);
+		};</code></pre>
           <section id="reduce">
             <h1><a href="http://mathlib.de/en/docs/Set/reduce">reduce</a>
             </h1>
@@ -645,12 +687,12 @@ function Set(elements) {
           </section>
           <div class="description"><p>Works like the Array.prototype.reduce function</p> </div>
           <pre><code class="language-javascript">Set.prototype.reduce = function () {
-    var args = [];
-    for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
-        args[_i] = arguments[_i + 0];
-    }
-    return Array.prototype.reduce.apply(this, arguments);
-};</code></pre>
+			var args = [];
+			for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
+				args[_i] = arguments[_i + 0];
+			}
+			return Array.prototype.reduce.apply(this, arguments);
+		};</code></pre>
           <section id="remove">
             <h1><a href="http://mathlib.de/en/docs/Set/remove">remove</a>
             </h1>
@@ -678,13 +720,13 @@ function Set(elements) {
           </table>
           <div class="description"><p>Removes a element from a set</p> </div>
           <pre><code class="language-javascript">Set.prototype.remove = function (element) {
-    var i = this.indexOf(element);
-    if (i !== -1) {
-        this.splice(i, 1);
-        this.card--;
-    }
-    return this;
-};</code></pre>
+			var i = this.indexOf(element);
+			if (i !== -1) {
+				this.splice(i, 1);
+				this.card--;
+			}
+			return this;
+		};</code></pre>
           <section id="slice">
             <h1><a href="http://mathlib.de/en/docs/Set/slice">slice</a>
             </h1>
@@ -695,12 +737,12 @@ function Set(elements) {
           </section>
           <div class="description"><p>Works like the Array.prototype.slice function</p> </div>
           <pre><code class="language-javascript">Set.prototype.slice = function () {
-    var args = [];
-    for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
-        args[_i] = arguments[_i + 0];
-    }
-    return Array.prototype.slice.apply(this, args);
-};</code></pre>
+			var args = [];
+			for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
+				args[_i] = arguments[_i + 0];
+			}
+			return Array.prototype.slice.apply(this, args);
+		};</code></pre>
           <section id="some">
             <h1><a href="http://mathlib.de/en/docs/Set/some">some</a>
             </h1>
@@ -711,12 +753,12 @@ function Set(elements) {
           </section>
           <div class="description"><p>Works like the Array.prototype.some function</p> </div>
           <pre><code class="language-javascript">Set.prototype.some = function () {
-    var args = [];
-    for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
-        args[_i] = arguments[_i + 0];
-    }
-    return Array.prototype.some.apply(this, args);
-};</code></pre>
+			var args = [];
+			for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
+				args[_i] = arguments[_i + 0];
+			}
+			return Array.prototype.some.apply(this, args);
+		};</code></pre>
           <section id="splice">
             <h1><a href="http://mathlib.de/en/docs/Set/splice">splice</a>
             </h1>
@@ -727,12 +769,12 @@ function Set(elements) {
           </section>
           <div class="description"><p>Works like the Array.prototype.splice function</p> </div>
           <pre><code class="language-javascript">Set.prototype.splice = function () {
-    var args = [];
-    for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
-        args[_i] = arguments[_i + 0];
-    }
-    return Array.prototype.splice.apply(this, args);
-};</code></pre>
+			var args = [];
+			for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
+				args[_i] = arguments[_i + 0];
+			}
+			return Array.prototype.splice.apply(this, args);
+		};</code></pre>
           <section id="times">
             <h1><a href="http://mathlib.de/en/docs/Set/times">times</a>
             </h1>
@@ -760,14 +802,15 @@ function Set(elements) {
           </table>
           <div class="description"><p>Multiplies all elements in the set if no argument is passed.<br />Multiplies all elements by a argument if one is passed.</p> </div>
           <pre><code class="language-javascript">Set.prototype.times = function (n) {
-    if (!arguments.length) {
-        return MathLib.times.apply(null, this.toArray());
-    } else {
-        return this.map(function (x) {
-            return MathLib.times(x, n);
-        });
-    }
-};</code></pre>
+			if (!arguments.length) {
+				return MathLib.times.apply(null, this.toArray());
+			}
+			else {
+				return this.map(function (x) {
+					return MathLib.times(x, n);
+				});
+			}
+		};</code></pre>
           <section id="toArray">
             <h1><a href="http://mathlib.de/en/docs/Set/toArray">toArray</a>
             </h1>
@@ -778,8 +821,8 @@ function Set(elements) {
           </section>
           <div class="description"><p>Converts the set to an array</p> </div>
           <pre><code class="language-javascript">Set.prototype.toArray = function () {
-    return Array.prototype.slice.call(this);
-};</code></pre>
+			return Array.prototype.slice.call(this);
+		};</code></pre>
           <section id="toContentMathML">
             <h1><a href="http://mathlib.de/en/docs/Set/toContentMathML">toContentMathML</a>
             </h1>
@@ -788,16 +831,47 @@ function Set(elements) {
               <div class="label label-info radius ctx-type">method</div><span>Set.prototype.toContentMathML()</span> → <span>string</span>
             </p>
           </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>[options]</td>
+                <td><span>object </span>
+                </td>
+                <td>- Optional options to style the output</td>
+              </tr>
+            </tbody>
+          </table>
           <div class="description"><p>Returns the content MathML representation of the set</p> </div>
-          <pre><code class="language-javascript">Set.prototype.toContentMathML = function () {
-    if (this.isEmpty()) {
-        return '&lt;emptyset/&gt;';
-    } else {
-        return this.reduce(function (old, cur) {
-            return old + MathLib.toContentMathML(cur);
-        }, '&lt;set&gt;') + '&lt;/set&gt;';
-    }
-};</code></pre>
+          <pre><code class="language-javascript">Set.prototype.toContentMathML = function (options) {
+			if (typeof options === 'undefined') { options = {}; }
+			if (options.strict) {
+				if (this.isEmpty()) {
+					return '&lt;csymbol cd=&quot;set1&quot;&gt;emptyset&lt;/csymbol&gt;';
+				}
+				else {
+					return this.reduce(function (old, cur) {
+						return old + MathLib.toContentMathML(cur, options);
+					}, '&lt;apply&gt;&lt;csymbol cd=&quot;set1&quot;&gt;set&lt;/csymbol&gt;') + '&lt;/apply&gt;';
+				}
+			}
+			else {
+				if (this.isEmpty()) {
+					return '&lt;emptyset/&gt;';
+				}
+				else {
+					return this.reduce(function (old, cur) {
+						return old + MathLib.toContentMathML(cur, options);
+					}, '&lt;set&gt;') + '&lt;/set&gt;';
+				}
+			}
+		};</code></pre>
           <section id="toLaTeX">
             <h1><a href="http://mathlib.de/en/docs/Set/toLaTeX">toLaTeX</a>
             </h1>
@@ -806,16 +880,35 @@ function Set(elements) {
               <div class="label label-info radius ctx-type">method</div><span>Set.prototype.toLaTeX()</span> → <span>string</span>
             </p>
           </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>[options]</td>
+                <td><span>object </span>
+                </td>
+                <td>- Optional options to style the output</td>
+              </tr>
+            </tbody>
+          </table>
           <div class="description"><p>Returns the LaTeX representation of the set</p> </div>
-          <pre><code class="language-javascript">Set.prototype.toLaTeX = function () {
-    if (this.isEmpty()) {
-        return '\\emptyset';
-    } else {
-        return this.reduce(function (old, cur) {
-            return old + MathLib.toLaTeX(cur) + ', ';
-        }, '\\{').slice(0, -2) + '\\}';
-    }
-};</code></pre>
+          <pre><code class="language-javascript">Set.prototype.toLaTeX = function (options) {
+			if (typeof options === 'undefined') { options = {}; }
+			if (this.isEmpty()) {
+				return '\\emptyset';
+			}
+			else {
+				return this.reduce(function (old, cur) {
+					return old + MathLib.toLaTeX(cur, options) + ', ';
+				}, '\\left{').slice(0, -2) + '\\right}';
+			}
+		};</code></pre>
           <section id="toMathML">
             <h1><a href="http://mathlib.de/en/docs/Set/toMathML">toMathML</a>
             </h1>
@@ -824,16 +917,35 @@ function Set(elements) {
               <div class="label label-info radius ctx-type">method</div><span>Set.prototype.toMathML()</span> → <span>string</span>
             </p>
           </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>[options]</td>
+                <td><span>object </span>
+                </td>
+                <td>- Optional options to style the output</td>
+              </tr>
+            </tbody>
+          </table>
           <div class="description"><p>Returns the (presentation) MathML representation of the set</p> </div>
-          <pre><code class="language-javascript">Set.prototype.toMathML = function () {
-    if (this.isEmpty()) {
-        return '&lt;mi&gt;&amp;#x2205;&lt;/mi&gt;';
-    } else {
-        return this.reduce(function (old, cur) {
-            return old + MathLib.toMathML(cur) + '&lt;mo&gt;,&lt;/mo&gt;';
-        }, '&lt;mrow&gt;&lt;mo&gt;{&lt;/mo&gt;').slice(0, -10) + '&lt;mo&gt;}&lt;/mo&gt;&lt;/mrow&gt;';
-    }
-};</code></pre>
+          <pre><code class="language-javascript">Set.prototype.toMathML = function (options) {
+			if (typeof options === 'undefined') { options = {}; }
+			if (this.isEmpty()) {
+				return '&lt;mi&gt;&amp;#x2205;&lt;/mi&gt;';
+			}
+			else {
+				return this.reduce(function (old, cur) {
+					return old + MathLib.toMathML(cur, options) + '&lt;mo&gt;,&lt;/mo&gt;';
+				}, '&lt;mrow&gt;&lt;mo&gt;{&lt;/mo&gt;').slice(0, -10) + '&lt;mo&gt;}&lt;/mo&gt;&lt;/mrow&gt;';
+			}
+		};</code></pre>
           <section id="toString">
             <h1><a href="http://mathlib.de/en/docs/Set/toString">toString</a>
             </h1>
@@ -842,64 +954,87 @@ function Set(elements) {
               <div class="label label-info radius ctx-type">method</div><span>Set.prototype.toString()</span> → <span>string</span>
             </p>
           </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>[options]</td>
+                <td><span>object </span>
+                </td>
+                <td>- Optional options to style the output</td>
+              </tr>
+            </tbody>
+          </table>
           <div class="description"><p>Returns a string representation of the set</p> </div>
-          <pre><code class="language-javascript">Set.prototype.toString = function () {
-    if (this.isEmpty()) {
-        return '∅';
-    }
-    return '{' + Array.prototype.join.call(this, ', ') + '}';
-};
-Set.fromTo = function (start, end, step) {
-    if (typeof step === &quot;undefined&quot;) { step = 1; }
-    var i, set = [];
+          <pre><code class="language-javascript">Set.prototype.toString = function (options) {
+			if (typeof options === 'undefined') { options = {}; }
+			if (this.isEmpty()) {
+				return '∅';
+			}
+			else {
+				return this.reduce(function (old, cur) {
+					return old + MathLib.toString(cur, options) + ', ';
+				}, '{').slice(0, -2) + '}';
+			}
+		};
+		Set.fromTo = function (start, end, step) {
+			if (typeof step === 'undefined') { step = 1; }
+			var i, set = [];
 
-    if (start &lt;= end) {
-        for (i = start; i &lt;= end; i += step) {
-            set.push(i);
-        }
-        return new MathLib.Set(set);
-    }
-};
+			if (start &lt;= end) {
+				for (i = start; i &lt;= end; i += step) {
+					set.push(i);
+				}
+				return new MathLib.Set(set);
+			}
+		};
 
-Set.createSetOperation = function (left, both, right) {
-    return function (a) {
-        var set = [], i = 0, j = 0, tl = this.card, al = a.card;
+		Set.createSetOperation = function (left, both, right) {
+			return function (a) {
+				var set = [], i = 0, j = 0, tl = this.card, al = a.card;
 
-        while (i &lt; tl &amp;&amp; j &lt; al) {
-            if (MathLib.compare(this[i], a[j]) &lt; 0) {
-                if (left) {
-                    set.push(this[i]);
-                }
-                i++;
-                continue;
-            }
-            if (MathLib.compare(this[i], a[j]) &gt; 0) {
-                if (right) {
-                    set.push(a[j]);
-                }
-                j++;
-                continue;
-            }
-            if (MathLib.isEqual(this[i], a[j])) {
-                if (both) {
-                    set.push(this[i]);
-                }
-                i++;
-                j++;
-                continue;
-            }
-        }
-        if (left &amp;&amp; j === al) {
-            set = set.concat(this.slice(i));
-        } else if (right &amp;&amp; i === tl) {
-            set = set.concat(a.slice(j));
-        }
-        return new MathLib.Set(set);
-    };
-};
-return Set;
-    })();
-    MathLib.Set = Set;
+				while (i &lt; tl &amp;&amp; j &lt; al) {
+					if (MathLib.compare(this[i], a[j]) &lt; 0) {
+						if (left) {
+							set.push(this[i]);
+						}
+						i++;
+						continue;
+					}
+					if (MathLib.compare(this[i], a[j]) &gt; 0) {
+						if (right) {
+							set.push(a[j]);
+						}
+						j++;
+						continue;
+					}
+					if (MathLib.isEqual(this[i], a[j])) {
+						if (both) {
+							set.push(this[i]);
+						}
+						i++;
+						j++;
+						continue;
+					}
+				}
+				if (left &amp;&amp; j === al) {
+					set = set.concat(this.slice(i));
+				}
+				else if (right &amp;&amp; i === tl) {
+					set = set.concat(a.slice(j));
+				}
+				return new MathLib.Set(set);
+			};
+		};
+		return Set;
+	})();
+	MathLib.Set = Set;
 })(MathLib || (MathLib = {}));</code></pre>
         </div>
       </div>

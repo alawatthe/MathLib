@@ -69,6 +69,7 @@
             <li class=""><a href="Conic.js.html"><span>Conic</span></a></li>
             <li class=""><a href="Expression.js.html"><span>Expression</span></a></li>
             <li class=""><a href="Functn.js.html"><span>Functn</span></a></li>
+            <li class=""><a href="Integer.js.html"><span>Integer</span></a></li>
             <li class=""><a href="Layer.js.html"><span>Layer</span></a></li>
             <li class=""><a href="Line.js.html"><span>Line</span></a></li>
             <li class=""><a href="Matrix.js.html"><span>Matrix</span></a></li>
@@ -82,6 +83,8 @@
             <li class=""><a href="Screen3D.js.html"><span>Screen3D</span></a></li>
             <li class=""><a href="Set.js.html"><span>Set</span></a></li>
             <li class=""><a href="Vector.js.html"><span>Vector</span></a></li>
+            <li class=""><a href="fullscreen.js.html"><span>fullscreen</span></a></li>
+            <li class=""><a href="lineDash.js.html"><span>lineDash</span></a></li>
             <li class=""><a href="meta.js.html"><span>meta</span></a></li>
           </ul>
           <div class="scrollspy">
@@ -128,15 +131,15 @@ c.center                   // The center of the circle (point)
 c.radius                   // returns the radius of the circle
 </pre></div> </div>
           <pre><code class="language-javascript">var Circle = (function () {
-function Circle(center, radius) {
-    this.type = 'circle';
-    if (center.type === undefined) {
-        center = new MathLib.Point(center.concat(1));
-    }
+		function Circle (center, radius) {
+			this.type = 'circle';
+			if (center.type === undefined) {
+				center = new MathLib.Point(center.concat(1));
+			}
 
-    this.center = center;
-    this.radius = radius;
-}</code></pre>
+			this.center = center;
+			this.radius = radius;
+		}</code></pre>
           <section id="area">
             <h1><a href="http://mathlib.de/en/docs/Circle/area">area</a>
             </h1>
@@ -147,8 +150,8 @@ function Circle(center, radius) {
           </section>
           <div class="description"><p>Calculates the area of the circle.</p> </div>
           <pre><code class="language-javascript">Circle.prototype.area = function () {
-    return this.radius * this.radius * Math.PI;
-};</code></pre>
+			return this.radius * this.radius * Math.PI;
+		};</code></pre>
           <section id="circumference">
             <h1><a href="http://mathlib.de/en/docs/Circle/circumference">circumference</a>
             </h1>
@@ -159,8 +162,8 @@ function Circle(center, radius) {
           </section>
           <div class="description"><p>Calculates the circumference of the circle.</p> </div>
           <pre><code class="language-javascript">Circle.prototype.circumference = function () {
-    return 2 * this.radius * Math.PI;
-};</code></pre>
+			return 2 * this.radius * Math.PI;
+		};</code></pre>
           <section id="compare">
             <h1><a href="http://mathlib.de/en/docs/Circle/compare">compare</a>
             </h1>
@@ -188,8 +191,8 @@ function Circle(center, radius) {
           </table>
           <div class="description"><p>Compares two circles</p> </div>
           <pre><code class="language-javascript">Circle.prototype.compare = function (circle) {
-    return MathLib.sign(this.center.compare(circle.center)) || MathLib.sign(this.radius - circle.radius);
-};</code></pre>
+			return MathLib.sign(this.center.compare(circle.center)) || MathLib.sign(this.radius - circle.radius);
+		};</code></pre>
           <section id="draw">
             <h1><a href="http://mathlib.de/en/docs/Circle/draw">draw</a>
             </h1>
@@ -223,16 +226,17 @@ function Circle(center, radius) {
           </table>
           <div class="description"><p>Draw the circle onto the screen.</p> </div>
           <pre><code class="language-javascript">Circle.prototype.draw = function (screen, options) {
-    if (Array.isArray(screen)) {
-        var circle = this;
-        screen.forEach(function (x) {
-            x.circle(circle, options);
-        });
-    } else {
-        screen.circle(this, options);
-    }
-    return this;
-};</code></pre>
+			if (Array.isArray(screen)) {
+				var circle = this;
+				screen.forEach(function (x) {
+					x.circle(circle, options);
+				});
+			}
+			else {
+				screen.circle(this, options);
+			}
+			return this;
+		};</code></pre>
           <section id="isEqual">
             <h1><a href="http://mathlib.de/en/docs/Circle/isEqual">isEqual</a>
             </h1>
@@ -260,8 +264,8 @@ function Circle(center, radius) {
           </table>
           <div class="description"><p>Checks if two circles are equal</p> </div>
           <pre><code class="language-javascript">Circle.prototype.isEqual = function (circle) {
-    return MathLib.isEqual(this.radius, circle.radius) &amp;&amp; this.center.isEqual(circle.center);
-};</code></pre>
+			return MathLib.isEqual(this.radius, circle.radius) &amp;&amp; this.center.isEqual(circle.center);
+		};</code></pre>
           <section id="positionOf">
             <h1><a href="http://mathlib.de/en/docs/Circle/positionOf">positionOf</a>
             </h1>
@@ -289,18 +293,20 @@ function Circle(center, radius) {
           </table>
           <div class="description"><p>Determine if a point is in, on or outside a circle.</p> </div>
           <pre><code class="language-javascript">Circle.prototype.positionOf = function (point) {
-    var diff;
-    if (point.type === 'point' &amp;&amp; point.dimension === 2) {
-        diff = point.distanceTo(this.center) - this.radius;
-        if (MathLib.isZero(diff)) {
-            return 'on';
-        } else if (diff &lt; 0) {
-            return 'in';
-        } else {
-            return 'out';
-        }
-    }
-};</code></pre>
+			var diff;
+			if (point.type === 'point' &amp;&amp; point.dimension === 2) {
+				diff = point.distanceTo(this.center) - this.radius;
+				if (MathLib.isZero(diff)) {
+					return 'on';
+				}
+				else if (diff &lt; 0) {
+					return 'in';
+				}
+				else {
+					return 'out';
+				}
+			}
+		};</code></pre>
           <section id="reflectAt">
             <h1><a href="http://mathlib.de/en/docs/Circle/reflectAt">reflectAt</a>
             </h1>
@@ -311,8 +317,8 @@ function Circle(center, radius) {
           </section>
           <div class="description"><p>Reflect the circle at a point or line</p> </div>
           <pre><code class="language-javascript">Circle.prototype.reflectAt = function (a) {
-    return new MathLib.Circle(this.center.reflectAt(a), this.radius);
-};</code></pre>
+			return new MathLib.Circle(this.center.reflectAt(a), this.radius);
+		};</code></pre>
           <section id="toLaTeX">
             <h1><a href="http://mathlib.de/en/docs/Circle/toLaTeX">toLaTeX</a>
             </h1>
@@ -323,8 +329,8 @@ function Circle(center, radius) {
           </section>
           <div class="description"><p>Returns a LaTeX expression of the circle</p> </div>
           <pre><code class="language-javascript">Circle.prototype.toLaTeX = function () {
-    return 'B_{' + MathLib.toLaTeX(this.radius) + '}\\left(' + this.center.toLaTeX() + '\\right)';
-};</code></pre>
+			return 'B_{' + MathLib.toLaTeX(this.radius) + '}\\left(' + this.center.toLaTeX() + '\\right)';
+		};</code></pre>
           <section id="toMatrix">
             <h1><a href="http://mathlib.de/en/docs/Circle/toMatrix">toMatrix</a>
             </h1>
@@ -335,12 +341,12 @@ function Circle(center, radius) {
           </section>
           <div class="description"><p>Converts the circle to the corresponding matrix.</p> </div>
           <pre><code class="language-javascript">Circle.prototype.toMatrix = function () {
-    var x = this.center[0] / this.center[2], y = this.center[1] / this.center[2], r = this.radius;
-    return new MathLib.Matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x * x + y * y - r * r]]);
-};
-return Circle;
-    })();
-    MathLib.Circle = Circle;
+			var x = this.center[0] / this.center[2], y = this.center[1] / this.center[2], r = this.radius;
+			return new MathLib.Matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x * x + y * y - r * r]]);
+		};
+		return Circle;
+	})();
+	MathLib.Circle = Circle;
 })(MathLib || (MathLib = {}));</code></pre>
         </div>
       </div>

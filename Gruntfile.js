@@ -40,9 +40,11 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-notify');
 	grunt.loadNpmTasks('grunt-jscs-checker');
 	grunt.loadNpmTasks('grunt-karma');
+	grunt.loadNpmTasks('grunt-newer');
 	grunt.loadNpmTasks('grunt-qunit-amd');
 	grunt.loadNpmTasks('grunt-regex-replace');
 	grunt.loadNpmTasks('grunt-saucelabs');
+	grunt.loadNpmTasks('grunt-shell');
 	grunt.loadNpmTasks('grunt-stamp');
 	grunt.loadNpmTasks('grunt-ts');
 
@@ -88,6 +90,9 @@ module.exports = function (grunt) {
 		grunt.log.writeln('grunt generateES6\t\tThis task generates the ES6 JavaScript files. ');
 		grunt.log.writeln('grunt generateDeclaration\tThis task generates the TypeScript declaration files. ');
 		grunt.log.writeln('grunt generateTests\t\tThis task generates the JavaScript Test files. ');
+		grunt.log.writeln('grunt generateCSS\t\tThis task generates the CSS file. ');
+		grunt.log.writeln('grunt generateTemplate\t\tThis task generates the HTML template. ');
+		grunt.log.writeln('grunt generateDocs\t\tThis task generates the documentation files. ');
 
 		grunt.log.subhead('Tests');
 		grunt.log.writeln('grunt testsAll\t\t\tRuns all the tests in all configurations');
@@ -107,19 +112,19 @@ module.exports = function (grunt) {
 	});
 
 
-	grunt.registerTask('template', 'A simple task to convert HTML templates', function () {
+	grunt.registerTask('generateTemplate', 'A simple task to convert HTML templates', function () {
 		var template = grunt.file.read('src/Screen/template.hbs'),
 			process = function (template) {
 				var str = 'var template = function (data) {';
 
 				str += 'var p = [];' +
 				'p.push(\'' +
-				template.replace(/[\r\t\n]/g, ' ')                                           // remove linebreaks etc.
-								.replace(/\{\{!--[^\}]*--\}\}/g, '')                                 // remove comments
-								.replace(/\{\{#if ([^\}]*)\}\}/g, ');\nif (data.$1) {\n\tp.push(') // opening if
-								.replace(/\{\{\/if\}\}/g, ');\n}\np.push(')                        // closing if
-								.replace(/\{\{/g, ');\np.push(data.')
-								.replace(/\}\}/g, ');\np.push(') +
+				template.replace(/[\r\t\n]/g, ' ')                                             // remove linebreaks etc.
+								.replace(/\{\{!--[^\}]*--\}\}/g, '')                                   // remove comments
+								.replace(/\{\{#if ([^\}]*)\}\}/g, '\');\nif (data.$1) {\n\tp.push(\'') // opening if
+								.replace(/\{\{\/if\}\}/g, '\');\n}\np.push(\'')                        // closing if
+								.replace(/\{\{/g, '\');\np.push(data.')
+								.replace(/\}\}/g, ');\np.push(\'') +
 				'\');\n' +
 				'return p.join(\'\');\n}';
 
@@ -423,11 +428,11 @@ module.exports = function (grunt) {
 				options: {
 					username: sauceuser, //'<%= saucelabs.username %>',
 					key: saucekey, //'<%= saucelabs.key %>',
-					urls: ['http://localhost:9999/test/test.html'],
+					urls: ['http://0.0.0.0:9999/test/test.html'],
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 59,
+					build: 60,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -741,12 +746,12 @@ module.exports = function (grunt) {
 		},
 
 		// Documentation
-		docco: {
-			MathLib: {
-				src: ['build/MathLib.ts'],
+		shell: {
+			doxx: {
 				options: {
-					output: 'docs/'
-				}
+					stdout: true
+				},
+				command: 'doxx --template ./doxx.jade --source build/plain --target docs'
 			}
 		},
 
@@ -779,7 +784,8 @@ module.exports = function (grunt) {
 		clean: {
 			plain: ['build/plain'],
 			reference: ['build/plain/reference.js', 'build/amd/reference.js', 'build/commonjs/reference.js'],
-			tscommand: ['tscommand.tmp.txt']
+			tscommand: ['tscommand.tmp.txt'],
+			interfacesJS: ['build/plain/Interfaces.js']
 		},
 
 
@@ -1111,43 +1117,49 @@ module.exports = function (grunt) {
 					},
 				]
 			}
-
 		},
 
 		watch: {
 			src: {
 				files: ['src/*/*.ts'],
-				tasks: ['concat:MathLib', 'typescript', 'uglify:MathLib']
+				tasks: ['generatePlain']
 			},
 			tests: {
 				files: ['test/*/*.js'],
-				tasks: ['concat:tests', 'uglify:tests']
+				tasks: ['generateTests']
 			},
 			scss: {
 				files: ['src/scss/MathLib.scss'],
-				tasks: ['compass', 'cssmin']
+				tasks: ['generateCSS']
 			},
-			handlebars: {
+			template: {
 				files: ['src/Screen/template.hbs'],
-				tasks: ['template']
+				tasks: ['generateTemplate']
 			}
 		}
 
 	});
 
 
-	grunt.registerTask('generatePlain', ['clean:plain', 'concat:meta', 'concat:Interfaces', 'concat:Expression', 'concat:Functn', 'concat:Screen', 'concat:Layer',
-		'concat:Canvas', 'concat:SVG', 'concat:Screen2D', 'concat:Screen3D', 'concat:Vector', 'concat:Circle', 'concat:Complex', 'concat:Integer', 'concat:Line',
-		'concat:Matrix', 'concat:Permutation', 'concat:Conic', 'concat:Point', 'concat:Polynomial', 'concat:Rational', 'concat:Set', 'ts', 'copy:shims',
-		'concat:plain', 'uglify', 'regex-replace:plainHead', 'regex-replace:plainBefore', 'clean:reference'
+	grunt.registerTask('generatePlain', ['clean:plain', 'newer:concat:meta', 'newer:concat:Interfaces',
+		'newer:concat:Expression', 'newer:concat:Functn', 'newer:concat:Screen', 'newer:concat:Layer',
+		'newer:concat:Canvas', 'newer:concat:SVG', 'newer:concat:Screen2D', 'newer:concat:Screen3D',
+		'newer:concat:Vector', 'newer:concat:Circle', 'newer:concat:Complex', 'newer:concat:Integer',
+		'newer:concat:Line', 'newer:concat:Matrix', 'newer:concat:Permutation', 'newer:concat:Conic',
+		'newer:concat:Point', 'newer:concat:Polynomial', 'newer:concat:Rational', 'newer:concat:Set', 'ts',
+		'copy:shims', 'concat:plain', 'uglify', 'regex-replace:plainHead', 'regex-replace:plainBefore',
+		'clean:reference'
 	]);
 	grunt.registerTask('generateAMD', ['copy:amd', 'regex-replace:amdHead', 'regex-replace:amd']);
 	grunt.registerTask('generateCommonjs', ['copy:commonjs', 'regex-replace:commonjsHead', 'regex-replace:commonjs']);
 	grunt.registerTask('generateES6', ['copy:es6', 'regex-replace:es6Head', 'regex-replace:es6']);
 	grunt.registerTask('generateDeclaration', ['concat:declaration', 'regex-replace:declaration']);
-	grunt.registerTask('generateTests', ['concat:tests', 'concat:testsAmd', 'concat:testsCommonjs']);
-	grunt.registerTask('generateAll', ['generatePlain', 'generateAMD', 'generateCommonjs', 'generateES6', 'generateDeclaration', 'generateTests', 'regex-replace:plainAfter']);
-
+	grunt.registerTask('generateTests', ['newer:concat:tests', 'newer:concat:testsAmd', 'concat:testsCommonjs']);
+	grunt.registerTask('generateAll', ['generatePlain', 'generateAMD', 'generateCommonjs', 'generateES6',
+		'generateDeclaration', 'generateTests', 'generateCSS', 'generateTemplate', 'generateDocs',
+		'regex-replace:plainAfter']);
+	grunt.registerTask('generateCSS', ['compass', 'cssmin']);
+	grunt.registerTask('generateDocs', ['clean:interfacesJS', 'shell:doxx']);
 
 	grunt.registerTask('testPlain', ['qunit']);
 	grunt.registerTask('testCommonjs', ['nodeunit']);
@@ -1155,9 +1167,9 @@ module.exports = function (grunt) {
 	grunt.registerTask('testAll', ['testPlain', 'testCommonjs', 'testAMD']);
 
 
-	grunt.registerTask('default', ['generatePlain']);
-	grunt.registerTask('commit', ['generateAll', 'clean', 'cssmin', 'testPlain', 'testCommonjs', 'jshint', 'jscs']);
-	grunt.registerTask('release', ['generateAll', 'clean', 'cssmin', 'testPlain', 'testCommonjs', /*'jshint', 'jscs',*/ 'regex-replace:saucebuildnumber']);/*, 'docco'*/
+	grunt.registerTask('default', ['help']);
+	grunt.registerTask('commit', ['generateAll', 'clean', 'testPlain', 'testCommonjs', 'jshint', 'jscs']);
+	grunt.registerTask('release', ['generateAll', 'clean', 'testPlain', 'testCommonjs', /*'jshint', 'jscs',*/ 'regex-replace:saucebuildnumber']);/*, 'docco'*/
 
 	grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);
 	grunt.registerTask('continuousIntegration', ['nodeunit', 'jshint', 'jscs', 'saucelabs']);
