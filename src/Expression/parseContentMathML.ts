@@ -37,19 +37,28 @@ static parseContentMathML(MathMLString : string) : Expression {
 
 	var handler = {
 		apply: function (node) {
-			var functnName = '', expr,
+			var functnName, expr, cd,
 					children = Array.prototype.slice.call(node.childNodes),
 					functnNameNode = children.shift(),
 					isMethod = true,
 					functnNames = {
+						arccosh: 'arcosh',
+						arccoth: 'arcoth',
+						arccsch: 'arcsch',
+						arcsech: 'arsech',
+						arcsinh: 'arsinh',
+						arctanh: 'artanh',
+						ceiling: 'ceil',
 						ident: 'identity',
 						power: 'pow',
-						rem: 'mod',
-						setdifference: 'without' 
+						remainder: 'rem',
+						setdifference: 'without' ,
+						unary_minus: 'negative'
 					};
 
 			if (functnNameNode.nodeName === 'csymbol') {
 				functnName = functnNameNode.textContent;
+				cd = functnNameNode.getAttribute('cd');
 			}
 			else {
 				functnName = functnNameNode.nodeName;
@@ -58,6 +67,12 @@ static parseContentMathML(MathMLString : string) : Expression {
 			// Change some function names for functions with different names in MathLib
 			if (functnName in functnNames) {
 				functnName = functnNames[functnName];
+			}
+			else if (functnName === 'minus' && children.length === 1) {
+				functnName = 'negative';
+			}
+			else if (functnName === 'arctan' && cd === 'transc2') {
+				functnName = 'arctan2';
 			}
 
 			if (MathLib[functnName]) {
@@ -159,8 +174,6 @@ static parseContentMathML(MathMLString : string) : Expression {
 				if (node.textContent === 'false') {
 					return false;
 				}
-
-//and, equivalent, false, implies, not, or, true, xor
 			}
 		},
 		lambda: function (node) {

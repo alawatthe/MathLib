@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-03-11
+ * build date: 2014-03-12
  */
 // [Specification](https://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html)
 // Chrome: ~
@@ -835,15 +835,24 @@ var MathLib;
 
 			var handler = {
 				apply: function (node) {
-					var functnName = '', expr, children = Array.prototype.slice.call(node.childNodes), functnNameNode = children.shift(), isMethod = true, functnNames = {
+					var functnName, expr, cd, children = Array.prototype.slice.call(node.childNodes), functnNameNode = children.shift(), isMethod = true, functnNames = {
+						arccosh: 'arcosh',
+						arccoth: 'arcoth',
+						arccsch: 'arcsch',
+						arcsech: 'arsech',
+						arcsinh: 'arsinh',
+						arctanh: 'artanh',
+						ceiling: 'ceil',
 						ident: 'identity',
 						power: 'pow',
-						rem: 'mod',
-						setdifference: 'without'
+						remainder: 'rem',
+						setdifference: 'without',
+						unary_minus: 'negative'
 					};
 
 					if (functnNameNode.nodeName === 'csymbol') {
 						functnName = functnNameNode.textContent;
+						cd = functnNameNode.getAttribute('cd');
 					}
 					else {
 						functnName = functnNameNode.nodeName;
@@ -852,6 +861,12 @@ var MathLib;
 					// Change some function names for functions with different names in MathLib
 					if (functnName in functnNames) {
 						functnName = functnNames[functnName];
+					}
+					else if (functnName === 'minus' && children.length === 1) {
+						functnName = 'negative';
+					}
+					else if (functnName === 'arctan' && cd === 'transc2') {
+						functnName = 'arctan2';
 					}
 
 					if (MathLib[functnName]) {
@@ -946,7 +961,6 @@ var MathLib;
 						if (node.textContent === 'false') {
 							return false;
 						}
-						//and, equivalent, false, implies, not, or, true, xor
 					}
 				},
 				lambda: function (node) {

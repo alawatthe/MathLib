@@ -6,7 +6,6 @@
 		"beforeOpeningCurlyBrace": true
 	},
 	"validateQuoteMarks": "'",
-		"validateIndentation": "\t",
 		"disallowTrailingWhitespace": true,
 		"disallowMixedSpacesAndTabs": true,
 		"requireSpaceAfterKeywords": ["if", "else", "for", "while", "do", "switch", "return"],

@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-03-11
+ * build date: 2014-03-12
  */
 
 	var version: string;

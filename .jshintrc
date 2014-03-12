@@ -12,7 +12,7 @@
 	"undef"         : true,
 	"unused"        : true,
 	"strict"        : false,
-	"camelcase"     : true,
+	"camelcase"     : false,
 
 	"asi"           : false,
 	"boss"          : false,
