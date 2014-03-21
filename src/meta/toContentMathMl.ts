@@ -8,6 +8,15 @@
 export var toContentMathML = function (x, options : toContentMathMLOptions = {}) {
 	var base = options.base || 10;
 
+	if (Array.isArray(x)) {
+		if (options.strict) {
+			return '<apply><csymbol cd="list1">list</csymbol>' + x.map(entry => MathLib.toContentMathML(entry, options)).join('') + '</apply>';
+		}
+		else {
+			return '<list>' + x.map(entry => MathLib.toContentMathML(entry, options)).join('') + '</list>';
+		}
+	}
+
 	if (typeof x === 'object' && 'toContentMathML' in x) {
 		return x.toContentMathML(options);
 	}

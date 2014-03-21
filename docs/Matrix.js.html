@@ -296,7 +296,9 @@
           </section>
           <div class="description"><p>Calculates the adjoint matrix</p> </div>
           <pre><code class="language-javascript">Matrix.prototype.adjoint = function () {
-			return this.map(MathLib.conjugate).transpose();
+			return this.map(function (entry) {
+				return MathLib.conjugate(entry);
+			}).transpose();
 		};</code></pre>
           <section id="adjugate">
             <h1><a href="http://mathlib.de/en/docs/Matrix/adjugate">adjugate</a>
@@ -411,7 +413,9 @@
           </section>
           <div class="description"><p>Copies the matrix</p> </div>
           <pre><code class="language-javascript">Matrix.prototype.copy = function () {
-			return this.map(MathLib.copy);
+			return this.map(function (entry) {
+				return MathLib.copy(entry);
+			});
 		};</code></pre>
           <section id="determinant">
             <h1><a href="http://mathlib.de/en/docs/Matrix/determinant">determinant</a>
@@ -1178,7 +1182,9 @@
 			var i, ii, negative = [];
 
 			for (i = 0, ii = this.rows; i &lt; ii; i++) {
-				negative.push(this[i].map(MathLib.negative));
+				negative.push(this[i].map(function (entry) {
+					return MathLib.negative(entry);
+				}));
 			}
 			return new MathLib.Matrix(negative);
 		};</code></pre>

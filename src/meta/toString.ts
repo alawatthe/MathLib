@@ -6,8 +6,12 @@
  * @return {string}
  */
 export var toString = function (x, options : toPresentationOptions = {}) {
-	var base = options.base || 10,
-			str = Math.abs(x).toString(base);
+	var str,
+			base = options.base || 10;
+
+	if (Array.isArray(x)) {
+		return '[' + x.map(entry => MathLib.toString(entry, options)).join() + ']';
+	}
 
 	if (typeof x === 'object') {
 		return x.toString(options);
@@ -17,6 +21,8 @@ export var toString = function (x, options : toPresentationOptions = {}) {
 		if (!MathLib.isFinite(x)) {
 			return x.toString();
 		}
+
+		str = Math.abs(x).toString(base);
 
 		if (x < 0) {
 			str = '-' + str;

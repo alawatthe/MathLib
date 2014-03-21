@@ -4,5 +4,5 @@
  * @return {Matrix}
  */
 adjoint() : Matrix {
-	return this.map(MathLib.conjugate).transpose();
+	return this.map(entry => MathLib.conjugate(entry)).transpose();
 }

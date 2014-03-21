@@ -38,7 +38,7 @@ var nAryFunctions = {
 		return MathLib.root(MathLib.times(n), n.length);
 	},
 	harmonicMean: function (n) {
-		return n.length / MathLib.plus(n.map(MathLib.inverse));
+		return n.length / MathLib.plus(n.map(entry => MathLib.inverse(entry)));
 	},
 	hypot: function (n) {
 		var a, b, max, min;

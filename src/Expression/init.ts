@@ -13,7 +13,7 @@ export class Expression {
 
 	type = 'expression';
 
-	args: string[];
+	args: any;
 	cdgroup: string;
 	content: any;
 	isMethod: boolean;

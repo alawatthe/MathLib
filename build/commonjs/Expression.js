@@ -139,21 +139,36 @@
 
 			for (prop in this) {
 				if (this.hasOwnProperty(prop) && prop !== 'content') {
-					properties[prop] = this[prop];
+					if (Array.isArray(this[prop])) {
+						properties[prop] = this[prop].map(f);
+					}
+					else {
+						properties[prop] = this[prop];
+					}
 				}
 			}
 
 			mappedProperties = f(properties);
 			if (Array.isArray(this.content)) {
 				mappedProperties.content = this.content.map(function (expr) {
-					return expr.map(f);
+					if (expr.type === 'expression') {
+						return expr.map(f);
+					}
+					else {
+						return f(expr);
+					}
 				});
 			}
 			else if (this.content) {
 				mappedProperties.content = this.content.map(f);
 			}
 
-			return new MathLib.Expression(mappedProperties);
+			if (typeof mappedProperties === 'object') {
+				return new MathLib.Expression(mappedProperties);
+			}
+			else {
+				return mappedProperties;
+			}
 		};
 
 		/**
@@ -235,6 +250,20 @@
 					}
 					else if (functnName === 'arctan' && cd === 'transc2') {
 						functnName = 'arctan2';
+					}
+
+					if (functnName === 'list') {
+						return parser(children);
+					}
+
+					if (functnName === 'rational') {
+						var parsedChildren = parser(children);
+						return new MathLib.Rational(parsedChildren[0], parsedChildren[1]);
+					}
+
+					if (functnName === 'based_integer') {
+						var parsedChildren = parser(children);
+						return new MathLib.Integer(parsedChildren[1], {base: parsedChildren[0]});
 					}
 
 					if (MathLib[functnName]) {
@@ -371,6 +400,9 @@
 							content: [parser(apply)]
 						});
 					}
+				},
+				list: function (node) {
+					return parser(Array.prototype.slice.call(node.childNodes));
 				},
 				math: function (node) {
 					return parser(node.childNodes[0]);

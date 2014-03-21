@@ -1,4 +1,6 @@
-test('.toLaTeX()', 19, function () {
+test('.toLaTeX()', 20, function () {
+	equal(MathLib.toLaTeX([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '[1,2,[3,4],\\frac{1}{2}]');
+
 	equal(MathLib.toLaTeX(NaN), '\\text{ NaN }');
 	equal(MathLib.toLaTeX(Infinity), '\\infty');
 	equal(MathLib.toLaTeX(-Infinity), '-\\infty');

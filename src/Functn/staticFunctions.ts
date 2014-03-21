@@ -17,7 +17,7 @@ for (var fnName in fns) {
 		Object.defineProperty(exports, fnName, {
 			value: MathLib.Functn(fns[fnName].functn, {
 				name: fnName,
-				arity: fn.arity || 1,
+				arity: args.length,
 				expression: new MathLib.Expression({
 					subtype: 'functionDefinition',
 					args: args,

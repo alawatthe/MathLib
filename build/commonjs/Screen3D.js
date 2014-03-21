@@ -131,7 +131,7 @@ var __extends = this.__extends || function (d, b) {
 
 			// Background
 			// ==========
-			renderer.setClearColorHex(opts.background, 1);
+			renderer.setClearColor(opts.background, 1);
 			renderer.clear();
 
 			// Grid

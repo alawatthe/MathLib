@@ -4,5 +4,5 @@
  * @return {Vector}
  */
 negative() : Vector {
-	return this.map(MathLib.negative);
+	return this.map(entry => MathLib.negative(entry));
 }

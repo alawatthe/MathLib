@@ -4,5 +4,5 @@
  * @return {Matrix}
  */
 copy() : Matrix {
-	return this.map(MathLib.copy);
+	return this.map(entry => MathLib.copy(entry));
 }

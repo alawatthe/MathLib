@@ -202,6 +202,19 @@ define([], function () {
 		if (typeof options === 'undefined') { options = {}; }
 		var base = options.base || 10;
 
+		if (Array.isArray(x)) {
+			if (options.strict) {
+				return '<apply><csymbol cd="list1">list</csymbol>' + x.map(function (entry) {
+					return MathLib.toContentMathML(entry, options);
+				}).join('') + '</apply>';
+			}
+			else {
+				return '<list>' + x.map(function (entry) {
+					return MathLib.toContentMathML(entry, options);
+				}).join('') + '</list>';
+			}
+		}
+
 		if (typeof x === 'object' && 'toContentMathML' in x) {
 			return x.toContentMathML(options);
 		}
@@ -268,6 +281,12 @@ define([], function () {
 		if (typeof options === 'undefined') { options = {}; }
 		var base = options.base || 10, str = MathLib.toString(x, {base: base, sign: options.sign});
 
+		if (Array.isArray(x)) {
+			return '[' + x.map(function (entry) {
+				return MathLib.toLaTeX(entry, options);
+			}).join() + ']';
+		}
+
 		if (typeof x === 'object' && 'toLaTeX' in x) {
 			return x.toLaTeX(options);
 		}
@@ -309,6 +328,12 @@ define([], function () {
 	MathLib.toMathML = function (x, options) {
 		if (typeof options === 'undefined') { options = {}; }
 		var str, base = options.base || 10;
+
+		if (Array.isArray(x)) {
+			return '<mrow><mo>[</mo>' + x.map(function (entry) {
+				return MathLib.toMathML(entry, options);
+			}).join('<mo>,</mo>') + '<mo>]</mo></mrow>';
+		}
 
 		if (typeof x === 'object' && 'toMathML' in x) {
 			return x.toMathML(options);
@@ -368,7 +393,13 @@ define([], function () {
 	*/
 	MathLib.toString = function (x, options) {
 		if (typeof options === 'undefined') { options = {}; }
-		var base = options.base || 10, str = Math.abs(x).toString(base);
+		var str, base = options.base || 10;
+
+		if (Array.isArray(x)) {
+			return '[' + x.map(function (entry) {
+				return MathLib.toString(entry, options);
+			}).join() + ']';
+		}
 
 		if (typeof x === 'object') {
 			return x.toString(options);
@@ -378,6 +409,8 @@ define([], function () {
 			if (!MathLib.isFinite(x)) {
 				return x.toString();
 			}
+
+			str = Math.abs(x).toString(base);
 
 			if (x < 0) {
 				str = '-' + str;

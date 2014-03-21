@@ -4,5 +4,5 @@
  * @return {Complex}
  */
 arccos() : Complex {
-	return MathLib.minus(Math.PI / 2, this.arcsin());
+	return (new MathLib.Complex(Math.PI / 2, -0)).minus(this.arcsin());
 }

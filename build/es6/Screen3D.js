@@ -131,7 +131,7 @@ import Screen from './Screen';
 
 			// Background
 			// ==========
-			renderer.setClearColorHex(opts.background, 1);
+			renderer.setClearColor(opts.background, 1);
 			renderer.clear();
 
 			// Grid

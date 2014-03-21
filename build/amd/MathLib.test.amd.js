@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-03-12
+ * build date: 2014-03-20
  */
 
 require(['../build/amd/MathLib.js'], function(MathLib) {
@@ -17,7 +17,7 @@ test('general', 1, function () {
 test('.compare()', 3, function () {
 	equal(MathLib.compare(12, 12), 0);
 	equal(MathLib.compare(1, 2), -1);
-	equal(MathLib.compare(23, new MathLib.Complex([3, 4])), 1);
+	equal(MathLib.compare(23, new MathLib.Complex(3, 4)), 1);
 });
 test('.extendObject()', 1, function () {
 	var dest = {
@@ -132,7 +132,10 @@ test('.on()', 1, function () {
 	MathLib.off('error', callback);
 	MathLib.off('warning', callback);
 });
-test('.toContentMathML()', 18, function () {
+test('.toContentMathML()', 20, function () {
+	equal(MathLib.toContentMathML([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '<list><cn type="double">1</cn><cn type="double">2</cn><list><cn type="double">3</cn><cn type="double">4</cn></list><cn type="rational">1<sep/>2</cn></list>');
+	equal(MathLib.toContentMathML([1, 2, [3, 4], new MathLib.Rational(1, 2)], {strict: true}), '<apply><csymbol cd="list1">list</csymbol><cn type="double">1</cn><cn type="double">2</cn><apply><csymbol cd="list1">list</csymbol><cn type="double">3</cn><cn type="double">4</cn></apply><apply><csymbol cd="nums1">rational</csymbol><cn type="double">1</cn><cn type="double">2</cn></apply></apply>');
+
 	equal(MathLib.toContentMathML(NaN), '<notanumber/>');
 	equal(MathLib.toContentMathML(NaN, {strict: true}), '<csymbol cd="nums1">NaN</csymbol>');
 
@@ -158,7 +161,9 @@ test('.toContentMathML()', 18, function () {
 
 	equal(MathLib.toContentMathML(new MathLib.Rational(1, 2)), '<cn type="rational">1<sep/>2</cn>');
 });
-test('.toLaTeX()', 19, function () {
+test('.toLaTeX()', 20, function () {
+	equal(MathLib.toLaTeX([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '[1,2,[3,4],\\frac{1}{2}]');
+
 	equal(MathLib.toLaTeX(NaN), '\\text{ NaN }');
 	equal(MathLib.toLaTeX(Infinity), '\\infty');
 	equal(MathLib.toLaTeX(-Infinity), '-\\infty');
@@ -186,7 +191,9 @@ test('.toLaTeX()', 19, function () {
 
 	equal(MathLib.toLaTeX(new MathLib.Rational(1, 2)), '\\frac{1}{2}');
 });
-test('.toMathML()', 19, function () {
+test('.toMathML()', 20, function () {
+	equal(MathLib.toMathML([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '<mrow><mo>[</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mrow><mo>[</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>]</mo></mrow><mo>,</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>]</mo></mrow>');
+
 	equal(MathLib.toMathML(NaN), '<mi>NaN</mi>');
 	equal(MathLib.toMathML(Infinity), '<mi>&#x221e;</mi>');
 	equal(MathLib.toMathML(-Infinity), '<mrow><mo>-</mo><mi>&#x221e;</mi></mrow>');
@@ -215,7 +222,9 @@ test('.toMathML()', 19, function () {
 
 	equal(MathLib.toMathML(new MathLib.Rational(1, 2)), '<mfrac><mn>1</mn><mn>2</mn></mfrac>');
 });
-test('.toString()', 19, function () {
+test('.toString()', 20, function () {
+	equal(MathLib.toString([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '[1,2,[3,4],1/2]');
+
 	equal(MathLib.toString(NaN), 'NaN');
 	equal(MathLib.toString(Infinity), 'Infinity');
 	equal(MathLib.toString(-Infinity), '-Infinity');
@@ -244,7 +253,7 @@ test('.toString()', 19, function () {
 	equal(MathLib.toString(new MathLib.Rational(1, 2)), '1/2');
 });
 test('.type()', 10, function () {
-	equal(MathLib.type(new MathLib.Complex([2, 3])), 'complex', 'MathLib.type(MathLib.complex([2, 3])) = "complex"');
+	equal(MathLib.type(new MathLib.Complex(2, 3)), 'complex', 'MathLib.type(MathLib.complex(2, 3)) = "complex"');
 	equal(MathLib.type(42), 'number', 'MathLib.type(42) = "number"');
 	equal(MathLib.type(['ar', 'ray']), 'array', 'MathLib.type([1,2]) = "array"');
 	equal(MathLib.type({ob: 'ject'}), 'object', 'MathLib.type({obj: 42}) = "object"');
@@ -583,13 +592,13 @@ test('.arcsec()', 17, function () {
 	ok(MathLib.isEqual(n1p0.re, Math.PI));
 	ok(MathLib.isPosZero(n1p0.im));
 	ok(MathLib.isEqual(n1n0.re, Math.PI));
-	ok(MathLib.isNegZero(n1n0.im));
+	ok(MathLib.isNegZero(n1n0.im), 'arcsec(-1 -0i).im = -0');
 
 
-	equal(p0p0.re, Infinity);
-	equal(p0n0.re, Infinity);
-	equal(n0p0.re, Infinity);
-	equal(n0n0.re, Infinity);
+	equal(p0p0.re, Infinity, 'arcsec(+0+0i) = ∞');
+	equal(p0n0.re, Infinity, 'arcsec(+0-0i) = ∞');
+	equal(n0p0.re, Infinity, 'arcsec(-0+0i) = ∞');
+	equal(n0n0.re, Infinity, 'arcsec(-0-0i) = ∞');
 
 
 	ok(MathLib.isPosZero(p1p0.re));
@@ -1877,6 +1886,12 @@ test('.parseContentMathML() function evaluation', 7, function () {
 });
 
 
+test('.parseContentMathML() list', 2, function () {
+	deepEqual(MathLib.Expression.parseContentMathML('<list><cn type="double">1</cn><cn type="double">2</cn><list><cn type="double">3</cn><cn type="double">4</cn></list><cn type="rational">1<sep/>2</cn></list>'), [1, 2, [3, 4], new MathLib.Rational(new MathLib.Integer(1), new MathLib.Integer(2))]);
+	deepEqual(MathLib.Expression.parseContentMathML('<apply><csymbol cd="list1">list</csymbol><cn type="double">1</cn><cn type="double">2</cn><apply><csymbol cd="list1">list</csymbol><cn type="double">3</cn><cn type="double">4</cn></apply><apply><csymbol cd="nums1">rational</csymbol><cn type="double">1</cn><cn type="double">2</cn></apply></apply>'), [1, 2, [3, 4], new MathLib.Rational(1, 2)]);
+});
+
+
 test('.parseContentMathML() matrix', 2, function () {
 	deepEqual(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><matrix><matrixrow><cn>1</cn><cn>0</cn><cn>0</cn></matrixrow><matrixrow><cn>0</cn><cn>1</cn><cn>0</cn></matrixrow><matrixrow><cn>0</cn><cn>0</cn><cn>1</cn></matrixrow></matrix></math>'), new MathLib.Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]), '.evaluate() matrix');
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><determinant/><matrix><matrixrow><cn>8</cn><cn>1</cn><cn>6</cn></matrixrow><matrixrow><cn>3</cn><cn>5</cn><cn>7</cn></matrixrow><matrixrow><cn>4</cn><cn>9</cn><cn>2</cn></matrixrow></matrix></apply></math>').evaluate(), -360, '.evaluate() apply');
@@ -1959,7 +1974,7 @@ test('execution', 4, function () {
 	equal(MathLib.sin(0), 0, 'MathLib.sin(0) should be 0');
 	equal(MathLib.exp(MathLib.sin)(0), 1, 'MathLib.exp(MathLib.sin)(0) should be 1');
 	equal(MathLib.plus(MathLib.sin, 2)(0), 2, 'sin(0) + 2');
-	equal(MathLib.plus(MathLib.times(MathLib.sin, MathLib.sin), MathLib.times(MathLib.cos, MathLib.cos))(42), 1, 'sin(42)^2 + cos(42)^2 = 1');
+	ok(MathLib.isEqual(MathLib.plus(MathLib.times(MathLib.sin, MathLib.sin), MathLib.times(MathLib.cos, MathLib.cos))(42), 1), 'sin(42)^2 + cos(42)^2 = 1');
 });
 
 
@@ -1975,6 +1990,39 @@ test('.type', 4, function () {
 	equal(MathLib.exp(MathLib.sin).type, 'functn', 'MathLib.exp(MathLib.sin).type should be functn');
 	equal(MathLib.plus(1, MathLib.cos).type, 'functn', 'MathLib.plus(1, MathLib.cos).type should be functn');
 	equal(MathLib.plus(MathLib.cos, 1).type, 'functn', 'MathLib.plus(MathLib.cos, 1).type should be functn');
+});
+
+
+test('.call', 14, function () {
+	var f;
+	equal(MathLib.minus(4, 3), 1, 'MathLib.minus with two arguments evaluates the functn');
+
+	f = MathLib.minus(4);
+
+	equal(f.toString(), 'y ⟼ 4 - y', 'MathLib.minus with one undefined arguments does partial application');
+	equal(f(3), 1);
+
+	f = MathLib.minus(undefined, 3);
+	equal(f.toString(), 'x ⟼ x - 3', 'MathLib.minus with one undefined arguments does partial application');
+	equal(f(4), 1);
+
+	f = MathLib.minus(MathLib.cos);
+	equal(f.toString(), '(x, y) ⟼ cos(x) - y');
+	equal(f(0, 2), -1);
+
+	f = MathLib.minus(MathLib.cos, 3);
+	equal(f.toString(), 'x ⟼ cos(x) - 3');
+	equal(f(0), -2);
+
+	f = MathLib.minus(4, MathLib.cos)
+	equal(f.toString(), 'x ⟼ 4 - cos(x)');
+	equal(f(0), 3);
+
+	f = MathLib.sin(MathLib.Expression.variable('u'));
+	equal(f.toString(), 'u ⟼ sin(u)');
+
+	deepEqual(MathLib.sqrt([0, 1, 4, 9, 16]), [0, 1, 2, 3, 4]);
+	deepEqual(MathLib.minus([1, 2, 3], [1, 2, 3]), [[0, -1, -2], [1, 0, -1], [2, 1, 0]]);
 });
 test('.abs()', 7, function () {
 	// Spec. 1: MathLib.abs(NaN) = NaN
@@ -4868,7 +4916,7 @@ test('.isEmpty()', 3, function () {
 test('.isEqual()', 3, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]),
 			m = new MathLib.Set([1, 3, 5, 7]),
-			n = new MathLib.Set([1, 2, new MathLib.Complex([3, 0]), 4]);
+			n = new MathLib.Set([1, 2, new MathLib.Complex(3, 0), 4]);
 	deepEqual(s.isEqual(s), true, '.isEqual()');
 	deepEqual(s.isEqual(m), false, '.isEqual()');
 	deepEqual(s.isEqual(n), false, '.isEqual()');

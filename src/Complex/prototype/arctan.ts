@@ -5,6 +5,7 @@
  */
 arctan() : Complex {
 	var res,
+			one = new MathLib.Complex(1, -0),
 			iz = new MathLib.Complex(-this.im, this.re);
 
 	if (this.isZero()) {
@@ -12,7 +13,7 @@ arctan() : Complex {
 	}
 	
 	res = MathLib.times(new MathLib.Complex(0, -0.5),
-		MathLib.plus(1, iz).divide(MathLib.minus(1, iz)).ln());
+		MathLib.plus(one, iz).divide(MathLib.minus(one, iz)).ln());
 
 	// Correct some values on the axis imaginary axis.
 	// TODO: Are this all the wrong values?

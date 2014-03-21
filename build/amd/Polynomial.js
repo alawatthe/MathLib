@@ -210,7 +210,9 @@
 		* @return {Polynomial}
 		*/
 		Polynomial.prototype.negative = function () {
-			return new MathLib.Polynomial(this.map(MathLib.negative));
+			return new MathLib.Polynomial(this.map(function (entry) {
+				return MathLib.negative(entry);
+			}));
 		};
 
 		/**

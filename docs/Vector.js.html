@@ -391,7 +391,9 @@
           </section>
           <div class="description"><p>Returns the negative vector.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.negative = function () {
-			return this.map(MathLib.negative);
+			return this.map(function (entry) {
+				return MathLib.negative(entry);
+			});
 		};</code></pre>
           <section id="norm">
             <h1><a href="http://mathlib.de/en/docs/Vector/norm">norm</a>

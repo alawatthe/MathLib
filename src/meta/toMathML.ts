@@ -9,6 +9,10 @@ export var toMathML = function (x, options : toPresentationOptions = {}) {
 	var str,
 			base = options.base || 10;
 
+	if (Array.isArray(x)) {
+		return '<mrow><mo>[</mo>' + x.map(entry => MathLib.toMathML(entry, options)).join('<mo>,</mo>') + '<mo>]</mo></mrow>';
+	}
+
 	if (typeof x === 'object' && 'toMathML' in x) {
 		return x.toMathML(options);
 	}

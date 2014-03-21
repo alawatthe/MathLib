@@ -11,17 +11,34 @@ map(f) : Expression {
 
 	for (prop in this) {
 		if (this.hasOwnProperty(prop) && prop !== 'content') {
-			properties[prop] = this[prop];
+			if (Array.isArray(this[prop])) {
+				properties[prop] = this[prop].map(f)
+			}
+			else {
+				properties[prop] = this[prop];
+			}
 		}
 	}
 
 	mappedProperties = f(properties);
 	if (Array.isArray(this.content)) {
-		mappedProperties.content = this.content.map(expr => expr.map(f));
+		mappedProperties.content = this.content.map(function(expr) {
+			if (expr.type === 'expression') {
+				return expr.map(f);
+			}
+			else {
+				return f(expr);
+			}
+		});
 	}
 	else if (this.content) {
 		mappedProperties.content = this.content.map(f);
 	}
 
-	return new MathLib.Expression(mappedProperties);
+	if (typeof mappedProperties === 'object') {
+		return new MathLib.Expression(mappedProperties);
+	}
+	else {
+		return mappedProperties;
+	}
 }

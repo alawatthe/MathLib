@@ -4,6 +4,8 @@
  * @return {Complex}
  */
 artanh() : Complex {
+	var one = new MathLib.Complex(1,-0);
+
 	if (this.isZero()) {
 		return new MathLib.Complex(this.re, this.im);
 	}
@@ -12,5 +14,5 @@ artanh() : Complex {
 		return new MathLib.Complex(NaN);
 	}
 
-	return MathLib.times(0.5, MathLib.minus(MathLib.ln(MathLib.plus(1, this)), MathLib.ln(MathLib.minus(1, this))));
+	return MathLib.times(0.5, MathLib.minus(one.plus(this).ln(), one.minus(this).ln()));
 }

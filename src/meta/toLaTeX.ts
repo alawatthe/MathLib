@@ -9,6 +9,10 @@ export var toLaTeX = function (x, options : toPresentationOptions = {}) {
 	var base = options.base || 10,
 			str = MathLib.toString(x, {base: base, sign: options.sign});
 
+	if (Array.isArray(x)) {
+		return '[' + x.map(entry => MathLib.toLaTeX(entry, options)).join() + ']';
+	}
+
 	if (typeof x === 'object' && 'toLaTeX' in x) {
 		return x.toLaTeX(options);
 	}

@@ -75,6 +75,20 @@ static parseContentMathML(MathMLString : string) : Expression {
 				functnName = 'arctan2';
 			}
 
+			if (functnName === 'list') {
+				return parser(children);
+			}
+
+			if (functnName === 'rational') {
+				var parsedChildren = parser(children);
+				return new MathLib.Rational(parsedChildren[0], parsedChildren[1]);
+			}
+
+			if (functnName === 'based_integer') {
+				var parsedChildren = parser(children);
+				return new MathLib.Integer(parsedChildren[1], {base: parsedChildren[0]});
+			}
+
 			if (MathLib[functnName]) {
 				isMethod = false;
 			}
@@ -218,6 +232,9 @@ static parseContentMathML(MathMLString : string) : Expression {
 					content: [parser(apply)]
 				});
 			}
+		},
+		list: function (node) {
+			return parser(Array.prototype.slice.call(node.childNodes));
 		},
 		math: function (node) {
 			return parser(node.childNodes[0]);

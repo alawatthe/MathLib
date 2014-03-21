@@ -88,7 +88,9 @@
 		* @return {Matrix}
 		*/
 		Matrix.prototype.adjoint = function () {
-			return this.map(MathLib.conjugate).transpose();
+			return this.map(function (entry) {
+				return MathLib.conjugate(entry);
+			}).transpose();
 		};
 
 		/**
@@ -178,7 +180,9 @@
 		* @return {Matrix}
 		*/
 		Matrix.prototype.copy = function () {
-			return this.map(MathLib.copy);
+			return this.map(function (entry) {
+				return MathLib.copy(entry);
+			});
 		};
 
 		/**
@@ -748,7 +752,9 @@
 			var i, ii, negative = [];
 
 			for (i = 0, ii = this.rows; i < ii; i++) {
-				negative.push(this[i].map(MathLib.negative));
+				negative.push(this[i].map(function (entry) {
+					return MathLib.negative(entry);
+				}));
 			}
 			return new MathLib.Matrix(negative);
 		};

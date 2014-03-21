@@ -1,4 +1,7 @@
-test('.toContentMathML()', 18, function () {
+test('.toContentMathML()', 20, function () {
+	equal(MathLib.toContentMathML([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '<list><cn type="double">1</cn><cn type="double">2</cn><list><cn type="double">3</cn><cn type="double">4</cn></list><cn type="rational">1<sep/>2</cn></list>');
+	equal(MathLib.toContentMathML([1, 2, [3, 4], new MathLib.Rational(1, 2)], {strict: true}), '<apply><csymbol cd="list1">list</csymbol><cn type="double">1</cn><cn type="double">2</cn><apply><csymbol cd="list1">list</csymbol><cn type="double">3</cn><cn type="double">4</cn></apply><apply><csymbol cd="nums1">rational</csymbol><cn type="double">1</cn><cn type="double">2</cn></apply></apply>');
+
 	equal(MathLib.toContentMathML(NaN), '<notanumber/>');
 	equal(MathLib.toContentMathML(NaN, {strict: true}), '<csymbol cd="nums1">NaN</csymbol>');
 

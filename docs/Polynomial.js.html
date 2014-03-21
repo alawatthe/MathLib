@@ -500,7 +500,9 @@
           </section>
           <div class="description"><p>Returns the negative polynomial</p> </div>
           <pre><code class="language-javascript">Polynomial.prototype.negative = function () {
-			return new MathLib.Polynomial(this.map(MathLib.negative));
+			return new MathLib.Polynomial(this.map(function (entry) {
+				return MathLib.negative(entry);
+			}));
 		};</code></pre>
           <section id="plus">
             <h1><a href="http://mathlib.de/en/docs/Polynomial/plus">plus</a>

@@ -4,5 +4,5 @@
  * @return {Polynomial}
  */
 negative() : Polynomial {
-	return new MathLib.Polynomial(this.map(MathLib.negative));
+	return new MathLib.Polynomial(this.map(entry => MathLib.negative(entry)));
 }

@@ -1,5 +1,5 @@
 test('.type()', 10, function () {
-	equal(MathLib.type(new MathLib.Complex([2, 3])), 'complex', 'MathLib.type(MathLib.complex([2, 3])) = "complex"');
+	equal(MathLib.type(new MathLib.Complex(2, 3)), 'complex', 'MathLib.type(MathLib.complex(2, 3)) = "complex"');
 	equal(MathLib.type(42), 'number', 'MathLib.type(42) = "number"');
 	equal(MathLib.type(['ar', 'ray']), 'array', 'MathLib.type([1,2]) = "array"');
 	equal(MathLib.type({ob: 'ject'}), 'object', 'MathLib.type({obj: 42}) = "object"');

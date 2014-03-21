@@ -1,4 +1,6 @@
-test('.toMathML()', 19, function () {
+test('.toMathML()', 20, function () {
+	equal(MathLib.toMathML([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '<mrow><mo>[</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mrow><mo>[</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>]</mo></mrow><mo>,</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>]</mo></mrow>');
+
 	equal(MathLib.toMathML(NaN), '<mi>NaN</mi>');
 	equal(MathLib.toMathML(Infinity), '<mi>&#x221e;</mi>');
 	equal(MathLib.toMathML(-Infinity), '<mrow><mo>-</mo><mi>&#x221e;</mi></mrow>');

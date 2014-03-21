@@ -131,7 +131,9 @@
 		* @return {Vector}
 		*/
 		Vector.prototype.negative = function () {
-			return this.map(MathLib.negative);
+			return this.map(function (entry) {
+				return MathLib.negative(entry);
+			});
 		};
 
 		/**

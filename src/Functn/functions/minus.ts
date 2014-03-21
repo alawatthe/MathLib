@@ -10,5 +10,5 @@ fns.minus = {
 	cdgroup: 'arith1',
 	toLaTeX: ['', '-', ''],
 	toMathML: ['', '<mo>-</mo>', ''],
-	toString: ['', '-', '']
+	toString: ['', ' - ', '']
 };

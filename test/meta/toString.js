@@ -1,4 +1,6 @@
-test('.toString()', 19, function () {
+test('.toString()', 20, function () {
+	equal(MathLib.toString([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '[1,2,[3,4],1/2]');
+
 	equal(MathLib.toString(NaN), 'NaN');
 	equal(MathLib.toString(Infinity), 'Infinity');
 	equal(MathLib.toString(-Infinity), '-Infinity');

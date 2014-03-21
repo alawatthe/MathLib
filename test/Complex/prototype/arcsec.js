@@ -16,13 +16,13 @@ test('.arcsec()', 17, function () {
 	ok(MathLib.isEqual(n1p0.re, Math.PI));
 	ok(MathLib.isPosZero(n1p0.im));
 	ok(MathLib.isEqual(n1n0.re, Math.PI));
-	ok(MathLib.isNegZero(n1n0.im));
+	ok(MathLib.isNegZero(n1n0.im), 'arcsec(-1 -0i).im = -0');
 
 
-	equal(p0p0.re, Infinity);
-	equal(p0n0.re, Infinity);
-	equal(n0p0.re, Infinity);
-	equal(n0n0.re, Infinity);
+	equal(p0p0.re, Infinity, 'arcsec(+0+0i) = ∞');
+	equal(p0n0.re, Infinity, 'arcsec(+0-0i) = ∞');
+	equal(n0p0.re, Infinity, 'arcsec(-0+0i) = ∞');
+	equal(n0n0.re, Infinity, 'arcsec(-0-0i) = ∞');
 
 
 	ok(MathLib.isPosZero(p1p0.re));

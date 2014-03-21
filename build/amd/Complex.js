@@ -89,7 +89,7 @@
 		* @return {Complex}
 		*/
 		Complex.prototype.arccos = function () {
-			return MathLib.minus(Math.PI / 2, this.arcsin());
+			return (new MathLib.Complex(Math.PI / 2, -0)).minus(this.arcsin());
 		};
 
 		/**
@@ -166,13 +166,13 @@
 		* @return {Complex}
 		*/
 		Complex.prototype.arctan = function () {
-			var res, iz = new MathLib.Complex(-this.im, this.re);
+			var res, one = new MathLib.Complex(1, -0), iz = new MathLib.Complex(-this.im, this.re);
 
 			if (this.isZero()) {
 				return new MathLib.Complex(this.re, this.im);
 			}
 
-			res = MathLib.times(new MathLib.Complex(0, -0.5), MathLib.plus(1, iz).divide(MathLib.minus(1, iz)).ln());
+			res = MathLib.times(new MathLib.Complex(0, -0.5), MathLib.plus(one, iz).divide(MathLib.minus(one, iz)).ln());
 
 			// Correct some values on the axis imaginary axis.
 			// TODO: Are this all the wrong values?
@@ -201,6 +201,8 @@
 		* @return {Complex}
 		*/
 		Complex.prototype.artanh = function () {
+			var one = new MathLib.Complex(1, -0);
+
 			if (this.isZero()) {
 				return new MathLib.Complex(this.re, this.im);
 			}
@@ -209,7 +211,7 @@
 				return new MathLib.Complex(NaN);
 			}
 
-			return MathLib.times(0.5, MathLib.minus(MathLib.ln(MathLib.plus(1, this)), MathLib.ln(MathLib.minus(1, this))));
+			return MathLib.times(0.5, MathLib.minus(one.plus(this).ln(), one.minus(this).ln()));
 		};
 
 		/**

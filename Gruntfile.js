@@ -387,11 +387,34 @@ module.exports = function (grunt) {
 
 		*/
 
+		connect: {
+			server: {
+				options: {
+					port: 8000,
+					hostname: 'localhost',
+					base: '.'
+				}
+			}
+		},
+
 
 		qunit: {
-			MathLib: ['test/test.html'],
-			min: ['test/test.min.html']
+			MathLib: {
+				options: {
+					urls: [
+						'http://localhost:8000/test/test.html'
+					]
+				}
+			},
+			min: {
+				options: {
+					urls: [
+						'http://localhost:8000/test/test.min.html'
+					]
+				}
+			}
 		},
+
 
 		'qunit_amd': {
 			MathLib: {
@@ -428,11 +451,11 @@ module.exports = function (grunt) {
 				options: {
 					username: sauceuser, //'<%= saucelabs.username %>',
 					key: saucekey, //'<%= saucelabs.key %>',
-					urls: ['http://0.0.0.0:9999/test/test.html'],
+					urls: ['http://localhost:8000/test/test.html'],
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 60,
+					build: 61,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -634,15 +657,6 @@ module.exports = function (grunt) {
 							platform: 'OS X 10.8'
 						}
 					]
-				}
-			}
-		},
-
-		connect: {
-			server: {
-				options: {
-					base: '.',
-					port: 9999
 				}
 			}
 		},
@@ -1121,7 +1135,7 @@ module.exports = function (grunt) {
 
 		watch: {
 			src: {
-				files: ['src/*/*.ts'],
+				files: ['src/*/*.ts', 'src/*/*/*.ts'],
 				tasks: ['generatePlain']
 			},
 			tests: {
@@ -1161,7 +1175,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('generateCSS', ['compass', 'cssmin']);
 	grunt.registerTask('generateDocs', ['clean:interfacesJS', 'shell:doxx']);
 
-	grunt.registerTask('testPlain', ['qunit']);
+	grunt.registerTask('testPlain', ['connect', 'qunit']);
 	grunt.registerTask('testCommonjs', ['nodeunit']);
 	grunt.registerTask('testAMD', ['qunit_amd_warning', 'qunit_amd']);
 	grunt.registerTask('testAll', ['testPlain', 'testCommonjs', 'testAMD']);

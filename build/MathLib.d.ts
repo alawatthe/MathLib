@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-03-12
+ * build date: 2014-03-21
  */
 
 	var version: string;
@@ -95,7 +95,7 @@
 	*/
 	class Expression {
 		public type: string;
-		public args: string[];
+		public args: any;
 		public cdgroup: string;
 		public content: any;
 		public isMethod: boolean;

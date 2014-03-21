@@ -68,6 +68,12 @@ test('.parseContentMathML() function evaluation', 7, function () {
 });
 
 
+test('.parseContentMathML() list', 2, function () {
+	deepEqual(MathLib.Expression.parseContentMathML('<list><cn type="double">1</cn><cn type="double">2</cn><list><cn type="double">3</cn><cn type="double">4</cn></list><cn type="rational">1<sep/>2</cn></list>'), [1, 2, [3, 4], new MathLib.Rational(new MathLib.Integer(1), new MathLib.Integer(2))]);
+	deepEqual(MathLib.Expression.parseContentMathML('<apply><csymbol cd="list1">list</csymbol><cn type="double">1</cn><cn type="double">2</cn><apply><csymbol cd="list1">list</csymbol><cn type="double">3</cn><cn type="double">4</cn></apply><apply><csymbol cd="nums1">rational</csymbol><cn type="double">1</cn><cn type="double">2</cn></apply></apply>'), [1, 2, [3, 4], new MathLib.Rational(1, 2)]);
+});
+
+
 test('.parseContentMathML() matrix', 2, function () {
 	deepEqual(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><matrix><matrixrow><cn>1</cn><cn>0</cn><cn>0</cn></matrixrow><matrixrow><cn>0</cn><cn>1</cn><cn>0</cn></matrixrow><matrixrow><cn>0</cn><cn>0</cn><cn>1</cn></matrixrow></matrix></math>'), new MathLib.Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]), '.evaluate() matrix');
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><determinant/><matrix><matrixrow><cn>8</cn><cn>1</cn><cn>6</cn></matrixrow><matrixrow><cn>3</cn><cn>5</cn><cn>7</cn></matrixrow><matrixrow><cn>4</cn><cn>9</cn><cn>2</cn></matrixrow></matrix></apply></math>').evaluate(), -360, '.evaluate() apply');
