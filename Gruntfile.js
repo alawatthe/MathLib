@@ -455,7 +455,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 61,
+					build: 62,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -464,155 +464,215 @@ module.exports = function (grunt) {
 						// ======
 
 						{
-							browser: 'googlechrome',
-							os: 'Windows 8.1',
-							'browser-version': '31'
+							browserName: 'googlechrome',
+							version: '33',
+							platform: 'Windows 8.1'
 						},
 						{
-							browser: 'googlechrome',
-							os: 'Windows 8',
-							'browser-version': '31'
+							browserName: 'googlechrome',
+							version: 'beta',
+							platform: 'Windows 8.1'
 						},
 						{
-							browser: 'googlechrome',
-							os: 'Windows 7',
-							'browser-version': '31'
+							browserName: 'googlechrome',
+							version: '33',
+							platform: 'Windows 8'
 						},
 						{
-							browser: 'googlechrome',
-							os: 'Windows XP',
-							'browser-version': '31'
+							browserName: 'googlechrome',
+							version: 'beta',
+							platform: 'Windows 8'
 						},
 						{
-							browser: 'googlechrome',
-							os: 'OS X 10.6',
-							'browser-version': '31'
+							browserName: 'googlechrome',
+							version: '33',
+							platform: 'Windows 7'
 						},
 						{
-							browser: 'googlechrome',
-							os: 'OS X 10.8',
-							'browser-version': '31'
+							browserName: 'googlechrome',
+							version: 'beta',
+							platform: 'Windows 7'
 						},
 						{
-							browser: 'googlechrome',
-							os: 'OS X 10.9',
-							'browser-version': '31'
+							browserName: 'googlechrome',
+							version: '33',
+							platform: 'Windows XP'
 						},
 						{
-							browser: 'googlechrome',
-							os: 'Linux',
-							'browser-version': '30'
+							browserName: 'googlechrome',
+							version: 'beta',
+							platform: 'Windows XP'
+						},
+						{
+							browserName: 'googlechrome',
+							version: '32',
+							platform: 'OS X 10.6'
+						},
+						{
+							browserName: 'googlechrome',
+							version: 'beta',
+							platform: 'OS X 10.6'
+						},
+						{
+							browserName: 'googlechrome',
+							version: '32',
+							platform: 'OS X 10.8'
+						},
+						{
+							browserName: 'googlechrome',
+							version: 'beta',
+							platform: 'OS X 10.8'
+						},
+						{
+							browserName: 'googlechrome',
+							version: '31',
+							platform: 'OS X 10.9'
+						},
+						{
+							browserName: 'googlechrome',
+							version: '32',
+							platform: 'Linux'
 						},
 
 
 						// Firefox
 						// =======
 						{
-							browser: 'firefox',
-							os: 'Windows 8.1',
-							'browser-version': '26'
+							browserName: 'firefox',
+							version: '27',
+							platform: 'Windows 8.1'
 						},
 						{
-							browser: 'firefox',
-							os: 'Windows 8',
-							'browser-version': '26'
+							browserName: 'firefox',
+							version: '27',
+							platform: 'Windows 8'
 						},
 						{
-							browser: 'firefox',
-							os: 'Windows 7',
-							'browser-version': '26'
+							browserName: 'firefox',
+							version: '27',
+							platform: 'Windows 7'
 						},
 						{
-							browser: 'firefox',
-							os: 'Windows XP',
-							'browser-version': '26'
+							browserName: 'firefox',
+							version: '27',
+							platform: 'Windows XP'
 						},
 						{
-							browser: 'firefox',
-							os: 'OS X 10.6',
-							'browser-version': '26'
+							browserName: 'firefox',
+							version: '27',
+							platform: 'OS X 10.6'
 						},
 						{
-							browser: 'firefox',
-							os: 'OS X 10.9',
-							'browser-version': '26'
+							browserName: 'firefox',
+							version: '26',
+							platform: 'OS X 10.9'
 						},
 						{
-							browser: 'firefox',
-							os: 'Linux',
-							'browser-version': '26'
+							browserName: 'firefox',
+							version: '27',
+							platform: 'Linux'
 						},
 
 
 						// Safari
 						// ======
 						{
-							browser: 'safari',
-							os: 'Windows 7',
-							'browser-version': '5'
+							browserName: 'safari',
+							version: '5',
+							platform: 'Windows 7'
 						},
 						{
-							browser: 'safari',
-							os: 'Windows XP',
-							'browser-version': '5'
+							browserName: 'safari',
+							version: '5',
+							platform: 'OS X 10.6'
 						},
 						{
-							browser: 'safari',
-							os: 'OS X 10.6',
-							'browser-version': '5'
+							browserName: 'safari',
+							version: '6',
+							platform: 'OS X 10.8'
 						},
 						{
-							browser: 'safari',
-							os: 'OS X 10.8',
-							'browser-version': '6'
+							browserName: 'safari',
+							version: '7',
+							platform: 'OS X 10.9'
 						},
 
 
 						// Opera
 						// =====
 						{
-							browser: 'opera',
-							os: 'Windows 8.1',
-							'browser-version': '10'
+							browserName: 'opera',
+							version: '12',
+							platform: 'Windows 7'
 						},
 						{
-							browser: 'opera',
-							os: 'Windows 8',
-							'browser-version': '10'
+							browserName: 'opera',
+							version: '11',
+							platform: 'Windows 7'
 						},
 						{
-							browser: 'opera',
-							os: 'Windows 7',
-							'browser-version': '12'
+							browserName: 'opera',
+							version: '12',
+							platform: 'Windows XP'
 						},
 						{
-							browser: 'opera',
-							os: 'Windows XP',
-							'browser-version': '12'
+							browserName: 'opera',
+							version: '11',
+							platform: 'Windows XP'
 						},
 						{
-							browser: 'opera',
-							os: 'Linux',
-							'browser-version': '12'
+							browserName: 'opera',
+							version: '12',
+							platform: 'Linux'
 						},
 
 
 						// Internet Explorer
 						// =================
 						{
-							browser: 'iehta',
-							os: 'Windows 7',
-							'browser-version': '10'
+							browserName: 'internetexplorer',
+							version: '11',
+							platform: 'Windows 8.1'
 						},
 						{
-							browser: 'iehta',
-							os: 'Windows 7',
-							'browser-version': '9'
+							browserName: 'internetexplorer',
+							version: '10',
+							platform: 'Windows 8'
+						},
+						{
+							browserName: 'internetexplorer',
+							version: '11',
+							platform: 'Windows 7'
+						},
+						{
+							browserName: 'internetexplorer',
+							version: '10',
+							platform: 'Windows 7'
+						},
+						{
+							browserName: 'internetexplorer',
+							version: '9',
+							platform: 'Windows 7'
 						},
 
 
 						// Android
 						// =======
+						{
+							browserName: 'android',
+							version: '4.3',
+							platform: 'Linux'
+						},
+						{
+							browserName: 'android',
+							version: '4.2',
+							platform: 'Linux'
+						},
+						{
+							browserName: 'android',
+							version: '4.1',
+							platform: 'Linux'
+						},
 						{
 							browserName: 'android',
 							version: '4.0',
@@ -629,7 +689,7 @@ module.exports = function (grunt) {
 						},
 						{
 							browserName: 'iphone',
-							version: '6.0',
+							version: '6.1',
 							platform: 'OS X 10.8'
 						},
 						{
@@ -648,7 +708,7 @@ module.exports = function (grunt) {
 						},
 						{
 							browserName: 'ipad',
-							version: '6.0',
+							version: '6.1',
 							platform: 'OS X 10.8'
 						},
 						{
