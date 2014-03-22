@@ -15,7 +15,12 @@ test('pow()', 65, function () {
 
 	// Spec. 2: MathLib.pow (±0, y) = ±∞ (for y an odd integer < 0)
 	equal(MathLib.pow(+0, -5), +Infinity, 'Spec. 2: MathLib.pow (±0, y) = ±∞ (for y an odd integer < 0)');
-	equal(MathLib.pow(-0, -5), -Infinity, 'Spec. 2: MathLib.pow (±0, y) = ±∞ (for y an odd integer < 0)');
+
+	// This test (and a test a bit down) fail in Opera 12,
+	// if this test isn't using a temporary variable.
+	// I have no idea what is going on...
+	var res = MathLib.pow(-0, -5);
+	equal(res, -Infinity, 'Spec. 2: MathLib.pow (±0, y) = ±∞ (for y an odd integer < 0)');
 
 	// Spec. 3: MathLib.pow(±0, -∞) = +∞
 	equal(MathLib.pow(+0, -Infinity), Infinity, 'Spec. 3: MathLib.pow(±0, -∞) = +∞');
