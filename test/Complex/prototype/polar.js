@@ -15,7 +15,7 @@ test('.polar()', 8, function () {
 	// I will only modify the test now and not the code.
 	// Affected tests:
 	// Complex.polar, Complex#cosh, Complex#sinh
-	// 
+	//
 	// More information:
 	// https://code.google.com/p/v8/issues/detail?id=3006
 	if (Math.cos(-5) === 0.2836621854632259) {
