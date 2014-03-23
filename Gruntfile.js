@@ -455,7 +455,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 64,
+					build: 65,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -620,6 +620,16 @@ module.exports = function (grunt) {
 
 
 		'regex-replace': {
+			bower: {
+				src: ['bower.json'],
+				actions: [
+					{
+						search: /"version": "\d+.\d+.\d+",/,
+						replace: '"version": "<%= pkg.version %>",'
+					}
+				]
+			},
+
 			plainHead: {
 				src: ['build/plain/meta.js'],
 				actions: [
@@ -986,7 +996,7 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('default', ['help']);
 	grunt.registerTask('commit', ['generateAll', 'clean', 'testPlain', 'testCommonjs', 'jshint', 'jscs']);
-	grunt.registerTask('release', ['generateAll', 'clean', 'testPlain', 'testCommonjs', /*'jshint', 'jscs',*/ 'regex-replace:saucebuildnumber']);/*, 'docco'*/
+	grunt.registerTask('release', ['generateAll', 'clean', 'testPlain', 'testCommonjs', /*'jshint', 'jscs',*/ 'regex-replace:bower', 'regex-replace:saucebuildnumber']);/*, 'docco'*/
 
 	grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);
 	grunt.registerTask('continuousIntegration', ['nodeunit', /*'jshint', 'jscs',*/ 'saucelabs']);
