@@ -4847,10 +4847,6 @@ test('.prototype.toMathML()', 8, function () {
 	equal(p.toMathML({base: 2}), '<mfrac><mn>-10</mn><mn>11</mn></mfrac>', '.toMathML()');
 	equal(p.toMathML({base: 2, baseSubscript: true}), '<mfrac><msub><mn>-10</mn><mn>2</mn></msub><msub><mn>11</mn><mn>2</mn></msub></mfrac>', '.toMathML()');
 });
-test('.prototype.toNumber()', 1, function () {
-	var r = new MathLib.Rational(1, 2);
-	equal(r.toNumber(), 1 / 2, '.toNumber()');
-});
 test('.prototype.toString()', 8, function () {
 	var r = new MathLib.Rational(2, 3),
 			p = new MathLib.Rational(-2, 3);

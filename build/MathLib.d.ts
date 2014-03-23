@@ -2495,13 +2495,6 @@ declare var Integer: Ring;
 		*/
 		public toMathML(options?: toPresentationOptions): string;
 		/**
-		* Returns the number represented by the rational number
-		*
-		* @deprecated Use .coerceTo('number') instead
-		* @return {number}
-		*/
-		public toNumber(): number;
-		/**
 		* Custom toString function
 		*
 		* @param {object} [options] - Optional options to style the output

@@ -129,8 +129,6 @@
               </li>
               <li><a href="#toMathML"><i class="alert alert-info"></i>toMathML</a>
               </li>
-              <li><a href="#toNumber"><i class="alert alert-info"></i>toNumber</a>
-              </li>
               <li><a href="#toString"><i class="alert alert-info"></i>toString</a>
               </li>
             </ul>
@@ -636,19 +634,6 @@ var r = new MathLib.Rational(2, 3);
 			}
 
 			return str + '&lt;mfrac&gt;' + numerator + MathLib.toMathML(this.denominator, passOptions) + '&lt;/mfrac&gt;';
-		};</code></pre>
-          <section id="toNumber">
-            <h1><a href="http://mathlib.de/en/docs/Rational/toNumber">toNumber</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Rational.prototype.toNumber()</span> → <span>number</span>
-            </p>
-          </section>
-          <div class="description"><p>Returns the number represented by the rational number</p> </div>
-          <pre><code class="language-javascript">Rational.prototype.toNumber = function () {
-			console.warn('Rational.prototype.toNumber() is deprecated. Use Rational.prototype.coerceTo(&quot;number&quot;) instead.');
-			return this.numerator / this.denominator;
 		};</code></pre>
           <section id="toString">
             <h1><a href="http://mathlib.de/en/docs/Rational/toString">toString</a>
