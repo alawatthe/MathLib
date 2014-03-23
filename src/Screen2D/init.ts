@@ -125,7 +125,7 @@ export class Screen2D extends Screen {
 		// Remove the warning message.
 		this.wrapper.innerHTML = '';
 
-		this.container.classList.add('MathLib_screen2D');
+		this.container.className += ' MathLib_screen2D';
 
 		// This is just a dummy method for the following few lines.
 		// The real applyTransformation method is specified after the creation of the layers.

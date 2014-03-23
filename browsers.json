@@ -136,31 +136,31 @@
 
 
 
-				{
-					"browserName": "opera",
-					"version": "12",
-					"platform": "Windows 7"
-				},
+	{
+		"browserName": "opera",
+		"version": "12",
+		"platform": "Windows 7"
+	},
 	{
 		"browserName": "opera",
 		"version": "11",
 		"platform": "Windows 7"
 	},
-				{
-					"browserName": "opera",
-					"version": "12",
-					"platform": "Windows XP"
-				},
+	{
+		"browserName": "opera",
+		"version": "12",
+		"platform": "Windows XP"
+	},
 	{
 		"browserName": "opera",
 		"version": "11",
 		"platform": "Windows XP"
 	},
-				{
-					"browserName": "opera",
-					"version": "12",
-					"platform": "Linux"
-				},
+	{
+		"browserName": "opera",
+		"version": "12",
+		"platform": "Linux"
+	},
 
 
 
@@ -218,38 +218,33 @@
 
 
 
-						{
-							"browserName": "iphone",
-							"version": "7.0",
-							"platform": "OS X 10.9"
-						},
+	{
+		"browserName": "iphone",
+		"version": "7.0",
+		"platform": "OS X 10.9"
+	},
 	{
 		"browserName": "iphone",
 		"version": "6.1",
 		"platform": "OS X 10.8"
 	},
-						{
-							"browserName": "iphone",
-							"version": "6.0",
-							"platform": "OS X 10.8"
-						},
+	{
+		"browserName": "iphone",
+		"version": "6.0",
+		"platform": "OS X 10.8"
+	},
 
 
 
 
-						{
-							"browserName": "ipad",
-							"version": "7.0",
-							"platform": "OS X 10.9"
-						},
-						{
-							"browserName": "ipad",
-							"version": "6.1",
-							"platform": "OS X 10.8"
-						},
-						{
-							"browserName": "ipad",
-							"version": "6.0",
-							"platform": "OS X 10.8"
-						}
+	{
+		"browserName": "ipad",
+		"version": "7.0",
+		"platform": "OS X 10.9"
+	},
+	{
+		"browserName": "ipad",
+		"version": "6.1",
+		"platform": "OS X 10.8"
+	}
 ]

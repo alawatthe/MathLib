@@ -173,7 +173,7 @@ import Screen from './Screen';
 			this.renderer = renderer;
 			this.camera = camera;
 
-			this.container.classList.add('MathLib_screen3D');
+			this.container.className += ' MathLib_screen3D';
 		}
 		/**
 		* Draws the grid.

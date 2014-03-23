@@ -2989,14 +2989,9 @@ test('pow()', 65, function () {
 	equal(MathLib.pow(Infinity, -0), 1, 'Spec. 1: MathLib.pow (x, ±0) = 1 (for any x, even a zero, NaN, or ±∞)');
 	equal(MathLib.pow(-Infinity, -0), 1, 'Spec. 1: MathLib.pow (x, ±0) = 1 (for any x, even a zero, NaN, or ±∞)');
 
-	// Spec. 2: MathLib.pow (±0, y) = ±∞ (for y an odd integer < 0)
-	equal(MathLib.pow(+0, -5), +Infinity, 'Spec. 2: MathLib.pow (±0, y) = ±∞ (for y an odd integer < 0)');
-
-	// This test (and a test a bit down) fail in Opera 12,
-	// if this test isn't using a temporary variable.
-	// I have no idea what is going on...
-	var res = MathLib.pow(-0, -5);
-	equal(res, -Infinity, 'Spec. 2: MathLib.pow (±0, y) = ±∞ (for y an odd integer < 0)');
+	// Spec. 2: MathLib.pow (±0, y) = ±∞ (for y a finite, odd integer < 0)
+	equal(MathLib.pow(+0, -5), +Infinity, 'Spec. 2: MathLib.pow (±0, y) = ±∞ (or y a finite, odd integer < 0)');
+	equal(MathLib.pow(-0, -5), -Infinity, 'Spec. 2: MathLib.pow (±0, y) = ±∞ (or y a finite, odd integer < 0)');
 
 	// Spec. 3: MathLib.pow(±0, -∞) = +∞
 	equal(MathLib.pow(+0, -Infinity), Infinity, 'Spec. 3: MathLib.pow(±0, -∞) = +∞');
@@ -3012,9 +3007,9 @@ test('pow()', 65, function () {
 	equal(MathLib.pow(+0, -5.5), +Infinity, 'Spec. 5: MathLib.pow (±0, y) = +∞ (for finite y < 0 and not an odd integer)');
 	equal(MathLib.pow(-0, -5.5), +Infinity, 'Spec. 5: MathLib.pow (±0, y) = +∞ (for finite y < 0 and not an odd integer)');
 
-	// Spec. 6: MathLib.pow (±0, y) = ±0 (for finite y > 0 an odd integer)
-	equal(MathLib.isPosZero(MathLib.pow(+0, 5)), true, 'Spec. 6: MathLib.pow (±0, y) = ±0 (for finite y > 0 an odd integer)');
-	equal(MathLib.isNegZero(MathLib.pow(-0, 5)), true, 'Spec. 6: MathLib.pow (±0, y) = ±0 (for finite y > 0 an odd integer)');
+	// Spec. 6: MathLib.pow (±0, y) = ±0 (for y a finite, odd integer > 0)
+	equal(MathLib.isPosZero(MathLib.pow(+0, 5)), true, 'Spec. 6: MathLib.pow (±0, y) = ±0 (for y a finite, odd integer > 0)');
+	equal(MathLib.isNegZero(MathLib.pow(-0, 5)), true, 'Spec. 6: MathLib.pow (±0, y) = ±0 (for y a finite, odd integer > 0)');
 
 	// Spec. 7: MathLib.pow (±0, y) = +0 (for finite y > 0 and not an odd integer)
 	equal(MathLib.isPosZero(MathLib.pow(+0, 4)), true, 'Spec. 7: MathLib.pow (±0, y) = +0 (for finite y > 0 and not an odd integer)');

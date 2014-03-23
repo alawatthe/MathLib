@@ -61,7 +61,7 @@
 			}, opts = MathLib.extendObject(defaults, options), container = document.getElementById(id), innerHTMLContextMenu = '', fullscreenchange;
 
 			container.innerHTML = template(opts);
-			container.classList.add('MathLib_container');
+			container.className += ' MathLib_container';
 
 			this.height = opts.height;
 			this.width = opts.width;

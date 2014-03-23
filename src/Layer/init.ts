@@ -45,7 +45,7 @@ export class Layer {
 
 			// Create the canvas
 			element = document.createElement('canvas');
-			element.classList.add('MathLib_screen');
+			element.className += ' MathLib_screen';
 			element.width = screen.width;
 			element.height = screen.height;
 			screen.wrapper.appendChild(element);

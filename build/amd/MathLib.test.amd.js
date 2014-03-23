@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-03-22
+ * build date: 2014-03-23
  */
 
 require(['../build/amd/MathLib.js'], function(MathLib) {
@@ -868,7 +868,7 @@ test('.cosh()', 4, function () {
 	// I will only modify the test now and not the code.
 	// Affected tests:
 	// Complex.polar, Complex#cosh, Complex#sinh
-	// 
+	//
 	// More information:
 	// https://code.google.com/p/v8/issues/detail?id=3006
 	if (Math.cos(-5) === 0.2836621854632259) {
@@ -1111,7 +1111,7 @@ test('.polar()', 8, function () {
 	// I will only modify the test now and not the code.
 	// Affected tests:
 	// Complex.polar, Complex#cosh, Complex#sinh
-	// 
+	//
 	// More information:
 	// https://code.google.com/p/v8/issues/detail?id=3006
 	if (Math.cos(-5) === 0.2836621854632259) {
@@ -1264,7 +1264,7 @@ test('.sinh()', 12, function () {
 	// I will only modify the test now and not the code.
 	// Affected tests:
 	// Complex.polar, Complex#cosh, Complex#sinh
-	// 
+	//
 	// More information:
 	// https://code.google.com/p/v8/issues/detail?id=3006
 	if (Math.cos(-5) === 0.2836621854632259) {
@@ -2990,10 +2990,9 @@ test('pow()', 65, function () {
 	equal(MathLib.pow(Infinity, -0), 1, 'Spec. 1: MathLib.pow (x, ±0) = 1 (for any x, even a zero, NaN, or ±∞)');
 	equal(MathLib.pow(-Infinity, -0), 1, 'Spec. 1: MathLib.pow (x, ±0) = 1 (for any x, even a zero, NaN, or ±∞)');
 
-	// Spec. 2: MathLib.pow (±0, y) = ±∞ (for y an odd integer < 0)
-	equal(MathLib.pow(+0, -5), +Infinity, 'Spec. 2: MathLib.pow (±0, y) = ±∞ (for y an odd integer < 0)');
-	var res = MathLib.pow(-0, -5);
-	equal(res, -Infinity, 'Spec. 2: MathLib.pow (±0, y) = ±∞ (for y an odd integer < 0)');
+	// Spec. 2: MathLib.pow (±0, y) = ±∞ (for y a finite, odd integer < 0)
+	equal(MathLib.pow(+0, -5), +Infinity, 'Spec. 2: MathLib.pow (±0, y) = ±∞ (or y a finite, odd integer < 0)');
+	equal(MathLib.pow(-0, -5), -Infinity, 'Spec. 2: MathLib.pow (±0, y) = ±∞ (or y a finite, odd integer < 0)');
 
 	// Spec. 3: MathLib.pow(±0, -∞) = +∞
 	equal(MathLib.pow(+0, -Infinity), Infinity, 'Spec. 3: MathLib.pow(±0, -∞) = +∞');
@@ -3009,9 +3008,9 @@ test('pow()', 65, function () {
 	equal(MathLib.pow(+0, -5.5), +Infinity, 'Spec. 5: MathLib.pow (±0, y) = +∞ (for finite y < 0 and not an odd integer)');
 	equal(MathLib.pow(-0, -5.5), +Infinity, 'Spec. 5: MathLib.pow (±0, y) = +∞ (for finite y < 0 and not an odd integer)');
 
-	// Spec. 6: MathLib.pow (±0, y) = ±0 (for finite y > 0 an odd integer)
-	equal(MathLib.isPosZero(MathLib.pow(+0, 5)), true, 'Spec. 6: MathLib.pow (±0, y) = ±0 (for finite y > 0 an odd integer)');
-	equal(MathLib.isNegZero(MathLib.pow(-0, 5)), true, 'Spec. 6: MathLib.pow (±0, y) = ±0 (for finite y > 0 an odd integer)');
+	// Spec. 6: MathLib.pow (±0, y) = ±0 (for y a finite, odd integer > 0)
+	equal(MathLib.isPosZero(MathLib.pow(+0, 5)), true, 'Spec. 6: MathLib.pow (±0, y) = ±0 (for y a finite, odd integer > 0)');
+	equal(MathLib.isNegZero(MathLib.pow(-0, 5)), true, 'Spec. 6: MathLib.pow (±0, y) = ±0 (for y a finite, odd integer > 0)');
 
 	// Spec. 7: MathLib.pow (±0, y) = +0 (for finite y > 0 and not an odd integer)
 	equal(MathLib.isPosZero(MathLib.pow(+0, 4)), true, 'Spec. 7: MathLib.pow (±0, y) = +0 (for finite y > 0 and not an odd integer)');

@@ -48,7 +48,7 @@ export class Screen {
 
 
 		container.innerHTML = template(opts);
-		container.classList.add('MathLib_container');
+		container.className += ' MathLib_container';
 
 
 		this.height = opts.height;

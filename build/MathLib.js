@@ -2818,6 +2818,14 @@ var MathLib;
 			if (x === 1 || (x === -1 && (y === Infinity || y === -Infinity))) {
 				return 1;
 			}
+
+			// Bugfix for Opera 12, where
+			//  > MathLib.pow(-0, -5) == -Infinity // should be Infinity
+			//  > MathLib.pow(-0, 5) == +0 // should be -0
+			// Weirdly this problem occurs only sometimes, in a very random way...
+			if (MathLib.isNegZero(x) && Math.abs(y % 2) === 1) {
+				return y < 0 ? -Infinity : -0;
+			}
 			return Math.pow(x, y);
 		},
 		arity: 2,
@@ -4035,7 +4043,7 @@ var MathLib;
 			}, opts = MathLib.extendObject(defaults, options), container = document.getElementById(id), innerHTMLContextMenu = '', fullscreenchange;
 
 			container.innerHTML = template(opts);
-			container.classList.add('MathLib_container');
+			container.className += ' MathLib_container';
 
 			this.height = opts.height;
 			this.width = opts.width;
@@ -4213,7 +4221,7 @@ var MathLib;
 			if (screen.options.renderer === 'Canvas') {
 				// Create the canvas
 				element = document.createElement('canvas');
-				element.classList.add('MathLib_screen');
+				element.className += ' MathLib_screen';
 				element.width = screen.width;
 				element.height = screen.height;
 				screen.wrapper.appendChild(element);
@@ -5462,7 +5470,7 @@ var MathLib;
 			// Remove the warning message.
 			this.wrapper.innerHTML = '';
 
-			this.container.classList.add('MathLib_screen2D');
+			this.container.className += ' MathLib_screen2D';
 
 			// This is just a dummy method for the following few lines.
 			// The real applyTransformation method is specified after the creation of the layers.
@@ -6190,7 +6198,7 @@ var MathLib;
 			this.renderer = renderer;
 			this.camera = camera;
 
-			this.container.classList.add('MathLib_screen3D');
+			this.container.className += ' MathLib_screen3D';
 		}
 		/**
 		* Draws the grid.
