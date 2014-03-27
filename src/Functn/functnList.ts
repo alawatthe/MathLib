@@ -116,6 +116,7 @@ var func, cur;
 
 // Add the functions to the MathLib object
 for (func in functionList1) {
+	/* istanbul ignore else */
 	if (functionList1.hasOwnProperty(func)) {
 
 		cur = functionList1[func];

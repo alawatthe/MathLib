@@ -367,7 +367,7 @@ var __extends = this.__extends || function (d, b) {
 			// The ticks on the axes
 			// The x axis
 			if (this.options.axes.x) {
-				for (i = -yTick; i >= left; i -= yTick) {
+				for (i = 0; i >= left; i -= yTick) {
 					line([[i, -lengthY], [i, lengthY]], options, true);
 				}
 				for (i = yTick; i <= right; i += yTick) {
@@ -377,7 +377,7 @@ var __extends = this.__extends || function (d, b) {
 
 			// The y axis
 			if (this.options.axes.y) {
-				for (i = -xTick; i >= bottom; i -= xTick) {
+				for (i = 0; i >= bottom; i -= xTick) {
 					line([[-lengthX, i], [lengthX, i]], options, true);
 				}
 				for (i = xTick; i <= top; i += xTick) {

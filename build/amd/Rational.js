@@ -75,7 +75,7 @@
 		* @return {Integer|Rational|number|Complex}
 		*/
 		Rational.prototype.coerceTo = function (type) {
-			if (type === 'rational') {
+			if (type === 'integer') {
 				if (this.denominator === 1) {
 					return new MathLib.Integer(this.numerator);
 				}

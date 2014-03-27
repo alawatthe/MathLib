@@ -176,6 +176,7 @@
 		};
 
 		for (var name in functnPrototype) {
+			/* istanbul ignore else */
 			if (functnPrototype.hasOwnProperty(name)) {
 				functn[name] = functnPrototype[name];
 			}
@@ -915,6 +916,7 @@
 			//  > MathLib.pow(-0, -5) == -Infinity // should be Infinity
 			//  > MathLib.pow(-0, 5) == +0 // should be -0
 			// Weirdly this problem occurs only sometimes, in a very random way...
+			/* istanbul ignore if */
 			if (MathLib.isNegZero(x) && Math.abs(y % 2) === 1) {
 				return y < 0 ? -Infinity : -0;
 			}
@@ -965,6 +967,7 @@
 			//   > m = -3;
 			//   > n%m = -1
 			// This is obviously not correct.
+			/* istanbul ignore if */
 			if (x % y === -1 && n > 0 && m < 0) {
 				return -(n % m);
 			}
@@ -1440,6 +1443,7 @@
 	var func, cur;
 
 	for (func in functionList1) {
+		/* istanbul ignore else */
 		if (functionList1.hasOwnProperty(func)) {
 			cur = functionList1[func];
 			Object.defineProperty(exports, func, {
@@ -1863,6 +1867,7 @@
 	};
 
 	for (func in nAryFunctions) {
+		/* istanbul ignore else */
 		if (nAryFunctions.hasOwnProperty(func)) {
 			Object.defineProperty(exports, func, {
 				value: createNaryFunction(nAryFunctions[func])
@@ -1871,6 +1876,7 @@
 	}
 	var args, fn;
 	for (var fnName in fns) {
+		/* istanbul ignore else */
 		if (fns.hasOwnProperty(fnName)) {
 			fn = fns[fnName];
 

@@ -58,6 +58,7 @@ export var toMathML = function (x, options : toPresentationOptions = {}) {
 		return '<mi>' + x + '</mi>'
 	}
 
+	/* istanbul ignore else */
 	if (typeof x === 'string') {
 		return '<ms>' + x + '</ms>'
 	}

@@ -278,6 +278,7 @@ var createNaryFunction = function (f) {
 
 
 for (func in nAryFunctions) {
+	/* istanbul ignore else */
 	if (nAryFunctions.hasOwnProperty(func)) {
 		Object.defineProperty(exports, func, {
 			value: createNaryFunction(nAryFunctions[func])

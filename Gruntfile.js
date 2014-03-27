@@ -33,15 +33,15 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-nodeunit');
-	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
-	grunt.loadNpmTasks('grunt-notify');
+	grunt.loadNpmTasks('grunt-coveralls');
 	grunt.loadNpmTasks('grunt-jscs-checker');
-	grunt.loadNpmTasks('grunt-karma');
 	grunt.loadNpmTasks('grunt-newer');
+	grunt.loadNpmTasks('grunt-notify');
 	grunt.loadNpmTasks('grunt-qunit-amd');
+	grunt.loadNpmTasks('grunt-qunit-istanbul');
 	grunt.loadNpmTasks('grunt-regex-replace');
 	grunt.loadNpmTasks('grunt-saucelabs');
 	grunt.loadNpmTasks('grunt-shell');
@@ -265,7 +265,7 @@ module.exports = function (grunt) {
 			},
 
 			plain: {
-				src: ['build/plain/fullscreen.js', 'build/plain/lineDash.js', 'build/plain/meta.js', 'build/plain/Expression.js', 'build/plain/Functn.js',
+				src: ['build/plain/meta.js', 'build/plain/Expression.js', 'build/plain/Functn.js',
 					'build/plain/Screen.js', 'build/plain/Layer.js', 'build/plain/Canvas.js', 'build/plain/SVG.js', 'build/plain/Screen2D.js',
 					'build/plain/Screen3D.js', 'build/plain/Vector.js', 'build/plain/Circle.js', 'build/plain/Complex.js', 'build/plain/Integer.js',
 					'build/plain/Line.js', 'build/plain/Matrix.js', 'build/plain/Permutation.js', 'build/plain/Conic.js', 'build/plain/Point.js',
@@ -382,9 +382,6 @@ module.exports = function (grunt) {
 		The tests for Commonjs modules:
 			grunt testCommonjs
 
-		The test coverage:
-			grunt karma
-
 		*/
 
 		connect: {
@@ -398,7 +395,9 @@ module.exports = function (grunt) {
 		},
 
 
+		/*
 		qunit: {
+			/*
 			MathLib: {
 				options: {
 					urls: [
@@ -410,6 +409,53 @@ module.exports = function (grunt) {
 				options: {
 					urls: [
 						'http://localhost:8000/test/test.min.html'
+					]
+				}
+			},
+			*
+			all: {
+				options: {
+					urls: [
+						'http://localhost:8000/test/test.all.html'
+					]
+				}
+			}
+		},
+		//*/
+
+
+		qunit: {
+			/*
+			MathLib: {
+				options: {
+					urls: [
+						'./test/test.html'
+					]
+				}
+			},
+			min: {
+				options: {
+					urls: [
+						'http://localhost:8000/test/test.min.html'
+					]
+				}
+			},
+			*/
+			all: {
+				options: {
+					baseUrl: '.',
+					'--web-security': 'no',
+					coverage: {
+						src: ['./build/MathLib.js'],
+						instrumentedFiles: 'temp/',
+						lcovReport: 'coverage',
+						linesThresholdPct: 85,
+						statementsThresholdPct: 85,
+						functionsThresholdPct: 85,
+						branchesThresholdPct: 80
+					},
+					urls: [
+						'./test/test.all.html'
 					]
 				}
 			}
@@ -434,15 +480,14 @@ module.exports = function (grunt) {
 			files: ['build/commonjs/MathLib.test.commonjs.js']
 		},
 
-		karma: {
-			unit: {
-				configFile: 'karma.conf.js',
-				runnerPort: 9999,
-				singleRun: true,
-				// PhantomJS currently complains about an security error:
-				//   SECURITY_ERR: DOM Exception 18: An attempt was made to break through the security policy of the user agent.
-				browsers: ['Chrome']/*, 'PhantomJS'*/
-			}
+
+		coveralls: {
+			options: {
+				force: true
+			},
+			MathLib: {
+				src: './coverage/lcov.info'
+			},
 		},
 
 		// Sauce Labs cross browser testing
@@ -455,7 +500,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 65,
+					build: 66,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -487,6 +532,9 @@ module.exports = function (grunt) {
 			Tests: {
 				src: ['build/MathLib.test.js']
 			},
+			visual: {
+				src: ['test/visual/*.js']
+			},
 			grunt: {
 				src: ['Gruntfile.js']
 			},
@@ -515,6 +563,11 @@ module.exports = function (grunt) {
 			Tests: {
 				files: {
 					src: ['build/MathLib.test.js']
+				}
+			},
+			visual: {
+				files: {
+					src: ['test/visual/*.js']
 				}
 			},
 			grunt: {
@@ -999,5 +1052,5 @@ module.exports = function (grunt) {
 	grunt.registerTask('release', ['generateAll', 'clean', 'testPlain', 'testCommonjs', /*'jshint', 'jscs',*/ 'regex-replace:bower', 'regex-replace:saucebuildnumber']);/*, 'docco'*/
 
 	grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);
-	grunt.registerTask('continuousIntegration', ['nodeunit', /*'jshint', 'jscs',*/ 'saucelabs']);
+	grunt.registerTask('continuousIntegration', ['testPlain', 'coveralls', /*'jshint', 'jscs',*/ 'saucelabs']);
 };

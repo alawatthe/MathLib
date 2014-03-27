@@ -1,8 +1,11 @@
-test('.prototype.isEqual()', 2, function () {
-	var r = new MathLib.Rational(1, 2),
-			p = new MathLib.Rational(4, 8),
-			q = new MathLib.Rational(2, 3);
+test('.prototype.isEqual()', 4, function () {
+	var r1 = new MathLib.Rational(1, 2),
+			r2 = new MathLib.Rational(4, 8),
+			r3 = new MathLib.Rational(3, 1),
+			r4 = new MathLib.Rational(6, 2);
 
-	equal(r.isEqual(p), true, '.isEqual()');
-	equal(r.isEqual(q), false, '.isEqual()');
+	equal(r1.isEqual(r2), true, '.isEqual()');
+	equal(r3.isEqual(3), true, '.isEqual()');
+	equal(r4.isEqual(3), true, '.isEqual()');
+	equal(r1.isEqual(r3), false, '.isEqual()');
 });

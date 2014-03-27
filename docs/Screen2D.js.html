@@ -466,7 +466,7 @@
 			// The ticks on the axes
 			// The x axis
 			if (this.options.axes.x) {
-				for (i = -yTick; i &gt;= left; i -= yTick) {
+				for (i = 0; i &gt;= left; i -= yTick) {
 					line([[i, -lengthY], [i, lengthY]], options, true);
 				}
 				for (i = yTick; i &lt;= right; i += yTick) {
@@ -476,7 +476,7 @@
 
 			// The y axis
 			if (this.options.axes.y) {
-				for (i = -xTick; i &gt;= bottom; i -= xTick) {
+				for (i = 0; i &gt;= bottom; i -= xTick) {
 					line([[-lengthX, i], [lengthX, i]], options, true);
 				}
 				for (i = xTick; i &lt;= top; i += xTick) {

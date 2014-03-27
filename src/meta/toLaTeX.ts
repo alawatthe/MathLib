@@ -39,6 +39,7 @@ export var toLaTeX = function (x, options : toPresentationOptions = {}) {
 		return '\\text{ ' + x + ' }';
 	}
 
+	/* istanbul ignore else */
 	if (typeof x === 'string') {
 		return '"' + x + '"';
 	}

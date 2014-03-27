@@ -1223,8 +1223,8 @@
 		};
 
 		Matrix.one = function (r, c) {
-			r = r || 1;
-			c = c || 1;
+			if (typeof r === 'undefined') { r = 1; }
+			if (typeof c === 'undefined') { c = r; }
 			return MathLib.Matrix.numbers(1, r, c);
 		};
 
@@ -1241,8 +1241,8 @@
 		};
 
 		Matrix.zero = function (r, c) {
-			r = r || 1;
-			c = c || 1;
+			if (typeof r === 'undefined') { r = 1; }
+			if (typeof c === 'undefined') { c = r; }
 			return MathLib.Matrix.numbers(0, r, c);
 		};
 		return Matrix;

@@ -185,6 +185,7 @@ export var Functn = function (f, options) {
 	};
 
 	for (var name in functnPrototype) {
+		/* istanbul ignore else */
 		if (functnPrototype.hasOwnProperty(name)) {
 			functn[name] = functnPrototype[name];
 		}

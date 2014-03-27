@@ -21,10 +21,6 @@ define([], function () {
 	MathLib.goldenRatio = 1.618033988749895;
 	MathLib.pi = Math.PI;
 
-	MathLib.isArrayLike = function (x) {
-		return typeof x === 'object' && 'length' in x;
-	};
-
 	MathLib.isNative = function (fn) {
 		return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
 	};
@@ -115,20 +111,6 @@ define([], function () {
 			return MathLib.coerceTo(x, numberType);
 		});
 	};
-
-	var flatten = function (a) {
-		var flattendArray = [];
-		a.forEach(function (x) {
-			if (Array.isArray(x)) {
-				flattendArray = flattendArray.concat(flatten(x));
-			}
-			else {
-				flattendArray.push(x);
-			}
-		});
-		return flattendArray;
-	};
-
 	var errors = [], warnings = [];
 
 	/**
@@ -265,6 +247,7 @@ define([], function () {
 			return '<' + x + '/>';
 		}
 
+		/* istanbul ignore else */
 		if (typeof x === 'string') {
 			return '<cs>' + x + '</cs>';
 		}
@@ -313,6 +296,7 @@ define([], function () {
 			return '\\text{ ' + x + ' }';
 		}
 
+		/* istanbul ignore else */
 		if (typeof x === 'string') {
 			return '"' + x + '"';
 		}
@@ -379,6 +363,7 @@ define([], function () {
 			return '<mi>' + x + '</mi>';
 		}
 
+		/* istanbul ignore else */
 		if (typeof x === 'string') {
 			return '<ms>' + x + '</ms>';
 		}
@@ -433,6 +418,7 @@ define([], function () {
 			return x.toString();
 		}
 
+		/* istanbul ignore else */
 		if (typeof x === 'string') {
 			return '"' + x + '"';
 		}

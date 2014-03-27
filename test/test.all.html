@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>QUnit Test Suite</title>
+		<link rel="stylesheet" href="../node_modules/qunitjs/qunit/qunit.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="./vendor/qunit-image.css" type="text/css" media="screen">
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture"></div>
+		<div id="testPlots" style="display: none"></div>
+
+		<script>
+			phantomJS = true;
+		</script>
+		<script src="../node_modules/qunitjs/qunit/qunit.js"></script>
+		<script src="../node_modules/three/three.js"></script>
+		<script src="./vendor/qunit-image.js"></script>
+		<script src="../build/MathLib.js"></script>
+		<script src="../build/MathLib.test.js"></script>
+
+		<script src="./visual/circle.js"></script>
+		<script src="./visual/conic.js"></script>
+		<script src="./visual/functn.js"></script>
+		<script src="./visual/line.js"></script>
+		<script src="./visual/point.js"></script>
+		<script src="./visual/Screen2D.js"></script>
+		<script src="./visual/Screen3D.js"></script>
+	</body>
+</html>

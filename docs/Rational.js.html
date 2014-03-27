@@ -229,7 +229,7 @@ var r = new MathLib.Rational(2, 3);
           </section>
           <div class="description"><p>Coerces the rational to some other data type</p> </div>
           <pre><code class="language-javascript">Rational.prototype.coerceTo = function (type) {
-			if (type === 'rational') {
+			if (type === 'integer') {
 				if (this.denominator === 1) {
 					return new MathLib.Integer(this.numerator);
 				}

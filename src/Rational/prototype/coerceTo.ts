@@ -4,7 +4,7 @@
  * @return {Integer|Rational|number|Complex}
  */
 coerceTo(type) : any {
-	if (type === 'rational') {
+	if (type === 'integer') {
 		if (this.denominator === 1) {
 			return new MathLib.Integer(this.numerator);
 		}

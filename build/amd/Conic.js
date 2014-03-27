@@ -46,6 +46,7 @@
 		* @return {boolean}
 		*/
 		Conic.prototype.draw = function (screen, options, redraw) {
+			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			if (Array.isArray(screen)) {
 				var conic = this;

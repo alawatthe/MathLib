@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-03-23
+ * build date: 2014-03-27
  */
 
 	var version: string;
@@ -16,7 +16,6 @@
 	var eulerMascheroni: number;
 	var goldenRatio: number;
 	var pi: number;
-	var isArrayLike: (x: any) => boolean;
 	var isNative: (fn: any) => any;
 	var argToRgba: (h: any) => number[];
 	var extendObject: (dest: any, src: any) => any;
@@ -1723,7 +1722,7 @@ declare var Integer: Ring;
 		* @param {number} c The number of columns.
 		* @return {Matrix}
 		*/
-		static one: (r: number, c: number) => Matrix;
+		static one: (r?: number, c?: number) => Matrix;
 		/**
 		* This function adds a matrix to the current matrix
 		* and returns the result as a new matrix.
@@ -1864,7 +1863,7 @@ declare var Integer: Ring;
 		* @param {number} c The number of columns.
 		* @return {Matrix}
 		*/
-		static zero: (r: number, c: number) => Matrix;
+		static zero: (r?: number, c?: number) => Matrix;
 	}
 
 
@@ -1973,7 +1972,7 @@ declare var Integer: Ring;
 		* @param {boolean} redraw Indicates if the current draw call is happening during a redraw
 		* @return {boolean}
 		*/
-		public draw(screen: any, options: any, redraw?: boolean): Conic;
+		public draw(screen: any, options?: any, redraw?: boolean): Conic;
 		/**
 		* Calculates the eccentricity of a conic.
 		*

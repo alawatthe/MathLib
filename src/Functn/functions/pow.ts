@@ -11,6 +11,7 @@ fns.pow = {
 		//  > MathLib.pow(-0, -5) == -Infinity // should be Infinity
 		//  > MathLib.pow(-0, 5) == +0 // should be -0
 		// Weirdly this problem occurs only sometimes, in a very random way...
+		/* istanbul ignore if */
 		if (MathLib.isNegZero(x) && Math.abs(y % 2) === 1) {
 			return y < 0 ? -Infinity : -0;
 		}

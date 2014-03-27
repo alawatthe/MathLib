@@ -6,222 +6,8 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-03-23
+ * build date: 2014-03-27
  */
-// [Specification](https://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html)
-// Chrome: ~
-// Firefox: ~ [Unprefix the DOM fullscreen API](https://bugzilla.mozilla.org/show_bug.cgi?id=743198)
-// Safari: ✗
-// Internet Explorer: ✗
-// Opera: ✗
-
-
-/**
-* @fileoverview game-shim - Shims to normalize gaming-related APIs to their respective specs
-* @author Brandon Jones
-* @version 1.2
-*/
-
-
-/* Copyright (c) 2012, Brandon Jones. All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
-
-	* Redistributions of source code must retain the above copyright notice, this
-	list of conditions and the following disclaimer.
-	* Redistributions in binary form must reproduce the above copyright notice,
-	this list of conditions and the following disclaimer in the documentation
-	and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
-
-(function (global) {
-	'use strict';
-
-	var elementPrototype = (global.HTMLElement || global.Element).prototype;
-	var getter;
-
-
-	// document.fullscreenEnabled
-	if (!document.hasOwnProperty('fullscreenEnabled')) {
-		getter = (function () {
-			// These are the functions that match the spec, and should be preferred
-			if ('webkitIsFullScreen' in document) {
-				return function () { return document.webkitFullscreenEnabled; };
-			}
-			if ('mozFullScreenEnabled' in document) {
-				return function () { return document.mozFullScreenEnabled; };
-			}
-
-			return function () { return false; }; // not supported, never fullscreen
-		})();
-
-		Object.defineProperty(document, 'fullscreenEnabled', {
-			enumerable: true, configurable: false, writeable: false,
-			get: getter
-		});
-	}
-
-	if (!document.hasOwnProperty('fullscreenElement')) {
-		getter = (function () {
-			// These are the functions that match the spec, and should be preferred
-			var i = 0, name = ['webkitCurrentFullScreenElement', 'webkitFullscreenElement', 'mozFullScreenElement'];
-			for (; i < name.length; i++) {
-				if (name[i] in document) {
-					return function () { return document[name[i]]; };
-				}
-			}
-			return function () { return null; }; // not supported
-		})();
-
-		Object.defineProperty(document, 'fullscreenElement', {
-			enumerable: true, configurable: false, writeable: false,
-			get: getter
-		});
-	}
-
-	// Document event: fullscreenchange
-	function fullscreenchange () {
-		var newEvent = document.createEvent('CustomEvent');
-		newEvent.initCustomEvent('fullscreenchange', true, false, null);
-		// TODO: Any need for variable copy?
-		document.dispatchEvent(newEvent);
-	}
-	document.addEventListener('webkitfullscreenchange', fullscreenchange, false);
-	document.addEventListener('mozfullscreenchange', fullscreenchange, false);
-
-	// Document event: fullscreenerror
-	function fullscreenerror () {
-		var newEvent = document.createEvent('CustomEvent');
-		newEvent.initCustomEvent('fullscreenerror', true, false, null);
-		// TODO: Any need for variable copy?
-		document.dispatchEvent(newEvent);
-	}
-	document.addEventListener('webkitfullscreenerror', fullscreenerror, false);
-	document.addEventListener('mozfullscreenerror', fullscreenerror, false);
-
-	// element.requestFullScreen
-	if (!elementPrototype.requestFullScreen) {
-		elementPrototype.requestFullScreen = (function () {
-			if (elementPrototype.webkitRequestFullScreen) {
-				return function () {
-					this.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-				};
-			}
-
-			if (elementPrototype.mozRequestFullScreen) {
-				return function () {
-					this.mozRequestFullScreen();
-				};
-			}
-
-			return function () { /* unsupported, fail silently */ };
-		})();
-	}
-
-	// document.cancelFullScreen
-	if (!document.cancelFullScreen) {
-		document.cancelFullScreen = (function () {
-			return document.webkitCancelFullScreen ||
-					document.mozCancelFullScreen ||
-					function () { /* unsupported, fail silently */ };
-		})();
-	}
-
-})(window);
-// [Specification](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#line-styles)
-// Chrome: ✓ [Implement canvas v5 line dash feature](http://trac.webkit.org/changeset/128116)
-// Firefox: ~ [Implement canvasRenderingContext2D.get/setLineDash](https://bugzilla.mozilla.org/show_bug.cgi?id=768067)
-// Safari: ✗
-// Internet Explorer: ✗
-// Opera: ✗
-
-(function () {
-	if (!('setLineDash' in CanvasRenderingContext2D.prototype)) {
-		var setLineDash, getLineDash, setLineDashOffset, getLineDashOffset, prototype;
-
-		if ('mozDash' in CanvasRenderingContext2D.prototype) {
-			prototype = CanvasRenderingContext2D.prototype;
-			setLineDash = function (dash) {
-				this.mozDash = dash;
-			};
-			getLineDash = function () {
-				return this.mozDash;
-			};
-
-			setLineDashOffset = function (dashOffset) {
-				this.mozDashOffset = dashOffset;
-			};
-			getLineDashOffset = function () {
-				return this.mozDashOffset;
-			};
-		}
-		else {
-			prototype = CanvasRenderingContext2D.prototype;
-			setLineDash = function () {};
-			getLineDash = function () {};
-			setLineDashOffset = function () {};
-			getLineDashOffset = function () {};
-		}
-
-
-		// Safari isn't supporting webkitLineDash any longer, but it also has no support for setLineDash.
-		// Additionally extending the CanvasRenderingContext2D.prototype is only possible with a weird hack.
-		/*
-		else if ('webkitLineDash' in CanvasRenderingContext2D.prototype) {
-			prototype = document.createElement('canvas').getContext('2d').__proto__;
-			setLineDash = function (dash) {
-				this.webkitLineDash = dash;
-			};
-			getLineDash = function () {
-				return this.webkitLineDash;
-			};
-
-			setLineDashOffset = function (dashOffset) {
-				this.webkitLineDashOffset = dashOffset;
-			};
-			getLineDashOffset = function () {
-				return this.webkitLineDashOffset;
-			};
-		}
-		*/
-
-
-
-		Object.defineProperty(prototype, 'setLineDash', {
-			value: setLineDash,
-			enumerable: true,
-			configurable: false,
-			writeable: false
-		});
-
-		Object.defineProperty(prototype, 'getLineDash', {
-			value: getLineDash,
-			enumerable: true,
-			configurable: false,
-			writeable: false
-		});
-
-		Object.defineProperty(prototype, 'lineDashOffset', {
-			set: setLineDashOffset,
-			get: getLineDashOffset,
-			enumerable: true,
-			configurable: false,
-			writeable: false
-		});
-
-	}
-})();
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
@@ -241,10 +27,6 @@ var MathLib;
 	MathLib.eulerMascheroni = 0.5772156649015329;
 	MathLib.goldenRatio = 1.618033988749895;
 	MathLib.pi = Math.PI;
-
-	MathLib.isArrayLike = function (x) {
-		return typeof x === 'object' && 'length' in x;
-	};
 
 	MathLib.isNative = function (fn) {
 		return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
@@ -336,20 +118,6 @@ var MathLib;
 			return MathLib.coerceTo(x, numberType);
 		});
 	};
-
-	var flatten = function (a) {
-		var flattendArray = [];
-		a.forEach(function (x) {
-			if (Array.isArray(x)) {
-				flattendArray = flattendArray.concat(flatten(x));
-			}
-			else {
-				flattendArray.push(x);
-			}
-		});
-		return flattendArray;
-	};
-
 	var errors = [], warnings = [];
 
 	/**
@@ -486,6 +254,7 @@ var MathLib;
 			return '<' + x + '/>';
 		}
 
+		/* istanbul ignore else */
 		if (typeof x === 'string') {
 			return '<cs>' + x + '</cs>';
 		}
@@ -534,6 +303,7 @@ var MathLib;
 			return '\\text{ ' + x + ' }';
 		}
 
+		/* istanbul ignore else */
 		if (typeof x === 'string') {
 			return '"' + x + '"';
 		}
@@ -600,6 +370,7 @@ var MathLib;
 			return '<mi>' + x + '</mi>';
 		}
 
+		/* istanbul ignore else */
 		if (typeof x === 'string') {
 			return '<ms>' + x + '</ms>';
 		}
@@ -654,6 +425,7 @@ var MathLib;
 			return x.toString();
 		}
 
+		/* istanbul ignore else */
 		if (typeof x === 'string') {
 			return '"' + x + '"';
 		}
@@ -775,9 +547,6 @@ var MathLib;
 				return MathLib[this.name].apply(null, this.content.map(function (x) {
 					return MathLib.evaluate(x);
 				}));
-			}
-			if (this.subtype === 'rationalNumber') {
-				return new MathLib.Rational(this.value[0].evaluate(), this.value[1].evaluate());
 			}
 			if (this.subtype === 'variable') {
 				if (this.value in MathLib.Expression.variables) {
@@ -2084,6 +1853,7 @@ var MathLib;
 		};
 
 		for (var name in functnPrototype) {
+			/* istanbul ignore else */
 			if (functnPrototype.hasOwnProperty(name)) {
 				functn[name] = functnPrototype[name];
 			}
@@ -2823,6 +2593,7 @@ var MathLib;
 			//  > MathLib.pow(-0, -5) == -Infinity // should be Infinity
 			//  > MathLib.pow(-0, 5) == +0 // should be -0
 			// Weirdly this problem occurs only sometimes, in a very random way...
+			/* istanbul ignore if */
 			if (MathLib.isNegZero(x) && Math.abs(y % 2) === 1) {
 				return y < 0 ? -Infinity : -0;
 			}
@@ -2873,6 +2644,7 @@ var MathLib;
 			//   > m = -3;
 			//   > n%m = -1
 			// This is obviously not correct.
+			/* istanbul ignore if */
 			if (x % y === -1 && n > 0 && m < 0) {
 				return -(n % m);
 			}
@@ -3348,6 +3120,7 @@ var MathLib;
 	var func, cur;
 
 	for (func in functionList1) {
+		/* istanbul ignore else */
 		if (functionList1.hasOwnProperty(func)) {
 			cur = functionList1[func];
 			Object.defineProperty(exports, func, {
@@ -3771,6 +3544,7 @@ var MathLib;
 	};
 
 	for (func in nAryFunctions) {
+		/* istanbul ignore else */
 		if (nAryFunctions.hasOwnProperty(func)) {
 			Object.defineProperty(exports, func, {
 				value: createNaryFunction(nAryFunctions[func])
@@ -3779,6 +3553,7 @@ var MathLib;
 	}
 	var args, fn;
 	for (var fnName in fns) {
+		/* istanbul ignore else */
 		if (fns.hasOwnProperty(fnName)) {
 			fn = fns[fnName];
 
@@ -5707,7 +5482,7 @@ var MathLib;
 			// The ticks on the axes
 			// The x axis
 			if (this.options.axes.x) {
-				for (i = -yTick; i >= left; i -= yTick) {
+				for (i = 0; i >= left; i -= yTick) {
 					line([[i, -lengthY], [i, lengthY]], options, true);
 				}
 				for (i = yTick; i <= right; i += yTick) {
@@ -5717,7 +5492,7 @@ var MathLib;
 
 			// The y axis
 			if (this.options.axes.y) {
-				for (i = -xTick; i >= bottom; i -= xTick) {
+				for (i = 0; i >= bottom; i -= xTick) {
 					line([[-lengthX, i], [lengthX, i]], options, true);
 				}
 				for (i = xTick; i <= top; i += xTick) {
@@ -6071,7 +5846,7 @@ var MathLib;
 					lookAt: [0, 0, 0],
 					position: [10, 10, 10]
 				},
-				controls: 'Trackball',
+				//controls: 'Trackball',
 				grid: {
 					xy: {
 						angle: Math.PI / 8,
@@ -9895,8 +9670,8 @@ var MathLib;
 		};
 
 		Matrix.one = function (r, c) {
-			r = r || 1;
-			c = c || 1;
+			if (typeof r === 'undefined') { r = 1; }
+			if (typeof c === 'undefined') { c = r; }
 			return MathLib.Matrix.numbers(1, r, c);
 		};
 
@@ -9913,8 +9688,8 @@ var MathLib;
 		};
 
 		Matrix.zero = function (r, c) {
-			r = r || 1;
-			c = c || 1;
+			if (typeof r === 'undefined') { r = 1; }
+			if (typeof c === 'undefined') { c = r; }
 			return MathLib.Matrix.numbers(0, r, c);
 		};
 		return Matrix;
@@ -10193,6 +9968,7 @@ var MathLib;
 		* @return {boolean}
 		*/
 		Conic.prototype.draw = function (screen, options, redraw) {
+			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			if (Array.isArray(screen)) {
 				var conic = this;
@@ -11676,7 +11452,7 @@ var MathLib;
 		* @return {Integer|Rational|number|Complex}
 		*/
 		Rational.prototype.coerceTo = function (type) {
-			if (type === 'rational') {
+			if (type === 'integer') {
 				if (this.denominator === 1) {
 					return new MathLib.Integer(this.numerator);
 				}

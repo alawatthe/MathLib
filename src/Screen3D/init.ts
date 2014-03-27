@@ -42,7 +42,7 @@ export class Screen3D extends Screen {
 						lookAt: [0, 0, 0],
 						position: [10, 10, 10]
 					},
-					controls: 'Trackball',
+					//controls: 'Trackball',
 					grid: {
 						xy: {
 							angle: Math.PI / 8,

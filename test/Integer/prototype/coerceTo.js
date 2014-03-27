@@ -1,4 +1,7 @@
-test('.prototype.coerceTo()', 10, function () {
+test('.prototype.coerceTo()', 11, function () {
+	// Integer
+	ok(MathLib.isEqual((new MathLib.Integer('1234')).coerceTo('integer'), new MathLib.Integer('1234')));
+
 	// Rational
 	ok(MathLib.isEqual((new MathLib.Integer('0')).coerceTo('rational'), new MathLib.Rational(0)));
 	ok(MathLib.isEqual((new MathLib.Integer('+1234')).coerceTo('rational'), new MathLib.Rational(1234)));

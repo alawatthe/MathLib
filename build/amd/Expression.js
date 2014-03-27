@@ -111,9 +111,6 @@
 					return MathLib.evaluate(x);
 				}));
 			}
-			if (this.subtype === 'rationalNumber') {
-				return new MathLib.Rational(this.value[0].evaluate(), this.value[1].evaluate());
-			}
 			if (this.subtype === 'variable') {
 				if (this.value in MathLib.Expression.variables) {
 					return MathLib.Expression.variables[this.value];

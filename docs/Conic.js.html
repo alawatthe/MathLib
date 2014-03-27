@@ -196,6 +196,7 @@
           </table>
           <div class="description"><p>Draws the conic on one or more screens</p> </div>
           <pre><code class="language-javascript">Conic.prototype.draw = function (screen, options, redraw) {
+			if (typeof options === 'undefined') { options = {}; }
 			if (typeof redraw === 'undefined') { redraw = false; }
 			if (Array.isArray(screen)) {
 				var conic = this;

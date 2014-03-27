@@ -5,8 +5,6 @@
  * @param {number} c The number of columns.  
  * @return {Matrix}
  */
-static zero = function (r : number, c : number) : Matrix {
-	r = r || 1;
-	c = c || 1;
+static zero = function (r = 1, c = r) : Matrix {
 	return MathLib.Matrix.numbers(0, r, c);
 };

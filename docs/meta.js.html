@@ -129,10 +129,6 @@
 	MathLib.goldenRatio = 1.618033988749895;
 	MathLib.pi = Math.PI;
 
-	MathLib.isArrayLike = function (x) {
-		return typeof x === 'object' &amp;&amp; 'length' in x;
-	};
-
 	MathLib.isNative = function (fn) {
 		return fn &amp;&amp; /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
 	};
@@ -223,20 +219,6 @@
 			return MathLib.coerceTo(x, numberType);
 		});
 	};
-
-	var flatten = function (a) {
-		var flattendArray = [];
-		a.forEach(function (x) {
-			if (Array.isArray(x)) {
-				flattendArray = flattendArray.concat(flatten(x));
-			}
-			else {
-				flattendArray.push(x);
-			}
-		});
-		return flattendArray;
-	};
-
 	var errors = [], warnings = [];</code></pre>
           <section id="on">
             <h1><a href="http://mathlib.de/en/docs/meta/on">on</a>
@@ -489,9 +471,9 @@
 				return '&lt;csymbol cd=&quot;logic1&quot;&gt;' + x + '&lt;/csymbol&gt;';
 			}
 			return '&lt;' + x + '/&gt;';
-		}
-
-		if (typeof x === 'string') {
+		}</code></pre>
+          <div class="description"><p>istanbul ignore else</p> </div>
+          <pre><code class="language-javascript">if (typeof x === 'string') {
 			return '&lt;cs&gt;' + x + '&lt;/cs&gt;';
 		}
 	};</code></pre>
@@ -561,9 +543,9 @@
 
 		if (typeof x === 'boolean') {
 			return '\\text{ ' + x + ' }';
-		}
-
-		if (typeof x === 'string') {
+		}</code></pre>
+          <div class="description"><p>istanbul ignore else</p> </div>
+          <pre><code class="language-javascript">if (typeof x === 'string') {
 			return '&quot;' + x + '&quot;';
 		}
 	};</code></pre>
@@ -651,9 +633,9 @@
 
 		if (typeof x === 'boolean') {
 			return '&lt;mi&gt;' + x + '&lt;/mi&gt;';
-		}
-
-		if (typeof x === 'string') {
+		}</code></pre>
+          <div class="description"><p>istanbul ignore else</p> </div>
+          <pre><code class="language-javascript">if (typeof x === 'string') {
 			return '&lt;ms&gt;' + x + '&lt;/ms&gt;';
 		}
 	};</code></pre>
@@ -729,9 +711,9 @@
 
 		if (typeof x === 'boolean') {
 			return x.toString();
-		}
-
-		if (typeof x === 'string') {
+		}</code></pre>
+          <div class="description"><p>istanbul ignore else</p> </div>
+          <pre><code class="language-javascript">if (typeof x === 'string') {
 			return '&quot;' + x + '&quot;';
 		}
 	};

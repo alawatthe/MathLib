@@ -72,6 +72,7 @@ export var toContentMathML = function (x, options : toContentMathMLOptions = {})
 		return '<' + x + '/>';
 	}
 
+	/* istanbul ignore else */
 	if (typeof x === 'string') {
 		return '<cs>' + x + '</cs>';
 	}

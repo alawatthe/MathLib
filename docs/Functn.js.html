@@ -402,8 +402,9 @@
 			}
 		};
 
-		for (var name in functnPrototype) {
-			if (functnPrototype.hasOwnProperty(name)) {
+		for (var name in functnPrototype) {</code></pre>
+          <div class="description"><p>istanbul ignore else</p> </div>
+          <pre><code class="language-javascript">if (functnPrototype.hasOwnProperty(name)) {
 				functn[name] = functnPrototype[name];
 			}
 		}
@@ -1326,8 +1327,9 @@
 			// Bugfix for Opera 12, where
 			//  &gt; MathLib.pow(-0, -5) == -Infinity // should be Infinity
 			//  &gt; MathLib.pow(-0, 5) == +0 // should be -0
-			// Weirdly this problem occurs only sometimes, in a very random way...
-			if (MathLib.isNegZero(x) &amp;&amp; Math.abs(y % 2) === 1) {
+			// Weirdly this problem occurs only sometimes, in a very random way...</code></pre>
+          <div class="description"><p>istanbul ignore if</p> </div>
+          <pre><code class="language-javascript">if (MathLib.isNegZero(x) &amp;&amp; Math.abs(y % 2) === 1) {
 				return y &lt; 0 ? -Infinity : -0;
 			}
 			return Math.pow(x, y);
@@ -1384,8 +1386,9 @@
 			//   &gt; n = 4;
 			//   &gt; m = -3;
 			//   &gt; n%m = -1
-			// This is obviously not correct.
-			if (x % y === -1 &amp;&amp; n &gt; 0 &amp;&amp; m &lt; 0) {
+			// This is obviously not correct.</code></pre>
+          <div class="description"><p>istanbul ignore if</p> </div>
+          <pre><code class="language-javascript">if (x % y === -1 &amp;&amp; n &gt; 0 &amp;&amp; m &lt; 0) {
 				return -(n % m);
 			}
 
@@ -1877,8 +1880,9 @@
 
 	var func, cur;
 
-	for (func in functionList1) {
-		if (functionList1.hasOwnProperty(func)) {
+	for (func in functionList1) {</code></pre>
+          <div class="description"><p>istanbul ignore else</p> </div>
+          <pre><code class="language-javascript">if (functionList1.hasOwnProperty(func)) {
 			cur = functionList1[func];
 			Object.defineProperty(exports, func, {
 				value: createFunction1(functionList1[func], func)
@@ -2400,16 +2404,18 @@
 		};
 	};
 
-	for (func in nAryFunctions) {
-		if (nAryFunctions.hasOwnProperty(func)) {
+	for (func in nAryFunctions) {</code></pre>
+          <div class="description"><p>istanbul ignore else</p> </div>
+          <pre><code class="language-javascript">if (nAryFunctions.hasOwnProperty(func)) {
 			Object.defineProperty(exports, func, {
 				value: createNaryFunction(nAryFunctions[func])
 			});
 		}
 	}
 	var args, fn;
-	for (var fnName in fns) {
-		if (fns.hasOwnProperty(fnName)) {
+	for (var fnName in fns) {</code></pre>
+          <div class="description"><p>istanbul ignore else</p> </div>
+          <pre><code class="language-javascript">if (fns.hasOwnProperty(fnName)) {
 			fn = fns[fnName];
 
 			if ('args' in fn) {

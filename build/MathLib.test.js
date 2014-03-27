@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-03-23
+ * build date: 2014-03-27
  */
 
 module('MathLib');
@@ -1575,12 +1575,16 @@ test('.isDegenerated()', 5, function () {
 	equal(h.isDegenerated(), false, '.isDegenerated(hyperbola) = false');
 	equal(deg.isDegenerated(), true, '.isDegenerated(degenerated conic) = true');
 });
-test('.isEqual()', 4, function () {
-	var c1 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
+test('.isEqual()', 5, function () {
+	var m = new MathLib.Matrix([[2, 1, 0], [1, 3, 0], [0, 0, 1]]),
+			cm1 = new MathLib.Conic(m),
+			cm2 = new MathLib.Conic(m),
+			c1 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
 			c2 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
 			c3 = new MathLib.Conic([[2, 0, 0], [0, 2, 0], [0, 0, 2]]),
 			c4 = new MathLib.Conic([[1, 0, 0], [0, 1, 0], [0, 0, 2]]);
 
+	equal(cm1.isEqual(cm2), true, 'same matrix variable');
 	equal(c1.isEqual(c1), true, 'same variable');
 	equal(c1.isEqual(c2), true, 'identical conic');
 	equal(c1.isEqual(c3), true, 'scaled parameters');
@@ -1863,6 +1867,10 @@ test('.parse (functionCall)', 3, function () {
 	deepEqual(fn.content[0].value, '1');
 });
 
+test('.parseContentMathML() based_integer', 1, function () {
+	deepEqual(MathLib.Expression.parseContentMathML('<apply><csymbol cd="nums1">based_integer</csymbol><cn>8</cn><cs> 10 </cs></apply>'), new MathLib.Integer(8));
+});
+
 test('.parseContentMathML() boolean', 8, function () {
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><and/><true/><true/></apply></math>').evaluate(), true, '</and> true true');
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><and/><true/><false/><true/></apply></math>').evaluate(), false, '</and> true false true');
@@ -1906,14 +1914,16 @@ test('.parseContentMathML() rational', 1, function () {
 });
 
 
-test('.parseContentMathML() function constructing', 5, function () {
+test('.parseContentMathML() function constructing', 6, function () {
 	var expsin = MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><exp/><apply><sin/><ci>x</ci></apply></apply></lambda></math>').evaluate();
 
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><sin/><ci>x</ci></apply></lambda></math>').evaluate()(0), 0, '.evaluate() sin');
 	equal(expsin(0), 1, 'exp(sin(0)) = 1');
 	equal(expsin.toString(), 'x ⟼ exp(sin(x))', '.toString');
 	equal(expsin.type, 'functn', 'exp(sin(x)).type');
+
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>x</bvar><domainofapplication><complexes/></domainofapplication><apply><ident/><ci>x</ci></apply></lambda></math>').evaluate()(42), 42, 'The identity function');
+	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>x</bvar><apply><csymbol cd="transc2">arctan</csymbol><ci>x</ci></apply></lambda></math>').evaluate()(1, 2), Math.atan2(1,2));
 	//deepEqual(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><cn>2</cn><ci>x</ci></apply></lambda></math>').evaluate()(42), 44, 'The result of 42 + 2 should be 44');
 	//deepEqual(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><ci>x</ci><cn>2</cn></apply></lambda></math>').evaluate()(42), 44, 'The result of 42 + 2 should be 44');
 	// deepEqual(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><bvar><ci>y</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><power/><ci>x</ci><ci>y</ci></apply></lambda></math>').evaluate()(4, 2), 16, 'Function with two arguments');
@@ -2868,6 +2878,16 @@ test('.lcm()', 8, function () {
 	equal(MathLib.lcm(1, 2, 3), 6);
 	equal(MathLib.lcm([1, 2, 3]), 6);
 });
+test('.lg()', 8, function () {
+	equal(MathLib.lg(1), 0, 'MathLib.lg(1) should be 0');
+	equal(MathLib.lg(10), 1, 'MathLib.lg(10) should be 1');
+	equal(MathLib.lg(+Infinity), +Infinity, 'MathLib.lg(+Infinity) should be +Infinity');
+	equal(MathLib.lg(+0), -Infinity, 'MathLib.lg(+0) should be -Infinity');
+	equal(MathLib.lg(-0), -Infinity, 'MathLib.lg(-0) should be -Infinity');
+	equal(MathLib.isNaN(MathLib.lg(-4)), true, 'MathLib.lg(-4) should be NaN');
+	equal(MathLib.isNaN(MathLib.lg(-Infinity)), true, 'MathLib.lg(-Infinity) should be NaN');
+	equal(MathLib.isNaN(MathLib.lg(NaN)), true, 'MathLib.lg(NaN) should be NaN');
+});
 test('.ln()', 8, function () {
 	equal(MathLib.ln(1), 0, 'MathLib.ln(1) should be 0');
 	equal(MathLib.ln(Math.E), 1, 'MathLib.ln(Math.E) should be 1');
@@ -3541,7 +3561,10 @@ test('prototype.abs()', 5, function () {
 	equal((new MathLib.Integer('+1234')).abs().toString(), '1234');
 	equal((new MathLib.Integer('-1234')).abs().toString(), '1234');
 });
-test('.prototype.coerceTo()', 10, function () {
+test('.prototype.coerceTo()', 11, function () {
+	// Integer
+	ok(MathLib.isEqual((new MathLib.Integer('1234')).coerceTo('integer'), new MathLib.Integer('1234')));
+
 	// Rational
 	ok(MathLib.isEqual((new MathLib.Integer('0')).coerceTo('rational'), new MathLib.Rational(0)));
 	ok(MathLib.isEqual((new MathLib.Integer('+1234')).coerceTo('rational'), new MathLib.Rational(1234)));
@@ -3636,11 +3659,12 @@ test('.prototype.isEqual()', 5, function () {
 	equal((new MathLib.Integer('1234')).isEqual(new MathLib.Integer('12')), false);
 	equal((new MathLib.Integer('1234')).isEqual(12), false);
 });
-test('.prototype.isUnit()', 4, function () {
+test('.prototype.isUnit()', 5, function () {
 	equal((new MathLib.Integer('1')).isUnit(), true);
 	equal((new MathLib.Integer('-1')).isUnit(), true);
 	equal((new MathLib.Integer('+1234')).isUnit(), false);
 	equal((new MathLib.Integer('-1234')).isUnit(), false);
+	equal((new MathLib.Integer(['1', '123'])).isUnit(), false);
 });
 test('.prototype.isZero()', 5, function () {
 	equal((new MathLib.Integer('0')).isZero(), true);
@@ -4002,12 +4026,13 @@ test('.compare()', 3, function () {
 	equal(m2.compare(m3), 0);
 	equal(m3.compare(m4), 1);
 });
-test('.determinant()', 3, function () {
+test('.determinant()', 4, function () {
 	var m = new MathLib.Matrix([[0, 1, 2], [3, 2, 1], [1, 1, 0]]),
 			n = new MathLib.Matrix([[42]]),
 			p = new MathLib.Matrix([[0, 1, 2], [3, 2, 1]]);
 
 	equal(m.determinant(), 3, 'Determinant of a 3x3 matrix');
+	equal(m.determinant(), 3, 'Determinant should be cached now');
 	equal(n.determinant(), 42, 'Determinant of 1x1 matrix');
 	equal(p.determinant(), undefined, 'Determinant of 2x3 matrix should be undefined');
 });
@@ -4076,10 +4101,11 @@ test('.inverse()', 3, function () {
 	equal(m2.inverse(), undefined, 'inverting a singular matrix');
 	equal(m3.inverse().isEqual(new MathLib.Matrix([[new C(-1 / 2, 7 / 16), new C(1 / 4, -3 / 16)], [new C(6 / 16, -5 / 16), new C(-2 / 16, 1 / 16)]])), true, 'inverting a regular complex matrix');
 });
-test('.isBandMatrix()', 2, function () {
+test('.isBandMatrix()', 3, function () {
 	var m = new MathLib.Matrix([[2, 1, 3, 0], [1, 2, 1, 3], [0, 1, 2, 1], [0, 0, 1, 2]]);
 
 	equal(m.isBandMatrix(1, 2), true, 'band matrix');
+	equal(m.isBandMatrix(2), true, 'band matrix');
 	equal(m.isBandMatrix(1, 1), false, 'upper bandwidth to small');
 });
 test('.isDiag()', 2, function () {
@@ -4089,11 +4115,27 @@ test('.isDiag()', 2, function () {
 	equal(m.isDiag(), true, 'square matrix');
 	equal(n.isDiag(), false, 'non square matrix');
 });
-test('.isIdentity()', 2, function () {
+test('.isEqual()', 4, function () {
+	var c = new MathLib.Complex(6, 7),
+			m = new MathLib.Matrix([[1, 2, 3], [4, 5, c], [8, 9, 10]]),
+			n = new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 10]]),
+			o = new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 10]]),
+			p = new MathLib.Matrix([[1, 2, 3], [4, 5, 6]]);
+
+	equal(m.isEqual(m), true);
+	equal(n.isEqual(o), true);
+	equal(o.isEqual(p), false);
+	equal(m.isEqual(n), false);
+});
+test('.isIdentity()', 4, function () {
 	var m = new MathLib.Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
-			n = new MathLib.Matrix([[1, 4, 7], [2, 5, 8], [2, 5, 8]]);
+			n = new MathLib.Matrix([[1, 4, 7], [2, 5, 8], [2, 5, 8]]),
+			o = new MathLib.Matrix([[1, 0, 0], [0, 1, 0]]);
+
 	equal(m.isIdentity(), true, '.isIdentity() on identity matrix');
+	equal(m.isIdentity(), true, '.isIdentity() should be cached');
 	equal(n.isIdentity(), false, '.isIdentity() on non identity matrix');
+	equal(o.isIdentity(), false, '.isIdentity() on non square matrix');
 });
 test('.isInvertible()', 2, function () {
 	var m = new MathLib.Matrix([[1, 4, 7], [2, 5, 8], [2, 5, 2]]),
@@ -4137,12 +4179,16 @@ test('.isSquare()', 2, function () {
 	equal(m.isSquare(), true, 'square matrix');
 	equal(n.isSquare(), false, 'non square matrix');
 });
-test('.isSymmetric()', 2, function () {
+test('.isSymmetric()', 4, function () {
 	var c = new MathLib.Complex(4, 0),
 			m = new MathLib.Matrix([[1, 7, c], [7, 0, 3], [4, 3, 1]]),
-			n = new MathLib.Matrix([[0, 0, 0], [0, 1, c], [0, 0, 0]]);
+			n = new MathLib.Matrix([[0, 0, 0], [0, 1, c], [0, 0, 0]]),
+			o = new MathLib.Matrix([[1, 0, 0], [0, 1, 0]]);
+
 	equal(m.isSymmetric(), true, 'symmetric matrix');
+	equal(m.isSymmetric(), true, 'isSymmetric should be cached');
 	equal(n.isSymmetric(), false, 'non symmetric matrix');
+	equal(o.isSymmetric(), false, 'non square matrix');
 });
 test('.isUpper()', 4, function () {
 	var m = new MathLib.Matrix([[1, 2, 3], [0, 5, 6], [0, 0, 9]]),
@@ -4160,11 +4206,13 @@ test('.isVector()', 2, function () {
 	equal(m.isVector(), false, 'normal matrix');
 	equal(n.isVector(), true, 'one row matrix');
 });
-test('.isZero()', 2, function () {
+test('.isZero()', 3, function () {
 	var c = new MathLib.Complex(0, 0),
 			m = new MathLib.Matrix([[0, 0, 0], [0, 0, c], [0, 0, 0]]),
 			n = new MathLib.Matrix([[0, 0, 0], [0, 1, c], [0, 0, 0]]);
+
 	equal(m.isZero(), true, 'zero matrix');
+	equal(m.isZero(), true, '.isZero() should be cached now');
 	equal(n.isZero(), false, 'non zero matrix');
 });
 test('.map()', 2, function () {
@@ -4200,6 +4248,15 @@ test('numbers()', 3, function () {
 	deepEqual(o, new MathLib.Matrix([[5]]), 'static number method');
 });
 
+test('.one()', 3, function () {
+	var m = MathLib.Matrix.one(),
+			n = MathLib.Matrix.one(2),
+			o = MathLib.Matrix.one(2, 3);
+
+	ok(m.isEqual(new MathLib.Matrix([[1]])));
+	ok(n.isEqual(new MathLib.Matrix([[1, 1], [1, 1]])));
+	ok(o.isEqual(new MathLib.Matrix([[1, 1, 1], [1, 1, 1]])));
+});
 test('.plus()', 1, function () {
 	var m = new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
 			n = new MathLib.Matrix([[1, 4, 7], [2, 5, 8], [3, 6, 9]]),
@@ -4324,12 +4381,13 @@ test('.toString()', 1, function () {
 
 	deepEqual(m.toString(), '1\t2\t3\n4\t5\t6\n7\t8\t9', '.toString()');
 });
-test('.trace()', 2, function () {
+test('.trace()', 3, function () {
 	var c = new MathLib.Complex(3, 4),
 			m = new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
 			n = new MathLib.Matrix([[1, 2], [3, c]]);
 
 	equal(m.trace(), 15, 'trace of a simple matrix');
+	equal(m.trace(), 15, 'trace should be cached now');
 	deepEqual(n.trace(), new MathLib.Complex(4, 4), 'trace of a complex matrix');
 });
 test('.transpose()', 2, function () {
@@ -4338,6 +4396,15 @@ test('.transpose()', 2, function () {
 
 	deepEqual(m.transpose(), new MathLib.Matrix([[1, 4, 7], [2, 5, 8], [3, 6, 9]]), 'transpose a square matrix');
 	deepEqual(n.transpose(), new MathLib.Matrix([[1, 4], [2, 5], [3, 6]]), 'transpose of a rectangular matrix');
+});
+test('.zero()', 3, function () {
+	var m = MathLib.Matrix.zero(),
+			n = MathLib.Matrix.zero(2),
+			o = MathLib.Matrix.zero(2, 3);
+
+	ok(m.isEqual(new MathLib.Matrix([[0]])));
+	ok(n.isEqual(new MathLib.Matrix([[0, 0], [0, 0]])));
+	ok(o.isEqual(new MathLib.Matrix([[0, 0, 0], [0, 0, 0]])));
 });
 module('Permutation');
 test('init', 1, function () {
@@ -4591,22 +4658,31 @@ test('.compare()', 3, function () {
 	equal(p2.compare(p3), 0);
 	equal(p3.compare(p4), 1);
 });
-test('.differentiate()', 3, function () {
+test('.differentiate()', 4, function () {
 	var p = new MathLib.Polynomial(3);
+
 	deepEqual(p.differentiate(), new MathLib.Polynomial([0, 0, 3]), '.differentiate()');
+	deepEqual(p.differentiate(0), new MathLib.Polynomial([0, 0, 0, 1]), '.differentiate()');
 	deepEqual(p.differentiate(2), new MathLib.Polynomial([0, 6]), '.differentiate(2)');
 	deepEqual(p.differentiate(4), new MathLib.Polynomial([0]), '.differentiate(4)');
 });
-test('.integrate()', 2, function () {
+test('.integrate()', 3, function () {
 	var p = new MathLib.Polynomial([0, 0, 0, 1]);
+
 	deepEqual(p.integrate(), new MathLib.Polynomial([0, 0, 0, 0, 0.25]), '.integrate()');
+	deepEqual(p.integrate(0), new MathLib.Polynomial([0, 0, 0, 1]), '.integrate()');
 	deepEqual(p.integrate(2), new MathLib.Polynomial([0, 0, 0, 0, 0,  0.05]), '.integrate(2)');
 });
-test('.isEqual()', 1, function () {
+test('.isEqual()', 3, function () {
 	var c = new MathLib.Complex(0, 0),
-			p = new MathLib.Polynomial(3),
-			q = new MathLib.Polynomial([c, 0, 0, 1]);
-	equal(q.isEqual(p), true, '.times(polynomial)');
+			p1 = new MathLib.Polynomial(3),
+			p2 = new MathLib.Polynomial([c, 0, 0, 1]),
+			p3 = new MathLib.Polynomial([1, 2, 3]),
+			p4 = new MathLib.Polynomial([0, 0, 0, 2]);
+
+	equal(p1.isEqual(p2), true);
+	equal(p1.isEqual(p3), false);
+	equal(p1.isEqual(p4), false);
 });
 test('.map()', 2, function () {
 	var p = new MathLib.Polynomial([1, 2, 3]),
@@ -4618,6 +4694,12 @@ test('.map()', 2, function () {
 
 	deepEqual(res, q, '.map()');
 	equal(res.type, 'polynomial', '.type should be polynomial');
+});
+test('.negative()', 1, function () {
+	var p = new MathLib.Polynomial([1, 2, 3]),
+			q = new MathLib.Polynomial([-1, -2, -3]);
+
+	ok(p.negative().isEqual(q));
 });
 test('one()', 1, function () {
 	var p = MathLib.Polynomial.one;
@@ -4727,6 +4809,13 @@ test('.toMathML()', 1, function () {
 test('.toString()', 1, function () {
 	equal(MathLib.Rational.toString(), 'Rational Field ℚ');
 });
+test('.prototype.coerceTo()', 2, function () {
+	var r1 = new MathLib.Rational(3, 1);
+
+	ok(MathLib.isEqual(r1.coerceTo('integer'), new MathLib.Integer(3)), 'integer');
+	ok(MathLib.isEqual(r1.coerceTo('rational'), new MathLib.Rational(3, 1)), 'rational');
+	//ok(MathLib.isEqual(r1.coerceTo('complex'), new MathLib.Complex(new MathLib.Rational(3, 1), 0)), 'complex');
+});
 test('.prototype.compare()', 3, function () {
 	var r1 = new MathLib.Rational(3, 2),
 			r2 = new MathLib.Rational(6, 4),
@@ -4735,6 +4824,29 @@ test('.prototype.compare()', 3, function () {
 	equal(r1.compare(r2), 0, '.compare()');
 	equal(r1.compare(r3), 1, '.compare()');
 	equal(r1.compare(r4), -1,  '.compare()');
+});
+test('.prototype.copy()', 10, function () {
+	var r1 = new MathLib.Rational(3, 1),
+			r2 = r1.copy();
+
+	equal(r2.numerator, r1.numerator);
+	equal(r2.denominator, r1.denominator);
+
+	r2.numerator = 2;
+	r2.denominator = 4;
+
+	equal(r1.numerator, 3);
+	equal(r1.denominator, 1);
+	equal(r2.numerator, 2);
+	equal(r2.denominator, 4);
+
+	r1.numerator = 5;
+	r1.denominator = 6;
+
+	equal(r1.numerator, 5);
+	equal(r1.denominator, 6);
+	equal(r2.numerator, 2);
+	equal(r2.denominator, 4);
 });
 test('.prototype.divide()', 2, function () {
 	var r = new MathLib.Rational(1, 2),
@@ -4749,13 +4861,16 @@ test('.prototype.inverse()', 2, function () {
 	equal(r.isEqual(new MathLib.Rational(2, 1)), true, '.inverse()');
 	equal(p, undefined, '.inverse()');
 });
-test('.prototype.isEqual()', 2, function () {
-	var r = new MathLib.Rational(1, 2),
-			p = new MathLib.Rational(4, 8),
-			q = new MathLib.Rational(2, 3);
+test('.prototype.isEqual()', 4, function () {
+	var r1 = new MathLib.Rational(1, 2),
+			r2 = new MathLib.Rational(4, 8),
+			r3 = new MathLib.Rational(3, 1),
+			r4 = new MathLib.Rational(6, 2);
 
-	equal(r.isEqual(p), true, '.isEqual()');
-	equal(r.isEqual(q), false, '.isEqual()');
+	equal(r1.isEqual(r2), true, '.isEqual()');
+	equal(r3.isEqual(3), true, '.isEqual()');
+	equal(r4.isEqual(3), true, '.isEqual()');
+	equal(r1.isEqual(r3), false, '.isEqual()');
 });
 test('.prototype.isZero()', 2, function () {
 	var r = new MathLib.Rational(0, 2),

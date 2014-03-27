@@ -1,10 +1,10 @@
-// qunit-image.js is an QUnit addon for comparing images.
+// qunit-image.js is an QUnit addon for comparing images and canvas elements.
 //
 // ## Version
-// v0.0.2 - 2013-12-09  
+// v0.0.2 - 2014-03-17  
 //
 // ## License
-// Copyright © 2013 Alexander Zeilmann  
+// Copyright © 2013 - 2014 Alexander Zeilmann  
 // qunit-image.js is [licensed under the MIT license](<http://MathLib.de/en/license>)
 //
 // ## Documentation
@@ -137,7 +137,6 @@ QUnit.extend(QUnit.assert, {
 
 			// Increase the id counter
 			window.qunitImage.id++;
-
 
 			// Pass the results to QUnit
 			QUnit.config.current.assertions.push({

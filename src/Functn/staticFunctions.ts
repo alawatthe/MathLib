@@ -1,5 +1,6 @@
 var args, fn;
 for (var fnName in fns) {
+	/* istanbul ignore else */
 	if (fns.hasOwnProperty(fnName)) {
 		fn = (<any>fns)[fnName];
 

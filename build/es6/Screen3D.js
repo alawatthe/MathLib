@@ -46,7 +46,7 @@ import Screen from './Screen';
 					lookAt: [0, 0, 0],
 					position: [10, 10, 10]
 				},
-				controls: 'Trackball',
+				//controls: 'Trackball',
 				grid: {
 					xy: {
 						angle: Math.PI / 8,

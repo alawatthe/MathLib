@@ -46,7 +46,7 @@ var __extends = this.__extends || function (d, b) {
 					lookAt: [0, 0, 0],
 					position: [10, 10, 10]
 				},
-				controls: 'Trackball',
+				//controls: 'Trackball',
 				grid: {
 					xy: {
 						angle: Math.PI / 8,

@@ -6,7 +6,7 @@
  * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
  * @return {boolean}
  */
-draw(screen, options, redraw = false) {
+draw(screen, options : any = {}, redraw = false) {
 	if (Array.isArray(screen)) {
 		var conic = this;
 		screen.forEach(function (x) {

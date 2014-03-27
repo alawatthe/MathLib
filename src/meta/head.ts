@@ -14,9 +14,6 @@
 	export var goldenRatio = 1.618033988749895;
 	export var pi = Math.PI;
 
-	export var isArrayLike = function (x) {
-		return typeof x === 'object' && 'length' in x;
-	};
 
 	export var isNative = function (fn) {
 		return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
@@ -109,16 +106,3 @@
 				
 		return args.map(x => coerceTo(x, numberType));
 	}
-
-	var flatten = function (a) {
-				var flattendArray = [];
-				a.forEach(function (x) {
-					if (Array.isArray(x)) {
-						flattendArray = flattendArray.concat(flatten(x));
-					}
-					else {
-						flattendArray.push(x);
-					}
-				});
-				return flattendArray;
-			};

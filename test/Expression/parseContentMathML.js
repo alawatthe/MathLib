@@ -1,3 +1,7 @@
+test('.parseContentMathML() based_integer', 1, function () {
+	deepEqual(MathLib.Expression.parseContentMathML('<apply><csymbol cd="nums1">based_integer</csymbol><cn>8</cn><cs> 10 </cs></apply>'), new MathLib.Integer(8));
+});
+
 test('.parseContentMathML() boolean', 8, function () {
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><and/><true/><true/></apply></math>').evaluate(), true, '</and> true true');
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><and/><true/><false/><true/></apply></math>').evaluate(), false, '</and> true false true');
@@ -41,14 +45,16 @@ test('.parseContentMathML() rational', 1, function () {
 });
 
 
-test('.parseContentMathML() function constructing', 5, function () {
+test('.parseContentMathML() function constructing', 6, function () {
 	var expsin = MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><exp/><apply><sin/><ci>x</ci></apply></apply></lambda></math>').evaluate();
 
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><sin/><ci>x</ci></apply></lambda></math>').evaluate()(0), 0, '.evaluate() sin');
 	equal(expsin(0), 1, 'exp(sin(0)) = 1');
 	equal(expsin.toString(), 'x ⟼ exp(sin(x))', '.toString');
 	equal(expsin.type, 'functn', 'exp(sin(x)).type');
+
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>x</bvar><domainofapplication><complexes/></domainofapplication><apply><ident/><ci>x</ci></apply></lambda></math>').evaluate()(42), 42, 'The identity function');
+	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar>x</bvar><apply><csymbol cd="transc2">arctan</csymbol><ci>x</ci></apply></lambda></math>').evaluate()(1, 2), Math.atan2(1,2));
 	//deepEqual(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><cn>2</cn><ci>x</ci></apply></lambda></math>').evaluate()(42), 44, 'The result of 42 + 2 should be 44');
 	//deepEqual(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><plus/><ci>x</ci><cn>2</cn></apply></lambda></math>').evaluate()(42), 44, 'The result of 42 + 2 should be 44');
 	// deepEqual(MathLib.MathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><lambda><bvar><ci>x</ci></bvar><bvar><ci>y</ci></bvar><domainofapplication><complexes/></domainofapplication><apply><power/><ci>x</ci><ci>y</ci></apply></lambda></math>').evaluate()(4, 2), 16, 'Function with two arguments');

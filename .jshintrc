@@ -63,6 +63,7 @@
 		"deepEqual"   : true,
 		"DOMParser"   : true,
 		"equal"       : true,
+		"expect"      : true,
 		"MathLib"     : true,
 		"MathJax"     : true,
 		"module"      : true,
