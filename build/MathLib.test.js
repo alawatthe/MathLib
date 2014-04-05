@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-03-27
+ * build date: 2014-04-05
  */
 
 module('MathLib');
@@ -262,6 +262,9 @@ test('.type()', 10, function () {
 	equal(MathLib.type(/regexp/), 'regexp', 'MathLib.type(/regexp/) = "regexp"');
 	equal(MathLib.type(undefined), 'undefined', 'MathLib.type(undefined) = "undefined"');
 	equal(MathLib.type(null), 'null', 'MathLib.type(null) = "null"');
+});
+test('.version', 1, function () {
+	ok(/\d+\.\d+\.\d+/.test(MathLib.version));
 });
 module('Circle');
 test('init', 2, function () {

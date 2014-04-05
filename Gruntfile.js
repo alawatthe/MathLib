@@ -149,7 +149,6 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		saucelabs: grunt.file.exists('saucelab.json') ? grunt.file.readJSON('saucelab.json') : '{}',
 
 		concat: {
 			options: {
@@ -494,13 +493,13 @@ module.exports = function (grunt) {
 		'saucelabs-qunit': {
 			MathLib: {
 				options: {
-					username: sauceuser, //'<%= saucelabs.username %>',
-					key: saucekey, //'<%= saucelabs.key %>',
+					username: sauceuser,
+					key: saucekey,
 					urls: ['http://localhost:8000/test/test.html'],
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 69,
+					build: 70,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -1027,7 +1026,7 @@ module.exports = function (grunt) {
 		'newer:concat:Vector', 'newer:concat:Circle', 'newer:concat:Complex', 'newer:concat:Integer',
 		'newer:concat:Line', 'newer:concat:Matrix', 'newer:concat:Permutation', 'newer:concat:Conic',
 		'newer:concat:Point', 'newer:concat:Polynomial', 'newer:concat:Rational', 'newer:concat:Set', 'ts',
-		'copy:shims', 'concat:plain', 'uglify', 'regex-replace:plainHead', 'regex-replace:plainBefore',
+		'copy:shims', 'regex-replace:plainHead', 'concat:plain', 'uglify', 'regex-replace:plainBefore',
 		'clean:reference'
 	]);
 	grunt.registerTask('generateAMD', ['copy:amd', 'regex-replace:amdHead', 'regex-replace:amd']);

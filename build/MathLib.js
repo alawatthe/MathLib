@@ -6,12 +6,15 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-03-27
+ * build date: 2014-04-05
  */
-/// <reference path='reference.ts'/>
+/**
+ *
+ * @module MathLib
+ */
 var MathLib;
 (function (MathLib) {
-	MathLib.version = '%MathLibVersion';
+	MathLib.version = '0.7.2';
 	MathLib.apery = 1.2020569031595942;
 	MathLib.e = Math.E;
 
