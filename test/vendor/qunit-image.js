@@ -112,6 +112,10 @@ QUnit.extend(QUnit.assert, {
 				diffCanvas: diffCanvas.toDataURL()
 			});
 
+			if (!passed) {
+				console.log(actCanvas.toDataURL());
+			}
+
 			window.qunitImage.tests.push({
 				id: window.qunitImage.id,
 				width: width,
