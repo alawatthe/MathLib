@@ -1,7 +1,7 @@
 # MathLib
 [Homepage](http://mathlib.de/en/) - [Download](http://mathlib.de/en/download) - [Demonstrations](http://mathlib.de/en/demos) - [Documentation](http://mathlib.de/en/docs)
 
-[![Build Status](https://travis-ci.org/alawatthe/MathLib.png?branch=master)](https://travis-ci.org/alawatthe/MathLib) [![Dependency Status](https://gemnasium.com/alawatthe/MathLib.png)](https://gemnasium.com/alawatthe/MathLib) [![NPM version](https://badge.fury.io/js/mathlib.png)](http://badge.fury.io/js/mathlib)
+[![Build Status](https://travis-ci.org/alawatthe/MathLib.png?branch=master)](https://travis-ci.org/alawatthe/MathLib) [![Dependency Status](https://gemnasium.com/alawatthe/MathLib.png)](https://gemnasium.com/alawatthe/MathLib) [![NPM version](https://badge.fury.io/js/mathlib.png)](http://badge.fury.io/js/mathlib) [![Coverage Status](https://coveralls.io/repos/alawatthe/MathLib/badge.png?branch=master)](https://coveralls.io/r/alawatthe/MathLib?branch=master)
 
 MathLib.js is a JavaScript library for mathematical computations. It can handle circles, complex numbers, expressions, functions, lines, integers, matrices, permutations, points, polynomials, rational numbers, sets, and vectors.
 
