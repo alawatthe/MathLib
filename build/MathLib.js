@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-04-05
+ * build date: 2014-04-16
  */
 /**
  *
@@ -7357,14 +7357,22 @@ var MathLib;
 		*/
 		Complex.prototype.toLaTeX = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var str = '', reFlag = !MathLib.isZero(this.re);
+			var option, str = '', reFlag = !MathLib.isZero(this.re), passOptions = {};
 
 			if (!this.isFinite()) {
 				return (options.sign ? '+' : '') + '\\text{Complex' + this.re + '}';
 			}
 
 			if (!MathLib.isZero(this.im)) {
-				str += MathLib.toLaTeX(this.im, {base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign}) + 'i';
+				for (option in options) {
+					if (options.hasOwnProperty(option) && option !== 'sign') {
+						passOptions[option] = options[option];
+					}
+				}
+
+				passOptions.sign = reFlag || options.sign;
+
+				str += MathLib.toLaTeX(this.im, passOptions) + 'i';
 			}
 
 			if (reFlag || str.length === 0) {
@@ -7382,18 +7390,25 @@ var MathLib;
 		*/
 		Complex.prototype.toMathML = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var str = '', reFlag = !MathLib.isZero(this.re);
+			var str = '', option, reFlag = !MathLib.isZero(this.re), passOptions = {};
 
 			if (!this.isFinite()) {
 				return (options.sign ? '<mo>+</mo>' : '') + '<mi>Complex' + this.re + '</mi>';
 			}
 
 			if (!MathLib.isZero(this.im)) {
+				for (option in options) {
+					if (options.hasOwnProperty(option) && option !== 'sign') {
+						passOptions[option] = options[option];
+					}
+				}
+
 				if (reFlag || options.sign) {
-					str += '<mo>' + MathLib.toString(this.im, {sign: true}).slice(0, 1) + '</mo><mrow>' + MathLib.toMathML(MathLib.abs(this.im), {base: options.base, baseSubscript: options.baseSubscript, sign: false}) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
+					passOptions.sign = false;
+					str += '<mo>' + MathLib.toString(this.im, {sign: true}).slice(0, 1) + '</mo><mrow>' + MathLib.toMathML(MathLib.abs(this.im), passOptions) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
 				}
 				else {
-					str += '<mrow>' + MathLib.toMathML(this.im, {base: options.base, baseSubscript: options.baseSubscript}) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
+					str += '<mrow>' + MathLib.toMathML(this.im, passOptions) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
 				}
 			}
 
@@ -7425,14 +7440,22 @@ var MathLib;
 		*/
 		Complex.prototype.toString = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var str = '', reFlag = !MathLib.isZero(this.re);
+			var str = '', option, reFlag = !MathLib.isZero(this.re), passOptions = {};
 
 			if (!this.isFinite()) {
 				return (options.sign ? '+' : '') + 'Complex' + this.re;
 			}
 
 			if (!MathLib.isZero(this.im)) {
-				str += MathLib.toString(this.im, {base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign}) + 'i';
+				for (option in options) {
+					if (options.hasOwnProperty(option) && option !== 'sign') {
+						passOptions[option] = options[option];
+					}
+				}
+
+				passOptions.sign = reFlag || options.sign;
+
+				str += MathLib.toString(this.im, passOptions) + 'i';
 			}
 
 			if (reFlag || str.length === 0) {
@@ -8173,7 +8196,15 @@ var MathLib;
 		*/
 		Integer.prototype.toLaTeX = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var base = options.base || 10, str = this.toString({base: base, sign: options.sign});
+			var option, str, base = options.base || 10, passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) && option !== 'baseSubscript') {
+					passOptions[option] = options[option];
+				}
+			}
+
+			str = this.toString(passOptions);
 
 			if (options.baseSubscript) {
 				str += '_{' + base + '}';
@@ -8190,7 +8221,15 @@ var MathLib;
 		*/
 		Integer.prototype.toMathML = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var base = options.base || 10, str = '<mn>' + this.toString({base: base, sign: options.sign}) + '</mn>';
+			var str, option, base = options.base || 10, passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) && option !== 'baseSubscript') {
+					passOptions[option] = options[option];
+				}
+			}
+
+			str = '<mn>' + this.toString(passOptions) + '</mn>';
 
 			if (options.baseSubscript) {
 				str = '<msub>' + str + '<mn>' + base + '</mn></msub>';
@@ -11642,7 +11681,13 @@ var MathLib;
 		*/
 		Rational.prototype.toLaTeX = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var numerator, str = '', passOptions = {base: options.base, baseSubscript: options.baseSubscript};
+			var numerator, option, str = '', passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) && option !== 'sign') {
+					passOptions[option] = options[option];
+				}
+			}
 
 			if (options.sign) {
 				str = MathLib.toString(this.numerator, {sign: true}).slice(0, 1);
@@ -11663,7 +11708,13 @@ var MathLib;
 		*/
 		Rational.prototype.toMathML = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var numerator, str = '', passOptions = {base: options.base, baseSubscript: options.baseSubscript};
+			var numerator, option, str = '', passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) && option !== 'sign') {
+					passOptions[option] = options[option];
+				}
+			}
 
 			if (options.sign) {
 				str = '<mo>' + MathLib.toString(this.numerator, {sign: true}).slice(0, 1) + '</mo>';
@@ -11684,7 +11735,15 @@ var MathLib;
 		*/
 		Rational.prototype.toString = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			return MathLib.toString(this.numerator, options) + '/' + MathLib.toString(this.denominator, {base: options.base, baseSubscript: options.baseSubscript});
+			var option, passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) && option !== 'sign') {
+					passOptions[option] = options[option];
+				}
+			}
+
+			return MathLib.toString(this.numerator, options) + '/' + MathLib.toString(this.denominator, passOptions);
 		};
 		return Rational;
 	})();

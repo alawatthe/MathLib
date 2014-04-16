@@ -5,22 +5,30 @@
  * @return {string}
  */
 toMathML(options : toPresentationOptions = {}) : string {
-	var str = '',
-			reFlag = !MathLib.isZero(this.re);
+	var str = '', option,
+			reFlag = !MathLib.isZero(this.re),
+			passOptions : toPresentationOptions = {};
 
 	if (!this.isFinite()) {
 		return (options.sign ? '<mo>+</mo>' : '') + '<mi>Complex' + this.re + '</mi>';
 	}
 
 	if (!MathLib.isZero(this.im)) {
-		if (reFlag || options.sign) {			
+		for (option in options) {
+			if (options.hasOwnProperty(option) && option !== 'sign') {
+				passOptions[option] = options[option];
+			}
+		}
+
+		if (reFlag || options.sign) {
+			passOptions.sign = false;
 			str += '<mo>' + MathLib.toString(this.im, {sign: true}).slice(0, 1) + '</mo><mrow>'
-					+ MathLib.toMathML(MathLib.abs(this.im), {base: options.base, baseSubscript: options.baseSubscript, sign: false})
+					+ MathLib.toMathML(MathLib.abs(this.im), passOptions)
 					+ '<mo>&#x2062;</mo><mi>i</mi></mrow>';
 		}
 		else {
 			str += '<mrow>'
-					+ MathLib.toMathML(this.im, {base: options.base, baseSubscript: options.baseSubscript})
+					+ MathLib.toMathML(this.im, passOptions)
 					+ '<mo>&#x2062;</mo><mi>i</mi></mrow>';
 		}
 	}

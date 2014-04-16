@@ -262,7 +262,13 @@
 		*/
 		Rational.prototype.toLaTeX = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var numerator, str = '', passOptions = {base: options.base, baseSubscript: options.baseSubscript};
+			var numerator, option, str = '', passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) && option !== 'sign') {
+					passOptions[option] = options[option];
+				}
+			}
 
 			if (options.sign) {
 				str = MathLib.toString(this.numerator, {sign: true}).slice(0, 1);
@@ -283,7 +289,13 @@
 		*/
 		Rational.prototype.toMathML = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var numerator, str = '', passOptions = {base: options.base, baseSubscript: options.baseSubscript};
+			var numerator, option, str = '', passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) && option !== 'sign') {
+					passOptions[option] = options[option];
+				}
+			}
 
 			if (options.sign) {
 				str = '<mo>' + MathLib.toString(this.numerator, {sign: true}).slice(0, 1) + '</mo>';
@@ -304,7 +316,15 @@
 		*/
 		Rational.prototype.toString = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			return MathLib.toString(this.numerator, options) + '/' + MathLib.toString(this.denominator, {base: options.base, baseSubscript: options.baseSubscript});
+			var option, passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) && option !== 'sign') {
+					passOptions[option] = options[option];
+				}
+			}
+
+			return MathLib.toString(this.numerator, options) + '/' + MathLib.toString(this.denominator, passOptions);
 		};
 		return Rational;
 	})();

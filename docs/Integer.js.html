@@ -1085,7 +1085,15 @@ var int = new MathLib.Integer('123456789');
           <div class="description"><p>A LaTeX string representation</p> </div>
           <pre><code class="language-javascript">Integer.prototype.toLaTeX = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var base = options.base || 10, str = this.toString({base: base, sign: options.sign});
+			var option, str, base = options.base || 10, passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) &amp;&amp; option !== 'baseSubscript') {
+					passOptions[option] = options[option];
+				}
+			}
+
+			str = this.toString(passOptions);
 
 			if (options.baseSubscript) {
 				str += '_{' + base + '}';
@@ -1121,7 +1129,15 @@ var int = new MathLib.Integer('123456789');
           <div class="description"><p>A presentation MathML string representation</p> </div>
           <pre><code class="language-javascript">Integer.prototype.toMathML = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var base = options.base || 10, str = '&lt;mn&gt;' + this.toString({base: base, sign: options.sign}) + '&lt;/mn&gt;';
+			var str, option, base = options.base || 10, passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) &amp;&amp; option !== 'baseSubscript') {
+					passOptions[option] = options[option];
+				}
+			}
+
+			str = '&lt;mn&gt;' + this.toString(passOptions) + '&lt;/mn&gt;';
 
 			if (options.baseSubscript) {
 				str = '&lt;msub&gt;' + str + '&lt;mn&gt;' + base + '&lt;/mn&gt;&lt;/msub&gt;';

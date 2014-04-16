@@ -5,15 +5,25 @@
  * @return {string}
  */
 toString(options : toPresentationOptions = {}) : string {
-	var str = '',
-			reFlag = !MathLib.isZero(this.re);
+	var str = '', option,
+			reFlag = !MathLib.isZero(this.re),
+			passOptions : toPresentationOptions = {};
 
 	if (!this.isFinite()) {
 		return (options.sign ? '+' : '') + 'Complex' + this.re;
 	}
 
 	if (!MathLib.isZero(this.im)) {
-		str += MathLib.toString(this.im, {base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign}) + 'i';
+
+		for (option in options) {
+			if (options.hasOwnProperty(option) && option !== 'sign') {
+				passOptions[option] = options[option];
+			}
+		}
+
+		passOptions.sign = reFlag || options.sign;
+
+		str += MathLib.toString(this.im, passOptions) + 'i';
 	}
 
 	if (reFlag || str.length === 0) {

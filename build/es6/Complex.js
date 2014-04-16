@@ -685,14 +685,22 @@ import Point from './Point';
 		*/
 		Complex.prototype.toLaTeX = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var str = '', reFlag = !MathLib.isZero(this.re);
+			var option, str = '', reFlag = !MathLib.isZero(this.re), passOptions = {};
 
 			if (!this.isFinite()) {
 				return (options.sign ? '+' : '') + '\\text{Complex' + this.re + '}';
 			}
 
 			if (!MathLib.isZero(this.im)) {
-				str += MathLib.toLaTeX(this.im, {base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign}) + 'i';
+				for (option in options) {
+					if (options.hasOwnProperty(option) && option !== 'sign') {
+						passOptions[option] = options[option];
+					}
+				}
+
+				passOptions.sign = reFlag || options.sign;
+
+				str += MathLib.toLaTeX(this.im, passOptions) + 'i';
 			}
 
 			if (reFlag || str.length === 0) {
@@ -710,18 +718,25 @@ import Point from './Point';
 		*/
 		Complex.prototype.toMathML = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var str = '', reFlag = !MathLib.isZero(this.re);
+			var str = '', option, reFlag = !MathLib.isZero(this.re), passOptions = {};
 
 			if (!this.isFinite()) {
 				return (options.sign ? '<mo>+</mo>' : '') + '<mi>Complex' + this.re + '</mi>';
 			}
 
 			if (!MathLib.isZero(this.im)) {
+				for (option in options) {
+					if (options.hasOwnProperty(option) && option !== 'sign') {
+						passOptions[option] = options[option];
+					}
+				}
+
 				if (reFlag || options.sign) {
-					str += '<mo>' + MathLib.toString(this.im, {sign: true}).slice(0, 1) + '</mo><mrow>' + MathLib.toMathML(MathLib.abs(this.im), {base: options.base, baseSubscript: options.baseSubscript, sign: false}) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
+					passOptions.sign = false;
+					str += '<mo>' + MathLib.toString(this.im, {sign: true}).slice(0, 1) + '</mo><mrow>' + MathLib.toMathML(MathLib.abs(this.im), passOptions) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
 				}
 				else {
-					str += '<mrow>' + MathLib.toMathML(this.im, {base: options.base, baseSubscript: options.baseSubscript}) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
+					str += '<mrow>' + MathLib.toMathML(this.im, passOptions) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
 				}
 			}
 
@@ -753,14 +768,22 @@ import Point from './Point';
 		*/
 		Complex.prototype.toString = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var str = '', reFlag = !MathLib.isZero(this.re);
+			var str = '', option, reFlag = !MathLib.isZero(this.re), passOptions = {};
 
 			if (!this.isFinite()) {
 				return (options.sign ? '+' : '') + 'Complex' + this.re;
 			}
 
 			if (!MathLib.isZero(this.im)) {
-				str += MathLib.toString(this.im, {base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign}) + 'i';
+				for (option in options) {
+					if (options.hasOwnProperty(option) && option !== 'sign') {
+						passOptions[option] = options[option];
+					}
+				}
+
+				passOptions.sign = reFlag || options.sign;
+
+				str += MathLib.toString(this.im, passOptions) + 'i';
 			}
 
 			if (reFlag || str.length === 0) {

@@ -5,9 +5,15 @@
  * @return {string}
  */
 toLaTeX(options : toPresentationOptions = {}) : string {
-	var numerator,
+	var numerator, option,
 			str = '',
-			passOptions = {base: options.base, baseSubscript: options.baseSubscript};
+			passOptions = {};
+
+	for (option in options) {
+		if (options.hasOwnProperty(option) && option !== 'sign') {
+			passOptions[option] = options[option];
+		}
+	}
 
 	if (options.sign) {
 		str = MathLib.toString(this.numerator, {sign: true}).slice(0, 1);

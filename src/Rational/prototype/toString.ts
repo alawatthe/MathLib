@@ -5,6 +5,15 @@
  * @return {string}
  */
 toString(options : toPresentationOptions = {}) : string {
+	var option,
+			passOptions = {};
+
+	for (option in options) {
+		if (options.hasOwnProperty(option) && option !== 'sign') {
+			passOptions[option] = options[option];
+		}
+	}
+
 	return MathLib.toString(this.numerator, options) + '/'
-					+ MathLib.toString(this.denominator, {base: options.base, baseSubscript: options.baseSubscript});
+					+ MathLib.toString(this.denominator, passOptions);
 }

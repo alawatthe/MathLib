@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-04-05
+ * build date: 2014-04-16
  */
 
 var MathLib = require('./MathLib.js'),
@@ -1926,6 +1926,12 @@ test('.parseContentMathML() cn', 3, function () {
 
 test('.parseContentMathML() cs', 1, function () {
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><cs>MathLib.js - A mathematical JavaScript library</cs></math>'), 'MathLib.js - A mathematical JavaScript library', '.parse() cs');
+});
+
+
+test('.parseContentMathML() logic1', 2, function () {
+	equal(MathLib.Expression.parseContentMathML('<csymbol cd="logic1">true</csymbol>'), true);
+	equal(MathLib.Expression.parseContentMathML('<csymbol cd="logic1">false</csymbol>'), false);
 });
 
 

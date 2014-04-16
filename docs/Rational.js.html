@@ -583,7 +583,13 @@ var r = new MathLib.Rational(2, 3);
           <div class="description"><p>Returns the LaTeX representation of the rational number</p> </div>
           <pre><code class="language-javascript">Rational.prototype.toLaTeX = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var numerator, str = '', passOptions = {base: options.base, baseSubscript: options.baseSubscript};
+			var numerator, option, str = '', passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
+					passOptions[option] = options[option];
+				}
+			}
 
 			if (options.sign) {
 				str = MathLib.toString(this.numerator, {sign: true}).slice(0, 1);
@@ -623,7 +629,13 @@ var r = new MathLib.Rational(2, 3);
           <div class="description"><p>Returns the MathML representation of the rational number</p> </div>
           <pre><code class="language-javascript">Rational.prototype.toMathML = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var numerator, str = '', passOptions = {base: options.base, baseSubscript: options.baseSubscript};
+			var numerator, option, str = '', passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
+					passOptions[option] = options[option];
+				}
+			}
 
 			if (options.sign) {
 				str = '&lt;mo&gt;' + MathLib.toString(this.numerator, {sign: true}).slice(0, 1) + '&lt;/mo&gt;';
@@ -663,7 +675,15 @@ var r = new MathLib.Rational(2, 3);
           <div class="description"><p>Custom toString function</p> </div>
           <pre><code class="language-javascript">Rational.prototype.toString = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			return MathLib.toString(this.numerator, options) + '/' + MathLib.toString(this.denominator, {base: options.base, baseSubscript: options.baseSubscript});
+			var option, passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
+					passOptions[option] = options[option];
+				}
+			}
+
+			return MathLib.toString(this.numerator, options) + '/' + MathLib.toString(this.denominator, passOptions);
 		};
 		return Rational;
 	})();

@@ -719,7 +719,15 @@ import Functn from './Functn';
 		*/
 		Integer.prototype.toLaTeX = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var base = options.base || 10, str = this.toString({base: base, sign: options.sign});
+			var option, str, base = options.base || 10, passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) && option !== 'baseSubscript') {
+					passOptions[option] = options[option];
+				}
+			}
+
+			str = this.toString(passOptions);
 
 			if (options.baseSubscript) {
 				str += '_{' + base + '}';
@@ -736,7 +744,15 @@ import Functn from './Functn';
 		*/
 		Integer.prototype.toMathML = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var base = options.base || 10, str = '<mn>' + this.toString({base: base, sign: options.sign}) + '</mn>';
+			var str, option, base = options.base || 10, passOptions = {};
+
+			for (option in options) {
+				if (options.hasOwnProperty(option) && option !== 'baseSubscript') {
+					passOptions[option] = options[option];
+				}
+			}
+
+			str = '<mn>' + this.toString(passOptions) + '</mn>';
 
 			if (options.baseSubscript) {
 				str = '<msub>' + str + '<mn>' + base + '</mn></msub>';

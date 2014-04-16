@@ -1122,14 +1122,22 @@ var c = new MathLib.Complex(1, 2);
           <div class="description"><p>Returns the LaTeX representation of the complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.toLaTeX = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var str = '', reFlag = !MathLib.isZero(this.re);
+			var option, str = '', reFlag = !MathLib.isZero(this.re), passOptions = {};
 
 			if (!this.isFinite()) {
 				return (options.sign ? '+' : '') + '\\text{Complex' + this.re + '}';
 			}
 
 			if (!MathLib.isZero(this.im)) {
-				str += MathLib.toLaTeX(this.im, {base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign}) + 'i';
+				for (option in options) {
+					if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
+						passOptions[option] = options[option];
+					}
+				}
+
+				passOptions.sign = reFlag || options.sign;
+
+				str += MathLib.toLaTeX(this.im, passOptions) + 'i';
 			}
 
 			if (reFlag || str.length === 0) {
@@ -1166,18 +1174,25 @@ var c = new MathLib.Complex(1, 2);
           <div class="description"><p>Returns the (presentation) MathML representation of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.toMathML = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var str = '', reFlag = !MathLib.isZero(this.re);
+			var str = '', option, reFlag = !MathLib.isZero(this.re), passOptions = {};
 
 			if (!this.isFinite()) {
 				return (options.sign ? '&lt;mo&gt;+&lt;/mo&gt;' : '') + '&lt;mi&gt;Complex' + this.re + '&lt;/mi&gt;';
 			}
 
 			if (!MathLib.isZero(this.im)) {
+				for (option in options) {
+					if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
+						passOptions[option] = options[option];
+					}
+				}
+
 				if (reFlag || options.sign) {
-					str += '&lt;mo&gt;' + MathLib.toString(this.im, {sign: true}).slice(0, 1) + '&lt;/mo&gt;&lt;mrow&gt;' + MathLib.toMathML(MathLib.abs(this.im), {base: options.base, baseSubscript: options.baseSubscript, sign: false}) + '&lt;mo&gt;&amp;#x2062;&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;';
+					passOptions.sign = false;
+					str += '&lt;mo&gt;' + MathLib.toString(this.im, {sign: true}).slice(0, 1) + '&lt;/mo&gt;&lt;mrow&gt;' + MathLib.toMathML(MathLib.abs(this.im), passOptions) + '&lt;mo&gt;&amp;#x2062;&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;';
 				}
 				else {
-					str += '&lt;mrow&gt;' + MathLib.toMathML(this.im, {base: options.base, baseSubscript: options.baseSubscript}) + '&lt;mo&gt;&amp;#x2062;&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;';
+					str += '&lt;mrow&gt;' + MathLib.toMathML(this.im, passOptions) + '&lt;mo&gt;&amp;#x2062;&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;';
 				}
 			}
 
@@ -1231,14 +1246,22 @@ var c = new MathLib.Complex(1, 2);
           <div class="description"><p>Custom toString function</p> </div>
           <pre><code class="language-javascript">Complex.prototype.toString = function (options) {
 			if (typeof options === 'undefined') { options = {}; }
-			var str = '', reFlag = !MathLib.isZero(this.re);
+			var str = '', option, reFlag = !MathLib.isZero(this.re), passOptions = {};
 
 			if (!this.isFinite()) {
 				return (options.sign ? '+' : '') + 'Complex' + this.re;
 			}
 
 			if (!MathLib.isZero(this.im)) {
-				str += MathLib.toString(this.im, {base: options.base, baseSubscript: options.baseSubscript, sign: reFlag || options.sign}) + 'i';
+				for (option in options) {
+					if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
+						passOptions[option] = options[option];
+					}
+				}
+
+				passOptions.sign = reFlag || options.sign;
+
+				str += MathLib.toString(this.im, passOptions) + 'i';
 			}
 
 			if (reFlag || str.length === 0) {

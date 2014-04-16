@@ -5,10 +5,19 @@
  * @return {string}
  */
 toMathML(options : toPresentationOptions = {}) : string {
-	var base = options.base || 10,
-			str = '<mn>'
-					+ this.toString({base: base, sign: options.sign})
-					+ '</mn>';
+	var str, option,
+			base = options.base || 10,
+			passOptions = {};
+
+	for (option in options) {
+		if (options.hasOwnProperty(option) && option !== 'baseSubscript') {
+			passOptions[option] = options[option];
+		}
+	}
+
+	str = '<mn>'
+			+ this.toString(passOptions)
+			+ '</mn>';
 
 	if (options.baseSubscript) {
 		str = '<msub>' + str + '<mn>' + base + '</mn></msub>';

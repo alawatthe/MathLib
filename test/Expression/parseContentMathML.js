@@ -40,6 +40,12 @@ test('.parseContentMathML() cs', 1, function () {
 });
 
 
+test('.parseContentMathML() logic1', 2, function () {
+	equal(MathLib.Expression.parseContentMathML('<csymbol cd="logic1">true</csymbol>'), true);
+	equal(MathLib.Expression.parseContentMathML('<csymbol cd="logic1">false</csymbol>'), false);
+});
+
+
 test('.parseContentMathML() rational', 1, function () {
 	deepEqual(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><cn type="rational">3<sep/>4</cn></math>'), new MathLib.Rational(new MathLib.Integer(3), new MathLib.Integer(4)), '.parse() rational');
 });
