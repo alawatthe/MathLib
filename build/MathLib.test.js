@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-04-05
+ * build date: 2014-04-20
  */
 
 module('MathLib');
@@ -160,7 +160,7 @@ test('.toContentMathML()', 20, function () {
 
 	equal(MathLib.toContentMathML(new MathLib.Rational(1, 2)), '<cn type="rational">1<sep/>2</cn>');
 });
-test('.toLaTeX()', 20, function () {
+test('.toLaTeX()', 22, function () {
 	equal(MathLib.toLaTeX([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '[1,2,[3,4],\\frac{1}{2}]');
 
 	equal(MathLib.toLaTeX(NaN), '\\text{ NaN }');
@@ -186,11 +186,13 @@ test('.toLaTeX()', 20, function () {
 
 	equal(MathLib.toLaTeX(true), '\\text{ true }');
 	equal(MathLib.toLaTeX(false), '\\text{ false }');
-	equal(MathLib.toLaTeX('MathLib'), '"MathLib"');
+	equal(MathLib.toLaTeX('MathLib'), '\\texttt{"MathLib"}');
+	equal(MathLib.toLaTeX('MathLib', {quotes: ['\'', '\'']}), '{\\ttfamily\\char\'15}\\texttt{MathLib}{\\ttfamily\\char\'15}');
+	equal(MathLib.toLaTeX('# $ % ^ & _ { } ~ \\'), '\\texttt{"\\# \\$ \\% \\^{} \\& \\_ \\{ \\} \\~{} \\textbackslash{}"}');
 
 	equal(MathLib.toLaTeX(new MathLib.Rational(1, 2)), '\\frac{1}{2}');
 });
-test('.toMathML()', 20, function () {
+test('.toMathML()', 21, function () {
 	equal(MathLib.toMathML([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '<mrow><mo>[</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mrow><mo>[</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>]</mo></mrow><mo>,</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>]</mo></mrow>');
 
 	equal(MathLib.toMathML(NaN), '<mi>NaN</mi>');
@@ -218,10 +220,11 @@ test('.toMathML()', 20, function () {
 	equal(MathLib.toMathML(true), '<mi>true</mi>');
 	equal(MathLib.toMathML(false), '<mi>false</mi>');
 	equal(MathLib.toMathML('MathLib'), '<ms>MathLib</ms>');
+	equal(MathLib.toMathML('MathLib', {quotes: ['\'', '\'']}), '<ms lquote="\'" rquote="\'">MathLib</ms>');
 
 	equal(MathLib.toMathML(new MathLib.Rational(1, 2)), '<mfrac><mn>1</mn><mn>2</mn></mfrac>');
 });
-test('.toString()', 20, function () {
+test('.toString()', 21, function () {
 	equal(MathLib.toString([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '[1,2,[3,4],1/2]');
 
 	equal(MathLib.toString(NaN), 'NaN');
@@ -248,6 +251,7 @@ test('.toString()', 20, function () {
 	equal(MathLib.toString(true), 'true');
 	equal(MathLib.toString(false), 'false');
 	equal(MathLib.toString('MathLib'), '"MathLib"');
+	equal(MathLib.toString('MathLib', {quotes: ['\'', '\'']}), '\'MathLib\'');
 
 	equal(MathLib.toString(new MathLib.Rational(1, 2)), '1/2');
 });

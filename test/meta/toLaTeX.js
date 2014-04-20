@@ -1,4 +1,4 @@
-test('.toLaTeX()', 20, function () {
+test('.toLaTeX()', 22, function () {
 	equal(MathLib.toLaTeX([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '[1,2,[3,4],\\frac{1}{2}]');
 
 	equal(MathLib.toLaTeX(NaN), '\\text{ NaN }');
@@ -24,7 +24,9 @@ test('.toLaTeX()', 20, function () {
 
 	equal(MathLib.toLaTeX(true), '\\text{ true }');
 	equal(MathLib.toLaTeX(false), '\\text{ false }');
-	equal(MathLib.toLaTeX('MathLib'), '"MathLib"');
+	equal(MathLib.toLaTeX('MathLib'), '\\texttt{"MathLib"}');
+	equal(MathLib.toLaTeX('MathLib', {quotes: ['\'', '\'']}), '{\\ttfamily\\char\'15}\\texttt{MathLib}{\\ttfamily\\char\'15}');
+	equal(MathLib.toLaTeX('# $ % ^ & _ { } ~ \\'), '\\texttt{"\\# \\$ \\% \\^{} \\& \\_ \\{ \\} \\~{} \\textbackslash{}"}');
 
 	equal(MathLib.toLaTeX(new MathLib.Rational(1, 2)), '\\frac{1}{2}');
 });

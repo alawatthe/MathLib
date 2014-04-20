@@ -1,4 +1,4 @@
-test('.toMathML()', 20, function () {
+test('.toMathML()', 21, function () {
 	equal(MathLib.toMathML([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '<mrow><mo>[</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mrow><mo>[</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo>]</mo></mrow><mo>,</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>]</mo></mrow>');
 
 	equal(MathLib.toMathML(NaN), '<mi>NaN</mi>');
@@ -26,6 +26,7 @@ test('.toMathML()', 20, function () {
 	equal(MathLib.toMathML(true), '<mi>true</mi>');
 	equal(MathLib.toMathML(false), '<mi>false</mi>');
 	equal(MathLib.toMathML('MathLib'), '<ms>MathLib</ms>');
+	equal(MathLib.toMathML('MathLib', {quotes: ['\'', '\'']}), '<ms lquote="\'" rquote="\'">MathLib</ms>');
 
 	equal(MathLib.toMathML(new MathLib.Rational(1, 2)), '<mfrac><mn>1</mn><mn>2</mn></mfrac>');
 });

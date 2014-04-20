@@ -7,7 +7,22 @@
  */
 export var toLaTeX = function (x, options : toPresentationOptions = {}) {
 	var base = options.base || 10,
-			str = MathLib.toString(x, {base: base, sign: options.sign});
+			str = MathLib.toString(x, {base: base, sign: options.sign}),
+			stringToLaTeX = function (str) {
+				return str.replace(/\\/g, '\\textbackslash')
+									.replace(/#/g, '\\#')
+									.replace(/\$/g, '\\$')
+									.replace(/%/g, '\\%')
+									.replace(/&/g, '\\&')
+									.replace(/_/g, '\\_')
+									.replace(/\{/g, '\\{')
+									.replace(/\}/g, '\\}')
+									.replace(/\^/g, '\\^{}')
+									.replace(/\\textbackslash/g, '\\textbackslash{}')
+									.replace(/~/g, '\\~{}')
+									.replace(/\"/g, '\\texttt{"}')
+									.replace(/'/g, '{\\ttfamily\\char\'15}');
+			};
 
 	if (Array.isArray(x)) {
 		return '[' + x.map(entry => MathLib.toLaTeX(entry, options)).join() + ']';
@@ -41,6 +56,11 @@ export var toLaTeX = function (x, options : toPresentationOptions = {}) {
 
 	/* istanbul ignore else */
 	if (typeof x === 'string') {
-		return '"' + x + '"';
+		x = stringToLaTeX(x);
+
+		if (options.quotes) {
+			return stringToLaTeX(options.quotes[0]) + '\\texttt{' + x + '}' + stringToLaTeX(options.quotes[1]);
+		}
+		return '\\texttt{"' + x + '"}';
 	}
 };

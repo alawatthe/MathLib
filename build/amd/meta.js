@@ -262,7 +262,9 @@ define([], function () {
 	*/
 	MathLib.toLaTeX = function (x, options) {
 		if (typeof options === 'undefined') { options = {}; }
-		var base = options.base || 10, str = MathLib.toString(x, {base: base, sign: options.sign});
+		var base = options.base || 10, str = MathLib.toString(x, {base: base, sign: options.sign}), stringToLaTeX = function (str) {
+			return str.replace(/\\/g, '\\textbackslash').replace(/#/g, '\\#').replace(/\$/g, '\\$').replace(/%/g, '\\%').replace(/&/g, '\\&').replace(/_/g, '\\_').replace(/\{/g, '\\{').replace(/\}/g, '\\}').replace(/\^/g, '\\^{}').replace(/\\textbackslash/g, '\\textbackslash{}').replace(/~/g, '\\~{}').replace(/\"/g, '\\texttt{"}').replace(/'/g, '{\\ttfamily\\char\'15}');
+		};
 
 		if (Array.isArray(x)) {
 			return '[' + x.map(function (entry) {
@@ -298,7 +300,12 @@ define([], function () {
 
 		/* istanbul ignore else */
 		if (typeof x === 'string') {
-			return '"' + x + '"';
+			x = stringToLaTeX(x);
+
+			if (options.quotes) {
+				return stringToLaTeX(options.quotes[0]) + '\\texttt{' + x + '}' + stringToLaTeX(options.quotes[1]);
+			}
+			return '\\texttt{"' + x + '"}';
 		}
 	};
 
@@ -365,6 +372,9 @@ define([], function () {
 
 		/* istanbul ignore else */
 		if (typeof x === 'string') {
+			if (options.quotes) {
+				return '<ms lquote="' + options.quotes[0] + '" rquote="' + options.quotes[1] + '">' + x + '</ms>';
+			}
 			return '<ms>' + x + '</ms>';
 		}
 	};
@@ -420,6 +430,9 @@ define([], function () {
 
 		/* istanbul ignore else */
 		if (typeof x === 'string') {
+			if (options.quotes) {
+				return options.quotes[0] + x + options.quotes[1];
+			}
 			return '"' + x + '"';
 		}
 	};

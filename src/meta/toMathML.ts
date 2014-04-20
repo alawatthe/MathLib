@@ -55,12 +55,16 @@ export var toMathML = function (x, options : toPresentationOptions = {}) {
 	}
 
 	if (typeof x === 'boolean') {
-		return '<mi>' + x + '</mi>'
+		return '<mi>' + x + '</mi>';
 	}
 
 	/* istanbul ignore else */
 	if (typeof x === 'string') {
-		return '<ms>' + x + '</ms>'
+		if (options.quotes) {
+			return '<ms lquote="' + options.quotes[0] + '" rquote="' +
+				options.quotes[1] + '">' + x + '</ms>';
+		}
+		return '<ms>' + x + '</ms>';
 	}
 
 }

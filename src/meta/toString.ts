@@ -47,6 +47,9 @@ export var toString = function (x, options : toPresentationOptions = {}) {
 
 	/* istanbul ignore else */
 	if (typeof x === 'string') {
+		if (options.quotes) {
+			return options.quotes[0] + x + options.quotes[1];
+		}
 		return '"' + x + '"';
 	}
 }

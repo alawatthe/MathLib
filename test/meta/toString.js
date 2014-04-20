@@ -1,4 +1,4 @@
-test('.toString()', 20, function () {
+test('.toString()', 21, function () {
 	equal(MathLib.toString([1, 2, [3, 4], new MathLib.Rational(1, 2)]), '[1,2,[3,4],1/2]');
 
 	equal(MathLib.toString(NaN), 'NaN');
@@ -25,6 +25,7 @@ test('.toString()', 20, function () {
 	equal(MathLib.toString(true), 'true');
 	equal(MathLib.toString(false), 'false');
 	equal(MathLib.toString('MathLib'), '"MathLib"');
+	equal(MathLib.toString('MathLib', {quotes: ['\'', '\'']}), '\'MathLib\'');
 
 	equal(MathLib.toString(new MathLib.Rational(1, 2)), '1/2');
 });

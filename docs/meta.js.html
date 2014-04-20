@@ -511,7 +511,9 @@
           <div class="description"><p>A LaTeX string representation</p> </div>
           <pre><code class="language-javascript">MathLib.toLaTeX = function (x, options) {
 		if (typeof options === 'undefined') { options = {}; }
-		var base = options.base || 10, str = MathLib.toString(x, {base: base, sign: options.sign});
+		var base = options.base || 10, str = MathLib.toString(x, {base: base, sign: options.sign}), stringToLaTeX = function (str) {
+			return str.replace(/\\/g, '\\textbackslash').replace(/#/g, '\\#').replace(/\$/g, '\\$').replace(/%/g, '\\%').replace(/&amp;/g, '\\&amp;').replace(/_/g, '\\_').replace(/\{/g, '\\{').replace(/\}/g, '\\}').replace(/\^/g, '\\^{}').replace(/\\textbackslash/g, '\\textbackslash{}').replace(/~/g, '\\~{}').replace(/\&quot;/g, '\\texttt{&quot;}').replace(/'/g, '{\\ttfamily\\char\'15}');
+		};
 
 		if (Array.isArray(x)) {
 			return '[' + x.map(function (entry) {
@@ -546,7 +548,12 @@
 		}</code></pre>
           <div class="description"><p>istanbul ignore else</p> </div>
           <pre><code class="language-javascript">if (typeof x === 'string') {
-			return '&quot;' + x + '&quot;';
+			x = stringToLaTeX(x);
+
+			if (options.quotes) {
+				return stringToLaTeX(options.quotes[0]) + '\\texttt{' + x + '}' + stringToLaTeX(options.quotes[1]);
+			}
+			return '\\texttt{&quot;' + x + '&quot;}';
 		}
 	};</code></pre>
           <section id="toMathML">
@@ -636,6 +643,9 @@
 		}</code></pre>
           <div class="description"><p>istanbul ignore else</p> </div>
           <pre><code class="language-javascript">if (typeof x === 'string') {
+			if (options.quotes) {
+				return '&lt;ms lquote=&quot;' + options.quotes[0] + '&quot; rquote=&quot;' + options.quotes[1] + '&quot;&gt;' + x + '&lt;/ms&gt;';
+			}
 			return '&lt;ms&gt;' + x + '&lt;/ms&gt;';
 		}
 	};</code></pre>
@@ -714,6 +724,9 @@
 		}</code></pre>
           <div class="description"><p>istanbul ignore else</p> </div>
           <pre><code class="language-javascript">if (typeof x === 'string') {
+			if (options.quotes) {
+				return options.quotes[0] + x + options.quotes[1];
+			}
 			return '&quot;' + x + '&quot;';
 		}
 	};
