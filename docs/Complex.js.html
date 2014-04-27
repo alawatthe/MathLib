@@ -107,6 +107,12 @@
               </li>
               <li><a href="#arccsc"><i class="alert alert-info"></i>arccsc</a>
               </li>
+              <li><a href="#arcosh"><i class="alert alert-info"></i>arcosh</a>
+              </li>
+              <li><a href="#arcoth"><i class="alert alert-info"></i>arcoth</a>
+              </li>
+              <li><a href="#arcsch"><i class="alert alert-info"></i>arcsch</a>
+              </li>
               <li><a href="#arcsec"><i class="alert alert-info"></i>arcsec</a>
               </li>
               <li><a href="#arcsin"><i class="alert alert-info"></i>arcsin</a>
@@ -114,6 +120,10 @@
               <li><a href="#arctan"><i class="alert alert-info"></i>arctan</a>
               </li>
               <li><a href="#arg"><i class="alert alert-info"></i>arg</a>
+              </li>
+              <li><a href="#arsech"><i class="alert alert-info"></i>arsech</a>
+              </li>
+              <li><a href="#arsinh"><i class="alert alert-info"></i>arsinh</a>
               </li>
               <li><a href="#artanh"><i class="alert alert-info"></i>artanh</a>
               </li>
@@ -338,6 +348,70 @@ var c = new MathLib.Complex(1, 2);
 
 			return this.inverse().arcsin();
 		};</code></pre>
+          <section id="arcosh">
+            <h1><a href="http://mathlib.de/en/docs/Complex/arcosh">arcosh</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Complex.prototype.arcosh()</span> → <a href="./Complex.js.html">Complex</a>
+            </p>
+          </section>
+          <div class="description"><p>Returns the inverse hyperbolic cosine of the number</p> </div>
+          <pre><code class="language-javascript">Complex.prototype.arcosh = function () {
+			var arccos;
+
+			if (this.isZero()) {
+				return new MathLib.Complex(0, 1.5707963267948966192);
+			}
+
+			arccos = this.arccos();
+			arccos = arccos.times(new MathLib.Complex(0, arccos.im &gt; 0 ? -1 : 1));
+
+			if (MathLib.isNegZero(this.im) &amp;&amp; this.re &gt;= -1) {
+				arccos.im = -arccos.im;
+			}
+
+			return arccos;
+		};</code></pre>
+          <section id="arcoth">
+            <h1><a href="http://mathlib.de/en/docs/Complex/arcoth">arcoth</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Complex.prototype.arcoth()</span> → <a href="./Complex.js.html">Complex</a>
+            </p>
+          </section>
+          <div class="description"><p>Returns the inverse hyperbolic cotangent of the number</p> </div>
+          <pre><code class="language-javascript">Complex.prototype.arcoth = function () {
+			var one = new MathLib.Complex(1, -0);
+
+			if (MathLib.isZero(this.re)) {
+				if (MathLib.isPosZero(this.im)) {
+					return new MathLib.Complex(this.re, -1.5707963267948966192);
+				}
+				if (MathLib.isNegZero(this.im)) {
+					return new MathLib.Complex(this.re, 1.5707963267948966192);
+				}
+			}
+
+			if (this.re === Infinity) {
+				return new MathLib.Complex(0, 0);
+			}
+
+			return MathLib.times(0.5, this.plus(one).divide(this.minus(one)).ln());
+		};</code></pre>
+          <section id="arcsch">
+            <h1><a href="http://mathlib.de/en/docs/Complex/arcsch">arcsch</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Complex.prototype.arcsch()</span> → <a href="./Complex.js.html">Complex</a>
+            </p>
+          </section>
+          <div class="description"><p>Returns the inverse hyperbolic cosecant of the number</p> </div>
+          <pre><code class="language-javascript">Complex.prototype.arcsch = function () {
+			return this.inverse().arsinh();
+		};</code></pre>
           <section id="arcsec">
             <h1><a href="http://mathlib.de/en/docs/Complex/arcsec">arcsec</a>
             </h1>
@@ -426,6 +500,52 @@ var c = new MathLib.Complex(1, 2);
 				return NaN;
 			}
 			return Math.atan2(this.im, this.re);
+		};</code></pre>
+          <section id="arsech">
+            <h1><a href="http://mathlib.de/en/docs/Complex/arsech">arsech</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Complex.prototype.arsech()</span> → <a href="./Complex.js.html">Complex</a>
+            </p>
+          </section>
+          <div class="description"><p>Returns the inverse hyperbolic secant of the number</p> </div>
+          <pre><code class="language-javascript">Complex.prototype.arsech = function () {
+			if (this.re === Infinity) {
+				return new MathLib.Complex(NaN);
+			}
+			return this.inverse().arcosh();
+		};</code></pre>
+          <section id="arsinh">
+            <h1><a href="http://mathlib.de/en/docs/Complex/arsinh">arsinh</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Complex.prototype.arsinh()</span> → <a href="./Complex.js.html">Complex</a>
+            </p>
+          </section>
+          <div class="description"><p>Returns the inverse hyperbolic sine of the number</p> </div>
+          <pre><code class="language-javascript">Complex.prototype.arsinh = function () {
+			var a = this.re, b = this.im, aa = a * a, bb = b * b, sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * aa), sgn = function (x) {
+				if (x &gt; 0) {
+					return 1;
+				}
+				if (x &lt; 0) {
+					return -1;
+				}
+				if (1 / x === Infinity) {
+					return 1;
+				}
+				if (1 / x === -Infinity) {
+					return -1;
+				}
+			};
+
+			if (a === Infinity) {
+				return new MathLib.Complex(Infinity);
+			}
+
+			return new MathLib.Complex(sgn(a) / 2 * MathLib.arcosh(sqrt + (aa + bb)), sgn(b) / 2 * MathLib.arccos(sqrt - (aa + bb)));
 		};</code></pre>
           <section id="artanh">
             <h1><a href="http://mathlib.de/en/docs/Complex/artanh">artanh</a>

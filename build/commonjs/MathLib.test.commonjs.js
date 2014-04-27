@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-04-20
+ * build date: 2014-04-27
  */
 
 var MathLib = require('./MathLib.js'),
@@ -597,6 +597,180 @@ test('.arccsc()', 17, function () {
 	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arccsc(), new MathLib.Complex(0.18631805410781552582, -0.39656823011232897892)));
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arccsc(), new MathLib.Complex(-0.11875073130741175420, -0.16044553377450493240)));
 });
+test('.arcosh()', 34, function () {
+	var n2p0 = (new MathLib.Complex(-2, +0)).arcosh(),
+			n2n0 = (new MathLib.Complex(-2, -0)).arcosh(),
+			n1p0 = (new MathLib.Complex(-1, +0)).arcosh(),
+			n1n0 = (new MathLib.Complex(-1, -0)).arcosh(),
+			n5p0 = (new MathLib.Complex(-0.5, +0)).arcosh(),
+			n5n0 = (new MathLib.Complex(-0.5, -0)).arcosh(),
+			p0p0 = (new MathLib.Complex(+0, +0)).arcosh(),
+			p0n0 = (new MathLib.Complex(+0, -0)).arcosh(),
+			n0p0 = (new MathLib.Complex(-0, +0)).arcosh(),
+			n0n0 = (new MathLib.Complex(-0, -0)).arcosh(),
+			p5p0 = (new MathLib.Complex(+0.5, +0)).arcosh(),
+			p5n0 = (new MathLib.Complex(+0.5, -0)).arcosh(),
+			p1p0 = (new MathLib.Complex(+1, +0)).arcosh(),
+			p1n0 = (new MathLib.Complex(+1, -0)).arcosh(),
+			p2p0 = (new MathLib.Complex(2, +0)).arcosh(),
+			p2n0 = (new MathLib.Complex(2, -0)).arcosh();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arcosh().re));
+	equal((new MathLib.Complex(Infinity)).arcosh().re, Infinity);
+
+	ok(MathLib.isEqual(n2p0, new MathLib.Complex(1.3169578969248167086, +3.1415926535897932385)), '(-2 +0i).arcosh() = 1.31 + 3.14i');
+	ok(MathLib.isEqual(n2n0, new MathLib.Complex(1.3169578969248167086, -3.1415926535897932385)), '(-2 -0i).arcosh() = 1.31 - 3.14i');
+
+	ok(MathLib.isPosZero(n1p0.re), '(-1 +0i).arcosh().re = +0');
+	ok(MathLib.isEqual(n1p0.im, Math.PI), '(-1 +0i).arcosh().im = 3.1415');
+	ok(MathLib.isPosZero(n1n0.re), '(-1 -0i).arcosh().re = +0');
+	ok(MathLib.isEqual(n1n0.im, -Math.PI), '(-1 -0i).arcosh().im = 3.1415');
+
+	ok(MathLib.isPosZero(n5p0.re), '(-0.5 +0i).arcosh().re = +0');
+	ok(MathLib.isEqual(n5p0.im, 2.0943951023931954923), '(-0.5 +0i).arcosh().im = +2.094');
+	ok(MathLib.isPosZero(n5n0.re), '(-0.5 -0i).arcosh().re = +0');
+	ok(MathLib.isEqual(n5n0.im, -2.0943951023931954923), '(-0.5 -0i).arcosh().im = -2.094');
+
+	ok(MathLib.isPosZero(p0p0.re), '(+0 +0i).arcosh().re = +0');
+	ok(MathLib.isEqual(p0p0.im, 1.5707963267948966192), '(+0 +0i).arcosh().im = 1.570');
+	ok(MathLib.isPosZero(p0n0.re), '(+0 -0i).arcosh().re = +0');
+	ok(MathLib.isEqual(p0n0.im, 1.5707963267948966192), '(+0 -0i).arcosh().im = 1.570');
+	ok(MathLib.isPosZero(n0p0.re), '(-0 +0i).arcosh().re = +0');
+	ok(MathLib.isEqual(n0p0.im, 1.5707963267948966192), '(-0 +0i).arcosh().im = 1.570');
+	ok(MathLib.isPosZero(n0n0.re), '(-0 -0i).arcosh().re = +0');
+	ok(MathLib.isEqual(n0n0.im, 1.5707963267948966192), '(-0 -0i).arcosh().im = 1.570');
+
+	ok(MathLib.isPosZero(p5p0.re), '(+0.5 +0i).arcosh().re = +0');
+	ok(MathLib.isEqual(p5p0.im, 1.0471975511965977462), '(+0.5 +0i).arcosh().im = +1.047');
+	ok(MathLib.isPosZero(p5n0.re), '(+0.5 -0i).arcosh().re = +0');
+	ok(MathLib.isEqual(p5n0.im, -1.0471975511965977462), '(+0.5 -0i).arcosh().im = -1.047');
+
+	ok(MathLib.isPosZero(p1p0.re), '(+1 +0i).arcosh().re = +0');
+	ok(MathLib.isPosZero(p1p0.im), '(+1 +0i).arcosh().im = +0');
+	ok(MathLib.isPosZero(p1n0.re), '(+1 -0i).arcosh().re = +0');
+	ok(MathLib.isNegZero(p1n0.im), '(+1 -0i).arcosh().im = -0');
+
+	ok(MathLib.isEqual(p2p0.re, 1.3169578969248167086), '(+2 +0i).arcosh().re = 3.1415');
+	ok(MathLib.isPosZero(p2p0.im), '(+2 +0i).arcosh().im = +0');
+	ok(MathLib.isEqual(p2n0.re, 1.3169578969248167086), '(+2 -0i).arcosh().re = 3.1415');
+	ok(MathLib.isNegZero(p2n0.im), '(+2 -0i).arcosh().im = -0');
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arcosh(), new MathLib.Complex(1.5285709194809981613, 1.1437177404024204938)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arcosh(), new MathLib.Complex(2.3055090312434769420, 2.2047801924340733356)));
+});
+test('.arcoth()', 29, function () {
+	var n2p0 = (new MathLib.Complex(-2, +0)).arcoth(),
+			n2n0 = (new MathLib.Complex(-2, -0)).arcoth(),
+			n1p0 = (new MathLib.Complex(-1, +0)).arcoth(),
+			n1n0 = (new MathLib.Complex(-1, -0)).arcoth(),
+			n5p0 = (new MathLib.Complex(-0.5, +0)).arcoth(),
+			n5n0 = (new MathLib.Complex(-0.5, -0)).arcoth(),
+			p0p0 = (new MathLib.Complex(+0, +0)).arcoth(),
+			p0n0 = (new MathLib.Complex(+0, -0)).arcoth(),
+			n0p0 = (new MathLib.Complex(-0, +0)).arcoth(),
+			n0n0 = (new MathLib.Complex(-0, -0)).arcoth(),
+			p5p0 = (new MathLib.Complex(+0.5, +0)).arcoth(),
+			p5n0 = (new MathLib.Complex(+0.5, -0)).arcoth(),
+			p1p0 = (new MathLib.Complex(1, +0)).arcoth(),
+			p1n0 = (new MathLib.Complex(1, -0)).arcoth(),
+			p2p0 = (new MathLib.Complex(2, +0)).arcoth(),
+			p2n0 = (new MathLib.Complex(2, -0)).arcoth();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arcoth().re));
+	ok(MathLib.isPosZero((new MathLib.Complex(Infinity)).arcoth().re));
+	ok(MathLib.isPosZero((new MathLib.Complex(Infinity)).arcoth().im));
+
+	ok(MathLib.isEqual(n2p0, new MathLib.Complex(-0.5493061443340548457, 0)), '(-2 +0i).arcoth() = -0.55 + 0i');
+	ok(MathLib.isEqual(n2n0, new MathLib.Complex(-0.5493061443340548457, 0)), '(-2 -0i).arcoth() = -0.55 + 0i');
+
+	equal(n1p0.re, Infinity, '(-1 +0i).arcoth().re = Infinity');
+	equal(n1n0.re, Infinity, '(-1 -0i).arcoth().re = Infinity');
+
+	ok(MathLib.isEqual(n5p0.re, -0.5493061443340548457), '(-0.5 +0i).arcoth().re = -1.107');
+	ok(MathLib.isEqual(n5p0.im, -1.5707963267948966192), '(-0.5 +0i).arcoth().im = -1.570');
+	ok(MathLib.isEqual(n5n0.re, -0.5493061443340548457), '(-0.5 -0i).arcoth().re = -1.107');
+	ok(MathLib.isEqual(n5n0.im, +1.5707963267948966192), '(-0.5 -0i).arcoth().im = +1.570');
+
+	ok(MathLib.isPosZero(p0p0.re), '(+0 +0i).arcoth().re = +0');
+	ok(MathLib.isEqual(p0p0.im, -1.5707963267948966192), '(+0 +0i).arcoth().im = -1.5707963267948966192');
+	ok(MathLib.isPosZero(p0n0.re), '(+0 -0i).arcoth().re = +0');
+	ok(MathLib.isEqual(p0n0.im, +1.5707963267948966192), '(+0 -0i).arcoth().im = +1.5707963267948966192');
+	ok(MathLib.isNegZero(n0p0.re), '(-0 +0i).arcoth().re = -0');
+	ok(MathLib.isEqual(n0p0.im, -1.5707963267948966192), '(-0 +0i).arcoth().im = -1.5707963267948966192');
+	ok(MathLib.isNegZero(n0n0.re), '(-0 -0i).arcoth().re = -0');
+	ok(MathLib.isEqual(n0n0.im, +1.5707963267948966192), '(-0 -0i).arcoth().im = +1.5707963267948966192');
+
+	ok(MathLib.isEqual(p5p0.re, +0.5493061443340548457), '(+0.5i +0).arcoth().re = +0.549');
+	ok(MathLib.isEqual(p5p0.im, -1.5707963267948966192), '(+0.5i +0).arcoth().im = -1.570');
+	ok(MathLib.isEqual(p5n0.re, +0.5493061443340548457), '(+0.5i -0).arcoth().re = +0.549');
+	ok(MathLib.isEqual(p5n0.im, +1.5707963267948966192), '(+0.5i -0).arcoth().im = +1.570');
+
+	equal(p1p0.re, Infinity, '(1 +0i).arcoth().re = Infinity');
+	equal(p1n0.re, Infinity, '(1 -0i).arcoth().re = Infinity');
+
+	ok(MathLib.isEqual(p2p0, new MathLib.Complex(0.5493061443340548457, 0)), '(2 + 0i).arcoth() = 1.57 + 0i');
+	ok(MathLib.isEqual(p2n0, new MathLib.Complex(0.5493061443340548457, 0)), '(2 - 0i).arcoth() = -1.57 + 0i');
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arcoth(), new MathLib.Complex(0.17328679513998632735, -0.39269908169872415481)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arcoth(), new MathLib.Complex(-0.11750090731143388841, -0.16087527719832109670)));
+});
+test('.arcsch()', 29, function () {
+	var p0n2 = (new MathLib.Complex(+0, -2)).arcsch(),
+			n0n2 = (new MathLib.Complex(-0, -2)).arcsch(),
+			p0n1 = (new MathLib.Complex(+0, -1)).arcsch(),
+			n0n1 = (new MathLib.Complex(-0, -1)).arcsch(),
+			p0n5 = (new MathLib.Complex(+0, -0.5)).arcsch(),
+			n0n5 = (new MathLib.Complex(-0, -0.5)).arcsch(),
+			p0p0 = (new MathLib.Complex(+0, +0)).arcsch(),
+			p0n0 = (new MathLib.Complex(+0, -0)).arcsch(),
+			n0p0 = (new MathLib.Complex(-0, +0)).arcsch(),
+			n0n0 = (new MathLib.Complex(-0, -0)).arcsch(),
+			p0p5 = (new MathLib.Complex(+0, +0.5)).arcsch(),
+			n0p5 = (new MathLib.Complex(-0, +0.5)).arcsch(),
+			p0p1 = (new MathLib.Complex(+0, +1)).arcsch(),
+			n0p1 = (new MathLib.Complex(-0, +1)).arcsch(),
+			p0p2 = (new MathLib.Complex(+0, +2)).arcsch(),
+			n0p2 = (new MathLib.Complex(-0, +2)).arcsch();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arcsch().re), '(NaN +NaN i).arcsch().re = +NaN +NaN i');
+	ok(MathLib.isPosZero((new MathLib.Complex(Infinity)).arcsch().re), '(+Infinity +Infinity i).arcsch().re = +0');
+	ok(MathLib.isPosZero((new MathLib.Complex(Infinity)).arcsch().im), '(+Infinity +Infinity i).arcsch().im = +0');
+
+	ok(MathLib.isPosZero(p0n2.re), '(+0 -2i).arsinh().re = +0');
+	ok(MathLib.isEqual(p0n2.im, +0.52359877559829887308), '(+0 -2i).arsinh().im = 0.523');
+	ok(MathLib.isNegZero(n0n2.re), '(-0 -2i).arsinh().re = -0');
+	ok(MathLib.isEqual(n0n2.im, +0.52359877559829887308), '(-0 -2i).arsinh().im = 0.523');
+
+	ok(MathLib.isPosZero(p0n1.re), '(+0 -i).arcsch().re = +0');
+	ok(MathLib.isEqual(p0n1.im, 1.5707963267948966192), '(+0 -i).arcsch().im = 1.570');
+	ok(MathLib.isNegZero(n0n1.re), '(-0 -i).arcsch().re = -0');
+	ok(MathLib.isEqual(n0n1.im, 1.5707963267948966192), '(-0 -i).arcsch().im = 1.570');
+
+	ok(MathLib.isEqual(p0n5, new MathLib.Complex(1.3169578969248167086, 1.5707963267948966192)), '(+0 -0.5i).arcsch() = +1.316 + 1.570i');
+	ok(MathLib.isEqual(n0n5, new MathLib.Complex(-1.3169578969248167086, 1.5707963267948966192)), '(-0 -0.5i).arcsch() = -1.316 + 1.570i');
+
+	ok(MathLib.isEqual(p0p0, new MathLib.Complex(Infinity)), '(+0 +0i).arsech() = ∞ + ∞i');
+	ok(MathLib.isEqual(p0n0, new MathLib.Complex(Infinity)), '(+0 -0i).arsech() = ∞ + ∞i');
+	ok(MathLib.isEqual(n0p0, new MathLib.Complex(Infinity)), '(-0 +0i).arsech() = ∞ + ∞i');
+	ok(MathLib.isEqual(n0n0, new MathLib.Complex(Infinity)), '(-0 -0i).arsech() = ∞ + ∞i');
+
+	ok(MathLib.isEqual(p0p5, new MathLib.Complex(1.3169578969248167086, -1.5707963267948966192)), '(+0 +0.5i).arcsch() = +1.316 - 1.570i');
+	ok(MathLib.isEqual(n0p5, new MathLib.Complex(-1.3169578969248167086, -1.5707963267948966192)), '(-0 +0.5i).arcsch() = -1.316 - 1.570i');
+
+	ok(MathLib.isPosZero(p0p1.re), '(+0 +i).arcsch().re = +0');
+	ok(MathLib.isEqual(p0p1.im, -1.5707963267948966192), '(+0 +i).arcsch().im = -1.570');
+	ok(MathLib.isNegZero(n0p1.re), '(-0 +i).arcsch().re = -0');
+	ok(MathLib.isEqual(n0p1.im, -1.5707963267948966192), '(-0 +i).arcsch().im = -1.570');
+
+	ok(MathLib.isPosZero(p0p2.re), '(+0 +2i).arsinh().re = +0');
+	ok(MathLib.isEqual(p0p2.im, -0.52359877559829887308), '(+0 +2i).arsinh().im = 0.523');
+	ok(MathLib.isNegZero(n0p2.re), '(-0 +2i).arsinh().re = -0');
+	ok(MathLib.isEqual(n0p2.im, -0.52359877559829887308), '(-0 +2i).arsinh().im = 0.523');
+
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arcsch(), new MathLib.Complex(0.21561241855582964497, -0.40158639166780606828)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arcsch(), new MathLib.Complex(-0.12124561370968745427, -0.15950663187736356950)));
+});
 test('.arcsec()', 17, function () {
 	var n1p0 = (new MathLib.Complex(-1, +0)).arcsec(),
 			n1n0 = (new MathLib.Complex(-1, -0)).arcsec(),
@@ -737,6 +911,135 @@ test('.arctan()', 28, function () {
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arctan(), new MathLib.Complex(-1.4483069952314645421, 0.1589971916799991744)));
 
 });
+test('.arg()', 6, function () {
+	var c1 = new MathLib.Complex(1, 1),
+			c2 = new MathLib.Complex(1, -1),
+			c3 = new MathLib.Complex(0, 0),
+			c4 = new MathLib.Complex(-1, 0);
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN, 1)).arg()));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity, 1)).arg()));
+	equal(c1.arg(), 0.7853981633974483);
+	equal(c2.arg(), -0.7853981633974483);
+	equal(c3.arg(), 0);
+	equal(c4.arg(), 3.141592653589793);
+});
+test('.arsech()', 30, function () {
+	var n2p0 = (new MathLib.Complex(-2, +0)).arsech(),
+			n2n0 = (new MathLib.Complex(-2, -0)).arsech(),
+			n1p0 = (new MathLib.Complex(-1, +0)).arsech(),
+			n1n0 = (new MathLib.Complex(-1, -0)).arsech(),
+			n5p0 = (new MathLib.Complex(-0.5, +0)).arsech(),
+			n5n0 = (new MathLib.Complex(-0.5, -0)).arsech(),
+			p0p0 = (new MathLib.Complex(+0, +0)).arsech(),
+			p0n0 = (new MathLib.Complex(+0, -0)).arsech(),
+			n0p0 = (new MathLib.Complex(-0, +0)).arsech(),
+			n0n0 = (new MathLib.Complex(-0, -0)).arsech(),
+			p5p0 = (new MathLib.Complex(+0.5, +0)).arsech(),
+			p5n0 = (new MathLib.Complex(+0.5, -0)).arsech(),
+			p1p0 = (new MathLib.Complex(+1, +0)).arsech(),
+			p1n0 = (new MathLib.Complex(+1, -0)).arsech(),
+			p2p0 = (new MathLib.Complex(2, +0)).arsech(),
+			p2n0 = (new MathLib.Complex(2, -0)).arsech();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arsech().re));
+	ok(MathLib.isNaN((new MathLib.Complex(Infinity)).arsech().re));
+
+	ok(MathLib.isPosZero(n2p0.re), '(-2 +0i).arcosh().re = +0');
+	ok(MathLib.isEqual(n2p0.im, -2.0943951023931954923), '(-2 +0i).arcosh().im = -2.094');
+	ok(MathLib.isPosZero(n2n0.re), '(-2 -0i).arcosh().re = +0');
+	ok(MathLib.isEqual(n2n0.im, 2.0943951023931954923), '(-2 -0i).arcosh().im = +2.094');
+
+	ok(MathLib.isPosZero(n1p0.re), '(-1 +0i).arsech().re = +0');
+	ok(MathLib.isEqual(n1p0.im, -Math.PI), '(-1 +0i).arsech().im = -3.1415');
+	ok(MathLib.isPosZero(n1n0.re), '(-1 -0i).arsech().re = +0');
+	ok(MathLib.isEqual(n1n0.im, Math.PI), '(-1 -0i).arsech().im = 3.1415');
+
+	ok(MathLib.isEqual(n5p0, new MathLib.Complex(1.3169578969248167086, -3.1415926535897932385)), '(-0.5 +0i).arsech() = 1.31 - 3.14i');
+	ok(MathLib.isEqual(n5n0, new MathLib.Complex(1.3169578969248167086, +3.1415926535897932385)), '(-0.5 -0i).arsech() = 1.31 + 3.14i');
+
+	ok(MathLib.isEqual(p0p0, new MathLib.Complex(Infinity)), '(+0 +0i).arsech() = ∞ + ∞i');
+	ok(MathLib.isEqual(p0n0, new MathLib.Complex(Infinity)), '(+0 -0i).arsech() = ∞ + ∞i');
+	ok(MathLib.isEqual(n0p0, new MathLib.Complex(Infinity)), '(-0 +0i).arsech() = ∞ + ∞i');
+	ok(MathLib.isEqual(n0n0, new MathLib.Complex(Infinity)), '(-0 -0i).arsech() = ∞ + ∞i');
+
+	ok(MathLib.isEqual(p5p0.re, 1.3169578969248167086), '(+0.5 +0i).arsech().re = 1.316');
+	ok(MathLib.isNegZero(p5p0.im), '(+0.5 +0i).arsech().im = -0');
+	ok(MathLib.isEqual(p5n0.re, 1.3169578969248167086), '(+0.5 -0i).arsech().re = 1.316');
+	ok(MathLib.isPosZero(p5n0.im), '(+0.5 -0i).arsech().im = +0');
+
+	ok(MathLib.isPosZero(p1p0.re), '(+1 +0i).arsech().re = +0');
+	ok(MathLib.isNegZero(p1p0.im), '(+1 +0i).arsech().im = -0');
+	ok(MathLib.isPosZero(p1n0.re), '(+1 -0i).arsech().re = +0');
+	ok(MathLib.isPosZero(p1n0.im), '(+1 -0i).arsech().im = +0');
+
+	ok(MathLib.isPosZero(p2p0.re), '(-2 +0i).arcosh().re = +0');
+	ok(MathLib.isEqual(p2p0.im, -1.0471975511965977462), '(-2 +0i).arcosh().im = -1.047');
+	ok(MathLib.isPosZero(p2n0.re), '(-2 -0i).arcosh().re = +0');
+	ok(MathLib.isEqual(p2n0.im, 1.0471975511965977462), '(-2 -0i).arcosh().im = +1.047');
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arsech(), new MathLib.Complex(0.3965682301123289789, -1.3844782726870810934)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arsech(), new MathLib.Complex(0.1604455337745049324, -1.6895470581023083734)));
+});
+test('.arsinh()', 32, function () {
+	var p0n2 = (new MathLib.Complex(+0, -2)).arsinh(),
+			n0n2 = (new MathLib.Complex(-0, -2)).arsinh(),
+			p0n1 = (new MathLib.Complex(+0, -1)).arsinh(),
+			n0n1 = (new MathLib.Complex(-0, -1)).arsinh(),
+			p0n5 = (new MathLib.Complex(+0, -0.5)).arsinh(),
+			n0n5 = (new MathLib.Complex(-0, -0.5)).arsinh(),
+			p0p0 = (new MathLib.Complex(+0, +0)).arsinh(),
+			p0n0 = (new MathLib.Complex(+0, -0)).arsinh(),
+			n0p0 = (new MathLib.Complex(-0, +0)).arsinh(),
+			n0n0 = (new MathLib.Complex(-0, -0)).arsinh(),
+			p0p5 = (new MathLib.Complex(+0, +0.5)).arsinh(),
+			n0p5 = (new MathLib.Complex(-0, +0.5)).arsinh(),
+			p0p1 = (new MathLib.Complex(+0, +1)).arsinh(),
+			n0p1 = (new MathLib.Complex(-0, +1)).arsinh(),
+			p0p2 = (new MathLib.Complex(+0, +2)).arsinh(),
+			n0p2 = (new MathLib.Complex(-0, +2)).arsinh();
+
+	ok(MathLib.isNaN((new MathLib.Complex(NaN)).arsinh().re));
+	equal((new MathLib.Complex(Infinity)).arsinh().re, Infinity);
+
+	ok(MathLib.isEqual(p0n2, new MathLib.Complex(+1.3169578969248167086, -1.5707963267948966192)), '(+0 -2i).arsinh() = +1.316 - 1.570i');
+	ok(MathLib.isEqual(n0n2, new MathLib.Complex(-1.3169578969248167086, -1.5707963267948966192)), '(-0 -2i).arsinh() = -1.316 - 1.570i');
+
+	ok(MathLib.isPosZero(p0n1.re), '(+0 -i).arsinh().re = +0');
+	ok(MathLib.isEqual(p0n1.im, -1.5707963267948966192), '(+0 -i).arsinh().im = -1.570');
+	ok(MathLib.isNegZero(n0n1.re), '(-0 -i).arsinh().re = -0');
+	ok(MathLib.isEqual(n0n1.im, -1.5707963267948966192), '(-0 -i).arsinh().im = -1.570');
+
+	ok(MathLib.isPosZero(p0n5.re), '(+0 -0.5i).arsinh().re = +0');
+	ok(MathLib.isEqual(p0n5.im, -0.52359877559829887308), '(+0 -0.5i).arsinh().im = -0.523');
+	ok(MathLib.isNegZero(n0n5.re), '(-0 -0.5i).arsinh().re = -0');
+	ok(MathLib.isEqual(n0n5.im, -0.52359877559829887308), '(-0 -0.5i).arsinh().im = -0.523');
+
+	ok(MathLib.isPosZero(p0p0.re), '(+0 +0i).arsinh().re = +0');
+	ok(MathLib.isPosZero(p0p0.im), '(+0 +0i).arsinh().im = +0');
+	ok(MathLib.isPosZero(p0n0.re), '(+0 -0i).arsinh().re = +0');
+	ok(MathLib.isNegZero(p0n0.im), '(+0 -0i).arsinh().im = -0');
+	ok(MathLib.isNegZero(n0p0.re), '(-0 +0i).arsinh().re = -0');
+	ok(MathLib.isPosZero(n0p0.im), '(-0 +0i).arsinh().im = +0');
+	ok(MathLib.isNegZero(n0n0.re), '(-0 -0i).arsinh().re = -0');
+	ok(MathLib.isNegZero(n0n0.im), '(-0 -0i).arsinh().im = -0');
+
+	ok(MathLib.isEqual(p0p5.im, 0.52359877559829887308), '(+0 +0.5i).arsinh().im = +0.523');
+	ok(MathLib.isPosZero(p0p5.re), '(+0 +0.5i).arsinh().re = +0');
+	ok(MathLib.isEqual(n0p5.im, 0.52359877559829887308), '(-0 +0.5i).arsinh().im = +0.523');
+	ok(MathLib.isNegZero(n0p5.re), '(-0 +0.5i).arsinh().re = -0');
+
+	ok(MathLib.isPosZero(p0p1.re), '(+0 +i).arsinh().re = +0');
+	ok(MathLib.isEqual(p0p1.im, 1.5707963267948966192), '(+0 +i).arsinh().im = 1.570');
+	ok(MathLib.isNegZero(n0p1.re), '(-0 +i).arsinh().re = -0');
+	ok(MathLib.isEqual(n0p1.im, 1.5707963267948966192), '(-0 +i).arsinh().im = 1.570');
+
+	ok(MathLib.isEqual(p0p2, new MathLib.Complex(+1.3169578969248167086, 1.5707963267948966192)), '(+0 +2i).arsinh() = +1.316 + 1.570i');
+	ok(MathLib.isEqual(n0p2, new MathLib.Complex(-1.3169578969248167086, 1.5707963267948966192)), '(-0 +2i).arsinh() = -1.316 + 1.570i');
+
+	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arsinh(), new MathLib.Complex(1.4693517443681852733, 1.0634400235777520562)));
+	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arsinh(), new MathLib.Complex(-2.2999140408792696500, 0.9176168533514786558)));
+});
 test('.artanh()', 28, function () {
 	var n2p0 = (new MathLib.Complex(-2, +0)).artanh(),
 			n2n0 = (new MathLib.Complex(-2, -0)).artanh(),
@@ -761,13 +1064,13 @@ test('.artanh()', 28, function () {
 	ok(MathLib.isEqual(n2p0, new MathLib.Complex(-0.5493061443340548457, 1.5707963267948966192)), '(-2 +0i).artanh() = -0.55 + 1.57i');
 	ok(MathLib.isEqual(n2n0, new MathLib.Complex(-0.5493061443340548457, -1.5707963267948966192)), '(-2 -0i).artanh() = -0.55 - 1.57i');
 
-	equal(n1p0.re, Infinity);
-	equal(n1n0.re, Infinity);
+	equal(n1p0.re, Infinity, '(-1 +0i).artanh().re = Infinity');
+	equal(n1n0.re, Infinity, '(-1 -0i).artanh().re = Infinity');
 
-	ok(MathLib.isEqual(n5p0.re, -0.5493061443340548457), '(+0 -0.5i).artanh().re = -0.549');
-	ok(MathLib.isPosZero(n5p0.im), '(+0 -0.5i).artanh().im = +0');
-	ok(MathLib.isEqual(n5n0.re, -0.5493061443340548457), '(-0 -0.5i).artanh().re = -0.549');
-	ok(MathLib.isNegZero(n5n0.im), '(-0 -0.5i).artanh().im = -0');
+	ok(MathLib.isEqual(n5p0.re, -0.5493061443340548457), '(-0.5 + 0i).artanh().re = -0.549');
+	ok(MathLib.isPosZero(n5p0.im), '(-0.5 +0i).artanh().im = +0');
+	ok(MathLib.isEqual(n5n0.re, -0.5493061443340548457), '(-0.5 -0i).artanh().re = -0.549');
+	ok(MathLib.isNegZero(n5n0.im), '(-0.5 -0i).artanh().im = -0');
 
 	ok(MathLib.isPosZero(p0p0.re), '(+0 +0i).artanh().re = +0');
 	ok(MathLib.isPosZero(p0p0.im), '(+0 +0i).artanh().im = +0');
@@ -783,27 +1086,14 @@ test('.artanh()', 28, function () {
 	ok(MathLib.isEqual(p5n0.re, +0.54930614433405484570), '(+0.5i -0).artanh().re = +0.549');
 	ok(MathLib.isNegZero(p5n0.im), '(+0.5i -0).artanh().im = -0');
 
-	equal(p1p0.re, Infinity);
-	equal(p1n0.re, Infinity);
+	equal(p1p0.re, Infinity, '(1 +0i).artanh().re = Infinity');
+	equal(p1n0.re, Infinity, '(1 -0i).artanh().re = Infinity');
 
-	ok(MathLib.isEqual(p2p0, new MathLib.Complex(0.5493061443340548457, 1.5707963267948966192)), '(2 + 0i).artanh() = 1.57 + 0.55');
-	ok(MathLib.isEqual(p2n0, new MathLib.Complex(0.5493061443340548457, -1.5707963267948966192)), '(2 - 0i).artanh() = -1.57 + 0.55');
+	ok(MathLib.isEqual(p2p0, new MathLib.Complex(0.5493061443340548457, 1.5707963267948966192)), '(2 + 0i).artanh() = 1.57 + 0.55i');
+	ok(MathLib.isEqual(p2n0, new MathLib.Complex(0.5493061443340548457, -1.5707963267948966192)), '(2 - 0i).artanh() = -1.57 + 0.55i');
 
 	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).artanh(), new MathLib.Complex(0.17328679513998632735, 1.17809724509617246442)));
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).artanh(), new MathLib.Complex(-0.1175009073114338884, 1.4099210495965755225)));
-});
-test('.arg()', 6, function () {
-	var c1 = new MathLib.Complex(1, 1),
-			c2 = new MathLib.Complex(1, -1),
-			c3 = new MathLib.Complex(0, 0),
-			c4 = new MathLib.Complex(-1, 0);
-
-	ok(MathLib.isNaN((new MathLib.Complex(NaN, 1)).arg()));
-	ok(MathLib.isNaN((new MathLib.Complex(Infinity, 1)).arg()));
-	equal(c1.arg(), 0.7853981633974483);
-	equal(c2.arg(), -0.7853981633974483);
-	equal(c3.arg(), 0);
-	equal(c4.arg(), 3.141592653589793);
 });
 test('.compare()', 9, function () {
 	var c = new MathLib.Complex(3, 2),

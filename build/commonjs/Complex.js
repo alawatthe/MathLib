@@ -122,6 +122,61 @@
 		};
 
 		/**
+		* Returns the inverse hyperbolic cosine of the number
+		*
+		* @return {Complex}
+		*/
+		Complex.prototype.arcosh = function () {
+			var arccos;
+
+			if (this.isZero()) {
+				return new MathLib.Complex(0, 1.5707963267948966192);
+			}
+
+			arccos = this.arccos();
+			arccos = arccos.times(new MathLib.Complex(0, arccos.im > 0 ? -1 : 1));
+
+			if (MathLib.isNegZero(this.im) && this.re >= -1) {
+				arccos.im = -arccos.im;
+			}
+
+			return arccos;
+		};
+
+		/**
+		* Returns the inverse hyperbolic cotangent of the number
+		*
+		* @return {Complex}
+		*/
+		Complex.prototype.arcoth = function () {
+			var one = new MathLib.Complex(1, -0);
+
+			if (MathLib.isZero(this.re)) {
+				if (MathLib.isPosZero(this.im)) {
+					return new MathLib.Complex(this.re, -1.5707963267948966192);
+				}
+				if (MathLib.isNegZero(this.im)) {
+					return new MathLib.Complex(this.re, 1.5707963267948966192);
+				}
+			}
+
+			if (this.re === Infinity) {
+				return new MathLib.Complex(0, 0);
+			}
+
+			return MathLib.times(0.5, this.plus(one).divide(this.minus(one)).ln());
+		};
+
+		/**
+		* Returns the inverse hyperbolic cosecant of the number
+		*
+		* @return {Complex}
+		*/
+		Complex.prototype.arcsch = function () {
+			return this.inverse().arsinh();
+		};
+
+		/**
 		* Returns the inverse secant of the number
 		*
 		* @return {Complex}
@@ -196,6 +251,46 @@
 				return NaN;
 			}
 			return Math.atan2(this.im, this.re);
+		};
+
+		/**
+		* Returns the inverse hyperbolic secant of the number
+		*
+		* @return {Complex}
+		*/
+		Complex.prototype.arsech = function () {
+			if (this.re === Infinity) {
+				return new MathLib.Complex(NaN);
+			}
+			return this.inverse().arcosh();
+		};
+
+		/**
+		* Returns the inverse hyperbolic sine of the number
+		*
+		* @return {Complex}
+		*/
+		Complex.prototype.arsinh = function () {
+			var a = this.re, b = this.im, aa = a * a, bb = b * b, sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * aa), sgn = function (x) {
+				if (x > 0) {
+					return 1;
+				}
+				if (x < 0) {
+					return -1;
+				}
+				if (1 / x === Infinity) {
+					return 1;
+				}
+				if (1 / x === -Infinity) {
+					return -1;
+				}
+			};
+
+			if (a === Infinity) {
+				return new MathLib.Complex(Infinity);
+			}
+
+			return new MathLib.Complex(sgn(a) / 2 * MathLib.arcosh(sqrt + (aa + bb)), sgn(b) / 2 * MathLib.arccos(sqrt - (aa + bb)));
 		};
 
 		/**

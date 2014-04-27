@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-04-20
+ * build date: 2014-04-27
  */
 
 	var version: string;
@@ -915,6 +915,24 @@
 		*/
 		public arccsc(): Complex;
 		/**
+		* Returns the inverse hyperbolic cosine of the number
+		*
+		* @return {Complex}
+		*/
+		public arcosh(): Complex;
+		/**
+		* Returns the inverse hyperbolic cotangent of the number
+		*
+		* @return {Complex}
+		*/
+		public arcoth(): Complex;
+		/**
+		* Returns the inverse hyperbolic cosecant of the number
+		*
+		* @return {Complex}
+		*/
+		public arcsch(): Complex;
+		/**
 		* Returns the inverse secant of the number
 		*
 		* @return {Complex}
@@ -938,6 +956,18 @@
 		* @return {number}
 		*/
 		public arg(): number;
+		/**
+		* Returns the inverse hyperbolic secant of the number
+		*
+		* @return {Complex}
+		*/
+		public arsech(): Complex;
+		/**
+		* Returns the inverse hyperbolic sine of the number
+		*
+		* @return {Complex}
+		*/
+		public arsinh(): Complex;
 		/**
 		* Returns the inverse hyperbolic tangent of the number
 		*

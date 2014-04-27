@@ -4,7 +4,7 @@
  * @return {Complex}
  */
 artanh() : Complex {
-	var one = new MathLib.Complex(1,-0);
+	var one = new MathLib.Complex(1, -0);
 
 	if (this.isZero()) {
 		return new MathLib.Complex(this.re, this.im);

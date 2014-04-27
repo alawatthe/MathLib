@@ -22,13 +22,13 @@ test('.artanh()', 28, function () {
 	ok(MathLib.isEqual(n2p0, new MathLib.Complex(-0.5493061443340548457, 1.5707963267948966192)), '(-2 +0i).artanh() = -0.55 + 1.57i');
 	ok(MathLib.isEqual(n2n0, new MathLib.Complex(-0.5493061443340548457, -1.5707963267948966192)), '(-2 -0i).artanh() = -0.55 - 1.57i');
 
-	equal(n1p0.re, Infinity);
-	equal(n1n0.re, Infinity);
+	equal(n1p0.re, Infinity, '(-1 +0i).artanh().re = Infinity');
+	equal(n1n0.re, Infinity, '(-1 -0i).artanh().re = Infinity');
 
-	ok(MathLib.isEqual(n5p0.re, -0.5493061443340548457), '(+0 -0.5i).artanh().re = -0.549');
-	ok(MathLib.isPosZero(n5p0.im), '(+0 -0.5i).artanh().im = +0');
-	ok(MathLib.isEqual(n5n0.re, -0.5493061443340548457), '(-0 -0.5i).artanh().re = -0.549');
-	ok(MathLib.isNegZero(n5n0.im), '(-0 -0.5i).artanh().im = -0');
+	ok(MathLib.isEqual(n5p0.re, -0.5493061443340548457), '(-0.5 + 0i).artanh().re = -0.549');
+	ok(MathLib.isPosZero(n5p0.im), '(-0.5 +0i).artanh().im = +0');
+	ok(MathLib.isEqual(n5n0.re, -0.5493061443340548457), '(-0.5 -0i).artanh().re = -0.549');
+	ok(MathLib.isNegZero(n5n0.im), '(-0.5 -0i).artanh().im = -0');
 
 	ok(MathLib.isPosZero(p0p0.re), '(+0 +0i).artanh().re = +0');
 	ok(MathLib.isPosZero(p0p0.im), '(+0 +0i).artanh().im = +0');
@@ -44,11 +44,11 @@ test('.artanh()', 28, function () {
 	ok(MathLib.isEqual(p5n0.re, +0.54930614433405484570), '(+0.5i -0).artanh().re = +0.549');
 	ok(MathLib.isNegZero(p5n0.im), '(+0.5i -0).artanh().im = -0');
 
-	equal(p1p0.re, Infinity);
-	equal(p1n0.re, Infinity);
+	equal(p1p0.re, Infinity, '(1 +0i).artanh().re = Infinity');
+	equal(p1n0.re, Infinity, '(1 -0i).artanh().re = Infinity');
 
-	ok(MathLib.isEqual(p2p0, new MathLib.Complex(0.5493061443340548457, 1.5707963267948966192)), '(2 + 0i).artanh() = 1.57 + 0.55');
-	ok(MathLib.isEqual(p2n0, new MathLib.Complex(0.5493061443340548457, -1.5707963267948966192)), '(2 - 0i).artanh() = -1.57 + 0.55');
+	ok(MathLib.isEqual(p2p0, new MathLib.Complex(0.5493061443340548457, 1.5707963267948966192)), '(2 + 0i).artanh() = 1.57 + 0.55i');
+	ok(MathLib.isEqual(p2n0, new MathLib.Complex(0.5493061443340548457, -1.5707963267948966192)), '(2 - 0i).artanh() = -1.57 + 0.55i');
 
 	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).artanh(), new MathLib.Complex(0.17328679513998632735, 1.17809724509617246442)));
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).artanh(), new MathLib.Complex(-0.1175009073114338884, 1.4099210495965755225)));
