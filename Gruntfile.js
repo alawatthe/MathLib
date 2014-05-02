@@ -60,23 +60,20 @@ module.exports = function (grunt) {
 								' * build date: <%= grunt.template.today(\'yyyy-mm-dd\') %>\n' +
 								' */\n',
 			testFiles = [
-				'test/meta/general.js', 'test/meta/!(general).js',
-				'test/Circle/init.js', 'test/Circle/!(init).js',
-				'test/Complex/init.js', 'test/Complex/!(init).js', 'test/Complex/prototype/*.js',
-				'test/Conic/init.js', 'test/Conic/!(init).js',
-				'test/Expression/init.js', 'test/Expression/!(init).js',
-				'test/Functn/init.js', 'test/Functn/!(init).js', 'test/Functn/*/*.js',
-				'test/Integer/init.js', 'test/Integer/!(init).js', 'test/Integer/prototype/*.js',
-				'test/Line/init.js', 'test/Line/!(init).js',
-				'test/Matrix/init.js', 'test/Matrix/!(init).js',
-				'test/Permutation/init.js', 'test/Permutation/!(init).js',
-				'test/Point/init.js', 'test/Point/!(init).js',
-				'test/Polynomial/init.js', 'test/Polynomial/!(init).js',
-				'test/Rational/init.js', 'test/Rational/!(init).js', 'test/Rational/prototype/*.js',
-				'test/Screen/init.js', 'test/Screen/!(init).js',
-				'test/Set/init.js', 'test/Set/!(init).js',
-				'test/Vector/init.js', 'test/Vector/!(init).js'
-			];
+				'test/meta/general.js', 'test/meta/!(general).js'
+			],
+
+			modules = ['Circle', 'Complex', 'Conic', 'Expression', 'Functn', 'Integer',
+									'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial',
+									'Rational', 'Screen', 'Set', 'Vector'],
+
+			createModuleArray = function (module) {
+				return ['src/' + module + '/init.ts', 'src/' + module + '/!(init).ts', 'src/' + module + '/*/*.ts'];
+			};
+
+			modules.forEach(function (module) {
+				testFiles.push('test/' + module + '/init.js', 'test/' + module + '/!(init).js', 'test/' + module + '/*/*.js');
+			});
 
 	grunt.registerTask('help', function () {
 		grunt.log.subhead('Release');
@@ -171,7 +168,7 @@ module.exports = function (grunt) {
 				}
 			},
 			Expression: {
-				src: ['src/Expression/init.ts', 'src/Expression/!(init).ts'],
+				src: createModuleArray('Expression'),
 				dest: 'build/plain/Expression.ts'
 			},
 			Functn: {
@@ -182,11 +179,11 @@ module.exports = function (grunt) {
 				}
 			},
 			Screen: {
-				src: ['src/Screen/template.ts', 'src/Screen/init.ts', 'src/Screen/!(init|template).ts'],
+				src: ['src/Screen/template.ts', 'src/Screen/init.ts', 'src/Screen/!(init|template).ts', 'src/Screen/*/*.ts'],
 				dest: 'build/plain/Screen.ts'
 			},
 			Layer: {
-				src: ['src/Layer/init.ts', 'src/Layer/!(init).ts'],
+				src: createModuleArray('Layer'),
 				dest: 'build/plain/Layer.ts'
 			},
 			Canvas: {
@@ -198,78 +195,78 @@ module.exports = function (grunt) {
 				dest: 'build/plain/SVG.ts'
 			},
 			Screen2D: {
-				src: ['src/Screen2D/init.ts', 'src/Screen2D/!(init).ts'],
+				src: createModuleArray('Screen2D'),
 				dest: 'build/plain/Screen2D.ts'
 			},
 			Screen3D: {
-				src: ['src/Screen3D/init.ts', 'src/Screen3D/!(init).ts'],
+				src: createModuleArray('Screen3D'),
 				dest: 'build/plain/Screen3D.ts'
 			},
 			Vector: {
-				src: ['src/Vector/init.ts', 'src/Vector/!(init).ts'],
+				src: createModuleArray('Vector'),
 				dest: 'build/plain/Vector.ts'
 			},
 			Circle: {
-				src: ['src/Circle/init.ts', 'src/Circle/!(init).ts'],
+				src: createModuleArray('Circle'),
 				dest: 'build/plain/Circle.ts'
 			},
 			Complex: {
-				src: ['src/Complex/init.ts', 'src/Complex/!(init).ts', 'src/Complex/prototype/*.ts'],
+				src: createModuleArray('Complex'),
 				dest: 'build/plain/Complex.ts',
 				options: {
 					footer: '\n}}declare var Complex : Field'
 				}
 			},
 			Integer: {
-				src: ['src/Integer/init.ts', 'src/Integer/!(init).ts', 'src/Integer/prototype/*.ts'],
+				src: createModuleArray('Integer'),
 				dest: 'build/plain/Integer.ts',
 				options: {
 					footer: '\n}}declare var Integer : Ring'
 				}
 			},
 			Line: {
-				src: ['src/Line/init.ts', 'src/Line/!(init).ts'],
+				src: createModuleArray('Line'),
 				dest: 'build/plain/Line.ts'
 			},
 			Matrix: {
-				src: ['src/Matrix/init.ts', 'src/Matrix/!(init).ts'],
+				src: createModuleArray('Matrix'),
 				dest: 'build/plain/Matrix.ts'
 			},
 			Permutation: {
-				src: ['src/Permutation/init.ts', 'src/Permutation/!(init).ts'],
+				src: createModuleArray('Permutation'),
 				dest: 'build/plain/Permutation.ts'
 			},
 			Conic: {
-				src: ['src/Conic/init.ts', 'src/Conic/!(init).ts'],
+				src: createModuleArray('Conic'),
 				dest: 'build/plain/Conic.ts'
 			},
 			Point: {
-				src: ['src/Point/init.ts', 'src/Point/!(init).ts'],
+				src: createModuleArray('Point'),
 				dest: 'build/plain/Point.ts'
 			},
 			Polynomial: {
-				src: ['src/Polynomial/init.ts', 'src/Polynomial/!(init).ts'],
+				src: createModuleArray('Polynomial'),
 				dest: 'build/plain/Polynomial.ts'
 			},
 			Rational: {
-				src: ['src/Rational/init.ts', 'src/Rational/!(init).ts', 'src/Rational/prototype/*.ts'],
+				src: createModuleArray('Rational'),
 				dest: 'build/plain/Rational.ts',
 				options: {
 					footer: '\n}}declare var Rational : Field'
 				}
 			},
 			Set: {
-				src: ['src/Set/init.ts', 'src/Set/!(init).ts'],
+				src: createModuleArray('Set'),
 				dest: 'build/plain/Set.ts'
 			},
 
 			plain: {
-				src: ['build/plain/meta.js', 'build/plain/Expression.js', 'build/plain/Functn.js',
-					'build/plain/Screen.js', 'build/plain/Layer.js', 'build/plain/Canvas.js', 'build/plain/SVG.js', 'build/plain/Screen2D.js',
-					'build/plain/Screen3D.js', 'build/plain/Vector.js', 'build/plain/Circle.js', 'build/plain/Complex.js', 'build/plain/Integer.js',
-					'build/plain/Line.js', 'build/plain/Matrix.js', 'build/plain/Permutation.js', 'build/plain/Conic.js', 'build/plain/Point.js',
-					'build/plain/Polynomial.js', 'build/plain/Rational.js', 'build/plain/Set.js'
-				],
+				src: ['meta', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
+					'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Integer', 'Line',
+					'Matrix', 'Permutation', 'Conic', 'Point', 'Polynomial', 'Rational', 'Set'
+				].map(function (module) {
+					return 'build/plain/' + module + '.js';
+				}),
 				dest: 'build/MathLib.js',
 				options: {
 					banner: banner,
@@ -278,11 +275,12 @@ module.exports = function (grunt) {
 			},
 
 			declaration: {
-				src: ['build/plain/meta.d.ts', 'build/plain/Expression.d.ts', 'build/plain/Functn.d.ts', 'build/plain/Screen.d.ts', 'build/plain/Layer.d.ts',
-					'build/plain/Canvas.d.ts', 'build/plain/SVG.d.ts', 'build/plain/Screen2D.d.ts', 'build/plain/Screen3D.d.ts', 'build/plain/Vector.d.ts',
-					'build/plain/Circle.d.ts', 'build/plain/Complex.d.ts', 'build/plain/Integer.d.ts', 'build/plain/Line.d.ts', 'build/plain/Matrix.d.ts', 'build/plain/Permutation.d.ts',
-					'build/plain/Conic.d.ts', 'build/plain/Point.d.ts', 'build/plain/Polynomial.d.ts', 'build/plain/Rational.d.ts', 'build/plain/Set.d.ts'
-				],
+				src: ['meta', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
+					'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Integer', 'Line',
+					'Matrix', 'Permutation', 'Conic', 'Point', 'Polynomial', 'Rational', 'Set'
+				].map(function (module) {
+					return 'build/plain/' + module + '.d.ts';
+				}),
 				dest: 'build/MathLib.d.ts',
 				options: {
 					banner: banner,
@@ -499,7 +497,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 72,
+					build: 73,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -654,6 +652,7 @@ module.exports = function (grunt) {
 			plain: ['build/plain'],
 			reference: ['build/plain/reference.js', 'build/amd/reference.js', 'build/commonjs/reference.js'],
 			tscommand: ['tscommand.tmp.txt'],
+			temp: ['temp'],
 			interfacesJS: ['build/plain/Interfaces.js']
 		},
 
@@ -1014,6 +1013,10 @@ module.exports = function (grunt) {
 			template: {
 				files: ['src/Screen/template.hbs'],
 				tasks: ['generateTemplate']
+			},
+			jade: {
+				files: ['doxx.jade'],
+				tasks: ['shell']
 			}
 		}
 

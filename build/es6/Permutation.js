@@ -31,6 +31,57 @@ import Matrix from './Matrix';
 			this.cycle = cycle;
 		}
 		/**
+		* Converts a cycle representation to a list representation
+		*
+		* @param {array} cycle The cycle to be converted
+		* @return {array}
+		*/
+		Permutation.cycleToList = function (cycle) {
+			var index, list = [], cur, i, ii, j, jj, max;
+
+			max = cycle.map(function (b) {
+				return Math.max.apply(null, b);
+			});
+			max = Math.max.apply(null, max);
+
+			for (i = 0, ii = max; i <= ii; i++) {
+				cur = i;
+				for (j = 0, jj = cycle.length; j < jj; j++) {
+					index = cycle[j].indexOf(cur);
+					if (++index) {
+						cur = cycle[j][index % cycle[j].length];
+					}
+				}
+				list.push(cur);
+			}
+			return list;
+		};
+
+		/**
+		* Converts a list representation to a cycle representation
+		*
+		* @param {array} list The list to be converted
+		* @return {array}
+		*/
+		Permutation.listToCycle = function (list) {
+			var finished = [], cur, i, ii, cycle, cycles = [];
+
+			for (i = 0, ii = list.length; i < ii; i++) {
+				cur = i;
+				cycle = [];
+				while (!finished[cur]) {
+					finished[cur] = true;
+					cycle.push(cur);
+					cur = list[cur];
+				}
+				if (cycle.length) {
+					cycles.push(cycle);
+				}
+			}
+			return cycles;
+		};
+
+		/**
 		* Applies the permutation to a number or a array/matrix/point/vector
 		*
 		* @param {number|array|Matrix|Point|Vector} n The object to apply the permutation to
@@ -77,33 +128,6 @@ import Matrix from './Matrix';
 		};
 
 		/**
-		* Converts a cycle representation to a list representation
-		*
-		* @param {array} cycle The cycle to be converted
-		* @return {array}
-		*/
-		Permutation.cycleToList = function (cycle) {
-			var index, list = [], cur, i, ii, j, jj, max;
-
-			max = cycle.map(function (b) {
-				return Math.max.apply(null, b);
-			});
-			max = Math.max.apply(null, max);
-
-			for (i = 0, ii = max; i <= ii; i++) {
-				cur = i;
-				for (j = 0, jj = cycle.length; j < jj; j++) {
-					index = cycle[j].indexOf(cur);
-					if (++index) {
-						cur = cycle[j][index % cycle[j].length];
-					}
-				}
-				list.push(cur);
-			}
-			return list;
-		};
-
-		/**
 		* Calculates the inverse of the permutation
 		*
 		* @return {Permutation}
@@ -114,30 +138,6 @@ import Matrix from './Matrix';
 				e.reverse();
 			});
 			return new MathLib.Permutation(cycle);
-		};
-
-		/**
-		* Converts a list representation to a cycle representation
-		*
-		* @param {array} list The list to be converted
-		* @return {array}
-		*/
-		Permutation.listToCycle = function (list) {
-			var finished = [], cur, i, ii, cycle, cycles = [];
-
-			for (i = 0, ii = list.length; i < ii; i++) {
-				cur = i;
-				cycle = [];
-				while (!finished[cur]) {
-					finished[cur] = true;
-					cycle.push(cur);
-					cur = list[cur];
-				}
-				if (cycle.length) {
-					cycles.push(cycle);
-				}
-			}
-			return cycles;
 		};
 
 		/**

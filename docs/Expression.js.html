@@ -91,19 +91,21 @@
             <ul class="nav nav-list bs-docs-sidenav affix-top">
               <li><a href="#Expression"><i class="alert alert-success"></i>Expression</a>
               </li>
-              <li><a href="#compare"><i class="alert alert-info"></i>compare</a>
-              </li>
               <li><a href="#constant"><i class="alert alert-info"></i>constant</a>
+              </li>
+              <li><a href="#number"><i class="alert alert-info"></i>number</a>
+              </li>
+              <li><a href="#parseContentMathML"><i class="alert alert-info"></i>parseContentMathML</a>
+              </li>
+              <li><a href="#variable"><i class="alert alert-info"></i>variable</a>
+              </li>
+              <li><a href="#compare"><i class="alert alert-info"></i>compare</a>
               </li>
               <li><a href="#copy"><i class="alert alert-info"></i>copy</a>
               </li>
               <li><a href="#evaluate"><i class="alert alert-info"></i>evaluate</a>
               </li>
               <li><a href="#map"><i class="alert alert-info"></i>map</a>
-              </li>
-              <li><a href="#number"><i class="alert alert-info"></i>number</a>
-              </li>
-              <li><a href="#parseContentMathML"><i class="alert alert-info"></i>parseContentMathML</a>
               </li>
               <li><a href="#toContentMathML"><i class="alert alert-info"></i>toContentMathML</a>
               </li>
@@ -112,8 +114,6 @@
               <li><a href="#toMathML"><i class="alert alert-info"></i>toMathML</a>
               </li>
               <li><a href="#toString"><i class="alert alert-info"></i>toString</a>
-              </li>
-              <li><a href="#variable"><i class="alert alert-info"></i>variable</a>
               </li>
             </ul>
           </div>
@@ -143,35 +143,6 @@
 				}
 			}
 		}</code></pre>
-          <section id="compare">
-            <h1><a href="http://mathlib.de/en/docs/Expression/compare">compare</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.compare()</span> → <span>number</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>expr</td>
-                <td><a href="./Expression.js.html">Expression </a>
-                </td>
-                <td>The expression to compare</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Compares two expressions</p> </div>
-          <pre><code class="language-javascript">Expression.prototype.compare = function (expr) {
-			return MathLib.sign(this.toString().localeCompare(expr.toString()));
-		};</code></pre>
           <section id="constant">
             <h1><a href="http://mathlib.de/en/docs/Expression/constant">constant</a>
             </h1>
@@ -203,154 +174,6 @@
 				subtype: 'constant',
 				value: n
 			});
-		};</code></pre>
-          <section id="copy">
-            <h1><a href="http://mathlib.de/en/docs/Expression/copy">copy</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.copy()</span> → <a href="./Expression.js.html">Expression</a>
-            </p>
-          </section>
-          <div class="description"><p>Copies the Expression</p> </div>
-          <pre><code class="language-javascript">Expression.prototype.copy = function () {
-			return this.map(function (x) {
-				return x;
-			});
-		};</code></pre>
-          <section id="evaluate">
-            <h1><a href="http://mathlib.de/en/docs/Expression/evaluate">evaluate</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.evaluate()</span> → <span>any</span>
-            </p>
-          </section>
-          <div class="description"><p>Evaluates the symbolic expression</p> </div>
-          <pre><code class="language-javascript">Expression.prototype.evaluate = function () {
-			if (this.subtype === 'binaryOperator') {
-				return MathLib[this.name].apply(null, this.content.map(function (x) {
-					return MathLib.evaluate(x);
-				}));
-			}
-			if (this.subtype === 'brackets') {
-				return MathLib.evaluate(this.content);
-			}
-			if (this.subtype === 'complexNumber') {
-				if (this.mode === 'cartesian') {
-					return new MathLib.Complex(this.value[0].evaluate(), this.value[1].evaluate());
-				}
-				else if (this.mode === 'polar') {
-					return MathLib.Complex.polar(this.value[0].evaluate(), this.value[1].evaluate());
-				}
-			}
-			if (this.subtype === 'constant') {
-				if (this.value === 'pi') {
-					return Math.PI;
-				}
-			}
-			if (this.subtype === 'functionCall') {
-				if (this.isMethod) {
-					var args = this.content.map(function (x) {
-						return MathLib.evaluate(x);
-					}), _this = args.shift();
-
-					return _this[this.value].apply(_this, args);
-				}
-				else {
-					return MathLib[this.value].apply(null, this.content.map(function (x) {
-						return MathLib.evaluate(x);
-					}));
-				}
-			}
-			if (this.subtype === 'functionDefinition') {
-				return MathLib.Functn(this.content[0].evaluate(), {
-					name: 'f',
-					expression: this
-				});
-			}
-			if (this.subtype === 'number') {
-				return parseFloat(this.value);
-			}
-			if (this.subtype === 'naryOperator') {
-				return MathLib[this.name].apply(null, this.content.map(function (x) {
-					return MathLib.evaluate(x);
-				}));
-			}
-			if (this.subtype === 'variable') {
-				if (this.value in MathLib.Expression.variables) {
-					return MathLib.Expression.variables[this.value];
-				}
-				return this;
-			}
-			if (this.subtype === 'unaryOperator') {
-				if (this.value === '-') {
-					return MathLib.negative(this.content.evaluate());
-				}
-				return this.content.evaluate();
-			}
-		};</code></pre>
-          <section id="map">
-            <h1><a href="http://mathlib.de/en/docs/Expression/map">map</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.map()</span> → <a href="./Expression.js.html">Expression</a>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>f</td>
-                <td><span>function </span>
-                </td>
-                <td>The function to apply to all the nodes in the tree.</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Maps the expression tree over to an other expression tree.</p> </div>
-          <pre><code class="language-javascript">Expression.prototype.map = function (f) {
-			var prop, properties = {}, mappedProperties;
-
-			for (prop in this) {
-				if (this.hasOwnProperty(prop) &amp;&amp; prop !== 'content') {
-					if (Array.isArray(this[prop])) {
-						properties[prop] = this[prop].map(f);
-					}
-					else {
-						properties[prop] = this[prop];
-					}
-				}
-			}
-
-			mappedProperties = f(properties);
-			if (Array.isArray(this.content)) {
-				mappedProperties.content = this.content.map(function (expr) {
-					if (expr.type === 'expression') {
-						return expr.map(f);
-					}
-					else {
-						return f(expr);
-					}
-				});
-			}
-			else if (this.content) {
-				mappedProperties.content = this.content.map(f);
-			}
-
-			if (typeof mappedProperties === 'object') {
-				return new MathLib.Expression(mappedProperties);
-			}
-			else {
-				return mappedProperties;
-			}
 		};</code></pre>
           <section id="number">
             <h1><a href="http://mathlib.de/en/docs/Expression/number">number</a>
@@ -403,7 +226,7 @@
             <tbody>
               <tr>
                 <td>MathMLString</td>
-                <td><span>string </span>
+                <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string">string</a>
                 </td>
                 <td>The string to be parsed as MathML</td>
               </tr>
@@ -658,12 +481,221 @@
 
 			return parser(MathMLdoc.childNodes[0]);
 		};</code></pre>
-          <section id="toContentMathML">
-            <h1><a href="http://mathlib.de/en/docs/Expression/toContentMathML">toContentMathML</a>
+          <section id="variable">
+            <h1><a href="http://mathlib.de/en/docs/Expression/variable">variable</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.toContentMathML()</span> → <span>string</span>
+              <div class="label label-info radius ctx-type">method</div><span>Expression.variable()</span> → <a href="./Expression.js.html">Expression</a>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>n</td>
+                <td><span>String </span>
+                </td>
+                <td>The variable to generate an expression from</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Constructs a variable expression.</p> </div>
+          <pre><code class="language-javascript">Expression.variable = function (n) {
+			return new MathLib.Expression({
+				subtype: 'variable',
+				value: n
+			});
+		};</code></pre>
+          <section id="compare">
+            <h1><a href="http://mathlib.de/en/docs/Expression/prototype/compare">compare</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.compare()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number">number</a>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>expr</td>
+                <td><a href="./Expression.js.html">Expression </a>
+                </td>
+                <td>The expression to compare</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Compares two expressions</p> </div>
+          <pre><code class="language-javascript">Expression.prototype.compare = function (expr) {
+			return MathLib.sign(this.toString().localeCompare(expr.toString()));
+		};</code></pre>
+          <section id="copy">
+            <h1><a href="http://mathlib.de/en/docs/Expression/prototype/copy">copy</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.copy()</span> → <a href="./Expression.js.html">Expression</a>
+            </p>
+          </section>
+          <div class="description"><p>Copies the Expression</p> </div>
+          <pre><code class="language-javascript">Expression.prototype.copy = function () {
+			return this.map(function (x) {
+				return x;
+			});
+		};</code></pre>
+          <section id="evaluate">
+            <h1><a href="http://mathlib.de/en/docs/Expression/prototype/evaluate">evaluate</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.evaluate()</span> → <span>any</span>
+            </p>
+          </section>
+          <div class="description"><p>Evaluates the symbolic expression</p> </div>
+          <pre><code class="language-javascript">Expression.prototype.evaluate = function () {
+			if (this.subtype === 'binaryOperator') {
+				return MathLib[this.name].apply(null, this.content.map(function (x) {
+					return MathLib.evaluate(x);
+				}));
+			}
+			if (this.subtype === 'brackets') {
+				return MathLib.evaluate(this.content);
+			}
+			if (this.subtype === 'complexNumber') {
+				if (this.mode === 'cartesian') {
+					return new MathLib.Complex(this.value[0].evaluate(), this.value[1].evaluate());
+				}
+				else if (this.mode === 'polar') {
+					return MathLib.Complex.polar(this.value[0].evaluate(), this.value[1].evaluate());
+				}
+			}
+			if (this.subtype === 'constant') {
+				if (this.value === 'pi') {
+					return Math.PI;
+				}
+			}
+			if (this.subtype === 'functionCall') {
+				if (this.isMethod) {
+					var args = this.content.map(function (x) {
+						return MathLib.evaluate(x);
+					}), _this = args.shift();
+
+					return _this[this.value].apply(_this, args);
+				}
+				else {
+					return MathLib[this.value].apply(null, this.content.map(function (x) {
+						return MathLib.evaluate(x);
+					}));
+				}
+			}
+			if (this.subtype === 'functionDefinition') {
+				return MathLib.Functn(this.content[0].evaluate(), {
+					name: 'f',
+					expression: this
+				});
+			}
+			if (this.subtype === 'number') {
+				return parseFloat(this.value);
+			}
+			if (this.subtype === 'naryOperator') {
+				return MathLib[this.name].apply(null, this.content.map(function (x) {
+					return MathLib.evaluate(x);
+				}));
+			}
+			if (this.subtype === 'variable') {
+				if (this.value in MathLib.Expression.variables) {
+					return MathLib.Expression.variables[this.value];
+				}
+				return this;
+			}
+			if (this.subtype === 'unaryOperator') {
+				if (this.value === '-') {
+					return MathLib.negative(this.content.evaluate());
+				}
+				return this.content.evaluate();
+			}
+		};</code></pre>
+          <section id="map">
+            <h1><a href="http://mathlib.de/en/docs/Expression/prototype/map">map</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.map()</span> → <a href="./Expression.js.html">Expression</a>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>f</td>
+                <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function">function</a>
+                </td>
+                <td>The function to apply to all the nodes in the tree.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Maps the expression tree over to an other expression tree.</p> </div>
+          <pre><code class="language-javascript">Expression.prototype.map = function (f) {
+			var prop, properties = {}, mappedProperties;
+
+			for (prop in this) {
+				if (this.hasOwnProperty(prop) &amp;&amp; prop !== 'content') {
+					if (Array.isArray(this[prop])) {
+						properties[prop] = this[prop].map(f);
+					}
+					else {
+						properties[prop] = this[prop];
+					}
+				}
+			}
+
+			mappedProperties = f(properties);
+			if (Array.isArray(this.content)) {
+				mappedProperties.content = this.content.map(function (expr) {
+					if (expr.type === 'expression') {
+						return expr.map(f);
+					}
+					else {
+						return f(expr);
+					}
+				});
+			}
+			else if (this.content) {
+				mappedProperties.content = this.content.map(f);
+			}
+
+			if (typeof mappedProperties === 'object') {
+				return new MathLib.Expression(mappedProperties);
+			}
+			else {
+				return mappedProperties;
+			}
+		};</code></pre>
+          <section id="toContentMathML">
+            <h1><a href="http://mathlib.de/en/docs/Expression/prototype/toContentMathML">toContentMathML</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.toContentMathML()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string">string</a>
             </p>
           </section>
           <div class="description"><p>Convert the Expression to MathML.</p> </div>
@@ -724,11 +756,11 @@
 			}
 		};</code></pre>
           <section id="toLaTeX">
-            <h1><a href="http://mathlib.de/en/docs/Expression/toLaTeX">toLaTeX</a>
+            <h1><a href="http://mathlib.de/en/docs/Expression/prototype/toLaTeX">toLaTeX</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.toLaTeX()</span> → <span>string</span>
+              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.toLaTeX()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string">string</a>
             </p>
           </section>
           <div class="description"><p>Convert the expression to a LaTeX string</p> </div>
@@ -811,11 +843,11 @@
 			}
 		};</code></pre>
           <section id="toMathML">
-            <h1><a href="http://mathlib.de/en/docs/Expression/toMathML">toMathML</a>
+            <h1><a href="http://mathlib.de/en/docs/Expression/prototype/toMathML">toMathML</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.toMathML()</span> → <span>string</span>
+              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.toMathML()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string">string</a>
             </p>
           </section>
           <div class="description"><p>Convert the Expression to MathML.</p> </div>
@@ -877,11 +909,11 @@
 			}
 		};</code></pre>
           <section id="toString">
-            <h1><a href="http://mathlib.de/en/docs/Expression/toString">toString</a>
+            <h1><a href="http://mathlib.de/en/docs/Expression/prototype/toString">toString</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.toString()</span> → <span>string</span>
+              <div class="label label-info radius ctx-type">method</div><span>Expression.prototype.toString()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string">string</a>
             </p>
           </section>
           <div class="description"><p>A custom toString function</p> </div>
@@ -930,38 +962,6 @@
 					return expr.toString();
 				}).join(', ') + ')');
 			}
-		};</code></pre>
-          <section id="variable">
-            <h1><a href="http://mathlib.de/en/docs/Expression/variable">variable</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Expression.variable()</span> → <a href="./Expression.js.html">Expression</a>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>n</td>
-                <td><span>String </span>
-                </td>
-                <td>The variable to generate an expression from</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Constructs a variable expression.</p> </div>
-          <pre><code class="language-javascript">Expression.variable = function (n) {
-			return new MathLib.Expression({
-				subtype: 'variable',
-				value: n
-			});
 		};
 		Expression.parse = function (str) {
 			var Token, Lexer, Parser;
@@ -1494,7 +1494,6 @@
         <p>Theme borrowed from Twitter Bootstrap</p>
       </div>
     </footer>
-    <script src="http://platform.twitter.com/widgets.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
     <script src="http://leaverou.github.com/prefixfree/prefixfree.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-transition.js"></script>

@@ -91,15 +91,15 @@
             <ul class="nav nav-list bs-docs-sidenav affix-top">
               <li><a href="#Permutation"><i class="alert alert-success"></i>Permutation</a>
               </li>
+              <li><a href="#cycleToList"><i class="alert alert-info"></i>cycleToList</a>
+              </li>
+              <li><a href="#listToCycle"><i class="alert alert-info"></i>listToCycle</a>
+              </li>
               <li><a href="#applyTo"><i class="alert alert-info"></i>applyTo</a>
               </li>
               <li><a href="#compare"><i class="alert alert-info"></i>compare</a>
               </li>
-              <li><a href="#cycleToList"><i class="alert alert-info"></i>cycleToList</a>
-              </li>
               <li><a href="#inverse"><i class="alert alert-info"></i>inverse</a>
-              </li>
-              <li><a href="#listToCycle"><i class="alert alert-info"></i>listToCycle</a>
               </li>
               <li><a href="#map"><i class="alert alert-info"></i>map</a>
               </li>
@@ -145,90 +145,6 @@
 			this.length = permutation.length;
 			this.cycle = cycle;
 		}</code></pre>
-          <section id="applyTo">
-            <h1><a href="http://mathlib.de/en/docs/Permutation/applyTo">applyTo</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Permutation.prototype.applyTo()</span> → <span>number array Matrix Point Vector</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>n</td>
-                <td><span>number </span><span>array </span><a href="./Matrix.js.html">Matrix </a><a href="./Point.js.html">Point </a><a href="./Vector.js.html">Vector </a>
-                </td>
-                <td>The object to apply the permutation to</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Applies the permutation to a number or a array/matrix/point/vector</p> </div>
-          <pre><code class="language-javascript">Permutation.prototype.applyTo = function (n) {
-			var p, permutatedObj;
-			if (typeof n === 'number') {
-				if (n &gt;= this.length) {
-					return n;
-				}
-				return this[n];
-			}
-			else {
-				p = this;
-				permutatedObj = n.map(function (x, i) {
-					return n[p.applyTo(i)];
-				});
-
-				return (n.type === undefined ? permutatedObj : new n.constructor(permutatedObj));
-			}
-		};</code></pre>
-          <section id="compare">
-            <h1><a href="http://mathlib.de/en/docs/Permutation/compare">compare</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Permutation.prototype.compare()</span> → <span>number</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>p</td>
-                <td><a href="./Permutation.js.html">Permutation </a>
-                </td>
-                <td>The permutation to compare</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Compares two permutations.</p> </div>
-          <pre><code class="language-javascript">Permutation.prototype.compare = function (p) {
-			var i, ii;
-
-			if (this.length !== p.length) {
-				return MathLib.sign(this.length - p.length);
-			}
-
-			for (i = 0, ii = this.length; i &lt; ii; i++) {
-				if (p[i] - this[i]) {
-					return MathLib.sign(this[i] - p[i]);
-				}
-			}
-
-			return 0;
-		};</code></pre>
           <section id="cycleToList">
             <h1><a href="http://mathlib.de/en/docs/Permutation/cycleToList">cycleToList</a>
             </h1>
@@ -275,22 +191,6 @@
 			}
 			return list;
 		};</code></pre>
-          <section id="inverse">
-            <h1><a href="http://mathlib.de/en/docs/Permutation/inverse">inverse</a>
-            </h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Permutation.prototype.inverse()</span> → <a href="./Permutation.js.html">Permutation</a>
-            </p>
-          </section>
-          <div class="description"><p>Calculates the inverse of the permutation</p> </div>
-          <pre><code class="language-javascript">Permutation.prototype.inverse = function () {
-			var cycle = this.cycle.slice(0);
-			cycle.reverse().forEach(function (e) {
-				e.reverse();
-			});
-			return new MathLib.Permutation(cycle);
-		};</code></pre>
           <section id="listToCycle">
             <h1><a href="http://mathlib.de/en/docs/Permutation/listToCycle">listToCycle</a>
             </h1>
@@ -334,8 +234,108 @@
 			}
 			return cycles;
 		};</code></pre>
+          <section id="applyTo">
+            <h1><a href="http://mathlib.de/en/docs/Permutation/prototype/applyTo">applyTo</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Permutation.prototype.applyTo()</span> → <span>number array Matrix Point Vector</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>n</td>
+                <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number">number</a><span>array </span><a href="./Matrix.js.html">Matrix </a><a href="./Point.js.html">Point </a><a href="./Vector.js.html">Vector </a>
+                </td>
+                <td>The object to apply the permutation to</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Applies the permutation to a number or a array/matrix/point/vector</p> </div>
+          <pre><code class="language-javascript">Permutation.prototype.applyTo = function (n) {
+			var p, permutatedObj;
+			if (typeof n === 'number') {
+				if (n &gt;= this.length) {
+					return n;
+				}
+				return this[n];
+			}
+			else {
+				p = this;
+				permutatedObj = n.map(function (x, i) {
+					return n[p.applyTo(i)];
+				});
+
+				return (n.type === undefined ? permutatedObj : new n.constructor(permutatedObj));
+			}
+		};</code></pre>
+          <section id="compare">
+            <h1><a href="http://mathlib.de/en/docs/Permutation/prototype/compare">compare</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Permutation.prototype.compare()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number">number</a>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>p</td>
+                <td><a href="./Permutation.js.html">Permutation </a>
+                </td>
+                <td>The permutation to compare</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Compares two permutations.</p> </div>
+          <pre><code class="language-javascript">Permutation.prototype.compare = function (p) {
+			var i, ii;
+
+			if (this.length !== p.length) {
+				return MathLib.sign(this.length - p.length);
+			}
+
+			for (i = 0, ii = this.length; i &lt; ii; i++) {
+				if (p[i] - this[i]) {
+					return MathLib.sign(this[i] - p[i]);
+				}
+			}
+
+			return 0;
+		};</code></pre>
+          <section id="inverse">
+            <h1><a href="http://mathlib.de/en/docs/Permutation/prototype/inverse">inverse</a>
+            </h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Permutation.prototype.inverse()</span> → <a href="./Permutation.js.html">Permutation</a>
+            </p>
+          </section>
+          <div class="description"><p>Calculates the inverse of the permutation</p> </div>
+          <pre><code class="language-javascript">Permutation.prototype.inverse = function () {
+			var cycle = this.cycle.slice(0);
+			cycle.reverse().forEach(function (e) {
+				e.reverse();
+			});
+			return new MathLib.Permutation(cycle);
+		};</code></pre>
           <section id="map">
-            <h1><a href="http://mathlib.de/en/docs/Permutation/map">map</a>
+            <h1><a href="http://mathlib.de/en/docs/Permutation/prototype/map">map</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -351,11 +351,11 @@
 			return new MathLib.Permutation(Array.prototype.map.apply(this, args));
 		};</code></pre>
           <section id="sgn">
-            <h1><a href="http://mathlib.de/en/docs/Permutation/sgn">sgn</a>
+            <h1><a href="http://mathlib.de/en/docs/Permutation/prototype/sgn">sgn</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Permutation.prototype.sgn()</span> → <span>number</span>
+              <div class="label label-info radius ctx-type">method</div><span>Permutation.prototype.sgn()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number">number</a>
             </p>
           </section>
           <div class="description"><p>Calculates the signum of the permutation</p> </div>
@@ -369,7 +369,7 @@
 			return -2 * (count % 2) + 1;
 		};</code></pre>
           <section id="times">
-            <h1><a href="http://mathlib.de/en/docs/Permutation/times">times</a>
+            <h1><a href="http://mathlib.de/en/docs/Permutation/prototype/times">times</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -401,7 +401,7 @@
 			});
 		};</code></pre>
           <section id="toMatrix">
-            <h1><a href="http://mathlib.de/en/docs/Permutation/toMatrix">toMatrix</a>
+            <h1><a href="http://mathlib.de/en/docs/Permutation/prototype/toMatrix">toMatrix</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -419,7 +419,7 @@
             <tbody>
               <tr>
                 <td>n</td>
-                <td><span>number </span>
+                <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number">number</a>
                 </td>
                 <td>The size of the matrix</td>
               </tr>
@@ -441,11 +441,11 @@
 			return new MathLib.Matrix(matrix);
 		};</code></pre>
           <section id="toString">
-            <h1><a href="http://mathlib.de/en/docs/Permutation/toString">toString</a>
+            <h1><a href="http://mathlib.de/en/docs/Permutation/prototype/toString">toString</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Permutation.prototype.toString()</span> → <span>string</span>
+              <div class="label label-info radius ctx-type">method</div><span>Permutation.prototype.toString()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string">string</a>
             </p>
           </section>
           <div class="description"><p>String representation of the permutation.</p> </div>
@@ -470,7 +470,6 @@
         <p>Theme borrowed from Twitter Bootstrap</p>
       </div>
     </footer>
-    <script src="http://platform.twitter.com/widgets.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
     <script src="http://leaverou.github.com/prefixfree/prefixfree.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-transition.js"></script>

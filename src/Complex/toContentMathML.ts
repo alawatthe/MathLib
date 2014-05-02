@@ -1,7 +1,7 @@
 /**
  * A content MathML string representation
  *
- * @return {string}
+ * @return {string} 
  */
 static toContentMathML(options : toContentMathMLOptions = {}) : string {
 	if (options.strict) {

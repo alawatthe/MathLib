@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-04-27
+ * build date: 2014-05-02
  */
 /**
  *
@@ -446,7 +446,7 @@ var MathLib;
 			return '"' + x + '"';
 		}
 	};
-
+	'export MathLib';
 })(MathLib || (MathLib = {}));
 
 /// <reference path='reference.ts'/>
@@ -477,16 +477,6 @@ var MathLib;
 			}
 		}
 		/**
-		* Compares two expressions
-		*
-		* @param {Expression} expr The expression to compare
-		* @return {number}
-		*/
-		Expression.prototype.compare = function (expr) {
-			return MathLib.sign(this.toString().localeCompare(expr.toString()));
-		};
-
-		/**
 		* Constructs a constant expression.
 		*
 		* @param {String} n The constant to generate an expression from
@@ -497,128 +487,6 @@ var MathLib;
 				subtype: 'constant',
 				value: n
 			});
-		};
-
-		/**
-		* Copies the Expression
-		* @return {Expression} The copied expression
-		*/
-		Expression.prototype.copy = function () {
-			return this.map(function (x) {
-				return x;
-			});
-		};
-
-		/**
-		* Evaluates the symbolic expression
-		*
-		* @return {any}
-		*/
-		Expression.prototype.evaluate = function () {
-			if (this.subtype === 'binaryOperator') {
-				return MathLib[this.name].apply(null, this.content.map(function (x) {
-					return MathLib.evaluate(x);
-				}));
-			}
-			if (this.subtype === 'brackets') {
-				return MathLib.evaluate(this.content);
-			}
-			if (this.subtype === 'complexNumber') {
-				if (this.mode === 'cartesian') {
-					return new MathLib.Complex(this.value[0].evaluate(), this.value[1].evaluate());
-				}
-				else if (this.mode === 'polar') {
-					return MathLib.Complex.polar(this.value[0].evaluate(), this.value[1].evaluate());
-				}
-			}
-			if (this.subtype === 'constant') {
-				if (this.value === 'pi') {
-					return Math.PI;
-				}
-			}
-			if (this.subtype === 'functionCall') {
-				if (this.isMethod) {
-					var args = this.content.map(function (x) {
-						return MathLib.evaluate(x);
-					}), _this = args.shift();
-
-					return _this[this.value].apply(_this, args);
-				}
-				else {
-					return MathLib[this.value].apply(null, this.content.map(function (x) {
-						return MathLib.evaluate(x);
-					}));
-				}
-			}
-			if (this.subtype === 'functionDefinition') {
-				return MathLib.Functn(this.content[0].evaluate(), {
-					name: 'f',
-					expression: this
-				});
-			}
-			if (this.subtype === 'number') {
-				return parseFloat(this.value);
-			}
-			if (this.subtype === 'naryOperator') {
-				return MathLib[this.name].apply(null, this.content.map(function (x) {
-					return MathLib.evaluate(x);
-				}));
-			}
-			if (this.subtype === 'variable') {
-				if (this.value in MathLib.Expression.variables) {
-					return MathLib.Expression.variables[this.value];
-				}
-				return this;
-			}
-			if (this.subtype === 'unaryOperator') {
-				if (this.value === '-') {
-					return MathLib.negative(this.content.evaluate());
-				}
-				return this.content.evaluate();
-			}
-		};
-
-		/**
-		* Maps the expression tree over to an other expression tree.
-		*
-		* @param {function} f The function to apply to all the nodes in the tree.
-		* @return {Expression}
-		*/
-		Expression.prototype.map = function (f) {
-			var prop, properties = {}, mappedProperties;
-
-			for (prop in this) {
-				if (this.hasOwnProperty(prop) && prop !== 'content') {
-					if (Array.isArray(this[prop])) {
-						properties[prop] = this[prop].map(f);
-					}
-					else {
-						properties[prop] = this[prop];
-					}
-				}
-			}
-
-			mappedProperties = f(properties);
-			if (Array.isArray(this.content)) {
-				mappedProperties.content = this.content.map(function (expr) {
-					if (expr.type === 'expression') {
-						return expr.map(f);
-					}
-					else {
-						return f(expr);
-					}
-				});
-			}
-			else if (this.content) {
-				mappedProperties.content = this.content.map(f);
-			}
-
-			if (typeof mappedProperties === 'object') {
-				return new MathLib.Expression(mappedProperties);
-			}
-			else {
-				return mappedProperties;
-			}
 		};
 
 		/**
@@ -896,6 +764,151 @@ var MathLib;
 		};
 
 		/**
+		* Constructs a variable expression.
+		*
+		* @param {String} n The variable to generate an expression from
+		* @return {Expression}
+		*/
+		Expression.variable = function (n) {
+			return new MathLib.Expression({
+				subtype: 'variable',
+				value: n
+			});
+		};
+
+		/**
+		* Compares two expressions
+		*
+		* @param {Expression} expr The expression to compare
+		* @return {number}
+		*/
+		Expression.prototype.compare = function (expr) {
+			return MathLib.sign(this.toString().localeCompare(expr.toString()));
+		};
+
+		/**
+		* Copies the Expression
+		* @return {Expression} The copied expression
+		*/
+		Expression.prototype.copy = function () {
+			return this.map(function (x) {
+				return x;
+			});
+		};
+
+		/**
+		* Evaluates the symbolic expression
+		*
+		* @return {any}
+		*/
+		Expression.prototype.evaluate = function () {
+			if (this.subtype === 'binaryOperator') {
+				return MathLib[this.name].apply(null, this.content.map(function (x) {
+					return MathLib.evaluate(x);
+				}));
+			}
+			if (this.subtype === 'brackets') {
+				return MathLib.evaluate(this.content);
+			}
+			if (this.subtype === 'complexNumber') {
+				if (this.mode === 'cartesian') {
+					return new MathLib.Complex(this.value[0].evaluate(), this.value[1].evaluate());
+				}
+				else if (this.mode === 'polar') {
+					return MathLib.Complex.polar(this.value[0].evaluate(), this.value[1].evaluate());
+				}
+			}
+			if (this.subtype === 'constant') {
+				if (this.value === 'pi') {
+					return Math.PI;
+				}
+			}
+			if (this.subtype === 'functionCall') {
+				if (this.isMethod) {
+					var args = this.content.map(function (x) {
+						return MathLib.evaluate(x);
+					}), _this = args.shift();
+
+					return _this[this.value].apply(_this, args);
+				}
+				else {
+					return MathLib[this.value].apply(null, this.content.map(function (x) {
+						return MathLib.evaluate(x);
+					}));
+				}
+			}
+			if (this.subtype === 'functionDefinition') {
+				return MathLib.Functn(this.content[0].evaluate(), {
+					name: 'f',
+					expression: this
+				});
+			}
+			if (this.subtype === 'number') {
+				return parseFloat(this.value);
+			}
+			if (this.subtype === 'naryOperator') {
+				return MathLib[this.name].apply(null, this.content.map(function (x) {
+					return MathLib.evaluate(x);
+				}));
+			}
+			if (this.subtype === 'variable') {
+				if (this.value in MathLib.Expression.variables) {
+					return MathLib.Expression.variables[this.value];
+				}
+				return this;
+			}
+			if (this.subtype === 'unaryOperator') {
+				if (this.value === '-') {
+					return MathLib.negative(this.content.evaluate());
+				}
+				return this.content.evaluate();
+			}
+		};
+
+		/**
+		* Maps the expression tree over to an other expression tree.
+		*
+		* @param {function} f The function to apply to all the nodes in the tree.
+		* @return {Expression}
+		*/
+		Expression.prototype.map = function (f) {
+			var prop, properties = {}, mappedProperties;
+
+			for (prop in this) {
+				if (this.hasOwnProperty(prop) && prop !== 'content') {
+					if (Array.isArray(this[prop])) {
+						properties[prop] = this[prop].map(f);
+					}
+					else {
+						properties[prop] = this[prop];
+					}
+				}
+			}
+
+			mappedProperties = f(properties);
+			if (Array.isArray(this.content)) {
+				mappedProperties.content = this.content.map(function (expr) {
+					if (expr.type === 'expression') {
+						return expr.map(f);
+					}
+					else {
+						return f(expr);
+					}
+				});
+			}
+			else if (this.content) {
+				mappedProperties.content = this.content.map(f);
+			}
+
+			if (typeof mappedProperties === 'object') {
+				return new MathLib.Expression(mappedProperties);
+			}
+			else {
+				return mappedProperties;
+			}
+		};
+
+		/**
 		* Convert the Expression to MathML.
 		*
 		* @return {string}
@@ -1154,19 +1167,6 @@ var MathLib;
 					return expr.toString();
 				}).join(', ') + ')');
 			}
-		};
-
-		/**
-		* Constructs a variable expression.
-		*
-		* @param {String} n The variable to generate an expression from
-		* @return {Expression}
-		*/
-		Expression.variable = function (n) {
-			return new MathLib.Expression({
-				subtype: 'variable',
-				value: n
-			});
 		};
 		Expression.parse = function (str) {
 			var Token, Lexer, Parser;
@@ -9879,6 +9879,57 @@ var MathLib;
 			this.cycle = cycle;
 		}
 		/**
+		* Converts a cycle representation to a list representation
+		*
+		* @param {array} cycle The cycle to be converted
+		* @return {array}
+		*/
+		Permutation.cycleToList = function (cycle) {
+			var index, list = [], cur, i, ii, j, jj, max;
+
+			max = cycle.map(function (b) {
+				return Math.max.apply(null, b);
+			});
+			max = Math.max.apply(null, max);
+
+			for (i = 0, ii = max; i <= ii; i++) {
+				cur = i;
+				for (j = 0, jj = cycle.length; j < jj; j++) {
+					index = cycle[j].indexOf(cur);
+					if (++index) {
+						cur = cycle[j][index % cycle[j].length];
+					}
+				}
+				list.push(cur);
+			}
+			return list;
+		};
+
+		/**
+		* Converts a list representation to a cycle representation
+		*
+		* @param {array} list The list to be converted
+		* @return {array}
+		*/
+		Permutation.listToCycle = function (list) {
+			var finished = [], cur, i, ii, cycle, cycles = [];
+
+			for (i = 0, ii = list.length; i < ii; i++) {
+				cur = i;
+				cycle = [];
+				while (!finished[cur]) {
+					finished[cur] = true;
+					cycle.push(cur);
+					cur = list[cur];
+				}
+				if (cycle.length) {
+					cycles.push(cycle);
+				}
+			}
+			return cycles;
+		};
+
+		/**
 		* Applies the permutation to a number or a array/matrix/point/vector
 		*
 		* @param {number|array|Matrix|Point|Vector} n The object to apply the permutation to
@@ -9925,33 +9976,6 @@ var MathLib;
 		};
 
 		/**
-		* Converts a cycle representation to a list representation
-		*
-		* @param {array} cycle The cycle to be converted
-		* @return {array}
-		*/
-		Permutation.cycleToList = function (cycle) {
-			var index, list = [], cur, i, ii, j, jj, max;
-
-			max = cycle.map(function (b) {
-				return Math.max.apply(null, b);
-			});
-			max = Math.max.apply(null, max);
-
-			for (i = 0, ii = max; i <= ii; i++) {
-				cur = i;
-				for (j = 0, jj = cycle.length; j < jj; j++) {
-					index = cycle[j].indexOf(cur);
-					if (++index) {
-						cur = cycle[j][index % cycle[j].length];
-					}
-				}
-				list.push(cur);
-			}
-			return list;
-		};
-
-		/**
 		* Calculates the inverse of the permutation
 		*
 		* @return {Permutation}
@@ -9962,30 +9986,6 @@ var MathLib;
 				e.reverse();
 			});
 			return new MathLib.Permutation(cycle);
-		};
-
-		/**
-		* Converts a list representation to a cycle representation
-		*
-		* @param {array} list The list to be converted
-		* @return {array}
-		*/
-		Permutation.listToCycle = function (list) {
-			var finished = [], cur, i, ii, cycle, cycles = [];
-
-			for (i = 0, ii = list.length; i < ii; i++) {
-				cur = i;
-				cycle = [];
-				while (!finished[cur]) {
-					finished[cur] = true;
-					cycle.push(cur);
-					cur = list[cur];
-				}
-				if (cycle.length) {
-					cycles.push(cycle);
-				}
-			}
-			return cycles;
 		};
 
 		/**
@@ -10109,6 +10109,35 @@ var MathLib;
 				this.dual = dual;
 			}
 		}
+		/**
+		* Calculates the conic through five points.
+		*
+		* @param {Point} p The first point
+		* @param {Point} q The second point
+		* @param {Point} r The third point
+		* @param {Point} s The fourth point
+		* @param {Point} t The fifth point
+		* @return {Conic}
+		*/
+		Conic.throughFivePoints = function (p, q, r, s, t) {
+			var conic = new MathLib.Conic(new MathLib.Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]));
+
+			Object.defineProperties(conic, {
+				'primal': {
+					get: function () {
+						var G = p.vectorProduct(r).outerProduct(q.vectorProduct(s)), H = p.vectorProduct(s).outerProduct(q.vectorProduct(r)), M = G.times(t.times(H).scalarProduct(t)).minus(H.times(t.times(G).scalarProduct(t)));
+						return M.transpose().plus(M);
+					},
+					set: function () {
+					},
+					enumerable: true,
+					configurable: true
+				}
+			});
+
+			return conic;
+		};
+
 		/**
 		* Draws the conic on one or more screens
 		*
@@ -10575,35 +10604,6 @@ var MathLib;
 				return [new MathLib.Line(this.primal[i]), new MathLib.Line(this.primal[i])];
 			}
 		};
-
-		/**
-		* Calculates the conic through five points.
-		*
-		* @param {Point} p The first point
-		* @param {Point} q The second point
-		* @param {Point} r The third point
-		* @param {Point} s The fourth point
-		* @param {Point} t The fifth point
-		* @return {Conic}
-		*/
-		Conic.throughFivePoints = function (p, q, r, s, t) {
-			var conic = new MathLib.Conic(new MathLib.Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]));
-
-			Object.defineProperties(conic, {
-				'primal': {
-					get: function () {
-						var G = p.vectorProduct(r).outerProduct(q.vectorProduct(s)), H = p.vectorProduct(s).outerProduct(q.vectorProduct(r)), M = G.times(t.times(H).scalarProduct(t)).minus(H.times(t.times(G).scalarProduct(t)));
-						return M.transpose().plus(M);
-					},
-					set: function () {
-					},
-					enumerable: true,
-					configurable: true
-				}
-			});
-
-			return conic;
-		};
 		return Conic;
 	})();
 	MathLib.Conic = Conic;
@@ -10990,6 +10990,98 @@ var MathLib;
 			}(polynomial));
 		}
 		/**
+		* Interpolates points.
+		*
+		* @return {Polynomial}
+		*/
+		Polynomial.interpolation = function (a, b) {
+			var basisPolynomial, interpolant = new MathLib.Polynomial([0]), n = a.length, i, j;
+
+			if (arguments.length === 2) {
+				a = a.map(function (x, i) {
+					return [x, b[i]];
+				});
+			}
+
+			for (i = 0; i < n; i++) {
+				basisPolynomial = new MathLib.Polynomial([1]);
+				for (j = 0; j < n; j++) {
+					if (i !== j) {
+						basisPolynomial = basisPolynomial.times(new MathLib.Polynomial([-a[j][0] / (a[i][0] - a[j][0]), 1 / (a[i][0] - a[j][0])]));
+					}
+				}
+				interpolant = interpolant.plus(basisPolynomial.times(a[i][1]));
+			}
+			return interpolant;
+		};
+
+		/**
+		* Calculates the regression line for some points
+		*
+		* @param {array} x The x values
+		* @param {array} y The y values
+		* @return {Polynomial}
+		*/
+		Polynomial.regression = function (x, y) {
+			var length = x.length, xy = 0, xi = 0, yi = 0, x2 = 0, m, c, i;
+
+			if (arguments.length === 2) {
+				for (i = 0; i < length; i++) {
+					xy += x[i] * y[i];
+					xi += x[i];
+					yi += y[i];
+					x2 += x[i] * x[i];
+				}
+			}
+			else {
+				for (i = 0; i < length; i++) {
+					xy += x[i][0] * x[i][1];
+					xi += x[i][0];
+					yi += x[i][1];
+					x2 += x[i][0] * x[i][0];
+				}
+			}
+
+			m = (length * xy - xi * yi) / (length * x2 - xi * xi);
+			c = (yi * x2 - xy * xi) / (length * x2 - xi * xi);
+			return new MathLib.Polynomial([c, m]);
+		};
+
+		/**
+		* Returns a polynomial with the specified roots
+		*
+		* @param {array|Set} zeros The wished zeros.
+		* @return {Polynomial}
+		*/
+		Polynomial.roots = function (zeros) {
+			var elemSymPoly, i, ii, coef = [];
+
+			if (MathLib.type(zeros) === 'array') {
+				zeros = new MathLib.Set(zeros);
+			}
+
+			elemSymPoly = zeros.powerset();
+			for (i = 0, ii = zeros.card; i < ii; i++) {
+				coef[i] = 0;
+			}
+
+			// Vieta's theorem
+			elemSymPoly.slice(1).forEach(function (x) {
+				coef[ii - x.card] = MathLib.plus(coef[ii - x.card], x.times());
+			});
+
+			coef = coef.map(function (x, i) {
+				if ((ii - i) % 2) {
+					return MathLib.negative(x);
+				}
+				return x;
+			});
+
+			coef.push(1);
+			return new MathLib.Polynomial(coef);
+		};
+
+		/**
 		* Compares two polynomials.
 		*
 		* @param {Polynomial} p The polynomial to compare
@@ -11088,32 +11180,6 @@ var MathLib;
 		};
 
 		/**
-		* Interpolates points.
-		*
-		* @return {Polynomial}
-		*/
-		Polynomial.interpolation = function (a, b) {
-			var basisPolynomial, interpolant = new MathLib.Polynomial([0]), n = a.length, i, j;
-
-			if (arguments.length === 2) {
-				a = a.map(function (x, i) {
-					return [x, b[i]];
-				});
-			}
-
-			for (i = 0; i < n; i++) {
-				basisPolynomial = new MathLib.Polynomial([1]);
-				for (j = 0; j < n; j++) {
-					if (i !== j) {
-						basisPolynomial = basisPolynomial.times(new MathLib.Polynomial([-a[j][0] / (a[i][0] - a[j][0]), 1 / (a[i][0] - a[j][0])]));
-					}
-				}
-				interpolant = interpolant.plus(basisPolynomial.times(a[i][1]));
-			}
-			return interpolant;
-		};
-
-		/**
 		* Decides if two polynomials are equal.
 		*
 		* @param {Polynomial} p The polynomial to compare.
@@ -11172,72 +11238,6 @@ var MathLib;
 				plus = plus.concat((this.deg > a.deg ? this : a).slice(i));
 			}
 			return new MathLib.Polynomial(plus);
-		};
-
-		/**
-		* Calculates the regression line for some points
-		*
-		* @param {array} x The x values
-		* @param {array} y The y values
-		* @return {Polynomial}
-		*/
-		Polynomial.regression = function (x, y) {
-			var length = x.length, xy = 0, xi = 0, yi = 0, x2 = 0, m, c, i;
-
-			if (arguments.length === 2) {
-				for (i = 0; i < length; i++) {
-					xy += x[i] * y[i];
-					xi += x[i];
-					yi += y[i];
-					x2 += x[i] * x[i];
-				}
-			}
-			else {
-				for (i = 0; i < length; i++) {
-					xy += x[i][0] * x[i][1];
-					xi += x[i][0];
-					yi += x[i][1];
-					x2 += x[i][0] * x[i][0];
-				}
-			}
-
-			m = (length * xy - xi * yi) / (length * x2 - xi * xi);
-			c = (yi * x2 - xy * xi) / (length * x2 - xi * xi);
-			return new MathLib.Polynomial([c, m]);
-		};
-
-		/**
-		* Returns a polynomial with the specified roots
-		*
-		* @param {array|Set} zeros The wished zeros.
-		* @return {Polynomial}
-		*/
-		Polynomial.roots = function (zeros) {
-			var elemSymPoly, i, ii, coef = [];
-
-			if (MathLib.type(zeros) === 'array') {
-				zeros = new MathLib.Set(zeros);
-			}
-
-			elemSymPoly = zeros.powerset();
-			for (i = 0, ii = zeros.card; i < ii; i++) {
-				coef[i] = 0;
-			}
-
-			// Vieta's theorem
-			elemSymPoly.slice(1).forEach(function (x) {
-				coef[ii - x.card] = MathLib.plus(coef[ii - x.card], x.times());
-			});
-
-			coef = coef.map(function (x, i) {
-				if ((ii - i) % 2) {
-					return MathLib.negative(x);
-				}
-				return x;
-			});
-
-			coef.push(1);
-			return new MathLib.Polynomial(coef);
 		};
 
 		/**
@@ -12320,18 +12320,6 @@ var MathLib;
 				}, '{').slice(0, -2) + '}';
 			}
 		};
-		Set.fromTo = function (start, end, step) {
-			if (typeof step === 'undefined') { step = 1; }
-			var i, set = [];
-
-			if (start <= end) {
-				for (i = start; i <= end; i += step) {
-					set.push(i);
-				}
-				return new MathLib.Set(set);
-			}
-		};
-
 		Set.createSetOperation = function (left, both, right) {
 			return function (a) {
 				var set = [], i = 0, j = 0, tl = this.card, al = a.card;
@@ -12368,6 +12356,18 @@ var MathLib;
 				}
 				return new MathLib.Set(set);
 			};
+		};
+
+		Set.fromTo = function (start, end, step) {
+			if (typeof step === 'undefined') { step = 1; }
+			var i, set = [];
+
+			if (start <= end) {
+				for (i = start; i <= end; i += step) {
+					set.push(i);
+				}
+				return new MathLib.Set(set);
+			}
 		};
 		return Set;
 	})();

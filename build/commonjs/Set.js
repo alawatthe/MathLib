@@ -458,18 +458,6 @@
 				}, '{').slice(0, -2) + '}';
 			}
 		};
-		Set.fromTo = function (start, end, step) {
-			if (typeof step === 'undefined') { step = 1; }
-			var i, set = [];
-
-			if (start <= end) {
-				for (i = start; i <= end; i += step) {
-					set.push(i);
-				}
-				return new MathLib.Set(set);
-			}
-		};
-
 		Set.createSetOperation = function (left, both, right) {
 			return function (a) {
 				var set = [], i = 0, j = 0, tl = this.card, al = a.card;
@@ -506,6 +494,18 @@
 				}
 				return new MathLib.Set(set);
 			};
+		};
+
+		Set.fromTo = function (start, end, step) {
+			if (typeof step === 'undefined') { step = 1; }
+			var i, set = [];
+
+			if (start <= end) {
+				for (i = start; i <= end; i += step) {
+					set.push(i);
+				}
+				return new MathLib.Set(set);
+			}
 		};
 		return Set;
 	})();

@@ -24,16 +24,6 @@
 			}
 		}
 		/**
-		* Compares two expressions
-		*
-		* @param {Expression} expr The expression to compare
-		* @return {number}
-		*/
-		Expression.prototype.compare = function (expr) {
-			return MathLib.sign(this.toString().localeCompare(expr.toString()));
-		};
-
-		/**
 		* Constructs a constant expression.
 		*
 		* @param {String} n The constant to generate an expression from
@@ -44,128 +34,6 @@
 				subtype: 'constant',
 				value: n
 			});
-		};
-
-		/**
-		* Copies the Expression
-		* @return {Expression} The copied expression
-		*/
-		Expression.prototype.copy = function () {
-			return this.map(function (x) {
-				return x;
-			});
-		};
-
-		/**
-		* Evaluates the symbolic expression
-		*
-		* @return {any}
-		*/
-		Expression.prototype.evaluate = function () {
-			if (this.subtype === 'binaryOperator') {
-				return MathLib[this.name].apply(null, this.content.map(function (x) {
-					return MathLib.evaluate(x);
-				}));
-			}
-			if (this.subtype === 'brackets') {
-				return MathLib.evaluate(this.content);
-			}
-			if (this.subtype === 'complexNumber') {
-				if (this.mode === 'cartesian') {
-					return new MathLib.Complex(this.value[0].evaluate(), this.value[1].evaluate());
-				}
-				else if (this.mode === 'polar') {
-					return MathLib.Complex.polar(this.value[0].evaluate(), this.value[1].evaluate());
-				}
-			}
-			if (this.subtype === 'constant') {
-				if (this.value === 'pi') {
-					return Math.PI;
-				}
-			}
-			if (this.subtype === 'functionCall') {
-				if (this.isMethod) {
-					var args = this.content.map(function (x) {
-						return MathLib.evaluate(x);
-					}), _this = args.shift();
-
-					return _this[this.value].apply(_this, args);
-				}
-				else {
-					return MathLib[this.value].apply(null, this.content.map(function (x) {
-						return MathLib.evaluate(x);
-					}));
-				}
-			}
-			if (this.subtype === 'functionDefinition') {
-				return MathLib.Functn(this.content[0].evaluate(), {
-					name: 'f',
-					expression: this
-				});
-			}
-			if (this.subtype === 'number') {
-				return parseFloat(this.value);
-			}
-			if (this.subtype === 'naryOperator') {
-				return MathLib[this.name].apply(null, this.content.map(function (x) {
-					return MathLib.evaluate(x);
-				}));
-			}
-			if (this.subtype === 'variable') {
-				if (this.value in MathLib.Expression.variables) {
-					return MathLib.Expression.variables[this.value];
-				}
-				return this;
-			}
-			if (this.subtype === 'unaryOperator') {
-				if (this.value === '-') {
-					return MathLib.negative(this.content.evaluate());
-				}
-				return this.content.evaluate();
-			}
-		};
-
-		/**
-		* Maps the expression tree over to an other expression tree.
-		*
-		* @param {function} f The function to apply to all the nodes in the tree.
-		* @return {Expression}
-		*/
-		Expression.prototype.map = function (f) {
-			var prop, properties = {}, mappedProperties;
-
-			for (prop in this) {
-				if (this.hasOwnProperty(prop) && prop !== 'content') {
-					if (Array.isArray(this[prop])) {
-						properties[prop] = this[prop].map(f);
-					}
-					else {
-						properties[prop] = this[prop];
-					}
-				}
-			}
-
-			mappedProperties = f(properties);
-			if (Array.isArray(this.content)) {
-				mappedProperties.content = this.content.map(function (expr) {
-					if (expr.type === 'expression') {
-						return expr.map(f);
-					}
-					else {
-						return f(expr);
-					}
-				});
-			}
-			else if (this.content) {
-				mappedProperties.content = this.content.map(f);
-			}
-
-			if (typeof mappedProperties === 'object') {
-				return new MathLib.Expression(mappedProperties);
-			}
-			else {
-				return mappedProperties;
-			}
 		};
 
 		/**
@@ -443,6 +311,151 @@
 		};
 
 		/**
+		* Constructs a variable expression.
+		*
+		* @param {String} n The variable to generate an expression from
+		* @return {Expression}
+		*/
+		Expression.variable = function (n) {
+			return new MathLib.Expression({
+				subtype: 'variable',
+				value: n
+			});
+		};
+
+		/**
+		* Compares two expressions
+		*
+		* @param {Expression} expr The expression to compare
+		* @return {number}
+		*/
+		Expression.prototype.compare = function (expr) {
+			return MathLib.sign(this.toString().localeCompare(expr.toString()));
+		};
+
+		/**
+		* Copies the Expression
+		* @return {Expression} The copied expression
+		*/
+		Expression.prototype.copy = function () {
+			return this.map(function (x) {
+				return x;
+			});
+		};
+
+		/**
+		* Evaluates the symbolic expression
+		*
+		* @return {any}
+		*/
+		Expression.prototype.evaluate = function () {
+			if (this.subtype === 'binaryOperator') {
+				return MathLib[this.name].apply(null, this.content.map(function (x) {
+					return MathLib.evaluate(x);
+				}));
+			}
+			if (this.subtype === 'brackets') {
+				return MathLib.evaluate(this.content);
+			}
+			if (this.subtype === 'complexNumber') {
+				if (this.mode === 'cartesian') {
+					return new MathLib.Complex(this.value[0].evaluate(), this.value[1].evaluate());
+				}
+				else if (this.mode === 'polar') {
+					return MathLib.Complex.polar(this.value[0].evaluate(), this.value[1].evaluate());
+				}
+			}
+			if (this.subtype === 'constant') {
+				if (this.value === 'pi') {
+					return Math.PI;
+				}
+			}
+			if (this.subtype === 'functionCall') {
+				if (this.isMethod) {
+					var args = this.content.map(function (x) {
+						return MathLib.evaluate(x);
+					}), _this = args.shift();
+
+					return _this[this.value].apply(_this, args);
+				}
+				else {
+					return MathLib[this.value].apply(null, this.content.map(function (x) {
+						return MathLib.evaluate(x);
+					}));
+				}
+			}
+			if (this.subtype === 'functionDefinition') {
+				return MathLib.Functn(this.content[0].evaluate(), {
+					name: 'f',
+					expression: this
+				});
+			}
+			if (this.subtype === 'number') {
+				return parseFloat(this.value);
+			}
+			if (this.subtype === 'naryOperator') {
+				return MathLib[this.name].apply(null, this.content.map(function (x) {
+					return MathLib.evaluate(x);
+				}));
+			}
+			if (this.subtype === 'variable') {
+				if (this.value in MathLib.Expression.variables) {
+					return MathLib.Expression.variables[this.value];
+				}
+				return this;
+			}
+			if (this.subtype === 'unaryOperator') {
+				if (this.value === '-') {
+					return MathLib.negative(this.content.evaluate());
+				}
+				return this.content.evaluate();
+			}
+		};
+
+		/**
+		* Maps the expression tree over to an other expression tree.
+		*
+		* @param {function} f The function to apply to all the nodes in the tree.
+		* @return {Expression}
+		*/
+		Expression.prototype.map = function (f) {
+			var prop, properties = {}, mappedProperties;
+
+			for (prop in this) {
+				if (this.hasOwnProperty(prop) && prop !== 'content') {
+					if (Array.isArray(this[prop])) {
+						properties[prop] = this[prop].map(f);
+					}
+					else {
+						properties[prop] = this[prop];
+					}
+				}
+			}
+
+			mappedProperties = f(properties);
+			if (Array.isArray(this.content)) {
+				mappedProperties.content = this.content.map(function (expr) {
+					if (expr.type === 'expression') {
+						return expr.map(f);
+					}
+					else {
+						return f(expr);
+					}
+				});
+			}
+			else if (this.content) {
+				mappedProperties.content = this.content.map(f);
+			}
+
+			if (typeof mappedProperties === 'object') {
+				return new MathLib.Expression(mappedProperties);
+			}
+			else {
+				return mappedProperties;
+			}
+		};
+
+		/**
 		* Convert the Expression to MathML.
 		*
 		* @return {string}
@@ -701,19 +714,6 @@
 					return expr.toString();
 				}).join(', ') + ')');
 			}
-		};
-
-		/**
-		* Constructs a variable expression.
-		*
-		* @param {String} n The variable to generate an expression from
-		* @return {Expression}
-		*/
-		Expression.variable = function (n) {
-			return new MathLib.Expression({
-				subtype: 'variable',
-				value: n
-			});
 		};
 		Expression.parse = function (str) {
 			var Token, Lexer, Parser;

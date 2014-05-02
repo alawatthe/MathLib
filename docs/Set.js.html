@@ -172,7 +172,7 @@
 			var _this = this;
 			this.type = 'set';</code></pre>
           <section id="intersect">
-            <h1><a href="http://mathlib.de/en/docs/Set/intersect">intersect</a>
+            <h1><a href="http://mathlib.de/en/docs/this/interse">intersect</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -199,7 +199,7 @@
           <div class="description"><p>Returns the intersection of two sets.</p> </div>
           <pre><code class="language-javascript">this.intersect = Set.createSetOperation(false, true, false);</code></pre>
           <section id="union">
-            <h1><a href="http://mathlib.de/en/docs/Set/union">union</a>
+            <h1><a href="http://mathlib.de/en/docs/this/uni">union</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -226,7 +226,7 @@
           <div class="description"><p>Returns the union of two sets.</p> </div>
           <pre><code class="language-javascript">this.union = Set.createSetOperation(true, true, true);</code></pre>
           <section id="without">
-            <h1><a href="http://mathlib.de/en/docs/Set/without">without</a>
+            <h1><a href="http://mathlib.de/en/docs/this/witho">without</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -253,7 +253,7 @@
           <div class="description"><p>Returns all elements, which are in the first set, but not in the second.</p> </div>
           <pre><code class="language-javascript">this.without = Set.createSetOperation(true, false, false);</code></pre>
           <section id="xor">
-            <h1><a href="http://mathlib.de/en/docs/Set/xor">xor</a>
+            <h1><a href="http://mathlib.de/en/docs/this/x">xor</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -294,11 +294,11 @@
 			this.card = elements.length;
 		}</code></pre>
           <section id="compare">
-            <h1><a href="http://mathlib.de/en/docs/Set/compare">compare</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/compare">compare</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.compare()</span> → <span>number</span>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.compare()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number">number</a>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -336,7 +336,7 @@
 			}
 		};</code></pre>
           <section id="evaluate">
-            <h1><a href="http://mathlib.de/en/docs/Set/evaluate">evaluate</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/evaluate">evaluate</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -348,11 +348,11 @@
 			return this.map(MathLib.evaluate);
 		};</code></pre>
           <section id="every">
-            <h1><a href="http://mathlib.de/en/docs/Set/every">every</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/every">every</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.every()</span> → <span>boolean</span>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.every()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean">boolean</a>
             </p>
           </section>
           <div class="description"><p>Works like the Array.prototype.every function</p> </div>
@@ -364,7 +364,7 @@
 			return Array.prototype.every.apply(this, args);
 		};</code></pre>
           <section id="filter">
-            <h1><a href="http://mathlib.de/en/docs/Set/filter">filter</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/filter">filter</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -380,7 +380,7 @@
 			return new MathLib.Set(Array.prototype.filter.apply(this, args));
 		};</code></pre>
           <section id="forEach">
-            <h1><a href="http://mathlib.de/en/docs/Set/forEach">forEach</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/forEach">forEach</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -396,11 +396,11 @@
 			Array.prototype.forEach.apply(this, args);
 		};</code></pre>
           <section id="indexOf">
-            <h1><a href="http://mathlib.de/en/docs/Set/indexOf">indexOf</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/indexOf">indexOf</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.indexOf()</span> → <span>number</span>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.indexOf()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number">number</a>
             </p>
           </section>
           <div class="description"><p>Works like the Array.prototype.indexOf function</p> </div>
@@ -412,7 +412,7 @@
 			return Array.prototype.indexOf.apply(this, args);
 		};</code></pre>
           <section id="insert">
-            <h1><a href="http://mathlib.de/en/docs/Set/insert">insert</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/insert">insert</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -446,11 +446,11 @@
 			return this;
 		};</code></pre>
           <section id="isEmpty">
-            <h1><a href="http://mathlib.de/en/docs/Set/isEmpty">isEmpty</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/isEmpty">isEmpty</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.isEmpty()</span> → <span>boolean</span>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.isEmpty()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean">boolean</a>
             </p>
           </section>
           <div class="description"><p>Determines if the set is empty.</p> </div>
@@ -458,11 +458,11 @@
 			return this.card === 0;
 		};</code></pre>
           <section id="isEqual">
-            <h1><a href="http://mathlib.de/en/docs/Set/isEqual">isEqual</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/isEqual">isEqual</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.isEqual()</span> → <span>boolean</span>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.isEqual()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean">boolean</a>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -494,11 +494,11 @@
 			}
 		};</code></pre>
           <section id="isSubsetOf">
-            <h1><a href="http://mathlib.de/en/docs/Set/isSubsetOf">isSubsetOf</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/isSubsetOf">isSubsetOf</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.isSubsetOf()</span> → <span>boolean</span>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.isSubsetOf()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean">boolean</a>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -525,11 +525,11 @@
 			});
 		};</code></pre>
           <section id="locate">
-            <h1><a href="http://mathlib.de/en/docs/Set/locate">locate</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/locate">locate</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.locate()</span> → <span>number</span>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.locate()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number">number</a>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -572,7 +572,7 @@
 			return left;
 		};</code></pre>
           <section id="map">
-            <h1><a href="http://mathlib.de/en/docs/Set/map">map</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/map">map</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -590,13 +590,13 @@
             <tbody>
               <tr>
                 <td>callback</td>
-                <td><span>function </span>
+                <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function">function</a>
                 </td>
                 <td>- The mapping function</td>
               </tr>
               <tr>
                 <td>[thisArg]</td>
-                <td><span>object </span>
+                <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object">object</a>
                 </td>
                 <td>- The value to use as this when executing the callback.</td>
               </tr>
@@ -607,7 +607,7 @@
 			return new MathLib.Set(Array.prototype.map.call(this, callback, thisArg));
 		};</code></pre>
           <section id="plus">
-            <h1><a href="http://mathlib.de/en/docs/Set/plus">plus</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/plus">plus</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -625,7 +625,7 @@
             <tbody>
               <tr>
                 <td>object}</td>
-                <td><span>number </span><span>MathLib </span>
+                <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number">number</a><span>MathLib </span>
                 </td>
                 <td>n The object to add to the elements in the set.</td>
               </tr>
@@ -653,7 +653,7 @@
 			}
 		};</code></pre>
           <section id="powerset">
-            <h1><a href="http://mathlib.de/en/docs/Set/powerset">powerset</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/powerset">powerset</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -678,7 +678,7 @@
 			return new MathLib.Set(powerset);
 		};</code></pre>
           <section id="reduce">
-            <h1><a href="http://mathlib.de/en/docs/Set/reduce">reduce</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/reduce">reduce</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -694,7 +694,7 @@
 			return Array.prototype.reduce.apply(this, arguments);
 		};</code></pre>
           <section id="remove">
-            <h1><a href="http://mathlib.de/en/docs/Set/remove">remove</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/remove">remove</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -728,7 +728,7 @@
 			return this;
 		};</code></pre>
           <section id="slice">
-            <h1><a href="http://mathlib.de/en/docs/Set/slice">slice</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/slice">slice</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -744,11 +744,11 @@
 			return Array.prototype.slice.apply(this, args);
 		};</code></pre>
           <section id="some">
-            <h1><a href="http://mathlib.de/en/docs/Set/some">some</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/some">some</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.some()</span> → <span>boolean</span>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.some()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean">boolean</a>
             </p>
           </section>
           <div class="description"><p>Works like the Array.prototype.some function</p> </div>
@@ -760,7 +760,7 @@
 			return Array.prototype.some.apply(this, args);
 		};</code></pre>
           <section id="splice">
-            <h1><a href="http://mathlib.de/en/docs/Set/splice">splice</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/splice">splice</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -776,7 +776,7 @@
 			return Array.prototype.splice.apply(this, args);
 		};</code></pre>
           <section id="times">
-            <h1><a href="http://mathlib.de/en/docs/Set/times">times</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/times">times</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -794,7 +794,7 @@
             <tbody>
               <tr>
                 <td>object}</td>
-                <td><span>number </span><span>MathLib </span>
+                <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number">number</a><span>MathLib </span>
                 </td>
                 <td>n The object to multiply the elements with</td>
               </tr>
@@ -812,7 +812,7 @@
 			}
 		};</code></pre>
           <section id="toArray">
-            <h1><a href="http://mathlib.de/en/docs/Set/toArray">toArray</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/toArray">toArray</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
@@ -824,11 +824,11 @@
 			return Array.prototype.slice.call(this);
 		};</code></pre>
           <section id="toContentMathML">
-            <h1><a href="http://mathlib.de/en/docs/Set/toContentMathML">toContentMathML</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/toContentMathML">toContentMathML</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.toContentMathML()</span> → <span>string</span>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.toContentMathML()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string">string</a>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -842,7 +842,7 @@
             <tbody>
               <tr>
                 <td>[options]</td>
-                <td><span>object </span>
+                <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object">object</a>
                 </td>
                 <td>- Optional options to style the output</td>
               </tr>
@@ -873,11 +873,11 @@
 			}
 		};</code></pre>
           <section id="toLaTeX">
-            <h1><a href="http://mathlib.de/en/docs/Set/toLaTeX">toLaTeX</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/toLaTeX">toLaTeX</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.toLaTeX()</span> → <span>string</span>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.toLaTeX()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string">string</a>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -891,7 +891,7 @@
             <tbody>
               <tr>
                 <td>[options]</td>
-                <td><span>object </span>
+                <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object">object</a>
                 </td>
                 <td>- Optional options to style the output</td>
               </tr>
@@ -910,11 +910,11 @@
 			}
 		};</code></pre>
           <section id="toMathML">
-            <h1><a href="http://mathlib.de/en/docs/Set/toMathML">toMathML</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/toMathML">toMathML</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.toMathML()</span> → <span>string</span>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.toMathML()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string">string</a>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -928,7 +928,7 @@
             <tbody>
               <tr>
                 <td>[options]</td>
-                <td><span>object </span>
+                <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object">object</a>
                 </td>
                 <td>- Optional options to style the output</td>
               </tr>
@@ -947,11 +947,11 @@
 			}
 		};</code></pre>
           <section id="toString">
-            <h1><a href="http://mathlib.de/en/docs/Set/toString">toString</a>
+            <h1><a href="http://mathlib.de/en/docs/Set/prototype/toString">toString</a>
             </h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.toString()</span> → <span>string</span>
+              <div class="label label-info radius ctx-type">method</div><span>Set.prototype.toString()</span> → <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string">string</a>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -965,7 +965,7 @@
             <tbody>
               <tr>
                 <td>[options]</td>
-                <td><span>object </span>
+                <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object">object</a>
                 </td>
                 <td>- Optional options to style the output</td>
               </tr>
@@ -983,18 +983,6 @@
 				}, '{').slice(0, -2) + '}';
 			}
 		};
-		Set.fromTo = function (start, end, step) {
-			if (typeof step === 'undefined') { step = 1; }
-			var i, set = [];
-
-			if (start &lt;= end) {
-				for (i = start; i &lt;= end; i += step) {
-					set.push(i);
-				}
-				return new MathLib.Set(set);
-			}
-		};
-
 		Set.createSetOperation = function (left, both, right) {
 			return function (a) {
 				var set = [], i = 0, j = 0, tl = this.card, al = a.card;
@@ -1032,6 +1020,18 @@
 				return new MathLib.Set(set);
 			};
 		};
+
+		Set.fromTo = function (start, end, step) {
+			if (typeof step === 'undefined') { step = 1; }
+			var i, set = [];
+
+			if (start &lt;= end) {
+				for (i = start; i &lt;= end; i += step) {
+					set.push(i);
+				}
+				return new MathLib.Set(set);
+			}
+		};
 		return Set;
 	})();
 	MathLib.Set = Set;
@@ -1045,7 +1045,6 @@
         <p>Theme borrowed from Twitter Bootstrap</p>
       </div>
     </footer>
-    <script src="http://platform.twitter.com/widgets.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
     <script src="http://leaverou.github.com/prefixfree/prefixfree.js"></script>
     <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-transition.js"></script>

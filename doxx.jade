@@ -93,7 +93,7 @@ html
                     if currentName.slice(0, -3) === symbol.ctx.name
                       a(href='http://mathlib.de/en/docs/'+currentName.slice(0,-3))= symbol.ctx.name
                     else
-                      a(href='http://mathlib.de/en/docs/'+currentName.slice(0,-3)+'/'+symbol.ctx.name)= symbol.ctx.name
+                      a(href='http://mathlib.de/en/docs/'+symbol.ctx.string.replace(/\./g, '/').slice(0, -2))= symbol.ctx.name
                   h5.subheader
                   if !symbol.gtype && symbol.type
                     p
@@ -105,8 +105,10 @@ html
                         span= symbol.ctx.string
                       if symbol.return
                         |  → 
-                        if (['Circle', 'Complex', 'Conic', 'Expression', 'Functn', 'Layer', 'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial', 'Rational', 'Screen', 'Screen2D', 'Screen3D', 'Set', 'Vector'].indexOf(symbol.return) !== -1)
+                        if (['Circle', 'Complex', 'Conic', 'Expression', 'Functn', 'Integer', 'Layer', 'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial', 'Rational', 'Screen', 'Screen2D', 'Screen3D', 'Set', 'Vector'].indexOf(symbol.return) !== -1)
                           a(href='./'+symbol.return+'.js.html')= symbol.return
+                        else if (['boolean', 'function', 'number', 'regexp', 'object', 'string'].indexOf(symbol.return) !== -1)
+                          a(href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/'+symbol.return)= symbol.return
                         else
                           span= symbol.return
 
@@ -126,6 +128,8 @@ html
                           each type in tag.types
                             if (['Circle', 'Complex', 'Conic', 'Expression', 'Functn', 'Layer', 'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial', 'Rational', 'Screen', 'Screen2D', 'Screen3D', 'Set', 'Vector'].indexOf(type) !== -1)
                               a(href='./'+type+'.js.html')= type + ' '
+                            else if (['boolean', 'function', 'number', 'regexp', 'object', 'string'].indexOf(type) !== -1)
+                              a(href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/'+type)= type
                             else
                               span= type + ' '
                         td= tag.description
@@ -147,7 +151,6 @@ html
           | created by Francois-Guillaume Ribreaun
         p Theme borrowed from Twitter Bootstrap
 
-    script(src="http://platform.twitter.com/widgets.js")
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js")
     script(src="http://leaverou.github.com/prefixfree/prefixfree.js")
     script(src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-transition.js")

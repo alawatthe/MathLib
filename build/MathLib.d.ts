@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-04-27
+ * build date: 2014-05-02
  */
 
 	var version: string;
@@ -105,37 +105,12 @@
 		public value: any;
 		constructor(expr?: {});
 		/**
-		* Compares two expressions
-		*
-		* @param {Expression} expr The expression to compare
-		* @return {number}
-		*/
-		public compare(expr: any): any;
-		/**
 		* Constructs a constant expression.
 		*
 		* @param {String} n The constant to generate an expression from
 		* @return {Expression}
 		*/
 		static constant(n: any): Expression;
-		/**
-		* Copies the Expression
-		* @return {Expression} The copied expression
-		*/
-		public copy(): Expression;
-		/**
-		* Evaluates the symbolic expression
-		*
-		* @return {any}
-		*/
-		public evaluate(): any;
-		/**
-		* Maps the expression tree over to an other expression tree.
-		*
-		* @param {function} f The function to apply to all the nodes in the tree.
-		* @return {Expression}
-		*/
-		public map(f: any): Expression;
 		/**
 		* Constructs a number expression.
 		*
@@ -162,6 +137,44 @@
 		*/
 		static parseContentMathML(MathMLString: string): Expression;
 		/**
+		* Constructs a variable expression.
+		*
+		* @param {String} n The variable to generate an expression from
+		* @return {Expression}
+		*/
+		static variable(n: any): Expression;
+		/**
+		* Stores all the values of variables in symbolic expressions.
+		*
+		* @return {Expression}
+		*/
+		static variables: {};
+		/**
+		* Compares two expressions
+		*
+		* @param {Expression} expr The expression to compare
+		* @return {number}
+		*/
+		public compare(expr: any): any;
+		/**
+		* Copies the Expression
+		* @return {Expression} The copied expression
+		*/
+		public copy(): Expression;
+		/**
+		* Evaluates the symbolic expression
+		*
+		* @return {any}
+		*/
+		public evaluate(): any;
+		/**
+		* Maps the expression tree over to an other expression tree.
+		*
+		* @param {function} f The function to apply to all the nodes in the tree.
+		* @return {Expression}
+		*/
+		public map(f: any): Expression;
+		/**
 		* Convert the Expression to MathML.
 		*
 		* @return {string}
@@ -185,19 +198,6 @@
 		* @return {string}
 		*/
 		public toString(): string;
-		/**
-		* Constructs a variable expression.
-		*
-		* @param {String} n The variable to generate an expression from
-		* @return {Expression}
-		*/
-		static variable(n: any): Expression;
-		/**
-		* Stores all the values of variables in symbolic expressions.
-		*
-		* @return {Expression}
-		*/
-		static variables: {};
 	}
 
 
@@ -601,6 +601,13 @@
 		*/
 		static areLinearIndependent: (vectors: Vector[]) => boolean;
 		/**
+		* Returns a zero vector of given size.
+		*
+		* @param {number} n The number of entries in the vector.
+		* @return {Vector}
+		*/
+		static zero: (n: number) => Vector;
+		/**
 		* Compares two vectors.
 		*
 		* @param {Vector} v The vector to compare
@@ -750,13 +757,6 @@
 		* @return {Vector}
 		*/
 		public vectorProduct(v: Vector): Vector;
-		/**
-		* Returns a zero vector of given size.
-		*
-		* @param {number} n The number of entries in the vector.
-		* @return {Vector}
-		*/
-		static zero: (n: number) => Vector;
 	}
 
 
@@ -1475,6 +1475,56 @@ declare var Integer: Ring;
 		public LUpermutation: MathLib.Permutation;
 		constructor(matrix: any);
 		/**
+		* This function returns a givens matrix
+		*
+		* @param {number} n The size of the matrix.
+		* @param {number} i The first row/column.
+		* @param {number} k The second row/column.
+		* @param {number} phi The angle (in radians).
+		* @return {Matrix}
+		*/
+		static givensMatrix: (n: any, i: any, k: any, phi: any) => Matrix;
+		/**
+		* Returns the identity matrix.
+		*
+		* @param {number} n The number of rows and columns.
+		* @return {Matrix}
+		*/
+		static identity: (n: number) => Matrix;
+		/**
+		* Returns a matrix consisting completely of a given number
+		*
+		* @param {number} n The number.
+		* @param {number} r The number of rows.
+		* @param {number} c The number of columns.
+		* @return {Matrix}
+		*/
+		static numbers: (n: any, r: number, c: number) => Matrix;
+		/**
+		* Returns a matrix consisting completely of ones.
+		*
+		* @param {number} r The number of rows.
+		* @param {number} c The number of columns.
+		* @return {Matrix}
+		*/
+		static one: (r?: number, c?: number) => Matrix;
+		/**
+		* Returns a matrix consisting completely of random numbers between 0 and 1
+		*
+		* @param {number} r The number of rows.
+		* @param {number} c The number of columns.
+		* @return {Matrix}
+		*/
+		static random: (r: number, c: number) => Matrix;
+		/**
+		* Returns a matrix consisting completely of zeros.
+		*
+		* @param {number} r The number of rows.
+		* @param {number} c The number of columns.
+		* @return {Matrix}
+		*/
+		static zero: (r?: number, c?: number) => Matrix;
+		/**
 		* Calculates the LU decomposition of a matrix
 		* The result is cached.
 		*
@@ -1573,23 +1623,6 @@ declare var Integer: Ring;
 		* @return {[Matrix, Matrix]}
 		*/
 		public givens(): Matrix[];
-		/**
-		* This function returns a givens matrix
-		*
-		* @param {number} n The size of the matrix.
-		* @param {number} i The first row/column.
-		* @param {number} k The second row/column.
-		* @param {number} phi The angle (in radians).
-		* @return {Matrix}
-		*/
-		static givensMatrix: (n: any, i: any, k: any, phi: any) => Matrix;
-		/**
-		* Returns the identity matrix.
-		*
-		* @param {number} n The number of rows and columns.
-		* @return {Matrix}
-		*/
-		static identity: (n: number) => Matrix;
 		/**
 		* Calculates the inverse matrix.
 		*
@@ -1737,23 +1770,6 @@ declare var Integer: Ring;
 		*/
 		public negative(): Matrix;
 		/**
-		* Returns a matrix consisting completely of a given number
-		*
-		* @param {number} n The number.
-		* @param {number} r The number of rows.
-		* @param {number} c The number of columns.
-		* @return {Matrix}
-		*/
-		static numbers: (n: any, r: number, c: number) => Matrix;
-		/**
-		* Returns a matrix consisting completely of ones.
-		*
-		* @param {number} r The number of rows.
-		* @param {number} c The number of columns.
-		* @return {Matrix}
-		*/
-		static one: (r?: number, c?: number) => Matrix;
-		/**
 		* This function adds a matrix to the current matrix
 		* and returns the result as a new matrix.
 		*
@@ -1761,14 +1777,6 @@ declare var Integer: Ring;
 		* @return {Matrix}
 		*/
 		public plus(summand: any): Matrix;
-		/**
-		* Returns a matrix consisting completely of random numbers between 0 and 1
-		*
-		* @param {number} r The number of rows.
-		* @param {number} c The number of columns.
-		* @return {Matrix}
-		*/
-		static random: (r: number, c: number) => Matrix;
 		/**
 		* Determines the rank of the matrix
 		*
@@ -1886,14 +1894,6 @@ declare var Integer: Ring;
 		* @return {Matrix}
 		*/
 		public transpose(): Matrix;
-		/**
-		* Returns a matrix consisting completely of zeros.
-		*
-		* @param {number} r The number of rows.
-		* @param {number} c The number of columns.
-		* @return {Matrix}
-		*/
-		static zero: (r?: number, c?: number) => Matrix;
 	}
 
 
@@ -1909,6 +1909,26 @@ declare var Integer: Ring;
 		public cycle: any[];
 		constructor(p: any);
 		/**
+		* Converts a cycle representation to a list representation
+		*
+		* @param {array} cycle The cycle to be converted
+		* @return {array}
+		*/
+		static cycleToList(cycle: any): number[];
+		/**
+		* The id permutation
+		*
+		* @return {Permutation}
+		*/
+		static id: Permutation;
+		/**
+		* Converts a list representation to a cycle representation
+		*
+		* @param {array} list The list to be converted
+		* @return {array}
+		*/
+		static listToCycle(list: number[]): any;
+		/**
 		* Applies the permutation to a number or a array/matrix/point/vector
 		*
 		* @param {number|array|Matrix|Point|Vector} n The object to apply the permutation to
@@ -1923,31 +1943,11 @@ declare var Integer: Ring;
 		*/
 		public compare(p: Permutation): number;
 		/**
-		* Converts a cycle representation to a list representation
-		*
-		* @param {array} cycle The cycle to be converted
-		* @return {array}
-		*/
-		static cycleToList(cycle: any): number[];
-		/**
-		* The id permutation
-		*
-		* @return {Permutation}
-		*/
-		static id: Permutation;
-		/**
 		* Calculates the inverse of the permutation
 		*
 		* @return {Permutation}
 		*/
 		public inverse(): Permutation;
-		/**
-		* Converts a list representation to a cycle representation
-		*
-		* @param {array} list The list to be converted
-		* @return {array}
-		*/
-		static listToCycle(list: number[]): any;
 		/**
 		* Works like Array.prototype.map.
 		*
@@ -1994,6 +1994,17 @@ declare var Integer: Ring;
 		public primal: MathLib.Matrix;
 		public dual: MathLib.Matrix;
 		constructor(primal: MathLib.Matrix, dual?: MathLib.Matrix);
+		/**
+		* Calculates the conic through five points.
+		*
+		* @param {Point} p The first point
+		* @param {Point} q The second point
+		* @param {Point} r The third point
+		* @param {Point} s The fourth point
+		* @param {Point} t The fifth point
+		* @return {Conic}
+		*/
+		static throughFivePoints(p: MathLib.Point, q: MathLib.Point, r: MathLib.Point, s: MathLib.Point, t: MathLib.Point): Conic;
 		/**
 		* Draws the conic on one or more screens
 		*
@@ -2059,17 +2070,6 @@ declare var Integer: Ring;
 		* @return {boolean}
 		*/
 		public splitDegenerated(): MathLib.Line[];
-		/**
-		* Calculates the conic through five points.
-		*
-		* @param {Point} p The first point
-		* @param {Point} q The second point
-		* @param {Point} r The third point
-		* @param {Point} s The fourth point
-		* @param {Point} t The fifth point
-		* @return {Conic}
-		*/
-		static throughFivePoints(p: MathLib.Point, q: MathLib.Point, r: MathLib.Point, s: MathLib.Point, t: MathLib.Point): Conic;
 	}
 
 
@@ -2227,6 +2227,37 @@ declare var Integer: Ring;
 		public subdeg: number;
 		constructor(polynomial: any);
 		/**
+		* Interpolates points.
+		*
+		* @return {Polynomial}
+		*/
+		static interpolation(a: any, b: any): Polynomial;
+		/**
+		* Returns the one polynomial
+		* @static
+		*/
+		static one: Polynomial;
+		/**
+		* Calculates the regression line for some points
+		*
+		* @param {array} x The x values
+		* @param {array} y The y values
+		* @return {Polynomial}
+		*/
+		static regression(x: any, y: any): Polynomial;
+		/**
+		* Returns a polynomial with the specified roots
+		*
+		* @param {array|Set} zeros The wished zeros.
+		* @return {Polynomial}
+		*/
+		static roots(zeros: any): Polynomial;
+		/**
+		* Returns the zero polynomial
+		* @static
+		*/
+		static zero: Polynomial;
+		/**
 		* Compares two polynomials.
 		*
 		* @param {Polynomial} p The polynomial to compare
@@ -2267,12 +2298,6 @@ declare var Integer: Ring;
 		*/
 		public integrate(n?: number): Polynomial;
 		/**
-		* Interpolates points.
-		*
-		* @return {Polynomial}
-		*/
-		static interpolation(a: any, b: any): Polynomial;
-		/**
 		* Decides if two polynomials are equal.
 		*
 		* @param {Polynomial} p The polynomial to compare.
@@ -2293,32 +2318,12 @@ declare var Integer: Ring;
 		*/
 		public negative(): Polynomial;
 		/**
-		* Returns the one polynomial
-		* @static
-		*/
-		static one: Polynomial;
-		/**
 		* Adds a number or a polynomial
 		*
 		* @param {number|Polynomial} a The number or polynomial to add to the current polynomial
 		* @return {Polynomial}
 		*/
 		public plus(a: any): Polynomial;
-		/**
-		* Calculates the regression line for some points
-		*
-		* @param {array} x The x values
-		* @param {array} y The y values
-		* @return {Polynomial}
-		*/
-		static regression(x: any, y: any): Polynomial;
-		/**
-		* Returns a polynomial with the specified roots
-		*
-		* @param {array|Set} zeros The wished zeros.
-		* @return {Polynomial}
-		*/
-		static roots(zeros: any): Polynomial;
 		/**
 		* Works like the Array.prototype.slice function
 		*
@@ -2375,11 +2380,6 @@ declare var Integer: Ring;
 		* @return {number|Complex|Matrix}
 		*/
 		public valueAt(x: any): any;
-		/**
-		* Returns the zero polynomial
-		* @static
-		*/
-		static zero: Polynomial;
 	}
 
 
@@ -2550,6 +2550,24 @@ declare var Rational: Field;
 		public card: number;
 		constructor(elements: any);
 		/**
+		* Function to create the intersect, union, without, xor methods
+		*
+		* @param {boolean} left Should the elements which are only in the left set be included in the result.
+		* @param {boolean} both Should the elements which are in both sets be included in the result.
+		* @param {boolean} right Should the elements which are only in the right set be included in the result.
+		* @return {function}
+		*/
+		static createSetOperation: (left: any, both: any, right: any) => (a: any) => Set;
+		/**
+		* Creates a set containing the numbers from a start value to a end value.
+		*
+		* @param {number} start The number to start from
+		* @param {number} end The number to end with
+		* @param {number} step The stepsize (default = 1)
+		* @return {Set}
+		*/
+		static fromTo: (start: number, end: number, step?: number) => Set;
+		/**
 		* Compare function for sets
 		*
 		* @param {Set} x The set to compare the current set to
@@ -2578,15 +2596,6 @@ declare var Rational: Field;
 		* Works like the Array.prototype.forEach function
 		*/
 		public forEach(...args: any[]): void;
-		/**
-		* Creates a set containing the numbers from a start value to a end value.
-		*
-		* @param {number} start The number to start from
-		* @param {number} end The number to end with
-		* @param {number} step The stepsize (default = 1)
-		* @return {Set}
-		*/
-		static fromTo: (start: number, end: number, step?: number) => Set;
 		/**
 		* Works like the Array.prototype.indexOf function
 		*
@@ -2670,15 +2679,6 @@ declare var Rational: Field;
 		* @return {Set}
 		*/
 		public remove(element: any): Set;
-		/**
-		* Function to create the intersect, union, without, xor methods
-		*
-		* @param {boolean} left Should the elements which are only in the left set be included in the result.
-		* @param {boolean} both Should the elements which are in both sets be included in the result.
-		* @param {boolean} right Should the elements which are only in the right set be included in the result.
-		* @return {function}
-		*/
-		static createSetOperation: (left: any, both: any, right: any) => (a: any) => Set;
 		/**
 		* Works like the Array.prototype.slice function
 		*

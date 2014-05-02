@@ -52,6 +52,98 @@
 			}(polynomial));
 		}
 		/**
+		* Interpolates points.
+		*
+		* @return {Polynomial}
+		*/
+		Polynomial.interpolation = function (a, b) {
+			var basisPolynomial, interpolant = new MathLib.Polynomial([0]), n = a.length, i, j;
+
+			if (arguments.length === 2) {
+				a = a.map(function (x, i) {
+					return [x, b[i]];
+				});
+			}
+
+			for (i = 0; i < n; i++) {
+				basisPolynomial = new MathLib.Polynomial([1]);
+				for (j = 0; j < n; j++) {
+					if (i !== j) {
+						basisPolynomial = basisPolynomial.times(new MathLib.Polynomial([-a[j][0] / (a[i][0] - a[j][0]), 1 / (a[i][0] - a[j][0])]));
+					}
+				}
+				interpolant = interpolant.plus(basisPolynomial.times(a[i][1]));
+			}
+			return interpolant;
+		};
+
+		/**
+		* Calculates the regression line for some points
+		*
+		* @param {array} x The x values
+		* @param {array} y The y values
+		* @return {Polynomial}
+		*/
+		Polynomial.regression = function (x, y) {
+			var length = x.length, xy = 0, xi = 0, yi = 0, x2 = 0, m, c, i;
+
+			if (arguments.length === 2) {
+				for (i = 0; i < length; i++) {
+					xy += x[i] * y[i];
+					xi += x[i];
+					yi += y[i];
+					x2 += x[i] * x[i];
+				}
+			}
+			else {
+				for (i = 0; i < length; i++) {
+					xy += x[i][0] * x[i][1];
+					xi += x[i][0];
+					yi += x[i][1];
+					x2 += x[i][0] * x[i][0];
+				}
+			}
+
+			m = (length * xy - xi * yi) / (length * x2 - xi * xi);
+			c = (yi * x2 - xy * xi) / (length * x2 - xi * xi);
+			return new MathLib.Polynomial([c, m]);
+		};
+
+		/**
+		* Returns a polynomial with the specified roots
+		*
+		* @param {array|Set} zeros The wished zeros.
+		* @return {Polynomial}
+		*/
+		Polynomial.roots = function (zeros) {
+			var elemSymPoly, i, ii, coef = [];
+
+			if (MathLib.type(zeros) === 'array') {
+				zeros = new MathLib.Set(zeros);
+			}
+
+			elemSymPoly = zeros.powerset();
+			for (i = 0, ii = zeros.card; i < ii; i++) {
+				coef[i] = 0;
+			}
+
+			// Vieta's theorem
+			elemSymPoly.slice(1).forEach(function (x) {
+				coef[ii - x.card] = MathLib.plus(coef[ii - x.card], x.times());
+			});
+
+			coef = coef.map(function (x, i) {
+				if ((ii - i) % 2) {
+					return MathLib.negative(x);
+				}
+				return x;
+			});
+
+			coef.push(1);
+			return new MathLib.Polynomial(coef);
+		};
+
+		/**
 		* Compares two polynomials.
 		*
 		* @param {Polynomial} p The polynomial to compare
@@ -150,32 +242,6 @@
 		};
 
 		/**
-		* Interpolates points.
-		*
-		* @return {Polynomial}
-		*/
-		Polynomial.interpolation = function (a, b) {
-			var basisPolynomial, interpolant = new MathLib.Polynomial([0]), n = a.length, i, j;
-
-			if (arguments.length === 2) {
-				a = a.map(function (x, i) {
-					return [x, b[i]];
-				});
-			}
-
-			for (i = 0; i < n; i++) {
-				basisPolynomial = new MathLib.Polynomial([1]);
-				for (j = 0; j < n; j++) {
-					if (i !== j) {
-						basisPolynomial = basisPolynomial.times(new MathLib.Polynomial([-a[j][0] / (a[i][0] - a[j][0]), 1 / (a[i][0] - a[j][0])]));
-					}
-				}
-				interpolant = interpolant.plus(basisPolynomial.times(a[i][1]));
-			}
-			return interpolant;
-		};
-
-		/**
 		* Decides if two polynomials are equal.
 		*
 		* @param {Polynomial} p The polynomial to compare.
@@ -234,72 +300,6 @@
 				plus = plus.concat((this.deg > a.deg ? this : a).slice(i));
 			}
 			return new MathLib.Polynomial(plus);
-		};
-
-		/**
-		* Calculates the regression line for some points
-		*
-		* @param {array} x The x values
-		* @param {array} y The y values
-		* @return {Polynomial}
-		*/
-		Polynomial.regression = function (x, y) {
-			var length = x.length, xy = 0, xi = 0, yi = 0, x2 = 0, m, c, i;
-
-			if (arguments.length === 2) {
-				for (i = 0; i < length; i++) {
-					xy += x[i] * y[i];
-					xi += x[i];
-					yi += y[i];
-					x2 += x[i] * x[i];
-				}
-			}
-			else {
-				for (i = 0; i < length; i++) {
-					xy += x[i][0] * x[i][1];
-					xi += x[i][0];
-					yi += x[i][1];
-					x2 += x[i][0] * x[i][0];
-				}
-			}
-
-			m = (length * xy - xi * yi) / (length * x2 - xi * xi);
-			c = (yi * x2 - xy * xi) / (length * x2 - xi * xi);
-			return new MathLib.Polynomial([c, m]);
-		};
-
-		/**
-		* Returns a polynomial with the specified roots
-		*
-		* @param {array|Set} zeros The wished zeros.
-		* @return {Polynomial}
-		*/
-		Polynomial.roots = function (zeros) {
-			var elemSymPoly, i, ii, coef = [];
-
-			if (MathLib.type(zeros) === 'array') {
-				zeros = new MathLib.Set(zeros);
-			}
-
-			elemSymPoly = zeros.powerset();
-			for (i = 0, ii = zeros.card; i < ii; i++) {
-				coef[i] = 0;
-			}
-
-			// Vieta's theorem
-			elemSymPoly.slice(1).forEach(function (x) {
-				coef[ii - x.card] = MathLib.plus(coef[ii - x.card], x.times());
-			});
-
-			coef = coef.map(function (x, i) {
-				if ((ii - i) % 2) {
-					return MathLib.negative(x);
-				}
-				return x;
-			});
-
-			coef.push(1);
-			return new MathLib.Polynomial(coef);
 		};
 
 		/**
