@@ -151,22 +151,22 @@
 var r = new MathLib.Rational(2, 3);
 </pre></div> </div>
           <pre><code class="language-javascript">var Rational = (function () {
-		function Rational (numerator, denominator) {
-			if (typeof denominator === 'undefined') { denominator = 1; }
-			this.type = 'rational';
-			if (MathLib.isZero(denominator)) {
-				MathLib.error({message: 'The denominator cannot be zero.', method: 'Rational.constructor'});
-				throw 'The denominator cannot be zero.';
-			}
+function Rational(numerator, denominator) {
+    if (typeof denominator === &quot;undefined&quot;) { denominator = 1; }
+    this.type = 'rational';
+    if (MathLib.isZero(denominator)) {
+        MathLib.error({ message: 'The denominator cannot be zero.', method: 'Rational.constructor' });
+        throw 'The denominator cannot be zero.';
+    }
 
-			if ((typeof denominator === 'number' &amp;&amp; denominator &lt; 0) || (denominator.type === 'integer' &amp;&amp; denominator.sign === '-')) {
-				numerator = MathLib.negative(numerator);
-				denominator = MathLib.negative(denominator);
-			}
+    if ((typeof denominator === 'number' &amp;&amp; denominator &lt; 0) || (denominator.type === 'integer' &amp;&amp; denominator.sign === '-')) {
+        numerator = MathLib.negative(numerator);
+        denominator = MathLib.negative(denominator);
+    }
 
-			this.numerator = numerator;
-			this.denominator = denominator;
-		}</code></pre>
+    this.numerator = numerator;
+    this.denominator = denominator;
+}</code></pre>
           <section id="toContentMathML">
             <h1><a href="http://mathlib.de/en/docs/Rational/toContentMathML">toContentMathML</a>
             </h1>
@@ -177,12 +177,12 @@ var r = new MathLib.Rational(2, 3);
           </section>
           <div class="description"><p>A content MathML string representation</p> </div>
           <pre><code class="language-javascript">Rational.toContentMathML = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			if (options.strict) {
-				return '&lt;csymbol cd=&quot;setname1&quot;&gt;Q&lt;/csymbol&gt;';
-			}
-			return '&lt;rationals/&gt;';
-		};</code></pre>
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    if (options.strict) {
+        return '&lt;csymbol cd=&quot;setname1&quot;&gt;Q&lt;/csymbol&gt;';
+    }
+    return '&lt;rationals/&gt;';
+};</code></pre>
           <section id="toLaTeX">
             <h1><a href="http://mathlib.de/en/docs/Rational/toLaTeX">toLaTeX</a>
             </h1>
@@ -193,8 +193,8 @@ var r = new MathLib.Rational(2, 3);
           </section>
           <div class="description"><p>A LaTeX string representation</p> </div>
           <pre><code class="language-javascript">Rational.toLaTeX = function () {
-			return 'Rational Field $\\mathbb{Q}$';
-		};</code></pre>
+    return 'Rational Field $\\mathbb{Q}$';
+};</code></pre>
           <section id="toMathML">
             <h1><a href="http://mathlib.de/en/docs/Rational/toMathML">toMathML</a>
             </h1>
@@ -205,8 +205,8 @@ var r = new MathLib.Rational(2, 3);
           </section>
           <div class="description"><p>A presentation MathML string representation</p> </div>
           <pre><code class="language-javascript">Rational.toMathML = function () {
-			return '&lt;mrow&gt;&lt;mtext&gt;Rational Field&lt;/mtext&gt;&lt;mi mathvariant=&quot;double-struck&quot;&gt;Q&lt;/mi&gt;&lt;/mrow&gt;';
-		};</code></pre>
+    return '&lt;mrow&gt;&lt;mtext&gt;Rational Field&lt;/mtext&gt;&lt;mi mathvariant=&quot;double-struck&quot;&gt;Q&lt;/mi&gt;&lt;/mrow&gt;';
+};</code></pre>
           <section id="toString">
             <h1><a href="http://mathlib.de/en/docs/Rational/toString">toString</a>
             </h1>
@@ -217,8 +217,8 @@ var r = new MathLib.Rational(2, 3);
           </section>
           <div class="description"><p>Custom toString function</p> </div>
           <pre><code class="language-javascript">Rational.toString = function () {
-			return 'Rational Field ℚ';
-		};</code></pre>
+    return 'Rational Field ℚ';
+};</code></pre>
           <section id="coerceTo">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/coerceTo">coerceTo</a>
             </h1>
@@ -229,26 +229,26 @@ var r = new MathLib.Rational(2, 3);
           </section>
           <div class="description"><p>Coerces the rational to some other data type</p> </div>
           <pre><code class="language-javascript">Rational.prototype.coerceTo = function (type) {
-			if (type === 'integer') {
-				if (this.denominator === 1) {
-					return new MathLib.Integer(this.numerator);
-				}
-				// TODO: coercion error
-			}
+    if (type === 'integer') {
+        if (this.denominator === 1) {
+            return new MathLib.Integer(this.numerator);
+        }
+        // TODO: coercion error
+    }
 
-			if (type === 'rational') {
-				return this.copy();
-			}
+    if (type === 'rational') {
+        return this.copy();
+    }
 
-			if (type === 'number') {
-				return this.numerator / this.denominator;
-			}
+    if (type === 'number') {
+        return this.numerator / this.denominator;
+    }
 
-			if (type === 'complex') {
-				// return new MathLib.Complex(this, new MathLib.Rational(0));
-				return new MathLib.Complex(this, 0);
-			}
-		};</code></pre>
+    if (type === 'complex') {
+        // return new MathLib.Complex(this, new MathLib.Rational(0));
+        return new MathLib.Complex(this, 0);
+    }
+};</code></pre>
           <section id="compare">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/compare">compare</a>
             </h1>
@@ -276,8 +276,8 @@ var r = new MathLib.Rational(2, 3);
           </table>
           <div class="description"><p>Compares two rational numbers</p> </div>
           <pre><code class="language-javascript">Rational.prototype.compare = function (rational) {
-			return MathLib.sign(this.numerator * rational.denominator - this.denominator * rational.numerator);
-		};</code></pre>
+    return MathLib.sign(this.numerator * rational.denominator - this.denominator * rational.numerator);
+};</code></pre>
           <section id="copy">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/copy">copy</a>
             </h1>
@@ -288,8 +288,8 @@ var r = new MathLib.Rational(2, 3);
           </section>
           <div class="description"><p>Copy the rational number</p> </div>
           <pre><code class="language-javascript">Rational.prototype.copy = function () {
-			return new MathLib.Rational(MathLib.copy(this.numerator), MathLib.copy(this.denominator));
-		};</code></pre>
+    return new MathLib.Rational(MathLib.copy(this.numerator), MathLib.copy(this.denominator));
+};</code></pre>
           <section id="divide">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/divide">divide</a>
             </h1>
@@ -317,16 +317,14 @@ var r = new MathLib.Rational(2, 3);
           </table>
           <div class="description"><p>Divides rational numbers</p> </div>
           <pre><code class="language-javascript">Rational.prototype.divide = function (divisor) {
-			if (divisor.type === 'rational') {
-				return new MathLib.Rational(MathLib.times(this.numerator, divisor.denominator), MathLib.times(this.denominator, divisor.numerator));
-			}
-			else if (typeof divisor === 'number') {
-				return new MathLib.Rational(this.numerator, MathLib.times(this.denominator, divisor));
-			}
-			else {
-				return divisor.inverse().times(this);
-			}
-		};</code></pre>
+    if (divisor.type === 'rational') {
+        return new MathLib.Rational(MathLib.times(this.numerator, divisor.denominator), MathLib.times(this.denominator, divisor.numerator));
+    } else if (typeof divisor === 'number') {
+        return new MathLib.Rational(this.numerator, MathLib.times(this.denominator, divisor));
+    } else {
+        return divisor.inverse().times(this);
+    }
+};</code></pre>
           <section id="inverse">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/inverse">inverse</a>
             </h1>
@@ -337,10 +335,10 @@ var r = new MathLib.Rational(2, 3);
           </section>
           <div class="description"><p>Calculates the inverse of a rational number</p> </div>
           <pre><code class="language-javascript">Rational.prototype.inverse = function () {
-			if (!MathLib.isZero(this.numerator)) {
-				return new MathLib.Rational(this.denominator, this.numerator);
-			}
-		};</code></pre>
+    if (!MathLib.isZero(this.numerator)) {
+        return new MathLib.Rational(this.denominator, this.numerator);
+    }
+};</code></pre>
           <section id="isEqual">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/isEqual">isEqual</a>
             </h1>
@@ -368,13 +366,12 @@ var r = new MathLib.Rational(2, 3);
           </table>
           <div class="description"><p>Checks if the rational number is equal to an other number</p> </div>
           <pre><code class="language-javascript">Rational.prototype.isEqual = function (n) {
-			if (n.type !== 'rational') {
-				return MathLib.isEqual.apply(null, MathLib.coerce(this, n));
-			}
-			else {
-				return MathLib.isEqual(MathLib.times(this.numerator, n.denominator), MathLib.times(this.denominator, n.numerator));
-			}
-		};</code></pre>
+    if (n.type !== 'rational') {
+        return MathLib.isEqual.apply(null, MathLib.coerce(this, n));
+    } else {
+        return MathLib.isEqual(MathLib.times(this.numerator, n.denominator), MathLib.times(this.denominator, n.numerator));
+    }
+};</code></pre>
           <section id="isZero">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/isZero">isZero</a>
             </h1>
@@ -385,8 +382,8 @@ var r = new MathLib.Rational(2, 3);
           </section>
           <div class="description"><p>Checks if the rational number is zero</p> </div>
           <pre><code class="language-javascript">Rational.prototype.isZero = function () {
-			return MathLib.isZero(this.numerator);
-		};</code></pre>
+    return MathLib.isZero(this.numerator);
+};</code></pre>
           <section id="minus">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/minus">minus</a>
             </h1>
@@ -414,13 +411,12 @@ var r = new MathLib.Rational(2, 3);
           </table>
           <div class="description"><p>Subtracts rational numbers</p> </div>
           <pre><code class="language-javascript">Rational.prototype.minus = function (subtrahend) {
-			if (subtrahend.type !== 'rational') {
-				return MathLib.minus.apply(null, MathLib.coerce(this, subtrahend));
-			}
-			else {
-				return new MathLib.Rational(MathLib.minus(MathLib.times(this.numerator, subtrahend.denominator), MathLib.times(this.denominator, subtrahend.numerator)), MathLib.times(this.denominator, subtrahend.denominator));
-			}
-		};</code></pre>
+    if (subtrahend.type !== 'rational') {
+        return MathLib.minus.apply(null, MathLib.coerce(this, subtrahend));
+    } else {
+        return new MathLib.Rational(MathLib.minus(MathLib.times(this.numerator, subtrahend.denominator), MathLib.times(this.denominator, subtrahend.numerator)), MathLib.times(this.denominator, subtrahend.denominator));
+    }
+};</code></pre>
           <section id="negative">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/negative">negative</a>
             </h1>
@@ -431,8 +427,8 @@ var r = new MathLib.Rational(2, 3);
           </section>
           <div class="description"><p>Calculates the negative of a rational number</p> </div>
           <pre><code class="language-javascript">Rational.prototype.negative = function () {
-			return new MathLib.Rational(-this.numerator, this.denominator);
-		};</code></pre>
+    return new MathLib.Rational(-this.numerator, this.denominator);
+};</code></pre>
           <section id="plus">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/plus">plus</a>
             </h1>
@@ -460,13 +456,12 @@ var r = new MathLib.Rational(2, 3);
           </table>
           <div class="description"><p>Adds rational numbers</p> </div>
           <pre><code class="language-javascript">Rational.prototype.plus = function (summand) {
-			if (summand.type !== 'rational') {
-				return MathLib.plus.apply(null, MathLib.coerce(this, summand));
-			}
-			else {
-				return new MathLib.Rational(MathLib.plus(MathLib.times(this.denominator, summand.numerator), MathLib.times(this.numerator, summand.denominator)), MathLib.times(this.denominator, summand.denominator));
-			}
-		};</code></pre>
+    if (summand.type !== 'rational') {
+        return MathLib.plus.apply(null, MathLib.coerce(this, summand));
+    } else {
+        return new MathLib.Rational(MathLib.plus(MathLib.times(this.denominator, summand.numerator), MathLib.times(this.numerator, summand.denominator)), MathLib.times(this.denominator, summand.denominator));
+    }
+};</code></pre>
           <section id="reduce">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/reduce">reduce</a>
             </h1>
@@ -477,9 +472,9 @@ var r = new MathLib.Rational(2, 3);
           </section>
           <div class="description"><p>Reduces the rational number</p> </div>
           <pre><code class="language-javascript">Rational.prototype.reduce = function () {
-			var gcd = MathLib.sign(this.denominator) * MathLib.gcd([this.numerator, this.denominator]);
-			return new MathLib.Rational(this.numerator / gcd, this.denominator / gcd);
-		};</code></pre>
+    var gcd = MathLib.sign(this.denominator) * MathLib.gcd([this.numerator, this.denominator]);
+    return new MathLib.Rational(this.numerator / gcd, this.denominator / gcd);
+};</code></pre>
           <section id="times">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/times">times</a>
             </h1>
@@ -507,16 +502,14 @@ var r = new MathLib.Rational(2, 3);
           </table>
           <div class="description"><p>Multiplies rational numbers</p> </div>
           <pre><code class="language-javascript">Rational.prototype.times = function (factor) {
-			if (factor.type === 'rational') {
-				return new MathLib.Rational(MathLib.times(this.numerator, factor.numerator), MathLib.times(this.denominator, factor.denominator));
-			}
-			else if (typeof factor === 'number') {
-				return new MathLib.Rational(MathLib.times(this.numerator, factor), this.denominator);
-			}
-			else {
-				return factor.times(this);
-			}
-		};</code></pre>
+    if (factor.type === 'rational') {
+        return new MathLib.Rational(MathLib.times(this.numerator, factor.numerator), MathLib.times(this.denominator, factor.denominator));
+    } else if (typeof factor === 'number') {
+        return new MathLib.Rational(MathLib.times(this.numerator, factor), this.denominator);
+    } else {
+        return factor.times(this);
+    }
+};</code></pre>
           <section id="toContentMathML">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/toContentMathML">toContentMathML</a>
             </h1>
@@ -544,17 +537,16 @@ var r = new MathLib.Rational(2, 3);
           </table>
           <div class="description"><p>Returns the Content MathML representation of the rational number</p> </div>
           <pre><code class="language-javascript">Rational.prototype.toContentMathML = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			var base;
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    var base;
 
-			if (options.strict) {
-				return '&lt;apply&gt;&lt;csymbol cd=&quot;nums1&quot;&gt;rational&lt;/csymbol&gt;' + MathLib.toContentMathML(this.numerator, options) + MathLib.toContentMathML(this.denominator, options) + '&lt;/apply&gt;';
-			}
-			else {
-				base = (options.base || 10);
-				return '&lt;cn type=&quot;rational&quot;' + ((base !== 10) ? ' base=&quot;' + base + '&quot;' : '') + '&gt;' + MathLib.toString(this.numerator, {base: base}) + '&lt;sep/&gt;' + MathLib.toString(this.denominator, {base: base}) + '&lt;/cn&gt;';
-			}
-		};</code></pre>
+    if (options.strict) {
+        return '&lt;apply&gt;&lt;csymbol cd=&quot;nums1&quot;&gt;rational&lt;/csymbol&gt;' + MathLib.toContentMathML(this.numerator, options) + MathLib.toContentMathML(this.denominator, options) + '&lt;/apply&gt;';
+    } else {
+        base = (options.base || 10);
+        return '&lt;cn type=&quot;rational&quot;' + ((base !== 10) ? ' base=&quot;' + base + '&quot;' : '') + '&gt;' + MathLib.toString(this.numerator, { base: base }) + '&lt;sep/&gt;' + MathLib.toString(this.denominator, { base: base }) + '&lt;/cn&gt;';
+    }
+};</code></pre>
           <section id="toLaTeX">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/toLaTeX">toLaTeX</a>
             </h1>
@@ -582,25 +574,24 @@ var r = new MathLib.Rational(2, 3);
           </table>
           <div class="description"><p>Returns the LaTeX representation of the rational number</p> </div>
           <pre><code class="language-javascript">Rational.prototype.toLaTeX = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			var numerator, option, str = '', passOptions = {};
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    var numerator, option, str = '', passOptions = {};
 
-			for (option in options) {
-				if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
-					passOptions[option] = options[option];
-				}
-			}
+    for (option in options) {
+        if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
+            passOptions[option] = options[option];
+        }
+    }
 
-			if (options.sign) {
-				str = MathLib.toString(this.numerator, {sign: true}).slice(0, 1);
-				numerator = MathLib.toLaTeX(MathLib.abs(this.numerator), passOptions);
-			}
-			else {
-				numerator = MathLib.toLaTeX(this.numerator, passOptions);
-			}
+    if (options.sign) {
+        str = MathLib.toString(this.numerator, { sign: true }).slice(0, 1);
+        numerator = MathLib.toLaTeX(MathLib.abs(this.numerator), passOptions);
+    } else {
+        numerator = MathLib.toLaTeX(this.numerator, passOptions);
+    }
 
-			return str + '\\frac{' + numerator + '}{' + MathLib.toLaTeX(this.denominator, passOptions) + '}';
-		};</code></pre>
+    return str + '\\frac{' + numerator + '}{' + MathLib.toLaTeX(this.denominator, passOptions) + '}';
+};</code></pre>
           <section id="toMathML">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/toMathML">toMathML</a>
             </h1>
@@ -628,25 +619,24 @@ var r = new MathLib.Rational(2, 3);
           </table>
           <div class="description"><p>Returns the MathML representation of the rational number</p> </div>
           <pre><code class="language-javascript">Rational.prototype.toMathML = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			var numerator, option, str = '', passOptions = {};
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    var numerator, option, str = '', passOptions = {};
 
-			for (option in options) {
-				if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
-					passOptions[option] = options[option];
-				}
-			}
+    for (option in options) {
+        if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
+            passOptions[option] = options[option];
+        }
+    }
 
-			if (options.sign) {
-				str = '&lt;mo&gt;' + MathLib.toString(this.numerator, {sign: true}).slice(0, 1) + '&lt;/mo&gt;';
-				numerator = MathLib.toMathML(MathLib.abs(this.numerator), passOptions);
-			}
-			else {
-				numerator = MathLib.toMathML(this.numerator, passOptions);
-			}
+    if (options.sign) {
+        str = '&lt;mo&gt;' + MathLib.toString(this.numerator, { sign: true }).slice(0, 1) + '&lt;/mo&gt;';
+        numerator = MathLib.toMathML(MathLib.abs(this.numerator), passOptions);
+    } else {
+        numerator = MathLib.toMathML(this.numerator, passOptions);
+    }
 
-			return str + '&lt;mfrac&gt;' + numerator + MathLib.toMathML(this.denominator, passOptions) + '&lt;/mfrac&gt;';
-		};</code></pre>
+    return str + '&lt;mfrac&gt;' + numerator + MathLib.toMathML(this.denominator, passOptions) + '&lt;/mfrac&gt;';
+};</code></pre>
           <section id="toString">
             <h1><a href="http://mathlib.de/en/docs/Rational/prototype/toString">toString</a>
             </h1>
@@ -674,20 +664,20 @@ var r = new MathLib.Rational(2, 3);
           </table>
           <div class="description"><p>Custom toString function</p> </div>
           <pre><code class="language-javascript">Rational.prototype.toString = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			var option, passOptions = {};
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    var option, passOptions = {};
 
-			for (option in options) {
-				if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
-					passOptions[option] = options[option];
-				}
-			}
+    for (option in options) {
+        if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
+            passOptions[option] = options[option];
+        }
+    }
 
-			return MathLib.toString(this.numerator, options) + '/' + MathLib.toString(this.denominator, passOptions);
-		};
-		return Rational;
-	})();
-	MathLib.Rational = Rational;
+    return MathLib.toString(this.numerator, options) + '/' + MathLib.toString(this.denominator, passOptions);
+};
+return Rational;
+    })();
+    MathLib.Rational = Rational;
 })(MathLib || (MathLib = {}));</code></pre>
         </div>
       </div>

@@ -112,115 +112,114 @@
           <div class="description"><p>@module MathLib</p> </div>
           <pre><code class="language-javascript">var MathLib;
 (function (MathLib) {
-	'use strict';
-	MathLib.version = '0.7.2';
-	MathLib.apery = 1.2020569031595942;
-	MathLib.e = Math.E;
+    'use strict';
+    MathLib.version = '0.7.2';
+    MathLib.apery = 1.2020569031595942;
+    MathLib.e = Math.E;
 
-	// Number.EPSILON is probably coming in ES6
-	// (see section 20.1.2.1 in the current draft)
-	MathLib.epsilon = Number.EPSILON || (function () {
-		var next, result;
-		for (next = 1; 1 + next !== 1; next = next / 2) {
-			result = next;
-		}
-		return result;
-	}());
-	MathLib.eulerMascheroni = 0.5772156649015329;
-	MathLib.goldenRatio = 1.618033988749895;
-	MathLib.pi = Math.PI;
+    // Number.EPSILON is probably coming in ES6
+    // (see section 20.1.2.1 in the current draft)
+    MathLib.epsilon = Number.EPSILON || (function () {
+var next, result;
+for (next = 1; 1 + next !== 1; next = next / 2) {
+    result = next;
+}
+return result;
+    }());
+    MathLib.eulerMascheroni = 0.5772156649015329;
+    MathLib.goldenRatio = 1.618033988749895;
+    MathLib.pi = Math.PI;
 
-	MathLib.isNative = function (fn) {
-		return fn &amp;&amp; /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
-	};
+    MathLib.isNative = function (fn) {
+return fn &amp;&amp; /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
+    };
 
-	MathLib.argToRgba = function (h) {
-		var r, g, b;
-		h = -h / (2 * Math.PI);
+    MathLib.argToRgba = function (h) {
+var r, g, b;
+h = -h / (2 * Math.PI);
 
-		function hue2rgb (t) {
-			if (t &lt; 0) {
-				t += 1;
-			}
-			if (t &gt; 1) {
-				t -= 1;
-			}
-			if (t &lt; 1 / 6) {
-				return 6 * t;
-			}
-			if (t &lt; 1 / 2) {
-				return 1;
-			}
-			if (t &lt; 2 / 3) {
-				return 4 - 6 * t;
-			}
-			return 0;
-		}
+function hue2rgb(t) {
+    if (t &lt; 0) {
+        t += 1;
+    }
+    if (t &gt; 1) {
+        t -= 1;
+    }
+    if (t &lt; 1 / 6) {
+        return 6 * t;
+    }
+    if (t &lt; 1 / 2) {
+        return 1;
+    }
+    if (t &lt; 2 / 3) {
+        return 4 - 6 * t;
+    }
+    return 0;
+}
 
-		r = hue2rgb(h + 1 / 3);
-		g = hue2rgb(h);
-		b = hue2rgb(h - 1 / 3);
+r = hue2rgb(h + 1 / 3);
+g = hue2rgb(h);
+b = hue2rgb(h - 1 / 3);
 
-		return [r * 255, g * 255, b * 255, 255];
-	};
+return [r * 255, g * 255, b * 255, 255];
+    };
 
-	MathLib.extendObject = function (dest, src) {
-		for (var prop in src) {
-			if (typeof dest[prop] === 'object' &amp;&amp; typeof src[prop] === 'object') {
-				dest[prop] = MathLib.extendObject(dest[prop], src[prop]);
-			}
-			else {
-				dest[prop] = src[prop];
-			}
-		}
-		return dest;
-	};
+    MathLib.extendObject = function (dest, src) {
+for (var prop in src) {
+    if (typeof dest[prop] === 'object' &amp;&amp; typeof src[prop] === 'object') {
+        dest[prop] = MathLib.extendObject(dest[prop], src[prop]);
+    } else {
+        dest[prop] = src[prop];
+    }
+}
+return dest;
+    };
 
-	MathLib.colorConvert = function (n) {
-		if (typeof n === 'number') {
-			n = Math.max(Math.min(Math.floor(n), 0xffffff), 0);
-			return '#' + ('00000' + n.toString(16)).slice(-6);
-		}
-		return n;
-	};
+    MathLib.colorConvert = function (n) {
+if (typeof n === 'number') {
+    n = Math.max(Math.min(Math.floor(n), 0xffffff), 0);
+    return '#' + ('00000' + n.toString(16)).slice(-6);
+}
+return n;
+    };
 
-	MathLib.coerceTo = function (obj, type) {
-		if (typeof obj === 'object') {
-			return obj.coerceTo(type);
-		}
+    MathLib.coerceTo = function (obj, type) {
+if (typeof obj === 'object') {
+    return obj.coerceTo(type);
+}
 
-		if (typeof obj === 'number') {
-			if (type === 'integer') {
-				return new MathLib.Integer(obj);
-			}
-			if (type === 'rational') {
-				return new MathLib.Rational(obj);
-			}
-			if (type === 'number') {
-				return obj;
-			}
-			if (type === 'complex') {
-				return new MathLib.Complex(obj);
-			}
-		}
-	};
+if (typeof obj === 'number') {
+    if (type === 'integer') {
+        return new MathLib.Integer(obj);
+    }
+    if (type === 'rational') {
+        return new MathLib.Rational(obj);
+    }
+    if (type === 'number') {
+        return obj;
+    }
+    if (type === 'complex') {
+        return new MathLib.Complex(obj);
+    }
+}
+    };
 
-	MathLib.coerce = function () {
-		var args = [];
-		for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
-			args[_i] = arguments[_i + 0];
-		}
-		var type = function (x) {
-			return x.type || typeof x;
-		}, numberTypes = ['integer', 'rational', 'number', 'complex'], numberType = numberTypes[Math.max.apply(null, args.map(function (x) {
-			return numberTypes.indexOf(type(x));
-		}))];
+    MathLib.coerce = function () {
+var args = [];
+for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
+    args[_i] = arguments[_i + 0];
+}
+var type = function (x) {
+    return x.type || typeof x;
+}, numberTypes = ['integer', 'rational', 'number', 'complex'], numberType = numberTypes[Math.max.apply(null, args.map(function (x) {
+    return numberTypes.indexOf(type(x));
+}))];
 
-		return args.map(function (x) {
-			return MathLib.coerceTo(x, numberType);
-		});
-	};
-	var errors = [], warnings = [];</code></pre>
+return args.map(function (x) {
+    return MathLib.coerceTo(x, numberType);
+});
+    };
+    var errors = [], warnings = [];</code></pre>
           <section id="on">
             <h1><a href="http://mathlib.de/en/docs/MathLib/on">on</a>
             </h1>
@@ -256,13 +255,12 @@
 
 <p>Binds an event handler to an event.</p> </div>
           <pre><code class="language-javascript">MathLib.on = function (type, callback) {
-		if (type === 'error') {
-			errors.push(callback);
-		}
-		else if (type === 'warning') {
-			warnings.push(callback);
-		}
-	};</code></pre>
+if (type === 'error') {
+    errors.push(callback);
+} else if (type === 'warning') {
+    warnings.push(callback);
+}
+    };</code></pre>
           <section id="off">
             <h1><a href="http://mathlib.de/en/docs/MathLib/off">off</a>
             </h1>
@@ -298,17 +296,16 @@
 
 <p>Unbinds an event handler from an event.</p> </div>
           <pre><code class="language-javascript">MathLib.off = function (type, callback) {
-		if (type === 'error') {
-			errors = errors.filter(function (x) {
-				return x !== callback;
-			});
-		}
-		else if (type === 'warning') {
-			warnings = warnings.filter(function (x) {
-				return x !== callback;
-			});
-		}
-	};</code></pre>
+if (type === 'error') {
+    errors = errors.filter(function (x) {
+        return x !== callback;
+    });
+} else if (type === 'warning') {
+    warnings = warnings.filter(function (x) {
+        return x !== callback;
+    });
+}
+    };</code></pre>
           <section id="error">
             <h1><a href="http://mathlib.de/en/docs/MathLib/error">error</a>
             </h1>
@@ -338,10 +335,10 @@
 
 <p>Fires an error event.</p> </div>
           <pre><code class="language-javascript">MathLib.error = function (details) {
-		errors.forEach(function (cb) {
-			cb(details);
-		});
-	};</code></pre>
+errors.forEach(function (cb) {
+    cb(details);
+});
+    };</code></pre>
           <section id="warning">
             <h1><a href="http://mathlib.de/en/docs/MathLib/warning">warning</a>
             </h1>
@@ -371,10 +368,10 @@
 
 <p>Fires a waring event.</p> </div>
           <pre><code class="language-javascript">MathLib.warning = function (details) {
-		warnings.forEach(function (cb) {
-			cb(details);
-		});
-	};</code></pre>
+warnings.forEach(function (cb) {
+    cb(details);
+});
+    };</code></pre>
           <section id="toContentMathML">
             <h1><a href="http://mathlib.de/en/docs/MathLib/toContentMathML">toContentMathML</a>
             </h1>
@@ -408,76 +405,70 @@
           </table>
           <div class="description"><p>A content MathML string representation</p> </div>
           <pre><code class="language-javascript">MathLib.toContentMathML = function (x, options) {
-		if (typeof options === 'undefined') { options = {}; }
-		var base = options.base || 10;
+if (typeof options === &quot;undefined&quot;) { options = {}; }
+var base = options.base || 10;
 
-		if (Array.isArray(x)) {
-			if (options.strict) {
-				return '&lt;apply&gt;&lt;csymbol cd=&quot;list1&quot;&gt;list&lt;/csymbol&gt;' + x.map(function (entry) {
-					return MathLib.toContentMathML(entry, options);
-				}).join('') + '&lt;/apply&gt;';
-			}
-			else {
-				return '&lt;list&gt;' + x.map(function (entry) {
-					return MathLib.toContentMathML(entry, options);
-				}).join('') + '&lt;/list&gt;';
-			}
-		}
+if (Array.isArray(x)) {
+    if (options.strict) {
+        return '&lt;apply&gt;&lt;csymbol cd=&quot;list1&quot;&gt;list&lt;/csymbol&gt;' + x.map(function (entry) {
+            return MathLib.toContentMathML(entry, options);
+        }).join('') + '&lt;/apply&gt;';
+    } else {
+        return '&lt;list&gt;' + x.map(function (entry) {
+            return MathLib.toContentMathML(entry, options);
+        }).join('') + '&lt;/list&gt;';
+    }
+}
 
-		if (typeof x === 'object' &amp;&amp; 'toContentMathML' in x) {
-			return x.toContentMathML(options);
-		}
+if (typeof x === 'object' &amp;&amp; 'toContentMathML' in x) {
+    return x.toContentMathML(options);
+}
 
-		if (typeof x === 'number') {
-			if (MathLib.isNaN(x)) {
-				if (options.strict) {
-					return '&lt;csymbol cd=&quot;nums1&quot;&gt;NaN&lt;/csymbol&gt;';
-				}
-				else {
-					return '&lt;notanumber/&gt;';
-				}
-			}
-			else if (!MathLib.isFinite(x)) {
-				if (x === Infinity) {
-					if (options.strict) {
-						return '&lt;csymbol cd=&quot;nums1&quot;&gt;infinity&lt;/csymbol&gt;';
-					}
-					else {
-						return '&lt;infinity/&gt;';
-					}
-				}
-				else {
-					if (options.strict) {
-						return '&lt;apply&gt;&lt;csymbol cd=&quot;arith1&quot;&gt;times&lt;/csymbol&gt;&lt;cn&gt;-1&lt;/cn&gt;&lt;csymbol cd=&quot;nums1&quot;&gt;infinity&lt;/csymbol&gt;&lt;/apply&gt;';
-					}
-					else {
-						return '&lt;apply&gt;&lt;times/&gt;&lt;cn&gt;-1&lt;/cn&gt;&lt;infinity/&gt;&lt;/apply&gt;';
-					}
-				}
-			}
+if (typeof x === 'number') {
+    if (MathLib.isNaN(x)) {
+        if (options.strict) {
+            return '&lt;csymbol cd=&quot;nums1&quot;&gt;NaN&lt;/csymbol&gt;';
+        } else {
+            return '&lt;notanumber/&gt;';
+        }
+    } else if (!MathLib.isFinite(x)) {
+        if (x === Infinity) {
+            if (options.strict) {
+                return '&lt;csymbol cd=&quot;nums1&quot;&gt;infinity&lt;/csymbol&gt;';
+            } else {
+                return '&lt;infinity/&gt;';
+            }
+        } else {
+            if (options.strict) {
+                return '&lt;apply&gt;&lt;csymbol cd=&quot;arith1&quot;&gt;times&lt;/csymbol&gt;&lt;cn&gt;-1&lt;/cn&gt;&lt;csymbol cd=&quot;nums1&quot;&gt;infinity&lt;/csymbol&gt;&lt;/apply&gt;';
+            } else {
+                return '&lt;apply&gt;&lt;times/&gt;&lt;cn&gt;-1&lt;/cn&gt;&lt;infinity/&gt;&lt;/apply&gt;';
+            }
+        }
+    }
 
-			if (base === 10) {
-				return '&lt;cn type=&quot;double&quot;&gt;' + MathLib.toString(x) + '&lt;/cn&gt;';
-			}
+    if (base === 10) {
+        return '&lt;cn type=&quot;double&quot;&gt;' + MathLib.toString(x) + '&lt;/cn&gt;';
+    }
 
-			if (options.strict) {
-				return '&lt;apply&gt;&lt;csymbol cd=&quot;nums1&quot;&gt;based_float&lt;/csymbol&gt;' + '&lt;cn type=&quot;integer&quot;&gt;' + base + '&lt;/cn&gt;' + '&lt;cs&gt;' + MathLib.toString(x, {base: base}) + '&lt;/cs&gt;' + '&lt;/apply&gt;';
-			}
+    if (options.strict) {
+        return '&lt;apply&gt;&lt;csymbol cd=&quot;nums1&quot;&gt;based_float&lt;/csymbol&gt;' + '&lt;cn type=&quot;integer&quot;&gt;' + base + '&lt;/cn&gt;' + '&lt;cs&gt;' + MathLib.toString(x, { base: base }) + '&lt;/cs&gt;' + '&lt;/apply&gt;';
+    }
 
-			return '&lt;cn type=&quot;real&quot; base=&quot;' + base + '&quot;&gt;' + MathLib.toString(x, {base: base}) + '&lt;/cn&gt;';
-		}
+    return '&lt;cn type=&quot;real&quot; base=&quot;' + base + '&quot;&gt;' + MathLib.toString(x, { base: base }) + '&lt;/cn&gt;';
+}
 
-		if (typeof x === 'boolean') {
-			if (options.strict) {
-				return '&lt;csymbol cd=&quot;logic1&quot;&gt;' + x + '&lt;/csymbol&gt;';
-			}
-			return '&lt;' + x + '/&gt;';
-		}</code></pre>
+if (typeof x === 'boolean') {
+    if (options.strict) {
+        return '&lt;csymbol cd=&quot;logic1&quot;&gt;' + x + '&lt;/csymbol&gt;';
+    }
+    return '&lt;' + x + '/&gt;';
+}</code></pre>
           <div class="description"><p>istanbul ignore else</p> </div>
           <pre><code class="language-javascript">if (typeof x === 'string') {
-			return '&lt;cs&gt;' + x + '&lt;/cs&gt;';
-		}
-	};</code></pre>
+    return '&lt;cs&gt;' + x + '&lt;/cs&gt;';
+}
+    };</code></pre>
           <section id="toLaTeX">
             <h1><a href="http://mathlib.de/en/docs/MathLib/toLaTeX">toLaTeX</a>
             </h1>
@@ -511,52 +502,50 @@
           </table>
           <div class="description"><p>A LaTeX string representation</p> </div>
           <pre><code class="language-javascript">MathLib.toLaTeX = function (x, options) {
-		if (typeof options === 'undefined') { options = {}; }
-		var base = options.base || 10, str = MathLib.toString(x, {base: base, sign: options.sign}), stringToLaTeX = function (str) {
-			return str.replace(/\\/g, '\\textbackslash').replace(/#/g, '\\#').replace(/\$/g, '\\$').replace(/%/g, '\\%').replace(/&amp;/g, '\\&amp;').replace(/_/g, '\\_').replace(/\{/g, '\\{').replace(/\}/g, '\\}').replace(/\^/g, '\\^{}').replace(/\\textbackslash/g, '\\textbackslash{}').replace(/~/g, '\\~{}').replace(/\&quot;/g, '\\texttt{&quot;}').replace(/'/g, '{\\ttfamily\\char\'15}');
-		};
+if (typeof options === &quot;undefined&quot;) { options = {}; }
+var base = options.base || 10, str = MathLib.toString(x, { base: base, sign: options.sign }), stringToLaTeX = function (str) {
+    return str.replace(/\\/g, '\\textbackslash').replace(/#/g, '\\#').replace(/\$/g, '\\$').replace(/%/g, '\\%').replace(/&amp;/g, '\\&amp;').replace(/_/g, '\\_').replace(/\{/g, '\\{').replace(/\}/g, '\\}').replace(/\^/g, '\\^{}').replace(/\\textbackslash/g, '\\textbackslash{}').replace(/~/g, '\\~{}').replace(/\&quot;/g, '\\texttt{&quot;}').replace(/'/g, '{\\ttfamily\\char\'15}');
+};
 
-		if (Array.isArray(x)) {
-			return '[' + x.map(function (entry) {
-				return MathLib.toLaTeX(entry, options);
-			}).join() + ']';
-		}
+if (Array.isArray(x)) {
+    return '[' + x.map(function (entry) {
+        return MathLib.toLaTeX(entry, options);
+    }).join() + ']';
+}
 
-		if (typeof x === 'object' &amp;&amp; 'toLaTeX' in x) {
-			return x.toLaTeX(options);
-		}
+if (typeof x === 'object' &amp;&amp; 'toLaTeX' in x) {
+    return x.toLaTeX(options);
+}
 
-		if (typeof x === 'number') {
-			if (MathLib.isNaN(x)) {
-				return '\\text{ NaN }';
-			}
-			else if (x === Infinity) {
-				return '\\infty';
-			}
-			else if (x === -Infinity) {
-				return '-\\infty';
-			}
+if (typeof x === 'number') {
+    if (MathLib.isNaN(x)) {
+        return '\\text{ NaN }';
+    } else if (x === Infinity) {
+        return '\\infty';
+    } else if (x === -Infinity) {
+        return '-\\infty';
+    }
 
-			if (options.baseSubscript) {
-				str += '_{' + base + '}';
-			}
+    if (options.baseSubscript) {
+        str += '_{' + base + '}';
+    }
 
-			return str;
-		}
+    return str;
+}
 
-		if (typeof x === 'boolean') {
-			return '\\text{ ' + x + ' }';
-		}</code></pre>
+if (typeof x === 'boolean') {
+    return '\\text{ ' + x + ' }';
+}</code></pre>
           <div class="description"><p>istanbul ignore else</p> </div>
           <pre><code class="language-javascript">if (typeof x === 'string') {
-			x = stringToLaTeX(x);
+    x = stringToLaTeX(x);
 
-			if (options.quotes) {
-				return stringToLaTeX(options.quotes[0]) + '\\texttt{' + x + '}' + stringToLaTeX(options.quotes[1]);
-			}
-			return '\\texttt{&quot;' + x + '&quot;}';
-		}
-	};</code></pre>
+    if (options.quotes) {
+        return stringToLaTeX(options.quotes[0]) + '\\texttt{' + x + '}' + stringToLaTeX(options.quotes[1]);
+    }
+    return '\\texttt{&quot;' + x + '&quot;}';
+}
+    };</code></pre>
           <section id="toMathML">
             <h1><a href="http://mathlib.de/en/docs/MathLib/toMathML">toMathML</a>
             </h1>
@@ -590,66 +579,62 @@
           </table>
           <div class="description"><p>A presentation MathML string representation</p> </div>
           <pre><code class="language-javascript">MathLib.toMathML = function (x, options) {
-		if (typeof options === 'undefined') { options = {}; }
-		var str, base = options.base || 10;
+if (typeof options === &quot;undefined&quot;) { options = {}; }
+var str, base = options.base || 10;
 
-		if (Array.isArray(x)) {
-			return '&lt;mrow&gt;&lt;mo&gt;[&lt;/mo&gt;' + x.map(function (entry) {
-				return MathLib.toMathML(entry, options);
-			}).join('&lt;mo&gt;,&lt;/mo&gt;') + '&lt;mo&gt;]&lt;/mo&gt;&lt;/mrow&gt;';
-		}
+if (Array.isArray(x)) {
+    return '&lt;mrow&gt;&lt;mo&gt;[&lt;/mo&gt;' + x.map(function (entry) {
+        return MathLib.toMathML(entry, options);
+    }).join('&lt;mo&gt;,&lt;/mo&gt;') + '&lt;mo&gt;]&lt;/mo&gt;&lt;/mrow&gt;';
+}
 
-		if (typeof x === 'object' &amp;&amp; 'toMathML' in x) {
-			return x.toMathML(options);
-		}
+if (typeof x === 'object' &amp;&amp; 'toMathML' in x) {
+    return x.toMathML(options);
+}
 
-		if (typeof x === 'number') {
-			if (options.sign) {
-				str = MathLib.toString(Math.abs(x), {base: base});
-			}
-			else {
-				str = MathLib.toString(x, {base: base});
-			}
+if (typeof x === 'number') {
+    if (options.sign) {
+        str = MathLib.toString(Math.abs(x), { base: base });
+    } else {
+        str = MathLib.toString(x, { base: base });
+    }
 
-			str = '&lt;mn&gt;' + str + '&lt;/mn&gt;';
+    str = '&lt;mn&gt;' + str + '&lt;/mn&gt;';
 
-			if (MathLib.isNaN(x)) {
-				return '&lt;mi&gt;NaN&lt;/mi&gt;';
-			}
-			else if (x === Infinity) {
-				return '&lt;mi&gt;&amp;#x221e;&lt;/mi&gt;';
-			}
-			else if (x === -Infinity) {
-				return '&lt;mrow&gt;&lt;mo&gt;-&lt;/mo&gt;&lt;mi&gt;&amp;#x221e;&lt;/mi&gt;&lt;/mrow&gt;';
-			}
+    if (MathLib.isNaN(x)) {
+        return '&lt;mi&gt;NaN&lt;/mi&gt;';
+    } else if (x === Infinity) {
+        return '&lt;mi&gt;&amp;#x221e;&lt;/mi&gt;';
+    } else if (x === -Infinity) {
+        return '&lt;mrow&gt;&lt;mo&gt;-&lt;/mo&gt;&lt;mi&gt;&amp;#x221e;&lt;/mi&gt;&lt;/mrow&gt;';
+    }
 
-			if (options.baseSubscript) {
-				str = '&lt;msub&gt;' + str + '&lt;mn&gt;' + base + '&lt;/mn&gt;&lt;/msub&gt;';
-			}
+    if (options.baseSubscript) {
+        str = '&lt;msub&gt;' + str + '&lt;mn&gt;' + base + '&lt;/mn&gt;&lt;/msub&gt;';
+    }
 
-			if (options.sign) {
-				if (x &lt; 0) {
-					str = '&lt;mo&gt;-&lt;/mo&gt;' + str;
-				}
-				else {
-					str = '&lt;mo&gt;+&lt;/mo&gt;' + str;
-				}
-			}
+    if (options.sign) {
+        if (x &lt; 0) {
+            str = '&lt;mo&gt;-&lt;/mo&gt;' + str;
+        } else {
+            str = '&lt;mo&gt;+&lt;/mo&gt;' + str;
+        }
+    }
 
-			return str;
-		}
+    return str;
+}
 
-		if (typeof x === 'boolean') {
-			return '&lt;mi&gt;' + x + '&lt;/mi&gt;';
-		}</code></pre>
+if (typeof x === 'boolean') {
+    return '&lt;mi&gt;' + x + '&lt;/mi&gt;';
+}</code></pre>
           <div class="description"><p>istanbul ignore else</p> </div>
           <pre><code class="language-javascript">if (typeof x === 'string') {
-			if (options.quotes) {
-				return '&lt;ms lquote=&quot;' + options.quotes[0] + '&quot; rquote=&quot;' + options.quotes[1] + '&quot;&gt;' + x + '&lt;/ms&gt;';
-			}
-			return '&lt;ms&gt;' + x + '&lt;/ms&gt;';
-		}
-	};</code></pre>
+    if (options.quotes) {
+        return '&lt;ms lquote=&quot;' + options.quotes[0] + '&quot; rquote=&quot;' + options.quotes[1] + '&quot;&gt;' + x + '&lt;/ms&gt;';
+    }
+    return '&lt;ms&gt;' + x + '&lt;/ms&gt;';
+}
+    };</code></pre>
           <section id="toString">
             <h1><a href="http://mathlib.de/en/docs/MathLib/toString">toString</a>
             </h1>
@@ -683,55 +668,54 @@
           </table>
           <div class="description"><p>Custom toString function</p> </div>
           <pre><code class="language-javascript">MathLib.toString = function (x, options) {
-		if (typeof options === 'undefined') { options = {}; }
-		var str, base = options.base || 10;
+if (typeof options === &quot;undefined&quot;) { options = {}; }
+var str, base = options.base || 10;
 
-		if (Array.isArray(x)) {
-			return '[' + x.map(function (entry) {
-				return MathLib.toString(entry, options);
-			}).join() + ']';
-		}
+if (Array.isArray(x)) {
+    return '[' + x.map(function (entry) {
+        return MathLib.toString(entry, options);
+    }).join() + ']';
+}
 
-		if (typeof x === 'object') {
-			return x.toString(options);
-		}
+if (typeof x === 'object') {
+    return x.toString(options);
+}
 
-		if (typeof x === 'number') {
-			if (!MathLib.isFinite(x)) {
-				return x.toString();
-			}
+if (typeof x === 'number') {
+    if (!MathLib.isFinite(x)) {
+        return x.toString();
+    }
 
-			str = Math.abs(x).toString(base);
+    str = Math.abs(x).toString(base);
 
-			if (x &lt; 0) {
-				str = '-' + str;
-			}
-			else if (options.sign) {
-				str = '+' + str;
-			}
+    if (x &lt; 0) {
+        str = '-' + str;
+    } else if (options.sign) {
+        str = '+' + str;
+    }
 
-			if (options.baseSubscript) {
-				if (base &gt; 9) {
-					str += '&amp;#x208' + Math.floor(base / 10) + ';';
-				}
-				str += '&amp;#x208' + (base % 10) + ';';
-			}
+    if (options.baseSubscript) {
+        if (base &gt; 9) {
+            str += '&amp;#x208' + Math.floor(base / 10) + ';';
+        }
+        str += '&amp;#x208' + (base % 10) + ';';
+    }
 
-			return str;
-		}
+    return str;
+}
 
-		if (typeof x === 'boolean') {
-			return x.toString();
-		}</code></pre>
+if (typeof x === 'boolean') {
+    return x.toString();
+}</code></pre>
           <div class="description"><p>istanbul ignore else</p> </div>
           <pre><code class="language-javascript">if (typeof x === 'string') {
-			if (options.quotes) {
-				return options.quotes[0] + x + options.quotes[1];
-			}
-			return '&quot;' + x + '&quot;';
-		}
-	};
-	'export MathLib';
+    if (options.quotes) {
+        return options.quotes[0] + x + options.quotes[1];
+    }
+    return '&quot;' + x + '&quot;';
+}
+    };
+    'export MathLib';
 })(MathLib || (MathLib = {}));</code></pre>
         </div>
       </div>

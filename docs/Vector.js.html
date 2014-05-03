@@ -151,14 +151,14 @@
 
 <p>It is as easy as<br /><code>new MathLib.Vector([1, 2, 3])</code><br />to create the following vector:<br />   ⎛ 1 ⎞<br />   ⎜ 2 ⎟<br />   ⎝ 3 ⎠</p> </div>
           <pre><code class="language-javascript">var Vector = (function () {
-		function Vector (coords) {
-			var _this = this;
-			this.type = 'vector';
-			coords.forEach(function (x, i) {
-				_this[i] = x;
-			});
-			this.length = coords.length;
-		}</code></pre>
+function Vector(coords) {
+    var _this = this;
+    this.type = 'vector';
+    coords.forEach(function (x, i) {
+        _this[i] = x;
+    });
+    this.length = coords.length;
+}</code></pre>
           <section id="compare">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/compare">compare</a>
             </h1>
@@ -186,20 +186,20 @@
           </table>
           <div class="description"><p>Compares two vectors.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.compare = function (v) {
-			var i, ii;
+    var i, ii;
 
-			if (this.length !== v.length) {
-				return MathLib.sign(this.length - v.length);
-			}
+    if (this.length !== v.length) {
+        return MathLib.sign(this.length - v.length);
+    }
 
-			for (i = 0, ii = this.length; i &lt; ii; i++) {
-				if (v[i] - this[i]) {
-					return MathLib.sign(this[i] - v[i]);
-				}
-			}
+    for (i = 0, ii = this.length; i &lt; ii; i++) {
+        if (v[i] - this[i]) {
+            return MathLib.sign(this[i] - v[i]);
+        }
+    }
 
-			return 0;
-		};</code></pre>
+    return 0;
+};</code></pre>
           <section id="evaluate">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/evaluate">evaluate</a>
             </h1>
@@ -210,8 +210,8 @@
           </section>
           <div class="description"><p>Evaluates the entries of the vector</p> </div>
           <pre><code class="language-javascript">Vector.prototype.evaluate = function () {
-			return this.map(MathLib.evaluate);
-		};</code></pre>
+    return this.map(MathLib.evaluate);
+};</code></pre>
           <section id="every">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/every">every</a>
             </h1>
@@ -239,8 +239,8 @@
           </table>
           <div class="description"><p>Works like Array.prototype.every.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.every = function (f) {
-			return Array.prototype.every.call(this, f);
-		};</code></pre>
+    return Array.prototype.every.call(this, f);
+};</code></pre>
           <section id="forEach">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/forEach">forEach</a>
             </h1>
@@ -268,8 +268,8 @@
           </table>
           <div class="description"><p>Works like Array.prototype.forEach.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.forEach = function (f) {
-			Array.prototype.forEach.call(this, f);
-		};</code></pre>
+    Array.prototype.forEach.call(this, f);
+};</code></pre>
           <section id="isEqual">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/isEqual">isEqual</a>
             </h1>
@@ -297,14 +297,14 @@
           </table>
           <div class="description"><p>Determines if two vectors are equal</p> </div>
           <pre><code class="language-javascript">Vector.prototype.isEqual = function (v) {
-			if (this.length !== v.length) {
-				return false;
-			}
+    if (this.length !== v.length) {
+        return false;
+    }
 
-			return this.every(function (x, i) {
-				return MathLib.isEqual(x, v[i]);
-			});
-		};</code></pre>
+    return this.every(function (x, i) {
+        return MathLib.isEqual(x, v[i]);
+    });
+};</code></pre>
           <section id="isZero">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/isZero">isZero</a>
             </h1>
@@ -315,8 +315,8 @@
           </section>
           <div class="description"><p>Determines if the vector is the zero vector.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.isZero = function () {
-			return this.every(MathLib.isZero);
-		};</code></pre>
+    return this.every(MathLib.isZero);
+};</code></pre>
           <section id="map">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/map">map</a>
             </h1>
@@ -344,8 +344,8 @@
           </table>
           <div class="description"><p>Works like Array.prototype.map.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.map = function (f) {
-			return new this.constructor(Array.prototype.map.call(this, f));
-		};</code></pre>
+    return new MathLib[this.type.slice(0, 1).toUpperCase() + this.type.slice(1)](Array.prototype.map.call(this, f));
+};</code></pre>
           <section id="minus">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/minus">minus</a>
             </h1>
@@ -373,14 +373,13 @@
           </table>
           <div class="description"><p>Calculates the difference of two vectors.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.minus = function (v) {
-			if (this.length === v.length) {
-				return this.plus(v.negative());
-			}
-			else {
-				MathLib.error({message: 'Vector sizes not matching', method: 'Vector#minus'});
-				return;
-			}
-		};</code></pre>
+    if (this.length === v.length) {
+        return this.plus(v.negative());
+    } else {
+        MathLib.error({ message: 'Vector sizes not matching', method: 'Vector#minus' });
+        return;
+    }
+};</code></pre>
           <section id="negative">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/negative">negative</a>
             </h1>
@@ -391,10 +390,10 @@
           </section>
           <div class="description"><p>Returns the negative vector.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.negative = function () {
-			return this.map(function (entry) {
-				return MathLib.negative(entry);
-			});
-		};</code></pre>
+    return this.map(function (entry) {
+        return MathLib.negative(entry);
+    });
+};</code></pre>
           <section id="norm">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/norm">norm</a>
             </h1>
@@ -422,19 +421,17 @@
           </table>
           <div class="description"><p>Calcultes the norm of the vector.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.norm = function (p) {
-			if (typeof p === 'undefined') { p = 2; }
-			if (p === 2) {
-				return MathLib.hypot.apply(null, this.toArray());
-			}
-			else if (p === Infinity) {
-				return Math.max.apply(null, this.map(Math.abs).toArray());
-			}
-			else {
-				return MathLib.root(this.reduce(function (prev, curr) {
-					return prev + Math.pow(Math.abs(curr), p);
-				}, 0), p);
-			}
-		};</code></pre>
+    if (typeof p === &quot;undefined&quot;) { p = 2; }
+    if (p === 2) {
+        return MathLib.hypot.apply(null, this.toArray());
+    } else if (p === Infinity) {
+        return Math.max.apply(null, this.map(Math.abs).toArray());
+    } else {
+        return MathLib.root(this.reduce(function (prev, curr) {
+            return prev + Math.pow(Math.abs(curr), p);
+        }, 0), p);
+    }
+};</code></pre>
           <section id="outerProduct">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/outerProduct">outerProduct</a>
             </h1>
@@ -462,12 +459,12 @@
           </table>
           <div class="description"><p>Calculates the outer product of two vectors.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.outerProduct = function (v) {
-			return new MathLib.Matrix(this.map(function (x) {
-				return v.map(function (y) {
-					return MathLib.times(x, y);
-				});
-			}));
-		};</code></pre>
+    return new MathLib.Matrix(this.map(function (x) {
+        return v.map(function (y) {
+            return MathLib.times(x, y);
+        });
+    }));
+};</code></pre>
           <section id="plus">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/plus">plus</a>
             </h1>
@@ -495,16 +492,15 @@
           </table>
           <div class="description"><p>Calculates the sum of two vectors.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.plus = function (v) {
-			if (this.length === v.length) {
-				return new MathLib.Vector(this.map(function (x, i) {
-					return MathLib.plus(x, v[i]);
-				}));
-			}
-			else {
-				MathLib.error({message: 'Vector sizes not matching', method: 'Vector#plus'});
-				return;
-			}
-		};</code></pre>
+    if (this.length === v.length) {
+        return new MathLib.Vector(this.map(function (x, i) {
+            return MathLib.plus(x, v[i]);
+        }));
+    } else {
+        MathLib.error({ message: 'Vector sizes not matching', method: 'Vector#plus' });
+        return;
+    }
+};</code></pre>
           <section id="reduce">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/reduce">reduce</a>
             </h1>
@@ -515,12 +511,12 @@
           </section>
           <div class="description"><p>Works like Array.prototype.reduce.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.reduce = function () {
-			var args = [];
-			for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
-				args[_i] = arguments[_i + 0];
-			}
-			return Array.prototype.reduce.apply(this, args);
-		};</code></pre>
+    var args = [];
+    for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
+    return Array.prototype.reduce.apply(this, args);
+};</code></pre>
           <section id="scalarProduct">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/scalarProduct">scalarProduct</a>
             </h1>
@@ -548,16 +544,15 @@
           </table>
           <div class="description"><p>Calculates the scalar product of two vectors.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.scalarProduct = function (v) {
-			if (this.length === v.length) {
-				return this.reduce(function (old, cur, i, w) {
-					return MathLib.plus(old, MathLib.times(w[i], v[i]));
-				}, 0);
-			}
-			else {
-				MathLib.error({message: 'Vector sizes not matching', method: 'Vector#scalarProduct'});
-				return;
-			}
-		};</code></pre>
+    if (this.length === v.length) {
+        return this.reduce(function (old, cur, i, w) {
+            return MathLib.plus(old, MathLib.times(w[i], v[i]));
+        }, 0);
+    } else {
+        MathLib.error({ message: 'Vector sizes not matching', method: 'Vector#scalarProduct' });
+        return;
+    }
+};</code></pre>
           <section id="slice">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/slice">slice</a>
             </h1>
@@ -568,12 +563,12 @@
           </section>
           <div class="description"><p>Works like the Array.prototype.slice function</p> </div>
           <pre><code class="language-javascript">Vector.prototype.slice = function () {
-			var args = [];
-			for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
-				args[_i] = arguments[_i + 0];
-			}
-			return Array.prototype.slice.apply(this, args);
-		};</code></pre>
+    var args = [];
+    for (var _i = 0; _i &lt; (arguments.length - 0); _i++) {
+        args[_i] = arguments[_i + 0];
+    }
+    return Array.prototype.slice.apply(this, args);
+};</code></pre>
           <section id="times">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/times">times</a>
             </h1>
@@ -601,29 +596,28 @@
           </table>
           <div class="description"><p>Multiplies the vector by a (complex) number or a matrix.<br />The vector is multiplied from left to the matrix.<br />If you want to multiply it from the right use<br />matrix.times(vector) instead of vector.times(matrix)</p> </div>
           <pre><code class="language-javascript">Vector.prototype.times = function (n) {
-			var i, ii, colVectors, product = [];
-			if (n.type === 'rational') {
-				n = n.coerceTo('number');
-			}
-			if (typeof n === 'number' || n.type === 'complex') {
-				return this.map(function (x) {
-					return MathLib.times(n, x);
-				});
-			}
-			if (n.type === 'matrix') {
-				if (this.length === n.rows) {
-					colVectors = n.toColVectors();
-					for (i = 0, ii = colVectors.length; i &lt; ii; i++) {
-						product[i] = this.scalarProduct(colVectors[i]);
-					}
-					return new MathLib.Vector(product);
-				}
-				else {
-					MathLib.error({message: 'Vector/Matrix sizes not matching', method: 'Vector#times'});
-					return;
-				}
-			}
-		};</code></pre>
+    var i, ii, colVectors, product = [];
+    if (n.type === 'rational') {
+        n = n.coerceTo('number');
+    }
+    if (typeof n === 'number' || n.type === 'complex') {
+        return this.map(function (x) {
+            return MathLib.times(n, x);
+        });
+    }
+    if (n.type === 'matrix') {
+        if (this.length === n.rows) {
+            colVectors = n.toColVectors();
+            for (i = 0, ii = colVectors.length; i &lt; ii; i++) {
+                product[i] = this.scalarProduct(colVectors[i]);
+            }
+            return new MathLib.Vector(product);
+        } else {
+            MathLib.error({ message: 'Vector/Matrix sizes not matching', method: 'Vector#times' });
+            return;
+        }
+    }
+};</code></pre>
           <section id="toArray">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/toArray">toArray</a>
             </h1>
@@ -634,8 +628,8 @@
           </section>
           <div class="description"><p>Converts the vector to an array.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.toArray = function () {
-			return Array.prototype.slice.call(this);
-		};</code></pre>
+    return Array.prototype.slice.call(this);
+};</code></pre>
           <section id="toContentMathML">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/toContentMathML">toContentMathML</a>
             </h1>
@@ -663,18 +657,17 @@
           </table>
           <div class="description"><p>Returns the content MathML representation of the vector.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.toContentMathML = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			if (options.strict) {
-				return this.reduce(function (old, cur) {
-					return old + MathLib.toContentMathML(cur, options);
-				}, '&lt;apply&gt;&lt;csymbol cd=&quot;linalg2&quot;&gt;vector&lt;/csymbol&gt;') + '&lt;/apply&gt;';
-			}
-			else {
-				return this.reduce(function (old, cur) {
-					return old + MathLib.toContentMathML(cur, options);
-				}, '&lt;vector&gt;') + '&lt;/vector&gt;';
-			}
-		};</code></pre>
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    if (options.strict) {
+        return this.reduce(function (old, cur) {
+            return old + MathLib.toContentMathML(cur, options);
+        }, '&lt;apply&gt;&lt;csymbol cd=&quot;linalg2&quot;&gt;vector&lt;/csymbol&gt;') + '&lt;/apply&gt;';
+    } else {
+        return this.reduce(function (old, cur) {
+            return old + MathLib.toContentMathML(cur, options);
+        }, '&lt;vector&gt;') + '&lt;/vector&gt;';
+    }
+};</code></pre>
           <section id="toLaTeX">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/toLaTeX">toLaTeX</a>
             </h1>
@@ -702,11 +695,11 @@
           </table>
           <div class="description"><p>Returns a LaTeX representation of the vector.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.toLaTeX = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
-				return old + '\\\\\n\t' + MathLib.toLaTeX(cur, options);
-			}) + '\n\\end{pmatrix}';
-		};</code></pre>
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
+        return old + '\\\\\n\t' + MathLib.toLaTeX(cur, options);
+    }) + '\n\\end{pmatrix}';
+};</code></pre>
           <section id="toMathML">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/toMathML">toMathML</a>
             </h1>
@@ -734,11 +727,11 @@
           </table>
           <div class="description"><p>Returns the (presentation) MathML representation of the vector.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.toMathML = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			return this.reduce(function (old, cur) {
-				return old + '&lt;mtr&gt;&lt;mtd&gt;' + MathLib.toMathML(cur, options) + '&lt;/mtd&gt;&lt;/mtr&gt;';
-			}, '&lt;mrow&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mtable&gt;') + '&lt;/mtable&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt;';
-		};</code></pre>
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    return this.reduce(function (old, cur) {
+        return old + '&lt;mtr&gt;&lt;mtd&gt;' + MathLib.toMathML(cur, options) + '&lt;/mtd&gt;&lt;/mtr&gt;';
+    }, '&lt;mrow&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mtable&gt;') + '&lt;/mtable&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt;';
+};</code></pre>
           <section id="toString">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/toString">toString</a>
             </h1>
@@ -766,11 +759,11 @@
           </table>
           <div class="description"><p>Returns a string representation of the vector.</p> </div>
           <pre><code class="language-javascript">Vector.prototype.toString = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			return '(' + this.reduce(function (old, cur) {
-				return old + ', ' + MathLib.toString(cur, options);
-			}) + ')';
-		};</code></pre>
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    return '(' + this.reduce(function (old, cur) {
+        return old + ', ' + MathLib.toString(cur, options);
+    }) + ')';
+};</code></pre>
           <section id="vectorProduct">
             <h1><a href="http://mathlib.de/en/docs/Vector/prototype/vectorProduct">vectorProduct</a>
             </h1>
@@ -800,43 +793,42 @@
           <pre><code class="language-javascript">Vector.prototype.vectorProduct = function (v) {</code></pre>
           <div class="description"><p>TODO: Implement vectorproduct for non three-dimensional vectors</p> </div>
           <pre><code class="language-javascript">if (this.length === 3 &amp;&amp; v.length === 3) {
-				return new MathLib.Vector([
-					MathLib.minus(MathLib.times(this[1], v[2]), MathLib.times(this[2], v[1])),
-					MathLib.minus(MathLib.times(this[2], v[0]), MathLib.times(this[0], v[2])),
-					MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0]))
-				]);
-			}
-			else {
-				MathLib.error({message: 'Vectors are not three-dimensional', method: 'Vector#vectorProduct'});
-				return;
-			}
-		};
-		Vector.areLinearIndependent = function (vectors) {
-			var n = vectors.length, m = vectors[0].length;
+        return new MathLib.Vector([
+            MathLib.minus(MathLib.times(this[1], v[2]), MathLib.times(this[2], v[1])),
+            MathLib.minus(MathLib.times(this[2], v[0]), MathLib.times(this[0], v[2])),
+            MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0]))
+        ]);
+    } else {
+        MathLib.error({ message: 'Vectors are not three-dimensional', method: 'Vector#vectorProduct' });
+        return;
+    }
+};
+Vector.areLinearIndependent = function (vectors) {
+    var n = vectors.length, m = vectors[0].length;
 
-			if (n &gt; m) {
-				return false;
-			}
+    if (n &gt; m) {
+        return false;
+    }
 
-			if (!vectors.every(function (x) {
-				return x.length === m;
-			})) {
-				return undefined;
-			}
+    if (!vectors.every(function (x) {
+        return x.length === m;
+    })) {
+        return undefined;
+    }
 
-			return (new MathLib.Matrix(vectors)).rank() === n;
-		};
+    return (new MathLib.Matrix(vectors)).rank() === n;
+};
 
-		Vector.zero = function (n) {
-			var vector = [], i;
-			for (i = 0; i &lt; n; i++) {
-				vector.push(0);
-			}
-			return new MathLib.Vector(vector);
-		};
-		return Vector;
-	})();
-	MathLib.Vector = Vector;
+Vector.zero = function (n) {
+    var vector = [], i;
+    for (i = 0; i &lt; n; i++) {
+        vector.push(0);
+    }
+    return new MathLib.Vector(vector);
+};
+return Vector;
+    })();
+    MathLib.Vector = Vector;
 })(MathLib || (MathLib = {}));</code></pre>
         </div>
       </div>

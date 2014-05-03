@@ -19,7 +19,6 @@ export class Vector implements Printable  {
 	type = 'vector';
 
 	length: number;
-	constructor: any;
 
 	constructor (coords: number[]) {
 		coords.forEach((x, i) => {

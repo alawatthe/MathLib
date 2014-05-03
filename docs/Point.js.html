@@ -135,13 +135,13 @@
 
 <p>To create the point (4, 2) on the two dimensional plane use<br /><code>new MathLib.Point([4, 2, 1])</code><br />Alternatively you can use<br /><code>new MathLib.Point(4, 2)</code><br />The 1 will be added for you.</p> </div>
           <pre><code class="language-javascript">var Point = (function (_super) {
-		__extends(Point, _super);
-		function Point (coords) {
-			_super.call(this, arguments.length &gt; 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
-			this.type = 'point';
+__extends(Point, _super);
+function Point(coords) {
+    _super.call(this, arguments.length &gt; 1 ? Array.prototype.slice.call(arguments).concat(1) : coords);
+    this.type = 'point';
 
-			this.dimension = 2;
-		}</code></pre>
+    this.dimension = 2;
+}</code></pre>
           <section id="crossRatio">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/crossRatio">crossRatio</a>
             </h1>
@@ -187,10 +187,10 @@
           </table>
           <div class="description"><p>Calculates the distance crossratio (A,B,C,D) of four points<br />as seen from the current point.</p> </div>
           <pre><code class="language-javascript">Point.prototype.crossRatio = function (a, b, c, d) {
-			var xa = this.vectorProduct(a), xb = this.vectorProduct(b);
+    var xa = this.vectorProduct(a), xb = this.vectorProduct(b);
 
-			return xa.scalarProduct(c) * xb.scalarProduct(d) / (xa.scalarProduct(d) * xb.scalarProduct(c));
-		};</code></pre>
+    return xa.scalarProduct(c) * xb.scalarProduct(d) / (xa.scalarProduct(d) * xb.scalarProduct(c));
+};</code></pre>
           <section id="distanceTo">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/distanceTo">distanceTo</a>
             </h1>
@@ -218,14 +218,14 @@
           </table>
           <div class="description"><p>Calculates the distance to an other point.<br />If no other point is provided, it calculates the distance to the origin.</p> </div>
           <pre><code class="language-javascript">Point.prototype.distanceTo = function (p) {
-			if (arguments.length === 0) {
-				return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
-			}
+    if (arguments.length === 0) {
+        return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
+    }
 
-			if (p.type === 'point' &amp;&amp; this.dimension === p.dimension) {
-				return MathLib.hypot.apply(null, this.normalize().minus(p.normalize()).slice(0, -1));
-			}
-		};</code></pre>
+    if (p.type === 'point' &amp;&amp; this.dimension === p.dimension) {
+        return MathLib.hypot.apply(null, this.normalize().minus(p.normalize()).slice(0, -1));
+    }
+};</code></pre>
           <section id="draw">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/draw">draw</a>
             </h1>
@@ -259,18 +259,17 @@
           </table>
           <div class="description"><p>Draws the point on a canvas or svg element.</p> </div>
           <pre><code class="language-javascript">Point.prototype.draw = function (screen, options) {
-			if (Array.isArray(screen)) {
-				var point = this;
-				screen.forEach(function (x) {
-					x.point(point, options);
-				});
-			}
-			else {
-				screen.point(this, options);
-			}
+    if (Array.isArray(screen)) {
+        var point = this;
+        screen.forEach(function (x) {
+            x.point(point, options);
+        });
+    } else {
+        screen.point(this, options);
+    }
 
-			return this;
-		};</code></pre>
+    return this;
+};</code></pre>
           <section id="isEqual">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/isEqual">isEqual</a>
             </h1>
@@ -298,17 +297,17 @@
           </table>
           <div class="description"><p>Determines if the point has the same coordinates as an other point</p> </div>
           <pre><code class="language-javascript">Point.prototype.isEqual = function (q) {
-			var p = this.normalize();
-			q = q.normalize();
+    var p = this.normalize();
+    q = q.normalize();
 
-			if (this.length !== q.length) {
-				return false;
-			}
+    if (this.length !== q.length) {
+        return false;
+    }
 
-			return p.every(function (x, i) {
-				return MathLib.isEqual(x, q[i]);
-			});
-		};</code></pre>
+    return p.every(function (x, i) {
+        return MathLib.isEqual(x, q[i]);
+    });
+};</code></pre>
           <section id="isFinite">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/isFinite">isFinite</a>
             </h1>
@@ -319,8 +318,8 @@
           </section>
           <div class="description"><p>Determines if the point is finite</p> </div>
           <pre><code class="language-javascript">Point.prototype.isFinite = function () {
-			return !MathLib.isZero(this[this.length - 1]);
-		};</code></pre>
+    return !MathLib.isZero(this[this.length - 1]);
+};</code></pre>
           <section id="join">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/join">join</a>
             </h1>
@@ -348,53 +347,53 @@
           </table>
           <div class="description"><p>Calculates a line connecting two points</p> </div>
           <pre><code class="language-javascript">Point.prototype.join = function (q) {
-			var line, p = this;
+    var line, p = this;
 
-			if (this.dimension === 2 &amp;&amp; q.dimension === 2) {
-				line = new MathLib.Line(this.vectorProduct(q).toArray());
+    if (this.dimension === 2 &amp;&amp; q.dimension === 2) {
+        line = new MathLib.Line(this.vectorProduct(q).toArray());
 
-				Object.defineProperties(line, {
-					'0': {
-						get: function () {
-							return p[1] * q[2] - p[2] * q[1];
-						},
-						set: function () {
-							MathLib.warning({
-								message: 'Trying to change the coordinates of a completely dependent line.',
-								method: 'Point#join'
-							});
-						},
-						enumerable: true
-					},
-					'1': {
-						get: function () {
-							return p[2] * q[0] - p[0] * q[2];
-						},
-						set: function () {
-							MathLib.warning({
-								message: 'Trying to change the coordinates of a completely dependent line.',
-								method: 'Point#join'
-							});
-						},
-						enumerable: true
-					},
-					'2': {
-						get: function () {
-							return p[0] * q[1] - p[1] * q[0];
-						},
-						set: function () {
-							MathLib.warning({
-								message: 'Trying to change the coordinates of a completely dependent line.',
-								method: 'Point#join'
-							});
-						},
-						enumerable: true
-					}
-				});
+        Object.defineProperties(line, {
+            '0': {
+                get: function () {
+                    return p[1] * q[2] - p[2] * q[1];
+                },
+                set: function () {
+                    MathLib.warning({
+                        message: 'Trying to change the coordinates of a completely dependent line.',
+                        method: 'Point#join'
+                    });
+                },
+                enumerable: true
+            },
+            '1': {
+                get: function () {
+                    return p[2] * q[0] - p[0] * q[2];
+                },
+                set: function () {
+                    MathLib.warning({
+                        message: 'Trying to change the coordinates of a completely dependent line.',
+                        method: 'Point#join'
+                    });
+                },
+                enumerable: true
+            },
+            '2': {
+                get: function () {
+                    return p[0] * q[1] - p[1] * q[0];
+                },
+                set: function () {
+                    MathLib.warning({
+                        message: 'Trying to change the coordinates of a completely dependent line.',
+                        method: 'Point#join'
+                    });
+                },
+                enumerable: true
+            }
+        });
 
-				return line;
-			}
-		};</code></pre>
+        return line;
+    }
+};</code></pre>
           <section id="normalize">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/normalize">normalize</a>
             </h1>
@@ -405,11 +404,11 @@
           </section>
           <div class="description"><p>Normalizes the point.</p> </div>
           <pre><code class="language-javascript">Point.prototype.normalize = function () {
-			var last = this[this.dimension] || 1;
-			return this.map(function (x) {
-				return x / last;
-			});
-		};</code></pre>
+    var last = this[this.dimension] || 1;
+    return this.map(function (x) {
+        return x / last;
+    });
+};</code></pre>
           <section id="reflectAt">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/reflectAt">reflectAt</a>
             </h1>
@@ -437,19 +436,19 @@
           </table>
           <div class="description"><p>Reflects the point at an other point</p> </div>
           <pre><code class="language-javascript">Point.prototype.reflectAt = function (q) {
-			var i, ii, reflectedPoint = [], p = this.normalize();
+    var i, ii, reflectedPoint = [], p = this.normalize();
 
-			if (q.type === 'point') {
-				if (this.dimension === q.dimension) {
-					q = q.normalize();
-					for (i = 0, ii = this.dimension; i &lt; ii; i++) {
-						reflectedPoint.push(2 * q[i] - p[i]);
-					}
-					reflectedPoint.push(1);
-					return new MathLib.Point(reflectedPoint);
-				}
-			}
-		};</code></pre>
+    if (q.type === 'point') {
+        if (this.dimension === q.dimension) {
+            q = q.normalize();
+            for (i = 0, ii = this.dimension; i &lt; ii; i++) {
+                reflectedPoint.push(2 * q[i] - p[i]);
+            }
+            reflectedPoint.push(1);
+            return new MathLib.Point(reflectedPoint);
+        }
+    }
+};</code></pre>
           <section id="restrictTo">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/restrictTo">restrictTo</a>
             </h1>
@@ -477,41 +476,41 @@
           </table>
           <div class="description"><p>Restricts the point to a line.</p> </div>
           <pre><code class="language-javascript">Point.prototype.restrictTo = function (l) {
-			var p = this.slice();
+    var p = this.slice();
 
-			Object.defineProperties(this, {
-				'0': {
-					get: function () {
-						return l[1] * l[1] * p[0] - l[0] * (l[1] * p[1] + l[2] * p[2]);
-					},
-					set: function (point) {
-						p[0] = point;
-					},
-					enumerable: true,
-					configurable: true
-				},
-				'1': {
-					get: function () {
-						return -l[1] * l[2] * p[2] + l[0] * (l[0] * p[1] - l[1] * p[0]);
-					},
-					set: function (point) {
-						p[1] = point;
-					},
-					enumerable: true,
-					configurable: true
-				},
-				'2': {
-					get: function () {
-						return l[1] * l[1] * p[2] + l[0] * l[0] * p[2];
-					},
-					set: function (point) {
-						p[2] = point;
-					},
-					enumerable: true,
-					configurable: true
-				}
-			});
-		};</code></pre>
+    Object.defineProperties(this, {
+        '0': {
+            get: function () {
+                return l[1] * l[1] * p[0] - l[0] * (l[1] * p[1] + l[2] * p[2]);
+            },
+            set: function (point) {
+                p[0] = point;
+            },
+            enumerable: true,
+            configurable: true
+        },
+        '1': {
+            get: function () {
+                return -l[1] * l[2] * p[2] + l[0] * (l[0] * p[1] - l[1] * p[0]);
+            },
+            set: function (point) {
+                p[1] = point;
+            },
+            enumerable: true,
+            configurable: true
+        },
+        '2': {
+            get: function () {
+                return l[1] * l[1] * p[2] + l[0] * l[0] * p[2];
+            },
+            set: function (point) {
+                p[2] = point;
+            },
+            enumerable: true,
+            configurable: true
+        }
+    });
+};</code></pre>
           <section id="toComplex">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/toComplex">toComplex</a>
             </h1>
@@ -522,16 +521,16 @@
           </section>
           <div class="description"><p>Converts a two dimensional point to the corresponding complex number.</p> </div>
           <pre><code class="language-javascript">Point.prototype.toComplex = function () {
-			if (this.dimension === 2) {
-				if (MathLib.isZero(this[2])) {
-					return new MathLib.Complex(Infinity);
-				}
-				return new MathLib.Complex(this[0] / this[2], this[1] / this[2]);
-			}
-		};</code></pre>
+    if (this.dimension === 2) {
+        if (MathLib.isZero(this[2])) {
+            return new MathLib.Complex(Infinity);
+        }
+        return new MathLib.Complex(this[0] / this[2], this[1] / this[2]);
+    }
+};</code></pre>
           <div class="description"><p>TODO: implement<br />Returns content MathML representation of the point</p> </div>
           <pre><code class="language-javascript">// toContentMathML(opt) {
-		// }</code></pre>
+// }</code></pre>
           <section id="toLaTeX">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/toLaTeX">toLaTeX</a>
             </h1>
@@ -559,13 +558,13 @@
           </table>
           <div class="description"><p>Returns LaTeX representation of the point</p> </div>
           <pre><code class="language-javascript">Point.prototype.toLaTeX = function (opt) {
-			if (typeof opt === 'undefined') { opt = false; }
-			var p = opt ? this.toArray() : this.normalize().slice(0, -1);
+    if (typeof opt === &quot;undefined&quot;) { opt = false; }
+    var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
-			return '\\begin{pmatrix}' + p.reduce(function (old, cur) {
-				return old + '\\\\' + MathLib.toLaTeX(cur);
-			}) + '\\end{pmatrix}';
-		};</code></pre>
+    return '\\begin{pmatrix}' + p.reduce(function (old, cur) {
+        return old + '\\\\' + MathLib.toLaTeX(cur);
+    }) + '\\end{pmatrix}';
+};</code></pre>
           <section id="toMathML">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/toMathML">toMathML</a>
             </h1>
@@ -593,13 +592,13 @@
           </table>
           <div class="description"><p>Returns (presentation) MathML representation of the point</p> </div>
           <pre><code class="language-javascript">Point.prototype.toMathML = function (opt) {
-			if (typeof opt === 'undefined') { opt = false; }
-			var p = opt ? this.toArray() : this.normalize().slice(0, -1);
+    if (typeof opt === &quot;undefined&quot;) { opt = false; }
+    var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
-			return p.reduce(function (old, cur) {
-				return old + '&lt;mtr&gt;&lt;mtd&gt;' + MathLib.toMathML(cur) + '&lt;/mtd&gt;&lt;/mtr&gt;';
-			}, '&lt;mrow&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mtable&gt;') + '&lt;/mtable&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt;';
-		};</code></pre>
+    return p.reduce(function (old, cur) {
+        return old + '&lt;mtr&gt;&lt;mtd&gt;' + MathLib.toMathML(cur) + '&lt;/mtd&gt;&lt;/mtr&gt;';
+    }, '&lt;mrow&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mtable&gt;') + '&lt;/mtable&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt;';
+};</code></pre>
           <section id="toString">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/toString">toString</a>
             </h1>
@@ -627,19 +626,19 @@
           </table>
           <div class="description"><p>Returns string representation of the point</p> </div>
           <pre><code class="language-javascript">Point.prototype.toString = function (opt) {
-			if (typeof opt === 'undefined') { opt = false; }
-			var p = opt ? this.toArray() : this.normalize().slice(0, -1);
+    if (typeof opt === &quot;undefined&quot;) { opt = false; }
+    var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
-			return '(' + p.reduce(function (old, cur) {
-				return old + ', ' + MathLib.toString(cur);
-			}) + ')';
-		};
-		Point.I = new Point([new MathLib.Complex(0, -1), 0, 1]);
+    return '(' + p.reduce(function (old, cur) {
+        return old + ', ' + MathLib.toString(cur);
+    }) + ')';
+};
+Point.I = new Point([new MathLib.Complex(0, -1), 0, 1]);
 
-		Point.J = new Point([new MathLib.Complex(0, 1), 0, 1]);
-		return Point;
-	})(MathLib.Vector);
-	MathLib.Point = Point;
+Point.J = new Point([new MathLib.Complex(0, 1), 0, 1]);
+return Point;
+    })(MathLib.Vector);
+    MathLib.Point = Point;
 })(MathLib || (MathLib = {}));</code></pre>
         </div>
       </div>

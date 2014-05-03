@@ -500,7 +500,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 73,
+					build: 74,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -520,9 +520,11 @@ module.exports = function (grunt) {
 			options: {
 				jshintrc: '.jshintrc'
 			},
+			/*
 			MathLib: {
 				src: ['build/MathLib.js']
 			},
+			*/
 			Tests: {
 				src: ['build/MathLib.test.js']
 			},
@@ -562,11 +564,13 @@ module.exports = function (grunt) {
 			options: {
 				config: '.jscs.json',
 			},
+			/*
 			MathLib: {
 				files: {
 					src: ['build/MathLib.js']
 				}
 			},
+			*/
 			Tests: {
 				files: {
 					src: ['build/MathLib.test.js']
@@ -663,7 +667,7 @@ module.exports = function (grunt) {
 			reference: ['build/plain/reference.js', 'build/amd/reference.js', 'build/commonjs/reference.js'],
 			tscommand: ['tscommand.tmp.txt'],
 			temp: ['temp'],
-			interfacesJS: ['build/plain/Interfaces.js']
+			beforeDoxx: ['build/plain/Interfaces.js', 'build/plain/.baseDir.js']
 		},
 
 
@@ -1051,7 +1055,7 @@ module.exports = function (grunt) {
 		'generateDeclaration', 'generateTests', 'generateCSS', 'generateTemplate', 'generateDocs',
 		'regex-replace:plainAfter']);
 	grunt.registerTask('generateCSS', ['compass', 'cssmin']);
-	grunt.registerTask('generateDocs', ['clean:interfacesJS', 'shell:doxx']);
+	grunt.registerTask('generateDocs', ['clean:beforeDoxx', 'shell:doxx']);
 
 	grunt.registerTask('testPlain', ['connect', 'qunit']);
 	grunt.registerTask('testCommonjs', ['nodeunit']);

@@ -224,22 +224,20 @@
 var c = new MathLib.Complex(1, 2);
 </pre></div> </div>
           <pre><code class="language-javascript">var Complex = (function () {
-		function Complex (re, im) {
-			if (typeof im === 'undefined') { im = 0; }
-			this.type = 'complex';
-			if (MathLib.isNaN(re) || MathLib.isNaN(im)) {
-				this.re = NaN;
-				this.im = NaN;
-			}
-			else if (!MathLib.isFinite(re) || !MathLib.isFinite(im)) {
-				this.re = Infinity;
-				this.im = Infinity;
-			}
-			else {
-				this.re = re;
-				this.im = im;
-			}
-		}</code></pre>
+function Complex(re, im) {
+    if (typeof im === &quot;undefined&quot;) { im = 0; }
+    this.type = 'complex';
+    if (MathLib.isNaN(re) || MathLib.isNaN(im)) {
+        this.re = NaN;
+        this.im = NaN;
+    } else if (!MathLib.isFinite(re) || !MathLib.isFinite(im)) {
+        this.re = Infinity;
+        this.im = Infinity;
+    } else {
+        this.re = re;
+        this.im = im;
+    }
+}</code></pre>
           <section id="toContentMathML">
             <h1><a href="http://mathlib.de/en/docs/Complex/toContentMathML">toContentMathML</a>
             </h1>
@@ -250,12 +248,12 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>A content MathML string representation</p> </div>
           <pre><code class="language-javascript">Complex.toContentMathML = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			if (options.strict) {
-				return '&lt;csymbol cd=&quot;setname1&quot;&gt;C&lt;/csymbol&gt;';
-			}
-			return '&lt;complexes/&gt;';
-		};</code></pre>
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    if (options.strict) {
+        return '&lt;csymbol cd=&quot;setname1&quot;&gt;C&lt;/csymbol&gt;';
+    }
+    return '&lt;complexes/&gt;';
+};</code></pre>
           <section id="toLaTeX">
             <h1><a href="http://mathlib.de/en/docs/Complex/toLaTeX">toLaTeX</a>
             </h1>
@@ -266,8 +264,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>A LaTeX string representation</p> </div>
           <pre><code class="language-javascript">Complex.toLaTeX = function () {
-			return 'Complex Field $\\mathbb{C}$';
-		};</code></pre>
+    return 'Complex Field $\\mathbb{C}$';
+};</code></pre>
           <section id="toMathML">
             <h1><a href="http://mathlib.de/en/docs/Complex/toMathML">toMathML</a>
             </h1>
@@ -278,8 +276,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>A presentation MathML string representation</p> </div>
           <pre><code class="language-javascript">Complex.toMathML = function () {
-			return '&lt;mrow&gt;&lt;mtext&gt;Complex Field&lt;/mtext&gt;&lt;mi mathvariant=&quot;double-struck&quot;&gt;C&lt;/mi&gt;&lt;/mrow&gt;';
-		};</code></pre>
+    return '&lt;mrow&gt;&lt;mtext&gt;Complex Field&lt;/mtext&gt;&lt;mi mathvariant=&quot;double-struck&quot;&gt;C&lt;/mi&gt;&lt;/mrow&gt;';
+};</code></pre>
           <section id="toString">
             <h1><a href="http://mathlib.de/en/docs/Complex/toString">toString</a>
             </h1>
@@ -290,8 +288,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Custom toString function</p> </div>
           <pre><code class="language-javascript">Complex.toString = function () {
-			return 'Complex Field ℂ';
-		};</code></pre>
+    return 'Complex Field ℂ';
+};</code></pre>
           <section id="abs">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/abs">abs</a>
             </h1>
@@ -302,8 +300,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the absolute value of the number.</p> </div>
           <pre><code class="language-javascript">Complex.prototype.abs = function () {
-			return MathLib.hypot(this.re, this.im);
-		};</code></pre>
+    return MathLib.hypot(this.re, this.im);
+};</code></pre>
           <section id="arccos">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/arccos">arccos</a>
             </h1>
@@ -314,8 +312,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the inverse cosine of the number.</p> </div>
           <pre><code class="language-javascript">Complex.prototype.arccos = function () {
-			return (new MathLib.Complex(Math.PI / 2, -0)).minus(this.arcsin());
-		};</code></pre>
+    return (new MathLib.Complex(Math.PI / 2, -0)).minus(this.arcsin());
+};</code></pre>
           <section id="arccot">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/arccot">arccot</a>
             </h1>
@@ -326,11 +324,11 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the inverse cotangent of the number.</p> </div>
           <pre><code class="language-javascript">Complex.prototype.arccot = function () {
-			if (this.isZero()) {
-				return new MathLib.Complex(MathLib.sign(1 / this.re) * Math.PI / 2, -this.im);
-			}
-			return this.inverse().arctan();
-		};</code></pre>
+    if (this.isZero()) {
+        return new MathLib.Complex(MathLib.sign(1 / this.re) * Math.PI / 2, -this.im);
+    }
+    return this.inverse().arctan();
+};</code></pre>
           <section id="arccsc">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/arccsc">arccsc</a>
             </h1>
@@ -341,13 +339,13 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the inverse cosecant of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.arccsc = function () {
-			// arccsc(0) = ComplexInfinity not ComplexNaN
-			if (this.isZero()) {
-				return new MathLib.Complex(Infinity);
-			}
+    // arccsc(0) = ComplexInfinity not ComplexNaN
+    if (this.isZero()) {
+        return new MathLib.Complex(Infinity);
+    }
 
-			return this.inverse().arcsin();
-		};</code></pre>
+    return this.inverse().arcsin();
+};</code></pre>
           <section id="arcosh">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/arcosh">arcosh</a>
             </h1>
@@ -358,21 +356,21 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the inverse hyperbolic cosine of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.arcosh = function () {
-			var arccos;
+    var arccos;
 
-			if (this.isZero()) {
-				return new MathLib.Complex(0, 1.5707963267948966192);
-			}
+    if (this.isZero()) {
+        return new MathLib.Complex(0, 1.5707963267948966192);
+    }
 
-			arccos = this.arccos();
-			arccos = arccos.times(new MathLib.Complex(0, arccos.im &gt; 0 ? -1 : 1));
+    arccos = this.arccos();
+    arccos = arccos.times(new MathLib.Complex(0, arccos.im &gt; 0 ? -1 : 1));
 
-			if (MathLib.isNegZero(this.im) &amp;&amp; this.re &gt;= -1) {
-				arccos.im = -arccos.im;
-			}
+    if (MathLib.isNegZero(this.im) &amp;&amp; this.re &gt;= -1) {
+        arccos.im = -arccos.im;
+    }
 
-			return arccos;
-		};</code></pre>
+    return arccos;
+};</code></pre>
           <section id="arcoth">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/arcoth">arcoth</a>
             </h1>
@@ -383,23 +381,23 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the inverse hyperbolic cotangent of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.arcoth = function () {
-			var one = new MathLib.Complex(1, -0);
+    var one = new MathLib.Complex(1, -0);
 
-			if (MathLib.isZero(this.re)) {
-				if (MathLib.isPosZero(this.im)) {
-					return new MathLib.Complex(this.re, -1.5707963267948966192);
-				}
-				if (MathLib.isNegZero(this.im)) {
-					return new MathLib.Complex(this.re, 1.5707963267948966192);
-				}
-			}
+    if (MathLib.isZero(this.re)) {
+        if (MathLib.isPosZero(this.im)) {
+            return new MathLib.Complex(this.re, -1.5707963267948966192);
+        }
+        if (MathLib.isNegZero(this.im)) {
+            return new MathLib.Complex(this.re, 1.5707963267948966192);
+        }
+    }
 
-			if (this.re === Infinity) {
-				return new MathLib.Complex(0, 0);
-			}
+    if (this.re === Infinity) {
+        return new MathLib.Complex(0, 0);
+    }
 
-			return MathLib.times(0.5, this.plus(one).divide(this.minus(one)).ln());
-		};</code></pre>
+    return MathLib.times(0.5, this.plus(one).divide(this.minus(one)).ln());
+};</code></pre>
           <section id="arcsch">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/arcsch">arcsch</a>
             </h1>
@@ -410,8 +408,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the inverse hyperbolic cosecant of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.arcsch = function () {
-			return this.inverse().arsinh();
-		};</code></pre>
+    return this.inverse().arsinh();
+};</code></pre>
           <section id="arcsec">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/arcsec">arcsec</a>
             </h1>
@@ -422,13 +420,13 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the inverse secant of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.arcsec = function () {
-			// arcsec(0) = ComplexInfinity not ComplexNaN
-			if (this.isZero()) {
-				return new MathLib.Complex(Infinity);
-			}
+    // arcsec(0) = ComplexInfinity not ComplexNaN
+    if (this.isZero()) {
+        return new MathLib.Complex(Infinity);
+    }
 
-			return this.inverse().arccos();
-		};</code></pre>
+    return this.inverse().arccos();
+};</code></pre>
           <section id="arcsin">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/arcsin">arcsin</a>
             </h1>
@@ -439,27 +437,27 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the inverse sine of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.arcsin = function () {
-			var a = this.re, b = this.im, aa = a * a, bb = b * b, sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb), sgn = function (x) {
-				if (x &gt; 0) {
-					return 1;
-				}
-				if (x &lt; 0) {
-					return -1;
-				}
-				if (1 / x === Infinity) {
-					return 1;
-				}
-				if (1 / x === -Infinity) {
-					return -1;
-				}
-			};
+    var a = this.re, b = this.im, aa = a * a, bb = b * b, sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * bb), sgn = function (x) {
+        if (x &gt; 0) {
+            return 1;
+        }
+        if (x &lt; 0) {
+            return -1;
+        }
+        if (1 / x === Infinity) {
+            return 1;
+        }
+        if (1 / x === -Infinity) {
+            return -1;
+        }
+    };
 
-			if (a === Infinity) {
-				return new MathLib.Complex(Infinity);
-			}
+    if (a === Infinity) {
+        return new MathLib.Complex(Infinity);
+    }
 
-			return new MathLib.Complex(sgn(a) / 2 * MathLib.arccos(sqrt - (aa + bb)), sgn(b) / 2 * MathLib.arcosh(sqrt + (aa + bb)));
-		};</code></pre>
+    return new MathLib.Complex(sgn(a) / 2 * MathLib.arccos(sqrt - (aa + bb)), sgn(b) / 2 * MathLib.arcosh(sqrt + (aa + bb)));
+};</code></pre>
           <section id="arctan">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/arctan">arctan</a>
             </h1>
@@ -470,22 +468,22 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the inverse tangent of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.arctan = function () {
-			var res, one = new MathLib.Complex(1, -0), iz = new MathLib.Complex(-this.im, this.re);
+    var res, one = new MathLib.Complex(1, -0), iz = new MathLib.Complex(-this.im, this.re);
 
-			if (this.isZero()) {
-				return new MathLib.Complex(this.re, this.im);
-			}
+    if (this.isZero()) {
+        return new MathLib.Complex(this.re, this.im);
+    }
 
-			res = MathLib.times(new MathLib.Complex(0, -0.5), MathLib.plus(one, iz).divide(MathLib.minus(one, iz)).ln());
+    res = MathLib.times(new MathLib.Complex(0, -0.5), MathLib.plus(one, iz).divide(MathLib.minus(one, iz)).ln());
 
-			// Correct some values on the axis imaginary axis.
-			// TODO: Are this all the wrong values?
-			if (MathLib.isNegZero(this.re) &amp;&amp; res.re !== Infinity &amp;&amp; (this.im &lt; 0 || this.im &gt; 1)) {
-				res.re = -res.re;
-			}
+    // Correct some values on the axis imaginary axis.
+    // TODO: Are this all the wrong values?
+    if (MathLib.isNegZero(this.re) &amp;&amp; res.re !== Infinity &amp;&amp; (this.im &lt; 0 || this.im &gt; 1)) {
+        res.re = -res.re;
+    }
 
-			return res;
-		};</code></pre>
+    return res;
+};</code></pre>
           <section id="arg">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/arg">arg</a>
             </h1>
@@ -496,11 +494,11 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the argument (= the angle) of the complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.arg = function () {
-			if (this.re === Infinity) {
-				return NaN;
-			}
-			return Math.atan2(this.im, this.re);
-		};</code></pre>
+    if (this.re === Infinity) {
+        return NaN;
+    }
+    return Math.atan2(this.im, this.re);
+};</code></pre>
           <section id="arsech">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/arsech">arsech</a>
             </h1>
@@ -511,11 +509,11 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the inverse hyperbolic secant of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.arsech = function () {
-			if (this.re === Infinity) {
-				return new MathLib.Complex(NaN);
-			}
-			return this.inverse().arcosh();
-		};</code></pre>
+    if (this.re === Infinity) {
+        return new MathLib.Complex(NaN);
+    }
+    return this.inverse().arcosh();
+};</code></pre>
           <section id="arsinh">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/arsinh">arsinh</a>
             </h1>
@@ -526,27 +524,27 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the inverse hyperbolic sine of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.arsinh = function () {
-			var a = this.re, b = this.im, aa = a * a, bb = b * b, sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * aa), sgn = function (x) {
-				if (x &gt; 0) {
-					return 1;
-				}
-				if (x &lt; 0) {
-					return -1;
-				}
-				if (1 / x === Infinity) {
-					return 1;
-				}
-				if (1 / x === -Infinity) {
-					return -1;
-				}
-			};
+    var a = this.re, b = this.im, aa = a * a, bb = b * b, sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * aa), sgn = function (x) {
+        if (x &gt; 0) {
+            return 1;
+        }
+        if (x &lt; 0) {
+            return -1;
+        }
+        if (1 / x === Infinity) {
+            return 1;
+        }
+        if (1 / x === -Infinity) {
+            return -1;
+        }
+    };
 
-			if (a === Infinity) {
-				return new MathLib.Complex(Infinity);
-			}
+    if (a === Infinity) {
+        return new MathLib.Complex(Infinity);
+    }
 
-			return new MathLib.Complex(sgn(a) / 2 * MathLib.arcosh(sqrt + (aa + bb)), sgn(b) / 2 * MathLib.arccos(sqrt - (aa + bb)));
-		};</code></pre>
+    return new MathLib.Complex(sgn(a) / 2 * MathLib.arcosh(sqrt + (aa + bb)), sgn(b) / 2 * MathLib.arccos(sqrt - (aa + bb)));
+};</code></pre>
           <section id="artanh">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/artanh">artanh</a>
             </h1>
@@ -557,18 +555,18 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the inverse hyperbolic tangent of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.artanh = function () {
-			var one = new MathLib.Complex(1, -0);
+    var one = new MathLib.Complex(1, -0);
 
-			if (this.isZero()) {
-				return new MathLib.Complex(this.re, this.im);
-			}
+    if (this.isZero()) {
+        return new MathLib.Complex(this.re, this.im);
+    }
 
-			if (this.re === Infinity) {
-				return new MathLib.Complex(NaN);
-			}
+    if (this.re === Infinity) {
+        return new MathLib.Complex(NaN);
+    }
 
-			return MathLib.times(0.5, MathLib.minus(one.plus(this).ln(), one.minus(this).ln()));
-		};</code></pre>
+    return MathLib.times(0.5, MathLib.minus(one.plus(this).ln(), one.minus(this).ln()));
+};</code></pre>
           <section id="coerceTo">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/coerceTo">coerceTo</a>
             </h1>
@@ -579,13 +577,13 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Coerces the complex number to some other data type</p> </div>
           <pre><code class="language-javascript">Complex.prototype.coerceTo = function (type) {
-			if (type === 'complex') {
-				return this.copy();
-			}
+    if (type === 'complex') {
+        return this.copy();
+    }
 
-			if (this.im === 0) {
-				return MathLib.coerceTo(this.re, type);
-			}</code></pre>
+    if (this.im === 0) {
+        return MathLib.coerceTo(this.re, type);
+    }</code></pre>
           <div class="description"><p>else {<br />            // TODO: coercion error<br />            }</p> </div>
           <pre><code class="language-javascript">};</code></pre>
           <section id="compare">
@@ -598,24 +596,24 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Compares two complex numbers</p> </div>
           <pre><code class="language-javascript">Complex.prototype.compare = function (x) {
-			var a = MathLib.sign(this.abs() - x.abs());
+    var a = MathLib.sign(this.abs() - x.abs());
 
-			if (MathLib.isNaN(this.re)) {
-				if (MathLib.isNaN(x.re)) {
-					return 0;
-				}
-				return -1;
-			}
+    if (MathLib.isNaN(this.re)) {
+        if (MathLib.isNaN(x.re)) {
+            return 0;
+        }
+        return -1;
+    }
 
-			if (this.re === Infinity) {
-				if (x.re === Infinity) {
-					return 0;
-				}
-				return 1;
-			}
+    if (this.re === Infinity) {
+        if (x.re === Infinity) {
+            return 0;
+        }
+        return 1;
+    }
 
-			return a ? a : MathLib.sign(this.arg() - x.arg());
-		};</code></pre>
+    return a ? a : MathLib.sign(this.arg() - x.arg());
+};</code></pre>
           <section id="conjugate">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/conjugate">conjugate</a>
             </h1>
@@ -626,8 +624,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the conjugate of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.conjugate = function () {
-			return new MathLib.Complex(this.re, MathLib.negative(this.im));
-		};</code></pre>
+    return new MathLib.Complex(this.re, MathLib.negative(this.im));
+};</code></pre>
           <section id="copy">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/copy">copy</a>
             </h1>
@@ -638,8 +636,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Copies the complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.copy = function () {
-			return new MathLib.Complex(MathLib.copy(this.re), MathLib.copy(this.im));
-		};</code></pre>
+    return new MathLib.Complex(MathLib.copy(this.re), MathLib.copy(this.im));
+};</code></pre>
           <section id="cos">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/cos">cos</a>
             </h1>
@@ -650,8 +648,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the cosine of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.cos = function () {
-			return new MathLib.Complex(MathLib.cos(this.re) * MathLib.cosh(this.im), -MathLib.sin(this.re) * MathLib.sinh(this.im));
-		};</code></pre>
+    return new MathLib.Complex(MathLib.cos(this.re) * MathLib.cosh(this.im), -MathLib.sin(this.re) * MathLib.sinh(this.im));
+};</code></pre>
           <section id="cosh">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/cosh">cosh</a>
             </h1>
@@ -662,8 +660,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the hyperbolic cosine of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.cosh = function () {
-			return new MathLib.Complex(MathLib.cos(this.im) * MathLib.cosh(this.re), MathLib.sin(this.im) * MathLib.sinh(this.re));
-		};</code></pre>
+    return new MathLib.Complex(MathLib.cos(this.im) * MathLib.cosh(this.re), MathLib.sin(this.im) * MathLib.sinh(this.re));
+};</code></pre>
           <section id="cot">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/cot">cot</a>
             </h1>
@@ -674,14 +672,14 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the cotangent of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.cot = function () {
-			var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cos(aa) - MathLib.cosh(bb);
+    var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cos(aa) - MathLib.cosh(bb);
 
-			if (this.isZero()) {
-				return new MathLib.Complex(Infinity);
-			}
+    if (this.isZero()) {
+        return new MathLib.Complex(Infinity);
+    }
 
-			return new MathLib.Complex(-MathLib.sin(aa) / d, MathLib.sinh(bb) / d);
-		};</code></pre>
+    return new MathLib.Complex(-MathLib.sin(aa) / d, MathLib.sinh(bb) / d);
+};</code></pre>
           <section id="coth">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/coth">coth</a>
             </h1>
@@ -692,14 +690,14 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the hyperbolic cotangent of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.coth = function () {
-			var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cosh(aa) - MathLib.cos(bb);
+    var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cosh(aa) - MathLib.cos(bb);
 
-			if (this.isZero()) {
-				return new MathLib.Complex(Infinity);
-			}
+    if (this.isZero()) {
+        return new MathLib.Complex(Infinity);
+    }
 
-			return new MathLib.Complex(MathLib.sinh(aa) / d, -MathLib.sin(bb) / d);
-		};</code></pre>
+    return new MathLib.Complex(MathLib.sinh(aa) / d, -MathLib.sin(bb) / d);
+};</code></pre>
           <section id="csc">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/csc">csc</a>
             </h1>
@@ -710,14 +708,14 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the cosecant of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.csc = function () {
-			var a = this.re, b = this.im, d = MathLib.cos(2 * a) - MathLib.cosh(2 * b);
+    var a = this.re, b = this.im, d = MathLib.cos(2 * a) - MathLib.cosh(2 * b);
 
-			if (this.isZero()) {
-				return new MathLib.Complex(Infinity);
-			}
+    if (this.isZero()) {
+        return new MathLib.Complex(Infinity);
+    }
 
-			return new MathLib.Complex(-2 * MathLib.sin(a) * MathLib.cosh(b) / d, 2 * MathLib.cos(a) * MathLib.sinh(b) / d);
-		};</code></pre>
+    return new MathLib.Complex(-2 * MathLib.sin(a) * MathLib.cosh(b) / d, 2 * MathLib.cos(a) * MathLib.sinh(b) / d);
+};</code></pre>
           <section id="csch">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/csch">csch</a>
             </h1>
@@ -728,14 +726,14 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the hyperbolic cosecant of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.csch = function () {
-			var a = this.re, b = this.im, d = MathLib.cosh(2 * a) - MathLib.cos(2 * b);
+    var a = this.re, b = this.im, d = MathLib.cosh(2 * a) - MathLib.cos(2 * b);
 
-			if (this.isZero()) {
-				return new MathLib.Complex(Infinity);
-			}
+    if (this.isZero()) {
+        return new MathLib.Complex(Infinity);
+    }
 
-			return new MathLib.Complex(2 * MathLib.sinh(a) * MathLib.cos(b) / d, -2 * MathLib.cosh(a) * MathLib.sin(b) / d);
-		};</code></pre>
+    return new MathLib.Complex(2 * MathLib.sinh(a) * MathLib.cos(b) / d, -2 * MathLib.cosh(a) * MathLib.sin(b) / d);
+};</code></pre>
           <section id="divide">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/divide">divide</a>
             </h1>
@@ -763,8 +761,8 @@ var c = new MathLib.Complex(1, 2);
           </table>
           <div class="description"><p>Divides a complex number by an other</p> </div>
           <pre><code class="language-javascript">Complex.prototype.divide = function (divisor) {
-			return this.times(MathLib.inverse(divisor));
-		};</code></pre>
+    return this.times(MathLib.inverse(divisor));
+};</code></pre>
           <section id="exp">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/exp">exp</a>
             </h1>
@@ -775,8 +773,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Evaluates the exponential function with a complex argument</p> </div>
           <pre><code class="language-javascript">Complex.prototype.exp = function () {
-			return new MathLib.Complex(MathLib.exp(this.re) * MathLib.cos(this.im), MathLib.exp(this.re) * MathLib.sin(this.im));
-		};</code></pre>
+    return new MathLib.Complex(MathLib.exp(this.re) * MathLib.cos(this.im), MathLib.exp(this.re) * MathLib.sin(this.im));
+};</code></pre>
           <section id="inverse">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/inverse">inverse</a>
             </h1>
@@ -787,18 +785,18 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the inverse of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.inverse = function () {
-			var d = MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2));
+    var d = MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2));
 
-			if (this.isZero()) {
-				return new MathLib.Complex(Infinity);
-			}
+    if (this.isZero()) {
+        return new MathLib.Complex(Infinity);
+    }
 
-			if (this.re === Infinity) {
-				return new MathLib.Complex(0);
-			}
+    if (this.re === Infinity) {
+        return new MathLib.Complex(0);
+    }
 
-			return new MathLib.Complex(MathLib.divide(this.re, d), MathLib.divide(MathLib.negative(this.im), d));
-		};</code></pre>
+    return new MathLib.Complex(MathLib.divide(this.re, d), MathLib.divide(MathLib.negative(this.im), d));
+};</code></pre>
           <section id="isEqual">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/isEqual">isEqual</a>
             </h1>
@@ -826,18 +824,16 @@ var c = new MathLib.Complex(1, 2);
           </table>
           <div class="description"><p>Determines if the complex number is equal to another number.</p> </div>
           <pre><code class="language-javascript">Complex.prototype.isEqual = function (n) {
-			if (n.type !== 'complex') {
-				if (MathLib.isZero(this.im)) {
-					return MathLib.isEqual.apply(null, MathLib.coerce(this.re, n));
-				}
-				else {
-					return false;
-				}
-			}
-			else {
-				return MathLib.isEqual(this.re, n.re) &amp;&amp; MathLib.isEqual(this.im, n.im);
-			}
-		};</code></pre>
+    if (n.type !== 'complex') {
+        if (MathLib.isZero(this.im)) {
+            return MathLib.isEqual.apply(null, MathLib.coerce(this.re, n));
+        } else {
+            return false;
+        }
+    } else {
+        return MathLib.isEqual(this.re, n.re) &amp;&amp; MathLib.isEqual(this.im, n.im);
+    }
+};</code></pre>
           <section id="isFinite">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/isFinite">isFinite</a>
             </h1>
@@ -848,8 +844,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Determines if the complex number is finite.</p> </div>
           <pre><code class="language-javascript">Complex.prototype.isFinite = function () {
-			return MathLib.isFinite(this.re);
-		};</code></pre>
+    return MathLib.isFinite(this.re);
+};</code></pre>
           <section id="isZero">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/isZero">isZero</a>
             </h1>
@@ -860,8 +856,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Determines if the complex number is equal to 0.</p> </div>
           <pre><code class="language-javascript">Complex.prototype.isZero = function () {
-			return MathLib.isZero(this.re) &amp;&amp; MathLib.isZero(this.im);
-		};</code></pre>
+    return MathLib.isZero(this.re) &amp;&amp; MathLib.isZero(this.im);
+};</code></pre>
           <section id="ln">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/ln">ln</a>
             </h1>
@@ -872,11 +868,11 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Evaluates the natural logarithm with complex arguments</p> </div>
           <pre><code class="language-javascript">Complex.prototype.ln = function () {
-			if (this.re === Infinity) {
-				return new MathLib.Complex(Infinity);
-			}
-			return new MathLib.Complex(MathLib.ln(this.abs()), this.arg());
-		};</code></pre>
+    if (this.re === Infinity) {
+        return new MathLib.Complex(Infinity);
+    }
+    return new MathLib.Complex(MathLib.ln(this.abs()), this.arg());
+};</code></pre>
           <section id="minus">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/minus">minus</a>
             </h1>
@@ -904,8 +900,8 @@ var c = new MathLib.Complex(1, 2);
           </table>
           <div class="description"><p>Calculates the difference of two complex numbers</p> </div>
           <pre><code class="language-javascript">Complex.prototype.minus = function (subtrahend) {
-			return this.plus(MathLib.negative(subtrahend));
-		};</code></pre>
+    return this.plus(MathLib.negative(subtrahend));
+};</code></pre>
           <section id="negative">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/negative">negative</a>
             </h1>
@@ -916,8 +912,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the negative of the complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.negative = function () {
-			return new MathLib.Complex(MathLib.negative(this.re), MathLib.negative(this.im));
-		};</code></pre>
+    return new MathLib.Complex(MathLib.negative(this.re), MathLib.negative(this.im));
+};</code></pre>
           <section id="plus">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/plus">plus</a>
             </h1>
@@ -945,13 +941,12 @@ var c = new MathLib.Complex(1, 2);
           </table>
           <div class="description"><p>Add complex numbers</p> </div>
           <pre><code class="language-javascript">Complex.prototype.plus = function (summand) {
-			if (summand.type !== 'complex') {
-				return new MathLib.Complex(MathLib.plus.apply(null, MathLib.coerce(this.re, summand)), this.im);
-			}
-			else {
-				return new MathLib.Complex(MathLib.plus(this.re, summand.re), MathLib.plus(this.im, summand.im));
-			}
-		};</code></pre>
+    if (summand.type !== 'complex') {
+        return new MathLib.Complex(MathLib.plus.apply(null, MathLib.coerce(this.re, summand)), this.im);
+    } else {
+        return new MathLib.Complex(MathLib.plus(this.re, summand.re), MathLib.plus(this.im, summand.im));
+    }
+};</code></pre>
           <section id="pow">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/pow">pow</a>
             </h1>
@@ -979,60 +974,59 @@ var c = new MathLib.Complex(1, 2);
           </table>
           <div class="description"><p>Calculates the complex number raised to some power</p> </div>
           <pre><code class="language-javascript">Complex.prototype.pow = function (c) {
-			var re, im, abs, arg;
+    var re, im, abs, arg;
 
-			if (MathLib.type(c) === 'complex') {
-				re = c.re;
-				im = c.im;
-				abs = this.abs();
-				arg = this.arg();
+    if (MathLib.type(c) === 'complex') {
+        re = c.re;
+        im = c.im;
+        abs = this.abs();
+        arg = this.arg();
 
-				// Fixes inf^(2+5i) = inf and 0^(2+5i) = 0
-				if ((this.isZero() || this.re === Infinity) &amp;&amp; !(c.isZero() || c.re === Infinity || MathLib.isNaN(c.re))) {
-					return new MathLib.Complex(this.re, this.im);
-				}
+        // Fixes inf^(2+5i) = inf and 0^(2+5i) = 0
+        if ((this.isZero() || this.re === Infinity) &amp;&amp; !(c.isZero() || c.re === Infinity || MathLib.isNaN(c.re))) {
+            return new MathLib.Complex(this.re, this.im);
+        }
 
-				return MathLib.Complex.polar(MathLib.times(MathLib.pow(abs, re), MathLib.exp(MathLib.negative(MathLib.times(im, arg)))), MathLib.plus(MathLib.times(re, arg), MathLib.times(im, MathLib.ln(abs))));
-			}
-			else {
-				// The naive pow method has some rounding errrors. For example
-				// (2+5i)^3 = -142.00000000000006-64.99999999999999i
-				// instead of -142-65i which are errors of magnitude around 1e-14.
-				// This error increases quickly for increasing exponents.
-				// (2+5i)^21 has an error of 5.8 in the real part
-				// return MathLib.Complex.polar(MathLib.pow(abs, c), MathLib.times(arg, c));
-				// The following algorithm uses a different approach for integer exponents,
-				// where it yields exact results.
-				// Non integer exponents are evaluated using the naive approach.
-				// TODO: Improve the algorithm.
-				var i, int = MathLib.floor(Math.abs(c)), res = new MathLib.Complex(1), power = this, bin = int.toString(2);
+        return MathLib.Complex.polar(MathLib.times(MathLib.pow(abs, re), MathLib.exp(MathLib.negative(MathLib.times(im, arg)))), MathLib.plus(MathLib.times(re, arg), MathLib.times(im, MathLib.ln(abs))));
+    } else {
+        // The naive pow method has some rounding errrors. For example
+        // (2+5i)^3 = -142.00000000000006-64.99999999999999i
+        // instead of -142-65i which are errors of magnitude around 1e-14.
+        // This error increases quickly for increasing exponents.
+        // (2+5i)^21 has an error of 5.8 in the real part
+        // return MathLib.Complex.polar(MathLib.pow(abs, c), MathLib.times(arg, c));
+        // The following algorithm uses a different approach for integer exponents,
+        // where it yields exact results.
+        // Non integer exponents are evaluated using the naive approach.
+        // TODO: Improve the algorithm.
+        var i, int = MathLib.floor(Math.abs(c)), res = new MathLib.Complex(1), power = this, bin = int.toString(2);
 
-				// If the exponent is not an integer we use the naive approach
-				if (c % 1) {
-					abs = this.abs();
-					arg = this.arg();
-					return MathLib.Complex.polar(MathLib.pow(abs, c), MathLib.times(arg, c));
-				}
+        // If the exponent is not an integer we use the naive approach
+        if (c % 1) {
+            abs = this.abs();
+            arg = this.arg();
+            return MathLib.Complex.polar(MathLib.pow(abs, c), MathLib.times(arg, c));
+        }
 
-				// The imaginary part of (2+5i)^-0 should be -0 not +0.
-				if (MathLib.isZero(c)) {
-					return new MathLib.Complex(1, c);
-				}
+        // The imaginary part of (2+5i)^-0 should be -0 not +0.
+        if (MathLib.isZero(c)) {
+            return new MathLib.Complex(1, c);
+        }
 
-				for (i = bin.length - 1; i &gt;= 0; i--) {
-					if (bin[i] === '1') {
-						res = MathLib.times(res, power);
-					}
-					power = MathLib.times(power, power);
-				}
+        for (i = bin.length - 1; i &gt;= 0; i--) {
+            if (bin[i] === '1') {
+                res = MathLib.times(res, power);
+            }
+            power = MathLib.times(power, power);
+        }
 
-				if (c &lt; 0) {
-					res = res.inverse();
-				}
+        if (c &lt; 0) {
+            res = res.inverse();
+        }
 
-				return res;
-			}
-		};</code></pre>
+        return res;
+    }
+};</code></pre>
           <section id="sec">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/sec">sec</a>
             </h1>
@@ -1043,10 +1037,10 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the secant of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.sec = function () {
-			var a = this.re, b = this.im, d = MathLib.cos(2 * a) + MathLib.cosh(2 * b);
+    var a = this.re, b = this.im, d = MathLib.cos(2 * a) + MathLib.cosh(2 * b);
 
-			return new MathLib.Complex(2 * MathLib.cos(a) * MathLib.cosh(b) / d, 2 * MathLib.sin(a) * MathLib.sinh(b) / d);
-		};</code></pre>
+    return new MathLib.Complex(2 * MathLib.cos(a) * MathLib.cosh(b) / d, 2 * MathLib.sin(a) * MathLib.sinh(b) / d);
+};</code></pre>
           <section id="sech">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/sech">sech</a>
             </h1>
@@ -1057,10 +1051,10 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the hyperbolic secant of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.sech = function () {
-			var a = this.re, b = this.im, d = MathLib.cosh(2 * a) + MathLib.cos(2 * b);
+    var a = this.re, b = this.im, d = MathLib.cosh(2 * a) + MathLib.cos(2 * b);
 
-			return new MathLib.Complex(2 * MathLib.cosh(a) * MathLib.cos(b) / d, -2 * MathLib.sinh(a) * MathLib.sin(b) / d);
-		};</code></pre>
+    return new MathLib.Complex(2 * MathLib.cosh(a) * MathLib.cos(b) / d, -2 * MathLib.sinh(a) * MathLib.sin(b) / d);
+};</code></pre>
           <section id="sign">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/sign">sign</a>
             </h1>
@@ -1071,14 +1065,13 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the signum of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.sign = function () {
-			if (this.isZero() || MathLib.isNaN(this.re)) {
-				return this;
-			}
-			else if (this.re === Infinity) {
-				return new MathLib.Complex(NaN);
-			}
-			return MathLib.Complex.polar(1, this.arg());
-		};</code></pre>
+    if (this.isZero() || MathLib.isNaN(this.re)) {
+        return this;
+    } else if (this.re === Infinity) {
+        return new MathLib.Complex(NaN);
+    }
+    return MathLib.Complex.polar(1, this.arg());
+};</code></pre>
           <section id="sin">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/sin">sin</a>
             </h1>
@@ -1089,8 +1082,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the sine of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.sin = function () {
-			return new MathLib.Complex(MathLib.sin(this.re) * MathLib.cosh(this.im), MathLib.cos(this.re) * MathLib.sinh(this.im));
-		};</code></pre>
+    return new MathLib.Complex(MathLib.sin(this.re) * MathLib.cosh(this.im), MathLib.cos(this.re) * MathLib.sinh(this.im));
+};</code></pre>
           <section id="sinh">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/sinh">sinh</a>
             </h1>
@@ -1101,8 +1094,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the hyperbolic sine of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.sinh = function () {
-			return new MathLib.Complex(MathLib.cos(this.im) * MathLib.sinh(this.re), MathLib.sin(this.im) * MathLib.cosh(this.re));
-		};</code></pre>
+    return new MathLib.Complex(MathLib.cos(this.im) * MathLib.sinh(this.re), MathLib.sin(this.im) * MathLib.cosh(this.re));
+};</code></pre>
           <section id="sqrt">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/sqrt">sqrt</a>
             </h1>
@@ -1113,8 +1106,8 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Takes the square root of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.sqrt = function () {
-			return MathLib.Complex.polar(Math.sqrt(this.abs()), this.arg() / 2);
-		};</code></pre>
+    return MathLib.Complex.polar(Math.sqrt(this.abs()), this.arg() / 2);
+};</code></pre>
           <section id="tan">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/tan">tan</a>
             </h1>
@@ -1125,10 +1118,10 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the tangent of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.tan = function () {
-			var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cos(aa) + MathLib.cosh(bb);
+    var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cos(aa) + MathLib.cosh(bb);
 
-			return new MathLib.Complex(MathLib.sin(aa) / d, MathLib.sinh(bb) / d);
-		};</code></pre>
+    return new MathLib.Complex(MathLib.sin(aa) / d, MathLib.sinh(bb) / d);
+};</code></pre>
           <section id="tanh">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/tanh">tanh</a>
             </h1>
@@ -1139,10 +1132,10 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Calculates the hyperbolic tangent of a complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.tanh = function () {
-			var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cosh(aa) + MathLib.cos(bb);
+    var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cosh(aa) + MathLib.cos(bb);
 
-			return new MathLib.Complex(MathLib.sinh(aa) / d, MathLib.sin(bb) / d);
-		};</code></pre>
+    return new MathLib.Complex(MathLib.sinh(aa) / d, MathLib.sin(bb) / d);
+};</code></pre>
           <section id="times">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/times">times</a>
             </h1>
@@ -1170,34 +1163,31 @@ var c = new MathLib.Complex(1, 2);
           </table>
           <div class="description"><p>Multiplies complex numbers</p> </div>
           <pre><code class="language-javascript">Complex.prototype.times = function (factor) {
-			if (factor.type === 'complex') {
-				if (this.re === Infinity) {
-					if (factor.isZero() || MathLib.isNaN(factor.re)) {
-						return new MathLib.Complex(NaN);
-					}
-					else {
-						return new MathLib.Complex(Infinity);
-					}
-				}
+    if (factor.type === 'complex') {
+        if (this.re === Infinity) {
+            if (factor.isZero() || MathLib.isNaN(factor.re)) {
+                return new MathLib.Complex(NaN);
+            } else {
+                return new MathLib.Complex(Infinity);
+            }
+        }
 
-				if (factor.re === Infinity) {
-					if (this.isZero() || MathLib.isNaN(this.re)) {
-						return new MathLib.Complex(NaN);
-					}
-					else {
-						return new MathLib.Complex(Infinity);
-					}
-				}
+        if (factor.re === Infinity) {
+            if (this.isZero() || MathLib.isNaN(this.re)) {
+                return new MathLib.Complex(NaN);
+            } else {
+                return new MathLib.Complex(Infinity);
+            }
+        }
 
-				return new MathLib.Complex(MathLib.minus(MathLib.times(this.re, factor.re), MathLib.times(this.im, factor.im)), MathLib.plus(MathLib.times(this.re, factor.im), MathLib.times(this.im, factor.re)));
-			}
-			else if (factor.type === 'rational') {
-				factor = factor.coerceTo('number');
-			}
-			if (typeof factor === 'number') {
-				return new MathLib.Complex(MathLib.times(this.re, factor), MathLib.times(this.im, factor));
-			}
-		};</code></pre>
+        return new MathLib.Complex(MathLib.minus(MathLib.times(this.re, factor.re), MathLib.times(this.im, factor.im)), MathLib.plus(MathLib.times(this.re, factor.im), MathLib.times(this.im, factor.re)));
+    } else if (factor.type === 'rational') {
+        factor = factor.coerceTo('number');
+    }
+    if (typeof factor === 'number') {
+        return new MathLib.Complex(MathLib.times(this.re, factor), MathLib.times(this.im, factor));
+    }
+};</code></pre>
           <section id="toContentMathML">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/toContentMathML">toContentMathML</a>
             </h1>
@@ -1208,12 +1198,12 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Returns the content MathML representation of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.toContentMathML = function () {
-			if (!this.isFinite()) {
-				return '&lt;csymbol cd=&quot;nums1&quot;&gt;' + (this.re === Infinity ? 'infinity' : 'NaN') + '&lt;/csymbol&gt;';
-			}
+    if (!this.isFinite()) {
+        return '&lt;csymbol cd=&quot;nums1&quot;&gt;' + (this.re === Infinity ? 'infinity' : 'NaN') + '&lt;/csymbol&gt;';
+    }
 
-			return '&lt;apply&gt;&lt;plus /&gt;' + MathLib.toContentMathML(this.re) + '&lt;apply&gt;&lt;times /&gt;' + MathLib.toContentMathML(this.im) + '&lt;imaginaryi /&gt;&lt;/apply&gt;&lt;/apply&gt;';
-		};</code></pre>
+    return '&lt;apply&gt;&lt;plus /&gt;' + MathLib.toContentMathML(this.re) + '&lt;apply&gt;&lt;times /&gt;' + MathLib.toContentMathML(this.im) + '&lt;imaginaryi /&gt;&lt;/apply&gt;&lt;/apply&gt;';
+};</code></pre>
           <section id="toLaTeX">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/toLaTeX">toLaTeX</a>
             </h1>
@@ -1241,31 +1231,31 @@ var c = new MathLib.Complex(1, 2);
           </table>
           <div class="description"><p>Returns the LaTeX representation of the complex number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.toLaTeX = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			var option, str = '', reFlag = !MathLib.isZero(this.re), passOptions = {};
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    var option, str = '', reFlag = !MathLib.isZero(this.re), passOptions = {};
 
-			if (!this.isFinite()) {
-				return (options.sign ? '+' : '') + '\\text{Complex' + this.re + '}';
-			}
+    if (!this.isFinite()) {
+        return (options.sign ? '+' : '') + '\\text{Complex' + this.re + '}';
+    }
 
-			if (!MathLib.isZero(this.im)) {
-				for (option in options) {
-					if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
-						passOptions[option] = options[option];
-					}
-				}
+    if (!MathLib.isZero(this.im)) {
+        for (option in options) {
+            if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
+                passOptions[option] = options[option];
+            }
+        }
 
-				passOptions.sign = reFlag || options.sign;
+        passOptions.sign = reFlag || options.sign;
 
-				str += MathLib.toLaTeX(this.im, passOptions) + 'i';
-			}
+        str += MathLib.toLaTeX(this.im, passOptions) + 'i';
+    }
 
-			if (reFlag || str.length === 0) {
-				str = MathLib.toLaTeX(this.re, options) + str;
-			}
+    if (reFlag || str.length === 0) {
+        str = MathLib.toLaTeX(this.re, options) + str;
+    }
 
-			return str;
-		};</code></pre>
+    return str;
+};</code></pre>
           <section id="toMathML">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/toMathML">toMathML</a>
             </h1>
@@ -1293,35 +1283,34 @@ var c = new MathLib.Complex(1, 2);
           </table>
           <div class="description"><p>Returns the (presentation) MathML representation of the number</p> </div>
           <pre><code class="language-javascript">Complex.prototype.toMathML = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			var str = '', option, reFlag = !MathLib.isZero(this.re), passOptions = {};
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    var str = '', option, reFlag = !MathLib.isZero(this.re), passOptions = {};
 
-			if (!this.isFinite()) {
-				return (options.sign ? '&lt;mo&gt;+&lt;/mo&gt;' : '') + '&lt;mi&gt;Complex' + this.re + '&lt;/mi&gt;';
-			}
+    if (!this.isFinite()) {
+        return (options.sign ? '&lt;mo&gt;+&lt;/mo&gt;' : '') + '&lt;mi&gt;Complex' + this.re + '&lt;/mi&gt;';
+    }
 
-			if (!MathLib.isZero(this.im)) {
-				for (option in options) {
-					if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
-						passOptions[option] = options[option];
-					}
-				}
+    if (!MathLib.isZero(this.im)) {
+        for (option in options) {
+            if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
+                passOptions[option] = options[option];
+            }
+        }
 
-				if (reFlag || options.sign) {
-					passOptions.sign = false;
-					str += '&lt;mo&gt;' + MathLib.toString(this.im, {sign: true}).slice(0, 1) + '&lt;/mo&gt;&lt;mrow&gt;' + MathLib.toMathML(MathLib.abs(this.im), passOptions) + '&lt;mo&gt;&amp;#x2062;&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;';
-				}
-				else {
-					str += '&lt;mrow&gt;' + MathLib.toMathML(this.im, passOptions) + '&lt;mo&gt;&amp;#x2062;&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;';
-				}
-			}
+        if (reFlag || options.sign) {
+            passOptions.sign = false;
+            str += '&lt;mo&gt;' + MathLib.toString(this.im, { sign: true }).slice(0, 1) + '&lt;/mo&gt;&lt;mrow&gt;' + MathLib.toMathML(MathLib.abs(this.im), passOptions) + '&lt;mo&gt;&amp;#x2062;&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;';
+        } else {
+            str += '&lt;mrow&gt;' + MathLib.toMathML(this.im, passOptions) + '&lt;mo&gt;&amp;#x2062;&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;';
+        }
+    }
 
-			if (reFlag || str.length === 0) {
-				str = MathLib.toMathML(this.re, options) + str;
-			}
+    if (reFlag || str.length === 0) {
+        str = MathLib.toMathML(this.re, options) + str;
+    }
 
-			return str;
-		};</code></pre>
+    return str;
+};</code></pre>
           <section id="toPoint">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/toPoint">toPoint</a>
             </h1>
@@ -1332,12 +1321,12 @@ var c = new MathLib.Complex(1, 2);
           </section>
           <div class="description"><p>Interprets the complex number as point in the two dimensional plane</p> </div>
           <pre><code class="language-javascript">Complex.prototype.toPoint = function () {
-			if (this.re === Infinity || MathLib.isNaN(this.re)) {
-				return new MathLib.Point([0, 0, 0]);
-			}
+    if (this.re === Infinity || MathLib.isNaN(this.re)) {
+        return new MathLib.Point([0, 0, 0]);
+    }
 
-			return new MathLib.Point([this.re, this.im, 1]);
-		};</code></pre>
+    return new MathLib.Point([this.re, this.im, 1]);
+};</code></pre>
           <section id="toString">
             <h1><a href="http://mathlib.de/en/docs/Complex/prototype/toString">toString</a>
             </h1>
@@ -1365,40 +1354,40 @@ var c = new MathLib.Complex(1, 2);
           </table>
           <div class="description"><p>Custom toString function</p> </div>
           <pre><code class="language-javascript">Complex.prototype.toString = function (options) {
-			if (typeof options === 'undefined') { options = {}; }
-			var str = '', option, reFlag = !MathLib.isZero(this.re), passOptions = {};
+    if (typeof options === &quot;undefined&quot;) { options = {}; }
+    var str = '', option, reFlag = !MathLib.isZero(this.re), passOptions = {};
 
-			if (!this.isFinite()) {
-				return (options.sign ? '+' : '') + 'Complex' + this.re;
-			}
+    if (!this.isFinite()) {
+        return (options.sign ? '+' : '') + 'Complex' + this.re;
+    }
 
-			if (!MathLib.isZero(this.im)) {
-				for (option in options) {
-					if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
-						passOptions[option] = options[option];
-					}
-				}
+    if (!MathLib.isZero(this.im)) {
+        for (option in options) {
+            if (options.hasOwnProperty(option) &amp;&amp; option !== 'sign') {
+                passOptions[option] = options[option];
+            }
+        }
 
-				passOptions.sign = reFlag || options.sign;
+        passOptions.sign = reFlag || options.sign;
 
-				str += MathLib.toString(this.im, passOptions) + 'i';
-			}
+        str += MathLib.toString(this.im, passOptions) + 'i';
+    }
 
-			if (reFlag || str.length === 0) {
-				str = MathLib.toString(this.re, options) + str;
-			}
+    if (reFlag || str.length === 0) {
+        str = MathLib.toString(this.re, options) + str;
+    }
 
-			return str;
-		};
-		Complex.polar = function (abs, arg) {
-			if (abs === Infinity) {
-				return new MathLib.Complex(Infinity);
-			}
-			return new MathLib.Complex(abs * Math.cos(arg), abs * Math.sin(arg));
-		};
-		return Complex;
-	})();
-	MathLib.Complex = Complex;
+    return str;
+};
+Complex.polar = function (abs, arg) {
+    if (abs === Infinity) {
+        return new MathLib.Complex(Infinity);
+    }
+    return new MathLib.Complex(abs * Math.cos(arg), abs * Math.sin(arg));
+};
+return Complex;
+    })();
+    MathLib.Complex = Complex;
 })(MathLib || (MathLib = {}));</code></pre>
         </div>
       </div>
