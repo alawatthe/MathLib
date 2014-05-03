@@ -33,6 +33,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-nodeunit');
+	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
@@ -41,7 +42,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-newer');
 	grunt.loadNpmTasks('grunt-notify');
 	grunt.loadNpmTasks('grunt-qunit-amd');
-	grunt.loadNpmTasks('grunt-qunit-istanbul');
+	//grunt.loadNpmTasks('grunt-qunit-istanbul');
 	grunt.loadNpmTasks('grunt-regex-replace');
 	grunt.loadNpmTasks('grunt-saucelabs');
 	grunt.loadNpmTasks('grunt-shell');
@@ -394,8 +395,7 @@ module.exports = function (grunt) {
 			}
 		},
 
-
-		/*
+		//*
 		qunit: {
 			/*
 			MathLib: {
@@ -412,7 +412,7 @@ module.exports = function (grunt) {
 					]
 				}
 			},
-			*
+			*/
 			all: {
 				options: {
 					urls: [
@@ -423,9 +423,9 @@ module.exports = function (grunt) {
 		},
 		//*/
 
-
+		/*
 		qunit: {
-			/*
+			/ *
 			MathLib: {
 				options: {
 					urls: [
@@ -440,7 +440,7 @@ module.exports = function (grunt) {
 					]
 				}
 			},
-			*/
+			* /
 
 			options: {
 				baseUrl: '.',
@@ -457,7 +457,7 @@ module.exports = function (grunt) {
 			},
 			MathLib: './test/test.all.html'
 		},
-
+		*/
 
 		'qunit_amd': {
 			MathLib: {
@@ -497,7 +497,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 75,
+					build: 76,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -543,6 +543,7 @@ module.exports = function (grunt) {
 			*/
 		},
 
+
 		tslint: {
 			options: {
 				configuration: grunt.file.readJSON('.tslintrc')
@@ -556,6 +557,7 @@ module.exports = function (grunt) {
 							})
 			}
 		},
+
 
 		jscs: {
 			options: {
@@ -1064,5 +1066,5 @@ module.exports = function (grunt) {
 	grunt.registerTask('commit', ['generateAll', 'clean', 'testPlain', 'testCommonjs', 'tslint', 'jshint', 'jscs']);
 	grunt.registerTask('release', ['generateAll', 'clean', 'testPlain', 'testCommonjs', /*'tslint', 'jshint', 'jscs',*/ 'regex-replace:bower', 'regex-replace:saucebuildnumber']);/*, 'docco'*/
 
-	grunt.registerTask('continuousIntegration', ['testPlain', 'coveralls', /*'tslint', 'jshint', 'jscs',*/ 'saucelabs-qunit']);
+	grunt.registerTask('continuousIntegration', ['testPlain', /*'coveralls',*/ /*'tslint', 'jshint', 'jscs',*/ 'saucelabs-qunit']);
 };
