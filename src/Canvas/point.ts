@@ -39,7 +39,8 @@ point: function (point : Point, options = {}, redraw = false) {
 
 	// Draw the point
 	ctx.beginPath();
-	ctx.arc(point[0] / point[2], point[1] / point[2], ((<any>options).size || 10) / (screen.scale.x - screen.scale.y), 0, 2 * Math.PI);
+	ctx.arc(point[0] / point[2], point[1] / point[2],
+		((<any>options).size || 10) / (screen.scale.x - screen.scale.y), 0, 2 * Math.PI);
 	ctx.closePath();
 	ctx.fill();
 	ctx.stroke();

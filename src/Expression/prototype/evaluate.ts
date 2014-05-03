@@ -37,7 +37,7 @@ evaluate() : any {
 	}
 	if (this.subtype === 'functionDefinition') {
 		return MathLib.Functn(this.content[0].evaluate(), {
-			name: 'f', 
+			name: 'f',
 			expression: this
 		});
 	}
@@ -55,7 +55,7 @@ evaluate() : any {
 	}
 	if (this.subtype === 'unaryOperator') {
 		if (this.value === '-') {
-			return MathLib.negative(this.content.evaluate())
+			return MathLib.negative(this.content.evaluate());
 		}
 		return this.content.evaluate();
 	}

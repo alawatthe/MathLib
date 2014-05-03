@@ -4,6 +4,7 @@
  */
 define([], function () {
 	var MathLib = {};
+	'use strict';
 	MathLib.version = '0.7.2';
 	MathLib.apery = 1.2020569031595942;
 	MathLib.e = Math.E;

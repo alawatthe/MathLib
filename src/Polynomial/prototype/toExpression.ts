@@ -65,7 +65,7 @@ toExpression() : Expression {
 				);
 			}
 		}
-	}	
+	}
 
 	sum = new MathLib.Expression({
 		content: content,

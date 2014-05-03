@@ -26,7 +26,9 @@ export class Permutation {
 			cycle = Permutation.listToCycle(permutation);
 		}
 
-		permutation.forEach((x, i) => {this[i] = x;});
+		permutation.forEach((x, i) => {
+			this[i] = x;
+		});
 		this.length = permutation.length;
 		this.cycle = cycle;
 

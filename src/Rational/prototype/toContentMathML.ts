@@ -10,8 +10,8 @@ toContentMathML(options : toContentMathMLOptions = {}) : string {
 	if (options.strict) {
 		return '<apply><csymbol cd="nums1">rational</csymbol>'
 						+ MathLib.toContentMathML(this.numerator, options)
-						+ MathLib.toContentMathML(this.denominator, options)						 
-						+ '</apply>'
+						+ MathLib.toContentMathML(this.denominator, options)
+						+ '</apply>';
 	}
 	else {
 		base = (options.base || 10);

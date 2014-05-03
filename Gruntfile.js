@@ -47,6 +47,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-shell');
 	grunt.loadNpmTasks('grunt-stamp');
 	grunt.loadNpmTasks('grunt-ts');
+	grunt.loadNpmTasks('grunt-tslint');
 
 	var bannerMin = '/*! MathLib v<%= pkg.version %> MathLib.de | MathLib.de/en/license */\n',
 			banner = '/*!\n' +
@@ -98,7 +99,8 @@ module.exports = function (grunt) {
 		grunt.log.writeln('grunt testAMD\t\t\tRun the tests for the AMD JavaScript files');
 
 		grunt.log.subhead('Code quality checks');
-		grunt.log.writeln('grunt jshint\t\t\tRuns the JSHint (Possible arguments: MathLib, Tests, grunt)');
+		grunt.log.writeln('grunt jshint\t\t\tRuns JSHint (Possible arguments: MathLib, Tests, grunt)');
+		grunt.log.writeln('grunt tslint\t\t\tRuns TSLint');
 		grunt.log.writeln('grunt jscs\t\t\tRuns the JavaScript Code Style checker (Possible arguments: MathLib, Tests, grunt)');
 	});
 
@@ -112,7 +114,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('generateTemplate', 'A simple task to convert HTML templates', function () {
 		var template = grunt.file.read('src/Screen/template.hbs'),
 			process = function (template) {
-				var str = 'var template = function (data) {';
+				var str = '/* tslint:disable */\nvar template = function (data) {';
 
 				str += 'var p = [];' +
 				'p.push(\'' +
@@ -123,7 +125,8 @@ module.exports = function (grunt) {
 								.replace(/\{\{/g, '\');\np.push(data.')
 								.replace(/\}\}/g, ');\np.push(\'') +
 				'\');\n' +
-				'return p.join(\'\');\n}';
+				'return p.join(\'\');\n};\n' +
+				'/* tslint:enable */';
 
 				return str;
 			};
@@ -149,14 +152,14 @@ module.exports = function (grunt) {
 
 		concat: {
 			options: {
-				banner: '/// <reference path=\'reference.ts\'/>\nmodule MathLib {\n',
-				footer: '\n}}'
+				banner: '/// <reference path=\'reference.ts\'/>\nmodule MathLib {\n\t\'use strict\';\n',
+				footer: '\n}}\n'
 			},
 			meta: {
 				src: ['src/meta/head.ts', 'src/meta/!(head).ts'],
 				dest: 'build/plain/meta.ts',
 				options: {
-					footer: '\n\'export MathLib\';\n// end meta\n}'
+					footer: '\n\'export MathLib\';\n// end meta\n}\n'
 				}
 			},
 			Interfaces: {
@@ -164,7 +167,7 @@ module.exports = function (grunt) {
 				dest: 'build/plain/Interfaces.ts',
 				options: {
 					banner: '',
-					footer: ''
+					footer: '\n'
 				}
 			},
 			Expression: {
@@ -175,7 +178,7 @@ module.exports = function (grunt) {
 				src: ['src/Functn/init.ts', 'src/Functn/*/*.ts', 'src/Functn/!(init).ts'],
 				dest: 'build/plain/Functn.ts',
 				options: {
-					footer: '\n}'
+					footer: '\n}\n'
 				}
 			},
 			Screen: {
@@ -214,14 +217,14 @@ module.exports = function (grunt) {
 				src: createModuleArray('Complex'),
 				dest: 'build/plain/Complex.ts',
 				options: {
-					footer: '\n}}declare var Complex : Field'
+					footer: '\n}}declare var Complex : Field;\n'
 				}
 			},
 			Integer: {
 				src: createModuleArray('Integer'),
 				dest: 'build/plain/Integer.ts',
 				options: {
-					footer: '\n}}declare var Integer : Ring'
+					footer: '\n}}declare var Integer : Ring;\n'
 				}
 			},
 			Line: {
@@ -252,7 +255,7 @@ module.exports = function (grunt) {
 				src: createModuleArray('Rational'),
 				dest: 'build/plain/Rational.ts',
 				options: {
-					footer: '\n}}declare var Rational : Field'
+					footer: '\n}}declare var Rational : Field;\n'
 				}
 			},
 			Set: {
@@ -512,12 +515,6 @@ module.exports = function (grunt) {
 		/*
 		Code Quality
 		============
-
-		Run jshint
-			grunt jshint
-
-		Run the JavaScript Code Style checker
-			grunt jscs
 		*/
 		jshint: {
 			options: {
@@ -547,6 +544,19 @@ module.exports = function (grunt) {
 			*/
 		},
 
+		tslint: {
+			options: {
+				configuration: grunt.file.readJSON('.tslintrc')
+			},
+			files: {
+				src: ['Circle', 'Complex', 'Conic', 'Expression', 'Functn', 'Integer',
+							'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial',
+							'Rational', 'Screen', 'Screen2D', 'Screen3D', 'Set', 'Vector'
+							].map(function (module) {
+								return 'build/plain/' + module + '.ts';
+							})
+			}
+		},
 
 		jscs: {
 			options: {
@@ -1050,8 +1060,8 @@ module.exports = function (grunt) {
 
 
 	grunt.registerTask('default', ['help']);
-	grunt.registerTask('commit', ['generateAll', 'clean', 'testPlain', 'testCommonjs', 'jshint', 'jscs']);
-	grunt.registerTask('release', ['generateAll', 'clean', 'testPlain', 'testCommonjs', /*'jshint', 'jscs',*/ 'regex-replace:bower', 'regex-replace:saucebuildnumber']);/*, 'docco'*/
+	grunt.registerTask('commit', ['generateAll', 'clean', 'testPlain', 'testCommonjs', 'tslint', 'jshint', 'jscs']);
+	grunt.registerTask('release', ['generateAll', 'clean', 'testPlain', 'testCommonjs', /*'tslint', 'jshint', 'jscs',*/ 'regex-replace:bower', 'regex-replace:saucebuildnumber']);/*, 'docco'*/
 
-	grunt.registerTask('continuousIntegration', ['testPlain', 'coveralls', /*'jshint', 'jscs',*/ 'saucelabs-qunit']);
+	grunt.registerTask('continuousIntegration', ['testPlain', 'coveralls', /*'tslint', 'jshint', 'jscs',*/ 'saucelabs-qunit']);
 };

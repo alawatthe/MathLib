@@ -37,7 +37,7 @@
 	"sub"           : false,
 	"supernew"      : false,
 	"validthis"     : false,
-	
+
 	"browser"       : true,
 	"couch"         : false,
 	"devel"         : false,

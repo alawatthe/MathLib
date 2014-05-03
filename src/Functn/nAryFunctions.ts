@@ -7,7 +7,9 @@ var nAryFunctions = {
 	 * @return {boolean}
 	 */
 	and: function (args) {
-		return args.every(function (x) {return !!x;});
+		return args.every(function (x) {
+			return !!x;
+		});
 	},
 	arithMean: function (n) {
 		return MathLib.plus(n) / n.length;
@@ -133,7 +135,9 @@ var nAryFunctions = {
 	 * @return {boolean}
 	 */
 	or: function (args) {
-		return args.some(function (x) {return !!x;});
+		return args.some(function (x) {
+			return !!x;
+		});
 	},
 	plus: function (n) {
 		if (n.length === 0) {
@@ -259,7 +263,9 @@ var nAryFunctions = {
 	 * @return {boolean}
 	 */
 	xor: function (args) {
-		return args.reduce(function (x, y) {return x + !!y;}, 0) % 2 !== 0;
+		return args.reduce(function (x, y) {
+			return x + !!y;
+		}, 0) % 2 !== 0;
 	}
 };
 

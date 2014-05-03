@@ -40,7 +40,9 @@ export class Polynomial implements Drawable, Printable {
 			polynomial = coefficients;
 		}
 
-		polynomial.forEach((x, i) => {this[i] = x});
+		polynomial.forEach((x, i) => {
+			this[i] = x;
+		});
 		this.length = polynomial.length;
 		this.deg = polynomial.length - 1;
 		this.subdeg = (function (a) {

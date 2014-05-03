@@ -11,6 +11,8 @@ var __extends = this.__extends || function (d, b) {
 	d.prototype = new __();
 };
 
+	'use strict';
+
 	// A function converting arrays to THREE.js vectors
 	var to3js = function (x) {
 		if (x.length === 2) {
@@ -44,7 +46,7 @@ var __extends = this.__extends || function (d, b) {
 					lookAt: [0, 0, 0],
 					position: [10, 10, 10]
 				},
-				//controls: 'Trackball',
+				// controls: 'Trackball',
 				grid: {
 					xy: {
 						angle: Math.PI / 8,
@@ -154,7 +156,7 @@ var __extends = this.__extends || function (d, b) {
 			}
 
 			function update () {
-				//var delta = clock.getDelta();
+				// var delta = clock.getDelta();
 				controls.update();
 			}
 

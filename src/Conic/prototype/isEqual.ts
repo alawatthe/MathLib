@@ -40,7 +40,7 @@ isEqual(conic : Conic) : boolean {
 		}
 
 		return true;
-	}
+	};
 
 	return compare(this.primal, conic.primal) && compare(this.dual, conic.dual);
 }

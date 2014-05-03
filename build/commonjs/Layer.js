@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	var MathLib = require('./meta.js'),
 		Screen2D = require('./Screen2D');
 
@@ -67,7 +69,7 @@
 					this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
 					this.draw = function () {
-						//					_this.ctx.lineWidth = (screen.options.grid.lineWidth || 4) / (screen.scale.x - screen.scale.y);
+						// _this.ctx.lineWidth = (screen.options.grid.lineWidth || 4) / (screen.scale.x - screen.scale.y);
 						_this.screen.drawGrid();
 					};
 				}

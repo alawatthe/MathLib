@@ -20,7 +20,7 @@ fns.cbrt = {
 			a3x = a3 + x;
 			an = a * (a3x + x) / (a3x + a3);
 			if (MathLib.isZero(an - a)) {
-				break; 
+				break;
 			}
 			a = an;
 		}

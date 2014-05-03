@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	define(['meta', 'Functn', 'Point'], function(MathLib) {
 	/**
 	* MathLib.Complex is the MathLib implementation of complex numbers.

@@ -24,7 +24,7 @@ toMathML() : string {
 			return  '<mrow>' + this.value[0].toMathML() + '<mo>+</mo>' + this.value[1].toMathML() + '<mi>i</mi></mrow>';
 		}
 		else if (this.mode === 'polar') {
-			return this.value[0].toMathML() + '<msup><mi>e</mi><mrow>' 
+			return this.value[0].toMathML() + '<msup><mi>e</mi><mrow>'
 				+ this.value[1].toMathML() + '<mi>i</mi></mrow></msup>';
 		}
 	}
@@ -40,7 +40,7 @@ toMathML() : string {
 		return '<mi>' + this.value + '</mi>';
 	}
 	if (this.subtype === 'naryOperator') {
-		return '<mrow>' + this.content.map(expr => expr.toMathML()).join('<mo>' + 
+		return '<mrow>' + this.content.map(expr => expr.toMathML()).join('<mo>' +
 			(this.value === '*'
 			? '&middot;'
 			: this.value) +
@@ -48,7 +48,7 @@ toMathML() : string {
 	}
 	if (this.subtype === 'unaryOperator') {
 		if (this.value === '-') {
-			return '<mo>-</mo>' + this.content.toMathML()
+			return '<mo>-</mo>' + this.content.toMathML();
 		}
 		return this.content.toMathML();
 	}

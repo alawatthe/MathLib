@@ -14,7 +14,7 @@ drawAxes() {
 			textOptions = {
 				font: this.options.axes && 'label' in this.options.axes ? this.options.axes.label.font : '',
 				fontSize: this.options.axes && 'label' in this.options.axes ? this.options.axes.label.fontSize : '',
-//				fontSize: this.options.axes.label.fontSize,
+				// fontSize: this.options.axes.label.fontSize,
 				strokeStyle: MathLib.colorConvert(this.options.axes.textColor),
 				fillStyle: MathLib.colorConvert(this.options.axes.textColor)
 			},
@@ -39,7 +39,7 @@ drawAxes() {
 
 	// The axes
 	if (this.options.axes.x) {
-		line([[left, 0], [right, 0]], options, true);	
+		line([[left, 0], [right, 0]], options, true);
 	}
 	if (this.options.axes.y) {
 		line([[0, bottom], [0, top]], options, true);

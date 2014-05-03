@@ -15,7 +15,7 @@ export var on = function (type, callback) {
 	else if (type === 'warning') {
 		warnings.push(callback);
 	}
-}
+};
 
 
 /**
@@ -32,7 +32,7 @@ export var off = function (type, callback) {
 	else if (type === 'warning') {
 		warnings = warnings.filter(x => x !== callback);
 	}
-}
+};
 
 
 /**

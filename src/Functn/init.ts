@@ -18,8 +18,8 @@ export var Functn = function (f, options) {
 
 	var functn = function (...args) {
 		var firstArg,
-				i:number,
-				ii:number,
+				i : number,
+				ii : number,
 				x = args[0],
 				arity = options.arity,
 				isNumeric = arg => ['complex', 'integer', 'number', 'rational'].indexOf(MathLib.type(arg)) !== -1;
@@ -32,7 +32,9 @@ export var Functn = function (f, options) {
 		firstArg = args[0];
 
 
-		if (args.length < arity || (args.length === arity && args.some(arg => arg === undefined || arg.type === 'functn' || arg.type === 'expression'))) {
+		if (args.length < arity ||
+			(args.length === arity &&
+				args.some(arg => arg === undefined || arg.type === 'functn' || arg.type === 'expression'))) {
 
 			var bvar,
 					partialAppliedExpression = options.expression.copy(),
@@ -97,8 +99,8 @@ export var Functn = function (f, options) {
 
 
 			return MathLib.Functn(function() {
-				var j:number,
-						jj:number,
+				var j : number,
+						jj : number,
 						argus = [],
 						argumentsIndex = 0;
 
@@ -142,7 +144,9 @@ export var Functn = function (f, options) {
 						return expr;
 					});
 
-			return new MathLib.Functn(function (y) {return f(x(y));}, {
+			return new MathLib.Functn(function (y) {
+					return f(x(y));
+				}, {
 					expression: new MathLib.Expression({
 						subtype: 'functionDefinition',
 						args: x.expression.args,
@@ -151,11 +155,13 @@ export var Functn = function (f, options) {
 				});
 		}
 		else if (typeof x === 'function') {
-			return function (y) {return f(x(y));};
+			return function (y) {
+				return f(x(y));
+			};
 		}
 		else if (firstArg.type === 'integer' || firstArg.type === 'rational') {
 			if (firstArg[options.name]) {
-				return firstArg[options.name].apply(firstArg, Array.prototype.slice.call(arguments, 1))
+				return firstArg[options.name].apply(firstArg, Array.prototype.slice.call(arguments, 1));
 			}
 			return f(firstArg.coerceTo('number'));
 		}
@@ -171,7 +177,7 @@ export var Functn = function (f, options) {
 				if (typeof ff === 'function') {
 					res.push(
 						ff.apply(null, args.slice(1))
-					);	
+					);
 				}
 				else {
 					res.push(ff);
@@ -195,8 +201,8 @@ export var Functn = function (f, options) {
 
 
 	Object.defineProperties(functn, {
-		args: { value: options.args},
-		id: { value: options.name},
+		args: {value: options.args},
+		id: {value: options.name},
 		expression: {value: options.expression}
 	});
 
@@ -204,4 +210,4 @@ export var Functn = function (f, options) {
 };
 
 var exports = {};
-var fns:any = {};
+var fns : any = {};

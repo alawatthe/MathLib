@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	import MathLib from './meta.js';
 	/**
 	* The Implementation of sets in MathLib

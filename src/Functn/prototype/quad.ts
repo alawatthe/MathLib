@@ -49,7 +49,7 @@ functnPrototype.quad = function (a, b, options : any = {}) : number {
 	options.warnMessage = warnMessage[options.warn];
 
 	return Q;
-}
+};
 
 
 
@@ -99,4 +99,4 @@ var quadstep = function  (f, a, b, fa, fc, fb, options) {
 	// Otherwise, divide the interval into two subintervals
 	return quadstep(f, a, c, fa, fd, fc, options) +
 					quadstep(f, c, b, fc, fe, fb, options);
-}
+};

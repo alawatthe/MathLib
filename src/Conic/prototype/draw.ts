@@ -24,10 +24,10 @@ draw(screen, options : any = {}, redraw = false) {
 				c = this.primal[1][1],
 				d = this.primal[0][2] * 2,
 				e = this.primal[1][2] * 2,
-				disc = 4*a*c - b*b,
+				disc = 4 * a * c - b * b,
 				rank = this.primal.rank(),
-				cx = (b*e - 2*c*d) / (4*a*c - b*b),
-				cy = (b*d - 2*a*e) / (4*a*c - b*b),
+				cx = (b * e - 2 * c * d) / (4 * a * c - b * b),
+				cy = (b * d - 2 * a * e) / (4 * a * c - b * b),
 
 				normalForm = this.normalize(),
 				A = Math.sqrt(Math.abs(normalForm.primal[2][2] / normalForm.primal[0][0])),

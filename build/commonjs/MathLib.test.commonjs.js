@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-05-02
+ * build date: 2014-05-03
  */
 
 var MathLib = require('./MathLib.js'),

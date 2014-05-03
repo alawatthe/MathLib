@@ -25,7 +25,7 @@ inverse() {
 	col = col.concat(col).slice(0, -1);
 
 	for (i = 0, ii = n; i < ii; i++) {
-		res = this.solve(col.slice(n - i - 1, 2 * n - i - 1))
+		res = this.solve(col.slice(n - i - 1, 2 * n - i - 1));
 
 		if (res === undefined) {
 			return;

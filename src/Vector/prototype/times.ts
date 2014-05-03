@@ -11,7 +11,7 @@ times(n : any) : any {
 	var i, ii, colVectors,
 			product = [];
 	if (n.type === 'rational') {
-		n = n.coerceTo('number'); 
+		n = n.coerceTo('number');
 	}
 	if (typeof n === 'number' || n.type === 'complex') {
 		return this.map(function (x) {

@@ -9,7 +9,7 @@ toString(options : toPresentationOptions = {}) : string {
 
 	return this.reduce(function (str, x) {
 		return str
-						+ x.map(entry => MathLib.toString(entry, passOptions)).join('\t')		
+						+ x.map(entry => MathLib.toString(entry, passOptions)).join('\t')
 						+ '\n';
 	}, '').slice(0, -1);
 }

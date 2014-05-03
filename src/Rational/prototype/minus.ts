@@ -9,7 +9,11 @@ minus(subtrahend) {
 		return MathLib.minus.apply(null, MathLib.coerce(this, subtrahend));
 	}
 	else {
-		return new MathLib.Rational(MathLib.minus(MathLib.times(this.numerator, subtrahend.denominator), MathLib.times(this.denominator, subtrahend.numerator)),
+		return new MathLib.Rational(
+			MathLib.minus(
+				MathLib.times(this.numerator, subtrahend.denominator),
+				MathLib.times(this.denominator, subtrahend.numerator)
+			),
 			MathLib.times(this.denominator, subtrahend.denominator));
 	}
 }

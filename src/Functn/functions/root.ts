@@ -9,7 +9,7 @@ fns.root = {
 	arity: 2,
 	cdgroup: 'arith1',
 	// toLaTeX can't use \sqrt since this requires the arguments in reverse order.
-	//toLaTeX: ['\\sqrt[', ']{', '}'],
+	// toLaTeX: ['\\sqrt[', ']{', '}'],
 	toLaTeX: ['\\left(', '\\right)^{\\frac{1}{', '}}'],
 	toMathML: ['<mroot>', '', '</mroot>'],
 	toString: ['(', ')^(1/', ')']

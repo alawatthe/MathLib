@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	define(['meta', 'Functn'], function(MathLib) {
 	/**
 	* The vector implementation of MathLib makes calculations with vectors of

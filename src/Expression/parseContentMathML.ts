@@ -135,11 +135,11 @@ static parseContentMathML(MathMLString : string) : Expression {
 			});
 		},
 		cn: function (node) : any {
-      var type = node.getAttribute('type') 
+      var type = node.getAttribute('type');
 
 			if (type === 'integer') {
 				var base = node.getAttribute('base') !== null ? Number(node.getAttributes('base')) : 10;
-				return new MathLib.Integer(node.textContent.trim(), {base: base})
+				return new MathLib.Integer(node.textContent.trim(), {base: base});
 			}
 			else if (type === 'real' || type === null || type === '') {
 				// TODO: adapt this, once the Real class exists
@@ -148,14 +148,17 @@ static parseContentMathML(MathMLString : string) : Expression {
 			else if (type === 'double') {
 				return Number(node.textContent);
 			}
-			//else if (type === 'hexdouble') {
-				// TODO: implement
-			//}
-			//else if (type === 'e-notation') {
-				// TODO: implement
-			//}
+			// else if (type === 'hexdouble') {
+			//   TODO: implement
+			// }
+			// else if (type === 'e-notation') {
+			//   TODO: implement
+			// }
 			else if (type === 'rational') {
-				return new MathLib.Rational(new MathLib.Integer(node.childNodes[0].textContent), new MathLib.Integer(node.childNodes[2].textContent));
+				return new MathLib.Rational(
+					new MathLib.Integer(node.childNodes[0].textContent),
+					new MathLib.Integer(node.childNodes[2].textContent)
+					);
 			}
 			else if (type === 'complex-cartesian') {
 				return new MathLib.Complex(Number(node.childNodes[0].textContent), Number(node.childNodes[2].textContent));
@@ -171,9 +174,9 @@ static parseContentMathML(MathMLString : string) : Expression {
 				});
 				*/
 			}
-			//else if (type === 'constant') {
-				// TODO: implement
-			//}
+			// else if (type === 'constant') {
+			//   TODO: implement
+			// }
 		},
 		cs: function (node) {
 			return node.textContent;
@@ -265,7 +268,7 @@ static parseContentMathML(MathMLString : string) : Expression {
 		true: function () {
 			return true;
 		}
-	}
+	};
 
 	var parser = function (node) {
 		if (Array.isArray(node)) {

@@ -1,3 +1,4 @@
+/* tslint:disable */
 var template = function (data) {var p = [];p.push(' <figure class="MathLib_figure">     <div class="MathLib_wrapper" style="width: ');
 p.push(data.width);
 p.push('px; height: ');
@@ -32,4 +33,5 @@ p.push('      <hr class="MathLib_separator">    <div class="MathLib_is_disabled 
 }
 p.push('');
 return p.join('');
-}
+};
+/* tslint:enable */

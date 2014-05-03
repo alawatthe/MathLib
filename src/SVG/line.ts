@@ -17,7 +17,7 @@ line: function (line, options = {}, redraw = false) {
 		return this;
 	}
 	else {
-		points = this.screen.getLineEndPoints(line)
+		points = this.screen.getLineEndPoints(line);
 	}
 
 	svgLine.setAttribute('x1', points[0][0]);

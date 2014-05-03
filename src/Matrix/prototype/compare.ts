@@ -5,7 +5,7 @@
  * @return {number}
  */
 compare(m : Matrix) : number {
-	var i, ii, j, jj; 
+	var i, ii, j, jj;
 
 	if (this.rows !== m.rows) {
 		return MathLib.sign(this.rows - m.rows);

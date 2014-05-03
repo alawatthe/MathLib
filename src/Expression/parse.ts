@@ -1,9 +1,9 @@
 /**
  * Heavily based on Ariya Hidayat's [tapdigit library](https://code.google.com/p/tapdigit/)
- * and his series "math evaluator in javascript":  
- * [Part 1: tokenizer](http://ariya.ofilabs.com/2011/08/math-evaluator-in-javascript-part1.html)  
- * [Part 2: parser](http://ariya.ofilabs.com/2011/08/math-evaluator-in-javascript-part-2.html)  
- * [Part 3: interpreter](http://ariya.ofilabs.com/2011/08/math-expression-evaluator-in-javascript-part-3.html)  
+ * and his series "math evaluator in javascript":
+ * [Part 1: tokenizer](http://ariya.ofilabs.com/2011/08/math-evaluator-in-javascript-part1.html)
+ * [Part 2: parser](http://ariya.ofilabs.com/2011/08/math-evaluator-in-javascript-part-2.html)
+ * [Part 3: interpreter](http://ariya.ofilabs.com/2011/08/math-expression-evaluator-in-javascript-part-3.html)
  *
  * @param {String} str The string to parse
  * @return {Expression}
@@ -291,7 +291,7 @@ static parse = function (str) : Expression {
 				content: args
 			});
 
-			if (name in MathLib && MathLib[name].type === 'functn') {			
+			if (name in MathLib && MathLib[name].type === 'functn') {
 				if (MathLib[name].expression.content[0].hasOwnProperty('cdgroup')) {
 					expr.cdgroup = MathLib[name].expression.content[0].cdgroup;
 				}
@@ -408,7 +408,7 @@ static parse = function (str) : Expression {
 					content: [left, right],
 					name: 'pow'
 				});
-				
+
 			}
 			return left;
 		}
@@ -435,7 +435,7 @@ static parse = function (str) : Expression {
 					while (r.content[0].subtype === 'naryOperator' || r.content[0].subtype === 'binaryOperator') {
 						r = r.content[0];
 					}
-					
+
 					r.content[0] = new MathLib.Expression({
 						subtype: token.value === '*' ? 'naryOperator' : 'binaryOperator',
 						content: [left, r.content[0]],
@@ -444,7 +444,7 @@ static parse = function (str) : Expression {
 					});
 					return right;
 				}
-				
+
 				else {
 					return new MathLib.Expression({
 						subtype: token.value === '*' ? 'naryOperator' : 'binaryOperator',
@@ -453,7 +453,7 @@ static parse = function (str) : Expression {
 						content: [left, right]
 					});
 				}
-				
+
 			}
 			return left;
 		}
@@ -479,7 +479,7 @@ static parse = function (str) : Expression {
 					while (r.content[0].subtype === 'naryOperator') {
 						r = r.content[0];
 					}
-					
+
 					r.content[0] = new MathLib.Expression({
 						subtype: token.value === '+' ? 'naryOperator' : 'binaryOperator',
 						content: [left, r.content[0]],
@@ -488,7 +488,7 @@ static parse = function (str) : Expression {
 					});
 					return right;
 				}
-				
+
 				else {
 					return new MathLib.Expression({
 						subtype: token.value === '+' ? 'naryOperator' : 'binaryOperator',
@@ -512,16 +512,16 @@ static parse = function (str) : Expression {
 
 			// TODO: support assignments
 			// if (typeof expr !== 'undefined' && expr.Identifier) {
-			//	token = lexer.peek();
-			//	if (matchOp(token, '=')) {
-			//		lexer.next();
-			//		return new MathLib.Expression({
-			//				subtype: 'Assignment',
-			//				name: expr,
-			//				value: parseAssignment()
-			//			});
-			//	}
-			//	return expr;
+			// token = lexer.peek();
+			// if (matchOp(token, '=')) {
+			//   lexer.next();
+			//   return new MathLib.Expression({
+			//     subtype: 'Assignment',
+			//     name: expr,
+			//     value: parseAssignment()
+			//   });
+			// }
+			// return expr;
 			// }
 
 			return expr;
@@ -553,5 +553,5 @@ static parse = function (str) : Expression {
 	};
 
 
-	return Parser().parse(str);
+	return (new Parser()).parse(str);
 };

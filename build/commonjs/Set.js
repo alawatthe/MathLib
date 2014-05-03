@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	var MathLib = require('./meta.js');
 	/**
 	* The Implementation of sets in MathLib

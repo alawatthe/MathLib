@@ -50,7 +50,7 @@ toLaTeX() : string {
 	}
 	if (this.subtype === 'unaryOperator') {
 		if (this.value === '-') {
-			return '-' + this.content.toLaTeX()
+			return '-' + this.content.toLaTeX();
 		}
 		return this.content.toLaTeX();
 	}
@@ -58,7 +58,7 @@ toLaTeX() : string {
 		// These operators are predefined by amsmath.
 		// (There are more predefined ones, but these are the useful ones.)
 		amsmath = [
-			'arccos', 'arcsin', 'arctan', 'arg', 'cos', 'cosh', 'cot', 'coth', 'csc', 'deg', 'det', 'dim', 
+			'arccos', 'arcsin', 'arctan', 'arg', 'cos', 'cosh', 'cot', 'coth', 'csc', 'deg', 'det', 'dim',
 			'gcd', 'lg', 'ln', 'log', 'max', 'min', 'sec', 'sin', 'sinh', 'tan', 'tanh'
 		];
 		if (amsmath.indexOf(this.value) + 1) {
@@ -68,16 +68,16 @@ toLaTeX() : string {
 				: 'x') +
 				'\\right)';
 		}
-		//else if (this.value === 'exp') {
-		//	return 'e^{' + (this.content.length ? this.content[0].toLaTeX() : 'x') + '}';
-		//}
-		//else if (this.value === 'sqrt') {
-		//	return '\\' + this.value + '{' + (this.content.length ? this.content[0].toLaTeX() : 'x') + '}';
-		//}
+		// else if (this.value === 'exp') {
+		// 	return 'e^{' + (this.content.length ? this.content[0].toLaTeX() : 'x') + '}';
+		// }
+		// else if (this.value === 'sqrt') {
+		// 	return '\\' + this.value + '{' + (this.content.length ? this.content[0].toLaTeX() : 'x') + '}';
+		// }
 		else {
 			return '\\operatorname{' + this.value + '}\\left(' +
 				(this.content.length
-				? this.content.reduce((old, cur, idx) => old + (idx ? ', ' : '') + cur.toLaTeX(), '') 
+				? this.content.reduce((old, cur, idx) => old + (idx ? ', ' : '') + cur.toLaTeX(), '')
 				: 'x') +
 				'\\right)';
 		}
@@ -93,6 +93,6 @@ toLaTeX() : string {
 
 			(this.content.length === 1
 			? this.content[0].toLaTeX()
-			: '\\left(' + this.content.map(expr => expr.toLaTeX()).join(', ') + '\\right)') 
+			: '\\left(' + this.content.map(expr => expr.toLaTeX()).join(', ') + '\\right)');
 	}
 }

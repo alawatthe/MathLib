@@ -12,7 +12,7 @@ line: function (line, options = {}, redraw = false) {
 			ctx = this.ctx,
 			prop, opts;
 
-	ctx.save()
+	ctx.save();
 	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 
 	// Don't try to draw the line at infinity
@@ -20,7 +20,7 @@ line: function (line, options = {}, redraw = false) {
 		return this;
 	}
 	else {
-		points = this.screen.getLineEndPoints(line)
+		points = this.screen.getLineEndPoints(line);
 	}
 
 	// Set the drawing options

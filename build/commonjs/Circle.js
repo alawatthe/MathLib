@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	var MathLib = require('./meta.js'),
 		Point = require('./Point');
 

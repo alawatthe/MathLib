@@ -53,7 +53,11 @@ drawGrid() {
 
 		if (this.options.grid.angle) {
 			for (i = 0, ii = 2 * Math.PI; i < ii; i += this.options.grid.angle.tick) {
-				line([[0, 0], [max * Math.cos(i), max * Math.sin(i)]], extendObject(this.options.grid, this.options.grid.angle), true);
+				line([[0, 0],
+					[max * Math.cos(i), max * Math.sin(i)]],
+					extendObject(this.options.grid, this.options.grid.angle),
+					true
+				);
 			}
 		}
 

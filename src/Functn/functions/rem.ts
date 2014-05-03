@@ -22,8 +22,8 @@ fns.rem = {
 		//   > n%m = -1
 		// This is obviously not correct.
 		/* istanbul ignore if */
-		if (x%y === -1 && n > 0 && m < 0) {
-			return -(n % m)
+		if (x % y === -1 && n > 0 && m < 0) {
+			return -(n % m);
 		}
 
 		return n % m;

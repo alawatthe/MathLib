@@ -10,4 +10,4 @@ static zero = function (n : number) : Vector {
 		vector.push(0);
 	}
 	return new MathLib.Vector(vector);
-}
+};

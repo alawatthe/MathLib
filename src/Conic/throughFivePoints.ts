@@ -10,7 +10,7 @@
  */
 static throughFivePoints(p : Point, q : Point, r : Point, s : Point, t : Point) : Conic {
 
-	var conic = new MathLib.Conic(new MathLib.Matrix([[1,0,0], [0,1,0], [0,0,1]]));
+	var conic = new MathLib.Conic(new MathLib.Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]));
 
 	Object.defineProperties(conic, {
 			'primal': {

@@ -52,4 +52,4 @@ export var toString = function (x, options : toPresentationOptions = {}) {
 		}
 		return '"' + x + '"';
 	}
-}
+};

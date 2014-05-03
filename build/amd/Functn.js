@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	define(['meta', 'Expression'], function(MathLib) {
 	var functnPrototype = {};
 
@@ -589,7 +591,7 @@
 			// Math.PI / 180 = 0.017453292519943295
 			return x * 0.017453292519943295;
 		},
-		toContentMathML: ['<csymbol cd="arith1">times</csymbol><apply><csymbol cd="arith1">divide</csymbol><csymbol cd="nums1">pi</csymbol><cn>180</cn></apply>', ''],
+		toContentMathML: ['<csymbol cd="arith1">times</csymbol><apply>' + '<csymbol cd="arith1">divide</csymbol><csymbol cd="nums1">pi</csymbol><cn>180</cn></apply>', ''],
 		toLaTeX: ['\\frac{\\pi}{180}', ''],
 		toMathML: ['<mfrac><mi>&pi;</mi><mn>180</mn></mfrac><mo>&#x2062;</mo>', ''],
 		toString: ['π/180*', '']
@@ -817,9 +819,11 @@
 	fns.logGamma = {
 		functn: function (x) {
 			var j, tmp, y, ser, cof = [
-				57.1562356658629235, -59.5979603554754912, 14.1360979747417471, -0.491913816097620199, 0.339946499848118887e-4,
-				0.465236289270485756e-4, -0.983744753048795646e-4, 0.158088703224912494e-3, -0.210264441724104883e-3, 0.217439618115212643e-3,
-				-0.164318106536763890e-3, 0.844182239838527433e-4, -0.261908384015814087e-4, 0.368991826595316234e-5
+				57.1562356658629235, -59.5979603554754912, 14.1360979747417471, -0.491913816097620199,
+				0.339946499848118887e-4, 0.465236289270485756e-4, -0.983744753048795646e-4,
+				0.158088703224912494e-3, -0.210264441724104883e-3, 0.217439618115212643e-3,
+				-0.164318106536763890e-3, 0.844182239838527433e-4, -0.261908384015814087e-4,
+				0.368991826595316234e-5
 			];
 
 			if (x === Infinity) {
@@ -837,7 +841,9 @@
 		},
 		toContentMathML: ['<csymbol cd="transc1">ln</csymbol><apply><ci>Gamma</ci>', '</apply>'],
 		toLaTeX: ['\\log\\left(\\Gamma\\left(', '\\right)\\right)'],
-		toMathML: ['<mi>log</mi><mo>&#x2061;</mo><mo>(</mo><mi mathvariant="normal">&#x0393;</mi><mo>&#x2061;</mo><mo>(</mo>', '<mo>)</mo><mo>)</mo>'],
+		toMathML: [
+			'<mi>log</mi><mo>&#x2061;</mo><mo>(</mo><mi mathvariant="normal">&#x0393;</mi><mo>&#x2061;</mo><mo>(</mo>',
+			'<mo>)</mo><mo>)</mo>'],
 		toString: ['log(Γ(', '))']
 	};
 
@@ -937,7 +943,7 @@
 			// 180 / Math.PI = 57.29577951308232
 			return x * 57.29577951308232;
 		},
-		toContentMathML: ['<csymbol cd="arith1">times</csymbol><apply><csymbol cd="arith1">divide</csymbol><cn>180</cn><csymbol cd="nums1">pi</csymbol></apply>', ''],
+		toContentMathML: ['<csymbol cd="arith1">times</csymbol><apply>' + '<csymbol cd="arith1">divide</csymbol><cn>180</cn><csymbol cd="nums1">pi</csymbol></apply>', ''],
 		toLaTeX: ['\\frac{180}{\\pi}', ''],
 		toMathML: ['<mfrac><mn>180</mn><mi>&pi;</mi></mfrac><mo>&#x2062;</mo>', ''],
 		toString: ['180/π*', '']
@@ -991,7 +997,7 @@
 		arity: 2,
 		cdgroup: 'arith1',
 		// toLaTeX can't use \sqrt since this requires the arguments in reverse order.
-		//toLaTeX: ['\\sqrt[', ']{', '}'],
+		// toLaTeX: ['\\sqrt[', ']{', '}'],
 		toLaTeX: ['\\left(', '\\right)^{\\frac{1}{', '}}'],
 		toMathML: ['<mroot>', '', '</mroot>'],
 		toString: ['(', ')^(1/', ')']
@@ -1509,7 +1515,7 @@
 			return obj instanceof glbl[ucfirst(type)];
 			// }
 			// if (global) {
-			//	return obj instanceof global[ucfirst(type)];
+			//   return obj instanceof global[ucfirst(type)];
 			// }
 		}
 	};

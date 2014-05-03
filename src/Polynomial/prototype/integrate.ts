@@ -5,7 +5,7 @@
  * @return {Polynomial}
  */
 integrate(n = 1) : Polynomial {
-	var i, ii, 
+	var i, ii,
 			antiderivative = [];
 
 	if (MathLib.isZero(n)) {

@@ -118,7 +118,7 @@ export class Screen {
 							window.location.href = dataURI.replace('image/svg+xml', 'image/octet-stream');
 						}
 					}
-				}
+				};
 			}
 
 
@@ -137,15 +137,15 @@ export class Screen {
 				this.contextMenu.getElementsByClassName('MathLib_grid_type')[0].onchange = function () {
 					(<any>that).options.grid.type = 'cartesian';
 					(<any>that).draw();
-				}
+				};
 				this.contextMenu.getElementsByClassName('MathLib_grid_type')[1].onchange = function () {
 					(<any>that).options.grid.type = 'polar';
 					(<any>that).draw();
-				}
+				};
 				this.contextMenu.getElementsByClassName('MathLib_grid_type')[2].onchange = function () {
 					(<any>that).options.grid.type = false;
 					(<any>that).draw();
-				}
+				};
 			}
 		}
 

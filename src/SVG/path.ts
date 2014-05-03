@@ -24,9 +24,9 @@ path: function (curve, options = {}, redraw = false) {
 			// Inline NaN test and disontinuity test
 			// For more info see the corresponding function for canvas
 			if (fx !== fx ||
-				(MathLib.abs((fxold - fx) / step) >= 1e2 && 
+				(MathLib.abs((fxold - fx) / step) >= 1e2 &&
 				(fx - curve(i - step / 2)) * (fxold - curve(i - step / 2)) >= 0)) {
-				
+
 				// Don't add empty subpaths
 				if (path.length) {
 					paths.push(path);
@@ -69,7 +69,7 @@ path: function (curve, options = {}, redraw = false) {
 		// The "normal" path
 		path.reduce(function (prev, cur) {
 			return prev + ' L ' + cur.join(' ');
-		}, '') + 
+		}, '') +
 		// Move the fill back to the zero line at the end of a subpath
 		' L ' + path[path.length - 1][0] + ' 0 ';
 	}, '');

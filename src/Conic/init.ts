@@ -18,17 +18,19 @@ export class Conic implements Drawable {
 		}
 		this.primal = primal;
 
-//		if (!dual) {
-//			dual = primal.adjugate();
-//		}
-//		else if (!primal.times(dual).isScalar()) {
-//			// Throw error
-//		}
+		// if (!dual) {
+		//   dual = primal.adjugate();
+		// }
+		// else if (!primal.times(dual).isScalar()) {
+		//   // Throw error
+		// }
 
 		if (primal.rank() > 1) {
 			Object.defineProperties(this, {
 				'dual': {
-					get : function () { return this.primal.adjugate() },
+					get : function () {
+						return this.primal.adjugate();
+					},
 					set : function () {},
 					enumerable : true,
 					configurable : true

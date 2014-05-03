@@ -217,9 +217,7 @@
             </tbody>
           </table>
           <div class="description"><p>Calculates the distance to an other point.<br />If no other point is provided, it calculates the distance to the origin.</p> </div>
-          <pre><code class="language-javascript">Point.prototype.distanceTo = function (p</code></pre>
-          <div class="description"><p>geom = MathLib.Geometry.active</p> </div>
-          <pre><code class="language-javascript">) {
+          <pre><code class="language-javascript">Point.prototype.distanceTo = function (p) {
 			if (arguments.length === 0) {
 				return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
 			}
@@ -227,14 +225,6 @@
 			if (p.type === 'point' &amp;&amp; this.dimension === p.dimension) {
 				return MathLib.hypot.apply(null, this.normalize().minus(p.normalize()).slice(0, -1));
 			}
-			//	if (p.type === 'point' &amp;&amp; this.dimension === p.dimension) {
-			//		var Otp = this.times(geom.fundamentalConic.primal).times(p),
-			//				Ott = this.times(geom.fundamentalConic.primal).times(this),
-			//				Opp = p.times(geom.fundamentalConic.primal).times(p),
-			//				Dtp = Math.sqrt(Otp * Otp - Ott * Opp);
-			//
-			//		return MathLib.Geometry.active.cDist * Math.log((Otp + Dtp) / (Otp - Dtp));
-			//	}
 		};</code></pre>
           <section id="draw">
             <h1><a href="http://mathlib.de/en/docs/Point/prototype/draw">draw</a>
@@ -369,7 +359,10 @@
 							return p[1] * q[2] - p[2] * q[1];
 						},
 						set: function () {
-							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join'});
+							MathLib.warning({
+								message: 'Trying to change the coordinates of a completely dependent line.',
+								method: 'Point#join'
+							});
 						},
 						enumerable: true
 					},
@@ -378,7 +371,10 @@
 							return p[2] * q[0] - p[0] * q[2];
 						},
 						set: function () {
-							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join'});
+							MathLib.warning({
+								message: 'Trying to change the coordinates of a completely dependent line.',
+								method: 'Point#join'
+							});
 						},
 						enumerable: true
 					},
@@ -387,7 +383,10 @@
 							return p[0] * q[1] - p[1] * q[0];
 						},
 						set: function () {
-							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join'});
+							MathLib.warning({
+								message: 'Trying to change the coordinates of a completely dependent line.',
+								method: 'Point#join'
+							});
 						},
 						enumerable: true
 					}

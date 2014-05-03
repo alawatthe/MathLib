@@ -32,13 +32,13 @@ toString() : string {
 	}
 	if (this.subtype === 'unaryOperator') {
 		if (this.value === '-') {
-			return '-' + this.content.toString()
+			return '-' + this.content.toString();
 		}
 		return this.content.toString();
 	}
 	if (this.subtype === 'functionCall') {
 		return this.value + '(' +
-			(this.content.length 
+			(this.content.length
 			? this.content.map((expr) => expr.toString()).join(', ')
 			: 'x') +
 			')';
@@ -52,6 +52,6 @@ toString() : string {
 
 			(this.content.length === 1
 			? this.content[0].toString()
-			: '(' + this.content.map(expr => expr.toString()).join(', ') + ')') 
+			: '(' + this.content.map(expr => expr.toString()).join(', ') + ')');
 	}
 }

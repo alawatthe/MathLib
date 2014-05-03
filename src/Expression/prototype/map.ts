@@ -12,7 +12,7 @@ map(f) : Expression {
 	for (prop in this) {
 		if (this.hasOwnProperty(prop) && prop !== 'content') {
 			if (Array.isArray(this[prop])) {
-				properties[prop] = this[prop].map(f)
+				properties[prop] = this[prop].map(f);
 			}
 			else {
 				properties[prop] = this[prop];

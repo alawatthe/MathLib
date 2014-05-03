@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	define(['meta'], function(MathLib) {
 	/**
 	* The Implementation of sets in MathLib

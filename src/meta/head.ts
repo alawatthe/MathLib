@@ -19,32 +19,32 @@
 		return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
 	};
 
-	export var argToRgba = function (h){
+	export var argToRgba = function (h) {
 		var r, g, b;
 		h = -h / (2 * Math.PI);
 
-		function hue2rgb(t){
+		function hue2rgb (t) {
 			if (t < 0) {
 				t += 1;
 			}
 			if (t > 1) {
 				t -= 1;
 			}
-			if (t < 1/6) {
+			if (t < 1 / 6) {
 				return 6 * t;
 			}
-			if (t < 1/2) {
+			if (t < 1 / 2) {
 				return 1;
 			}
-			if (t < 2/3) {
-				return 4 - 6*t;
+			if (t < 2 / 3) {
+				return 4 - 6 * t;
 			}
 			return 0;
- 	 }
+		}
 
-	 r = hue2rgb(h + 1/3);
+		r = hue2rgb(h + 1 / 3);
 		g = hue2rgb(h);
-		b = hue2rgb(h - 1/3);
+		b = hue2rgb(h - 1 / 3);
 
 		return [r * 255, g * 255, b * 255, 255];
 	};
@@ -64,7 +64,7 @@
 	export var colorConvert = function (n) {
 		if (typeof n === 'number') {
 			n = Math.max(Math.min(Math.floor(n), 0xffffff), 0);
-			return '#' + ('00000' + n.toString(16)).slice(-6); 
+			return '#' + ('00000' + n.toString(16)).slice(-6);
 		}
 		return n;
 	};
@@ -90,9 +90,9 @@
 				return new MathLib.Complex(obj);
 			}
 		}
-	}
-		
-	
+	};
+
+
 	export var coerce = function (...args) {
 		var type = function (x) {
 					return x.type || typeof x;
@@ -105,4 +105,4 @@
 				)];
 				
 		return args.map(x => coerceTo(x, numberType));
-	}
+	};

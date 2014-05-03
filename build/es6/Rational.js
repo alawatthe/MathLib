@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	import MathLib from './meta.js';
 import Functn from './Functn';
 
@@ -93,7 +95,7 @@ import Functn from './Functn';
 			}
 
 			if (type === 'complex') {
-				//		return new MathLib.Complex(this, new MathLib.Rational(0));
+				// return new MathLib.Complex(this, new MathLib.Rational(0));
 				return new MathLib.Complex(this, 0);
 			}
 		};

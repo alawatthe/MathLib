@@ -17,7 +17,7 @@ times(a) : Polynomial {
 		return new MathLib.Polynomial(product);
 	}
 	else if (a.type === 'rational') {
-		a = a.coerceTo('number'); 
+		a = a.coerceTo('number');
 	}
   // we we multiply it to every coefficient
 	return this.map(b => MathLib.times(a, b));

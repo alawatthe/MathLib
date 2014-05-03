@@ -7,7 +7,7 @@ linearEccentricity() : number {
 	var normalForm = this.normalize(),
 			a = normalForm.primal[0][0],
 			c = normalForm.primal[1][1],
-			max = Math.max(Math.abs(a), Math.abs(c)), 
+			max = Math.max(Math.abs(a), Math.abs(c)),
 			min = Math.min(Math.abs(a), Math.abs(c));
 
 	if (!this.isDegenerated()) {

@@ -5,8 +5,8 @@
  */
 isDiag() : boolean {
 	var i, j, ii, jj;
-	if (Number(this.hasOwnProperty('isUpper') && this.isUpper()) + 
-			Number(this.hasOwnProperty('isLower') && this.isLower()) + 
+	if (Number(this.hasOwnProperty('isUpper') && this.isUpper()) +
+			Number(this.hasOwnProperty('isLower') && this.isLower()) +
 			Number(this.hasOwnProperty('isSymmetric') && this.isSymmetric()) > 1) {
 		return true;
 	}

@@ -3,6 +3,6 @@
  *
  * @return {Integer}
  */
-conjugate() : Integer {	
+conjugate() : Integer {
 	return this.copy();
 }

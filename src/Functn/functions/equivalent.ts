@@ -11,4 +11,4 @@ fns.equivalent = {
 	toLaTeX: ['', ' \\Leftrightarrow ', ''],
 	toMathML: ['', '<mo>&#x21D4;</mo>', ''],
 	toString: ['', ' ⇔ ', '']
-}
+};

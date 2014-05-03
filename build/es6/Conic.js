@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	import MathLib from './meta.js';
 import Functn from './Functn';
 import Matrix from './Matrix';
@@ -17,12 +19,12 @@ import Matrix from './Matrix';
 			}
 			this.primal = primal;
 
-			//		if (!dual) {
-			//			dual = primal.adjugate();
-			//		}
-			//		else if (!primal.times(dual).isScalar()) {
-			//			// Throw error
-			//		}
+			// if (!dual) {
+			//   dual = primal.adjugate();
+			// }
+			// else if (!primal.times(dual).isScalar()) {
+			//   // Throw error
+			// }
 			if (primal.rank() > 1) {
 				Object.defineProperties(this, {
 					'dual': {
@@ -304,7 +306,10 @@ import Matrix from './Matrix';
 
 			if (x.type === 'line') {
 				var setter = function () {
-					MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Conic#meet'});
+					MathLib.warning({
+						message: 'Trying to change the coordinates of a completely dependent point.',
+						method: 'Conic#meet'
+					});
 				}, recalculate = function () {
 					Ml = new MathLib.Matrix([[0, x[2], -x[1]], [-x[2], 0, x[0]], [x[1], -x[0], 0]]);
 					B = Ml.transpose().times(A).times(Ml);
@@ -460,7 +465,10 @@ import Matrix from './Matrix';
 						return c[m][0][0] * x[0] + c[m][0][1] * x[1] + c[m][0][2] * x[2];
 					},
 					set: function () {
-						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity'});
+						MathLib.warning({
+							message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.',
+							method: 'Conic#polarity'
+						});
 					},
 					enumerable: true
 				},
@@ -469,7 +477,10 @@ import Matrix from './Matrix';
 						return c[m][1][0] * x[0] + c[m][1][1] * x[1] + c[m][1][2] * x[2];
 					},
 					set: function () {
-						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity'});
+						MathLib.warning({
+							message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.',
+							method: 'Conic#polarity'
+						});
 					},
 					enumerable: true
 				},
@@ -478,7 +489,10 @@ import Matrix from './Matrix';
 						return c[m][2][0] * x[0] + c[m][2][1] * x[1] + c[m][2][2] * x[2];
 					},
 					set: function () {
-						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity'});
+						MathLib.warning({
+							message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.',
+							method: 'Conic#polarity'
+						});
 					},
 					enumerable: true
 				}

@@ -46,7 +46,7 @@ export var toMathML = function (x, options : toPresentationOptions = {}) {
 			if (x < 0) {
 				str = '<mo>-</mo>' + str;
 			}
-			else {				
+			else {
 				str = '<mo>+</mo>' + str;
 			}
 		}
@@ -67,4 +67,4 @@ export var toMathML = function (x, options : toPresentationOptions = {}) {
 		return '<ms>' + x + '</ms>';
 	}
 
-}
+};

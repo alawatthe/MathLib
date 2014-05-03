@@ -4,7 +4,7 @@
  * @param {object} [options] - Optional options to style the output
  * @return {string}
  */
-toMathML(options : toPresentationOptions = {}) : string {	
+toMathML(options : toPresentationOptions = {}) : string {
 	if (this.isEmpty()) {
 		return '<mi>&#x2205;</mi>';
 	}

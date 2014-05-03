@@ -20,9 +20,9 @@ toContentMathML(options : toContentMathMLOptions = {}) : string {
 						+ base
 						+ '</cn><cs>'
 						+ this.toString({base: base})
-						+ '</cs></apply>'
+						+ '</cs></apply>';
 	}
-	else {		
+	else {
 		return '<cn type="integer" base="' + base + '">'
 						+ this.toString({base: base})
 						+ '</cn>';

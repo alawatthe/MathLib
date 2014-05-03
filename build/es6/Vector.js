@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	import MathLib from './meta.js';
 import Functn from './Functn';
 

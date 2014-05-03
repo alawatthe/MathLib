@@ -4,7 +4,7 @@
  * @param {numeric} c The power to which the complex number should be raised   
  * @return {Complex}
  */
-pow(c) : Complex {	
+pow(c) : Complex {
 	var re, im, abs, arg;
 
 	if (MathLib.type(c) === 'complex') {

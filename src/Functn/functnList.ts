@@ -95,7 +95,9 @@ var createFunction1 = function (f, name) {
 			return f.apply(null, arguments);
 		}
 		else if (typeof x === 'function') {
-			return function (y) {return f(x(y));};
+			return function (y) {
+				return f(x(y));
+			};
 		}
 		else if (x.type === 'set') {
 			return new MathLib.Set( x.map(f) );
@@ -173,7 +175,7 @@ export var type = function (x) {
 
 export var is = function (obj, type) {
 	var ucfirst = function (str) {
-				return str.slice(0,1).toUpperCase() + str.slice(1);
+				return str.slice(0, 1).toUpperCase() + str.slice(1);
 			},
 			// Trick Typescript to believe that global exists
 			global = global,
@@ -199,17 +201,17 @@ export var is = function (obj, type) {
 	}
 	else {
 		// if (window) {
-			return obj instanceof glbl[ucfirst(type)];
+		return obj instanceof glbl[ucfirst(type)];
 		// }
 		// if (global) {
-		//	return obj instanceof global[ucfirst(type)];
+		//   return obj instanceof global[ucfirst(type)];
 		// }
 	}
-}
+};
 
 
 /**
- * Checks if MathML is supported by the browser.  
+ * Checks if MathML is supported by the browser.
  * Code stolen from [Modernizr](http://www.modernizr.com/)
  *
  * @return {boolean}
@@ -240,7 +242,7 @@ export var isMathMLSupported = function () : boolean {
  * ### MathLib.writeMathML()
  * Writes MathML to an element.
  *
- * @param {string} id The id of the element in which the MathML should be inserted.  
+ * @param {string} id The id of the element in which the MathML should be inserted.
  * @param {string} math The MathML to be inserted.
  */
 export var writeMathML = function (id : string, math : string) : void {
@@ -250,7 +252,7 @@ export var writeMathML = function (id : string, math : string) : void {
 		formula = MathJax.Hub.getAllJax(id)[0];
 		MathJax.Hub.Queue(['Typeset', MathJax.Hub, id]);
 	}
-}
+};
 
 
 /**
@@ -281,4 +283,4 @@ export var loadMathJax = function (config : string) : void {
 	}
 
 	document.getElementsByTagName('head')[0].appendChild(script);
-}
+};

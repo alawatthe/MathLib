@@ -3,6 +3,6 @@
  *
  * @return {Integer}
  */
-copy() : Integer {	
+copy() : Integer {
 	return new MathLib.Integer(this.data, {sign: this.sign});
 }

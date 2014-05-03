@@ -50,7 +50,7 @@ for (var fnName in fns) {
 					MathML += '</apply>';
 
 					return MathML;
-				}
+				};
 			})(fn);
 		}
 
@@ -66,7 +66,7 @@ for (var fnName in fns) {
 					LaTeX += fn.toLaTeX[i];
 
 					return LaTeX;
-				}
+				};
 			})(fn);
 		}
 
@@ -83,7 +83,7 @@ for (var fnName in fns) {
 					MathML += '</mrow>';
 
 					return MathML;
-				}
+				};
 			})(fn);
 		}
 
@@ -99,7 +99,7 @@ for (var fnName in fns) {
 					str += fn.toString[i];
 
 					return str;
-				}
+				};
 			})(fn);
 		}
 

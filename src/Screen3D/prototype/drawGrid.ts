@@ -30,7 +30,9 @@ drawGrid() {
 						lines.lineTo(i, size);
 					}
 
-					grid.add(new THREE.Line(lines.createPointsGeometry(), new THREE.LineBasicMaterial({color: color}), THREE.LinePieces));
+					grid.add(new THREE.Line(lines.createPointsGeometry(),
+						new THREE.LineBasicMaterial({color: color}),
+						THREE.LinePieces));
 
 					grid.rotation.x = rotX;
 					grid.rotation.y = rotY;

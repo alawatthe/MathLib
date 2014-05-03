@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-05-02
+ * build date: 2014-05-03
  */
 /**
  *
@@ -14,6 +14,7 @@
  */
 var MathLib;
 (function (MathLib) {
+	'use strict';
 	MathLib.version = '0.7.2';
 	MathLib.apery = 1.2020569031595942;
 	MathLib.e = Math.E;
@@ -446,12 +447,14 @@ var MathLib;
 			return '"' + x + '"';
 		}
 	};
-	'export MathLib';
+
 })(MathLib || (MathLib = {}));
 
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// no import
 	// There is no DOMParser in Node, so we have to require one (done via a regexp replace)
 	/// DOMParser
@@ -659,9 +662,9 @@ var MathLib;
 						});
 						*/
 					}
-					//else if (type === 'constant') {
-					// TODO: implement
-					//}
+					// else if (type === 'constant') {
+					//   TODO: implement
+					// }
 				},
 				cs: function (node) {
 					return node.textContent;
@@ -1644,16 +1647,16 @@ var MathLib;
 
 					// TODO: support assignments
 					// if (typeof expr !== 'undefined' && expr.Identifier) {
-					//	token = lexer.peek();
-					//	if (matchOp(token, '=')) {
-					//		lexer.next();
-					//		return new MathLib.Expression({
-					//				subtype: 'Assignment',
-					//				name: expr,
-					//				value: parseAssignment()
-					//			});
-					//	}
-					//	return expr;
+					// token = lexer.peek();
+					// if (matchOp(token, '=')) {
+					//   lexer.next();
+					//   return new MathLib.Expression({
+					//     subtype: 'Assignment',
+					//     name: expr,
+					//     value: parseAssignment()
+					//   });
+					// }
+					// return expr;
 					// }
 					return expr;
 				}
@@ -1682,7 +1685,7 @@ var MathLib;
 				};
 			};
 
-			return Parser().parse(str);
+			return (new Parser()).parse(str);
 		};
 
 		Expression.variables = {};
@@ -1694,6 +1697,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Expression
 	var functnPrototype = {};
 
@@ -2284,7 +2289,7 @@ var MathLib;
 			// Math.PI / 180 = 0.017453292519943295
 			return x * 0.017453292519943295;
 		},
-		toContentMathML: ['<csymbol cd="arith1">times</csymbol><apply><csymbol cd="arith1">divide</csymbol><csymbol cd="nums1">pi</csymbol><cn>180</cn></apply>', ''],
+		toContentMathML: ['<csymbol cd="arith1">times</csymbol><apply>' + '<csymbol cd="arith1">divide</csymbol><csymbol cd="nums1">pi</csymbol><cn>180</cn></apply>', ''],
 		toLaTeX: ['\\frac{\\pi}{180}', ''],
 		toMathML: ['<mfrac><mi>&pi;</mi><mn>180</mn></mfrac><mo>&#x2062;</mo>', ''],
 		toString: ['π/180*', '']
@@ -2512,9 +2517,11 @@ var MathLib;
 	fns.logGamma = {
 		functn: function (x) {
 			var j, tmp, y, ser, cof = [
-				57.1562356658629235, -59.5979603554754912, 14.1360979747417471, -0.491913816097620199, 0.339946499848118887e-4,
-				0.465236289270485756e-4, -0.983744753048795646e-4, 0.158088703224912494e-3, -0.210264441724104883e-3, 0.217439618115212643e-3,
-				-0.164318106536763890e-3, 0.844182239838527433e-4, -0.261908384015814087e-4, 0.368991826595316234e-5
+				57.1562356658629235, -59.5979603554754912, 14.1360979747417471, -0.491913816097620199,
+				0.339946499848118887e-4, 0.465236289270485756e-4, -0.983744753048795646e-4,
+				0.158088703224912494e-3, -0.210264441724104883e-3, 0.217439618115212643e-3,
+				-0.164318106536763890e-3, 0.844182239838527433e-4, -0.261908384015814087e-4,
+				0.368991826595316234e-5
 			];
 
 			if (x === Infinity) {
@@ -2532,7 +2539,9 @@ var MathLib;
 		},
 		toContentMathML: ['<csymbol cd="transc1">ln</csymbol><apply><ci>Gamma</ci>', '</apply>'],
 		toLaTeX: ['\\log\\left(\\Gamma\\left(', '\\right)\\right)'],
-		toMathML: ['<mi>log</mi><mo>&#x2061;</mo><mo>(</mo><mi mathvariant="normal">&#x0393;</mi><mo>&#x2061;</mo><mo>(</mo>', '<mo>)</mo><mo>)</mo>'],
+		toMathML: [
+			'<mi>log</mi><mo>&#x2061;</mo><mo>(</mo><mi mathvariant="normal">&#x0393;</mi><mo>&#x2061;</mo><mo>(</mo>',
+			'<mo>)</mo><mo>)</mo>'],
 		toString: ['log(Γ(', '))']
 	};
 
@@ -2632,7 +2641,7 @@ var MathLib;
 			// 180 / Math.PI = 57.29577951308232
 			return x * 57.29577951308232;
 		},
-		toContentMathML: ['<csymbol cd="arith1">times</csymbol><apply><csymbol cd="arith1">divide</csymbol><cn>180</cn><csymbol cd="nums1">pi</csymbol></apply>', ''],
+		toContentMathML: ['<csymbol cd="arith1">times</csymbol><apply>' + '<csymbol cd="arith1">divide</csymbol><cn>180</cn><csymbol cd="nums1">pi</csymbol></apply>', ''],
 		toLaTeX: ['\\frac{180}{\\pi}', ''],
 		toMathML: ['<mfrac><mn>180</mn><mi>&pi;</mi></mfrac><mo>&#x2062;</mo>', ''],
 		toString: ['180/π*', '']
@@ -2686,7 +2695,7 @@ var MathLib;
 		arity: 2,
 		cdgroup: 'arith1',
 		// toLaTeX can't use \sqrt since this requires the arguments in reverse order.
-		//toLaTeX: ['\\sqrt[', ']{', '}'],
+		// toLaTeX: ['\\sqrt[', ']{', '}'],
 		toLaTeX: ['\\left(', '\\right)^{\\frac{1}{', '}}'],
 		toMathML: ['<mroot>', '', '</mroot>'],
 		toString: ['(', ')^(1/', ')']
@@ -3204,7 +3213,7 @@ var MathLib;
 			return obj instanceof glbl[ucfirst(type)];
 			// }
 			// if (global) {
-			//	return obj instanceof global[ucfirst(type)];
+			//   return obj instanceof global[ucfirst(type)];
 			// }
 		}
 	};
@@ -3772,6 +3781,9 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
+	/* tslint:disable */
 	var template = function (data) {
 		var p = [];
 		p.push(' <figure class="MathLib_figure">     <div class="MathLib_wrapper" style="width: ');
@@ -3810,6 +3822,7 @@ var MathLib;
 		return p.join('');
 	};
 
+	/* tslint:enable */
 	/// no import
 	/**
 	* This module contains the common methods of all drawing modules.
@@ -3990,6 +4003,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Screen2D
 	/**
 	* Layers for two dimensional plotting
@@ -4056,7 +4071,7 @@ var MathLib;
 					this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
 					this.draw = function () {
-						//					_this.ctx.lineWidth = (screen.options.grid.lineWidth || 4) / (screen.scale.x - screen.scale.y);
+						// _this.ctx.lineWidth = (screen.options.grid.lineWidth || 4) / (screen.scale.x - screen.scale.y);
 						_this.screen.drawGrid();
 					};
 				}
@@ -4189,6 +4204,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Screen2D
 	/**
 	* The Canvas renderer for 2D plotting
@@ -4449,7 +4466,7 @@ var MathLib;
 					ctx.lineTo(path[path.length - 1][0], 0);
 				});
 				ctx.fill();
-				//		ctx.closePath();
+				// ctx.closePath();
 			}
 
 			if (options.lineColor || options.lineColor !== 'transparent') {
@@ -4461,7 +4478,7 @@ var MathLib;
 					});
 				});
 				ctx.stroke();
-				//		ctx.closePath();
+				// ctx.closePath();
 			}
 
 			ctx.restore();
@@ -4611,7 +4628,7 @@ var MathLib;
 			var defaults = {
 				font: 'Helvetica',
 				fontSize: 12,
-				//				lineWidth:  0.05,
+				// lineWidth:  0.05,
 				textColor: 'rgba(0, 0, 0, 1)'
 			}, ctx, prop, opts;
 
@@ -4657,6 +4674,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Screen2D
 	/**
 	* The SVG renderer for 2D plotting
@@ -5088,7 +5107,7 @@ var MathLib;
 			var defaults = {
 				font: 'Helvetica',
 				fontSize: 12,
-				//				lineWidth:  0.05,
+				// lineWidth:  0.05,
 				textColor: 'rgba(0, 0, 0, 1)'
 			}, opts, screen = this.screen, svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'), svgTspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
 
@@ -5144,6 +5163,8 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Screen
 	/**
 	* Two dimensional plotting
@@ -5187,7 +5208,7 @@ var MathLib;
 					lineWidth: 4,
 					dash: [],
 					dashOffset: 0,
-					//tick: {x: 1, y: 1, r: 1}
+					// tick: {x: 1, y: 1, r: 1}
 					x: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
 					y: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
 					r: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
@@ -5382,7 +5403,7 @@ var MathLib;
 				this.element = element;
 				this.wrapper.appendChild(element);
 
-				//			if ('background' in options) {
+				// if ('background' in options) {
 				var background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
 
 				background.setAttribute('x', '0px');
@@ -5393,7 +5414,7 @@ var MathLib;
 				background.setAttribute('fill', 'background' in options ? MathLib.colorConvert(options.background) : 'white');
 				background.setAttribute('fill-opacity', '1');
 				this.element.appendChild(background);
-				//			}
+				// }
 			}
 
 			// Create the Layers
@@ -5478,7 +5499,7 @@ var MathLib;
 			}, textOptions = {
 				font: this.options.axes && 'label' in this.options.axes ? this.options.axes.label.font : '',
 				fontSize: this.options.axes && 'label' in this.options.axes ? this.options.axes.label.fontSize : '',
-				//				fontSize: this.options.axes.label.fontSize,
+				// fontSize: this.options.axes.label.fontSize,
 				strokeStyle: MathLib.colorConvert(this.options.axes.textColor),
 				fillStyle: MathLib.colorConvert(this.options.axes.textColor)
 			}, top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lengthX = 10 / this.transformation[0][0], lengthY = -10 / this.transformation[1][1], yExp = 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3), xExp = 1 - Math.floor(Math.log(this.transformation[0][0]) / Math.LN10 - 0.3), yTick = Math.pow(10, yExp), xTick = Math.pow(10, xExp), xLen = Math.max(0, Math.min(20, -xExp)), yLen = Math.max(0, Math.min(20, -yExp));
@@ -5599,7 +5620,9 @@ var MathLib;
 
 				if (this.options.grid.angle) {
 					for (i = 0, ii = 2 * Math.PI; i < ii; i += this.options.grid.angle.tick) {
-						line([[0, 0], [max * Math.cos(i), max * Math.sin(i)]], MathLib.extendObject(this.options.grid, this.options.grid.angle), true);
+						line([
+							[0, 0],
+							[max * Math.cos(i), max * Math.sin(i)]], MathLib.extendObject(this.options.grid, this.options.grid.angle), true);
 					}
 				}
 
@@ -5829,6 +5852,8 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	// A function converting arrays to THREE.js vectors
 	var to3js = function (x) {
 		if (x.length === 2) {
@@ -5862,7 +5887,7 @@ var MathLib;
 					lookAt: [0, 0, 0],
 					position: [10, 10, 10]
 				},
-				//controls: 'Trackball',
+				// controls: 'Trackball',
 				grid: {
 					xy: {
 						angle: Math.PI / 8,
@@ -5972,7 +5997,7 @@ var MathLib;
 			}
 
 			function update () {
-				//var delta = clock.getDelta();
+				// var delta = clock.getDelta();
 				controls.update();
 			}
 
@@ -6157,6 +6182,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Functn
 	/**
 	* The vector implementation of MathLib makes calculations with vectors of
@@ -6544,6 +6571,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Point
 	/**
 	* Creates a MathLib circle
@@ -6687,6 +6716,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Functn, Point
 	/**
 	* MathLib.Complex is the MathLib implementation of complex numbers.
@@ -7586,6 +7617,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Functn
 	/**
 	* MathLib.Integer is the MathLib implementation of (arbitrary precision) integers.
@@ -7740,7 +7773,7 @@ var MathLib;
 			}
 
 			if (type === 'number') {
-				//TODO Warn when the number is bigger that 2^53
+				// TODO: Warn when the number is bigger that 2^53
 				num = this.data.reduce(function (old, cur, i) {
 					return old + cur * Math.pow(1e7, i);
 				}, 0);
@@ -8409,6 +8442,8 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Functn, Vector
 	/**
 	* The line implementation of MathLib makes calculations with lines in the
@@ -8501,7 +8536,9 @@ var MathLib;
 							return k[1] * l[2] - k[2] * l[1];
 						},
 						set: function () {
-							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet'});
+							MathLib.warning({
+								message: 'Trying to change the coordinates of a completely dependent point.',
+								method: 'Line#meet'});
 						},
 						enumerable: true
 					},
@@ -8510,7 +8547,10 @@ var MathLib;
 							return k[2] * l[0] - k[0] * l[2];
 						},
 						set: function () {
-							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet'});
+							MathLib.warning({
+								message: 'Trying to change the coordinates of a completely dependent point.',
+								method: 'Line#meet'
+							});
 						},
 						enumerable: true
 					},
@@ -8519,7 +8559,10 @@ var MathLib;
 							return k[0] * l[1] - k[1] * l[0];
 						},
 						set: function () {
-							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet'});
+							MathLib.warning({
+								message: 'Trying to change the coordinates of a completely dependent point.',
+								method: 'Line#meet'
+							});
 						},
 						enumerable: true
 					}
@@ -8562,7 +8605,10 @@ var MathLib;
 						return -l[0] * p[2];
 					},
 					set: function () {
-						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough'});
+						MathLib.warning({
+							message: 'Trying to change the coordinates of a completely dependent line.',
+							method: 'Line#parallelThrough'
+						});
 					},
 					enumerable: true
 				},
@@ -8571,7 +8617,10 @@ var MathLib;
 						return -l[1] * p[2];
 					},
 					set: function () {
-						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough'});
+						MathLib.warning({
+							message: 'Trying to change the coordinates of a completely dependent line.',
+							method: 'Line#parallelThrough'
+						});
 					},
 					enumerable: true
 				},
@@ -8580,7 +8629,10 @@ var MathLib;
 						return l[1] * p[1] + l[0] * p[0];
 					},
 					set: function () {
-						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough'});
+						MathLib.warning({
+							message: 'Trying to change the coordinates of a completely dependent line.',
+							method: 'Line#parallelThrough'
+						});
 					},
 					enumerable: true
 				}
@@ -8596,6 +8648,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Functn, Permutation
 	/**
 	* The matrix implementation of MathLib makes calculations with matrices of
@@ -9850,6 +9904,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Functn, Matrix
 	/**
 	* The permutation class for MathLib
@@ -10071,6 +10127,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Functn, Matrix
 	/**
 	* The conic implementation of MathLib makes calculations with conics possible.
@@ -10086,12 +10144,12 @@ var MathLib;
 			}
 			this.primal = primal;
 
-			//		if (!dual) {
-			//			dual = primal.adjugate();
-			//		}
-			//		else if (!primal.times(dual).isScalar()) {
-			//			// Throw error
-			//		}
+			// if (!dual) {
+			//   dual = primal.adjugate();
+			// }
+			// else if (!primal.times(dual).isScalar()) {
+			//   // Throw error
+			// }
 			if (primal.rank() > 1) {
 				Object.defineProperties(this, {
 					'dual': {
@@ -10373,7 +10431,10 @@ var MathLib;
 
 			if (x.type === 'line') {
 				var setter = function () {
-					MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Conic#meet'});
+					MathLib.warning({
+						message: 'Trying to change the coordinates of a completely dependent point.',
+						method: 'Conic#meet'
+					});
 				}, recalculate = function () {
 					Ml = new MathLib.Matrix([[0, x[2], -x[1]], [-x[2], 0, x[0]], [x[1], -x[0], 0]]);
 					B = Ml.transpose().times(A).times(Ml);
@@ -10529,7 +10590,10 @@ var MathLib;
 						return c[m][0][0] * x[0] + c[m][0][1] * x[1] + c[m][0][2] * x[2];
 					},
 					set: function () {
-						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity'});
+						MathLib.warning({
+							message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.',
+							method: 'Conic#polarity'
+						});
 					},
 					enumerable: true
 				},
@@ -10538,7 +10602,10 @@ var MathLib;
 						return c[m][1][0] * x[0] + c[m][1][1] * x[1] + c[m][1][2] * x[2];
 					},
 					set: function () {
-						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity'});
+						MathLib.warning({
+							message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.',
+							method: 'Conic#polarity'
+						});
 					},
 					enumerable: true
 				},
@@ -10547,7 +10614,10 @@ var MathLib;
 						return c[m][2][0] * x[0] + c[m][2][1] * x[1] + c[m][2][2] * x[2];
 					},
 					set: function () {
-						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.', method: 'Conic#polarity'});
+						MathLib.warning({
+							message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.',
+							method: 'Conic#polarity'
+						});
 					},
 					enumerable: true
 				}
@@ -10624,6 +10694,8 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Complex, Vector
 	/**
 	* The point implementation of MathLib makes calculations with point in
@@ -10672,7 +10744,7 @@ var MathLib;
 		* @param {Point} p The point to calculate the distance to
 		* @return {number}
 		*/
-		Point.prototype.distanceTo = function (p /*, geom = MathLib.Geometry.active*/ ) {
+		Point.prototype.distanceTo = function (p) {
 			if (arguments.length === 0) {
 				return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
 			}
@@ -10680,14 +10752,6 @@ var MathLib;
 			if (p.type === 'point' && this.dimension === p.dimension) {
 				return MathLib.hypot.apply(null, this.normalize().minus(p.normalize()).slice(0, -1));
 			}
-			//	if (p.type === 'point' && this.dimension === p.dimension) {
-			//		var Otp = this.times(geom.fundamentalConic.primal).times(p),
-			//				Ott = this.times(geom.fundamentalConic.primal).times(this),
-			//				Opp = p.times(geom.fundamentalConic.primal).times(p),
-			//				Dtp = Math.sqrt(Otp * Otp - Ott * Opp);
-			//
-			//		return MathLib.Geometry.active.cDist * Math.log((Otp + Dtp) / (Otp - Dtp));
-			//	}
 		};
 
 		/**
@@ -10757,7 +10821,10 @@ var MathLib;
 							return p[1] * q[2] - p[2] * q[1];
 						},
 						set: function () {
-							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join'});
+							MathLib.warning({
+								message: 'Trying to change the coordinates of a completely dependent line.',
+								method: 'Point#join'
+							});
 						},
 						enumerable: true
 					},
@@ -10766,7 +10833,10 @@ var MathLib;
 							return p[2] * q[0] - p[0] * q[2];
 						},
 						set: function () {
-							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join'});
+							MathLib.warning({
+								message: 'Trying to change the coordinates of a completely dependent line.',
+								method: 'Point#join'
+							});
 						},
 						enumerable: true
 					},
@@ -10775,7 +10845,10 @@ var MathLib;
 							return p[0] * q[1] - p[1] * q[0];
 						},
 						set: function () {
-							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Point#join'});
+							MathLib.warning({
+								message: 'Trying to change the coordinates of a completely dependent line.',
+								method: 'Point#join'
+							});
 						},
 						enumerable: true
 					}
@@ -10937,6 +11010,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Functn
 	/**
 	* The polynomial implementation of MathLib makes calculations with polynomials.
@@ -11526,6 +11601,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// import Functn
 	/**
 	* MathLib.Rational is the MathLib implementation of rational numbers.
@@ -11618,7 +11695,7 @@ var MathLib;
 			}
 
 			if (type === 'complex') {
-				//		return new MathLib.Complex(this, new MathLib.Rational(0));
+				// return new MathLib.Complex(this, new MathLib.Rational(0));
 				return new MathLib.Complex(this, 0);
 			}
 		};
@@ -11861,6 +11938,8 @@ var MathLib;
 /// <reference path='reference.ts'/>
 var MathLib;
 (function (MathLib) {
+	'use strict';
+
 	/// no import
 	/**
 	* The Implementation of sets in MathLib

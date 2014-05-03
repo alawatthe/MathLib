@@ -10,7 +10,9 @@ export var toContentMathML = function (x, options : toContentMathMLOptions = {})
 
 	if (Array.isArray(x)) {
 		if (options.strict) {
-			return '<apply><csymbol cd="list1">list</csymbol>' + x.map(entry => MathLib.toContentMathML(entry, options)).join('') + '</apply>';
+			return '<apply><csymbol cd="list1">list</csymbol>' +
+				x.map(entry => MathLib.toContentMathML(entry, options)).join('') +
+				'</apply>';
 		}
 		else {
 			return '<list>' + x.map(entry => MathLib.toContentMathML(entry, options)).join('') + '</list>';
@@ -59,7 +61,7 @@ export var toContentMathML = function (x, options : toContentMathMLOptions = {})
 			return '<apply><csymbol cd="nums1">based_float</csymbol>'
 				 			+ '<cn type="integer">' + base + '</cn>'
 							+ '<cs>' + MathLib.toString(x, {base: base}) + '</cs>'
-							+ '</apply>'
+							+ '</apply>';
 		}
 
 		return '<cn type="real" base="' + base + '">' + MathLib.toString(x, {base: base}) + '</cn>';
@@ -67,7 +69,7 @@ export var toContentMathML = function (x, options : toContentMathMLOptions = {})
 
 	if (typeof x === 'boolean') {
 		if (options.strict) {
-			return '<csymbol cd="logic1">' + x + '</csymbol>'
+			return '<csymbol cd="logic1">' + x + '</csymbol>';
 		}
 		return '<' + x + '/>';
 	}
@@ -77,4 +79,4 @@ export var toContentMathML = function (x, options : toContentMathMLOptions = {})
 		return '<cs>' + x + '</cs>';
 	}
 
-}
+};

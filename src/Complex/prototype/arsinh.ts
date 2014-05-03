@@ -11,16 +11,16 @@ arsinh() : Complex {
 			sqrt = Math.sqrt(Math.pow(aa + bb - 1, 2) + 4 * aa),
 			sgn = function (x) {
 				if (x > 0) {
-					return 1; 
+					return 1;
 				}
 				if (x < 0) {
-					return -1; 
+					return -1;
 				}
-				if (1/x === Infinity) {
-					return 1; 
+				if (1 / x === Infinity) {
+					return 1;
 				}
-				if (1/x === -Infinity) {
-					return -1; 
+				if (1 / x === -Infinity) {
+					return -1;
 				}
 			};
 

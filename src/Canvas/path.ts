@@ -13,7 +13,7 @@ path: function (curve, options = {}, redraw = false) {
 			step = 2 / (screen.scale.x - screen.scale.y),
 			from, to;
 
-	ctx.save()
+	ctx.save();
 	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
 
 
@@ -49,7 +49,7 @@ path: function (curve, options = {}, redraw = false) {
 			// TODO: Find a better check if there is a discontinuity.
 			if (fx !== fx ||
 				// next the check for very steep lines
-				(MathLib.abs((fxold - fx) / step) >= 1e2 && 
+				(MathLib.abs((fxold - fx) / step) >= 1e2 &&
 				// But those points additionally have to satisfy,
 				// that the midpoint of the current interval is not in between
 				// the two values of the function at the endpoints of the intervall.
@@ -101,12 +101,12 @@ path: function (curve, options = {}, redraw = false) {
 			// The following line (and the line four lines afterwards) fixes the fill at holes in the path.
 			ctx.lineTo(path[0][0], 0);
 			path.forEach(function (x) {
-				ctx.lineTo(x[0], x[1]); 
+				ctx.lineTo(x[0], x[1]);
 			});
 			ctx.lineTo(path[path.length - 1][0], 0);
 		});
 		ctx.fill();
-//		ctx.closePath();
+		// ctx.closePath();
 	}
 
 	if ((<any>options).lineColor || (<any>options).lineColor !== 'transparent') {
@@ -114,11 +114,11 @@ path: function (curve, options = {}, redraw = false) {
 		paths.forEach(function (path) {
 			ctx.moveTo(path[0][0], path[0][1]);
 			path.forEach(function (x) {
-				ctx.lineTo(x[0], x[1]); 
+				ctx.lineTo(x[0], x[1]);
 			});
 		});
 		ctx.stroke();
-//		ctx.closePath();
+		// ctx.closePath();
 	}
 
 	ctx.restore();

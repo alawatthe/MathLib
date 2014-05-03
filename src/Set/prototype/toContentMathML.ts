@@ -8,7 +8,7 @@ toContentMathML(options : toContentMathMLOptions = {}) : string {
 	
 	if (options.strict) {
 		if (this.isEmpty()) {
-			return '<csymbol cd="set1">emptyset</csymbol>'
+			return '<csymbol cd="set1">emptyset</csymbol>';
 		}
 		else {
 			

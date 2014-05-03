@@ -25,11 +25,14 @@ pixel: function (f, t : number, r : number, b : number, l : number, options = {}
 
 	canvas.width = screen.width;
 	canvas.height = screen.height;
-	canvasCtx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2])
+	canvasCtx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
 
 
 
-	svgContainer.setAttribute('transform', 'matrix(' + 1 / m[0][0] + ', 0, 0, ' + 1 / m[1][1] + ', -' + m[0][2] / m[0][0] + ', ' + -m[1][2] / m[1][1] + ')');
+	svgContainer.setAttribute('transform', 'matrix(' +
+		1 / m[0][0] + ', 0, 0, ' +
+		1 / m[1][1] + ', -' + m[0][2] / m[0][0] + ', ' + -m[1][2] / m[1][1] +
+	')');
 	svgImage.setAttribute('width', screen.width + 'px');
 	svgImage.setAttribute('height', screen.height + 'px');
 	svgImage.setAttribute('x', '0');

@@ -47,8 +47,8 @@ divrem(divisor : Integer) : Integer[] {
 			}
 
 			// Step 7
-			return [q, A.minus(T)]
-		}
+			return [q, A.minus(T)];
+		};
 
 
 
@@ -98,7 +98,7 @@ divrem(divisor : Integer) : Integer[] {
 
 			// Step 7
 			return [new MathLib.Integer(q.data.concat(q1.data)), r];
-		}
+		};
 
 
 

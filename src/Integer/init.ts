@@ -63,7 +63,7 @@ export class Integer implements Printable, RingElement {
 			data = [];
 			blocksize = Math.floor(Math.log(Math.pow(2, 53)) / Math.log(inputBase));
 
-			while (integer.length > blocksize) {	
+			while (integer.length > blocksize) {
 				data.push(new MathLib.Integer(parseInt(integer.slice(-blocksize), inputBase)));
 				integer = integer.slice(0, -blocksize);
 			}
@@ -97,5 +97,5 @@ export class Integer implements Printable, RingElement {
 		}
 
 		this.data = data;
-		this.sign = sign;	
+		this.sign = sign;
 	}

@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	var MathLib = require('./meta.js');
 	// There is no DOMParser in Node, so we have to require one (done via a regexp replace)
 	var DOMParser = DOMParser || require('xmldom').DOMParser;
@@ -206,9 +208,9 @@
 						});
 						*/
 					}
-					//else if (type === 'constant') {
-					// TODO: implement
-					//}
+					// else if (type === 'constant') {
+					//   TODO: implement
+					// }
 				},
 				cs: function (node) {
 					return node.textContent;
@@ -1191,16 +1193,16 @@
 
 					// TODO: support assignments
 					// if (typeof expr !== 'undefined' && expr.Identifier) {
-					//	token = lexer.peek();
-					//	if (matchOp(token, '=')) {
-					//		lexer.next();
-					//		return new MathLib.Expression({
-					//				subtype: 'Assignment',
-					//				name: expr,
-					//				value: parseAssignment()
-					//			});
-					//	}
-					//	return expr;
+					// token = lexer.peek();
+					// if (matchOp(token, '=')) {
+					//   lexer.next();
+					//   return new MathLib.Expression({
+					//     subtype: 'Assignment',
+					//     name: expr,
+					//     value: parseAssignment()
+					//   });
+					// }
+					// return expr;
 					// }
 					return expr;
 				}
@@ -1229,7 +1231,7 @@
 				};
 			};
 
-			return Parser().parse(str);
+			return (new Parser()).parse(str);
 		};
 
 		Expression.variables = {};

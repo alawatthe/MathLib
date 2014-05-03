@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	import MathLib from './meta.js';
 import Screen2D from './Screen2D';
 
@@ -261,7 +263,7 @@ import Screen2D from './Screen2D';
 					ctx.lineTo(path[path.length - 1][0], 0);
 				});
 				ctx.fill();
-				//		ctx.closePath();
+				// ctx.closePath();
 			}
 
 			if (options.lineColor || options.lineColor !== 'transparent') {
@@ -273,7 +275,7 @@ import Screen2D from './Screen2D';
 					});
 				});
 				ctx.stroke();
-				//		ctx.closePath();
+				// ctx.closePath();
 			}
 
 			ctx.restore();
@@ -423,7 +425,7 @@ import Screen2D from './Screen2D';
 			var defaults = {
 				font: 'Helvetica',
 				fontSize: 12,
-				//				lineWidth:  0.05,
+				// lineWidth:  0.05,
 				textColor: 'rgba(0, 0, 0, 1)'
 			}, ctx, prop, opts;
 

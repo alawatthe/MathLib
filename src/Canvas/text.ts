@@ -11,7 +11,7 @@ text: function (str : string, x : number, y : number, options = {}, redraw = fal
 	var defaults = {
 				font:       'Helvetica',
 				fontSize:   12,
-//				lineWidth:  0.05,
+				// lineWidth:  0.05,
 				textColor:  'rgba(0, 0, 0, 1)'
 			},
 			ctx, prop, opts;

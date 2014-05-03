@@ -18,7 +18,7 @@ onmousedown(evt) {
 
 	// Pan mode
 	if (this.options.interaction.allowPan && !this.options.interaction.type) {
-		this.options.interaction.type = 'pan'
+		this.options.interaction.type = 'pan';
 		this.options.interaction.startPoint = this.getEventPoint(evt);
 		this.options.interaction.startTransformation = this.transformation.copy();
 	}

@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	define(['meta', 'Functn'], function(MathLib) {
 	/**
 	* The polynomial implementation of MathLib makes calculations with polynomials.

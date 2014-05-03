@@ -922,7 +922,7 @@
 			// Math.PI / 180 = 0.017453292519943295
 			return x * 0.017453292519943295;
 		},
-		toContentMathML: ['&lt;csymbol cd=&quot;arith1&quot;&gt;times&lt;/csymbol&gt;&lt;apply&gt;&lt;csymbol cd=&quot;arith1&quot;&gt;divide&lt;/csymbol&gt;&lt;csymbol cd=&quot;nums1&quot;&gt;pi&lt;/csymbol&gt;&lt;cn&gt;180&lt;/cn&gt;&lt;/apply&gt;', ''],
+		toContentMathML: ['&lt;csymbol cd=&quot;arith1&quot;&gt;times&lt;/csymbol&gt;&lt;apply&gt;' + '&lt;csymbol cd=&quot;arith1&quot;&gt;divide&lt;/csymbol&gt;&lt;csymbol cd=&quot;nums1&quot;&gt;pi&lt;/csymbol&gt;&lt;cn&gt;180&lt;/cn&gt;&lt;/apply&gt;', ''],
 		toLaTeX: ['\\frac{\\pi}{180}', ''],
 		toMathML: ['&lt;mfrac&gt;&lt;mi&gt;&pi;&lt;/mi&gt;&lt;mn&gt;180&lt;/mn&gt;&lt;/mfrac&gt;&lt;mo&gt;&amp;#x2062;&lt;/mo&gt;', ''],
 		toString: ['π/180*', '']
@@ -1211,9 +1211,11 @@
           <pre><code class="language-javascript">fns.logGamma = {
 		functn: function (x) {
 			var j, tmp, y, ser, cof = [
-				57.1562356658629235, -59.5979603554754912, 14.1360979747417471, -0.491913816097620199, 0.339946499848118887e-4,
-				0.465236289270485756e-4, -0.983744753048795646e-4, 0.158088703224912494e-3, -0.210264441724104883e-3, 0.217439618115212643e-3,
-				-0.164318106536763890e-3, 0.844182239838527433e-4, -0.261908384015814087e-4, 0.368991826595316234e-5
+				57.1562356658629235, -59.5979603554754912, 14.1360979747417471, -0.491913816097620199,
+				0.339946499848118887e-4, 0.465236289270485756e-4, -0.983744753048795646e-4,
+				0.158088703224912494e-3, -0.210264441724104883e-3, 0.217439618115212643e-3,
+				-0.164318106536763890e-3, 0.844182239838527433e-4, -0.261908384015814087e-4,
+				0.368991826595316234e-5
 			];
 
 			if (x === Infinity) {
@@ -1231,7 +1233,9 @@
 		},
 		toContentMathML: ['&lt;csymbol cd=&quot;transc1&quot;&gt;ln&lt;/csymbol&gt;&lt;apply&gt;&lt;ci&gt;Gamma&lt;/ci&gt;', '&lt;/apply&gt;'],
 		toLaTeX: ['\\log\\left(\\Gamma\\left(', '\\right)\\right)'],
-		toMathML: ['&lt;mi&gt;log&lt;/mi&gt;&lt;mo&gt;&amp;#x2061;&lt;/mo&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;&amp;#x0393;&lt;/mi&gt;&lt;mo&gt;&amp;#x2061;&lt;/mo&gt;&lt;mo&gt;(&lt;/mo&gt;', '&lt;mo&gt;)&lt;/mo&gt;&lt;mo&gt;)&lt;/mo&gt;'],
+		toMathML: [
+			'&lt;mi&gt;log&lt;/mi&gt;&lt;mo&gt;&amp;#x2061;&lt;/mo&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;&amp;#x0393;&lt;/mi&gt;&lt;mo&gt;&amp;#x2061;&lt;/mo&gt;&lt;mo&gt;(&lt;/mo&gt;',
+			'&lt;mo&gt;)&lt;/mo&gt;&lt;mo&gt;)&lt;/mo&gt;'],
 		toString: ['log(Γ(', '))']
 	};</code></pre>
           <section id="minus">
@@ -1355,7 +1359,7 @@
 			// 180 / Math.PI = 57.29577951308232
 			return x * 57.29577951308232;
 		},
-		toContentMathML: ['&lt;csymbol cd=&quot;arith1&quot;&gt;times&lt;/csymbol&gt;&lt;apply&gt;&lt;csymbol cd=&quot;arith1&quot;&gt;divide&lt;/csymbol&gt;&lt;cn&gt;180&lt;/cn&gt;&lt;csymbol cd=&quot;nums1&quot;&gt;pi&lt;/csymbol&gt;&lt;/apply&gt;', ''],
+		toContentMathML: ['&lt;csymbol cd=&quot;arith1&quot;&gt;times&lt;/csymbol&gt;&lt;apply&gt;' + '&lt;csymbol cd=&quot;arith1&quot;&gt;divide&lt;/csymbol&gt;&lt;cn&gt;180&lt;/cn&gt;&lt;csymbol cd=&quot;nums1&quot;&gt;pi&lt;/csymbol&gt;&lt;/apply&gt;', ''],
 		toLaTeX: ['\\frac{180}{\\pi}', ''],
 		toMathML: ['&lt;mfrac&gt;&lt;mn&gt;180&lt;/mn&gt;&lt;mi&gt;&pi;&lt;/mi&gt;&lt;/mfrac&gt;&lt;mo&gt;&amp;#x2062;&lt;/mo&gt;', ''],
 		toString: ['180/π*', '']
@@ -1417,7 +1421,7 @@
 		arity: 2,
 		cdgroup: 'arith1',
 		// toLaTeX can't use \sqrt since this requires the arguments in reverse order.
-		//toLaTeX: ['\\sqrt[', ']{', '}'],
+		// toLaTeX: ['\\sqrt[', ']{', '}'],
 		toLaTeX: ['\\left(', '\\right)^{\\frac{1}{', '}}'],
 		toMathML: ['&lt;mroot&gt;', '', '&lt;/mroot&gt;'],
 		toString: ['(', ')^(1/', ')']
@@ -1949,7 +1953,7 @@
 			return obj instanceof glbl[ucfirst(type)];
 			// }
 			// if (global) {
-			//	return obj instanceof global[ucfirst(type)];
+			//   return obj instanceof global[ucfirst(type)];
 			// }
 		}
 	};</code></pre>

@@ -24,10 +24,14 @@ export class Set implements Printable  {
 		
 		elements = elements.sort(MathLib.compare)
 			.filter(function (x, i, a) {
-		 		return (a.length === i + 1) ||  !MathLib.isEqual(x, a[i + 1]) || (typeof x.isEqual !== 'undefined' && !x.isEqual(a[i + 1]));
+		 		return (a.length === i + 1) ||
+		 			!MathLib.isEqual(x, a[i + 1]) ||
+		 			(typeof x.isEqual !== 'undefined' && !x.isEqual(a[i + 1]));
 			 });
 
-		elements.forEach((x, i) => {this[i] = x;});
+		elements.forEach((x, i) => {
+			this[i] = x;
+		});
 		this.length = elements.length;
 		this.card = elements.length;
 	}

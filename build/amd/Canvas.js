@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	define(['meta', 'Screen2D'], function(MathLib) {
 	/**
 	* The Canvas renderer for 2D plotting
@@ -259,7 +261,7 @@
 					ctx.lineTo(path[path.length - 1][0], 0);
 				});
 				ctx.fill();
-				//		ctx.closePath();
+				// ctx.closePath();
 			}
 
 			if (options.lineColor || options.lineColor !== 'transparent') {
@@ -271,7 +273,7 @@
 					});
 				});
 				ctx.stroke();
-				//		ctx.closePath();
+				// ctx.closePath();
 			}
 
 			ctx.restore();
@@ -421,7 +423,7 @@
 			var defaults = {
 				font: 'Helvetica',
 				fontSize: 12,
-				//				lineWidth:  0.05,
+				// lineWidth:  0.05,
 				textColor: 'rgba(0, 0, 0, 1)'
 			}, ctx, prop, opts;
 

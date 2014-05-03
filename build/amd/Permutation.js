@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	define(['meta', 'Functn', 'Matrix'], function(MathLib) {
 	/**
 	* The permutation class for MathLib

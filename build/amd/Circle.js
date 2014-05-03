@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	define(['meta', 'Point'], function(MathLib) {
 	/**
 	* Creates a MathLib circle

@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	var MathLib = require('./meta.js'),
 		Functn = require('./Functn');
 
@@ -93,7 +95,7 @@
 			}
 
 			if (type === 'complex') {
-				//		return new MathLib.Complex(this, new MathLib.Rational(0));
+				// return new MathLib.Complex(this, new MathLib.Rational(0));
 				return new MathLib.Complex(this, 0);
 			}
 		};

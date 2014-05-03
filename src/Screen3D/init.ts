@@ -42,7 +42,7 @@ export class Screen3D extends Screen {
 						lookAt: [0, 0, 0],
 						position: [10, 10, 10]
 					},
-					//controls: 'Trackball',
+					// controls: 'Trackball',
 					grid: {
 						xy: {
 							angle: Math.PI / 8,
@@ -69,7 +69,7 @@ export class Screen3D extends Screen {
 				},
 				opts = extendObject(defaults, options),
 				scene = new THREE.Scene(),
-				//clock = new THREE.Clock(),
+				// clock = new THREE.Clock(),
 				camera, renderer, controls, viewAngle, aspect, near, far;
 
 		this.options = opts;
@@ -171,7 +171,7 @@ export class Screen3D extends Screen {
 		}
 
 		function update () {
-			//var delta = clock.getDelta();
+			// var delta = clock.getDelta();
 			controls.update();
 		}
 

@@ -5,7 +5,7 @@
  * @return {boolean}
  */
 isEqual(n) : boolean {
-	var i, ii; 
+	var i, ii;
 	
 	if (n.type !== 'integer') {
 		return MathLib.isEqual(MathLib.coerce(this, n));

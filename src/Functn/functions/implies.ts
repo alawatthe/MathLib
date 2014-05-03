@@ -14,4 +14,4 @@ fns.implies = {
 	toLaTeX: ['', ' \\Rightarrow ', ''],
 	toMathML: ['', '<mo>&#x21D2;</mo>', ''],
 	toString: ['', ' ⇒ ', '']
-}
+};

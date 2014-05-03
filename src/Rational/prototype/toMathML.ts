@@ -24,8 +24,8 @@ toMathML(options : toPresentationOptions = {}) : string {
 	}
 
 	return str
-					+	'<mfrac>' 
+					+ '<mfrac>'
 					+ numerator
 					+ MathLib.toMathML(this.denominator, passOptions)
-					+ '</mfrac>';	
+					+ '</mfrac>';
 }

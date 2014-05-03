@@ -6,7 +6,7 @@
 normalize() : Line {
 	var h = MathLib.hypot(this[0], this[1]);
 
-	if (h !== 0){
+	if (h !== 0) {
 		return this.map(function (x) {
 			return x / h;
 		});

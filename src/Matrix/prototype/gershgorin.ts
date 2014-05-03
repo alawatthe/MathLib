@@ -25,8 +25,8 @@ gershgorin() {
 			}
 		}
 		else {
-			rc[j] += MathLib.abs(x); 
-			rr[i] += MathLib.abs(x); 
+			rc[j] += MathLib.abs(x);
+			rr[i] += MathLib.abs(x);
 		}
 	});
 

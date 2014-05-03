@@ -11,6 +11,8 @@ var __extends = this.__extends || function (d, b) {
 	d.prototype = new __();
 };
 
+	'use strict';
+
 	import MathLib from './meta.js';
 import Functn from './Functn';
 import Vector from './Vector';
@@ -106,7 +108,9 @@ import Vector from './Vector';
 							return k[1] * l[2] - k[2] * l[1];
 						},
 						set: function () {
-							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet'});
+							MathLib.warning({
+								message: 'Trying to change the coordinates of a completely dependent point.',
+								method: 'Line#meet'});
 						},
 						enumerable: true
 					},
@@ -115,7 +119,10 @@ import Vector from './Vector';
 							return k[2] * l[0] - k[0] * l[2];
 						},
 						set: function () {
-							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet'});
+							MathLib.warning({
+								message: 'Trying to change the coordinates of a completely dependent point.',
+								method: 'Line#meet'
+							});
 						},
 						enumerable: true
 					},
@@ -124,7 +131,10 @@ import Vector from './Vector';
 							return k[0] * l[1] - k[1] * l[0];
 						},
 						set: function () {
-							MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Line#meet'});
+							MathLib.warning({
+								message: 'Trying to change the coordinates of a completely dependent point.',
+								method: 'Line#meet'
+							});
 						},
 						enumerable: true
 					}
@@ -167,7 +177,10 @@ import Vector from './Vector';
 						return -l[0] * p[2];
 					},
 					set: function () {
-						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough'});
+						MathLib.warning({
+							message: 'Trying to change the coordinates of a completely dependent line.',
+							method: 'Line#parallelThrough'
+						});
 					},
 					enumerable: true
 				},
@@ -176,7 +189,10 @@ import Vector from './Vector';
 						return -l[1] * p[2];
 					},
 					set: function () {
-						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough'});
+						MathLib.warning({
+							message: 'Trying to change the coordinates of a completely dependent line.',
+							method: 'Line#parallelThrough'
+						});
 					},
 					enumerable: true
 				},
@@ -185,7 +201,10 @@ import Vector from './Vector';
 						return l[1] * p[1] + l[0] * p[0];
 					},
 					set: function () {
-						MathLib.warning({message: 'Trying to change the coordinates of a completely dependent line.', method: 'Line#parallelThrough'});
+						MathLib.warning({
+							message: 'Trying to change the coordinates of a completely dependent line.',
+							method: 'Line#parallelThrough'
+						});
 					},
 					enumerable: true
 				}

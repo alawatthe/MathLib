@@ -12,7 +12,7 @@ compare(x : Set) : number {
 	}
 	else {
 		for (i = 0, ii = this.card; i < ii; i++) {
-			a = MathLib.compare(this[i], x[i])
+			a = MathLib.compare(this[i], x[i]);
 			if (a !== 0) {
 				return a;
 			}

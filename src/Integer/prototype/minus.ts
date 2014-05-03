@@ -52,7 +52,7 @@ minus(n) : Integer {
 			}
 			if (typeof resPos === 'undefined') {
 				return new MathLib.Integer(0);
-			} 
+			}
 		}
 
 		if (resPos) {
@@ -63,7 +63,7 @@ minus(n) : Integer {
 		else {
 			A = n;
 			B = this;
-			sign = '-'
+			sign = '-';
 		}
 
 		for (i = 0, ii = A.data.length; i < ii; i++) {

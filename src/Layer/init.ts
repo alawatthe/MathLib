@@ -87,16 +87,16 @@ export class Layer {
 							_this[x.type](x.object, x.options, true);
 						}
 					});
-				}
+				};
 			}
 			else if (id === 'grid') {
 				this.ctx.strokeStyle = colorConvert(screen.options.grid.color) || '#cccccc';
 				this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
 				this.draw = function () {
-//					_this.ctx.lineWidth = (screen.options.grid.lineWidth || 4) / (screen.scale.x - screen.scale.y);
+					// _this.ctx.lineWidth = (screen.options.grid.lineWidth || 4) / (screen.scale.x - screen.scale.y);
 					_this.screen.drawGrid();
-				}
+				};
 			}
 			else if (id === 'axes') {
 				this.ctx.strokeStyle = colorConvert(screen.options.axes.color) || '#000000';
@@ -104,7 +104,7 @@ export class Layer {
 				this.draw = function () {
 					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 					_this.screen.drawAxes();
-				}
+				};
 			}
 			else {
 				this.ctx.strokeStyle = '#000000';
@@ -128,7 +128,7 @@ export class Layer {
 						}
 					});
 				
-				}
+				};
 			}
 
 
@@ -168,7 +168,7 @@ export class Layer {
 							_this[x.type](x.object, x.options, true);
 						}
 					});
-				}
+				};
 			}
 			else if (id === 'grid') {
 				ctx.setAttribute('stroke', colorConvert(screen.options.grid.color) || '#cccccc');
@@ -185,7 +185,7 @@ export class Layer {
 				this.draw = function () {
 					ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
 					_this.screen.drawAxes();
-				}
+				};
 			}
 			else {
 				this.draw = function () {
@@ -204,7 +204,7 @@ export class Layer {
 							_this[x.type](x.object, x.options, true);
 						}
 					});
-				}
+				};
 			}
 
 

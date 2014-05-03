@@ -9,7 +9,7 @@ times(a) {
 			product = [], entry;
 
 	if (a.type === 'rational') {
-		a = a.coerceTo('number'); 
+		a = a.coerceTo('number');
 	}
 	if (typeof a === 'number' || a.type === 'complex') {
 		return this.map(function (x) {

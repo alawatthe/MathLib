@@ -4,7 +4,8 @@
  * @return {string}
  */
 toMathML() : string {
-	var str = '<mrow>' + MathLib.toMathML(this[this.deg]) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(this.deg) + '</msup>',
+	var str = '<mrow>' + MathLib.toMathML(this[this.deg]) +
+				'<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(this.deg) + '</msup>',
 			i;
 	for (i = this.deg - 1; i >= 0; i--) {
 		if (!MathLib.isZero(this[i])) {

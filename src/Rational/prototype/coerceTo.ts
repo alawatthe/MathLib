@@ -9,7 +9,7 @@ coerceTo(type) : any {
 			return new MathLib.Integer(this.numerator);
 		}
 		// TODO: coercion error
-	}	
+	}
 	
 	if (type === 'rational') {
 		return this.copy();
@@ -20,7 +20,7 @@ coerceTo(type) : any {
 	}
 	
 	if (type === 'complex') {
-//		return new MathLib.Complex(this, new MathLib.Rational(0));
+		// return new MathLib.Complex(this, new MathLib.Rational(0));
 		return new MathLib.Complex(this, 0);
 	}
 }

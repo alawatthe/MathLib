@@ -25,7 +25,7 @@ circle: function (circle, options = {}, redraw = false) {
 		}
 	}
 
-	this.ctx.appendChild(svgCircle)
+	this.ctx.appendChild(svgCircle);
 
 	if (!redraw) {
 		this.stack.push({

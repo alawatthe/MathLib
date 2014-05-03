@@ -1,4 +1,7 @@
 
+	'use strict';
+
+	/* tslint:disable */
 	var template = function (data) {
 		var p = [];
 		p.push(' <figure class="MathLib_figure">     <div class="MathLib_wrapper" style="width: ');
@@ -37,6 +40,7 @@
 		return p.join('');
 	};
 
+	/* tslint:enable */
 	define(['meta'], function(MathLib) {
 	/**
 	* This module contains the common methods of all drawing modules.

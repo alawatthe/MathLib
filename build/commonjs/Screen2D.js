@@ -11,6 +11,8 @@ var __extends = this.__extends || function (d, b) {
 	d.prototype = new __();
 };
 
+	'use strict';
+
 	var MathLib = require('./meta.js'),
 		Screen = require('./Screen');
 
@@ -56,7 +58,7 @@ var __extends = this.__extends || function (d, b) {
 					lineWidth: 4,
 					dash: [],
 					dashOffset: 0,
-					//tick: {x: 1, y: 1, r: 1}
+					// tick: {x: 1, y: 1, r: 1}
 					x: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
 					y: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
 					r: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
@@ -251,7 +253,7 @@ var __extends = this.__extends || function (d, b) {
 				this.element = element;
 				this.wrapper.appendChild(element);
 
-				//			if ('background' in options) {
+				// if ('background' in options) {
 				var background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
 
 				background.setAttribute('x', '0px');
@@ -262,7 +264,7 @@ var __extends = this.__extends || function (d, b) {
 				background.setAttribute('fill', 'background' in options ? MathLib.colorConvert(options.background) : 'white');
 				background.setAttribute('fill-opacity', '1');
 				this.element.appendChild(background);
-				//			}
+				// }
 			}
 
 			// Create the Layers
@@ -347,7 +349,7 @@ var __extends = this.__extends || function (d, b) {
 			}, textOptions = {
 				font: this.options.axes && 'label' in this.options.axes ? this.options.axes.label.font : '',
 				fontSize: this.options.axes && 'label' in this.options.axes ? this.options.axes.label.fontSize : '',
-				//				fontSize: this.options.axes.label.fontSize,
+				// fontSize: this.options.axes.label.fontSize,
 				strokeStyle: MathLib.colorConvert(this.options.axes.textColor),
 				fillStyle: MathLib.colorConvert(this.options.axes.textColor)
 			}, top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lengthX = 10 / this.transformation[0][0], lengthY = -10 / this.transformation[1][1], yExp = 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3), xExp = 1 - Math.floor(Math.log(this.transformation[0][0]) / Math.LN10 - 0.3), yTick = Math.pow(10, yExp), xTick = Math.pow(10, xExp), xLen = Math.max(0, Math.min(20, -xExp)), yLen = Math.max(0, Math.min(20, -yExp));
@@ -468,7 +470,9 @@ var __extends = this.__extends || function (d, b) {
 
 				if (this.options.grid.angle) {
 					for (i = 0, ii = 2 * Math.PI; i < ii; i += this.options.grid.angle.tick) {
-						line([[0, 0], [max * Math.cos(i), max * Math.sin(i)]], MathLib.extendObject(this.options.grid, this.options.grid.angle), true);
+						line([
+							[0, 0],
+							[max * Math.cos(i), max * Math.sin(i)]], MathLib.extendObject(this.options.grid, this.options.grid.angle), true);
 					}
 				}
 

@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	var MathLib = require('./meta.js'),
 		Screen2D = require('./Screen2D');
 
@@ -432,7 +434,7 @@
 			var defaults = {
 				font: 'Helvetica',
 				fontSize: 12,
-				//				lineWidth:  0.05,
+				// lineWidth:  0.05,
 				textColor: 'rgba(0, 0, 0, 1)'
 			}, opts, screen = this.screen, svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'), svgTspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
 

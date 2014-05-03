@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	import MathLib from './meta.js';
 import Screen2D from './Screen2D';
 
@@ -67,7 +69,7 @@ import Screen2D from './Screen2D';
 					this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
 					this.draw = function () {
-						//					_this.ctx.lineWidth = (screen.options.grid.lineWidth || 4) / (screen.scale.x - screen.scale.y);
+						// _this.ctx.lineWidth = (screen.options.grid.lineWidth || 4) / (screen.scale.x - screen.scale.y);
 						_this.screen.drawGrid();
 					};
 				}

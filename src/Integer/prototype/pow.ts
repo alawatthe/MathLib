@@ -11,7 +11,7 @@ pow(exponent) : any {
 		return MathLib.pow.apply(null, MathLib.coerce(this, exponent));
 	}
 	else {
-		powInt = function (b, e) {			
+		powInt = function (b, e) {
 
 			var res, i,
 					half = [],
@@ -40,8 +40,8 @@ pow(exponent) : any {
 				res = res.times(b);
 			}
 
-			return res;	
-		}
+			return res;
+		};
 
 		result = powInt(this, exponent);
 

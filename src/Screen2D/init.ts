@@ -70,8 +70,8 @@ export class Screen2D extends Screen {
 						x: true,
 						y: true
 						
-//						origin: {x: 0, y: 0},
-//						tick: {x: 1, y: 1}
+						// origin: {x: 0, y: 0},
+						// tick: {x: 1, y: 1}
 					},
 					grid: {
 						// angle: Math.PI / 8,
@@ -80,7 +80,7 @@ export class Screen2D extends Screen {
 						lineWidth: 4,
 						dash: [],
 						dashOffset: 0,
-						//tick: {x: 1, y: 1, r: 1}
+						// tick: {x: 1, y: 1, r: 1}
 						x: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
 						y: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
 						r: {tick: 1, lineColor: 0xcccccc, lineWidth: 4, dash: [], dashOffset: 0},
@@ -138,23 +138,39 @@ export class Screen2D extends Screen {
 		this.transformation = transformation;
 
 		Object.defineProperty(this.translation, 'x', {
-			get: function () {return that.transformation[0][2];},
-			set: function (x) {that.transformation[0][2] = x; that.applyTransformation();}
+			get: function () {
+				return that.transformation[0][2];
+			},
+			set: function (x) {
+				that.transformation[0][2] = x; that.applyTransformation();
+			}
 		});
 
 		Object.defineProperty(this.translation, 'y', {
-			get: function () {return that.transformation[1][2];},
-			set: function (y) {that.transformation[1][2] = y; that.applyTransformation();}
+			get: function () {
+				return that.transformation[1][2];
+			},
+			set: function (y) {
+				that.transformation[1][2] = y; that.applyTransformation();
+			}
 		});
 
 		Object.defineProperty(this.scale, 'x', {
-			get: function () {return that.transformation[0][0];},
-			set: function (x) {that.transformation[0][0] = x; that.applyTransformation();}
+			get: function () {
+				return that.transformation[0][0];
+			},
+			set: function (x) {
+				that.transformation[0][0] = x; that.applyTransformation();
+			}
 		});
 
 		Object.defineProperty(this.scale, 'y', {
-			get: function () {return that.transformation[1][1];},
-			set: function (y) {that.transformation[1][1] = y; that.applyTransformation();}
+			get: function () {
+				return that.transformation[1][1];
+			},
+			set: function (y) {
+				that.transformation[1][1] = y; that.applyTransformation();
+			}
 		});
 
 
@@ -162,30 +178,46 @@ export class Screen2D extends Screen {
 		this.lookAt = {};
 		this.range = {};
 		Object.defineProperty(this.lookAt, 'x', {
-			get: function () {return (that.width / 2 - that.transformation[0][2]) / that.transformation[0][0];},
-			set: function (x) {that.transformation[0][2] = that.width / 2 - x * that.transformation[0][0]; that.applyTransformation();}
+			get: function () {
+				return (that.width / 2 - that.transformation[0][2]) / that.transformation[0][0];
+			},
+			set: function (x) {
+				that.transformation[0][2] = that.width / 2 - x * that.transformation[0][0]; that.applyTransformation();
+			}
 		});
 
 		Object.defineProperty(this.lookAt, 'y', {
-			get: function () {return (that.height / 2 - that.transformation[1][2]) / that.transformation[1][1];},
-			set: function (y) {that.transformation[1][2] = that.height / 2 - y * that.transformation[1][1]; that.applyTransformation();}
+			get: function () {
+				return (that.height / 2 - that.transformation[1][2]) / that.transformation[1][1];
+			},
+			set: function (y) {
+				that.transformation[1][2] = that.height / 2 - y * that.transformation[1][1]; that.applyTransformation();
+			}
 		});
 
 		Object.defineProperty(this.range, 'x', {
-			get: function () {return that.width / (2 * that.transformation[0][0]);},
-			set: function (x) {that.transformation[0][0] = 0.5 * that.width / x; that.applyTransformation();}
+			get: function () {
+				return that.width / (2 * that.transformation[0][0]);
+			},
+			set: function (x) {
+				that.transformation[0][0] = 0.5 * that.width / x; that.applyTransformation();
+			}
 		});
 
 		Object.defineProperty(this.range, 'y', {
-			get: function () {return -that.height / (2 * that.transformation[1][1]);},
-			set: function (y) {that.transformation[1][1] = -0.5 * that.height / y; that.applyTransformation();}
+			get: function () {
+				return -that.height / (2 * that.transformation[1][1]);
+			},
+			set: function (y) {
+				that.transformation[1][1] = -0.5 * that.height / y; that.applyTransformation();
+			}
 		});
 
 
-		this.range.x = opts.range.x
-		this.range.y = opts.range.y
-		this.lookAt.x = opts.lookAt.x
-		this.lookAt.y = opts.lookAt.y
+		this.range.x = opts.range.x;
+		this.range.y = opts.range.y;
+		this.lookAt.x = opts.lookAt.x;
+		this.lookAt.y = opts.lookAt.y;
 
 
 
@@ -212,8 +244,8 @@ export class Screen2D extends Screen {
 			this.element = element;
 			this.wrapper.appendChild(element);
 
-//			if ('background' in options) {
-				var background = document.createElementNS('http://www.w3.org/2000/svg','rect');
+			// if ('background' in options) {
+				var background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
 
 				background.setAttribute('x', '0px');
 				background.setAttribute('y', '0px');
@@ -223,7 +255,7 @@ export class Screen2D extends Screen {
 				background.setAttribute('fill', 'background' in options ? colorConvert((<any>options).background) : 'white');
 				background.setAttribute('fill-opacity', '1');
 				this.element.appendChild(background);
-//			}
+			// }
 		}
 
 
@@ -252,7 +284,7 @@ export class Screen2D extends Screen {
 			// Clear and redraw the screen
 			if (arguments.length === 0) {
 				this.layer.forEach(function (l) {
-					l.clear().draw()
+					l.clear().draw();
 				});
 			}
 			else if (x.type === 'circle') {

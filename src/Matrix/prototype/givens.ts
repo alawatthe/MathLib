@@ -8,7 +8,7 @@ givens() {
 			cols = this.cols,
 			R = this.copy(),
 			Q = MathLib.Matrix.identity(rows),
-			c, s, rho, i, j, k, ri, rj, qi, qj; 
+			c, s, rho, i, j, k, ri, rj, qi, qj;
 			
 	for (i = 0; i < cols; i++) {
 		for (j = i + 1; j < rows; j++) {

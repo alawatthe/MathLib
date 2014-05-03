@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	define(['meta', 'Functn', 'Permutation'], function(MathLib) {
 	/**
 	* The matrix implementation of MathLib makes calculations with matrices of

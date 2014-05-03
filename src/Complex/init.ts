@@ -34,7 +34,7 @@ export class Complex implements FieldElement, Printable {
 			this.im = Infinity;
 		}
 		else {
-			this.re = re;		
+			this.re = re;
 			this.im = im;
 		}
 	}

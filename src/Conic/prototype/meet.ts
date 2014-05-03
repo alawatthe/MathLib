@@ -12,7 +12,10 @@ meet(x) {
 	if (x.type === 'line') {
 
 		var setter = function () {
-					MathLib.warning({message: 'Trying to change the coordinates of a completely dependent point.', method: 'Conic#meet'});
+					MathLib.warning({
+						message: 'Trying to change the coordinates of a completely dependent point.',
+						method: 'Conic#meet'
+					});
 				},
 				recalculate = function () {
 					Ml = new MathLib.Matrix([[0, x[2], -x[1]], [-x[2], 0, x[0]], [x[1], -x[0], 0]]);
@@ -108,8 +111,12 @@ meet(x) {
 	else if (x.type === 'conic') {
 		B = x.primal;
 		a = A.determinant();
-		b = (new MathLib.Matrix([A[0], A[1], B[2]])).plus(new MathLib.Matrix([A[0], B[1], A[2]])).plus(new MathLib.Matrix([B[0], A[1], A[2]])).determinant();
-		c = (new MathLib.Matrix([A[0], B[1], B[2]])).plus(new MathLib.Matrix([B[0], A[1], B[2]])).plus(new MathLib.Matrix([B[0], B[1], A[2]])).determinant();
+		b = (new MathLib.Matrix([A[0], A[1], B[2]]))
+				.plus(new MathLib.Matrix([A[0], B[1], A[2]]))
+				.plus(new MathLib.Matrix([B[0], A[1], A[2]])).determinant();
+		c = (new MathLib.Matrix([A[0], B[1], B[2]]))
+				.plus(new MathLib.Matrix([B[0], A[1], B[2]]))
+				.plus(new MathLib.Matrix([B[0], B[1], A[2]])).determinant();
 		d = B.determinant();
 		Delta0 = b * b - 3 * a * c;
 		Delta1 = 2 * b * b - 9 * a * b * c + 27 * a * a * d;

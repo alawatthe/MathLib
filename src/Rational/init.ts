@@ -24,10 +24,11 @@ export class Rational implements FieldElement, Printable {
 			MathLib.error({message: 'The denominator cannot be zero.', method: 'Rational.constructor'});
 			throw 'The denominator cannot be zero.';
 		}
-			
-		if ((typeof denominator === 'number' && denominator < 0) || (denominator.type === 'integer' && denominator.sign === '-')) {
+
+		if ((typeof denominator === 'number' && denominator < 0) ||
+			(denominator.type === 'integer' && denominator.sign === '-')) {
 			numerator = MathLib.negative(numerator);
-			denominator = MathLib.negative(denominator);	
+			denominator = MathLib.negative(denominator);
 		}
 		
 		this.numerator = numerator;

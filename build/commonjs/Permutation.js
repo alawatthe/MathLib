@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	var MathLib = require('./meta.js'),
 		Functn = require('./Functn'),
 		Matrix = require('./Matrix');

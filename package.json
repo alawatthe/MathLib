@@ -33,6 +33,7 @@
 		"grunt-shell": "~0.6.4",
 		"grunt-stamp": "~0.1.0",
 		"grunt-ts": "~1.7.2",
+		"grunt-tslint": "~0.4.1",
 		"qunitjs": "~1.14.0",
 		"requirejs": "~2.1.10",
 		"three": "~0.66.2"

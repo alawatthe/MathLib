@@ -378,9 +378,9 @@
 						return MathLib.Complex.polar(Number(node.childNodes[0].textContent), Number(node.childNodes[2].textContent));</code></pre>
           <div class="description"><p>return new MathLib.Expression({<br />                        value: [parser(node.childNodes[0]), parser(node.childNodes[2])],<br />                        subtype: 'complexNumber',<br />                        mode: 'polar'<br />                        });</p> </div>
           <pre><code class="language-javascript">}
-					//else if (type === 'constant') {
-					// TODO: implement
-					//}
+					// else if (type === 'constant') {
+					//   TODO: implement
+					// }
 				},
 				cs: function (node) {
 					return node.textContent;
@@ -1439,16 +1439,16 @@
 
 					// TODO: support assignments
 					// if (typeof expr !== 'undefined' &amp;&amp; expr.Identifier) {
-					//	token = lexer.peek();
-					//	if (matchOp(token, '=')) {
-					//		lexer.next();
-					//		return new MathLib.Expression({
-					//				subtype: 'Assignment',
-					//				name: expr,
-					//				value: parseAssignment()
-					//			});
-					//	}
-					//	return expr;
+					// token = lexer.peek();
+					// if (matchOp(token, '=')) {
+					//   lexer.next();
+					//   return new MathLib.Expression({
+					//     subtype: 'Assignment',
+					//     name: expr,
+					//     value: parseAssignment()
+					//   });
+					// }
+					// return expr;
 					// }
 					return expr;
 				}
@@ -1477,7 +1477,7 @@
 				};
 			};
 
-			return Parser().parse(str);
+			return (new Parser()).parse(str);
 		};
 
 		Expression.variables = {};

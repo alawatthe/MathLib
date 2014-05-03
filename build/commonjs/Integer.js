@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	var MathLib = require('./meta.js'),
 		Functn = require('./Functn');
 
@@ -155,7 +157,7 @@
 			}
 
 			if (type === 'number') {
-				//TODO Warn when the number is bigger that 2^53
+				// TODO: Warn when the number is bigger that 2^53
 				num = this.data.reduce(function (old, cur, i) {
 					return old + cur * Math.pow(1e7, i);
 				}, 0);

@@ -1,4 +1,6 @@
 
+	'use strict';
+
 	define(['meta', 'Functn'], function(MathLib) {
 	/**
 	* MathLib.Rational is the MathLib implementation of rational numbers.
@@ -91,7 +93,7 @@
 			}
 
 			if (type === 'complex') {
-				//		return new MathLib.Complex(this, new MathLib.Rational(0));
+				// return new MathLib.Complex(this, new MathLib.Rational(0));
 				return new MathLib.Complex(this, 0);
 			}
 		};
