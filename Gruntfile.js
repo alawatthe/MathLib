@@ -441,24 +441,21 @@ module.exports = function (grunt) {
 				}
 			},
 			*/
-			all: {
-				options: {
-					baseUrl: '.',
-					'--web-security': 'no',
-					coverage: {
-						src: ['./build/MathLib.js'],
-						instrumentedFiles: 'temp/',
-						lcovReport: 'coverage',
-						linesThresholdPct: 85,
-						statementsThresholdPct: 85,
-						functionsThresholdPct: 85,
-						branchesThresholdPct: 80
-					},
-					urls: [
-						'./test/test.all.html'
-					]
-				}
-			}
+
+			options: {
+				baseUrl: '.',
+				'--web-security': 'no',
+				coverage: {
+					src: ['./build/MathLib.js'],
+					instrumentedFiles: 'temp/',
+					lcovReport: 'coverage',
+					linesThresholdPct: 85,
+					statementsThresholdPct: 85,
+					functionsThresholdPct: 85,
+					branchesThresholdPct: 80
+				},
+			},
+			MathLib: './test/test.all.html'
 		},
 
 
@@ -500,7 +497,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 74,
+					build: 75,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
