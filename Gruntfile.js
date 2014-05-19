@@ -395,7 +395,8 @@ module.exports = function (grunt) {
 			}
 		},
 
-		//*
+
+		/*
 		qunit: {
 			/*
 			MathLib: {
@@ -412,7 +413,7 @@ module.exports = function (grunt) {
 					]
 				}
 			},
-			*/
+			*
 			all: {
 				options: {
 					urls: [
@@ -423,9 +424,9 @@ module.exports = function (grunt) {
 		},
 		//*/
 
-		/*
+
 		qunit: {
-			/ *
+			/*
 			MathLib: {
 				options: {
 					urls: [
@@ -440,24 +441,26 @@ module.exports = function (grunt) {
 					]
 				}
 			},
-			* /
-
-			options: {
-				baseUrl: '.',
-				'--web-security': 'no',
-				coverage: {
-					src: ['./build/MathLib.js'],
-					instrumentedFiles: 'temp/',
-					lcovReport: 'coverage',
-					linesThresholdPct: 85,
-					statementsThresholdPct: 85,
-					functionsThresholdPct: 85,
-					branchesThresholdPct: 80
-				},
-			},
-			MathLib: './test/test.all.html'
+			*/
+			all: {
+				options: {
+					baseUrl: '.',
+					'--web-security': 'no',
+					coverage: {
+						src: ['./build/MathLib.js'],
+						instrumentedFiles: 'temp/',
+						lcovReport: 'coverage',
+						linesThresholdPct: 85,
+						statementsThresholdPct: 85,
+						functionsThresholdPct: 85,
+						branchesThresholdPct: 80
+					},
+					urls: [
+						'./test/test.all.html'
+					]
+				}
+			}
 		},
-		*/
 
 		'qunit_amd': {
 			MathLib: {
@@ -497,7 +500,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 77,
+					build: 78,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -1066,5 +1069,5 @@ module.exports = function (grunt) {
 	grunt.registerTask('commit', ['generateAll', 'clean', 'testPlain', 'testCommonjs', 'tslint', 'jshint', 'jscs']);
 	grunt.registerTask('release', ['generateAll', 'clean', 'testPlain', 'testCommonjs', /*'tslint', 'jshint', 'jscs',*/ 'regex-replace:bower', 'regex-replace:saucebuildnumber']);/*, 'docco'*/
 
-	grunt.registerTask('continuousIntegration', ['testPlain', /*'coveralls',*/ /*'tslint', 'jshint', 'jscs',*/ 'saucelabs-qunit']);
+	grunt.registerTask('continuousIntegration', ['testPlain', 'coveralls', /*'tslint', 'jshint', 'jscs',*/ 'saucelabs-qunit']);
 };
