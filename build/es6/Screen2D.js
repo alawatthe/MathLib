@@ -269,6 +269,9 @@ var Screen2D = (function (_super) {
         this.layer.axes = new MathLib.Layer(this, 'axes', 2);
         this.layer.main = new MathLib.Layer(this, 'main', 3);
 
+        this.wrapper.addEventListener('keydown', function (evt) {
+            return _this.onkeydown(evt);
+        }, false);
         this.wrapper.addEventListener('mouseup', function (evt) {
             return _this.onmouseup(evt);
         }, false);
@@ -523,6 +526,51 @@ var Screen2D = (function (_super) {
     };
 
     /**
+    * Handles the keydown event
+    *
+    * @param {event} evt The event object
+    */
+    Screen2D.prototype.onkeydown = function (evt) {
+        var keyCode, keyTable = {
+            Left: 37,
+            Up: 38,
+            Right: 39,
+            Down: 40
+        };
+
+        // evt.key is the new property to identify the key pressed.
+        // http://www.w3.org/TR/DOM-Level-3-Events/#widl-KeyboardEvent-key
+        // Not supported in all browsers yet.
+        if (evt.key) {
+            if (['Up', 'Right', 'Down', 'Left'].indexOf(evt.key) === -1) {
+                return;
+            } else {
+                keyCode = keyTable[evt.key];
+            }
+        } else if (evt.keyCode) {
+            if ([37, 38, 39, 40].indexOf(evt.keyCode) === -1) {
+                return;
+            } else {
+                keyCode = evt.keyCode;
+            }
+        } else {
+            return;
+        }
+
+        if (evt.preventDefault) {
+            evt.preventDefault();
+        }
+
+        evt.returnValue = false;
+
+        this.options.interaction.startTransformation = this.transformation.copy();
+
+        this.translation.x = this.options.interaction.startTransformation[0][2] - 2 * ((evt.keyCode - 38) % 2);
+        this.translation.y = this.options.interaction.startTransformation[1][2] - 2 * ((evt.keyCode - 39) % 2);
+        this.draw();
+    };
+
+    /**
     * Handles the mousedown event
     *
     * @param {event} evt The event object
@@ -610,6 +658,8 @@ var Screen2D = (function (_super) {
             } else {
                 delta = evt.detail / -9;
             }
+
+            console.log(delta);
 
             // The amount of zoom is determined by the zoom speed
             // and the amount how much the scrollwheel has been moved

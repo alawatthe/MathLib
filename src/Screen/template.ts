@@ -3,7 +3,7 @@ var template = function (data) {var p = [];p.push(' <figure class="MathLib_figur
 p.push(data.width);
 p.push('px; height: ');
 p.push(data.height);
-p.push('px">   <div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>   Please update your browser to see the plot.</div>  </div>      ');
+p.push('px" tabindex="0">   <div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>   Please update your browser to see the plot.</div>  </div>      ');
 if (data.figcaption) {
 	p.push('   <figcaption class="MathLib_figcaption">');
 p.push(data.figcaption);

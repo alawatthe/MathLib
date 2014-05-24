@@ -269,6 +269,7 @@ export class Screen2D extends Screen {
 		this.layer.main = new MathLib.Layer(this, 'main', 3);
 
 
+		this.wrapper.addEventListener('keydown',      (evt) => this.onkeydown(evt), false);
 		this.wrapper.addEventListener('mouseup',      (evt) => this.onmouseup(evt), false);
 		this.wrapper.addEventListener('mousedown',    (evt) => this.onmousedown(evt), false);
 		this.wrapper.addEventListener('mousemove',    (evt) => this.onmousemove(evt), false);

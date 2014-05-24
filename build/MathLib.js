@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-05-03
+ * build date: 2014-05-24
  */
 /**
  *
@@ -3701,7 +3701,7 @@ var MathLib;
         p.push(data.width);
         p.push('px; height: ');
         p.push(data.height);
-        p.push('px">   <div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>   Please update your browser to see the plot.</div>  </div>      ');
+        p.push('px" tabindex="0">   <div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>   Please update your browser to see the plot.</div>  </div>      ');
         if (data.figcaption) {
             p.push('   <figcaption class="MathLib_figcaption">');
             p.push(data.figcaption);
@@ -3769,6 +3769,10 @@ var MathLib;
             this.contextMenu = container.getElementsByClassName('MathLib_mainmenu')[0];
             this.contextMenuOverlay = container.getElementsByClassName('MathLib_contextMenuOverlay')[0];
             this.innerHTMLContextMenu = innerHTMLContextMenu;
+
+            this.wrapper.addEventListener('click', function (evt) {
+                return _this.wrapper.focus();
+            });
 
             if (options.contextMenu) {
                 this.wrapper.oncontextmenu = function (evt) {
@@ -5289,6 +5293,9 @@ var MathLib;
             this.layer.axes = new MathLib.Layer(this, 'axes', 2);
             this.layer.main = new MathLib.Layer(this, 'main', 3);
 
+            this.wrapper.addEventListener('keydown', function (evt) {
+                return _this.onkeydown(evt);
+            }, false);
             this.wrapper.addEventListener('mouseup', function (evt) {
                 return _this.onmouseup(evt);
             }, false);
@@ -5540,6 +5547,51 @@ var MathLib;
             } else {
                 return l;
             }
+        };
+
+        /**
+        * Handles the keydown event
+        *
+        * @param {event} evt The event object
+        */
+        Screen2D.prototype.onkeydown = function (evt) {
+            var keyCode, keyTable = {
+                Left: 37,
+                Up: 38,
+                Right: 39,
+                Down: 40
+            };
+
+            // evt.key is the new property to identify the key pressed.
+            // http://www.w3.org/TR/DOM-Level-3-Events/#widl-KeyboardEvent-key
+            // Not supported in all browsers yet.
+            if (evt.key) {
+                if (['Up', 'Right', 'Down', 'Left'].indexOf(evt.key) === -1) {
+                    return;
+                } else {
+                    keyCode = keyTable[evt.key];
+                }
+            } else if (evt.keyCode) {
+                if ([37, 38, 39, 40].indexOf(evt.keyCode) === -1) {
+                    return;
+                } else {
+                    keyCode = evt.keyCode;
+                }
+            } else {
+                return;
+            }
+
+            if (evt.preventDefault) {
+                evt.preventDefault();
+            }
+
+            evt.returnValue = false;
+
+            this.options.interaction.startTransformation = this.transformation.copy();
+
+            this.translation.x = this.options.interaction.startTransformation[0][2] - 2 * ((evt.keyCode - 38) % 2);
+            this.translation.y = this.options.interaction.startTransformation[1][2] - 2 * ((evt.keyCode - 39) % 2);
+            this.draw();
         };
 
         /**

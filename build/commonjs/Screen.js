@@ -8,7 +8,7 @@
         p.push(data.width);
         p.push('px; height: ');
         p.push(data.height);
-        p.push('px">   <div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>   Please update your browser to see the plot.</div>  </div>      ');
+        p.push('px" tabindex="0">   <div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>   Please update your browser to see the plot.</div>  </div>      ');
         if (data.figcaption) {
             p.push('   <figcaption class="MathLib_figcaption">');
             p.push(data.figcaption);
@@ -76,6 +76,10 @@
             this.contextMenu = container.getElementsByClassName('MathLib_mainmenu')[0];
             this.contextMenuOverlay = container.getElementsByClassName('MathLib_contextMenuOverlay')[0];
             this.innerHTMLContextMenu = innerHTMLContextMenu;
+
+            this.wrapper.addEventListener('click', function (evt) {
+                return _this.wrapper.focus();
+            });
 
             if (options.contextMenu) {
                 this.wrapper.oncontextmenu = function (evt) {

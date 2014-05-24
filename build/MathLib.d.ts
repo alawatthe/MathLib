@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-05-03
+ * build date: 2014-05-24
  */
 
 declare module MathLib {
@@ -482,6 +482,12 @@ declare module MathLib {
         * @return {array} The array has the format [[x1, y1], [x2, y2]]
         */
         public getLineEndPoints(l: any): any;
+        /**
+        * Handles the keydown event
+        *
+        * @param {event} evt The event object
+        */
+        public onkeydown(evt: any): void;
         /**
         * Handles the mousedown event
         *

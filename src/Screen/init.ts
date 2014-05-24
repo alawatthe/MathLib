@@ -62,6 +62,9 @@ export class Screen {
 		this.innerHTMLContextMenu = innerHTMLContextMenu;
 
 
+		this.wrapper.addEventListener('click', evt => this.wrapper.focus());
+
+
 		if ((<any>options).contextMenu) {
 			this.wrapper.oncontextmenu = (evt) => this.oncontextmenu(evt);
 		
