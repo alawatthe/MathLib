@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-05-24
+ * build date: 2014-05-25
  */
 /**
  *
@@ -3929,22 +3929,32 @@ var MathLib;
             this.stack = [];
             this.transformation = screen.transformation;
 
-            var element;
+            var element, devicePixelRatio = window.devicePixelRatio || 1;
 
             if (screen.options.renderer === 'Canvas') {
                 // Create the canvas
                 element = document.createElement('canvas');
                 element.className += ' MathLib_screen';
-                element.width = screen.width;
-                element.height = screen.height;
+                element.width = screen.width * devicePixelRatio;
+                element.height = screen.height * devicePixelRatio;
+
+                if (devicePixelRatio !== 1) {
+                    element.style.transformOrigin = 'top left';
+                    element.style['-ms-transformOrigin'] = 'top left';
+                    element.style.transform = 'scale(' + 1 / devicePixelRatio + ')';
+                    element.style['-ms-transform'] = 'scale(' + 1 / devicePixelRatio + ')';
+                    element.style['-webkit-transform'] = 'translate(-' + screen.width / devicePixelRatio + 'px, -' + screen.height / devicePixelRatio + 'px) scale(' + 1 / devicePixelRatio + ')';
+                }
+
                 screen.wrapper.appendChild(element);
                 this.element = element;
 
                 // Get the context and apply the transformations
                 this.ctx = element.getContext('2d');
+
                 this.applyTransformation = function () {
                     var m = _this.transformation;
-                    _this.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+                    _this.ctx.setTransform(devicePixelRatio * m[0][0], m[1][0], m[0][1], devicePixelRatio * m[1][1], devicePixelRatio * m[0][2], devicePixelRatio * m[1][2]);
                 };
                 this.applyTransformation();
 
@@ -4103,9 +4113,10 @@ var MathLib;
         * Applies the current transformations to the screen
         */
         applyTransformation: function () {
-            var m = this.transformation;
+            var m = this.transformation, devicePixelRatio = window.devicePixelRatio || 1;
+
             this.layer.forEach(function (l) {
-                l.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+                l.ctx.setTransform(devicePixelRatio * m[0][0], m[1][0], m[0][1], devicePixelRatio * m[1][1], devicePixelRatio * m[0][2], devicePixelRatio * m[1][2]);
             });
         },
         /**
@@ -5517,6 +5528,12 @@ var MathLib;
                 x = evt.layerX;
                 y = evt.layerY;
             }
+
+            if (this.options.renderer === 'Canvas') {
+                x /= window.devicePixelRatio;
+                y /= window.devicePixelRatio;
+            }
+
             return new MathLib.Point([x, y, 1]);
         };
 
@@ -5625,7 +5642,7 @@ var MathLib;
         * @param {event} evt The event object
         */
         Screen2D.prototype.onmousemove = function (evt) {
-            var p;
+            var p, devicePixelRatio = window.devicePixelRatio || 1;
 
             if (evt.preventDefault) {
                 evt.preventDefault();
@@ -5636,8 +5653,8 @@ var MathLib;
             // Pan mode
             if (this.options.interaction.type === 'pan') {
                 p = this.getEventPoint(evt).minus(this.options.interaction.startPoint);
-                this.translation.x = this.options.interaction.startTransformation[0][2] + p[0];
-                this.translation.y = this.options.interaction.startTransformation[1][2] + p[1];
+                this.translation.x = this.options.interaction.startTransformation[0][2] + p[0] / devicePixelRatio;
+                this.translation.y = this.options.interaction.startTransformation[1][2] + p[1] / devicePixelRatio;
                 this.draw();
             }
         };

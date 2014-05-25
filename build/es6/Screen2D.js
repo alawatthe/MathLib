@@ -601,7 +601,7 @@ var Screen2D = (function (_super) {
     * @param {event} evt The event object
     */
     Screen2D.prototype.onmousemove = function (evt) {
-        var p;
+        var p, devicePixelRatio = window.devicePixelRatio || 1;
 
         if (evt.preventDefault) {
             evt.preventDefault();
@@ -612,8 +612,8 @@ var Screen2D = (function (_super) {
         // Pan mode
         if (this.options.interaction.type === 'pan') {
             p = this.getEventPoint(evt).minus(this.options.interaction.startPoint);
-            this.translation.x = this.options.interaction.startTransformation[0][2] + p[0];
-            this.translation.y = this.options.interaction.startTransformation[1][2] + p[1];
+            this.translation.x = this.options.interaction.startTransformation[0][2] + p[0] / devicePixelRatio;
+            this.translation.y = this.options.interaction.startTransformation[1][2] + p[1] / devicePixelRatio;
             this.draw();
         }
     };
@@ -644,7 +644,7 @@ var Screen2D = (function (_super) {
     * @param {event} evt The event object
     */
     Screen2D.prototype.onmousewheel = function (evt) {
-        var delta, s, p, z;
+        var delta, s, p, z, devicePixelRatio = window.devicePixelRatio || 1;
 
         if (this.options.interaction.allowZoom) {
             if (evt.preventDefault) {
@@ -659,8 +659,6 @@ var Screen2D = (function (_super) {
                 delta = evt.detail / -9;
             }
 
-            console.log(delta);
-
             // The amount of zoom is determined by the zoom speed
             // and the amount how much the scrollwheel has been moved
             z = Math.pow(1 + this.options.interaction.zoomSpeed, delta);
@@ -669,7 +667,7 @@ var Screen2D = (function (_super) {
             p = this.transformation.inverse().times(this.getEventPoint(evt));
 
             // Compute new scale matrix in current mouse position
-            s = new MathLib.Matrix([[z, 0, p[0] - p[0] * z], [0, z, p[1] - p[1] * z], [0, 0, 1]]);
+            s = new MathLib.Matrix([[z, 0, (p[0] - p[0] * z) / devicePixelRatio], [0, z, (p[1] - p[1] * z) / devicePixelRatio], [0, 0, 1]]);
 
             this.transformation = this.transformation.times(s);
 

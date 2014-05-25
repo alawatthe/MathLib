@@ -14,5 +14,11 @@ getEventPoint(evt) {
 		x = evt.layerX;
 		y = evt.layerY;
 	}
+
+	if (this.options.renderer === 'Canvas') {
+		x /= window.devicePixelRatio;
+		y /= window.devicePixelRatio;
+	}
+
 	return new MathLib.Point([x, y, 1]);
 }

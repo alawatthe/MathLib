@@ -18,22 +18,35 @@
             this.stack = [];
             this.transformation = screen.transformation;
 
-            var element;
+            var element, devicePixelRatio = window.devicePixelRatio || 1;
 
             if (screen.options.renderer === 'Canvas') {
                 // Create the canvas
                 element = document.createElement('canvas');
                 element.className += ' MathLib_screen';
-                element.width = screen.width;
-                element.height = screen.height;
+                element.width = screen.width * devicePixelRatio;
+                element.height = screen.height * devicePixelRatio;
+
+                if (devicePixelRatio !== 1) {
+                    element.style.transformOrigin = 'top left';
+                    element.style['-ms-transformOrigin'] = 'top left';
+                    element.style.transform = 'scale(' + 1 / devicePixelRatio + ')';
+                    element.style['-ms-transform'] = 'scale(' + 1 / devicePixelRatio + ')';
+                    element.style['-webkit-transform'] = 'translate(-' + screen.width / devicePixelRatio + 'px, -' + screen.height / devicePixelRatio + 'px) scale(' + 1 / devicePixelRatio + ')';
+                }
+
                 screen.wrapper.appendChild(element);
+
+                //screen.wrapper.width = screen.width;
+                //screen.wrapper.height = screen.height;
                 this.element = element;
 
                 // Get the context and apply the transformations
                 this.ctx = element.getContext('2d');
+
                 this.applyTransformation = function () {
                     var m = _this.transformation;
-                    _this.ctx.setTransform(m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]);
+                    _this.ctx.setTransform(devicePixelRatio * m[0][0], m[1][0], m[0][1], devicePixelRatio * m[1][1], devicePixelRatio * m[0][2], devicePixelRatio * m[1][2]);
                 };
                 this.applyTransformation();
 

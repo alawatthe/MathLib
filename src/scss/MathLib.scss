@@ -72,6 +72,12 @@ $padding: 4px;
 .MathLib_wrapper {
 	@include expandToFullscreen;
 	position: relative;
+
+	// On Retina displays only the top and left outlines are drawn when focusing the element.
+	// Manually setting the outlines fixes this.
+	&:focus {
+		outline: 1px dotted black;
+	}
 }
 
 .MathLib_info_message {
