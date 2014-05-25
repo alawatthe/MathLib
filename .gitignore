@@ -1,5 +1,7 @@
 .sass-cache
 .tscache
+coverage/
+docs/
 node_modules/
 MathLib.sublime-project
 MathLib.sublime-workspace
