@@ -5,9 +5,10 @@
  */
 evaluate() : any {
 	if (this.subtype === 'assignment') {
-		this.content.forEach(function (variable, index) {
-			MathLib.Expression.variables[variable.value] = this.value;
-		}.bind(this));
+		var value = this.value;
+		this.content.forEach(function (variable) {
+			MathLib.Expression.variables[variable.value] = value;
+		});
 		return this.value; 
 	}
 	if (this.subtype === 'binaryOperator') {
