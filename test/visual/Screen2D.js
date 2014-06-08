@@ -379,6 +379,7 @@ asyncTest('.text', function (assert) {
 	svg.text('.js', 0.4, 0.5, {font: 'Times New Roman', fontSize: 40});
 	svg.text('javascript library', -0.5, -0.5);
 
+	console.log(navigator.userAgent);
 
 	if (typeof phantomJS !== 'undefined') {
 		expect(1);
