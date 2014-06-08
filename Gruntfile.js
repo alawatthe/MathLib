@@ -77,11 +77,18 @@ module.exports = function (grunt) {
 			});
 
 	grunt.registerTask('help', function () {
-		grunt.log.subhead('Release');
-		grunt.log.writeln('grunt release\t\t\tRun this task before committing something. ');
+		grunt.log.subhead('Watching');
+		grunt.log.writeln('grunt watch\t\t\tRun this task to watch for changes and trigger the appropriate tasks. ');
+
+		grunt.log.subhead('Commiting');
+		grunt.log.writeln('grunt commit\t\t\tRun this task before committing something. ');
+
+		grunt.log.writeln('\n┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐');
+		grunt.log.writeln('│ You probably do not need to call the following tasks directly, if you use the watch and commit tasks. │');
+		grunt.log.writeln('└───────────────────────────────────────────────────────────────────────────────────────────────────────┘');
 
 		grunt.log.subhead('Building');
-		grunt.log.writeln('grunt generateAll\t\tThis task generates all of the files mentioned below. ');
+		grunt.log.writeln('grunt generateAll\t\tThis task runs all the generate* tasks. ');
 		grunt.log.writeln('grunt generatePlain\t\tThis task generates the plain JavaScript files. ');
 		grunt.log.writeln('grunt generateCommonjs\t\tThis task generates the Commonjs JavaScript files. ');
 		grunt.log.writeln('grunt generateAMD\t\tThis task generates the AMD JavaScript files. ');
@@ -394,53 +401,7 @@ module.exports = function (grunt) {
 			}
 		},
 
-
-		/*
 		qunit: {
-			/*
-			MathLib: {
-				options: {
-					urls: [
-						'http://localhost:8000/test/test.html'
-					]
-				}
-			},
-			min: {
-				options: {
-					urls: [
-						'http://localhost:8000/test/test.min.html'
-					]
-				}
-			},
-			*
-			all: {
-				options: {
-					urls: [
-						'http://localhost:8000/test/test.all.html'
-					]
-				}
-			}
-		},
-		//*/
-
-
-		qunit: {
-			/*
-			MathLib: {
-				options: {
-					urls: [
-						'./test/test.html'
-					]
-				}
-			},
-			min: {
-				options: {
-					urls: [
-						'http://localhost:8000/test/test.min.html'
-					]
-				}
-			},
-			*/
 			all: {
 				options: {
 					baseUrl: '.',
@@ -499,7 +460,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 85,
+					build: 86,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -519,11 +480,6 @@ module.exports = function (grunt) {
 			options: {
 				jshintrc: '.jshintrc'
 			},
-			/*
-			MathLib: {
-				src: ['build/MathLib.js']
-			},
-			*/
 			Tests: {
 				src: ['build/MathLib.test.js']
 			},
@@ -565,13 +521,6 @@ module.exports = function (grunt) {
 			options: {
 				config: '.jscs.json',
 			},
-			/*
-			MathLib: {
-				files: {
-					src: ['build/MathLib.js']
-				}
-			},
-			*/
 			Tests: {
 				files: {
 					src: ['build/MathLib.test.js']
@@ -1015,11 +964,15 @@ module.exports = function (grunt) {
 		watch: {
 			src: {
 				files: ['src/*/*.ts', 'src/*/*/*.ts'],
-				tasks: ['generatePlain']
+				tasks: ['tslint', 'generatePlain']
 			},
 			tests: {
 				files: ['test/*/*.js', 'test/*/*/*.js'],
-				tasks: ['generateTests']
+				tasks: ['jshint:Tests', 'jscs:Tests', 'generateTests']
+			},
+			grunt: {
+				files: ['Gruntfile.js'],
+				tasks: ['jshint:grunt', 'jscs:grunt']
 			},
 			scss: {
 				files: ['src/scss/MathLib.scss'],
@@ -1065,8 +1018,9 @@ module.exports = function (grunt) {
 
 
 	grunt.registerTask('default', ['help']);
-	grunt.registerTask('commit', ['generateAll', 'clean', 'testPlain', 'testCommonjs', 'tslint', 'jshint', 'jscs']);
-	grunt.registerTask('release', ['generateAll', 'clean', 'testPlain', 'testCommonjs', /*'tslint', 'jshint', 'jscs',*/ 'regex-replace:bower', 'regex-replace:saucebuildnumber']);/*, 'docco'*/
+	grunt.registerTask('commit', ['generatePlain', 'generateAMD', 'generateCommonjs', 'generateES6',
+		'generateDeclaration', 'generateTests', 'generateCSS', 'generateTemplate', 'regex-replace:plainAfter',
+		'clean', 'testPlain', 'testCommonjs', 'tslint', 'jshint', 'jscs', 'regex-replace:bower', 'regex-replace:saucebuildnumber']);
 
-	grunt.registerTask('continuousIntegration', ['testPlain', 'coveralls', /*'tslint', 'jshint', 'jscs',*/ 'saucelabs-qunit']);
+	grunt.registerTask('continuousIntegration', ['testPlain', 'coveralls', 'tslint', 'jshint', 'jscs', 'saucelabs-qunit']);
 };
