@@ -379,9 +379,11 @@ asyncTest('.text', function (assert) {
 	svg.text('.js', 0.4, 0.5, {font: 'Times New Roman', fontSize: 40});
 	svg.text('javascript library', -0.5, -0.5);
 
-	console.log(navigator.userAgent);
-
-	if (typeof phantomJS !== 'undefined') {
+	if (navigator.userAgent === 'Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.7 Safari/534.34') {
+		expect(1);
+		assert.imageEqual(canvas.layer.main.element, 'http://localhost:8000/test/visual/screen2D_text_phantomJS_legacy.png');
+	}
+	else if (typeof phantomJS !== 'undefined') {
 		expect(1);
 		assert.imageEqual(canvas.layer.main.element, 'http://localhost:8000/test/visual/screen2D_text_phantomJS.png');
 	}
