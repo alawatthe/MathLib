@@ -5,6 +5,9 @@
  */
 toMathML() : string {
 
+	if (this.subtype === 'assignment') {
+		return this.content.map(MathLib.toMathML).join('<mo>:=</mo>') + '<mo>:=</mo>' + MathLib.toMathML(this.value);
+	}
 	if (this.subtype === 'binaryOperator') {
 		if (this.value === '-') {
 			return this.content[0].toMathML() + '<mo>-</mo>' + this.content[1].toMathML();

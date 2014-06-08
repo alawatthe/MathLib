@@ -5,6 +5,19 @@
  */
 toContentMathML() : string {
 
+	if (this.subtype === 'assignment') {
+		var str, i, ii;
+
+		str = '<apply><csymbol cd="prog1">assignment</csymbol>'
+			+ this.content.map(MathLib.toContentMathML).join('<apply><csymbol cd="prog1">assignment</csymbol>')
+			+ MathLib.toContentMathML(this.value);
+
+		for (i = 0, ii = this.content.length; i < ii; i++) {
+			str += '</apply>';
+		}
+
+		return str;
+	}
 	if (this.subtype === 'binaryOperator') {
 		var op = this.name === 'pow' ? 'power' : this.name;
 

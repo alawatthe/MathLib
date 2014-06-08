@@ -25,6 +25,27 @@ test('.parse (unaryOperator)', 4, function () {
 });
 
 
+test('.parse (assignment)', 9, function () {
+	MathLib.Expression.variables = {};
+
+	var one = MathLib.Expression.parse('a := 1');
+	var two = MathLib.Expression.parse('b := c := 2');
+
+	equal(one.subtype, 'assignment');
+	equal(one.value.value, 1);
+	deepEqual(one.content, [MathLib.Expression.variable('a')]);
+
+	equal(two.subtype, 'assignment');
+	equal(two.value.value, 2);
+	deepEqual(two.content, [MathLib.Expression.variable('b'), MathLib.Expression.variable('c')]);
+
+
+	equal(MathLib.Expression.variables.a, undefined);
+	equal(one.evaluate().value, 1);
+	equal(MathLib.Expression.variables.a.value, 1);
+});
+
+
 
 test('.parse (binaryOperator)', 10, function () {
 	equal(MathLib.Expression.parse('12+34').evaluate(), 12 + 34, '.parse("12+34")');
