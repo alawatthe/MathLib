@@ -4,13 +4,17 @@
 /* tslint:disable */
 var template = function (data) {
     var p = [];
-    p.push(' <figure class="MathLib_figure">     <div class="MathLib_wrapper" style="width: ');
+    p.push(' <figure class="MathLib_figure" aria-describedby="MathLib_figcaption_');
+    p.push(data.uuid);
+    p.push('" alt="alt text figure">     <div class="MathLib_wrapper" style="width: ');
     p.push(data.width);
     p.push('px; height: ');
     p.push(data.height);
-    p.push('px" tabindex="0">   <div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>   Please update your browser to see the plot.</div>  </div>      ');
+    p.push('px" tabindex="0" aria-hidden="true">   <div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>   Please update your browser to see the plot.</div>  </div>      ');
     if (data.figcaption) {
-        p.push('   <figcaption class="MathLib_figcaption">');
+        p.push('   <figcaption class="MathLib_figcaption" id="MathLib_figcaption_');
+        p.push(data.uuid);
+        p.push('" alt="alt text caption">');
         p.push(data.figcaption);
         p.push('</figcaption>  ');
     }
@@ -64,6 +68,7 @@ var Screen = (function () {
             figcaption: ''
         }, opts = MathLib.extendObject(defaults, options), container = document.getElementById(id), innerHTMLContextMenu = '', fullscreenchange;
 
+        opts.uuid = +new Date();
         container.innerHTML = template(opts);
         container.className += ' MathLib_container';
 

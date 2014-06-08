@@ -1,8 +1,8 @@
 {{!-- The figure contains the plot and the caption --}}
-<figure class="MathLib_figure">
+<figure class="MathLib_figure" aria-describedby="MathLib_figcaption_{{uuid}}" alt="alt text figure">
 
 	{{!-- The canvas or SVG element will be inserted here --}}
-	<div class="MathLib_wrapper" style="width: {{width}}px; height: {{height}}px" tabindex="0">
+	<div class="MathLib_wrapper" style="width: {{width}}px; height: {{height}}px" tabindex="0" aria-hidden="true">
 		<div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>
 		Please update your browser to see the plot.</div>
 	</div>
@@ -10,7 +10,7 @@
 
 	{{!-- Add the optional figcaption --}}
 	{{#if figcaption}}
-		<figcaption class="MathLib_figcaption">{{figcaption}}</figcaption>
+		<figcaption class="MathLib_figcaption" id="MathLib_figcaption_{{uuid}}" alt="alt text caption">{{figcaption}}</figcaption>
 	{{/if}}
 
 </figure>

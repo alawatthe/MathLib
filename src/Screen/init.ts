@@ -46,10 +46,9 @@ export class Screen {
 				innerHTMLContextMenu = '',
 				fullscreenchange;
 
-
+		opts.uuid = +new Date();
 		container.innerHTML = template(opts);
 		container.className += ' MathLib_container';
-
 
 		this.height = opts.height;
 		this.width = opts.width;
