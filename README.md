@@ -1,7 +1,7 @@
 # MathLib
 [Homepage](http://mathlib.de/en/) - [Download](http://mathlib.de/en/download) - [Demonstrations](http://mathlib.de/en/demos) - [Documentation](http://mathlib.de/en/docs)
 
-[![Build Status](https://travis-ci.org/alawatthe/MathLib.png?branch=master)](https://travis-ci.org/alawatthe/MathLib) [![Dependency Status](https://gemnasium.com/alawatthe/MathLib.png)](https://gemnasium.com/alawatthe/MathLib) [![NPM version](https://badge.fury.io/js/mathlib.png)](http://badge.fury.io/js/mathlib) [![Coverage Status](https://coveralls.io/repos/alawatthe/MathLib/badge.png?branch=master)](https://coveralls.io/r/alawatthe/MathLib?branch=master)
+[![Build Status](https://travis-ci.org/alawatthe/MathLib.svg?branch=master)](https://travis-ci.org/alawatthe/MathLib) [![Dependency Status](https://david-dm.org/alawatthe/MathLib.svg)](https://david-dm.org/alawatthe/MathLib) [![devDependency Status](https://david-dm.org/alawatthe/MathLib/dev-status.svg)](https://david-dm.org/alawatthe/MathLib#info=devDependencies) [![NPM version](https://badge.fury.io/js/mathlib.svg)](http://badge.fury.io/js/mathlib) [![Coverage Status](https://img.shields.io/coveralls/alawatthe/MathLib.svg)](https://coveralls.io/r/alawatthe/MathLib?branch=master)
 
 MathLib.js is a JavaScript library for mathematical computations. It can handle circles, complex numbers, expressions, functions, lines, integers, matrices, permutations, points, polynomials, rational numbers, sets, and vectors.
 
@@ -11,7 +11,7 @@ Further it can parse Content MathML and write Content MathML, Presentation MathM
 
 
 ## Test Suite
-MathLib has an extensive QUnit test suite with more than 2100 tests. Crossbrowser tests are automated with Sauce Labs' Open Sauce and are run by Travis on every commit.
+MathLib has an extensive QUnit test suite with more than 2500 tests. Crossbrowser tests are automated with Sauce Labs' Open Sauce and are run by Travis on every commit.
 
 
 ## Getting Started
