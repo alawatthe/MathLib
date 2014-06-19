@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-05-25
+ * build date: 2014-06-19
  */
 /**
  *
@@ -2151,7 +2151,8 @@ var MathLib;
         // Math.cosh(-Infinity) = -Infinity
         // but should be +Infinity
         functn: function (x) {
-            return (Math.exp(x) + Math.exp(-x)) / 2;
+            var ex = Math.exp(x);
+            return (ex + 1 / ex) / 2;
         },
         cdgroup: 'transc1'
     };
@@ -2658,7 +2659,8 @@ var MathLib;
     */
     fns.sech = {
         functn: function (x) {
-            return 2 / (Math.exp(x) + Math.exp(-x));
+            var ex = Math.exp(x);
+            return 2 / (ex + 1 / ex);
         },
         cdgroup: 'transc1'
     };
@@ -2689,11 +2691,15 @@ var MathLib;
     */
     fns.sinh = {
         functn: MathLib.isNative(Math.sinh) || function (x) {
+            var ex;
+
             // sinh(-0) should be -0
             if (x === 0) {
                 return x;
             }
-            return (Math.exp(x) - Math.exp(-x)) / 2;
+
+            ex = Math.exp(x);
+            return (ex - 1 / ex) / 2;
         },
         cdgroup: 'transc1'
     };

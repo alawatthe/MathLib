@@ -4,7 +4,8 @@
  */
 fns.sech = {
 	functn(x) {
-		return 2 / (Math.exp(x) + Math.exp(-x));
+		var ex = Math.exp(x);
+		return 2 / (ex + 1 / ex);
 	},
 	cdgroup: 'transc1'
 };

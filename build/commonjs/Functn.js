@@ -499,7 +499,8 @@
         // Math.cosh(-Infinity) = -Infinity
         // but should be +Infinity
         functn: function (x) {
-            return (Math.exp(x) + Math.exp(-x)) / 2;
+            var ex = Math.exp(x);
+            return (ex + 1 / ex) / 2;
         },
         cdgroup: 'transc1'
     };
@@ -1006,7 +1007,8 @@
     */
     fns.sech = {
         functn: function (x) {
-            return 2 / (Math.exp(x) + Math.exp(-x));
+            var ex = Math.exp(x);
+            return 2 / (ex + 1 / ex);
         },
         cdgroup: 'transc1'
     };
@@ -1037,11 +1039,15 @@
     */
     fns.sinh = {
         functn: MathLib.isNative(Math.sinh) || function (x) {
+            var ex;
+
             // sinh(-0) should be -0
             if (x === 0) {
                 return x;
             }
-            return (Math.exp(x) - Math.exp(-x)) / 2;
+
+            ex = Math.exp(x);
+            return (ex - 1 / ex) / 2;
         },
         cdgroup: 'transc1'
     };

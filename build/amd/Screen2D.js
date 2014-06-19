@@ -491,6 +491,12 @@ var __extends = this.__extends || function (d, b) {
                 x = evt.layerX;
                 y = evt.layerY;
             }
+
+            if (this.options.renderer === 'Canvas') {
+                x /= window.devicePixelRatio;
+                y /= window.devicePixelRatio;
+            }
+
             return new MathLib.Point([x, y, 1]);
         };
 
@@ -642,7 +648,7 @@ var __extends = this.__extends || function (d, b) {
         * @param {event} evt The event object
         */
         Screen2D.prototype.onmousewheel = function (evt) {
-            var delta, s, p, z, devicePixelRatio = window.devicePixelRatio || 1;
+            var delta, s, p, z;
 
             if (this.options.interaction.allowZoom) {
                 if (evt.preventDefault) {
@@ -665,7 +671,7 @@ var __extends = this.__extends || function (d, b) {
                 p = this.transformation.inverse().times(this.getEventPoint(evt));
 
                 // Compute new scale matrix in current mouse position
-                s = new MathLib.Matrix([[z, 0, (p[0] - p[0] * z) / devicePixelRatio], [0, z, (p[1] - p[1] * z) / devicePixelRatio], [0, 0, 1]]);
+                s = new MathLib.Matrix([[z, 0, p[0] - p[0] * z], [0, z, p[1] - p[1] * z], [0, 0, 1]]);
 
                 this.transformation = this.transformation.times(s);
 

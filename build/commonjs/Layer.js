@@ -38,9 +38,6 @@
                 }
 
                 screen.wrapper.appendChild(element);
-
-                //screen.wrapper.width = screen.width;
-                //screen.wrapper.height = screen.height;
                 this.element = element;
 
                 // Get the context and apply the transformations

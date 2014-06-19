@@ -499,7 +499,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 80,
+					build: 81,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -532,6 +532,9 @@ module.exports = function (grunt) {
 			},
 			grunt: {
 				src: ['Gruntfile.js']
+			},
+			benchmarks: {
+				src: ['benchmarks/*.js']
 			},
 			/*
 			es6: {
@@ -586,6 +589,11 @@ module.exports = function (grunt) {
 				files: {
 					src: ['Gruntfile.js']
 				}
+			},
+			benchmarks: {
+				files: {
+					src: ['benchmarks/*.js']
+				}
 			}
 		},
 
@@ -634,6 +642,12 @@ module.exports = function (grunt) {
 					stdout: true
 				},
 				command: 'doxx --template ./doxx.jade --source build/plain --target docs'
+			},
+			benchmarks: {
+				options: {
+					stdout: true
+				},
+				command: 'node ./benchmarks/benchmarks.js'
 			}
 		},
 
@@ -1064,6 +1078,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('testAll', ['testPlain', 'testCommonjs', 'testAMD']);
 
 
+	grunt.registerTask('benchmarks', ['shell:benchmarks']);
 	grunt.registerTask('default', ['help']);
 	grunt.registerTask('commit', ['generateAll', 'clean', 'testPlain', 'testCommonjs', 'tslint', 'jshint', 'jscs']);
 	grunt.registerTask('release', ['generateAll', 'clean', 'testPlain', 'testCommonjs', /*'tslint', 'jshint', 'jscs',*/ 'regex-replace:bower', 'regex-replace:saucebuildnumber']);/*, 'docco'*/

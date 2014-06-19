@@ -7,7 +7,8 @@ fns.cosh = {
 	// Math.cosh(-Infinity) = -Infinity 
 	// but should be +Infinity
 	functn: /*MathLib.isNative((<any>Math).cosh) ||*/ function (x) {
-		return (Math.exp(x) + Math.exp(-x)) / 2;
+		var ex = Math.exp(x);
+		return (ex + 1 / ex) / 2;
 	},
 	cdgroup: 'transc1'
 };
