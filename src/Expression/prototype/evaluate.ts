@@ -4,7 +4,13 @@
  * @return {any}
  */
 evaluate() : any {
-
+	if (this.subtype === 'assignment') {
+		var value = this.value;
+		this.content.forEach(function (variable) {
+			MathLib.Expression.variables[variable.value] = value;
+		});
+		return this.value; 
+	}
 	if (this.subtype === 'binaryOperator') {
 		return MathLib[this.name].apply(null, this.content.map(x => MathLib.evaluate(x)));
 	}

@@ -777,6 +777,13 @@ var MathLib;
         * @return {any}
         */
         Expression.prototype.evaluate = function () {
+            if (this.subtype === 'assignment') {
+                var value = this.value;
+                this.content.forEach(function (variable) {
+                    MathLib.Expression.variables[variable.value] = value;
+                });
+                return this.value;
+            }
             if (this.subtype === 'binaryOperator') {
                 return MathLib[this.name].apply(null, this.content.map(function (x) {
                     return MathLib.evaluate(x);
@@ -883,6 +890,17 @@ var MathLib;
         * @return {string}
         */
         Expression.prototype.toContentMathML = function () {
+            if (this.subtype === 'assignment') {
+                var str, i, ii;
+
+                str = '<apply><csymbol cd="prog1">assignment</csymbol>' + this.content.map(MathLib.toContentMathML).join('<apply><csymbol cd="prog1">assignment</csymbol>') + MathLib.toContentMathML(this.value);
+
+                for (i = 0, ii = this.content.length; i < ii; i++) {
+                    str += '</apply>';
+                }
+
+                return str;
+            }
             if (this.subtype === 'binaryOperator') {
                 var op = this.name === 'pow' ? 'power' : this.name;
 
@@ -946,6 +964,9 @@ var MathLib;
         Expression.prototype.toLaTeX = function () {
             var op, amsmath;
 
+            if (this.subtype === 'assignment') {
+                return this.content.map(MathLib.toLaTeX).join(' := ') + ' := ' + MathLib.toLaTeX(this.value);
+            }
             if (this.subtype === 'binaryOperator') {
                 var str;
 
@@ -1025,6 +1046,9 @@ var MathLib;
         * @return {string}
         */
         Expression.prototype.toMathML = function () {
+            if (this.subtype === 'assignment') {
+                return this.content.map(MathLib.toMathML).join('<mo>:=</mo>') + '<mo>:=</mo>' + MathLib.toMathML(this.value);
+            }
             if (this.subtype === 'binaryOperator') {
                 if (this.value === '-') {
                     return this.content[0].toMathML() + '<mo>-</mo>' + this.content[1].toMathML();
@@ -1088,6 +1112,9 @@ var MathLib;
         */
         Expression.prototype.toString = function () {
             var _this = this;
+            if (this.subtype === 'assignment') {
+                return this.content.map(MathLib.toString).join(' := ') + ' := ' + MathLib.toString(this.value);
+            }
             if (this.subtype === 'binaryOperator') {
                 return this.content[0].toString() + this.value + this.content[1].toString();
             }
@@ -1143,9 +1170,10 @@ var MathLib;
             Lexer = function () {
                 var expression = '', length = 0, index = 0, marker = 0, T = Token;
 
-                function peekNextChar() {
+                function peekNextChar(n) {
+                    if (typeof n === "undefined") { n = 1; }
                     var idx = index;
-                    return ((idx < length) ? expression.charAt(idx) : '\x00');
+                    return ((idx < length) ? expression.substr(idx, n) : '\x00');
                 }
 
                 function getNextChar() {
@@ -1194,6 +1222,11 @@ var MathLib;
                     var ch = peekNextChar();
                     if ('+-*/()^%=;,'.indexOf(ch) >= 0) {
                         return createToken(T.Operator, getNextChar());
+                    }
+                    if (peekNextChar(2) === ':=') {
+                        index += 2;
+
+                        return createToken(T.Operator, ':=');
                     }
                     return undefined;
                 }
@@ -1443,10 +1476,7 @@ var MathLib;
                         if (matchOp(lexer.peek(), '(')) {
                             return parseFunctionCall(token.value);
                         } else {
-                            return new MathLib.Expression({
-                                subtype: 'Identifier',
-                                value: token.value
-                            });
+                            return MathLib.Expression.variable(token.value);
                         }
                     }
 
@@ -1492,7 +1522,7 @@ var MathLib;
                 }
 
                 // Exponentiation ::= Unary |
-                //                    Exponentiation '^' Unary |
+                //                    Unary '^' Exponentiation
                 function parseExponentiation() {
                     var token, left, right;
 
@@ -1594,26 +1624,35 @@ var MathLib;
                     return left;
                 }
 
-                // Assignment ::= Identifier '=' Assignment |
+                // Assignment ::= Identifier ':=' Assignment |
                 //                Additive
                 function parseAssignment() {
-                    var expr;
+                    var expr, value, token, content = [];
 
                     expr = parseAdditive();
 
-                    // TODO: support assignments
-                    // if (typeof expr !== 'undefined' && expr.Identifier) {
-                    // token = lexer.peek();
-                    // if (matchOp(token, '=')) {
-                    //   lexer.next();
-                    //   return new MathLib.Expression({
-                    //     subtype: 'Assignment',
-                    //     name: expr,
-                    //     value: parseAssignment()
-                    //   });
-                    // }
-                    // return expr;
-                    // }
+                    if (typeof expr !== 'undefined' && expr.subtype === 'variable') {
+                        token = lexer.peek();
+                        if (matchOp(token, ':=')) {
+                            lexer.next();
+
+                            content.push(expr);
+                            value = parseAssignment();
+
+                            while (value.subtype === 'assignment') {
+                                content = content.concat(value.content);
+                                value = value.value;
+                            }
+
+                            return new MathLib.Expression({
+                                subtype: 'assignment',
+                                content: content,
+                                value: value
+                            });
+                        }
+                        return expr;
+                    }
+
                     return expr;
                 }
 
@@ -3703,13 +3742,17 @@ var MathLib;
     /* tslint:disable */
     var template = function (data) {
         var p = [];
-        p.push(' <figure class="MathLib_figure">     <div class="MathLib_wrapper" style="width: ');
+        p.push(' <figure class="MathLib_figure" aria-describedby="MathLib_figcaption_');
+        p.push(data.uuid);
+        p.push('" alt="alt text figure">     <div class="MathLib_wrapper" style="width: ');
         p.push(data.width);
         p.push('px; height: ');
         p.push(data.height);
-        p.push('px" tabindex="0">   <div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>   Please update your browser to see the plot.</div>  </div>      ');
+        p.push('px" tabindex="0" aria-hidden="true">   <div class="MathLib_info_message">Your browser does not seem to support WebGL.<br>   Please update your browser to see the plot.</div>  </div>      ');
         if (data.figcaption) {
-            p.push('   <figcaption class="MathLib_figcaption">');
+            p.push('   <figcaption class="MathLib_figcaption" id="MathLib_figcaption_');
+            p.push(data.uuid);
+            p.push('" alt="alt text caption">');
             p.push(data.figcaption);
             p.push('</figcaption>  ');
         }
@@ -3763,6 +3806,7 @@ var MathLib;
                 figcaption: ''
             }, opts = MathLib.extendObject(defaults, options), container = document.getElementById(id), innerHTMLContextMenu = '', fullscreenchange;
 
+            opts.uuid = +new Date();
             container.innerHTML = template(opts);
             container.className += ' MathLib_container';
 

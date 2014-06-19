@@ -6,6 +6,9 @@
 toLaTeX() : string {
 	var op, amsmath;
 
+	if (this.subtype === 'assignment') {
+		return this.content.map(MathLib.toLaTeX).join(' := ') + ' := ' + MathLib.toLaTeX(this.value);
+	}
 	if (this.subtype === 'binaryOperator') {
 		var str;
 

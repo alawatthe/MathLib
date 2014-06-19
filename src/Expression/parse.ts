@@ -25,9 +25,9 @@ static parse = function (str) : Expression {
 				marker = 0,
 				T = Token;
 
-		function peekNextChar () {
+		function peekNextChar (n = 1) {
 			var idx = index;
-			return ((idx < length) ? expression.charAt(idx) : '\x00');
+			return ((idx < length) ? expression.substr(idx, n) : '\x00');
 		}
 
 		function getNextChar () {
@@ -77,6 +77,11 @@ static parse = function (str) : Expression {
 			var ch = peekNextChar();
 			if ('+-*/()^%=;,'.indexOf(ch) >= 0) {
 				return createToken(T.Operator, getNextChar());
+			}
+			if (peekNextChar(2) === ':=') {
+				index += 2;
+
+				return createToken(T.Operator, ':=');
 			}
 			return undefined;
 		}
@@ -337,11 +342,9 @@ static parse = function (str) : Expression {
 				token = lexer.next();
 				if (matchOp(lexer.peek(), '(')) {
 					return parseFunctionCall(token.value);
-				} else {
-					return new MathLib.Expression({
-						subtype: 'Identifier',
-						value: token.value
-					});
+				}
+				else {
+					return MathLib.Expression.variable(token.value);
 				}
 			}
 
@@ -388,7 +391,7 @@ static parse = function (str) : Expression {
 
 
 		// Exponentiation ::= Unary |
-		//                    Exponentiation '^' Unary |
+		//                    Unary '^' Exponentiation
 		function parseExponentiation() {
 			var token, left, right;
 
@@ -502,27 +505,36 @@ static parse = function (str) : Expression {
 			return left;
 		}
 
-		// Assignment ::= Identifier '=' Assignment |
+		// Assignment ::= Identifier ':=' Assignment |
 		//                Additive
 		function parseAssignment() {
-			var expr;
+			var expr, value, token,
+					content = [];
 
 			expr = parseAdditive();
 
+			if (typeof expr !== 'undefined' && expr.subtype	=== 'variable') {
 
-			// TODO: support assignments
-			// if (typeof expr !== 'undefined' && expr.Identifier) {
-			// token = lexer.peek();
-			// if (matchOp(token, '=')) {
-			//   lexer.next();
-			//   return new MathLib.Expression({
-			//     subtype: 'Assignment',
-			//     name: expr,
-			//     value: parseAssignment()
-			//   });
-			// }
-			// return expr;
-			// }
+				token = lexer.peek();
+				if (matchOp(token, ':=')) {
+					lexer.next();
+
+					content.push(expr);
+					value = parseAssignment();
+
+					while (value.subtype === 'assignment') {
+						content = content.concat(value.content);
+						value = value.value;
+					}
+
+					return new MathLib.Expression({
+						subtype: 'assignment',
+						content: content,
+						value: value
+					});
+				}
+				return expr;
+			}
 
 			return expr;
 		}

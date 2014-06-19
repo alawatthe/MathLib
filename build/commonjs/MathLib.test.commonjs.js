@@ -2138,6 +2138,27 @@ test('.parse (unaryOperator)', 4, function () {
 });
 
 
+test('.parse (assignment)', 9, function () {
+	MathLib.Expression.variables = {};
+
+	var one = MathLib.Expression.parse('a := 1');
+	var two = MathLib.Expression.parse('b := c := 2');
+
+	equal(one.subtype, 'assignment');
+	equal(one.value.value, 1);
+	deepEqual(one.content, [MathLib.Expression.variable('a')]);
+
+	equal(two.subtype, 'assignment');
+	equal(two.value.value, 2);
+	deepEqual(two.content, [MathLib.Expression.variable('b'), MathLib.Expression.variable('c')]);
+
+
+	equal(MathLib.Expression.variables.a, undefined);
+	equal(one.evaluate().value, 1);
+	equal(MathLib.Expression.variables.a.value, 1);
+});
+
+
 
 test('.parse (binaryOperator)', 10, function () {
 	equal(MathLib.Expression.parse('12+34').evaluate(), 12 + 34, '.parse("12+34")');
@@ -2292,7 +2313,7 @@ test('.compare()', 3, function () {
 	equal(e1.compare(e3), 1, '.compare()');
 	equal(e1.compare(e4), -1,  '.compare()');
 });
-test('.toContentMathML', 8, function () {
+test('.toContentMathML', 10, function () {
 	equal(MathLib.Expression.parse('123.456E-7').toContentMathML(), '<cn>123.456E-7</cn>', '("123.456E-7").toContentMathML()');
 	equal(MathLib.Expression.parse('1+2').toContentMathML(), '<apply><csymbol cd="arith1">plus</csymbol><cn>1</cn><cn>2</cn></apply>', '("1+2").toContentMathML()');
 	equal(MathLib.Expression.parse('(1+2)*3').toContentMathML(), '<apply><csymbol cd="arith1">times</csymbol><apply><csymbol cd="arith1">plus</csymbol><cn>1</cn><cn>2</cn></apply><cn>3</cn></apply>', '("(1+2)*3").toContentMathML()');
@@ -2304,8 +2325,11 @@ test('.toContentMathML', 8, function () {
 
 	equal(MathLib.Expression.parse('sin(1)').toContentMathML(), '<apply><csymbol cd="transc1">sin</csymbol><cn>1</cn></apply>', '("sin(1)").toContentMathML()');
 	equal(MathLib.Expression.parse('sin(1)+cos(exp(2)*3)').toContentMathML(), '<apply><csymbol cd="arith1">plus</csymbol><apply><csymbol cd="transc1">sin</csymbol><cn>1</cn></apply><apply><csymbol cd="transc1">cos</csymbol><apply><csymbol cd="arith1">times</csymbol><apply><csymbol cd="transc1">exp</csymbol><cn>2</cn></apply><cn>3</cn></apply></apply></apply>', '("sin(1)+cos(exp(2)*3)").toContentMathML()');
+
+	equal(MathLib.Expression.parse('a := 1').toContentMathML(), '<apply><csymbol cd="prog1">assignment</csymbol><ci>a</ci><cn>1</cn></apply>');
+	equal(MathLib.Expression.parse('b := c := 2').toContentMathML(), '<apply><csymbol cd="prog1">assignment</csymbol><ci>b</ci><apply><csymbol cd="prog1">assignment</csymbol><ci>c</ci><cn>2</cn></apply></apply>');
 });
-test('.toLaTeX', 13, function () {
+test('.toLaTeX', 15, function () {
 	equal(MathLib.Expression.parse('123.456E-7').toLaTeX(), '123.456E-7', '("123.456E-7").toLaTeX()');
 	equal(MathLib.Expression.parse('1+2').toLaTeX(), '1+2', '("1+2").toLaTeX()');
 	equal(MathLib.Expression.parse('(1+2)*3').toLaTeX(), '\\left(1+2\\right)\\cdot3', '("(1+2)*3").toLaTeX()');
@@ -2317,11 +2341,13 @@ test('.toLaTeX', 13, function () {
 	equal(MathLib.Expression.parse('sqrt(1)').toLaTeX(), '\\sqrt{1}', '("sqrt(1)").toLaTeX()');
 	equal(MathLib.Expression.parse('arsinh(1)').toLaTeX(), '\\operatorname{arsinh}\\left(1\\right)', '("arsinh(1)").toLaTeX()');
 	equal(MathLib.Expression.parse('sin(1)+cos(exp(2)*3)').toLaTeX(), '\\sin\\left(1\\right)+\\cos\\left(e^{2}\\cdot3\\right)', '("sin(1)+cos(exp(2)*3)").toLaTeX()');
+	equal(MathLib.Expression.parse('a := 1').toLaTeX(), 'a := 1');
+	equal(MathLib.Expression.parse('b := c := 2').toLaTeX(), 'b := c := 2');
 
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><cn type="complex-cartesian">2<sep/>3</cn></math>').toLaTeX(), '2+3i', '.toLaTeX() complex');
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><set><cn>1</cn><cn>2</cn><cn>3</cn></set></math>').toLaTeX(), '\\left{1, 2, 3\\right}', '.toLaTeX() set');
 });
-test('.toMathML', 8, function () {
+test('.toMathML', 10, function () {
 	equal(MathLib.Expression.parse('123.456E-7').toMathML(), '<mn>123.456E-7</mn>', '("123.456E-7").toMathML()');
 	equal(MathLib.Expression.parse('1+2').toMathML(), '<mrow><mn>1</mn><mo>+</mo><mn>2</mn></mrow>', '("1+2").toMathML()');
 	equal(MathLib.Expression.parse('(1+2)*3').toMathML(), '<mrow><mrow><mo>(</mo><mrow><mn>1</mn><mo>+</mo><mn>2</mn></mrow><mo>)</mo></mrow><mo>&middot;</mo><mn>3</mn></mrow>', '("(1+2)*3").toMathML()');
@@ -2330,8 +2356,10 @@ test('.toMathML', 8, function () {
 	equal(MathLib.Expression.parse('2^3^4').toMathML(), '<msup><mn>2</mn><msup><mn>3</mn><mn>4</mn></msup></msup>', '("2^3^4").toMathML()');
 	equal(MathLib.Expression.parse('sin(1)').toMathML(), '<mrow><mi>sin</mi><mo>&af;</mo><mrow><mo>(</mo><mn>1</mn><mo>)</mo></mrow></mrow>', '("sin(1)").toMathML()');
 	equal(MathLib.Expression.parse('sin(1)+cos(exp(2)*3)').toMathML(), '<mrow><mrow><mi>sin</mi><mo>&af;</mo><mrow><mo>(</mo><mn>1</mn><mo>)</mo></mrow></mrow><mo>+</mo><mrow><mi>cos</mi><mo>&af;</mo><mrow><mo>(</mo><mrow><mrow><mi>exp</mi><mo>&af;</mo><mrow><mo>(</mo><mn>2</mn><mo>)</mo></mrow></mrow><mo>&middot;</mo><mn>3</mn></mrow><mo>)</mo></mrow></mrow></mrow>', '("sin(1)+cos(exp(2)*3)").toMathML()');
+	equal(MathLib.Expression.parse('a := 1').toMathML(), '<mi>a</mi><mo>:=</mo><mn>1</mn>');
+	equal(MathLib.Expression.parse('b := c := 2').toMathML(), '<mi>b</mi><mo>:=</mo><mi>c</mi><mo>:=</mo><mn>2</mn>');
 });
-test('.toString', 12, function () {
+test('.toString', 14, function () {
 	equal(MathLib.Expression.parse('123.456E-7').toString(), '123.456E-7', '("123.456E-7").toString()');
 	equal(MathLib.Expression.parse('1+2').toString(), '1+2', '("1+2").toString()');
 	equal(MathLib.Expression.parse('(1+2)*3').toString(), '(1+2)*3', '("(1+2)*3").toString()');
@@ -2340,6 +2368,8 @@ test('.toString', 12, function () {
 	equal(MathLib.Expression.parse('2^3^4').toString(), '2^3^4', '("2^3^4").toString()');
 	equal(MathLib.Expression.parse('sin(1)').toString(), 'sin(1)', '("sin(1)").toString()');
 	equal(MathLib.Expression.parse('sin(1)+cos(exp(2)*3)').toString(), 'sin(1)+cos(exp(2)*3)', '("sin(1)+cos(exp(2)*3)").toString()');
+	equal(MathLib.Expression.parse('a := 1').toString(), 'a := 1');
+	equal(MathLib.Expression.parse('b := c := 2').toString(), 'b := c := 2');
 
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><cn type="complex-cartesian">2<sep/>3</cn></math>').toString(), '2+3i', '.toString() complex');
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML"><cn type="rational">3<sep/>4</cn></math>').toString(), '3/4', '.parse() rational');

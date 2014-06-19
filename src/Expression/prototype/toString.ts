@@ -5,6 +5,9 @@
  */
 toString() : string {
 
+	if (this.subtype === 'assignment') {
+		return this.content.map(MathLib.toString).join(' := ') + ' := ' + MathLib.toString(this.value);
+	}
 	if (this.subtype === 'binaryOperator') {
 		return this.content[0].toString() + this.value + this.content[1].toString();
 	}
