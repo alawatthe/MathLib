@@ -11,5 +11,6 @@ test('.cosh()', 6, function () {
 	// Spec. 4: otherwise MathLib.cosh(x) = hyperbolic cosine of x
 	equal(MathLib.cosh(+0), 1, 'Spec. 4: otherwise MathLib.cosh(x) = hyperbolic cosine of x');
 	equal(MathLib.cosh(-0), 1, 'Spec. 4: otherwise MathLib.cosh(x) = hyperbolic cosine of x');
-	equal(MathLib.isEqual(MathLib.cosh(1), 1.5430806348152437), true, 'Spec. 4: otherwise MathLib.cosh(x) = hyperbolic cosine of x');
+	equal(MathLib.isEqual(MathLib.cosh(1), 1.5430806348152437), true,
+		'Spec. 4: otherwise MathLib.cosh(x) = hyperbolic cosine of x');
 });

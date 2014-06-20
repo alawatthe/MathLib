@@ -3,7 +3,8 @@ test('execution', 4, function () {
 	equal(MathLib.sin(0), 0, 'MathLib.sin(0) should be 0');
 	equal(MathLib.exp(MathLib.sin)(0), 1, 'MathLib.exp(MathLib.sin)(0) should be 1');
 	equal(MathLib.plus(MathLib.sin, 2)(0), 2, 'sin(0) + 2');
-	ok(MathLib.isEqual(MathLib.plus(MathLib.times(MathLib.sin, MathLib.sin), MathLib.times(MathLib.cos, MathLib.cos))(42), 1), 'sin(42)^2 + cos(42)^2 = 1');
+	ok(MathLib.isEqual(MathLib.plus(MathLib.times(MathLib.sin, MathLib.sin),
+		MathLib.times(MathLib.cos, MathLib.cos))(42), 1), 'sin(42)^2 + cos(42)^2 = 1');
 });
 
 

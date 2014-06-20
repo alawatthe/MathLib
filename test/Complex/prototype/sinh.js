@@ -32,7 +32,7 @@ test('.sinh()', 12, function () {
 	// More information:
 	// https://code.google.com/p/v8/issues/detail?id=3006
 	if (Math.cos(-5) === 0.2836621854632259) {
-				ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).sinh(), new MathLib.Complex(6.5481200409109945, -7.619231720321402)));
+		ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).sinh(), new MathLib.Complex(6.5481200409109945, -7.619231720321402)));
 	}
 	else {
 		ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).sinh(), new MathLib.Complex(6.5481200409110016478, -7.6192317203214102085)));

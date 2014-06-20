@@ -17,7 +17,6 @@ test('init', 2, function () {
 
 	equal(screen.width, 500, 'Default .width should be 500.');
 	equal(screen.height, 500, 'Default .height should be 500.');
-
 });
 
 

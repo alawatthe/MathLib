@@ -44,5 +44,4 @@ test('.arccot()', 25, function () {
 
 	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arccot(), new MathLib.Complex(0.23182380450040305811, -0.40235947810852509365)));
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arccot(), new MathLib.Complex(-0.12248933156343207709, -0.15899719167999917436)));
-
 });

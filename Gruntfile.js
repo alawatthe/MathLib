@@ -64,17 +64,19 @@ module.exports = function (grunt) {
 				'test/meta/general.js', 'test/meta/!(general).js'
 			],
 
-			modules = ['Circle', 'Complex', 'Conic', 'Expression', 'Functn', 'Integer',
-									'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial',
-									'Rational', 'Screen', 'Set', 'Vector'],
+			modules = [
+				'Circle', 'Complex', 'Conic', 'Expression', 'Functn', 'Integer',
+				'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial',
+				'Rational', 'Screen', 'Set', 'Vector'
+			],
 
 			createModuleArray = function (module) {
 				return ['src/' + module + '/init.ts', 'src/' + module + '/!(init).ts', 'src/' + module + '/*/*.ts'];
 			};
 
-			modules.forEach(function (module) {
-				testFiles.push('test/' + module + '/init.js', 'test/' + module + '/!(init).js', 'test/' + module + '/*/*.js');
-			});
+	modules.forEach(function (module) {
+		testFiles.push('test/' + module + '/init.js', 'test/' + module + '/!(init).js', 'test/' + module + '/*/*.js');
+	});
 
 	grunt.registerTask('help', function () {
 		grunt.log.subhead('Watching');
@@ -271,7 +273,8 @@ module.exports = function (grunt) {
 			},
 
 			plain: {
-				src: ['meta', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
+				src: [
+					'meta', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
 					'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Integer', 'Line',
 					'Matrix', 'Permutation', 'Conic', 'Point', 'Polynomial', 'Rational', 'Set'
 				].map(function (module) {
@@ -422,7 +425,7 @@ module.exports = function (grunt) {
 			}
 		},
 
-		'qunit_amd': {
+		qunit_amd: {
 			MathLib: {
 				include: [
 					'build/amd/MathLib.js'
@@ -447,7 +450,7 @@ module.exports = function (grunt) {
 			},
 			MathLib: {
 				src: './coverage/lcov.info'
-			},
+			}
 		},
 
 		// Sauce Labs cross browser testing
@@ -460,7 +463,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 87,
+					build: 88,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -491,7 +494,7 @@ module.exports = function (grunt) {
 			},
 			benchmarks: {
 				src: ['benchmarks/*.js']
-			},
+			}
 			/*
 			es6: {
 				files: {
@@ -510,19 +513,20 @@ module.exports = function (grunt) {
 				configuration: grunt.file.readJSON('.tslintrc')
 			},
 			files: {
-				src: ['Circle', 'Complex', 'Conic', 'Expression', 'Functn', 'Integer',
-							'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial',
-							'Rational', 'Screen', 'Screen2D', 'Screen3D', 'Set', 'Vector'
-							].map(function (module) {
-								return 'build/plain/' + module + '.ts';
-							})
+				src: [
+					'Circle', 'Complex', 'Conic', 'Expression', 'Functn', 'Integer',
+					'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial',
+					'Rational', 'Screen', 'Screen2D', 'Screen3D', 'Set', 'Vector'
+				].map(function (module) {
+					return 'build/plain/' + module + '.ts';
+				})
 			}
 		},
 
 
 		jscs: {
 			options: {
-				config: '.jscs.json',
+				config: '.jscsrc'
 			},
 			Tests: {
 				files: {
@@ -537,6 +541,9 @@ module.exports = function (grunt) {
 			grunt: {
 				files: {
 					src: ['Gruntfile.js']
+				},
+				options: {
+					requireCamelCaseOrUpperCaseIdentifiers: 'ignoreProperties'
 				}
 			},
 			benchmarks: {
@@ -619,9 +626,9 @@ module.exports = function (grunt) {
 					sourceMap: false,
 					sourceRoot: '',
 					mapRoot: '',
-					declaration: true,
+					declaration: true
 				}
-			},
+			}
 		},
 
 
@@ -638,7 +645,7 @@ module.exports = function (grunt) {
 
 		stamp: {
 			options: {
-				banner: banner,
+				banner: banner
 			},
 			MathLib: {
 				files: {
@@ -685,7 +692,7 @@ module.exports = function (grunt) {
 					{
 						search: '/// <reference path=\'reference.ts\'/>\n',
 						replace: ''
-					},
+					}
 				]
 			},
 
@@ -816,7 +823,7 @@ module.exports = function (grunt) {
 							return 'var MathLib = require(\'./meta.js\'),' +
 							match.split(', ').reduce(function (old, cur) {
 								return old + '\n\t\t' + cur  + ' = require(\'./' + cur + '\'),';
-							}, '').slice(0,-1) + ';\n';
+							}, '').slice(0, -1) + ';\n';
 						},
 						flags: 'g'
 					},
@@ -902,7 +909,7 @@ module.exports = function (grunt) {
 							return 'import MathLib from \'./meta.js\';' +
 							match.split(', ').reduce(function (old, cur) {
 								return old + '\nimport ' + cur  + ' from \'./' + cur + '\';';
-							}, '').slice(0,-1) + ';\n';
+							}, '').slice(0, -1) + ';\n';
 						},
 						flags: 'g'
 					},
@@ -970,7 +977,7 @@ module.exports = function (grunt) {
 						replace: function (_, match) {
 							return 'build: ' + (parseInt(match, 10) + 1);
 						}
-					},
+					}
 				]
 			}
 		},
@@ -982,7 +989,7 @@ module.exports = function (grunt) {
 			},
 			tests: {
 				files: ['test/*/*.js', 'test/*/*/*.js'],
-				tasks: ['jshint:Tests', 'jscs:Tests', 'generateTests']
+				tasks: ['jshint:Tests', 'generateTests', 'jscs:Tests']
 			},
 			grunt: {
 				files: ['Gruntfile.js'],
@@ -1019,9 +1026,10 @@ module.exports = function (grunt) {
 	grunt.registerTask('generateES6', ['copy:es6', 'regex-replace:es6Head', 'regex-replace:es6']);
 	grunt.registerTask('generateDeclaration', ['concat:declaration', 'regex-replace:declaration']);
 	grunt.registerTask('generateTests', ['newer:concat:tests', 'newer:concat:testsAmd', 'concat:testsCommonjs']);
-	grunt.registerTask('generateAll', ['generatePlain', 'generateAMD', 'generateCommonjs', 'generateES6',
-		'generateDeclaration', 'generateTests', 'generateCSS', 'generateTemplate', 'generateDocs',
-		'regex-replace:plainAfter']);
+	grunt.registerTask('generateAll', [
+		'generatePlain', 'generateAMD', 'generateCommonjs', 'generateES6', 'generateDeclaration',
+		'generateTests', 'generateCSS', 'generateTemplate', 'generateDocs', 'regex-replace:plainAfter'
+	]);
 	grunt.registerTask('generateCSS', ['compass', 'cssmin']);
 	grunt.registerTask('generateDocs', ['clean:beforeDoxx', 'shell:doxx']);
 
@@ -1033,9 +1041,11 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('benchmarks', ['shell:benchmarks']);
 	grunt.registerTask('default', ['help']);
-	grunt.registerTask('commit', ['generatePlain', 'generateAMD', 'generateCommonjs', 'generateES6',
+	grunt.registerTask('commit', [
+		'generatePlain', 'generateAMD', 'generateCommonjs', 'generateES6',
 		'generateDeclaration', 'generateTests', 'generateCSS', 'generateTemplate', 'regex-replace:plainAfter',
-		'clean', 'testPlain', 'testCommonjs', 'tslint', 'jshint', 'jscs', 'regex-replace:bower', 'regex-replace:saucebuildnumber']);
+		'clean', 'testPlain', 'testCommonjs', 'tslint', 'jshint', 'jscs', 'regex-replace:bower', 'regex-replace:saucebuildnumber'
+	]);
 
 	grunt.registerTask('continuousIntegration', ['testPlain', 'coveralls', 'tslint', 'jshint', 'jscs', 'saucelabs-qunit']);
 };

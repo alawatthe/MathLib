@@ -15,6 +15,8 @@ test('.csch()', 7, function () {
 	equal(MathLib.isNegZero(MathLib.csch(-Infinity)), true, 'Spec. 5: MathLib.csch(-∞) = -0');
 
 	// Spec. 6: otherwise MathLib.csch(x) = hyperbolic cosecant of x
-	ok(MathLib.isEqual(MathLib.csch(1), 0.8509181282393216), 'Spec. 6: otherwise MathLib.csch(x) = hyperbolic cosecant of x');
-	ok(MathLib.isEqual(MathLib.csch(10), 0.00009079985971212217), 'Spec. 6: otherwise MathLib.csch(x) = hyperbolic cosecant of x');
+	ok(MathLib.isEqual(MathLib.csch(1), 0.8509181282393216),
+		'Spec. 6: otherwise MathLib.csch(x) = hyperbolic cosecant of x');
+	ok(MathLib.isEqual(MathLib.csch(10), 0.00009079985971212217),
+		'Spec. 6: otherwise MathLib.csch(x) = hyperbolic cosecant of x');
 });

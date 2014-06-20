@@ -47,6 +47,4 @@ test('.normalize()', 30, function () {
 		equal(np[0][0] * np[0][2], 0, 'a or d is 0');
 		equal(np[1][1] * np[1][2], 0, 'c or e is 0');
 	}
-
-
 });

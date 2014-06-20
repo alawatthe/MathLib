@@ -1,0 +1,181 @@
+{
+	// Load the jscs jsdoc plugin
+	"additionalRules": [
+		"node_modules/jscs-jsdoc/lib/rules/*.js"
+	],
+
+	"fileExtensions": [".js", ".json"],
+
+	// White space
+	// ===========
+
+	// Indentation
+	// -----------
+	"validateIndentation": "\t",
+
+	// Function Expressions
+	// --------------------
+	"requireSpacesInFunctionExpression": {
+		"beforeOpeningRoundBrace": true,
+		"beforeOpeningCurlyBrace": true
+	},
+
+
+	// Conditional Expressions
+	// -----------------------
+	// Like for binary operators we want spaces in coditional expressions.
+	"requireSpacesInConditionalExpression": {
+		"afterTest": true,
+		"beforeConsequent": true,
+		"afterConsequent": true,
+		"beforeAlternate": true
+	},
+
+
+	// Binary operators
+	// ----------------
+	// We want a space before and after every binary operator
+	// (except "," and ":", which only have spaces afterwards).
+	"requireSpaceBeforeBinaryOperators": ["=", "+=", "-=", "*=", "/=", "%=", "<<=",
+		">>=", ">>>=", "&=", "|=", "^=", "+", "-", "*", "/", "%", "<<", ">>", ">>>",
+		"&", "|", "^", "&&", "||", "===", "==", ">=", "<=", "<", ">", "!=", "!=="
+	],
+	"disallowSpaceBeforeBinaryOperators": [":", ","],
+	"requireSpaceAfterBinaryOperators": true,
+
+
+	// Unary operators
+	// ---------------
+	// We want no spaces between unary operators and the operand.
+	"disallowSpaceAfterPrefixUnaryOperators": true,
+	"disallowSpaceBeforePostfixUnaryOperators": true,
+
+
+	// Brackets
+	// --------
+	"disallowSpacesInsideObjectBrackets": true,
+	"disallowSpacesInsideArrayBrackets": true,
+	"disallowSpacesInsideParentheses": true,
+
+
+	// Comments
+	// --------
+	"requireSpaceAfterLineComment": true,
+
+
+	// Blocks
+	// ------
+	"requireSpaceBeforeBlockStatements": true,
+
+
+	// Miscellaneous
+	// -------------
+	"disallowTrailingWhitespace": true,
+	"disallowMixedSpacesAndTabs": true,
+	"disallowSpaceAfterObjectKeys": true,
+	"requireSpaceAfterKeywords": ["if", "else", "for", "while", "do", "switch", "return", "try", "catch"],
+
+
+	// JSDOC
+	// =====
+
+	"jsDoc": {
+		"checkParamNames": true,
+		"checkRedundantParams": true,
+		"requireParamTypes": true,
+		"checkReturnTypes": true,
+		"checkRedundantReturns": true,
+		"requireReturnTypes": true,
+		"checkTypes": true
+	},
+
+
+	// Line breaks
+	// ===========
+
+	// Requires blocks to begin and end with a newline,
+	// except if there is only one statement in them.
+	"requireBlocksOnNewline": 1,
+
+	// Disallows blocks from beginning and ending with 2 newlines.
+	"disallowPaddingNewlinesInBlocks": true,
+
+	// Disallows strings that span multiple lines without using concatenation.
+	"disallowMultipleLineStrings": true,
+
+	// Requires operators to appear before line breaks and not after.
+	"requireOperatorBeforeLineBreak": true,
+
+	// Don't use the comma first style
+	"requireCommaBeforeLineBreak": true,
+
+	// Always put keywords, especially "else", on new lines.
+	// We can't include "if" here because of "else if" statements.
+	"requireKeywordsOnNewLine": ["else", "for", "while", "do", "switch", "try", "catch", "case", "default"],
+
+	// Option to check line break characters
+	"validateLineBreaks": "LF",
+
+	// Requires placing line feed at file end.
+	"requireLineFeedAtFileEnd": true,
+
+
+	// Line length
+	// ===========
+
+	"maximumLineLength": {
+ 		"value": 140, // lines should be at most the number of characters specified
+		"tabSize": 2, // considered the tab character as number of specified spaces
+		"allowComments": true, // allows comments to break the rule
+		"allowUrlComments": true, // allows comments with long urls to break the rule
+		"allowRegex": true // allows regular expression literals to break the rule
+	},
+
+
+	// Variables
+	// =========
+
+	// Requires identifiers to be camelCased or UPPERCASE_WITH_UNDERSCORES
+	"requireCamelCaseOrUpperCaseIdentifiers": true,
+
+	// Requires member expressions to use dot notation when possible
+	"requireDotNotation": true,
+	"disallowQuotedKeysInObjects": true,
+
+	// Requires constructors to be capitalized
+	"requireCapitalizedConstructors": true,
+
+	// Option to check var _this = this expressions
+	"safeContextKeyword": "_this",
+
+	// Disallows identifiers that start or end in _
+	"disallowDanglingUnderscores": true,
+
+
+	// Miscellaneous
+	// =============
+
+	// Disallows implicit type conversion.
+	"disallowImplicitTypeConversion": ["binary", "boolean", "string"],
+
+	// There should be no need to use the "with" keyword.
+	"disallowKeywords": ["with"],
+
+	// Use curly braces
+	"requireCurlyBraces": ["if", "else", "for", "while", "do", "switch", "try", "catch"],
+
+	// Requires parentheses around immediately invoked function expressions.
+	"requireParenthesesAroundIIFE": true,
+
+	// We use single quotes everywhere, because so we don't have problems with double quotes in HTML.
+	"validateQuoteMarks": "'",
+
+	// Requires the variable to be the left hand operator when doing a boolean comparison
+	"disallowYodaConditions": true,
+
+	// Disallows an extra comma following the final element of an array or object literal.
+	"disallowTrailingComma": true,
+
+	// Disallows empty blocks (except for catch blocks).
+	"disallowEmptyBlocks": true
+}

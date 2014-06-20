@@ -13,7 +13,6 @@ module('Conic', {
 			div.className = 'screenDiv';
 			container.appendChild(div);
 		});
-
 	},
 	teardown: function () {
 		document.getElementById('testPlots').innerHTML = '';
@@ -33,7 +32,7 @@ test('return value', 1, function () {
 
 asyncTest('visual test', function (assert) {
 	var canvas = new MathLib.Screen2D('screen1',
-				{renderer: 'Canvas', width: 300, height: 300, range: {x: 3, y: 3},}
+				{renderer: 'Canvas', width: 300, height: 300, range: {x: 3, y: 3}}
 			),
 			svg = new MathLib.Screen2D('screen2',
 				{renderer: 'SVG', width: 300, height: 300, range: {x: 3, y: 3}, axes: false, grid: false, background: 'transparent'}

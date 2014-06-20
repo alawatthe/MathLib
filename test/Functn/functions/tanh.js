@@ -15,6 +15,8 @@ test('.tanh()', 7, function () {
 	equal(MathLib.tanh(-Infinity), -1, 'Spec. 5: MathLib.tanh(-∞) = -1');
 
 	// Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x
-	equal(MathLib.isEqual(MathLib.tanh(1), 0.761594155955765), true, 'Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x');
-	equal(MathLib.isEqual(MathLib.tanh(10), 0.9999999958776927), true, 'Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x');
+	equal(MathLib.isEqual(MathLib.tanh(1), 0.761594155955765), true,
+		'Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x');
+	equal(MathLib.isEqual(MathLib.tanh(10), 0.9999999958776927), true,
+		'Spec. 6: otherwise MathLib.tanh(x) = hyperbolic tangent of x');
 });

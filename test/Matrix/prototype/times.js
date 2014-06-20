@@ -10,8 +10,12 @@ test('.times()', 5, function () {
 			r = new MathLib.Rational(2, 3);
 
 	deepEqual(m.times(3), new MathLib.Matrix([[3, 6], [9, 12]]), 'matrix scalar multiplication');
-	deepEqual(m.times(new C(0, 1)), new MathLib.Matrix([[new C(0, 1), new C(0, 2)], [new C(0, 3), new C(0, 4)]]), 'matrix scalar multiplication');
+	deepEqual(m.times(new C(0, 1)), new MathLib.Matrix([
+		[new C(0, 1), new C(0, 2)],
+		[new C(0, 3), new C(0, 4)]
+	]), 'matrix scalar multiplication');
 	deepEqual(m.times(n), res, 'multiplying two simple matrices');
 	deepEqual(mc.times(bc), resc, 'complex matrix times complex vector');
-	equal(m.times(r).isEqual(new MathLib.Matrix([[2 / 3, 4 / 3], [6 / 3, 8 / 3]])), true, 'complex matrix times rational number');
+	equal(m.times(r).isEqual(new MathLib.Matrix([[2 / 3, 4 / 3], [6 / 3, 8 / 3]])),
+		true, 'complex matrix times rational number');
 });

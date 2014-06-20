@@ -31,7 +31,7 @@ asyncTest('draw', function (assert) {
 
 
 	l0.draw([canvas, svg]);
-	l1.draw([canvas, svg], {lineWidth: 10,});
+	l1.draw([canvas, svg], {lineWidth: 10});
 	l2.draw([canvas, svg], {lineColor: 0xff0000, dash: [0.35, 0.1], dashOffset: 0.1});
 	l3.draw([canvas, svg], {lineColor: 'orange', dash: [0.043]});
 	l4.draw([canvas, svg], {color: '#0000bb'});

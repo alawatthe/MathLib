@@ -52,5 +52,4 @@ test('.arctan()', 28, function () {
 
 	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arctan(), new MathLib.Complex(1.33897252229449356112, 0.40235947810852509365)));
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arctan(), new MathLib.Complex(-1.4483069952314645421, 0.1589971916799991744)));
-
 });

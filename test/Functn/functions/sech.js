@@ -11,5 +11,6 @@ test('.sech()', 6, function () {
 	// Spec. 4: otherwise MathLib.sech(x) = hyperbolic secant of x
 	equal(MathLib.sech(+0), 1, 'Spec. 4: otherwise MathLib.sech(x) = hyperbolic secant of x');
 	equal(MathLib.sech(-0), 1, 'Spec. 4: otherwise MathLib.sech(x) = hyperbolic secant of x');
-	equal(MathLib.isEqual(MathLib.sech(1), 0.6480542736638855), true, 'Spec. 4: otherwise MathLib.sech(x) = hyperbolic secant of x');
+	equal(MathLib.isEqual(MathLib.sech(1), 0.6480542736638855), true,
+		'Spec. 4: otherwise MathLib.sech(x) = hyperbolic secant of x');
 });

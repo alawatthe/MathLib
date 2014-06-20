@@ -40,7 +40,7 @@ asyncTest('draw', function (assert) {
 
 
 	p0.draw([canvas, svg]);
-	p1.draw([canvas, svg], {lineWidth: 10,});
+	p1.draw([canvas, svg], {lineWidth: 10});
 	p2.draw([canvas, svg], {color: '#ff00aa', label: 'P'});
 	p3.draw([canvas, svg], {fillColor: '#00aaff', lineColor: '#ffaa00'});
 	p4.draw([canvas, svg], {color: '#0000bb', label: 'Q'});

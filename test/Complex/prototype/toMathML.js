@@ -15,16 +15,20 @@ test('.toMathML()', 22, function () {
 	equal((new MathLib.Complex(Infinity)).toMathML({sign: true}), '<mo>+</mo><mi>ComplexInfinity</mi>');
 
 	equal(c1.toMathML(), '<mn>3</mn><mo>+</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
-	equal(c1.toMathML({sign: true}), '<mo>+</mo><mn>3</mn><mo>+</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
+	equal(c1.toMathML({sign: true}), '<mo>+</mo><mn>3</mn><mo>+</mo><mrow>' +
+		'<mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
 
 	equal(c2.toMathML(), '<mn>-3</mn><mo>+</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
-	equal(c2.toMathML({sign: true}), '<mo>-</mo><mn>3</mn><mo>+</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
+	equal(c2.toMathML({sign: true}), '<mo>-</mo><mn>3</mn><mo>+</mo><mrow>' +
+		'<mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
 
 	equal(c3.toMathML(), '<mn>3</mn><mo>-</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
-	equal(c3.toMathML({sign: true}), '<mo>+</mo><mn>3</mn><mo>-</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
+	equal(c3.toMathML({sign: true}), '<mo>+</mo><mn>3</mn><mo>-</mo><mrow>' +
+		'<mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
 
 	equal(c4.toMathML(), '<mn>-3</mn><mo>-</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
-	equal(c4.toMathML({sign: true}), '<mo>-</mo><mn>3</mn><mo>-</mo><mrow><mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
+	equal(c4.toMathML({sign: true}), '<mo>-</mo><mn>3</mn><mo>-</mo><mrow>' +
+		'<mn>4</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Normal complex number.');
 
 	equal(d1.toMathML(), '<mrow><mn>7</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Real part is zero.');
 	equal(d1.toMathML({sign: true}), '<mo>+</mo><mrow><mn>7</mn><mo>&#x2062;</mo><mi>i</mi></mrow>', 'Real part is zero.');

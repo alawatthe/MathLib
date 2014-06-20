@@ -13,7 +13,6 @@ module('Screen2D', {
 			div.className = 'screenDiv';
 			container.appendChild(div);
 		});
-
 	},
 	teardown: function () {
 		document.getElementById('testPlots').innerHTML = '';
@@ -71,7 +70,7 @@ asyncTest('.pixel', function (assert) {
 				{renderer: 'Canvas', width: 300, height: 300, range: {x: 3, y: 3}}
 			),
 			svg = new MathLib.Screen2D('screen2',
-			{renderer: 'SVG', width: 300, height: 300, range: {x: 3, y: 3}, axes: false, grid: false}
+				{renderer: 'SVG', width: 300, height: 300, range: {x: 3, y: 3}, axes: false, grid: false}
 			);
 
 	canvas.pixel(function (x, y) {
@@ -209,11 +208,13 @@ asyncTest('.grid cartesian default', function (assert) {
 
 	if (typeof phantomJS !== 'undefined') {
 		expect(1);
-		assert.imageEqual(defaultCartesianGridCanvas.layer.grid.element, 'http://localhost:8000/test/visual/screen2D_grid_cartesian_default.png');
+		assert.imageEqual(defaultCartesianGridCanvas.layer.grid.element,
+			'http://localhost:8000/test/visual/screen2D_grid_cartesian_default.png');
 	}
 	else {
 		expect(2);
-		assert.imageEqual(defaultCartesianGridCanvas.layer.grid.element, 'http://localhost:8000/test/visual/screen2D_grid_cartesian_default.png');
+		assert.imageEqual(defaultCartesianGridCanvas.layer.grid.element,
+			'http://localhost:8000/test/visual/screen2D_grid_cartesian_default.png');
 		assert.imageEqual(defaultCartesianGridSvg.element, 'http://localhost:8000/test/visual/screen2D_grid_cartesian_default.png');
 	}
 });
@@ -229,7 +230,8 @@ asyncTest('.grid polar default', function (assert) {
 
 	if (typeof phantomJS !== 'undefined') {
 		expect(1);
-		assert.imageEqual(defaultPolarGridCanvas.layer.grid.element, 'http://localhost:8000/test/visual/screen2D_grid_polar_default_phantomJS.png');
+		assert.imageEqual(defaultPolarGridCanvas.layer.grid.element,
+			'http://localhost:8000/test/visual/screen2D_grid_polar_default_phantomJS.png');
 	}
 	else {
 		expect(2);
@@ -240,40 +242,45 @@ asyncTest('.grid polar default', function (assert) {
 
 
 asyncTest('.grid cartesian modified', function (assert) {
-	var modifiedCartesianGridCanvas = new MathLib.Screen2D('screen1',
-				{renderer: 'Canvas', width: 300, height: 300, range: {x: 3, y: 3},
-					grid: {x: true, y: true, lineColor: '#00AAFF', lineWidth: 15, dash: [0.1, 0.1]}}
-			),
-			modifiedCartesianGridSvg = new MathLib.Screen2D('screen2',
-				{renderer: 'SVG', width: 300, height: 300, range: {x: 3, y: 3},
-					grid: {x: true, y: true, lineColor: '#00AAFF', lineWidth: 15, dash: [0.1, 0.1]}, axes: false, background: 'transparent'}
-			);
+	var modifiedCartesianGridCanvas = new MathLib.Screen2D('screen1', {
+				renderer: 'Canvas', width: 300, height: 300, range: {x: 3, y: 3},
+				grid: {x: true, y: true, lineColor: '#00AAFF', lineWidth: 15, dash: [0.1, 0.1]}
+			}),
+			modifiedCartesianGridSvg = new MathLib.Screen2D('screen2', {
+				renderer: 'SVG', width: 300, height: 300, range: {x: 3, y: 3},
+				grid: {x: true, y: true, lineColor: '#00AAFF', lineWidth: 15, dash: [0.1, 0.1]}, axes: false, background: 'transparent'
+			});
 
 	if (typeof phantomJS !== 'undefined') {
 		expect(1);
-		assert.imageEqual(modifiedCartesianGridCanvas.layer.grid.element, 'http://localhost:8000/test/visual/screen2D_grid_cartesian_modified_phantomJS.png');
+		assert.imageEqual(modifiedCartesianGridCanvas.layer.grid.element,
+			'http://localhost:8000/test/visual/screen2D_grid_cartesian_modified_phantomJS.png');
 	}
 	else {
 		expect(2);
-		assert.imageEqual(modifiedCartesianGridCanvas.layer.grid.element, 'http://localhost:8000/test/visual/screen2D_grid_cartesian_modified.png');
+		assert.imageEqual(modifiedCartesianGridCanvas.layer.grid.element,
+			'http://localhost:8000/test/visual/screen2D_grid_cartesian_modified.png');
 		assert.imageEqual(modifiedCartesianGridSvg.element, 'http://localhost:8000/test/visual/screen2D_grid_cartesian_modified.png');
 	}
 });
 
 
 asyncTest('.grid polar modified', function (assert) {
-	var modifiedPolarGridCanvas = new MathLib.Screen2D('screen1',
-				{renderer: 'Canvas', width: 300, height: 300, range: {x: 3, y: 3},
-					grid: {type: 'polar', r: true, angle: {lineColor: '#00AAFF', lineWidth: 2, dash: [0.8, 0.1]}, lineColor: '#00AAFF', lineWidth: 2, dash: [0.8, 0.1]}}
-			),
-			modifiedPolarGridSvg = new MathLib.Screen2D('screen2',
-				{renderer: 'SVG', width: 300, height: 300, range: {x: 3, y: 3}, background: 'transparent', axes: false,
-					grid: {type: 'polar', r: true, angle: {lineColor: '#00AAFF', lineWidth: 2, dash: [0.8, 0.1]}, lineColor: '#00AAFF', lineWidth: 2, dash: [0.8, 0.1]}}
-			);
+	var modifiedPolarGridCanvas = new MathLib.Screen2D('screen1', {
+				renderer: 'Canvas', width: 300, height: 300, range: {x: 3, y: 3},
+				grid: {type: 'polar', r: true, angle: {lineColor: '#00AAFF', lineWidth: 2,
+				dash: [0.8, 0.1]}, lineColor: '#00AAFF', lineWidth: 2, dash: [0.8, 0.1]}
+			}),
+			modifiedPolarGridSvg = new MathLib.Screen2D('screen2', {
+				renderer: 'SVG', width: 300, height: 300, range: {x: 3, y: 3}, background: 'transparent', axes: false,
+				grid: {type: 'polar', r: true, angle: {lineColor: '#00AAFF', lineWidth: 2,
+				dash: [0.8, 0.1]}, lineColor: '#00AAFF', lineWidth: 2, dash: [0.8, 0.1]}
+			});
 
 	if (typeof phantomJS !== 'undefined') {
 		expect(1);
-		assert.imageEqual(modifiedPolarGridCanvas.layer.grid.element, 'http://localhost:8000/test/visual/screen2D_grid_polar_modified_phantomJS.png');
+		assert.imageEqual(modifiedPolarGridCanvas.layer.grid.element,
+			'http://localhost:8000/test/visual/screen2D_grid_polar_modified_phantomJS.png');
 	}
 	else {
 		expect(2);
@@ -333,14 +340,20 @@ asyncTest('.path (2 functions)', function (assert) {
 			);
 
 	canvas.path([MathLib.cos, MathLib.sin], {lineColor: 0x00AAFF, dash: [0.1]});
-	canvas.path([function (x) {return Math.pow(Math.cos(x), 3);}, function (x) {return Math.pow(Math.sin(x), 3);}], {lineColor: 0x00FFAA, dash: [0.1]});
-	canvas.path([function (x) {return Math.pow(Math.cos(x), 3);}, function (x) {return Math.pow(Math.sin(x), 3);}], {lineColor: 0xAA00FF, dash: [0.1], dashOffset: 0.1});
-	canvas.path([function (x) {return Math.pow(Math.cos(x), 5);}, function (x) {return Math.pow(Math.sin(x), 5);}], {lineColor: 0xFFAA00, lineWidth: 10, fillColor: 'rgba(0,170,255,0.5)'});
+	canvas.path([function (x) {return Math.pow(Math.cos(x), 3);}, function (x) {return Math.pow(Math.sin(x), 3);}],
+		{lineColor: 0x00FFAA, dash: [0.1]});
+	canvas.path([function (x) {return Math.pow(Math.cos(x), 3);}, function (x) {return Math.pow(Math.sin(x), 3);}],
+		{lineColor: 0xAA00FF, dash: [0.1], dashOffset: 0.1});
+	canvas.path([function (x) {return Math.pow(Math.cos(x), 5);}, function (x) {return Math.pow(Math.sin(x), 5);}],
+		{lineColor: 0xFFAA00, lineWidth: 10, fillColor: 'rgba(0,170,255,0.5)'});
 
 	svg.path([MathLib.cos, MathLib.sin], {lineColor: 0x00AAFF, dash: [0.1]});
-	svg.path([function (x) {return Math.pow(Math.cos(x), 3);}, function (x) {return Math.pow(Math.sin(x), 3);}], {lineColor: 0x00FFAA, dash: [0.1]});
-	svg.path([function (x) {return Math.pow(Math.cos(x), 3);}, function (x) {return Math.pow(Math.sin(x), 3);}], {lineColor: 0xAA00FF, dash: [0.1], dashOffset: 0.1});
-	svg.path([function (x) {return Math.pow(Math.cos(x), 5);}, function (x) {return Math.pow(Math.sin(x), 5);}], {lineColor: 0xFFAA00, lineWidth: 10, fillColor: 'rgba(0,170,255,0.5)'});
+	svg.path([function (x) {return Math.pow(Math.cos(x), 3);}, function (x) {return Math.pow(Math.sin(x), 3);}],
+		{lineColor: 0x00FFAA, dash: [0.1]});
+	svg.path([function (x) {return Math.pow(Math.cos(x), 3);}, function (x) {return Math.pow(Math.sin(x), 3);}],
+		{lineColor: 0xAA00FF, dash: [0.1], dashOffset: 0.1});
+	svg.path([function (x) {return Math.pow(Math.cos(x), 5);}, function (x) {return Math.pow(Math.sin(x), 5);}],
+		{lineColor: 0xFFAA00, lineWidth: 10, fillColor: 'rgba(0,170,255,0.5)'});
 
 
 	if (typeof phantomJS !== 'undefined') {

@@ -15,6 +15,8 @@ test('.arsinh()', 7, function () {
 	equal(MathLib.arsinh(-Infinity), -Infinity, 'Spec. 5: MathLib.arsinh(-∞) = -∞');
 
 	// Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x
-	equal(MathLib.isEqual(MathLib.arsinh(1), 0.8813735870195429), true, 'Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x');
-	equal(MathLib.isEqual(MathLib.arsinh(10), 2.99822295029797), true, 'Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x');
+	equal(MathLib.isEqual(MathLib.arsinh(1), 0.8813735870195429), true,
+		'Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x');
+	equal(MathLib.isEqual(MathLib.arsinh(10), 2.99822295029797), true,
+		'Spec. 6: otherwise MathLib.arsinh(x) = inverse hyperbolic sine of x');
 });

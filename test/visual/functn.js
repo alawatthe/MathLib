@@ -55,7 +55,7 @@ asyncTest('discontinuities', function (assert) {
 			);
 
 	MathLib.cot.draw([canvas, svg], {lineColor: '#00AAFF'});
-  MathLib.sign.draw([canvas, svg], {lineColor: '#FFAA00'});
+	MathLib.sign.draw([canvas, svg], {lineColor: '#FFAA00'});
 	canvas.path(function (x) {
 		return MathLib.ln(x - 1) + 3;
 	}, {lineColor: '#AA00FF'});

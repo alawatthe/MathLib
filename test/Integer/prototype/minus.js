@@ -19,8 +19,6 @@ test('.prototype.minus()', 21, function () {
 
 
 	// number
-	//ok(MathLib.isPosZero((new MathLib.Integer('+0')).plus()));
-	//ok(MathLib.isNegZero((new MathLib.Integer('-0')).plus()));
 	equal((new MathLib.Integer('+100')).minus(10), 90);
 	equal((new MathLib.Integer('+100')).minus(-10), 110);
 	equal((new MathLib.Integer('-100')).minus(10), -110);
