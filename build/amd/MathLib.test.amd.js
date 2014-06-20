@@ -4167,7 +4167,7 @@ test('.prototype.coerceTo()', 11, function () {
 	ok(MathLib.isEqual((new MathLib.Integer('+1234')).coerceTo('complex'), new MathLib.Complex(1234)));
 	ok(MathLib.isEqual((new MathLib.Integer('-1234')).coerceTo('complex'), new MathLib.Complex(-1234)));
 });
-test('.prototype.compare()', 10, function () {
+test('.prototype.compare()', 15, function () {
 	equal((new MathLib.Integer('0')).compare(new MathLib.Integer('-0')), 0);
 
 	equal((new MathLib.Integer('10')).compare(new MathLib.Integer('100')), -1);
@@ -4181,6 +4181,13 @@ test('.prototype.compare()', 10, function () {
 	equal((new MathLib.Integer('-10')).compare(new MathLib.Integer('-100')), 1);
 	equal((new MathLib.Integer('-100')).compare(new MathLib.Integer('-10')), -1);
 	equal((new MathLib.Integer('-100')).compare(new MathLib.Integer('-100')), 0);
+
+	equal((new MathLib.Integer('-10')).compare(new MathLib.Integer('100')), -1);
+	equal((new MathLib.Integer('-100')).compare(new MathLib.Integer('10')), -1);
+	equal((new MathLib.Integer('-100')).compare(new MathLib.Integer('100')), -1);
+
+	equal((new MathLib.Integer('1')).compare(new MathLib.Integer('123456789123456789')), -1);
+	equal((new MathLib.Integer('-1')).compare(new MathLib.Integer('-123456789123456789')), 1);
 });
 test('.prototype.conjugate()', 1, function () {
 	var i = new MathLib.Integer('1234'),
@@ -4199,6 +4206,27 @@ test('.prototype.copy()', 3, function () {
 
 	equal(i.sign, '+');
 	equal(i.data[0], 1234);
+});
+test('.prototype.digitSum()', 8, function () {
+	ok((new MathLib.Integer('0')).digitSum().isEqual(new MathLib.Integer('0')));
+	ok((new MathLib.Integer('+0')).digitSum().isEqual(new MathLib.Integer('0')));
+	ok((new MathLib.Integer('-0')).digitSum().isEqual(new MathLib.Integer('0')));
+	ok((new MathLib.Integer('+1234')).digitSum().isEqual(new MathLib.Integer('10')));
+	ok((new MathLib.Integer('-1234')).digitSum().isEqual(new MathLib.Integer('10')));
+	ok((new MathLib.Integer('123456789')).digitSum().isEqual(new MathLib.Integer('45')));
+	ok((new MathLib.Integer('123456789')).digitSum(2).isEqual(new MathLib.Integer('16')));
+	ok((new MathLib.Integer('123456789')).digitSum(16).isEqual(new MathLib.Integer('54')));
+});
+test('.prototype.digits()', 8, function () {
+	deepEqual((new MathLib.Integer('0')).digits(), [0]);
+	deepEqual((new MathLib.Integer('+0')).digits(), [0]);
+	deepEqual((new MathLib.Integer('-0')).digits(), [0]);
+	deepEqual((new MathLib.Integer('+1234')).digits(), [1, 2, 3, 4]);
+	deepEqual((new MathLib.Integer('-1234')).digits(), [1, 2, 3, 4]);
+	deepEqual((new MathLib.Integer('123456789')).digits(), [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+	deepEqual((new MathLib.Integer('123456789')).digits(2), [1, 1, 1, 0, 1, 1, 0,
+		1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1]);
+	deepEqual((new MathLib.Integer('123456789')).digits(16), [7, 6, 9, 8, 8, 11, 5]);
 });
 test('.prototype.divide()', 12, function () {
 	// integer

@@ -2276,22 +2276,6 @@ var MathLib;
     };
 
     /**
-    * The digitsum function
-    *
-    */
-    fns.digitsum = {
-        functn: function (x) {
-            var out = 0;
-            while (x > 9) {
-                out += x % 10;
-                x = Math.floor(x / 10);
-            }
-            return out + x;
-        },
-        toContentMathML: ['<ci>digitsum</ci>']
-    };
-
-    /**
     * The division function
     *
     */
@@ -3668,7 +3652,6 @@ var MathLib;
     MathLib.csc = exports.csc;
     MathLib.csch = exports.csch;
     MathLib.degToRad = exports.degToRad;
-    MathLib.digitsum = exports.digitsum;
     MathLib.exp = exports.exp;
     MathLib.factorial = exports.factorial;
     MathLib.floor = exports.floor;
@@ -7784,6 +7767,45 @@ var MathLib;
         */
         Integer.prototype.copy = function () {
             return new MathLib.Integer(this.data, { sign: this.sign });
+        };
+
+        /**
+        * Calculates the digit sum to a given base
+        *
+        * @param {number} [base=10] - The base
+        * @return {Integer}
+        */
+        Integer.prototype.digitSum = function (base) {
+            if (typeof base === "undefined") { base = 10; }
+            return new MathLib.Integer(this.digits(base).reduce(function (x, y) {
+                return x + y;
+            }));
+        };
+
+        /**
+        * Returns the digits of the integer in a given base
+        *
+        * @param {number} [base=10] - The base
+        * @return {number[]}
+        */
+        Integer.prototype.digits = function (base) {
+            if (typeof base === "undefined") { base = 10; }
+            var div, rem, temp, blocksize = Math.floor(Math.log(Math.pow(2, 26) - 1) / Math.log(base)), factor = new MathLib.Integer(base), n = this.abs(), digits = [];
+
+            if (n.isZero()) {
+                return [0];
+            } else {
+                while (!n.isZero()) {
+                    temp = n.divrem(factor);
+                    div = temp[0];
+                    rem = temp[1];
+
+                    digits.unshift(rem.data[0]);
+                    n = div;
+                }
+            }
+
+            return digits;
         };
 
         /**

@@ -585,22 +585,6 @@ fns.degToRad = {
 };
 
 /**
-* The digitsum function
-*
-*/
-fns.digitsum = {
-    functn: function (x) {
-        var out = 0;
-        while (x > 9) {
-            out += x % 10;
-            x = Math.floor(x / 10);
-        }
-        return out + x;
-    },
-    toContentMathML: ['<ci>digitsum</ci>']
-};
-
-/**
 * The division function
 *
 */
@@ -1977,7 +1961,6 @@ export var coth = exports.coth;
 export var csc = exports.csc;
 export var csch = exports.csch;
 export var degToRad = exports.degToRad;
-export var digitsum = exports.digitsum;
 export var exp = exports.exp;
 export var factorial = exports.factorial;
 export var floor = exports.floor;

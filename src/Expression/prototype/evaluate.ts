@@ -9,7 +9,7 @@ evaluate() : any {
 		this.content.forEach(function (variable) {
 			MathLib.Expression.variables[variable.value] = value;
 		});
-		return this.value; 
+		return this.value;
 	}
 	if (this.subtype === 'binaryOperator') {
 		return MathLib[this.name].apply(null, this.content.map(x => MathLib.evaluate(x)));

@@ -463,7 +463,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 88,
+					build: 89,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -985,11 +985,11 @@ module.exports = function (grunt) {
 		watch: {
 			src: {
 				files: ['src/*/*.ts', 'src/*/*/*.ts'],
-				tasks: ['tslint', 'generatePlain']
+				tasks: ['generatePlain', 'tslint']
 			},
 			tests: {
 				files: ['test/*/*.js', 'test/*/*/*.js'],
-				tasks: ['jshint:Tests', 'generateTests', 'jscs:Tests']
+				tasks: ['generateTests', 'jshint:Tests', 'jscs:Tests']
 			},
 			grunt: {
 				files: ['Gruntfile.js'],

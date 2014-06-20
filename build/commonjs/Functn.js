@@ -585,22 +585,6 @@
     };
 
     /**
-    * The digitsum function
-    *
-    */
-    fns.digitsum = {
-        functn: function (x) {
-            var out = 0;
-            while (x > 9) {
-                out += x % 10;
-                x = Math.floor(x / 10);
-            }
-            return out + x;
-        },
-        toContentMathML: ['<ci>digitsum</ci>']
-    };
-
-    /**
     * The division function
     *
     */
@@ -1977,7 +1961,6 @@
     MathLib.csc = exports.csc;
     MathLib.csch = exports.csch;
     MathLib.degToRad = exports.degToRad;
-    MathLib.digitsum = exports.digitsum;
     MathLib.exp = exports.exp;
     MathLib.factorial = exports.factorial;
     MathLib.floor = exports.floor;

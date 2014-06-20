@@ -263,7 +263,6 @@ declare module MathLib {
     var csc: any;
     var csch: any;
     var degToRad: any;
-    var digitsum: any;
     var exp: any;
     var factorial: any;
     var floor: any;
@@ -1271,6 +1270,20 @@ declare var Complex: Field;
         * @return {Integer}
         */
         public copy(): Integer;
+        /**
+        * Calculates the digit sum to a given base
+        *
+        * @param {number} [base=10] - The base
+        * @return {Integer}
+        */
+        public digitSum(base?: number): Integer;
+        /**
+        * Returns the digits of the integer in a given base
+        *
+        * @param {number} [base=10] - The base
+        * @return {number[]}
+        */
+        public digits(base?: number): number[];
         /**
         * Divides the integer by some other number.
         *

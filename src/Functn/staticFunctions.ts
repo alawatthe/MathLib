@@ -132,7 +132,6 @@ export var coth = (<any>exports).coth;
 export var csc = (<any>exports).csc;
 export var csch = (<any>exports).csch;
 export var degToRad = (<any>exports).degToRad;
-export var digitsum = (<any>exports).digitsum;
 export var exp = (<any>exports).exp;
 export var factorial = (<any>exports).factorial;
 export var floor = (<any>exports).floor;
