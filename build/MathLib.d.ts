@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-06-20
+ * build date: 2014-06-21
  */
 
 declare module MathLib {
@@ -1302,6 +1302,12 @@ declare var Complex: Field;
         * @return {Integer[]}
         */
         public divrem(divisor: Integer): Integer[];
+        /**
+        * Calculates the factorial of the integer
+        *
+        * @return {Integer}
+        */
+        public factorial(): RingElement;
         /**
         * Checks if the current integer is equal to some other number
         *

@@ -405,6 +405,30 @@
         };
 
         /**
+        * Calculates the factorial of the integer
+        *
+        * @return {Integer}
+        */
+        Integer.prototype.factorial = function () {
+            if (this.isZero()) {
+                return new MathLib.Integer('1');
+            }
+
+            if (this.sign === '-') {
+                return new MathLib.Complex(Infinity);
+            }
+
+            var factorial = this, n = this.minus(new MathLib.Integer('1'));
+
+            while (!n.isZero()) {
+                factorial = factorial.times(n);
+                n = n.minus(new MathLib.Integer('1'));
+            }
+
+            return factorial;
+        };
+
+        /**
         * Checks if the current integer is equal to some other number
         *
         * @param {any} n The number to check
