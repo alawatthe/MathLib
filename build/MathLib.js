@@ -8,11 +8,26 @@
  *
  * build date: 2014-06-26
  */
+
+var __extends = this.__extends || function (d, b) {
+        for (var p in b) {
+            /* istanbul ignore else */
+            if (b.hasOwnProperty(p)) {
+                d[p] = b[p];
+            }
+        }
+        function __() {
+            this.constructor = d;
+        }
+        __.prototype = b.prototype;
+        d.prototype = new __();
+	};
+
 /**
  *
  * @module MathLib
  */
-var MathLib;
+var MathLib = {};
 (function (MathLib) {
     'use strict';
     MathLib.version = '0.7.2';
@@ -432,10 +447,9 @@ var MathLib;
         }
     };
     'export MathLib';
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -1687,10 +1701,9 @@ var MathLib;
         return Expression;
     })();
     MathLib.Expression = Expression;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -3715,10 +3728,9 @@ var MathLib;
     MathLib.plus = exports.plus;
     MathLib.times = exports.times;
     MathLib.xor = exports.xor;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -3938,10 +3950,9 @@ var MathLib;
         return Screen;
     })();
     MathLib.Screen = Screen;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -4130,10 +4141,9 @@ var MathLib;
         return Layer;
     })();
     MathLib.Layer = Layer;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -4594,10 +4604,9 @@ var MathLib;
             return this;
         }
     };
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -5064,16 +5073,10 @@ var MathLib;
             return this;
         }
     };
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-/// <reference path='reference.ts'/>
-var MathLib;
+
+
 (function (MathLib) {
     'use strict';
 
@@ -5792,16 +5795,10 @@ var MathLib;
         return Screen2D;
     })(MathLib.Screen);
     MathLib.Screen2D = Screen2D;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-/// <reference path='reference.ts'/>
-var MathLib;
+
+
 (function (MathLib) {
     'use strict';
 
@@ -6125,10 +6122,9 @@ var MathLib;
         return Screen3D;
     })(MathLib.Screen);
     MathLib.Screen3D = Screen3D;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -6506,10 +6502,9 @@ var MathLib;
         return Vector;
     })();
     MathLib.Vector = Vector;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -6648,10 +6643,9 @@ var MathLib;
         return Circle;
     })();
     MathLib.Circle = Circle;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -7538,10 +7532,9 @@ var MathLib;
         return Complex;
     })();
     MathLib.Complex = Complex;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -8426,16 +8419,10 @@ var MathLib;
         return Integer;
     })();
     MathLib.Integer = Integer;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-/// <reference path='reference.ts'/>
-var MathLib;
+
+
 (function (MathLib) {
     'use strict';
 
@@ -8636,10 +8623,9 @@ var MathLib;
         return Line;
     })(MathLib.Vector);
     MathLib.Line = Line;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -9874,10 +9860,9 @@ var MathLib;
         return Matrix;
     })();
     MathLib.Matrix = Matrix;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -10095,10 +10080,9 @@ var MathLib;
         return Permutation;
     })();
     MathLib.Permutation = Permutation;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -10635,16 +10619,10 @@ var MathLib;
         return Conic;
     })();
     MathLib.Conic = Conic;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-/// <reference path='reference.ts'/>
-var MathLib;
+
+
 (function (MathLib) {
     'use strict';
 
@@ -10956,10 +10934,9 @@ var MathLib;
         return Point;
     })(MathLib.Vector);
     MathLib.Point = Point;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -11534,10 +11511,9 @@ var MathLib;
         return Polynomial;
     })();
     MathLib.Polynomial = Polynomial;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -11861,10 +11837,9 @@ var MathLib;
         return Rational;
     })();
     MathLib.Rational = Rational;
-})(MathLib || (MathLib = {}));
+})(MathLib);
 
-/// <reference path='reference.ts'/>
-var MathLib;
+
 (function (MathLib) {
     'use strict';
 
@@ -12365,4 +12340,4 @@ var MathLib;
         return Set;
     })();
     MathLib.Set = Set;
-})(MathLib || (MathLib = {}));
+})(MathLib);

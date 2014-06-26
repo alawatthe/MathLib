@@ -463,7 +463,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 91,
+					build: 92,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -700,10 +700,46 @@ module.exports = function (grunt) {
 				src: ['build/MathLib.js'],
 				actions: [
 					{
+						search: /\/\*\*\n \*\n \* @module MathLib\n \*\//,
+						replace: '\nvar __extends = this.__extends || function (d, b) {\n' +
+							'        for (var p in b) {\n' +
+							'            /* istanbul ignore else */\n' +
+							'            if (b.hasOwnProperty(p)) {\n' +
+							'                d[p] = b[p];\n' +
+							'            }\n' +
+							'        }\n' +
+							'        function __() {\n' +
+							'            this.constructor = d;\n' +
+							'        }\n' +
+							'        __.prototype = b.prototype;\n' +
+							'        d.prototype = new __();\n' +
+							'	};\n\n' +
+							'/**\n' +
+							' *\n' +
+							' * @module MathLib\n' +
+							' */'
+					},
+					{
 						name: '',
 						search: /\t'export MathLib';/,
 						replace: '',
 						flag: 'g'
+					},
+					{
+						search: /var __extends.*\n.*\n.*\n.*\n.*\n\};/g,
+						replace: ''
+					},
+					{
+						search: /\/\/\/ <reference path='reference.ts'\/>\nvar MathLib;/g,
+						replace: ''
+					},
+					{
+						search: /var MathLib;/g,
+						replace: 'var MathLib = {};'
+					},
+					{
+						search: / \|\| \(MathLib = \{\}\)/g,
+						replace: ''
 					}
 				]
 			},
