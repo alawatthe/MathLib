@@ -139,6 +139,15 @@
         };
 
         /**
+        * Calculates the ceil of the integer
+        *
+        * @return {Integer}
+        */
+        Integer.prototype.ceil = function () {
+            return this.copy();
+        };
+
+        /**
         * Coerces the integer to some other data type
         *
         * @return {Integer|Rational|number|Complex}
@@ -431,6 +440,15 @@
         };
 
         /**
+        * Calculates the floor of the integer
+        *
+        * @return {Integer}
+        */
+        Integer.prototype.floor = function () {
+            return this.copy();
+        };
+
+        /**
         * Checks if the current integer is equal to some other number
         *
         * @param {any} n The number to check
@@ -511,6 +529,24 @@
             return this.data.every(function (x) {
                 return x === 0;
             });
+        };
+
+        /**
+        * Calculates the floor of the square root of the integer
+        *
+        * @return {Integer}
+        */
+        Integer.prototype.isqrt = function () {
+            var y, two = new MathLib.Integer('2'), numberofbits = ((this.data.length - 1) * 25 + 1 + Math.log(this.data[this.data.length - 1]) / Math.log(2)), x = (new MathLib.Integer(2)).pow(new MathLib.Integer(Math.ceil(numberofbits / 2)));
+
+            while (true) {
+                y = x.plus(this.divrem(x)[0]).divrem(two)[0];
+
+                if (y.minus(x).isZero()) {
+                    return x;
+                }
+                x = y;
+            }
         };
 
         /**

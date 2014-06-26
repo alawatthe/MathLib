@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-06-21
+ * build date: 2014-06-26
  */
 
 require(['../build/amd/MathLib.js'], function(MathLib) {
@@ -4147,6 +4147,9 @@ test('prototype.abs()', 5, function () {
 	equal((new MathLib.Integer('+1234')).abs().toString(), '1234');
 	equal((new MathLib.Integer('-1234')).abs().toString(), '1234');
 });
+test('.prototype.ceil()', 1, function () {
+	ok((new MathLib.Integer('1234')).ceil().isEqual(new MathLib.Integer('1234')));
+});
 test('.prototype.coerceTo()', 11, function () {
 	// Integer
 	ok(MathLib.isEqual((new MathLib.Integer('1234')).coerceTo('integer'), new MathLib.Integer('1234')));
@@ -4312,6 +4315,9 @@ test('.prototype.factorial()', 8, function () {
 		'000000000000000'
 	));
 });
+test('.prototype.floor()', 1, function () {
+	ok((new MathLib.Integer('1234')).floor().isEqual(new MathLib.Integer('1234')));
+});
 test('.prototype.isEqual()', 5, function () {
 	equal((new MathLib.Integer('+0')).isEqual(new MathLib.Integer('-0')), true);
 	equal((new MathLib.Integer('1234')).isEqual(new MathLib.Integer('1234')), true);
@@ -4332,6 +4338,12 @@ test('.prototype.isZero()', 5, function () {
 	equal((new MathLib.Integer('-0')).isZero(), true);
 	equal((new MathLib.Integer('+1234')).isZero(), false);
 	equal((new MathLib.Integer('-1234')).isZero(), false);
+});
+test('.prototype.isqrt()', 4, function () {
+	ok((new MathLib.Integer('1')).isqrt().isEqual(new MathLib.Integer('1')));
+	ok((new MathLib.Integer('16')).isqrt().isEqual(new MathLib.Integer('4')));
+	ok((new MathLib.Integer('123456789')).isqrt().isEqual(new MathLib.Integer('11111')));
+	ok((new MathLib.Integer('123456789123456789')).isqrt().isEqual(new MathLib.Integer('351364183')));
 });
 test('.prototype.minus()', 21, function () {
 	// integer

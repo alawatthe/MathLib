@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-06-21
+ * build date: 2014-06-26
  */
 
 declare module MathLib {
@@ -1247,6 +1247,12 @@ declare var Complex: Field;
         */
         public abs(): Integer;
         /**
+        * Calculates the ceil of the integer
+        *
+        * @return {Integer}
+        */
+        public ceil(): Integer;
+        /**
         * Coerces the integer to some other data type
         *
         * @return {Integer|Rational|number|Complex}
@@ -1309,6 +1315,12 @@ declare var Complex: Field;
         */
         public factorial(): RingElement;
         /**
+        * Calculates the floor of the integer
+        *
+        * @return {Integer}
+        */
+        public floor(): Integer;
+        /**
         * Checks if the current integer is equal to some other number
         *
         * @param {any} n The number to check
@@ -1339,6 +1351,12 @@ declare var Complex: Field;
         * @return {boolean}
         */
         public isZero(): boolean;
+        /**
+        * Calculates the floor of the square root of the integer
+        *
+        * @return {Integer}
+        */
+        public isqrt(): Integer;
         /**
         * Subtracts a number from the current integer
         *
