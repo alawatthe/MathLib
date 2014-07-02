@@ -6,6 +6,9 @@
  * @return {Screen2D}
  */
 resize(width : number, height : number) : Screen2D {
+	var lookAtX = this.lookAt.x,
+			lookAtY = this.lookAt.y;
+
 	this.height = height;
 	this.width = width;
 
@@ -35,6 +38,9 @@ resize(width : number, height : number) : Screen2D {
 		this.element.setAttribute('width', width + 'px');
 		this.element.setAttribute('height', height + 'px');
 	}
+
+	this.lookAt.x = lookAtX;
+	this.lookAt.y = lookAtY;
 
 	this.applyTransformation();
 	this.draw();

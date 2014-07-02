@@ -690,6 +690,8 @@ var __extends = this.__extends || function (d, b) {
         * @return {Screen2D}
         */
         Screen2D.prototype.resize = function (width, height) {
+            var lookAtX = this.lookAt.x, lookAtY = this.lookAt.y;
+
             this.height = height;
             this.width = width;
 
@@ -715,6 +717,9 @@ var __extends = this.__extends || function (d, b) {
                 this.element.setAttribute('width', width + 'px');
                 this.element.setAttribute('height', height + 'px');
             }
+
+            this.lookAt.x = lookAtX;
+            this.lookAt.y = lookAtY;
 
             this.applyTransformation();
             this.draw();

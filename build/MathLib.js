@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-06-26
+ * build date: 2014-07-02
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -5761,6 +5761,8 @@ var MathLib = {};
         * @return {Screen2D}
         */
         Screen2D.prototype.resize = function (width, height) {
+            var lookAtX = this.lookAt.x, lookAtY = this.lookAt.y;
+
             this.height = height;
             this.width = width;
 
@@ -5786,6 +5788,9 @@ var MathLib = {};
                 this.element.setAttribute('width', width + 'px');
                 this.element.setAttribute('height', height + 'px');
             }
+
+            this.lookAt.x = lookAtX;
+            this.lookAt.y = lookAtY;
 
             this.applyTransformation();
             this.draw();

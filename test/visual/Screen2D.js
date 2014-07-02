@@ -406,3 +406,49 @@ asyncTest('.text', function (assert) {
 		assert.imageEqual(svg.element, 'http://localhost:8000/test/visual/screen2D_text_phantomJS.png');
 	}
 });
+
+
+asyncTest('.resize() keeping proportions', function (assert) {
+	var canvas = new MathLib.Screen2D('screen1',
+				{renderer: 'Canvas', width: 300, height: 300, range: {x: 1, y: 1}}
+			),
+			svg = new MathLib.Screen2D('screen2',
+				{renderer: 'SVG', width: 300, height: 300, range: {x: 1, y: 1}}
+			);
+
+	canvas.resize(400, 400);
+	svg.resize(400, 400);
+
+	if (typeof phantomJS !== 'undefined') {
+		expect(1);
+		assert.imageEqual(canvas.layer.axes.element, 'http://localhost:8000/test/visual/screen2D_resized.png');
+	}
+	else {
+		expect(2);
+		assert.imageEqual(canvas.layer.axes.element, 'http://localhost:8000/test/visual/screen2D_resized.png');
+		assert.imageEqual(svg.element, 'http://localhost:8000/test/visual/screen2D_resized.png');
+	}
+});
+
+
+asyncTest('.resize() changing proportions', function (assert) {
+	var canvas = new MathLib.Screen2D('screen1',
+				{renderer: 'Canvas', width: 300, height: 300, range: {x: 1, y: 1}}
+			),
+			svg = new MathLib.Screen2D('screen2',
+				{renderer: 'SVG', width: 300, height: 300, range: {x: 1, y: 1}}
+			);
+
+	canvas.resize(500, 400);
+	svg.resize(500, 400);
+
+	if (typeof phantomJS !== 'undefined') {
+		expect(1);
+		assert.imageEqual(canvas.layer.axes.element, 'http://localhost:8000/test/visual/screen2D_resized_changed_proportions.png');
+	}
+	else {
+		expect(2);
+		assert.imageEqual(canvas.layer.axes.element, 'http://localhost:8000/test/visual/screen2D_resized_changed_proportions.png');
+		assert.imageEqual(svg.element, 'http://localhost:8000/test/visual/screen2D_resized_changed_proportions.png');
+	}
+});
