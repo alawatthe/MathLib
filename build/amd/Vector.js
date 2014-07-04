@@ -21,7 +21,7 @@
         function Vector(coords) {
             var _this = this;
             this.type = 'vector';
-            coords.forEach(function (x, i) {
+            Array.prototype.forEach.call(coords, function (x, i) {
                 _this[i] = x;
             });
             this.length = coords.length;

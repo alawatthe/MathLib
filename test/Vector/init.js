@@ -9,6 +9,23 @@ test('init', 4, function () {
 });
 
 
+if (typeof Float32Array !== 'undefined') {
+	test('init with Float32Array', 4, function () {
+		var vector,
+				f = new Float32Array(3);
+
+		f[0] = 1;
+		f[1] = 2;
+		f[2] = 3;
+
+		vector = new MathLib.Vector(f);
+
+		equal(vector.length, 3, 'Testing the dimension');
+		equal(vector[0], 1, 'checking the entries');
+		equal(vector[1], 2, 'checking the entries');
+		equal(vector[2], 3, 'checking the entries');
+	});
+}
 
 // Properties
 test('.constructor', 1, function () {

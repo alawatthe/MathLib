@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-06-26
+ * build date: 2014-07-04
  */
 
 require(['../build/amd/MathLib.js'], function(MathLib) {
@@ -4127,6 +4127,14 @@ test('.type', 1, function () {
 	var i = new MathLib.Integer('1234');
 	equal(i.type, 'integer', 'Testing .type');
 });
+test('.gcd()', 5, function () {
+	deepEqual(MathLib.Integer.gcd(), new MathLib.Integer(0));
+	deepEqual(MathLib.Integer.gcd(new MathLib.Integer(7)), new MathLib.Integer(7));
+	deepEqual(MathLib.Integer.gcd(new MathLib.Integer(8), new MathLib.Integer(12)), new MathLib.Integer(4));
+	deepEqual(MathLib.Integer.gcd(new MathLib.Integer(4), new MathLib.Integer(2), new MathLib.Integer(3)),
+		new MathLib.Integer(1));
+	deepEqual(MathLib.Integer.gcd(new MathLib.Integer('15949072807509828810'), new MathLib.Integer('3131648391112422')), new MathLib.Integer('162354'));
+});
 test('.toContentMathML()', 2, function () {
 	equal(MathLib.Integer.toContentMathML(), '<integers/>');
 	equal(MathLib.Integer.toContentMathML({strict: true}), '<csymbol cd="setname1">Z</csymbol>');
@@ -4250,7 +4258,7 @@ test('.prototype.divide()', 12, function () {
 	equal((new MathLib.Integer('-100')).divide(10), -10);
 	equal((new MathLib.Integer('-100')).divide(-10), 10);
 });
-test('prototype.divrem()', 15, function () {
+test('prototype.divrem()', 16, function () {
 	deepEqual((new MathLib.Integer(+0)).divrem(new MathLib.Integer(+3)),
 		[new MathLib.Integer(0), new MathLib.Integer(0)]);
 	deepEqual((new MathLib.Integer(+0)).divrem(new MathLib.Integer(-3)),
@@ -4284,6 +4292,9 @@ test('prototype.divrem()', 15, function () {
 		[new MathLib.Integer('+1000000'), new MathLib.Integer('1')]);
 	deepEqual((new MathLib.Integer('+10000002')).divrem(new MathLib.Integer('+10')),
 		[new MathLib.Integer('+1000000'), new MathLib.Integer('2')]);
+
+	deepEqual((new MathLib.Integer('2719199965375986')).divrem(new MathLib.Integer('412448425736436')),
+		[new MathLib.Integer('6'), new MathLib.Integer('244509410957370')]);
 });
 test('.prototype.factorial()', 8, function () {
 	deepEqual((new MathLib.Integer('0')).factorial(), new MathLib.Integer('1'));

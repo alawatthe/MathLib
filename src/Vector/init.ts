@@ -21,7 +21,7 @@ export class Vector implements Printable  {
 	length: number;
 
 	constructor (coords: number[]) {
-		coords.forEach((x, i) => {
+		Array.prototype.forEach.call(coords, (x, i) => {
 			this[i] = x;
 		});
 		this.length = coords.length;

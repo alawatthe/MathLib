@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-02
+ * build date: 2014-07-04
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -6153,7 +6153,7 @@ var MathLib = {};
         function Vector(coords) {
             var _this = this;
             this.type = 'vector';
-            coords.forEach(function (x, i) {
+            Array.prototype.forEach.call(coords, function (x, i) {
                 _this[i] = x;
             });
             this.length = coords.length;
