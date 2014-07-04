@@ -6,7 +6,7 @@
  * @param {boolean} right Should the elements which are only in the right set be included in the result.
  * @return {function}
  */
-static createSetOperation = function (left, both, right) {
+static createSetOperation = function (left : boolean, both : boolean, right : boolean) {
 	return function (a) {
 		var set = [],
 				i = 0,

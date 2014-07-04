@@ -1,9 +1,10 @@
 /**
  * Coerces the complex number to some other data type
  *
+ * @param {string} type The type to coerce the complex number into
  * @return {Rational|number|Complex}
  */
-coerceTo(type) {
+coerceTo(type : string) {
 
 	if (type === 'complex') {
 		return this.copy();

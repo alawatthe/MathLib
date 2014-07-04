@@ -13,14 +13,14 @@ declare module MathLib {
     var version: string;
     var apery: number;
     var e: number;
-    var epsilon: any;
+    var epsilon: number;
     var eulerMascheroni: number;
     var goldenRatio: number;
     var pi: number;
     var isNative: (fn: any) => any;
-    var argToRgba: (h: any) => number[];
+    var argToRgba: (h: number) => number[];
     var extendObject: (dest: any, src: any) => any;
-    var colorConvert: (n: any) => any;
+    var colorConvert: (n: any) => string;
     var coerceTo: (obj: any, type: any) => any;
     var coerce: (...args: any[]) => any[];
     /**
@@ -30,7 +30,7 @@ declare module MathLib {
     * @param {string} type - The name of the event.
     * @param {function} callback - The callback function.
     */
-    var on: (type: any, callback: any) => void;
+    var on: (type: string, callback: any) => void;
     /**
     * ### [MathLib.off()](http://mathlib.de/en/docs/off)
     * Unbinds an event handler from an event.
@@ -38,7 +38,7 @@ declare module MathLib {
     * @param {string} type - The name of the event.
     * @param {function} callback - The callback function.
     */
-    var off: (type: any, callback: any) => void;
+    var off: (type: string, callback: any) => void;
     /**
     * ### MathLib.error()
     * Fires an error event.
@@ -60,7 +60,7 @@ declare module MathLib {
     * @param {object} [options] - Optional options to style the output
     * @return {string}
     */
-    var toContentMathML: (x: any, options?: toContentMathMLOptions) => any;
+    var toContentMathML: (x: any, options?: toContentMathMLOptions) => string;
     /**
     * A LaTeX string representation
     *
@@ -68,7 +68,7 @@ declare module MathLib {
     * @param {object} [options] - Optional options to style the output
     * @return {string}
     */
-    var toLaTeX: (x: any, options?: toPresentationOptions) => any;
+    var toLaTeX: (x: any, options?: toPresentationOptions) => string;
     /**
     * A presentation MathML string representation
     *
@@ -76,7 +76,7 @@ declare module MathLib {
     * @param {object} [options] - Optional options to style the output
     * @return {string}
     */
-    var toMathML: (x: any, options?: toPresentationOptions) => any;
+    var toMathML: (x: any, options?: toPresentationOptions) => string;
     /**
     * Custom toString function
     *
@@ -84,7 +84,7 @@ declare module MathLib {
     * @param {object} [options] - Optional options to style the output
     * @return {string}
     */
-    var toString: (x: any, options?: toPresentationOptions) => any;
+    var toString: (x: any, options?: toPresentationOptions) => string;
 
 
     /**
@@ -126,10 +126,10 @@ declare module MathLib {
         * [Part 2: parser](http://ariya.ofilabs.com/2011/08/math-evaluator-in-javascript-part-2.html)
         * [Part 3: interpreter](http://ariya.ofilabs.com/2011/08/math-expression-evaluator-in-javascript-part-3.html)
         *
-        * @param {String} str The string to parse
+        * @param {string} str - The string to parse
         * @return {Expression}
         */
-        static parse: (str: any) => Expression;
+        static parse: (str: string) => Expression;
         /**
         * Parses a content MathML string and returns an Expression.
         *
@@ -140,10 +140,10 @@ declare module MathLib {
         /**
         * Constructs a variable expression.
         *
-        * @param {String} n The variable to generate an expression from
+        * @param {string} n - The variable to generate an expression from
         * @return {Expression}
         */
-        static variable(n: any): Expression;
+        static variable(n: string): Expression;
         /**
         * Stores all the values of variables in symbolic expressions.
         *
@@ -156,7 +156,7 @@ declare module MathLib {
         * @param {Expression} expr The expression to compare
         * @return {number}
         */
-        public compare(expr: any): any;
+        public compare(expr: Expression): number;
         /**
         * Copies the Expression
         * @return {Expression} The copied expression
@@ -370,7 +370,7 @@ declare module MathLib {
         public screen: any;
         public zIndex: number;
         public stack: any;
-        public transformation: any;
+        public transformation: Matrix;
         public applyTransformation: any;
         public draw: any;
         public circle: any;
@@ -394,14 +394,14 @@ declare module MathLib {
     */
     var Canvas: {
         applyTransformation: () => void;
-        circle: (circle: Circle, options?: {}, redraw?: boolean) => any;
+        circle: (circle: Circle, options?: drawingOptions, redraw?: boolean) => Screen2D;
         clear: (layer: Layer) => void;
-        convertOptions: (options: any) => any;
-        line: (line: any, options?: {}, redraw?: boolean) => any;
-        path: (curve: any, options?: {}, redraw?: boolean) => any;
-        pixel: (f: any, t: any, r: any, b: any, l: any, options?: {}, redraw?: boolean) => any;
-        point: (point: Point, options?: {}, redraw?: boolean) => any;
-        text: (str: string, x: number, y: number, options?: {}, redraw?: boolean) => any;
+        convertOptions: (options: drawingOptions) => canvasDrawingOptions;
+        line: (line: any, options?: drawingOptions, redraw?: boolean) => Screen2D;
+        path: (curve: any, options?: pathDrawingOptions, redraw?: boolean) => Screen2D;
+        pixel: (f: any, t: number, r: number, b: number, l: number, options?: drawingOptions, redraw?: boolean) => Screen2D;
+        point: (point: Point, options?: drawingOptions, redraw?: boolean) => Screen2D;
+        text: (str: string, x: number, y: number, options?: drawingOptions, redraw?: boolean) => Screen2D;
     };
 
 
@@ -410,14 +410,14 @@ declare module MathLib {
     */
     var SVG: {
         applyTransformation: () => void;
-        circle: (circle: any, options?: {}, redraw?: boolean) => any;
+        circle: (circle: any, options?: drawingOptions, redraw?: boolean) => Screen2D;
         clear: (layer: Layer) => void;
-        convertOptions: (options: any) => any;
-        line: (line: any, options?: {}, redraw?: boolean) => any;
-        path: (curve: any, options?: {}, redraw?: boolean) => any;
-        pixel: (f: any, t: number, r: number, b: number, l: number, options?: {}, redraw?: boolean) => any;
-        point: (point: any, options?: {}, redraw?: boolean) => any;
-        text: (str: string, x: number, y: number, options?: {}, redraw?: boolean) => any;
+        convertOptions: (options: drawingOptions) => svgDrawingOptions;
+        line: (line: any, options?: drawingOptions, redraw?: boolean) => Screen2D;
+        path: (curve: any, options?: pathDrawingOptions, redraw?: boolean) => Screen2D;
+        pixel: (f: any, t: number, r: number, b: number, l: number, options?: drawingOptions, redraw?: boolean) => Screen2D;
+        point: (point: any, options?: drawingOptions, redraw?: boolean) => Screen2D;
+        text: (str: string, x: number, y: number, options?: drawingOptions, redraw?: boolean) => Screen2D;
     };
 
 
@@ -441,12 +441,12 @@ declare module MathLib {
         public redraw: any;
         public draw: any;
         public circle: any;
-        public line: any;
+        public line: (line: any, options?: drawingOptions, redraw?: boolean) => Screen2D;
         public path: any;
         public pixel: any;
         public point: any;
         public text: any;
-        public transformation: any;
+        public transformation: Matrix;
         public translation: any;
         public scale: any;
         public lookAt: any;
@@ -472,7 +472,7 @@ declare module MathLib {
         * @param {event} evt The event object
         * @return {Point}
         */
-        public getEventPoint(evt: any): Point;
+        public getEventPoint(evt: MouseEvent): Point;
         /**
         * Calculates the both endpoints for the line
         * for drawing purposes
@@ -480,37 +480,37 @@ declare module MathLib {
         * @param {Line|array} l The Line to calculate the end points to
         * @return {array} The array has the format [[x1, y1], [x2, y2]]
         */
-        public getLineEndPoints(l: any): any;
+        public getLineEndPoints(l: any): number[];
         /**
         * Handles the keydown event
         *
-        * @param {event} evt The event object
+        * @param {KeyboardEvent} evt The event object
         */
-        public onkeydown(evt: any): void;
+        public onkeydown(evt: KeyboardEvent): void;
         /**
         * Handles the mousedown event
         *
-        * @param {event} evt The event object
+        * @param {MouseEvent} evt The event object
         */
-        public onmousedown(evt: any): void;
+        public onmousedown(evt: MouseEvent): void;
         /**
         * Handles the mousemove event
         *
-        * @param {event} evt The event object
+        * @param {MouseEvent} evt The event object
         */
-        public onmousemove(evt: any): void;
+        public onmousemove(evt: MouseEvent): void;
         /**
         * Handles the mouseup event
         *
-        * @param {event} evt The event object
+        * @param {MouseEvent} evt The event object
         */
-        public onmouseup(evt: any): void;
+        public onmouseup(evt: MouseEvent): void;
         /**
         * Handles the mousewheel event
         *
-        * @param {event} evt The event object
+        * @param {MouseEvent} evt The event object
         */
-        public onmousewheel(evt: any): void;
+        public onmousewheel(evt: MouseEvent): void;
         /**
         * Adjust the rendering if the screen is resized
         *
@@ -810,10 +810,10 @@ declare module MathLib {
         * Draw the circle onto the screen.
         *
         * @param {Screen} screen The screen to draw onto.
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @return {Circle} Returns the circle for chaining
         */
-        public draw(screen: any, options: any): Circle;
+        public draw(screen: any, options: drawingOptions): Circle;
         /**
         * Checks if two circles are equal
         *
@@ -982,15 +982,17 @@ declare module MathLib {
         /**
         * Coerces the complex number to some other data type
         *
+        * @param {string} type The type to coerce the complex number into
         * @return {Rational|number|Complex}
         */
-        public coerceTo(type: any): any;
+        public coerceTo(type: string): any;
         /**
         * Compares two complex numbers
         *
+        * @param {Complex} x The complex number to compare the current number to
         * @return {number}
         */
-        public compare(x: any): number;
+        public compare(x: Complex): number;
         /**
         * Calculates the conjugate of a complex number
         *
@@ -1255,9 +1257,10 @@ declare var Complex: Field;
         /**
         * Coerces the integer to some other data type
         *
+        * @param {string} type The type to coerce the integer into
         * @return {Integer|Rational|number|Complex}
         */
-        public coerceTo(type: any): any;
+        public coerceTo(type: string): any;
         /**
         * Compares the integer
         *
@@ -1447,9 +1450,9 @@ declare var Integer: Ring;
         *
         * @param {Screen} screen The screen to draw onto.
         * @param {object} options Drawing options
-        * @return {boolean}
+        * @return {Line} Returns the line for chaining
         */
-        public draw(screen: any, options: any): Line;
+        public draw(screen: any, options?: drawingOptions): Line;
         /**
         * Determines if two lines are equal.
         *
@@ -2054,9 +2057,9 @@ declare var Integer: Ring;
         * @param {Screen} screen The screen to draw onto.
         * @param {object} options Drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
-        * @return {boolean}
+        * @return {Conic} Returns the conic for chaining
         */
-        public draw(screen: any, options?: any, redraw?: boolean): Conic;
+        public draw(screen: any, options?: pathDrawingOptions, redraw?: boolean): Conic;
         /**
         * Calculates the eccentricity of a conic.
         *
@@ -2173,9 +2176,9 @@ declare var Integer: Ring;
         *
         * @param {Screen} screen The screen to draw onto
         * @param {object} options Drawing options
-        * @return {Point} The current point
+        * @return {Point} Returns the point for chaining
         */
-        public draw(screen: any, options: any): Point;
+        public draw(screen: any, options?: drawingOptions): Point;
         /**
         * Determines if the point has the same coordinates as an other point
         *
@@ -2319,9 +2322,9 @@ declare var Integer: Ring;
         *
         * @param {Screen} screen The screen to draw the polynomial onto.
         * @param {object} options Optional drawing options.
-        * @return {Polynomial}
+        * @return {Polynomial} Returns the polynomial for chaining
         */
-        public draw(screen: any, options: any): any;
+        public draw(screen: any, options?: pathDrawingOptions): Polynomial;
         /**
         * Works like Array.prototype.every.
         *
@@ -2470,9 +2473,10 @@ declare var Integer: Ring;
         /**
         * Coerces the rational to some other data type
         *
+        * @param {string} type The type to coerce the rational number into
         * @return {Integer|Rational|number|Complex}
         */
-        public coerceTo(type: any): any;
+        public coerceTo(type: string): any;
         /**
         * Compares two rational numbers
         *
@@ -2600,7 +2604,7 @@ declare var Rational: Field;
         * @param {boolean} right Should the elements which are only in the right set be included in the result.
         * @return {function}
         */
-        static createSetOperation: (left: any, both: any, right: any) => (a: any) => Set;
+        static createSetOperation: (left: boolean, both: boolean, right: boolean) => (a: any) => Set;
         /**
         * Creates a set containing the numbers from a start value to a end value.
         *

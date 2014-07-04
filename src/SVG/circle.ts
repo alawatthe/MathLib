@@ -2,11 +2,11 @@
  * Draws a circle on the screen.
  *
  * @param {Circle} circle The circle to be drawn  
- * @param {object} options Optional drawing options
+ * @param {drawingOptions} options Optional drawing options
  * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
  * @return {Screen} Returns the screen
  */
-circle: function (circle, options = {}, redraw = false) {
+circle: function (circle, options : drawingOptions = {}, redraw = false) : Screen2D {
 	var screen = this.screen,
 			prop, opts,
 			svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -16,7 +16,7 @@ circle: function (circle, options = {}, redraw = false) {
 	svgCircle.setAttribute('r', circle.radius);
 
 	if (options) {
-		svgCircle.setAttribute('stroke-width', ((<any>options).lineWidth || 4 ) / (screen.scale.x - screen.scale.y) + '');
+		svgCircle.setAttribute('stroke-width', (options.lineWidth || 4 ) / (screen.scale.x - screen.scale.y) + '');
 		opts = MathLib.SVG.convertOptions(options);
 		for (prop in opts) {
 			if (opts.hasOwnProperty(prop)) {

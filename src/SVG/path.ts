@@ -2,11 +2,11 @@
  * Draws a path on the screen.
  *
  * @param {any} curve The path to be drawn  
- * @param {object} options Optional drawing options  
+ * @param {pathDrawingOptions} options Optional drawing options  
  * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
  * @return {Screen} Returns the screen
  */
-path: function (curve, options = {}, redraw = false) {
+path: function (curve, options : pathDrawingOptions = {}, redraw = false) : Screen2D {
 	var screen = this.screen,
 			svgPathStroke = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
 			svgPathFill = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
@@ -16,8 +16,8 @@ path: function (curve, options = {}, redraw = false) {
 	// If curve is a function f, the path will be (x, f(x))
 	if (typeof curve === 'function') {
 		path = [];
-		from = ('from' in options ? (<any>options).from :         - screen.translation.x  / screen.scale.x) - step;
-		to = ('to' in options ? (<any>options).to : (screen.width - screen.translation.x) / screen.scale.x) + step;
+		from = ('from' in options ? options.from :         - screen.translation.x  / screen.scale.x) - step;
+		to = ('to' in options ? options.to : (screen.width - screen.translation.x) / screen.scale.x) + step;
 		for (i = from; i <= to; i += step) {
 			fx = curve(i);
 			
@@ -50,8 +50,8 @@ path: function (curve, options = {}, redraw = false) {
 		path = [];
 		x = curve[0];
 		y = curve[1];
-		from = ('from' in options ? (<any>options).from : 0) - step;
-		to = ('to' in options ? (<any>options).to : 2 * Math.PI) + step;
+		from = ('from' in options ? options.from : 0) - step;
+		to = ('to' in options ? options.to : 2 * Math.PI) + step;
 		for (i = from; i <= to; i += step) {
 			path.push([x(i), y(i)]);
 		}
@@ -88,7 +88,7 @@ path: function (curve, options = {}, redraw = false) {
 		svgPathStroke.setAttribute('d', pathStringStroke);
 	}
 
-	svgPathStroke.setAttribute('stroke-width', ((<any>options).lineWidth || 4 ) / (screen.scale.x - screen.scale.y) + '');
+	svgPathStroke.setAttribute('stroke-width', (options.lineWidth || 4 ) / (screen.scale.x - screen.scale.y) + '');
 
 
 	if (options) {
@@ -108,10 +108,10 @@ path: function (curve, options = {}, redraw = false) {
 	this.ctx.appendChild(svgPathStroke);
 
 	if (!redraw) {
-		if ((<any>options).conic) {
+		if (options.conic) {
 			this.stack.push({
 				type: 'conic',
-				object: (<any>options).conic,
+				object: options.conic,
 				options: options
 			});
 		}

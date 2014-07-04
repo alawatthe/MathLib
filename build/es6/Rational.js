@@ -76,6 +76,7 @@ var Rational = (function () {
     /**
     * Coerces the rational to some other data type
     *
+    * @param {string} type The type to coerce the rational number into
     * @return {Integer|Rational|number|Complex}
     */
     Rational.prototype.coerceTo = function (type) {

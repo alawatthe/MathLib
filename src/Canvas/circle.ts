@@ -2,17 +2,17 @@
  * Draws a circle on the screen.
  *
  * @param {Circle} circle The circle to be drawn  
- * @param {object} options Optional drawing options
+ * @param {drawingOptions} options Optional drawing options
  * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
  * @return {Screen} Returns the screen
  */
-circle: function (circle : Circle, options = {}, redraw = false) {
+circle: function (circle : Circle, options : drawingOptions = {}, redraw = false) : Screen2D {
 	var screen = this.screen,
 			ctx = this.ctx,
 			prop, opts;
 
 	ctx.save();
-	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
+	ctx.lineWidth = (options.lineWidth || 4) / (screen.scale.x - screen.scale.y);
 
 	// Set the drawing options
 	if (options) {
@@ -24,10 +24,10 @@ circle: function (circle : Circle, options = {}, redraw = false) {
 		}
 
 		if ('setLineDash' in ctx) {
-			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
+			ctx.setLineDash(('dash' in options ? options.dash : []));
 		}
 		if ('lineDashOffset' in ctx) {
-			ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
+			ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
 		}
 	}
 

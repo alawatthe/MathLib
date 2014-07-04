@@ -63,7 +63,7 @@
         * Draw the circle onto the screen.
         *
         * @param {Screen} screen The screen to draw onto.
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @return {Circle} Returns the circle for chaining
         */
         Circle.prototype.draw = function (screen, options) {

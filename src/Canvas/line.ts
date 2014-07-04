@@ -2,18 +2,18 @@
  * Draws a line on the screen.
  *
  * @param {Line} line The line to be drawn  
- * @param {object} options Optional drawing options  
+ * @param {drawingOptions} options Optional drawing options  
  * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
  * @return {Screen} Returns the screen
  */
-line: function (line, options = {}, redraw = false) {
+line: function (line, options : drawingOptions = {}, redraw = false) : Screen2D {
 	var screen = this.screen,
 			points,
 			ctx = this.ctx,
 			prop, opts;
 
 	ctx.save();
-	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
+	ctx.lineWidth = (options.lineWidth || 4) / (screen.scale.x - screen.scale.y);
 
 	// Don't try to draw the line at infinity
 	if (line.type === 'line' && MathLib.isZero(line[0]) && MathLib.isZero(line[1])) {
@@ -33,10 +33,10 @@ line: function (line, options = {}, redraw = false) {
 		}
 
 		if ('setLineDash' in ctx) {
-			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
+			ctx.setLineDash(('dash' in options ? options.dash : []));
 		}
 		if ('lineDashOffset' in ctx) {
-			ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
+			ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
 		}
 	}
 

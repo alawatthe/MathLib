@@ -1,9 +1,10 @@
 /**
  * Coerces the integer to some other data type
  *
+ * @param {string} type The type to coerce the integer into
  * @return {Integer|Rational|number|Complex}
  */
-coerceTo(type) {
+coerceTo(type : string) {
 	var num;
 
 	if (type === 'integer') {

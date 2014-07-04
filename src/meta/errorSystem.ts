@@ -8,7 +8,7 @@ var errors = [],
  * @param {string} type - The name of the event.  
  * @param {function} callback - The callback function.
  */
-export var on = function (type, callback) {
+export var on = function (type : string, callback) {
 	if (type === 'error') {
 		errors.push(callback);
 	}
@@ -25,7 +25,7 @@ export var on = function (type, callback) {
  * @param {string} type - The name of the event.  
  * @param {function} callback - The callback function.
  */
-export var off = function (type, callback) {
+export var off = function (type : string, callback) {
 	if (type === 'error') {
 		errors = errors.filter(x => x !== callback);
 	}

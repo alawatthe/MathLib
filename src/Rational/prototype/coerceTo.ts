@@ -1,9 +1,10 @@
 /**
  * Coerces the rational to some other data type
  *
+ * @param {string} type The type to coerce the rational number into
  * @return {Integer|Rational|number|Complex}
  */
-coerceTo(type) : any {
+coerceTo(type : string) : any {
 	if (type === 'integer') {
 		if (this.denominator === 1) {
 			return new MathLib.Integer(this.numerator);

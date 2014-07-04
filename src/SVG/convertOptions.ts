@@ -1,11 +1,11 @@
 /**
  * Converts the options to the SVG options format
  *
- * @param {object} options The drawing options  
- * @return {object} The converted options
+ * @param {drawingOptions} options The drawing options  
+ * @return {svgDrawingOptions} The converted options
  */
-convertOptions: function (options) {
-	var convertedOptions : any = {};
+convertOptions: function (options : drawingOptions) : svgDrawingOptions {
+	var convertedOptions : svgDrawingOptions = {};
 	if ('fillColor' in options) {
 		convertedOptions.fill = MathLib.colorConvert(options.fillColor);
 	}

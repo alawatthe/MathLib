@@ -28,7 +28,7 @@ export class Expression {
 		var prop;
 
 		if (typeof expr === 'string') {
-			expr = MathLib.Expression.parse(expr);
+			expr = MathLib.Expression.parse(<string>expr);
 		}
 		for (prop in expr) {
 			if (expr.hasOwnProperty(prop)) {

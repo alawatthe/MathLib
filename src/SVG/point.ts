@@ -2,11 +2,11 @@
  * Draws a point on the screen.
  *
  * @param {Point} point The point to be drawn
- * @param {object} options Optional drawing options
+ * @param {drawingOptions} options Optional drawing options
  * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
  * @return {Screen} Returns the screen
  */
-point: function (point, options = {}, redraw = false) {
+point: function (point, options : drawingOptions = {}, redraw = false) : Screen2D {
 	var screen = this.screen,
 			prop, opts, dist,
 			svgPoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');

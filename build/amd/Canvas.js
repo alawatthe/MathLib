@@ -20,7 +20,7 @@
         * Draws a circle on the screen.
         *
         * @param {Circle} circle The circle to be drawn
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -80,11 +80,12 @@
         /**
         * Converts the options to the Canvas options format
         *
-        * @param {object} options The drawing options
-        * @return {object} The converted options
+        * @param {drawingOptions} options The drawing options
+        * @return {canvasDrawingOptions} The converted options
         */
         convertOptions: function (options) {
             var convertedOptions = {};
+
             if ('fillColor' in options) {
                 convertedOptions.fillStyle = MathLib.colorConvert(options.fillColor);
             } else if ('color' in options) {
@@ -111,7 +112,7 @@
         * Draws a line on the screen.
         *
         * @param {Line} line The line to be drawn
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -169,7 +170,7 @@
         * Draws a path on the screen.
         *
         * @param {Path} curve The path to be drawn
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the scren
         */
@@ -201,8 +202,8 @@
             // If curve is a function f, the path will be (x, f(x))
             if (typeof curve === 'function') {
                 path = [];
-                from = ('from' in options ? options.from : (-screen.translation.x) / screen.scale.x) - step;
-                to = ('to' in options ? options.to : (screen.width - screen.translation.x) / screen.scale.x) + step;
+                from = ('from' in options ? (options).from : (-screen.translation.x) / screen.scale.x) - step;
+                to = ('to' in options ? (options).to : (screen.width - screen.translation.x) / screen.scale.x) + step;
 
                 for (i = from; i <= to; i += step) {
                     fx = curve(i);
@@ -230,8 +231,8 @@
                 path = [];
                 x = curve[0];
                 y = curve[1];
-                from = ('from' in options ? options.from : 0) - step;
-                to = ('to' in options ? options.to : 2 * Math.PI) + step;
+                from = ('from' in options ? (options).from : 0) - step;
+                to = ('to' in options ? (options).to : 2 * Math.PI) + step;
                 for (i = from; i <= to; i += step) {
                     path.push([x(i), y(i)]);
                 }
@@ -299,7 +300,7 @@
         * @param {number} r The right coordinate of the draw rectangle
         * @param {number} b The bottom coordinate of the draw rectangle
         * @param {number} l The left coordinate of the draw rectangle
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -345,7 +346,7 @@
         * Draws a point on the screen.
         *
         * @param {Point} point The point to be drawn
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -408,7 +409,7 @@
         * @param {string} str The string to be drawn
         * @param {number} x The x coordinate
         * @param {number} y The y coordinate
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @return {Screen} Returns the screen
         */
         text: function (str, x, y, options, redraw) {

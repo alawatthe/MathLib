@@ -303,7 +303,7 @@
         /**
         * Constructs a variable expression.
         *
-        * @param {String} n The variable to generate an expression from
+        * @param {string} n - The variable to generate an expression from
         * @return {Expression}
         */
         Expression.variable = function (n) {

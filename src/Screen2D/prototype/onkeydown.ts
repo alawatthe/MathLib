@@ -1,9 +1,9 @@
 /**
  * Handles the keydown event
  *
- * @param {event} evt The event object
+ * @param {KeyboardEvent} evt The event object
  */
-onkeydown(evt) {
+onkeydown(evt : KeyboardEvent) {
 	var keyCode,
 			keyTable = {
 				Left: 37,
@@ -40,12 +40,7 @@ onkeydown(evt) {
 		return;
 	}
 
-	if (evt.preventDefault) {
-		evt.preventDefault();
-	}
-
-	evt.returnValue = false;
-
+	evt.preventDefault();
 
 	this.options.interaction.startTransformation = this.transformation.copy();
 

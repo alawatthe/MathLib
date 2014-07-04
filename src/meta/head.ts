@@ -3,7 +3,7 @@
 	export var e = Math.E;
 	// Number.EPSILON is probably coming in ES6
 	// (see section 20.1.2.1 in the current draft)
-	export var epsilon = (<any>Number).EPSILON || (function () {
+	export var epsilon : number = (<any>Number).EPSILON || (function () {
 			var next, result;
 			for (next = 1; 1 + next !== 1; next = next / 2) {
 				result = next;
@@ -19,7 +19,7 @@
 		return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
 	};
 
-	export var argToRgba = function (h) {
+	export var argToRgba = function (h : number) : number[] {
 		var r, g, b;
 		h = -h / (2 * Math.PI);
 
@@ -61,7 +61,7 @@
 		return dest;
 	};
 
-	export var colorConvert = function (n) {
+	export var colorConvert = function (n) : string {
 		if (typeof n === 'number') {
 			n = Math.max(Math.min(Math.floor(n), 0xffffff), 0);
 			return '#' + ('00000' + n.toString(16)).slice(-6);

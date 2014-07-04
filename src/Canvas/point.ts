@@ -2,17 +2,17 @@
  * Draws a point on the screen.
  *
  * @param {Point} point The point to be drawn
- * @param {object} options Optional drawing options
+ * @param {drawingOptions} options Optional drawing options
  * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
  * @return {Screen} Returns the screen
  */
-point: function (point : Point, options = {}, redraw = false) {
+point: function (point : Point, options : drawingOptions = {}, redraw = false) : Screen2D {
 	var screen = this.screen,
 			ctx = this.ctx,
 			prop, opts, dist;
 
 	ctx.save();
-	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
+	ctx.lineWidth = (options.lineWidth || 4) / (screen.scale.x - screen.scale.y);
 
 	// Set the drawing options
 	if (options) {
@@ -29,10 +29,10 @@ point: function (point : Point, options = {}, redraw = false) {
 		}
 
 		if ('setLineDash' in ctx) {
-			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
+			ctx.setLineDash(('dash' in options ? options.dash : []));
 		}
 		if ('lineDashOffset' in ctx) {
-			ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
+			ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
 		}
 	}
 
@@ -48,7 +48,7 @@ point: function (point : Point, options = {}, redraw = false) {
 
 
 	if ((<any>options).label) {
-		dist = 1.75 * ((<any>options).size || 10) + 0.75 * ((<any>options).lineWidth || 4);
+		dist = 1.75 * ((<any>options).size || 10) + 0.75 * (options.lineWidth || 4);
 		screen.text((<any>options).label,
 			point[0] / point[2] + dist / (screen.scale.x - screen.scale.y),
 			point[1] / point[2] + dist / (screen.scale.x - screen.scale.y), options, true);

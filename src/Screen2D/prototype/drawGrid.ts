@@ -3,7 +3,7 @@
  *
  * @return {Screen2D}
  */
-drawGrid() {
+drawGrid() : Screen2D {
 
 	if (!this.options.grid) {
 		return this;

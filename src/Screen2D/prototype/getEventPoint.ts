@@ -4,7 +4,7 @@
  * @param {event} evt The event object
  * @return {Point}
  */
-getEventPoint(evt) {
+getEventPoint(evt : MouseEvent) : Point {
 	var x, y;
 	if (evt.offsetX) {
 		x = evt.offsetX;

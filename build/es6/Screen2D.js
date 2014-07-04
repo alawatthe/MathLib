@@ -534,7 +534,7 @@ var Screen2D = (function (_super) {
     /**
     * Handles the keydown event
     *
-    * @param {event} evt The event object
+    * @param {KeyboardEvent} evt The event object
     */
     Screen2D.prototype.onkeydown = function (evt) {
         var keyCode, keyTable = {
@@ -563,11 +563,7 @@ var Screen2D = (function (_super) {
             return;
         }
 
-        if (evt.preventDefault) {
-            evt.preventDefault();
-        }
-
-        evt.returnValue = false;
+        evt.preventDefault();
 
         this.options.interaction.startTransformation = this.transformation.copy();
 
@@ -579,7 +575,7 @@ var Screen2D = (function (_super) {
     /**
     * Handles the mousedown event
     *
-    * @param {event} evt The event object
+    * @param {MouseEvent} evt The event object
     */
     Screen2D.prototype.onmousedown = function (evt) {
         // Only start the action if the left mouse button was clicked
@@ -587,11 +583,7 @@ var Screen2D = (function (_super) {
             return;
         }
 
-        if (evt.preventDefault) {
-            evt.preventDefault();
-        }
-
-        evt.returnValue = false;
+        evt.preventDefault();
 
         // Pan mode
         if (this.options.interaction.allowPan && !this.options.interaction.type) {
@@ -604,16 +596,12 @@ var Screen2D = (function (_super) {
     /**
     * Handles the mousemove event
     *
-    * @param {event} evt The event object
+    * @param {MouseEvent} evt The event object
     */
     Screen2D.prototype.onmousemove = function (evt) {
         var p, devicePixelRatio = window.devicePixelRatio || 1;
 
-        if (evt.preventDefault) {
-            evt.preventDefault();
-        }
-
-        evt.returnValue = false;
+        evt.preventDefault();
 
         // Pan mode
         if (this.options.interaction.type === 'pan') {
@@ -627,14 +615,10 @@ var Screen2D = (function (_super) {
     /**
     * Handles the mouseup event
     *
-    * @param {event} evt The event object
+    * @param {MouseEvent} evt The event object
     */
     Screen2D.prototype.onmouseup = function (evt) {
-        if (evt.preventDefault) {
-            evt.preventDefault();
-        }
-
-        evt.returnValue = false;
+        evt.preventDefault();
 
         // Go back to normal mode
         if (this.options.interaction.type === 'pan') {
@@ -647,16 +631,13 @@ var Screen2D = (function (_super) {
     /**
     * Handles the mousewheel event
     *
-    * @param {event} evt The event object
+    * @param {MouseEvent} evt The event object
     */
     Screen2D.prototype.onmousewheel = function (evt) {
         var delta, s, p, z;
 
         if (this.options.interaction.allowZoom) {
-            if (evt.preventDefault) {
-                evt.preventDefault();
-            }
-            evt.returnValue = false;
+            evt.preventDefault();
 
             // Chrome/Safari
             if (evt.wheelDelta) {

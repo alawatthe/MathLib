@@ -76,7 +76,7 @@ var Conic = (function () {
     * @param {Screen} screen The screen to draw onto.
     * @param {object} options Drawing options
     * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
-    * @return {boolean}
+    * @return {Conic} Returns the conic for chaining
     */
     Conic.prototype.draw = function (screen, options, redraw) {
         if (typeof options === "undefined") { options = {}; }

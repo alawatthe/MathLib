@@ -4,15 +4,15 @@
  * @param {string} str The string to be drawn  
  * @param {number} x The x coordinate  
  * @param {number} y The y coordinate  
- * @param {object} options Optional drawing options  
+ * @param {drawingOptions} options Optional drawing options  
  * @return {Screen} Returns the screen
  */
-text: function (str : string, x : number, y : number, options = {}, redraw = false) {
+text: function (str : string, x : number, y : number, options : drawingOptions = {}, redraw = false) : Screen2D {
 	var defaults = {
-				font:       'Helvetica',
-				fontSize:   12,
+				font: 'Helvetica',
+				fontSize: 12,
 				// lineWidth:  0.05,
-				textColor:  'rgba(0, 0, 0, 1)'
+				textColor: 'rgba(0, 0, 0, 1)'
 			},
 			ctx, prop, opts;
 
@@ -28,8 +28,8 @@ text: function (str : string, x : number, y : number, options = {}, redraw = fal
 		}
 	}
 
-	ctx.fillStyle = colorConvert((<any>options).textColor || (<any>options).color || defaults.textColor);
-	ctx.strokeStyle = colorConvert((<any>options).textColor || (<any>options).color || defaults.textColor);
+	ctx.fillStyle = colorConvert(options.textColor || options.color || defaults.textColor);
+	ctx.strokeStyle = colorConvert(options.textColor || options.color || defaults.textColor);
 
 	ctx.font = opts.fontSize + 'px ' + opts.font;
 	ctx.textAlign = 'center';

@@ -5,7 +5,7 @@
  * @param {Line|array} l The Line to calculate the end points to
  * @return {array} The array has the format [[x1, y1], [x2, y2]]
  */
-getLineEndPoints (l) {
+getLineEndPoints (l) : number[] {
 	if (l.type === 'line') {
 		var top    = (            - this.translation.y) / this.scale.y,
 				bottom = (this.height - this.translation.y) / this.scale.y,

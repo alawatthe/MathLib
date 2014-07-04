@@ -312,6 +312,7 @@
         /**
         * Coerces the complex number to some other data type
         *
+        * @param {string} type The type to coerce the complex number into
         * @return {Rational|number|Complex}
         */
         Complex.prototype.coerceTo = function (type) {
@@ -332,6 +333,7 @@
         /**
         * Compares two complex numbers
         *
+        * @param {Complex} x The complex number to compare the current number to
         * @return {number}
         */
         Complex.prototype.compare = function (x) {

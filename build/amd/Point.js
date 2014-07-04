@@ -70,9 +70,10 @@ var __extends = this.__extends || function (d, b) {
         *
         * @param {Screen} screen The screen to draw onto
         * @param {object} options Drawing options
-        * @return {Point} The current point
+        * @return {Point} Returns the point for chaining
         */
         Point.prototype.draw = function (screen, options) {
+            if (typeof options === "undefined") { options = {}; }
             if (Array.isArray(screen)) {
                 var point = this;
                 screen.forEach(function (x) {

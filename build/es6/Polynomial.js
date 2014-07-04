@@ -192,9 +192,10 @@ var Polynomial = (function () {
     *
     * @param {Screen} screen The screen to draw the polynomial onto.
     * @param {object} options Optional drawing options.
-    * @return {Polynomial}
+    * @return {Polynomial} Returns the polynomial for chaining
     */
     Polynomial.prototype.draw = function (screen, options) {
+        if (typeof options === "undefined") { options = {}; }
         return this.toFunctn().draw(screen, options);
     };
 

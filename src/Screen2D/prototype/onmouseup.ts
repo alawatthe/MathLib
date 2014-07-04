@@ -1,14 +1,10 @@
 /**
  * Handles the mouseup event
  *
- * @param {event} evt The event object
+ * @param {MouseEvent} evt The event object
  */
-onmouseup(evt) {
-	if (evt.preventDefault) {
-		evt.preventDefault();
-	}
-
-	evt.returnValue = false;
+onmouseup(evt : MouseEvent) {
+	evt.preventDefault();
 
 	// Go back to normal mode
 	if (this.options.interaction.type === 'pan') {

@@ -6,11 +6,11 @@
  * @param {number} r The right coordinate of the draw rectangle  
  * @param {number} b The bottom coordinate of the draw rectangle  
  * @param {number} l The left coordinate of the draw rectangle  
- * @param {object} options Optional drawing options
+ * @param {drawingOptions} options Optional drawing options
  * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
  * @return {Screen} Returns the screen
  */
-pixel: function (f, t : number, r : number, b : number, l : number, options = {}, redraw = false) {
+pixel: function (f, t : number, r : number, b : number, l : number, options : drawingOptions = {}, redraw = false) : Screen2D {
 	var screen = this.screen,
 			top     = (              - screen.translation.y) / screen.scale.y,
 			bottom  = (screen.height - screen.translation.y) / screen.scale.y,

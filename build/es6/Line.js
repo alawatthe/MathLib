@@ -31,9 +31,10 @@ var Line = (function (_super) {
     *
     * @param {Screen} screen The screen to draw onto.
     * @param {object} options Drawing options
-    * @return {boolean}
+    * @return {Line} Returns the line for chaining
     */
     Line.prototype.draw = function (screen, options) {
+        if (typeof options === "undefined") { options = {}; }
         if (Array.isArray(screen)) {
             var line = this;
             screen.forEach(function (x) {

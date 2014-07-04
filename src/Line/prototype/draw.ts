@@ -3,9 +3,9 @@
  *
  * @param {Screen} screen The screen to draw onto.  
  * @param {object} options Drawing options  
- * @return {boolean}
+ * @return {Line} Returns the line for chaining
  */
-draw(screen, options) {
+draw(screen : any, options : drawingOptions = {}) : Line {
 	if (Array.isArray(screen)) {
 		var line = this;
 		screen.forEach(function (x) {

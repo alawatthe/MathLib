@@ -1,20 +1,15 @@
 /**
  * Handles the mousedown event
  *
- * @param {event} evt The event object
+ * @param {MouseEvent} evt The event object
  */
-onmousedown(evt) {
+onmousedown(evt : MouseEvent) {
 	// Only start the action if the left mouse button was clicked
 	if (evt.button !== 0) {
 		return;
 	}
 
-
-	if (evt.preventDefault) {
-		evt.preventDefault();
-	}
-
-	evt.returnValue = false;
+	evt.preventDefault();
 
 	// Pan mode
 	if (this.options.interaction.allowPan && !this.options.interaction.type) {

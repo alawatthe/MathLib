@@ -15,7 +15,7 @@ export class Layer {
 	screen: any;
 	zIndex: number;
 	stack: any;
-	transformation: any;
+	transformation: Matrix;
 	applyTransformation: any;
 
 

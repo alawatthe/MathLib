@@ -2,11 +2,11 @@
  * Draws a path on the screen.
  *
  * @param {Path} curve The path to be drawn
- * @param {object} options Optional drawing options
+ * @param {drawingOptions} options Optional drawing options
  * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
  * @return {Screen} Returns the scren
  */
-path: function (curve, options = {}, redraw = false) {
+path: function (curve, options : pathDrawingOptions = {}, redraw = false) : Screen2D {
 	var screen = this.screen,
 			ctx = this.ctx,
 			prop, opts, path, paths = [], x, y, i, fx, fxold,
@@ -14,7 +14,7 @@ path: function (curve, options = {}, redraw = false) {
 			from, to;
 
 	ctx.save();
-	ctx.lineWidth = ((<any>options).lineWidth || 4) / (screen.scale.x - screen.scale.y);
+	ctx.lineWidth = (options.lineWidth || 4) / (screen.scale.x - screen.scale.y);
 
 
 	// Set the drawing options
@@ -27,10 +27,10 @@ path: function (curve, options = {}, redraw = false) {
 		}
 
 		if ('setLineDash' in ctx) {
-			ctx.setLineDash(('dash' in options ? (<any>options).dash : []));
+			ctx.setLineDash(('dash' in options ? options.dash : []));
 		}
 		if ('lineDashOffset' in ctx) {
-			ctx.lineDashOffset = ('dashOffset' in options ? (<any>options).dashOffset : 0);
+			ctx.lineDashOffset = ('dashOffset' in options ? options.dashOffset : 0);
 		}
 	}
 
@@ -38,8 +38,8 @@ path: function (curve, options = {}, redraw = false) {
 	// If curve is a function f, the path will be (x, f(x))
 	if (typeof curve === 'function') {
 		path = [];
-		from = ('from' in options ? (<any>options).from : ( - screen.translation.x) / screen.scale.x) - step;
-		to = ('to' in options ? (<any>options).to : (screen.width  - screen.translation.x) / screen.scale.x) + step;
+		from = ('from' in options ? (options).from : ( - screen.translation.x) / screen.scale.x) - step;
+		to = ('to' in options ? (options).to : (screen.width  - screen.translation.x) / screen.scale.x) + step;
 
 		for (i = from; i <= to; i += step) {
 			fx = curve(i);
@@ -78,8 +78,8 @@ path: function (curve, options = {}, redraw = false) {
 		path = [];
 		x = curve[0];
 		y = curve[1];
-		from = ('from' in options ? (<any>options).from : 0) - step;
-		to = ('to' in options ? (<any>options).to : 2 * Math.PI) + step;
+		from = ('from' in options ? (options).from : 0) - step;
+		to = ('to' in options ? (options).to : 2 * Math.PI) + step;
 		for (i = from; i <= to; i += step) {
 			path.push([x(i), y(i)]);
 		}
@@ -94,7 +94,7 @@ path: function (curve, options = {}, redraw = false) {
 	// Till now I haven't found a way to stroke and fill the path in one go.
 	// The problem is basically, that moveTo creates a new subpath
 	// and every subpath is filled on its own.
-	if ((<any>options).fillColor || (<any>options).fillColor !== 'transparent') {
+	if (options.fillColor || options.fillColor !== 'transparent') {
 		ctx.beginPath();
 		ctx.lineTo(from, 0);
 		paths.forEach(function (path) {
@@ -109,7 +109,7 @@ path: function (curve, options = {}, redraw = false) {
 		// ctx.closePath();
 	}
 
-	if ((<any>options).lineColor || (<any>options).lineColor !== 'transparent') {
+	if (options.lineColor || options.lineColor !== 'transparent') {
 		ctx.beginPath();
 		paths.forEach(function (path) {
 			ctx.moveTo(path[0][0], path[0][1]);
@@ -124,10 +124,10 @@ path: function (curve, options = {}, redraw = false) {
 	ctx.restore();
 
 	if (!redraw) {
-		if ((<any>options).conic) {
+		if (options.conic) {
 			this.stack.push({
 				type: 'conic',
-				object: (<any>options).conic,
+				object: options.conic,
 				options: options
 			});
 		}

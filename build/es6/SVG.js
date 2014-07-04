@@ -21,7 +21,7 @@ export var SVG = {
     * Draws a circle on the screen.
     *
     * @param {Circle} circle The circle to be drawn
-    * @param {object} options Optional drawing options
+    * @param {drawingOptions} options Optional drawing options
     * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
     * @return {Screen} Returns the screen
     */
@@ -67,8 +67,8 @@ export var SVG = {
     /**
     * Converts the options to the SVG options format
     *
-    * @param {object} options The drawing options
-    * @return {object} The converted options
+    * @param {drawingOptions} options The drawing options
+    * @return {svgDrawingOptions} The converted options
     */
     convertOptions: function (options) {
         var convertedOptions = {};
@@ -106,7 +106,7 @@ export var SVG = {
     * Draws a line on the screen.
     *
     * @param {Line} line The line to be drawn
-    * @param {object} options Optional drawing options
+    * @param {drawingOptions} options Optional drawing options
     * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
     * @return {Canvas} Returns the screen
     */
@@ -153,7 +153,7 @@ export var SVG = {
     * Draws a path on the screen.
     *
     * @param {any} curve The path to be drawn
-    * @param {object} options Optional drawing options
+    * @param {pathDrawingOptions} options Optional drawing options
     * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
     * @return {Screen} Returns the screen
     */
@@ -264,7 +264,7 @@ export var SVG = {
     * @param {number} r The right coordinate of the draw rectangle
     * @param {number} b The bottom coordinate of the draw rectangle
     * @param {number} l The left coordinate of the draw rectangle
-    * @param {object} options Optional drawing options
+    * @param {drawingOptions} options Optional drawing options
     * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
     * @return {Screen} Returns the screen
     */
@@ -325,7 +325,7 @@ export var SVG = {
     * Draws a point on the screen.
     *
     * @param {Point} point The point to be drawn
-    * @param {object} options Optional drawing options
+    * @param {drawingOptions} options Optional drawing options
     * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
     * @return {Screen} Returns the screen
     */
@@ -417,7 +417,7 @@ export var SVG = {
     * @param {string} str The string to be drawn
     * @param {number} x The x coordinate
     * @param {number} y The y coordinate
-    * @param {object} options Optional drawing options
+    * @param {drawingOptions} options Optional drawing options
     * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
     * @return {Screen} Returns the screen
     */

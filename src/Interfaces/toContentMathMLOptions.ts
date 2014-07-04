@@ -1,3 +1,3 @@
-interface toContentMathMLOptions extends toContentOptions{
+interface toContentMathMLOptions extends toContentOptions {
 	strict? : boolean;
 }

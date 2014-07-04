@@ -5,7 +5,7 @@
  * @param {object} [options] - Optional options to style the output
  * @return {string}
  */
-export var toContentMathML = function (x, options : toContentMathMLOptions = {}) {
+export var toContentMathML = function (x, options : toContentMathMLOptions = {}) : string {
 	var base = options.base || 10;
 
 	if (Array.isArray(x)) {

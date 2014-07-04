@@ -5,7 +5,7 @@
  * @param {object} [options] - Optional options to style the output
  * @return {string}
  */
-export var toLaTeX = function (x, options : toPresentationOptions = {}) {
+export var toLaTeX = function (x, options : toPresentationOptions = {}) : string {
 	var base = options.base || 10,
 			str = MathLib.toString(x, {base: base, sign: options.sign}),
 			stringToLaTeX = function (str) {

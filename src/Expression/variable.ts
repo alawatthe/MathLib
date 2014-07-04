@@ -1,10 +1,10 @@
 /**
  * Constructs a variable expression.
  *
- * @param {String} n The variable to generate an expression from
+ * @param {string} n - The variable to generate an expression from
  * @return {Expression}
  */
-static variable(n) : Expression {
+static variable(n : string) : Expression {
 	return new MathLib.Expression({
 		subtype: 'variable',
 		value: n

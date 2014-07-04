@@ -4,11 +4,11 @@
  * @param {string} str The string to be drawn
  * @param {number} x The x coordinate
  * @param {number} y The y coordinate
- * @param {object} options Optional drawing options
+ * @param {drawingOptions} options Optional drawing options
  * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
  * @return {Screen} Returns the screen
  */
-text: function (str : string, x : number, y : number, options = {}, redraw = false) {
+text: function (str : string, x : number, y : number, options : drawingOptions = {}, redraw = false) : Screen2D {
 	var defaults = {
 				font:       'Helvetica',
 				fontSize:   12,
@@ -28,9 +28,9 @@ text: function (str : string, x : number, y : number, options = {}, redraw = fal
 	svgText.setAttribute('transform', 'matrix(' + 1 / screen.scale.x + ', 0, 0, ' + 1 / screen.scale.y + ', 0, 0)');
 	svgText.setAttribute('font-family', opts.font);
 	svgText.setAttribute('font-size', opts.fontSize);
-	svgText.setAttribute('fill', colorConvert((<any>options).textColor || (<any>options).color) || defaults.textColor);
+	svgText.setAttribute('fill', colorConvert(options.textColor || options.color) || defaults.textColor);
 	svgText.setAttribute('fill-opacity', '1');
-	svgText.setAttribute('stroke', colorConvert((<any>options).textColor || (<any>options).color) || defaults.textColor);
+	svgText.setAttribute('stroke', colorConvert(options.textColor || options.color) || defaults.textColor);
 	svgText.setAttribute('text-anchor', 'middle');
 
 	// alignment-baseline isn't defined for text elements, 

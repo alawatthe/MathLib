@@ -1,11 +1,12 @@
 /**
  * Converts the options to the Canvas options format
  *
- * @param {object} options The drawing options  
- * @return {object} The converted options
+ * @param {drawingOptions} options The drawing options  
+ * @return {canvasDrawingOptions} The converted options
  */
-convertOptions: function (options) {
-	var convertedOptions : any = {};
+convertOptions: function (options : drawingOptions) : canvasDrawingOptions {
+	var convertedOptions : canvasDrawingOptions = {};
+
 	if ('fillColor' in options) {
 		convertedOptions.fillStyle = MathLib.colorConvert(options.fillColor);
 	}
@@ -29,7 +30,6 @@ convertOptions: function (options) {
 	else if ('color' in options) {
 		convertedOptions.strokeStyle = MathLib.colorConvert(options.color);
 	}
-
 
 	return convertedOptions;
 },

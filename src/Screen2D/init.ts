@@ -25,15 +25,14 @@ export class Screen2D extends Screen {
 	// Drawing functions
 	draw: any;
 	circle: any;
-	line: any;
+	line : (line: any, options?: drawingOptions, redraw?: boolean) => Screen2D;
 	path: any;
 	pixel: any;
 	point: any;
 	text: any;
 
-
 	// Transformation
-	transformation: any;
+	transformation: Matrix;
 	translation: any;
 	scale: any;
 	lookAt: any;

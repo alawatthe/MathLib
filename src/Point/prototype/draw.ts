@@ -3,9 +3,9 @@
  *
  * @param {Screen} screen The screen to draw onto  
  * @param {object} options Drawing options  
- * @return {Point} The current point
+ * @return {Point} Returns the point for chaining
  */
-draw(screen, options) {
+draw(screen, options : drawingOptions = {}) : Point {
 	if (Array.isArray(screen)) {
 		var point = this;
 		screen.forEach(function (x) {

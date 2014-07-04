@@ -3,7 +3,7 @@
  *
  * @return {Screen2D}
  */
-drawAxes() {
+drawAxes() : Screen2D {
 	var i,
 			line = (...args : any[]) => this.renderer.line.apply(this.layer.axes, args),
 			text = (...args : any[]) => this.renderer.text.apply(this.layer.axes, args),

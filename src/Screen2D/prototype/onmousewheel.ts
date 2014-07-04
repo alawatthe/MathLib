@@ -1,22 +1,18 @@
 /**
  * Handles the mousewheel event
  *
- * @param {event} evt The event object
+ * @param {MouseEvent} evt The event object
  */
-onmousewheel(evt) {
+onmousewheel(evt : MouseEvent) {
 	var delta, s, p, z;
 
 	if (this.options.interaction.allowZoom) {
 
-		if (evt.preventDefault) {
-			evt.preventDefault();
-		}
-		evt.returnValue = false;
-
+		evt.preventDefault();
 
 		// Chrome/Safari
-		if (evt.wheelDelta) {
-			delta = evt.wheelDelta / 360;
+		if ((<any>evt).wheelDelta) {
+			delta = (<any>evt).wheelDelta / 360;
 		}
 		// Firefox
 		else {

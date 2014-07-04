@@ -1,18 +1,13 @@
 /**
  * Handles the mousemove event
  *
- * @param {event} evt The event object
+ * @param {MouseEvent} evt The event object
  */
-onmousemove(evt) {
+onmousemove(evt : MouseEvent) {
 	var p,
 			devicePixelRatio = window.devicePixelRatio || 1;
 
-	if (evt.preventDefault) {
-		evt.preventDefault();
-	}
-
-	evt.returnValue = false;
-	
+	evt.preventDefault();	
 
 	// Pan mode
 	if (this.options.interaction.type === 'pan') {

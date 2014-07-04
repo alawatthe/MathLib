@@ -755,7 +755,7 @@ var MathLib = {};
         /**
         * Constructs a variable expression.
         *
-        * @param {String} n The variable to generate an expression from
+        * @param {string} n - The variable to generate an expression from
         * @return {Expression}
         */
         Expression.variable = function (n) {
@@ -2798,7 +2798,7 @@ var MathLib = {};
     *
     * @param {Screen} screen The screen to draw the function onto.
     * @param {object} options Optional drawing options.
-    * @return {Functn}
+    * @return {Functn} Returns the functn for chaining
     */
     functnPrototype.draw = function (screen, options) {
         if (typeof options === "undefined") { options = {}; }
@@ -4166,7 +4166,7 @@ var MathLib = {};
         * Draws a circle on the screen.
         *
         * @param {Circle} circle The circle to be drawn
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -4226,11 +4226,12 @@ var MathLib = {};
         /**
         * Converts the options to the Canvas options format
         *
-        * @param {object} options The drawing options
-        * @return {object} The converted options
+        * @param {drawingOptions} options The drawing options
+        * @return {canvasDrawingOptions} The converted options
         */
         convertOptions: function (options) {
             var convertedOptions = {};
+
             if ('fillColor' in options) {
                 convertedOptions.fillStyle = MathLib.colorConvert(options.fillColor);
             } else if ('color' in options) {
@@ -4257,7 +4258,7 @@ var MathLib = {};
         * Draws a line on the screen.
         *
         * @param {Line} line The line to be drawn
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -4315,7 +4316,7 @@ var MathLib = {};
         * Draws a path on the screen.
         *
         * @param {Path} curve The path to be drawn
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the scren
         */
@@ -4347,8 +4348,8 @@ var MathLib = {};
             // If curve is a function f, the path will be (x, f(x))
             if (typeof curve === 'function') {
                 path = [];
-                from = ('from' in options ? options.from : (-screen.translation.x) / screen.scale.x) - step;
-                to = ('to' in options ? options.to : (screen.width - screen.translation.x) / screen.scale.x) + step;
+                from = ('from' in options ? (options).from : (-screen.translation.x) / screen.scale.x) - step;
+                to = ('to' in options ? (options).to : (screen.width - screen.translation.x) / screen.scale.x) + step;
 
                 for (i = from; i <= to; i += step) {
                     fx = curve(i);
@@ -4376,8 +4377,8 @@ var MathLib = {};
                 path = [];
                 x = curve[0];
                 y = curve[1];
-                from = ('from' in options ? options.from : 0) - step;
-                to = ('to' in options ? options.to : 2 * Math.PI) + step;
+                from = ('from' in options ? (options).from : 0) - step;
+                to = ('to' in options ? (options).to : 2 * Math.PI) + step;
                 for (i = from; i <= to; i += step) {
                     path.push([x(i), y(i)]);
                 }
@@ -4445,7 +4446,7 @@ var MathLib = {};
         * @param {number} r The right coordinate of the draw rectangle
         * @param {number} b The bottom coordinate of the draw rectangle
         * @param {number} l The left coordinate of the draw rectangle
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -4491,7 +4492,7 @@ var MathLib = {};
         * Draws a point on the screen.
         *
         * @param {Point} point The point to be drawn
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -4554,7 +4555,7 @@ var MathLib = {};
         * @param {string} str The string to be drawn
         * @param {number} x The x coordinate
         * @param {number} y The y coordinate
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @return {Screen} Returns the screen
         */
         text: function (str, x, y, options, redraw) {
@@ -4628,7 +4629,7 @@ var MathLib = {};
         * Draws a circle on the screen.
         *
         * @param {Circle} circle The circle to be drawn
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -4674,8 +4675,8 @@ var MathLib = {};
         /**
         * Converts the options to the SVG options format
         *
-        * @param {object} options The drawing options
-        * @return {object} The converted options
+        * @param {drawingOptions} options The drawing options
+        * @return {svgDrawingOptions} The converted options
         */
         convertOptions: function (options) {
             var convertedOptions = {};
@@ -4713,7 +4714,7 @@ var MathLib = {};
         * Draws a line on the screen.
         *
         * @param {Line} line The line to be drawn
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Canvas} Returns the screen
         */
@@ -4760,7 +4761,7 @@ var MathLib = {};
         * Draws a path on the screen.
         *
         * @param {any} curve The path to be drawn
-        * @param {object} options Optional drawing options
+        * @param {pathDrawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -4871,7 +4872,7 @@ var MathLib = {};
         * @param {number} r The right coordinate of the draw rectangle
         * @param {number} b The bottom coordinate of the draw rectangle
         * @param {number} l The left coordinate of the draw rectangle
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -4932,7 +4933,7 @@ var MathLib = {};
         * Draws a point on the screen.
         *
         * @param {Point} point The point to be drawn
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -5024,7 +5025,7 @@ var MathLib = {};
         * @param {string} str The string to be drawn
         * @param {number} x The x coordinate
         * @param {number} y The y coordinate
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
         * @return {Screen} Returns the screen
         */
@@ -5605,7 +5606,7 @@ var MathLib = {};
         /**
         * Handles the keydown event
         *
-        * @param {event} evt The event object
+        * @param {KeyboardEvent} evt The event object
         */
         Screen2D.prototype.onkeydown = function (evt) {
             var keyCode, keyTable = {
@@ -5634,11 +5635,7 @@ var MathLib = {};
                 return;
             }
 
-            if (evt.preventDefault) {
-                evt.preventDefault();
-            }
-
-            evt.returnValue = false;
+            evt.preventDefault();
 
             this.options.interaction.startTransformation = this.transformation.copy();
 
@@ -5650,7 +5647,7 @@ var MathLib = {};
         /**
         * Handles the mousedown event
         *
-        * @param {event} evt The event object
+        * @param {MouseEvent} evt The event object
         */
         Screen2D.prototype.onmousedown = function (evt) {
             // Only start the action if the left mouse button was clicked
@@ -5658,11 +5655,7 @@ var MathLib = {};
                 return;
             }
 
-            if (evt.preventDefault) {
-                evt.preventDefault();
-            }
-
-            evt.returnValue = false;
+            evt.preventDefault();
 
             // Pan mode
             if (this.options.interaction.allowPan && !this.options.interaction.type) {
@@ -5675,16 +5668,12 @@ var MathLib = {};
         /**
         * Handles the mousemove event
         *
-        * @param {event} evt The event object
+        * @param {MouseEvent} evt The event object
         */
         Screen2D.prototype.onmousemove = function (evt) {
             var p, devicePixelRatio = window.devicePixelRatio || 1;
 
-            if (evt.preventDefault) {
-                evt.preventDefault();
-            }
-
-            evt.returnValue = false;
+            evt.preventDefault();
 
             // Pan mode
             if (this.options.interaction.type === 'pan') {
@@ -5698,14 +5687,10 @@ var MathLib = {};
         /**
         * Handles the mouseup event
         *
-        * @param {event} evt The event object
+        * @param {MouseEvent} evt The event object
         */
         Screen2D.prototype.onmouseup = function (evt) {
-            if (evt.preventDefault) {
-                evt.preventDefault();
-            }
-
-            evt.returnValue = false;
+            evt.preventDefault();
 
             // Go back to normal mode
             if (this.options.interaction.type === 'pan') {
@@ -5718,16 +5703,13 @@ var MathLib = {};
         /**
         * Handles the mousewheel event
         *
-        * @param {event} evt The event object
+        * @param {MouseEvent} evt The event object
         */
         Screen2D.prototype.onmousewheel = function (evt) {
             var delta, s, p, z;
 
             if (this.options.interaction.allowZoom) {
-                if (evt.preventDefault) {
-                    evt.preventDefault();
-                }
-                evt.returnValue = false;
+                evt.preventDefault();
 
                 // Chrome/Safari
                 if (evt.wheelDelta) {
@@ -6573,7 +6555,7 @@ var MathLib = {};
         * Draw the circle onto the screen.
         *
         * @param {Screen} screen The screen to draw onto.
-        * @param {object} options Optional drawing options
+        * @param {drawingOptions} options Optional drawing options
         * @return {Circle} Returns the circle for chaining
         */
         Circle.prototype.draw = function (screen, options) {
@@ -6965,6 +6947,7 @@ var MathLib = {};
         /**
         * Coerces the complex number to some other data type
         *
+        * @param {string} type The type to coerce the complex number into
         * @return {Rational|number|Complex}
         */
         Complex.prototype.coerceTo = function (type) {
@@ -6985,6 +6968,7 @@ var MathLib = {};
         /**
         * Compares two complex numbers
         *
+        * @param {Complex} x The complex number to compare the current number to
         * @return {number}
         */
         Complex.prototype.compare = function (x) {
@@ -7690,6 +7674,7 @@ var MathLib = {};
         /**
         * Coerces the integer to some other data type
         *
+        * @param {string} type The type to coerce the integer into
         * @return {Integer|Rational|number|Complex}
         */
         Integer.prototype.coerceTo = function (type) {
@@ -8452,9 +8437,10 @@ var MathLib = {};
         *
         * @param {Screen} screen The screen to draw onto.
         * @param {object} options Drawing options
-        * @return {boolean}
+        * @return {Line} Returns the line for chaining
         */
         Line.prototype.draw = function (screen, options) {
+            if (typeof options === "undefined") { options = {}; }
             if (Array.isArray(screen)) {
                 var line = this;
                 screen.forEach(function (x) {
@@ -10163,7 +10149,7 @@ var MathLib = {};
         * @param {Screen} screen The screen to draw onto.
         * @param {object} options Drawing options
         * @param {boolean} redraw Indicates if the current draw call is happening during a redraw
-        * @return {boolean}
+        * @return {Conic} Returns the conic for chaining
         */
         Conic.prototype.draw = function (screen, options, redraw) {
             if (typeof options === "undefined") { options = {}; }
@@ -10694,9 +10680,10 @@ var MathLib = {};
         *
         * @param {Screen} screen The screen to draw onto
         * @param {object} options Drawing options
-        * @return {Point} The current point
+        * @return {Point} Returns the point for chaining
         */
         Point.prototype.draw = function (screen, options) {
+            if (typeof options === "undefined") { options = {}; }
             if (Array.isArray(screen)) {
                 var point = this;
                 screen.forEach(function (x) {
@@ -11134,9 +11121,10 @@ var MathLib = {};
         *
         * @param {Screen} screen The screen to draw the polynomial onto.
         * @param {object} options Optional drawing options.
-        * @return {Polynomial}
+        * @return {Polynomial} Returns the polynomial for chaining
         */
         Polynomial.prototype.draw = function (screen, options) {
+            if (typeof options === "undefined") { options = {}; }
             return this.toFunctn().draw(screen, options);
         };
 
@@ -11595,6 +11583,7 @@ var MathLib = {};
         /**
         * Coerces the rational to some other data type
         *
+        * @param {string} type The type to coerce the rational number into
         * @return {Integer|Rational|number|Complex}
         */
         Rational.prototype.coerceTo = function (type) {

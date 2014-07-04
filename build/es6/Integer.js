@@ -150,6 +150,7 @@ var Integer = (function () {
     /**
     * Coerces the integer to some other data type
     *
+    * @param {string} type The type to coerce the integer into
     * @return {Integer|Rational|number|Complex}
     */
     Integer.prototype.coerceTo = function (type) {

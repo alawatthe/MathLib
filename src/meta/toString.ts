@@ -5,7 +5,7 @@
  * @param {object} [options] - Optional options to style the output
  * @return {string}
  */
-export var toString = function (x, options : toPresentationOptions = {}) {
+export var toString = function (x, options : toPresentationOptions = {}) : string {
 	var str,
 			base = options.base || 10;
 

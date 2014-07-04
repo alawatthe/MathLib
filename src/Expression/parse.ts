@@ -5,10 +5,10 @@
  * [Part 2: parser](http://ariya.ofilabs.com/2011/08/math-evaluator-in-javascript-part-2.html)
  * [Part 3: interpreter](http://ariya.ofilabs.com/2011/08/math-expression-evaluator-in-javascript-part-3.html)
  *
- * @param {String} str The string to parse
+ * @param {string} str - The string to parse
  * @return {Expression}
  */
-static parse = function (str) : Expression {
+static parse = function (str : string) : Expression {
 
 	var Token, Lexer, Parser;
 
