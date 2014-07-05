@@ -35,3 +35,15 @@ test('.type', 1, function () {
 
 	equal(screen.type, 'screen', 'Testing .type');
 });
+
+
+
+test('.type', 2, function () {
+	var screen = new MathLib.Screen('screen', {
+		figcaption: 'A caption for the figure'
+	});
+
+
+	equal(screen.figure.children[1].localName, 'figcaption');
+	equal(screen.figure.children[1].innerHTML, 'A caption for the figure');
+});

@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-04
+ * build date: 2014-07-05
  */
 
 module('MathLib');
@@ -5728,6 +5728,18 @@ test('.type', 1, function () {
 	var screen = new MathLib.Screen('screen', {});
 
 	equal(screen.type, 'screen', 'Testing .type');
+});
+
+
+
+test('.type', 2, function () {
+	var screen = new MathLib.Screen('screen', {
+		figcaption: 'A caption for the figure'
+	});
+
+
+	equal(screen.figure.children[1].localName, 'figcaption');
+	equal(screen.figure.children[1].innerHTML, 'A caption for the figure');
 });
 module('Set');
 test('init', 2, function () {
