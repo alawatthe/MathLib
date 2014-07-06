@@ -452,3 +452,40 @@ asyncTest('.resize() changing proportions', function (assert) {
 		assert.imageEqual(svg.element, 'http://localhost:8000/test/visual/screen2D_resized_changed_proportions.png');
 	}
 });
+
+
+asyncTest('translating with the mouse', function (assert) {
+	var canvas = new MathLib.Screen2D('screen1',
+				{renderer: 'Canvas', width: 300, height: 300, range: {x: 1, y: 1}}
+			),
+			svg = new MathLib.Screen2D('screen2',
+				{renderer: 'SVG', width: 300, height: 300, range: {x: 1, y: 1}}
+			);
+
+
+	var down = document.createEvent('MouseEvents');
+	down.initMouseEvent('mousedown', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+	canvas.wrapper.dispatchEvent(down);
+	svg.wrapper.dispatchEvent(down);
+
+	var move = document.createEvent('MouseEvents');
+	move.initMouseEvent('mousemove', true, true, window, 0, 50, 50, 50, 50, false, false, false, false, 0, null);
+	canvas.wrapper.dispatchEvent(move);
+	svg.wrapper.dispatchEvent(move);
+
+	var up = document.createEvent('MouseEvents');
+	up.initMouseEvent('mouseup', true, true, window, 0, 50, 50, 50, 50, false, false, false, false, 0, null);
+	canvas.wrapper.dispatchEvent(up);
+	svg.wrapper.dispatchEvent(up);
+
+
+	if (typeof phantomJS !== 'undefined') {
+		expect(1);
+		assert.imageEqual(canvas.layer.axes.element, 'http://localhost:8000/test/visual/screen2D_translated.png');
+	}
+	else {
+		expect(2);
+		assert.imageEqual(canvas.layer.axes.element, 'http://localhost:8000/test/visual/screen2D_translated.png');
+		assert.imageEqual(svg.element, 'http://localhost:8000/test/visual/screen2D_translated.png');
+	}
+});

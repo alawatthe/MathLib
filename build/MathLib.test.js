@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-05
+ * build date: 2014-07-06
  */
 
 module('MathLib');
@@ -437,6 +437,33 @@ test('.constructor', 1, function () {
 test('.type', 1, function () {
 	var c = new MathLib.Complex(3, 4);
 	equal(c.type, 'complex', 'Testing .type');
+});
+test('.polar()', 8, function () {
+	equal(MathLib.Complex.polar(Infinity).re, Infinity);
+	equal(MathLib.Complex.polar(Infinity, NaN).re, Infinity);
+	equal(MathLib.Complex.polar(Infinity, Infinity).re, Infinity);
+	equal(MathLib.Complex.polar(Infinity, 0).re, Infinity);
+
+	ok(MathLib.isPosZero(MathLib.Complex.polar(1, +0).im));
+	ok(MathLib.isNegZero(MathLib.Complex.polar(1, -0).im));
+	ok(MathLib.isEqual(MathLib.Complex.polar(2, 3), new MathLib.Complex(-1.9799849932008909145, 0.2822400161197344442)));
+
+	// Chrome implemented sin, cos & tan in a new way:
+	// https://codereview.chromium.org/70003004/
+	// While the new implementation is faster, it is also not acurate.
+	// I expect the bug to be fixed soon and it isn't causing major problems,
+	// I will only modify the test now and not the code.
+	// Affected tests:
+	// Complex.polar, Complex#cosh, Complex#sinh
+	//
+	// More information:
+	// https://code.google.com/p/v8/issues/detail?id=3006
+	if (Math.cos(-5) === 0.2836621854632259) {
+		ok(MathLib.isEqual(MathLib.Complex.polar(4, -5), new MathLib.Complex(1.1346487418529037, 3.835697098652549)));
+	}
+	else {
+		ok(MathLib.isEqual(MathLib.Complex.polar(4, -5), new MathLib.Complex(1.1346487418529050579, 3.8356970986525538756)));
+	}
 });
 test('.toContentMathML()', 2, function () {
 	equal(MathLib.Complex.toContentMathML(), '<complexes/>');
@@ -1400,33 +1427,6 @@ test('.plus()', 18, function () {
 
 	deepEqual(c.plus(d), new MathLib.Complex(5, 9), 'Adding two complex numbers.');
 	deepEqual(d.plus(5), new MathLib.Complex(8, 4), 'Adding a number to a complex number.');
-});
-test('.polar()', 8, function () {
-	equal(new MathLib.Complex.polar(Infinity).re, Infinity);
-	equal(new MathLib.Complex.polar(Infinity, NaN).re, Infinity);
-	equal(new MathLib.Complex.polar(Infinity, Infinity).re, Infinity);
-	equal(new MathLib.Complex.polar(Infinity, 0).re, Infinity);
-
-	ok(MathLib.isPosZero(new MathLib.Complex.polar(1, +0).im));
-	ok(MathLib.isNegZero(new MathLib.Complex.polar(1, -0).im));
-	ok(MathLib.isEqual(new MathLib.Complex.polar(2, 3), new MathLib.Complex(-1.9799849932008909145, 0.2822400161197344442)));
-
-	// Chrome implemented sin, cos & tan in a new way:
-	// https://codereview.chromium.org/70003004/
-	// While the new implementation is faster, it is also not acurate.
-	// I expect the bug to be fixed soon and it isn't causing major problems,
-	// I will only modify the test now and not the code.
-	// Affected tests:
-	// Complex.polar, Complex#cosh, Complex#sinh
-	//
-	// More information:
-	// https://code.google.com/p/v8/issues/detail?id=3006
-	if (Math.cos(-5) === 0.2836621854632259) {
-		ok(MathLib.isEqual(new MathLib.Complex.polar(4, -5), new MathLib.Complex(1.1346487418529037, 3.835697098652549)));
-	}
-	else {
-		ok(MathLib.isEqual(new MathLib.Complex.polar(4, -5), new MathLib.Complex(1.1346487418529050579, 3.8356970986525538756)));
-	}
 });
 test('.pow()', 29, function () {
 	var inf = new MathLib.Complex(Infinity),
@@ -5732,15 +5732,71 @@ test('.type', 1, function () {
 
 
 
-test('.type', 2, function () {
+test('figcaption', 2, function () {
 	var screen = new MathLib.Screen('screen', {
 		figcaption: 'A caption for the figure'
 	});
 
-
 	equal(screen.figure.children[1].localName, 'figcaption');
 	equal(screen.figure.children[1].innerHTML, 'A caption for the figure');
 });
+
+module('Screen2D', {
+	setup: function () {
+		var div = document.createElement('div');
+		div.id = 'screen';
+
+		document.body.appendChild(div);
+	},
+	teardown: function () {
+		var div = document.getElementById('screen');
+
+		div.parentElement.removeChild(div);
+	}
+});
+
+test('init', 2, function () {
+	var screen = new MathLib.Screen2D('screen', {});
+
+	equal(screen.width, 500, 'Default .width should be 500.');
+	equal(screen.height, 500, 'Default .height should be 500.');
+});
+
+
+
+// Properties
+test('.constructor', 1, function () {
+	var screen = new MathLib.Screen2D('screen', {});
+
+	equal(screen.constructor, MathLib.Screen2D, 'Testing .constructor');
+});
+
+
+
+test('.type', 1, function () {
+	var screen = new MathLib.Screen2D('screen', {});
+
+	equal(screen.type, 'screen2D', 'Testing .type');
+});
+
+
+
+test('focus', 3, function () {
+	var screen = new MathLib.Screen2D('screen', {});
+
+	var click = document.createEvent('MouseEvents');
+	click.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+	screen.wrapper.dispatchEvent(click);
+
+	equal(screen.wrapper, document.activeElement);
+
+	screen.wrapper.blur();
+	notEqual(screen.wrapper, document.activeElement);
+
+	screen.wrapper.focus();
+	equal(screen.wrapper, document.activeElement);
+});
+
 module('Set');
 test('init', 2, function () {
 	var s1 = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),

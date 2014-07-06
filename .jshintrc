@@ -67,6 +67,7 @@
 		"MathLib"     : true,
 		"MathJax"     : true,
 		"module"      : true,
+		"notEqual"    : true,
 		"ok"          : true,
 		"process"     : true,
 		"requestAnimationFrame": true,

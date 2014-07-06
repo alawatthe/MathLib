@@ -67,7 +67,7 @@ module.exports = function (grunt) {
 			modules = [
 				'Circle', 'Complex', 'Conic', 'Expression', 'Functn', 'Integer',
 				'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial',
-				'Rational', 'Screen', 'Set', 'Vector'
+				'Rational', 'Screen', 'Screen2D', 'Set', 'Vector'
 			],
 
 			createModuleArray = function (module) {
@@ -413,10 +413,10 @@ module.exports = function (grunt) {
 						src: ['./build/MathLib.js'],
 						instrumentedFiles: 'temp/',
 						lcovReport: 'coverage',
-						linesThresholdPct: 85,
-						statementsThresholdPct: 85,
-						functionsThresholdPct: 85,
-						branchesThresholdPct: 80
+						linesThresholdPct: 89,
+						statementsThresholdPct: 89,
+						functionsThresholdPct: 89,
+						branchesThresholdPct: 82
 					},
 					urls: [
 						'./test/test.all.html'
@@ -463,7 +463,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 96,
+					build: 97,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],

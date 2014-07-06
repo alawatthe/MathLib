@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-05
+ * build date: 2014-07-06
  */
 
 var __extends = this.__extends || function (d, b) {

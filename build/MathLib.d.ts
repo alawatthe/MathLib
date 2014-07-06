@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-05
+ * build date: 2014-07-06
  */
 
 declare module MathLib {
@@ -872,6 +872,12 @@ declare module MathLib {
         public im: any;
         constructor(re: any, im?: number);
         /**
+        * Construct a complex number out of the absolute value and the argument
+        *
+        * @return {Complex}
+        */
+        static polar: (abs: any, arg: any) => Complex;
+        /**
         * A content MathML string representation
         *
         * @return {string}
@@ -1095,12 +1101,6 @@ declare module MathLib {
         * @return {Complex}
         */
         public plus(summand: any): Complex;
-        /**
-        * Construct a complex number out of the absolute value and the argument
-        *
-        * @return {Complex}
-        */
-        static polar: (abs: any, arg: any) => Complex;
         /**
         * Calculates the complex number raised to some power
         *
