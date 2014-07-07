@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-06
+ * build date: 2014-07-07
  */
 
 declare module MathLib {
@@ -2700,8 +2700,7 @@ declare var Rational: Field;
         */
         public map(callback: any, thisArg?: any): any;
         /**
-        * Adds the argument to all elements in the set,
-        * or if no argument is provided adds up all the elements in the set.
+        * Adds the argument to all elements in the set.
         *
         * @param {number|MathLib object} n The object to add to the elements in the set.
         * @return {Set|any}
@@ -2745,8 +2744,7 @@ declare var Rational: Field;
         */
         public splice(...args: any[]): any;
         /**
-        * Multiplies all elements in the set if no argument is passed.
-        * Multiplies all elements by a argument if one is passed.
+        * Multiplies all elements by an argument.
         *
         * @param {number|MathLib object} n The object to multiply the elements with
         * @return {Set}
@@ -2786,6 +2784,13 @@ declare var Rational: Field;
         * @return {string}
         */
         public toString(options?: toPresentationOptions): string;
+        /**
+        * Adds up all the elements in the set.
+        *
+        * @param {number|MathLib object} n The object to add to the elements in the set.
+        * @return {Set|any}
+        */
+        public total(): any;
         /**
         * Returns the union of two sets.
         *

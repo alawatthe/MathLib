@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-06
+ * build date: 2014-07-07
  */
 
 module('MathLib');
@@ -5920,13 +5920,14 @@ test('.map()', 2, function () {
 	ok(res.isEqual(q), '.map()');
 	equal(res.type, 'set', '.type should be set');
 });
-test('.plus()', 3, function () {
+test('.plus()', 2, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]),
 			m = new MathLib.Set([1, 2, 3, 4, 5, 6]);
-	equal(s.plus(), 10, 'Testing .plus() (set)');
+
 	ok(s.plus(2).isEqual(new MathLib.Set([3, 4, 5, 6])), 'Testing .plus(int) (set)');
 	ok(s.plus(m).isEqual(new MathLib.Set([2, 3, 4, 5, 6, 7, 8, 9, 10])), 'Testing .plus(set) (set)');
 });
+
 test('.powerset()', 5, function () {
 	equal((new MathLib.Set([])).powerset().card, 1);
 	equal((new MathLib.Set([1])).powerset().card, 2);
@@ -5959,12 +5960,12 @@ test('.some()', 2, function () {
 	}), false, '.some()');
 });
 
-test('.times()', 2, function () {
+test('.times()', 1, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]);
 
-	equal(s.times(), 24, 'Testing .times() (set)');
 	ok(s.times(2).isEqual(new MathLib.Set([2, 4, 6, 8])), 'Testing .times(int) (set)');
 });
+
 test('.toArray()', 2, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
 			n = new MathLib.Set();
@@ -6009,6 +6010,12 @@ test('.toString()', 2, function () {
 	equal(s.toString(), '{2, 3, 4, 8, 9}', 'Testing .toString() (set)');
 	equal(e.toString(), '∅', 'Testing .toString() (empty set)');
 });
+test('.total()', 1, function () {
+	var s = new MathLib.Set([1, 2, 3, 4]);
+
+	equal(s.total(), 10);
+});
+
 test('.union()', 2, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]),
 			m = new MathLib.Set([1, 3, 5, 7]),

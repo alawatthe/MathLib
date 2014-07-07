@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-06
+ * build date: 2014-07-07
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -12066,17 +12066,15 @@ var MathLib = {};
         };
 
         /**
-        * Adds the argument to all elements in the set,
-        * or if no argument is provided adds up all the elements in the set.
+        * Adds the argument to all elements in the set.
         *
         * @param {number|MathLib object} n The object to add to the elements in the set.
         * @return {Set|any}
         */
         Set.prototype.plus = function (n) {
             var sum = [];
-            if (!arguments.length) {
-                return MathLib.plus.apply(null, this.toArray());
-            } else if (n.type === 'set') {
+
+            if (n.type === 'set') {
                 this.forEach(function (x) {
                     n.forEach(function (y) {
                         sum.push(MathLib.plus(x, y));
@@ -12181,20 +12179,15 @@ var MathLib = {};
         };
 
         /**
-        * Multiplies all elements in the set if no argument is passed.
-        * Multiplies all elements by a argument if one is passed.
+        * Multiplies all elements by an argument.
         *
         * @param {number|MathLib object} n The object to multiply the elements with
         * @return {Set}
         */
         Set.prototype.times = function (n) {
-            if (!arguments.length) {
-                return MathLib.times.apply(null, this.toArray());
-            } else {
-                return this.map(function (x) {
-                    return MathLib.times(x, n);
-                });
-            }
+            return this.map(function (x) {
+                return MathLib.times(x, n);
+            });
         };
 
         /**
@@ -12282,6 +12275,16 @@ var MathLib = {};
                     return old + MathLib.toString(cur, options) + ', ';
                 }, '{').slice(0, -2) + '}';
             }
+        };
+
+        /**
+        * Adds up all the elements in the set.
+        *
+        * @param {number|MathLib object} n The object to add to the elements in the set.
+        * @return {Set|any}
+        */
+        Set.prototype.total = function () {
+            return MathLib.plus.apply(null, this.toArray());
         };
         Set.createSetOperation = function (left, both, right) {
             return function (a) {
