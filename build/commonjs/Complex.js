@@ -38,6 +38,15 @@
             }
         }
         /**
+        * The characteristic of the complex field is 0.
+        *
+        * @return {Integer}
+        */
+        Complex.characteristic = function () {
+            return new MathLib.Integer(0);
+        };
+
+        /**
         * A content MathML string representation
         *
         * @return {string}

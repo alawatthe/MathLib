@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-07
+ * build date: 2014-07-08
  */
 
 var MathLib = require('./MathLib.js'),
@@ -454,6 +454,9 @@ test('.constructor', 1, function () {
 test('.type', 1, function () {
 	var c = new MathLib.Complex(3, 4);
 	equal(c.type, 'complex', 'Testing .type');
+});
+test('.characteristic()', 1, function () {
+	ok(MathLib.Complex.characteristic().isEqual(new MathLib.Integer(0)));
 });
 test('.polar()', 8, function () {
 	equal(MathLib.Complex.polar(Infinity).re, Infinity);
@@ -4143,6 +4146,9 @@ test('.type', 1, function () {
 	var i = new MathLib.Integer('1234');
 	equal(i.type, 'integer', 'Testing .type');
 });
+test('.characteristic()', 1, function () {
+	ok(MathLib.Integer.characteristic().isEqual(new MathLib.Integer(0)));
+});
 test('.toContentMathML()', 2, function () {
 	equal(MathLib.Integer.toContentMathML(), '<integers/>');
 	equal(MathLib.Integer.toContentMathML({strict: true}), '<csymbol cd="setname1">Z</csymbol>');
@@ -5541,6 +5547,9 @@ test('.constructor', 1, function () {
 test('.type', 1, function () {
 	var r = new MathLib.Rational(2, 3);
 	equal(r.type, 'rational', 'Testing .type');
+});
+test('.characteristic()', 1, function () {
+	ok(MathLib.Rational.characteristic().isEqual(new MathLib.Integer(0)));
 });
 test('.toContentMathML()', 2, function () {
 	equal(MathLib.Rational.toContentMathML(), '<rationals/>');

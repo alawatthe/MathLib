@@ -34,6 +34,15 @@
             this.denominator = denominator;
         }
         /**
+        * The characteristic of the rational field is 0.
+        *
+        * @return {Integer}
+        */
+        Rational.characteristic = function () {
+            return new MathLib.Integer(0);
+        };
+
+        /**
         * A content MathML string representation
         *
         * @return {string}

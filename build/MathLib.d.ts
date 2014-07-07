@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-07
+ * build date: 2014-07-08
  */
 
 declare module MathLib {
@@ -872,6 +872,12 @@ declare module MathLib {
         public im: any;
         constructor(re: any, im?: number);
         /**
+        * The characteristic of the complex field is 0.
+        *
+        * @return {Integer}
+        */
+        static characteristic(): Integer;
+        /**
         * Construct a complex number out of the absolute value and the argument
         *
         * @return {Complex}
@@ -1218,6 +1224,12 @@ declare var Complex: Field;
         public data: number[];
         public sign: string;
         constructor(integer: any, options?: {});
+        /**
+        * The characteristic of the ring of integers is 0.
+        *
+        * @return {Integer}
+        */
+        static characteristic(): Integer;
         /**
         * A content MathML string representation
         *
@@ -2446,6 +2458,12 @@ declare var Integer: Ring;
         public numerator: any;
         public denominator: any;
         constructor(numerator: any, denominator?: any);
+        /**
+        * The characteristic of the rational field is 0.
+        *
+        * @return {Integer}
+        */
+        static characteristic(): Integer;
         /**
         * A content MathML string representation
         *

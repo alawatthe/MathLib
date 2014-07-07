@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-07
+ * build date: 2014-07-08
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -6670,6 +6670,15 @@ var MathLib = {};
             }
         }
         /**
+        * The characteristic of the complex field is 0.
+        *
+        * @return {Integer}
+        */
+        Complex.characteristic = function () {
+            return new MathLib.Integer(0);
+        };
+
+        /**
         * A content MathML string representation
         *
         * @return {string}
@@ -7613,6 +7622,15 @@ var MathLib = {};
             this.data = data;
             this.sign = sign;
         }
+        /**
+        * The characteristic of the ring of integers is 0.
+        *
+        * @return {Integer}
+        */
+        Integer.characteristic = function () {
+            return new MathLib.Integer(0);
+        };
+
         /**
         * A content MathML string representation
         *
@@ -11540,6 +11558,15 @@ var MathLib = {};
             this.numerator = numerator;
             this.denominator = denominator;
         }
+        /**
+        * The characteristic of the rational field is 0.
+        *
+        * @return {Integer}
+        */
+        Rational.characteristic = function () {
+            return new MathLib.Integer(0);
+        };
+
         /**
         * A content MathML string representation
         *

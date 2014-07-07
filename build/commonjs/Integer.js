@@ -90,6 +90,15 @@
             this.sign = sign;
         }
         /**
+        * The characteristic of the ring of integers is 0.
+        *
+        * @return {Integer}
+        */
+        Integer.characteristic = function () {
+            return new MathLib.Integer(0);
+        };
+
+        /**
         * A content MathML string representation
         *
         * @return {string}
