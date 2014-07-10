@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-08
+ * build date: 2014-07-10
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -8196,12 +8196,10 @@ var MathLib = {};
             } else {
                 if (this.sign === '-') {
                     if (n.sign === '+') {
-                        this.sign = '+';
-                        return n.minus(this);
+                        return n.minus(this.negative());
                     }
                 } else if (n.sign === '-') {
-                    n.sign = '+';
-                    return this.minus(n);
+                    return this.minus(n.negative());
                 }
 
                 if (this.data.length !== n.data.length) {

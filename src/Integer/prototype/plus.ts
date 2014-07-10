@@ -16,13 +16,11 @@ plus(n) : Integer {
 	else {
 		if (this.sign === '-') {
 			if (n.sign === '+') {
-				this.sign = '+';
-				return n.minus(this);
+				return n.minus(this.negative());
 			}
 		}
 		else if (n.sign === '-') {
-			n.sign = '+';
-			return this.minus(n);
+			return this.minus(n.negative());
 		}
 
 
