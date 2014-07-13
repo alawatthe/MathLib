@@ -9,7 +9,6 @@ minus(subtrahend) {
 		return this.plus(subtrahend.negative());
 	}
 	else {
-		MathLib.error({message: 'Matrix sizes not matching', method: 'Matrix#minus'});
-		return;
+		throw MathLib.EvaluationError('Matrix sizes not matching', {method: 'Matrix.prototype.minus'});
 	}
 }

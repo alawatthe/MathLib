@@ -6,5 +6,7 @@ test('.determinant()', 4, function () {
 	equal(m.determinant(), 3, 'Determinant of a 3x3 matrix');
 	equal(m.determinant(), 3, 'Determinant should be cached now');
 	equal(n.determinant(), 42, 'Determinant of 1x1 matrix');
-	equal(p.determinant(), undefined, 'Determinant of 2x3 matrix should be undefined');
+	throws(function () {
+		p.determinant();
+	}, 'Determinant of 2x3 matrix should be undefined');
 });

@@ -1,7 +1,8 @@
 module('Rational');
-test('init', 5, function () {
+test('init', 7, function () {
 	var r = new MathLib.Rational(2, 3),
 			p = new	MathLib.Rational(4);
+
 	equal(r.numerator, 2, 'Testing the numerator');
 	equal(r.denominator, 3, 'Testing the denominator');
 	equal(p.numerator, 4, 'Testing the numerator');
@@ -9,6 +10,12 @@ test('init', 5, function () {
 	throws(function () {
 		new MathLib.Rational(2, 0);
 	}, 'Setting the denominator to zero should throw an error.');
+	throws(function () {
+		new MathLib.Rational(NaN, 2);
+	}, 'Setting the numerator to NaN should throw an error.');
+	throws(function () {
+		new MathLib.Rational(2, NaN);
+	}, 'Setting the denominator to NaN should throw an error.');
 });
 
 
@@ -16,10 +23,12 @@ test('init', 5, function () {
 // Properties
 test('.constructor', 1, function () {
 	var r = new MathLib.Rational(2, 3);
+
 	equal(r.constructor, MathLib.Rational, 'Testing .constructor');
 });
 
 test('.type', 1, function () {
 	var r = new MathLib.Rational(2, 3);
+
 	equal(r.type, 'rational', 'Testing .type');
 });

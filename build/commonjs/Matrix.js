@@ -199,8 +199,9 @@
             var LU, determinant;
 
             if (!this.isSquare()) {
-                MathLib.error({ message: 'Determinant of non square matrix', method: 'Matrix#determinant' });
-                return;
+                throw MathLib.EvaluationError('Determinant of non square matrix', {
+                    method: 'Matrix.prototype.determinant'
+                });
             }
 
             if (this.rank() < this.rows) {
@@ -371,8 +372,7 @@
             var i, ii, res, inverse, col = [], matrix = [], n = this.rows;
 
             if (!this.isSquare()) {
-                MathLib.error({ message: 'Inverse of non square matrix', method: 'Matrix#inverse' });
-                return;
+                throw MathLib.EvaluationError('Inverse of non square matrix', { method: 'Matrix.prototype.inverse' });
             }
 
             for (i = 0, ii = n - 1; i < ii; i++) {
@@ -733,8 +733,7 @@
             if (this.rows === subtrahend.rows && this.cols === subtrahend.cols) {
                 return this.plus(subtrahend.negative());
             } else {
-                MathLib.error({ message: 'Matrix sizes not matching', method: 'Matrix#minus' });
-                return;
+                throw MathLib.EvaluationError('Matrix sizes not matching', { method: 'Matrix.prototype.minus' });
             }
         };
 
@@ -773,8 +772,7 @@
                 }
                 return new MathLib.Matrix(sum);
             } else {
-                MathLib.error({ message: 'Matrix sizes not matching', method: 'Matrix#plus' });
-                return;
+                throw MathLib.EvaluationError('Matrix sizes not matching', { method: 'Matrix.prototype.plus' });
             }
         };
 
@@ -1010,8 +1008,7 @@
                     }
                     return new MathLib.Matrix(product);
                 } else {
-                    MathLib.error({ message: 'Matrix sizes not matching', method: 'Matrix#times' });
-                    return;
+                    throw MathLib.EvaluationError('Matrix sizes not matching', { method: 'Matrix#times' });
                 }
             } else if (a.type === 'point' || a.type === 'vector') {
                 if (this.cols === a.length) {

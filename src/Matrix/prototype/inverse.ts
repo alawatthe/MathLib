@@ -10,8 +10,7 @@ inverse() {
 			n = this.rows;
 
 	if (!this.isSquare()) {
-		MathLib.error({message: 'Inverse of non square matrix', method: 'Matrix#inverse'});
-		return;
+		throw MathLib.EvaluationError('Inverse of non square matrix', {method: 'Matrix.prototype.inverse'});
 	}
 
 	for (i = 0, ii = n - 1; i < ii; i++) {

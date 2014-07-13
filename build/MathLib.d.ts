@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-10
+ * build date: 2014-07-13
  */
 
 declare module MathLib {
@@ -85,6 +85,9 @@ declare module MathLib {
     * @return {string}
     */
     var toString: (x: any, options?: toPresentationOptions) => string;
+
+
+    var EvaluationError: (message: string, options: any) => any;
 
 
     /**

@@ -21,8 +21,19 @@ export class Rational implements FieldElement, Printable {
 
 	constructor (numerator, denominator = (<any>1)) {
 		if (MathLib.isZero(denominator)) {
-			MathLib.error({message: 'The denominator cannot be zero.', method: 'Rational.constructor'});
-			throw 'The denominator cannot be zero.';
+			throw MathLib.EvaluationError('The denominator of a rational number cannot be zero.', {
+				method: 'Rational.constructor'
+			});
+		}
+		if (MathLib.isNaN(numerator)) {
+			throw MathLib.EvaluationError('The numerator of a rational number cannot be NaN.', {
+				method: 'Rational.constructor'
+			});
+		}
+		if (MathLib.isNaN(denominator)) {
+			throw MathLib.EvaluationError('The denominator of a rational number cannot be NaN.', {
+				method: 'Rational.constructor'
+			});
 		}
 
 		if ((typeof denominator === 'number' && denominator < 0) ||
@@ -34,3 +45,4 @@ export class Rational implements FieldElement, Printable {
 		this.numerator = numerator;
 		this.denominator = denominator;
 	}
+	

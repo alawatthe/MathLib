@@ -4,5 +4,7 @@ test('.minus()', 2, function () {
 			u = new MathLib.Vector([1, 2]);
 
 	equal(v.minus(w).isEqual(new MathLib.Vector([2, -4, -5])), true, '.minus()');
-	equal(v.minus(u), undefined, '.minus()');
+	throws(function () {
+		v.minus(u);
+	}, '.minus()');
 });

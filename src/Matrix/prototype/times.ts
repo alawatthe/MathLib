@@ -33,8 +33,7 @@ times(a) {
 			return new MathLib.Matrix(product);
 		}
 		else {
-			MathLib.error({message: 'Matrix sizes not matching', method: 'Matrix#times'});
-			return;
+			throw MathLib.EvaluationError('Matrix sizes not matching', {method: 'Matrix#times'});
 		}
 	}
 

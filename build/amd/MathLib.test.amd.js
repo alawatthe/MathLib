@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-10
+ * build date: 2014-07-13
  */
 
 require(['../build/amd/MathLib.js'], function(MathLib) {
@@ -4133,69 +4133,6 @@ test('.type', 1, function () {
 test('.characteristic()', 1, function () {
 	ok(MathLib.Integer.characteristic().isEqual(new MathLib.Integer(0)));
 });
-test('.randomElement()', 68, function () {
-	var sample, mean, variance, i, start, end,
-			arr = [],
-			n = 1000;
-
-	// random numbers from -4 to +4
-	start = new MathLib.Integer(-4);
-	end = new MathLib.Integer(4);
-	for (i = 0; i < n; i++) {
-		sample = MathLib.Integer.randomElement(start, end);
-
-		arr.push((sample.data[0] || 0) * (sample.sign === '+' ? 1 : -1));
-	}
-
-	for (i = 0; i < 10; i++) {
-		ok(arr[i] <= 4);
-		ok(arr[i] >= -4);
-		ok(arr[i] % 1 === 0);
-	}
-
-	// 2*Math.sqrt((9*9-1)/12)/Math.sqrt(9) = 1.7213259316477407
-	mean = arr.reduce(function (x, y) {
-		return x + y;
-	}) / n;
-	ok(mean < +1.7213259316477407);
-	ok(mean > -1.7213259316477407);
-
-	variance = arr.reduce(function (x, y) {
-		return x + y * y;
-	}, 0) / n;
-	ok(variance < 8.88888888888889);
-	ok(variance > 4.444444444444445);
-
-
-
-	// random numbers from 0 to 8
-	arr = [];
-	start = new MathLib.Integer(8);
-	for (i = 0; i < n; i++) {
-		sample = MathLib.Integer.randomElement(start);
-
-		arr.push(sample.data[0] || 0);
-	}
-
-	for (i = 0; i < 10; i++) {
-		ok(arr[i] <= 8);
-		ok(arr[i] >= 0);
-		ok(arr[i] % 1 === 0);
-	}
-
-	// 2*Math.sqrt((9*9-1)/12)/Math.sqrt(9) = 1.7213259316477407
-	mean = arr.reduce(function (x, y) {
-		return x + y;
-	}) / n;
-	ok(mean < 4 + 1.7213259316477407);
-	ok(mean > 4 - 1.7213259316477407);
-
-	variance = arr.reduce(function (x, y) {
-		return x + Math.pow(y - 4, 2);
-	}, 0) / n;
-	ok(variance < 8.88888888888889);
-	ok(variance > 4.444444444444445);
-});
 test('.toContentMathML()', 2, function () {
 	equal(MathLib.Integer.toContentMathML(), '<integers/>');
 	equal(MathLib.Integer.toContentMathML({strict: true}), '<csymbol cd="setname1">Z</csymbol>');
@@ -4804,8 +4741,11 @@ test('.determinant()', 4, function () {
 	equal(m.determinant(), 3, 'Determinant of a 3x3 matrix');
 	equal(m.determinant(), 3, 'Determinant should be cached now');
 	equal(n.determinant(), 42, 'Determinant of 1x1 matrix');
-	equal(p.determinant(), undefined, 'Determinant of 2x3 matrix should be undefined');
+	throws(function () {
+		p.determinant();
+	}, 'Determinant of 2x3 matrix should be undefined');
 });
+
 test('.every()', 2, function () {
 	var m = new MathLib.Matrix([[1, 5, 3], [9, 5, 11], [-1, 9, 3]]),
 			n = new MathLib.Matrix([[1, 3, 5], [7, 8, 1], [11, 6, 3]]),
@@ -5571,9 +5511,10 @@ test('.valueAt()', 6, function () {
 	equal(charPoly.valueAt(m).isZero(), true, 'Cayley–Hamilton theorem');
 });
 module('Rational');
-test('init', 5, function () {
+test('init', 7, function () {
 	var r = new MathLib.Rational(2, 3),
 			p = new	MathLib.Rational(4);
+
 	equal(r.numerator, 2, 'Testing the numerator');
 	equal(r.denominator, 3, 'Testing the denominator');
 	equal(p.numerator, 4, 'Testing the numerator');
@@ -5581,6 +5522,12 @@ test('init', 5, function () {
 	throws(function () {
 		new MathLib.Rational(2, 0);
 	}, 'Setting the denominator to zero should throw an error.');
+	throws(function () {
+		new MathLib.Rational(NaN, 2);
+	}, 'Setting the numerator to NaN should throw an error.');
+	throws(function () {
+		new MathLib.Rational(2, NaN);
+	}, 'Setting the denominator to NaN should throw an error.');
 });
 
 
@@ -5588,13 +5535,16 @@ test('init', 5, function () {
 // Properties
 test('.constructor', 1, function () {
 	var r = new MathLib.Rational(2, 3);
+
 	equal(r.constructor, MathLib.Rational, 'Testing .constructor');
 });
 
 test('.type', 1, function () {
 	var r = new MathLib.Rational(2, 3);
+
 	equal(r.type, 'rational', 'Testing .type');
 });
+
 test('.characteristic()', 1, function () {
 	ok(MathLib.Rational.characteristic().isEqual(new MathLib.Integer(0)));
 });
@@ -6237,8 +6187,11 @@ test('.minus()', 2, function () {
 			u = new MathLib.Vector([1, 2]);
 
 	equal(v.minus(w).isEqual(new MathLib.Vector([2, -4, -5])), true, '.minus()');
-	equal(v.minus(u), undefined, '.minus()');
+	throws(function () {
+		v.minus(u);
+	}, '.minus()');
 });
+
 test('.neagtive()', 1, function () {
 	var v = new MathLib.Vector([3, 1, 4]);
 
@@ -6265,8 +6218,11 @@ test('.plus()', 2, function () {
 			u = new MathLib.Vector([1, 2]);
 
 	equal(v.plus(w).isEqual(new MathLib.Vector([4, 6, 13])), true, '.plus()');
-	equal(v.plus(u), undefined, '.plus()');
+	throws(function () {
+		v.plus(u);
+	}, '.plus()');
 });
+
 test('.reduce()', 1, function () {
 	var v = new MathLib.Vector([1, 2, 3]),
 			f = function (prev, cur) {
@@ -6282,9 +6238,14 @@ test('.scalarProduct()', 3, function () {
 			u = new MathLib.Vector([1, 2]);
 
 	equal(v.scalarProduct(w), 44, '.scalarProduct()');
-	equal(u.scalarProduct(w), undefined, '.scalarProduct()');
-	equal(v.scalarProduct(u), undefined, '.scalarProduct()');
+	throws(function () {
+		u.scalarProduct(w);
+	}, '.scalarProduct()');
+	throws(function () {
+		v.scalarProduct(u);
+	}, '.scalarProduct()');
 });
+
 test('.slice()', 2, function () {
 	var v = new MathLib.Vector([1, 2, 3, 4, 5]);
 
@@ -6337,8 +6298,12 @@ test('.vectorProduct()', 3, function () {
 			res = new MathLib.Vector([-6, -30, 22]);
 
 	equal(v.vectorProduct(w).isEqual(res), true, '.vectorProduct()');
-	equal(u.vectorProduct(w), undefined, '.vectorProduct()');
-	equal(v.vectorProduct(u), undefined, '.vectorProduct()');
+	throws(function () {
+		u.vectorProduct(w);
+	}, '.vectorProduct()');
+	throws(function () {
+		v.vectorProduct(u);
+	}, '.vectorProduct()');
 });
 
 });

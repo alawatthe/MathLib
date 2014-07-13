@@ -27,8 +27,7 @@ times(n : any) : any {
 			return new MathLib.Vector(product);
 		}
 		else {
-			MathLib.error({message: 'Vector/Matrix sizes not matching', method: 'Vector#times'});
-			return;
+			throw MathLib.EvaluationError('Vector/Matrix sizes not matching', {method: 'Vector.prototype.times'});
 		}
 	}
 }

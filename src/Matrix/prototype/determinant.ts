@@ -8,8 +8,9 @@ determinant() : any {
 	var LU, determinant;
 	
 	if (!this.isSquare()) {
-		MathLib.error({message: 'Determinant of non square matrix', method: 'Matrix#determinant'});
-		return;
+		throw MathLib.EvaluationError('Determinant of non square matrix', {
+			method: 'Matrix.prototype.determinant'
+		});
 	}
 
 	if (this.rank() < this.rows) {
@@ -24,5 +25,4 @@ determinant() : any {
 		return determinant;
 	};
 	return determinant;
-
 }

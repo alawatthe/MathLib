@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-10
+ * build date: 2014-07-13
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -147,6 +147,7 @@ var MathLib = {};
     */
     MathLib.on = function (type, callback) {
         if (type === 'error') {
+            console.warn('MathLib.on("error", fn) is deprecated');
             errors.push(callback);
         } else if (type === 'warning') {
             warnings.push(callback);
@@ -447,6 +448,33 @@ var MathLib = {};
         }
     };
     'export MathLib';
+})(MathLib);
+
+
+(function (MathLib) {
+    'use strict';
+
+    /**
+    * MathLib.EvaluationError is thrown if it is not possible to perform the Evaluation.
+    *
+    */
+    var error = function (message, options) {
+        var tmp = Error.apply(this, arguments);
+        tmp.name = this.name = 'EvaluationError';
+
+        this.stack = tmp.stack;
+        this.message = tmp.message;
+        this.method = options.method;
+
+        return this;
+    };
+
+    var CustomError = function () {
+    };
+    CustomError.prototype = Error.prototype;
+    MathLib.error.prototype = new CustomError();
+
+    MathLib.EvaluationError = error;
 })(MathLib);
 
 
@@ -6235,8 +6263,7 @@ var MathLib = {};
             if (this.length === v.length) {
                 return this.plus(v.negative());
             } else {
-                MathLib.error({ message: 'Vector sizes not matching', method: 'Vector#minus' });
-                return;
+                throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#minus' });
             }
         };
 
@@ -6296,8 +6323,7 @@ var MathLib = {};
                     return MathLib.plus(x, v[i]);
                 }));
             } else {
-                MathLib.error({ message: 'Vector sizes not matching', method: 'Vector#plus' });
-                return;
+                throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#plus' });
             }
         };
 
@@ -6326,8 +6352,7 @@ var MathLib = {};
                     return MathLib.plus(old, MathLib.times(w[i], v[i]));
                 }, 0);
             } else {
-                MathLib.error({ message: 'Vector sizes not matching', method: 'Vector#scalarProduct' });
-                return;
+                throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#scalarProduct' });
             }
         };
 
@@ -6371,8 +6396,7 @@ var MathLib = {};
                     }
                     return new MathLib.Vector(product);
                 } else {
-                    MathLib.error({ message: 'Vector/Matrix sizes not matching', method: 'Vector#times' });
-                    return;
+                    throw MathLib.EvaluationError('Vector/Matrix sizes not matching', { method: 'Vector.prototype.times' });
                 }
             }
         };
@@ -6459,8 +6483,7 @@ var MathLib = {};
                     MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0]))
                 ]);
             } else {
-                MathLib.error({ message: 'Vectors are not three-dimensional', method: 'Vector#vectorProduct' });
-                return;
+                throw MathLib.EvaluationError('Vectors are not three-dimensional', { method: 'Vector.prototype.vectorProduct' });
             }
         };
         Vector.areLinearIndependent = function (vectors) {
@@ -8831,8 +8854,9 @@ var MathLib = {};
             var LU, determinant;
 
             if (!this.isSquare()) {
-                MathLib.error({ message: 'Determinant of non square matrix', method: 'Matrix#determinant' });
-                return;
+                throw MathLib.EvaluationError('Determinant of non square matrix', {
+                    method: 'Matrix.prototype.determinant'
+                });
             }
 
             if (this.rank() < this.rows) {
@@ -9003,8 +9027,7 @@ var MathLib = {};
             var i, ii, res, inverse, col = [], matrix = [], n = this.rows;
 
             if (!this.isSquare()) {
-                MathLib.error({ message: 'Inverse of non square matrix', method: 'Matrix#inverse' });
-                return;
+                throw MathLib.EvaluationError('Inverse of non square matrix', { method: 'Matrix.prototype.inverse' });
             }
 
             for (i = 0, ii = n - 1; i < ii; i++) {
@@ -9365,8 +9388,7 @@ var MathLib = {};
             if (this.rows === subtrahend.rows && this.cols === subtrahend.cols) {
                 return this.plus(subtrahend.negative());
             } else {
-                MathLib.error({ message: 'Matrix sizes not matching', method: 'Matrix#minus' });
-                return;
+                throw MathLib.EvaluationError('Matrix sizes not matching', { method: 'Matrix.prototype.minus' });
             }
         };
 
@@ -9405,8 +9427,7 @@ var MathLib = {};
                 }
                 return new MathLib.Matrix(sum);
             } else {
-                MathLib.error({ message: 'Matrix sizes not matching', method: 'Matrix#plus' });
-                return;
+                throw MathLib.EvaluationError('Matrix sizes not matching', { method: 'Matrix.prototype.plus' });
             }
         };
 
@@ -9642,8 +9663,7 @@ var MathLib = {};
                     }
                     return new MathLib.Matrix(product);
                 } else {
-                    MathLib.error({ message: 'Matrix sizes not matching', method: 'Matrix#times' });
-                    return;
+                    throw MathLib.EvaluationError('Matrix sizes not matching', { method: 'Matrix#times' });
                 }
             } else if (a.type === 'point' || a.type === 'vector') {
                 if (this.cols === a.length) {
@@ -11544,8 +11564,19 @@ var MathLib = {};
             if (typeof denominator === "undefined") { denominator = 1; }
             this.type = 'rational';
             if (MathLib.isZero(denominator)) {
-                MathLib.error({ message: 'The denominator cannot be zero.', method: 'Rational.constructor' });
-                throw 'The denominator cannot be zero.';
+                throw MathLib.EvaluationError('The denominator of a rational number cannot be zero.', {
+                    method: 'Rational.constructor'
+                });
+            }
+            if (MathLib.isNaN(numerator)) {
+                throw MathLib.EvaluationError('The numerator of a rational number cannot be NaN.', {
+                    method: 'Rational.constructor'
+                });
+            }
+            if (MathLib.isNaN(denominator)) {
+                throw MathLib.EvaluationError('The denominator of a rational number cannot be NaN.', {
+                    method: 'Rational.constructor'
+                });
             }
 
             if ((typeof denominator === 'number' && denominator < 0) || (denominator.type === 'integer' && denominator.sign === '-')) {

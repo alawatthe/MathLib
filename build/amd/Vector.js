@@ -121,8 +121,7 @@
             if (this.length === v.length) {
                 return this.plus(v.negative());
             } else {
-                MathLib.error({ message: 'Vector sizes not matching', method: 'Vector#minus' });
-                return;
+                throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#minus' });
             }
         };
 
@@ -182,8 +181,7 @@
                     return MathLib.plus(x, v[i]);
                 }));
             } else {
-                MathLib.error({ message: 'Vector sizes not matching', method: 'Vector#plus' });
-                return;
+                throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#plus' });
             }
         };
 
@@ -212,8 +210,7 @@
                     return MathLib.plus(old, MathLib.times(w[i], v[i]));
                 }, 0);
             } else {
-                MathLib.error({ message: 'Vector sizes not matching', method: 'Vector#scalarProduct' });
-                return;
+                throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#scalarProduct' });
             }
         };
 
@@ -257,8 +254,7 @@
                     }
                     return new MathLib.Vector(product);
                 } else {
-                    MathLib.error({ message: 'Vector/Matrix sizes not matching', method: 'Vector#times' });
-                    return;
+                    throw MathLib.EvaluationError('Vector/Matrix sizes not matching', { method: 'Vector.prototype.times' });
                 }
             }
         };
@@ -345,8 +341,7 @@
                     MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0]))
                 ]);
             } else {
-                MathLib.error({ message: 'Vectors are not three-dimensional', method: 'Vector#vectorProduct' });
-                return;
+                throw MathLib.EvaluationError('Vectors are not three-dimensional', { method: 'Vector.prototype.vectorProduct' });
             }
         };
         Vector.areLinearIndependent = function (vectors) {

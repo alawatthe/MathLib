@@ -122,6 +122,7 @@ var errors = [], warnings = [];
 */
 MathLib.on = function (type, callback) {
     if (type === 'error') {
+        console.warn('MathLib.on("error", fn) is deprecated');
         errors.push(callback);
     } else if (type === 'warning') {
         warnings.push(callback);

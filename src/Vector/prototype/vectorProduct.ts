@@ -14,7 +14,6 @@ vectorProduct(v : Vector) : Vector {
 		]);
 	}
 	else {
-		MathLib.error({message: 'Vectors are not three-dimensional', method: 'Vector#vectorProduct'});
-		return;
+		throw MathLib.EvaluationError('Vectors are not three-dimensional', {method: 'Vector.prototype.vectorProduct'});
 	}
 }

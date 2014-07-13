@@ -4,6 +4,10 @@ test('.scalarProduct()', 3, function () {
 			u = new MathLib.Vector([1, 2]);
 
 	equal(v.scalarProduct(w), 44, '.scalarProduct()');
-	equal(u.scalarProduct(w), undefined, '.scalarProduct()');
-	equal(v.scalarProduct(u), undefined, '.scalarProduct()');
+	throws(function () {
+		u.scalarProduct(w);
+	}, '.scalarProduct()');
+	throws(function () {
+		v.scalarProduct(u);
+	}, '.scalarProduct()');
 });

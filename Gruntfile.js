@@ -65,7 +65,7 @@ module.exports = function (grunt) {
 			],
 
 			modules = [
-				'Circle', 'Complex', 'Conic', 'Expression', 'Functn', 'Integer',
+				'Circle', 'Complex', 'Conic', 'Expression', 'EvaluationError', 'Functn', 'Integer',
 				'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial',
 				'Rational', 'Screen', 'Screen2D', 'Set', 'Vector'
 			],
@@ -179,6 +179,13 @@ module.exports = function (grunt) {
 					footer: '\n'
 				}
 			},
+			EvaluationError: {
+				src: createModuleArray('EvaluationError'),
+				dest: 'build/plain/EvaluationError.ts',
+				options: {
+					footer: '\n}\n'
+				}
+			},
 			Expression: {
 				src: createModuleArray('Expression'),
 				dest: 'build/plain/Expression.ts'
@@ -274,7 +281,7 @@ module.exports = function (grunt) {
 
 			plain: {
 				src: [
-					'meta', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
+					'meta', 'EvaluationError', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
 					'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Integer', 'Line',
 					'Matrix', 'Permutation', 'Conic', 'Point', 'Polynomial', 'Rational', 'Set'
 				].map(function (module) {
@@ -288,7 +295,7 @@ module.exports = function (grunt) {
 			},
 
 			declaration: {
-				src: ['meta', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
+				src: ['meta', 'EvaluationError', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
 					'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Integer', 'Line',
 					'Matrix', 'Permutation', 'Conic', 'Point', 'Polynomial', 'Rational', 'Set'
 				].map(function (module) {
@@ -463,7 +470,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 100,
+					build: 104,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -514,7 +521,7 @@ module.exports = function (grunt) {
 			},
 			files: {
 				src: [
-					'Circle', 'Complex', 'Conic', 'Expression', 'Functn', 'Integer',
+					'Circle', 'Complex', 'Conic', 'EvaluationError', 'Expression', 'Functn', 'Integer',
 					'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial',
 					'Rational', 'Screen', 'Screen2D', 'Screen3D', 'Set', 'Vector'
 				].map(function (module) {
@@ -1049,7 +1056,7 @@ module.exports = function (grunt) {
 
 
 	grunt.registerTask('generatePlain', ['clean:plain', 'newer:concat:meta', 'newer:concat:Interfaces',
-		'newer:concat:Expression', 'newer:concat:Functn', 'newer:concat:Screen', 'newer:concat:Layer',
+		'newer:concat:EvaluationError', 'newer:concat:Expression', 'newer:concat:Functn', 'newer:concat:Screen', 'newer:concat:Layer',
 		'newer:concat:Canvas', 'newer:concat:SVG', 'newer:concat:Screen2D', 'newer:concat:Screen3D',
 		'newer:concat:Vector', 'newer:concat:Circle', 'newer:concat:Complex', 'newer:concat:Integer',
 		'newer:concat:Line', 'newer:concat:Matrix', 'newer:concat:Permutation', 'newer:concat:Conic',

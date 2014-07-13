@@ -11,7 +11,6 @@ scalarProduct(v : Vector) : any {
 		}, 0);
 	}
 	else {
-		MathLib.error({message: 'Vector sizes not matching', method: 'Vector#scalarProduct'});
-		return;
+		throw MathLib.EvaluationError('Vector sizes not matching', {method: 'Vector#scalarProduct'});
 	}
 }

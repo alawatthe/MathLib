@@ -9,7 +9,6 @@ minus(v : Vector) : Vector {
 		return this.plus(v.negative());
 	}
 	else {
-		MathLib.error({message: 'Vector sizes not matching', method: 'Vector#minus'});
-		return;
+		throw MathLib.EvaluationError('Vector sizes not matching', {method: 'Vector#minus'});
 	}
 }

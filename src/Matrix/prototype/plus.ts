@@ -19,7 +19,6 @@ plus(summand) {
 		return new MathLib.Matrix(sum);
 	}
 	else {
-		MathLib.error({message: 'Matrix sizes not matching', method: 'Matrix#plus'});
-		return;
+		throw MathLib.EvaluationError('Matrix sizes not matching', {method: 'Matrix.prototype.plus'});
 	}
 }
