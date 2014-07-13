@@ -7,7 +7,7 @@ onmousemove(evt : MouseEvent) {
 	var p,
 			devicePixelRatio = window.devicePixelRatio || 1;
 
-	evt.preventDefault();	
+	evt.preventDefault();
 
 	// Pan mode
 	if (this.options.interaction.type === 'pan') {

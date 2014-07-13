@@ -1,6 +1,6 @@
 /**
  * The cube root function
- * 
+ *
  */
 fns.cbrt = {
 	functn(x) {
@@ -10,7 +10,7 @@ fns.cbrt = {
 		if (x === 0 || x !== x || x === Infinity || x === -Infinity) {
 			return x;
 		}
-		
+
 		// Get an approximation
 		a = MathLib.sign(x) * Math.pow(Math.abs(x), 1 / 3);
 

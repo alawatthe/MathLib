@@ -5,8 +5,8 @@
  *
  * #### Simple use case:
  * ```
- * // Create the rational number 2/3  
- * var r = new MathLib.Rational(2, 3);  
+ * // Create the rational number 2/3
+ * var r = new MathLib.Rational(2, 3);
  * ```
  *
  * @class
@@ -41,8 +41,7 @@ export class Rational implements FieldElement, Printable {
 			numerator = MathLib.negative(numerator);
 			denominator = MathLib.negative(denominator);
 		}
-		
+
 		this.numerator = numerator;
 		this.denominator = denominator;
 	}
-	

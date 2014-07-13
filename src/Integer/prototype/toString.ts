@@ -31,11 +31,11 @@ toString(options : toPresentationOptions = {}) : string {
 			str = '-' + str;
 		}
 	}
-	
+
 	if (options.sign && (this.sign === '+' || this.isZero())) {
 		str = '+' + str;
 	}
-	
+
 	if (options.baseSubscript) {
 		if (base > 9) {
 			str += '&#x208' + Math.floor(base / 10) + ';';

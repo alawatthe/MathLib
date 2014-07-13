@@ -29,7 +29,7 @@ inverse() {
 		if (res === undefined) {
 			return;
 		}
-		
+
 		res.forEach(function (x, i) {
 			matrix[i].push(x);
 		});

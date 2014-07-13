@@ -21,7 +21,7 @@ export class Set implements Printable  {
 		if (!elements) {
 			elements = [];
 		}
-		
+
 		elements = elements.sort(MathLib.compare)
 			.filter(function (x, i, a) {
 		 		return (a.length === i + 1) ||

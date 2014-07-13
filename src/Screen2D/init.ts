@@ -51,7 +51,7 @@ export class Screen2D extends Screen {
 						color: 0x000000,
 						lineColor: 0x000000,
 						textColor: 0x000000,
-					
+
 /*						label: true
 						label: false
 						label: {
@@ -65,10 +65,10 @@ export class Screen2D extends Screen {
 							x: true,
 							y: true
 						},
-					
+
 						x: true,
 						y: true
-						
+
 						// origin: {x: 0, y: 0},
 						// tick: {x: 1, y: 1}
 					},

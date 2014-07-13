@@ -7,7 +7,7 @@
  */
 isBandMatrix(l : number, u : number) : boolean {
 	// var i, j, ii, jj;
-	
+
 	if (arguments.length === 1) {
 		u = l;
 	}

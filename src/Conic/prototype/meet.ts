@@ -8,7 +8,7 @@ meet(x) {
 	var B, C, alpha, i, j, p1, p2, Ml,
 			a, b, c, d, Delta0, Delta1, lambda, degenerated, lines,
 			A = this.primal;
-			
+
 	if (x.type === 'line') {
 
 		var setter = function () {

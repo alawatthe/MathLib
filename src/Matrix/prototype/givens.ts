@@ -9,12 +9,12 @@ givens() {
 			R = this.copy(),
 			Q = MathLib.Matrix.identity(rows),
 			c, s, rho, i, j, k, ri, rj, qi, qj;
-			
+
 	for (i = 0; i < cols; i++) {
 		for (j = i + 1; j < rows; j++) {
 
 			if (!MathLib.isZero(R[j][i])) {
-				// We can't use the sign function here, because we want the factor 
+				// We can't use the sign function here, because we want the factor
 				// to be 1 if A[i][i] is zero.
 				rho = (R[i][i] < 0 ? -1 : 1) * MathLib.hypot(R[i][i],  R[j][i]);
 				c   = R[i][i] / rho;
@@ -25,7 +25,7 @@ givens() {
 				rj = [];
 				qi = [];
 				qj = [];
-				
+
 				// Multiply to R
 				for (k = 0; k < cols; k++) {
 					ri.push(R[i][k]);

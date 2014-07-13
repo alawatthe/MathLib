@@ -25,7 +25,7 @@ normalize() : Conic {
 		f += -d * d / (4 * a);
 		d = 0;
 	}
-	
+
 	if (c !== 0) {
 		f += -e * e / (4 * c);
 		e = 0;

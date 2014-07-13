@@ -9,7 +9,7 @@ arcosh() : Complex {
 	if (this.isZero()) {
 		return new MathLib.Complex(0, 1.5707963267948966192);
 	}
-	
+
 	arccos = this.arccos();
 	arccos = arccos.times(new MathLib.Complex(0, arccos.im > 0 ? -1 : 1));
 

@@ -125,7 +125,7 @@ export class Screen3D extends Screen {
 				update: function () {}
 			};
 		}
-		
+
 
 
 

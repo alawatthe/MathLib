@@ -12,7 +12,7 @@ divide(divisor) {
 	}
 	else {
 		divrem = this.divrem(divisor);
-		
+
 		if (divrem[1].isZero()) {
 			return divrem[0];
 		}

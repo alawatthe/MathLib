@@ -6,7 +6,7 @@
  */
 determinant() : any {
 	var LU, determinant;
-	
+
 	if (!this.isSquare()) {
 		throw MathLib.EvaluationError('Determinant of non square matrix', {
 			method: 'Matrix.prototype.determinant'

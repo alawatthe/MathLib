@@ -16,7 +16,7 @@ export class Permutation {
 
 	constructor (p) {
 		var cycle, permutation;
-		
+
 		if (Array.isArray(p[0])) {
 			cycle = p;
 			permutation = Permutation.cycleToList(cycle);

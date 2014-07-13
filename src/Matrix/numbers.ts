@@ -10,7 +10,7 @@ static numbers = function (n, r : number, c : number) {
 	var i, ii,
 			row = [],
 			matrix = [];
-			
+
 	for (i = 0, ii = c || r || 1; i < ii; i++) {
 		row.push(n);
 	}

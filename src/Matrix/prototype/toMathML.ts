@@ -6,7 +6,7 @@
  */
 toMathML(options : toPresentationOptions = {}) : string {
 	var passOptions = {base: options.base, baseSubscript: options.baseSubscript};
-	
+
 	return this.reduce(function (str, x) {
 		return str
 						+ '<mtr><mtd>'

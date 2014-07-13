@@ -11,7 +11,7 @@ isUnit() : boolean {
 			return false;
 		}
 	}
-	
+
 	if (this.data[0] === 1) {
 		return true;
 	}

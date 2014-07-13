@@ -22,7 +22,7 @@ pow(exponent) : any {
 			}
 
 			for (i = e.data.length - 1; i >= 0; i--) {
-			
+
 				half[i] = Math.floor(e.data[i] / 2) + carry;
 
 				if (e.data[i] % 2) {
@@ -35,7 +35,7 @@ pow(exponent) : any {
 
 			res = powInt(b, new MathLib.Integer(half));
 			res = res.times(res);
-		
+
 			if (e.data[0] % 2) {
 				res = res.times(b);
 			}

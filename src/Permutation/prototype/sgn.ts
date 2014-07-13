@@ -6,7 +6,7 @@
 sgn() : number {
 	var i, ii,
 			count = 0;
-			
+
 	for (i = 0, ii = this.cycle.length; i < ii; i++) {
 		count += this.cycle[i].length;
 	}

@@ -1,6 +1,6 @@
 /**
  * Checks whether a number is a prime or not
- * 
+ *
  */
 fns.isPrime = {
 	functn(x) {
@@ -21,5 +21,5 @@ fns.isPrime = {
 		}
 		return false;
 	},
-	toContentMathML: ['<csymbol cd="set1">in</csymbol>', '<csymbol cd="setname1">P</csymbol>'],
+	toContentMathML: ['<csymbol cd="set1">in</csymbol>', '<csymbol cd="setname1">P</csymbol>']
 };

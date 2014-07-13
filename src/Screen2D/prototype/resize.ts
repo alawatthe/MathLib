@@ -1,8 +1,8 @@
 /**
  * Adjust the rendering if the screen is resized
  *
- * @param {number} width The new width  
- * @param {number} height The new height  
+ * @param {number} width The new width
+ * @param {number} height The new height
  * @return {Screen2D}
  */
 resize(width : number, height : number) : Screen2D {
@@ -17,7 +17,7 @@ resize(width : number, height : number) : Screen2D {
 		this.layer.back.element.width = width;
 		this.layer.back.element.height = height;
 		this.layer.back.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-		
+
 		this.layer.grid.element.width = width;
 		this.layer.grid.element.height = height;
 		this.layer.grid.ctx.fillStyle = 'rgba(255, 255, 255, 0)';

@@ -42,7 +42,7 @@ meet(l : Line) : Point {
 				enumerable: true
 			}
 		});
-		
+
 		return point;
 	}
 }

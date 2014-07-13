@@ -32,7 +32,7 @@ drawAxes() : Screen2D {
 			xLen = Math.max(0, Math.min(20, -xExp)),
 			yLen = Math.max(0, Math.min(20, -yExp));
 
-  if (!this.options.axes) {
+	if (!this.options.axes) {
 		return this;
 	}
 

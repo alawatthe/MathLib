@@ -14,7 +14,7 @@ arcoth() : Complex {
 			return new MathLib.Complex(this.re, 1.5707963267948966192);
 		}
 	}
-	
+
 	if (this.re === Infinity) {
 		return new MathLib.Complex(0, 0);
 	}

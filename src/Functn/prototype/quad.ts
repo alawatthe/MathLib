@@ -1,16 +1,16 @@
 /**
  * Numeric evaluation of an integral using an adative simpson approach.
- * 
+ *
  * Inspired by "adaptsim.m" by Walter Gander
  * and MatLab's "quad.m"
- * 
+ *
  * @param {number} a The starting point
  * @param {number} b The end point
  * @param {number} options Optional options
  * @return {number}
  */
 functnPrototype.quad = function (a, b, options : any = {}) : number {
-	
+
 	var f = this,
 			warnMessage = [
 				'Calculation succeded',
@@ -35,7 +35,7 @@ functnPrototype.quad = function (a, b, options : any = {}) : number {
 	if (!('minStep' in options)) {
 		options.minStep = 1e-15;
 	}
-	
+
 	if (!('maxCalls' in options)) {
 		options.maxCalls = 10000;
 	}
@@ -72,7 +72,7 @@ var quadstep = function  (f, a, b, fa, fc, fb, options) {
 
 			options.calls = options.calls + 2;
 
-	
+
 	// Infinite or Not-a-Number function value encountered
 	if (!MathLib.isFinite(Q)) {
 		options.warn = Math.max(options.warn, 3);

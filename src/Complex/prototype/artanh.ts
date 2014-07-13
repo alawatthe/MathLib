@@ -9,7 +9,7 @@ artanh() : Complex {
 	if (this.isZero()) {
 		return new MathLib.Complex(this.re, this.im);
 	}
-	
+
 	if (this.re === Infinity) {
 		return new MathLib.Complex(NaN);
 	}

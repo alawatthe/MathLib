@@ -19,12 +19,11 @@ oncontextmenu(evt) {
 	menu.style.setProperty('top', (evt.clientY - 20) + 'px');
 	menu.style.setProperty('left', evt.clientX + 'px');
 	overlay.style.setProperty('display', 'block');
-	
 
 
 	listener = function () {
 		overlay.style.setProperty('display', 'none');
-		
+
 		Array.prototype.forEach.call(_this.contextMenu.getElementsByClassName('MathLib_temporaryMenuItem'),
 		function (x) {
 			_this.contextMenu.removeChild(x);

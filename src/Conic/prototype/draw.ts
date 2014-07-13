@@ -47,7 +47,7 @@ draw(screen, options : pathDrawingOptions = {}, redraw = false) : Conic {
 
 				options.from = -10;
 				options.to = 10;
-				
+
 				var param = -this.primal[1][2] / (2 * this.primal[0][0]);
 				cx = 0;
 				cy = this.primal[2][2] / this.primal[0][0];
@@ -104,7 +104,7 @@ draw(screen, options : pathDrawingOptions = {}, redraw = false) : Conic {
 				], options, redraw);
 			}
 
-			
+
 		}
 
 		else if (rank === 2) {

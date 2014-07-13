@@ -17,6 +17,6 @@ powerset() : Set {
 		}
 		powerset.push(new MathLib.Set(subset));
 	}
-	
+
 	return new MathLib.Set(powerset);
 }

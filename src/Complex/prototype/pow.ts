@@ -1,7 +1,7 @@
 /**
  * Calculates the complex number raised to some power
  *
- * @param {numeric} c The power to which the complex number should be raised   
+ * @param {numeric} c The power to which the complex number should be raised
  * @return {Complex}
  */
 pow(c) : Complex {
@@ -32,7 +32,7 @@ pow(c) : Complex {
 	}
 	else {
 		// The naive pow method has some rounding errrors. For example
-		// (2+5i)^3 = -142.00000000000006-64.99999999999999i  
+		// (2+5i)^3 = -142.00000000000006-64.99999999999999i
 		// instead of -142-65i which are errors of magnitude around 1e-14.
 		// This error increases quickly for increasing exponents.
 		// (2+5i)^21 has an error of 5.8 in the real part

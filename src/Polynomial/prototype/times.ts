@@ -1,13 +1,13 @@
 /**
- * Multiplies the polynomial by a number or an other polynomial  
+ * Multiplies the polynomial by a number or an other polynomial
  *
- * @param {number|Polynomial} a The multiplicator  
+ * @param {number|Polynomial} a The multiplicator
  * @return {Polynomial}
  */
 times(a) : Polynomial {
 	var i, ii, j, jj,
 			product = [];
-			
+
 	if (a.type === 'polynomial') {
 		for (i = 0, ii = this.deg; i <= ii; i++) {
 			for (j = 0, jj = a.deg; j <= jj; j++) {

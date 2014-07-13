@@ -11,7 +11,7 @@ arctan() : Complex {
 	if (this.isZero()) {
 		return new MathLib.Complex(this.re, this.im);
 	}
-	
+
 	res = MathLib.times(new MathLib.Complex(0, -0.5),
 		MathLib.plus(one, iz).divide(MathLib.minus(one, iz)).ln());
 

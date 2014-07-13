@@ -11,6 +11,6 @@ cot() : Complex {
 	if (this.isZero()) {
 		return new MathLib.Complex(Infinity);
 	}
-			
+
 	return new MathLib.Complex(-MathLib.sin(aa) / d , MathLib.sinh(bb) / d);
 }

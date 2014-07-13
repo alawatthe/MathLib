@@ -7,7 +7,7 @@ csc() : Complex {
 	var a = this.re,
 			b = this.im,
 			d = MathLib.cos(2 * a) - MathLib.cosh(2 * b);
-	
+
 	if (this.isZero()) {
 		return new MathLib.Complex(Infinity);
 	}

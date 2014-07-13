@@ -6,8 +6,8 @@
  *
  * #### Simple example:
  * ```
- * // Create the integer   
- * var int = new MathLib.Integer('123456789');  
+ * // Create the integer
+ * var int = new MathLib.Integer('123456789');
  * ```
  *
  * @class
@@ -22,7 +22,7 @@ export class Integer implements Printable, RingElement {
 	sign : string;
 
 	constructor (integer, options = {}) {
-		
+
 		var i, res, factor, blocksize,
 				inputBase = (<any>options).base || 10,
 				base = Math.pow(2, 26),
@@ -76,7 +76,7 @@ export class Integer implements Printable, RingElement {
 			}
 
 			data = res.data;
-			
+
 			/*
 			data.push(
 				Number(

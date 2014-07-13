@@ -22,6 +22,6 @@ toMathML(options : toPresentationOptions = {}) : string {
 	if (options.baseSubscript) {
 		str = '<msub>' + str + '<mn>' + base + '</mn></msub>';
 	}
-				
+
 	return str;
 }
