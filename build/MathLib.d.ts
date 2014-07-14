@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-13
+ * build date: 2014-07-14
  */
 
 declare module MathLib {
@@ -1233,6 +1233,18 @@ declare var Complex: Field;
         * @return {Integer}
         */
         static characteristic(): Integer;
+        /**
+        * Returns a random element of the ring of integers
+        * in the intervall [start, end] (both endpoits included).
+        * If the second argument is not provided, the intervall is
+        * [start, 0] (if start is negative) or [0, start] (if start is positive).
+        * Again, both endpoits are included.
+        *
+        * @param {start} Integer - the integer starting the intervall
+        * @param {end} Integer - the integer ending the intervall
+        * @return {Integer}
+        */
+        static randomElement(start: Integer, end?: Integer): Integer;
         /**
         * A content MathML string representation
         *
