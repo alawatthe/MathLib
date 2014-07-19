@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-14
+ * build date: 2014-07-19
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -8320,6 +8320,10 @@ var MathLib = {};
 
                     return res;
                 };
+
+                if (exponent.isZero()) {
+                    return new MathLib.Integer(1);
+                }
 
                 result = powInt(this, exponent);
 

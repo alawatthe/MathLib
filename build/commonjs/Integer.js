@@ -765,6 +765,10 @@
                     return res;
                 };
 
+                if (exponent.isZero()) {
+                    return new MathLib.Integer(1);
+                }
+
                 result = powInt(this, exponent);
 
                 if (exponent.sign === '-') {
