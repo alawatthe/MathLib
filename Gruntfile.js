@@ -30,6 +30,7 @@ module.exports = function (grunt) {
 	// require('time-grunt')(grunt);
 
 	require('jit-grunt')(grunt, {
+		qunit: 'grunt-qunit-istanbul',
 		jscs: 'grunt-jscs-checker',
 		'saucelabs-qunit': 'grunt-saucelabs'
 	});
@@ -57,26 +58,7 @@ module.exports = function (grunt) {
 		// Testing
 		// =======
 		connect: require('./grunt/connect.js'),
-		qunit: {
-			all: {
-				options: {
-					baseUrl: '.',
-					'--web-security': 'no',
-					coverage: {
-						src: ['./build/MathLib.js'],
-						instrumentedFiles: 'temp/',
-						lcovReport: 'coverage',
-						linesThresholdPct: 89,
-						statementsThresholdPct: 89,
-						functionsThresholdPct: 89,
-						branchesThresholdPct: 82
-					},
-					urls: [
-						'./test/test.all.html'
-					]
-				}
-			}
-		},
+		qunit: require('./grunt/qunit.js'),
 		qunit_amd: require('./grunt/qunit_amd.js'),
 		nodeunit: require('./grunt/nodeunit.js'),
 		coveralls: require('./grunt/coveralls.js'),
