@@ -1,3 +1,10 @@
+/*es6
+import {cbrt, isZero, sec, tan, warning} from 'Functn';
+import {Line} from 'Line';
+import {Matrix} from 'Matrix';
+import {Point} from 'Point';
+es6*/
+
 /// import Functn, Matrix
 
 /**

@@ -1,8 +1,12 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Functn from './Functn';
+
+import {evaluate, hypot, isEqual, isZero, minus, negative, plus, root, sign, times, toContentMathML, toLaTeX, toMathML, toString} from 'Functn';
+import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+import {EvaluationError} from 'EvaluationError';
+import {Matrix} from 'Matrix';
+
 
 /**
 * The vector implementation of MathLib makes calculations with vectors of
@@ -10,7 +14,7 @@ import Functn from './Functn';
 * numbers.
 *
 * It is as easy as
-* `new MathLib.Vector([1, 2, 3])`
+* `new Vector([1, 2, 3])`
 * to create the following vector:
 *    ⎛ 1 ⎞
 *    ⎜ 2 ⎟
@@ -38,12 +42,12 @@ var Vector = (function () {
         var i, ii;
 
         if (this.length !== v.length) {
-            return MathLib.sign(this.length - v.length);
+            return sign(this.length - v.length);
         }
 
         for (i = 0, ii = this.length; i < ii; i++) {
             if (v[i] - this[i]) {
-                return MathLib.sign(this[i] - v[i]);
+                return sign(this[i] - v[i]);
             }
         }
 
@@ -56,7 +60,7 @@ var Vector = (function () {
     * @return {Vector}
     */
     Vector.prototype.evaluate = function () {
-        return this.map(MathLib.evaluate);
+        return this.map(evaluate);
     };
 
     /**
@@ -90,7 +94,7 @@ var Vector = (function () {
         }
 
         return this.every(function (x, i) {
-            return MathLib.isEqual(x, v[i]);
+            return isEqual(x, v[i]);
         });
     };
 
@@ -100,7 +104,7 @@ var Vector = (function () {
     * @return {boolean}
     */
     Vector.prototype.isZero = function () {
-        return this.every(MathLib.isZero);
+        return this.every(isZero);
     };
 
     /**
@@ -123,7 +127,7 @@ var Vector = (function () {
         if (this.length === v.length) {
             return this.plus(v.negative());
         } else {
-            throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#minus' });
+            throw EvaluationError('Vector sizes not matching', { method: 'Vector#minus' });
         }
     };
 
@@ -134,7 +138,7 @@ var Vector = (function () {
     */
     Vector.prototype.negative = function () {
         return this.map(function (entry) {
-            return MathLib.negative(entry);
+            return negative(entry);
         });
     };
 
@@ -147,11 +151,11 @@ var Vector = (function () {
     Vector.prototype.norm = function (p) {
         if (typeof p === "undefined") { p = 2; }
         if (p === 2) {
-            return MathLib.hypot.apply(null, this.toArray());
+            return hypot.apply(null, this.toArray());
         } else if (p === Infinity) {
             return Math.max.apply(null, this.map(Math.abs).toArray());
         } else {
-            return MathLib.root(this.reduce(function (prev, curr) {
+            return root(this.reduce(function (prev, curr) {
                 return prev + Math.pow(Math.abs(curr), p);
             }, 0), p);
         }
@@ -164,9 +168,9 @@ var Vector = (function () {
     * @return {Matrix}
     */
     Vector.prototype.outerProduct = function (v) {
-        return new MathLib.Matrix(this.map(function (x) {
+        return new Matrix(this.map(function (x) {
             return v.map(function (y) {
-                return MathLib.times(x, y);
+                return times(x, y);
             });
         }));
     };
@@ -179,11 +183,11 @@ var Vector = (function () {
     */
     Vector.prototype.plus = function (v) {
         if (this.length === v.length) {
-            return new MathLib.Vector(this.map(function (x, i) {
-                return MathLib.plus(x, v[i]);
+            return new Vector(this.map(function (x, i) {
+                return plus(x, v[i]);
             }));
         } else {
-            throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#plus' });
+            throw EvaluationError('Vector sizes not matching', { method: 'Vector#plus' });
         }
     };
 
@@ -209,10 +213,10 @@ var Vector = (function () {
     Vector.prototype.scalarProduct = function (v) {
         if (this.length === v.length) {
             return this.reduce(function (old, cur, i, w) {
-                return MathLib.plus(old, MathLib.times(w[i], v[i]));
+                return plus(old, times(w[i], v[i]));
             }, 0);
         } else {
-            throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#scalarProduct' });
+            throw EvaluationError('Vector sizes not matching', { method: 'Vector#scalarProduct' });
         }
     };
 
@@ -245,7 +249,7 @@ var Vector = (function () {
         }
         if (typeof n === 'number' || n.type === 'complex') {
             return this.map(function (x) {
-                return MathLib.times(n, x);
+                return times(n, x);
             });
         }
         if (n.type === 'matrix') {
@@ -254,9 +258,9 @@ var Vector = (function () {
                 for (i = 0, ii = colVectors.length; i < ii; i++) {
                     product[i] = this.scalarProduct(colVectors[i]);
                 }
-                return new MathLib.Vector(product);
+                return new Vector(product);
             } else {
-                throw MathLib.EvaluationError('Vector/Matrix sizes not matching', { method: 'Vector.prototype.times' });
+                throw EvaluationError('Vector/Matrix sizes not matching', { method: 'Vector.prototype.times' });
             }
         }
     };
@@ -280,11 +284,11 @@ var Vector = (function () {
         if (typeof options === "undefined") { options = {}; }
         if (options.strict) {
             return this.reduce(function (old, cur) {
-                return old + MathLib.toContentMathML(cur, options);
+                return old + toContentMathML(cur, options);
             }, '<apply><csymbol cd="linalg2">vector</csymbol>') + '</apply>';
         } else {
             return this.reduce(function (old, cur) {
-                return old + MathLib.toContentMathML(cur, options);
+                return old + toContentMathML(cur, options);
             }, '<vector>') + '</vector>';
         }
     };
@@ -298,7 +302,7 @@ var Vector = (function () {
     Vector.prototype.toLaTeX = function (options) {
         if (typeof options === "undefined") { options = {}; }
         return '\\begin{pmatrix}\n\t' + this.reduce(function (old, cur) {
-            return old + '\\\\\n\t' + MathLib.toLaTeX(cur, options);
+            return old + '\\\\\n\t' + toLaTeX(cur, options);
         }) + '\n\\end{pmatrix}';
     };
 
@@ -311,7 +315,7 @@ var Vector = (function () {
     Vector.prototype.toMathML = function (options) {
         if (typeof options === "undefined") { options = {}; }
         return this.reduce(function (old, cur) {
-            return old + '<mtr><mtd>' + MathLib.toMathML(cur, options) + '</mtd></mtr>';
+            return old + '<mtr><mtd>' + toMathML(cur, options) + '</mtd></mtr>';
         }, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
     };
 
@@ -324,7 +328,7 @@ var Vector = (function () {
     Vector.prototype.toString = function (options) {
         if (typeof options === "undefined") { options = {}; }
         return '(' + this.reduce(function (old, cur) {
-            return old + ', ' + MathLib.toString(cur, options);
+            return old + ', ' + toString(cur, options);
         }) + ')';
     };
 
@@ -337,13 +341,13 @@ var Vector = (function () {
     Vector.prototype.vectorProduct = function (v) {
         /* TODO: Implement vectorproduct for non three-dimensional vectors */
         if (this.length === 3 && v.length === 3) {
-            return new MathLib.Vector([
-                MathLib.minus(MathLib.times(this[1], v[2]), MathLib.times(this[2], v[1])),
-                MathLib.minus(MathLib.times(this[2], v[0]), MathLib.times(this[0], v[2])),
-                MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0]))
+            return new Vector([
+                minus(times(this[1], v[2]), times(this[2], v[1])),
+                minus(times(this[2], v[0]), times(this[0], v[2])),
+                minus(times(this[0], v[1]), times(this[1], v[0]))
             ]);
         } else {
-            throw MathLib.EvaluationError('Vectors are not three-dimensional', { method: 'Vector.prototype.vectorProduct' });
+            throw EvaluationError('Vectors are not three-dimensional', { method: 'Vector.prototype.vectorProduct' });
         }
     };
     Vector.areLinearIndependent = function (vectors) {
@@ -359,7 +363,7 @@ var Vector = (function () {
             return undefined;
         }
 
-        return (new MathLib.Matrix(vectors)).rank() === n;
+        return (new Matrix(vectors)).rank() === n;
     };
 
     Vector.zero = function (n) {
@@ -367,9 +371,9 @@ var Vector = (function () {
         for (i = 0; i < n; i++) {
             vector.push(0);
         }
-        return new MathLib.Vector(vector);
+        return new Vector(vector);
     };
     return Vector;
 })();
-export default = Vector;
+export default Vector;
 

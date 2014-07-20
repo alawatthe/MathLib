@@ -5,6 +5,13 @@
 var MathLib = {};
 
     'use strict';
+
+    /*es6
+    import {warning} from 'meta';
+    import {Complex} from 'Complex';
+    import {Integer} from 'Integer';
+    import {Rational} from 'Rational';
+    es6*/
     MathLib.version = '0.7.2';
     MathLib.apery = 1.2020569031595942;
     MathLib.e = Math.E;
@@ -111,6 +118,7 @@ var MathLib = {};
             return MathLib.coerceTo(x, numberType);
         });
     };
+
     var errors = [], warnings = [];
 
     /**
@@ -170,6 +178,63 @@ var MathLib = {};
         warnings.forEach(function (cb) {
             cb(details);
         });
+    };
+
+    /**
+    * Custom toString function
+    *
+    * @param {any} x - The value to which the String should be generated
+    * @param {object} [options] - Optional options to style the output
+    * @return {string}
+    */
+    MathLib.toString = function (x, options) {
+        if (typeof options === "undefined") { options = {}; }
+        var str, base = options.base || 10;
+
+        if (Array.isArray(x)) {
+            return '[' + x.map(function (entry) {
+                return MathLib.toString(entry, options);
+            }).join() + ']';
+        }
+
+        if (typeof x === 'object') {
+            return x.toString(options);
+        }
+
+        if (typeof x === 'number') {
+            if (!MathLib.isFinite(x)) {
+                return x.toString();
+            }
+
+            str = Math.abs(x).toString(base);
+
+            if (x < 0) {
+                str = '-' + str;
+            } else if (options.sign) {
+                str = '+' + str;
+            }
+
+            if (options.baseSubscript) {
+                if (base > 9) {
+                    str += '&#x208' + Math.floor(base / 10) + ';';
+                }
+                str += '&#x208' + (base % 10) + ';';
+            }
+
+            return str;
+        }
+
+        if (typeof x === 'boolean') {
+            return x.toString();
+        }
+
+        /* istanbul ignore else */
+        if (typeof x === 'string') {
+            if (options.quotes) {
+                return options.quotes[0] + x + options.quotes[1];
+            }
+            return '"' + x + '"';
+        }
     };
 
     /**
@@ -363,63 +428,6 @@ var MathLib = {};
                 return '<ms lquote="' + options.quotes[0] + '" rquote="' + options.quotes[1] + '">' + x + '</ms>';
             }
             return '<ms>' + x + '</ms>';
-        }
-    };
-
-    /**
-    * Custom toString function
-    *
-    * @param {any} x - The value to which the String should be generated
-    * @param {object} [options] - Optional options to style the output
-    * @return {string}
-    */
-    MathLib.toString = function (x, options) {
-        if (typeof options === "undefined") { options = {}; }
-        var str, base = options.base || 10;
-
-        if (Array.isArray(x)) {
-            return '[' + x.map(function (entry) {
-                return MathLib.toString(entry, options);
-            }).join() + ']';
-        }
-
-        if (typeof x === 'object') {
-            return x.toString(options);
-        }
-
-        if (typeof x === 'number') {
-            if (!MathLib.isFinite(x)) {
-                return x.toString();
-            }
-
-            str = Math.abs(x).toString(base);
-
-            if (x < 0) {
-                str = '-' + str;
-            } else if (options.sign) {
-                str = '+' + str;
-            }
-
-            if (options.baseSubscript) {
-                if (base > 9) {
-                    str += '&#x208' + Math.floor(base / 10) + ';';
-                }
-                str += '&#x208' + (base % 10) + ';';
-            }
-
-            return str;
-        }
-
-        if (typeof x === 'boolean') {
-            return x.toString();
-        }
-
-        /* istanbul ignore else */
-        if (typeof x === 'string') {
-            if (options.quotes) {
-                return options.quotes[0] + x + options.quotes[1];
-            }
-            return '"' + x + '"';
         }
     };
     module.exports = MathLib

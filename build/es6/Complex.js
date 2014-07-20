@@ -1,22 +1,25 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Functn from './Functn';
-import Point from './Point';
+
+import {abs, arccos, arcosh, coerce, coerceTo, copy, cos, cosh, divide, exp, floor, hypot, inverse, isEqual, isNegZero, isPosZero, isZero, ln, minus, negative, plus, pow, sign, sin, sinh, times, type} from 'Functn';
+import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+import {Integer} from 'Integer';
+import {Point} from 'Point';
+
 
 /**
-* MathLib.Complex is the MathLib implementation of complex numbers.
+* Complex is the MathLib implementation of complex numbers.
 *
 * There are two ways of defining complex numbers:
 *
 * * Two numbers representing the real and the complex part.
-* * MathLib.Complex.polar(abs, arg)
+* * Complex.polar(abs, arg)
 *
 * #### Simple example:
 * ```
 * // Create the complex number 1 + 2i
-* var c = new MathLib.Complex(1, 2);
+* var c = new Complex(1, 2);
 * ```
 *
 * @class
@@ -26,10 +29,10 @@ var Complex = (function () {
     function Complex(re, im) {
         if (typeof im === "undefined") { im = 0; }
         this.type = 'complex';
-        if (MathLib.isNaN(re) || MathLib.isNaN(im)) {
+        if (isNaN(re) || isNaN(im)) {
             this.re = NaN;
             this.im = NaN;
-        } else if (!MathLib.isFinite(re) || !MathLib.isFinite(im)) {
+        } else if (!isFinite(re) || !isFinite(im)) {
             this.re = Infinity;
             this.im = Infinity;
         } else {
@@ -43,7 +46,7 @@ var Complex = (function () {
     * @return {Integer}
     */
     Complex.characteristic = function () {
-        return new MathLib.Integer(0);
+        return new Integer(0);
     };
 
     /**
@@ -92,7 +95,7 @@ var Complex = (function () {
     * @return {number}
     */
     Complex.prototype.abs = function () {
-        return MathLib.hypot(this.re, this.im);
+        return hypot(this.re, this.im);
     };
 
     /**
@@ -101,7 +104,7 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.arccos = function () {
-        return (new MathLib.Complex(Math.PI / 2, -0)).minus(this.arcsin());
+        return (new Complex(Math.PI / 2, -0)).minus(this.arcsin());
     };
 
     /**
@@ -111,7 +114,7 @@ var Complex = (function () {
     */
     Complex.prototype.arccot = function () {
         if (this.isZero()) {
-            return new MathLib.Complex(MathLib.sign(1 / this.re) * Math.PI / 2, -this.im);
+            return new Complex(sign(1 / this.re) * Math.PI / 2, -this.im);
         }
         return this.inverse().arctan();
     };
@@ -124,7 +127,7 @@ var Complex = (function () {
     Complex.prototype.arccsc = function () {
         // arccsc(0) = ComplexInfinity not ComplexNaN
         if (this.isZero()) {
-            return new MathLib.Complex(Infinity);
+            return new Complex(Infinity);
         }
 
         return this.inverse().arcsin();
@@ -139,13 +142,13 @@ var Complex = (function () {
         var arccos;
 
         if (this.isZero()) {
-            return new MathLib.Complex(0, 1.5707963267948966192);
+            return new Complex(0, 1.5707963267948966192);
         }
 
         arccos = this.arccos();
-        arccos = arccos.times(new MathLib.Complex(0, arccos.im > 0 ? -1 : 1));
+        arccos = arccos.times(new Complex(0, arccos.im > 0 ? -1 : 1));
 
-        if (MathLib.isNegZero(this.im) && this.re >= -1) {
+        if (isNegZero(this.im) && this.re >= -1) {
             arccos.im = -arccos.im;
         }
 
@@ -158,22 +161,22 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.arcoth = function () {
-        var one = new MathLib.Complex(1, -0);
+        var one = new Complex(1, -0);
 
-        if (MathLib.isZero(this.re)) {
-            if (MathLib.isPosZero(this.im)) {
-                return new MathLib.Complex(this.re, -1.5707963267948966192);
+        if (isZero(this.re)) {
+            if (isPosZero(this.im)) {
+                return new Complex(this.re, -1.5707963267948966192);
             }
-            if (MathLib.isNegZero(this.im)) {
-                return new MathLib.Complex(this.re, 1.5707963267948966192);
+            if (isNegZero(this.im)) {
+                return new Complex(this.re, 1.5707963267948966192);
             }
         }
 
         if (this.re === Infinity) {
-            return new MathLib.Complex(0, 0);
+            return new Complex(0, 0);
         }
 
-        return MathLib.times(0.5, this.plus(one).divide(this.minus(one)).ln());
+        return times(0.5, this.plus(one).divide(this.minus(one)).ln());
     };
 
     /**
@@ -193,7 +196,7 @@ var Complex = (function () {
     Complex.prototype.arcsec = function () {
         // arcsec(0) = ComplexInfinity not ComplexNaN
         if (this.isZero()) {
-            return new MathLib.Complex(Infinity);
+            return new Complex(Infinity);
         }
 
         return this.inverse().arccos();
@@ -221,10 +224,10 @@ var Complex = (function () {
         };
 
         if (a === Infinity) {
-            return new MathLib.Complex(Infinity);
+            return new Complex(Infinity);
         }
 
-        return new MathLib.Complex(sgn(a) / 2 * MathLib.arccos(sqrt - (aa + bb)), sgn(b) / 2 * MathLib.arcosh(sqrt + (aa + bb)));
+        return new Complex(sgn(a) / 2 * arccos(sqrt - (aa + bb)), sgn(b) / 2 * arcosh(sqrt + (aa + bb)));
     };
 
     /**
@@ -233,17 +236,17 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.arctan = function () {
-        var res, one = new MathLib.Complex(1, -0), iz = new MathLib.Complex(-this.im, this.re);
+        var res, one = new Complex(1, -0), iz = new Complex(-this.im, this.re);
 
         if (this.isZero()) {
-            return new MathLib.Complex(this.re, this.im);
+            return new Complex(this.re, this.im);
         }
 
-        res = MathLib.times(new MathLib.Complex(0, -0.5), MathLib.plus(one, iz).divide(MathLib.minus(one, iz)).ln());
+        res = times(new Complex(0, -0.5), plus(one, iz).divide(minus(one, iz)).ln());
 
         // Correct some values on the axis imaginary axis.
         // TODO: Are this all the wrong values?
-        if (MathLib.isNegZero(this.re) && res.re !== Infinity && (this.im < 0 || this.im > 1)) {
+        if (isNegZero(this.re) && res.re !== Infinity && (this.im < 0 || this.im > 1)) {
             res.re = -res.re;
         }
 
@@ -269,7 +272,7 @@ var Complex = (function () {
     */
     Complex.prototype.arsech = function () {
         if (this.re === Infinity) {
-            return new MathLib.Complex(NaN);
+            return new Complex(NaN);
         }
         return this.inverse().arcosh();
     };
@@ -296,10 +299,10 @@ var Complex = (function () {
         };
 
         if (a === Infinity) {
-            return new MathLib.Complex(Infinity);
+            return new Complex(Infinity);
         }
 
-        return new MathLib.Complex(sgn(a) / 2 * MathLib.arcosh(sqrt + (aa + bb)), sgn(b) / 2 * MathLib.arccos(sqrt - (aa + bb)));
+        return new Complex(sgn(a) / 2 * arcosh(sqrt + (aa + bb)), sgn(b) / 2 * arccos(sqrt - (aa + bb)));
     };
 
     /**
@@ -308,17 +311,17 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.artanh = function () {
-        var one = new MathLib.Complex(1, -0);
+        var one = new Complex(1, -0);
 
         if (this.isZero()) {
-            return new MathLib.Complex(this.re, this.im);
+            return new Complex(this.re, this.im);
         }
 
         if (this.re === Infinity) {
-            return new MathLib.Complex(NaN);
+            return new Complex(NaN);
         }
 
-        return MathLib.times(0.5, MathLib.minus(one.plus(this).ln(), one.minus(this).ln()));
+        return times(0.5, minus(one.plus(this).ln(), one.minus(this).ln()));
     };
 
     /**
@@ -333,7 +336,7 @@ var Complex = (function () {
         }
 
         if (this.im === 0) {
-            return MathLib.coerceTo(this.re, type);
+            return coerceTo(this.re, type);
         }
         /*
         else {
@@ -349,10 +352,10 @@ var Complex = (function () {
     * @return {number}
     */
     Complex.prototype.compare = function (x) {
-        var a = MathLib.sign(this.abs() - x.abs());
+        var a = sign(this.abs() - x.abs());
 
-        if (MathLib.isNaN(this.re)) {
-            if (MathLib.isNaN(x.re)) {
+        if (isNaN(this.re)) {
+            if (isNaN(x.re)) {
                 return 0;
             }
             return -1;
@@ -365,7 +368,7 @@ var Complex = (function () {
             return 1;
         }
 
-        return a ? a : MathLib.sign(this.arg() - x.arg());
+        return a ? a : sign(this.arg() - x.arg());
     };
 
     /**
@@ -374,7 +377,7 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.conjugate = function () {
-        return new MathLib.Complex(this.re, MathLib.negative(this.im));
+        return new Complex(this.re, negative(this.im));
     };
 
     /**
@@ -383,7 +386,7 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.copy = function () {
-        return new MathLib.Complex(MathLib.copy(this.re), MathLib.copy(this.im));
+        return new Complex(copy(this.re), copy(this.im));
     };
 
     /**
@@ -392,7 +395,7 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.cos = function () {
-        return new MathLib.Complex(MathLib.cos(this.re) * MathLib.cosh(this.im), -MathLib.sin(this.re) * MathLib.sinh(this.im));
+        return new Complex(cos(this.re) * cosh(this.im), -sin(this.re) * sinh(this.im));
     };
 
     /*
@@ -401,7 +404,7 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.cosh = function () {
-        return new MathLib.Complex(MathLib.cos(this.im) * MathLib.cosh(this.re), MathLib.sin(this.im) * MathLib.sinh(this.re));
+        return new Complex(cos(this.im) * cosh(this.re), sin(this.im) * sinh(this.re));
     };
 
     /**
@@ -410,13 +413,13 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.cot = function () {
-        var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cos(aa) - MathLib.cosh(bb);
+        var aa = 2 * this.re, bb = 2 * this.im, d = cos(aa) - cosh(bb);
 
         if (this.isZero()) {
-            return new MathLib.Complex(Infinity);
+            return new Complex(Infinity);
         }
 
-        return new MathLib.Complex(-MathLib.sin(aa) / d, MathLib.sinh(bb) / d);
+        return new Complex(-sin(aa) / d, sinh(bb) / d);
     };
 
     /**
@@ -425,13 +428,13 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.coth = function () {
-        var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cosh(aa) - MathLib.cos(bb);
+        var aa = 2 * this.re, bb = 2 * this.im, d = cosh(aa) - cos(bb);
 
         if (this.isZero()) {
-            return new MathLib.Complex(Infinity);
+            return new Complex(Infinity);
         }
 
-        return new MathLib.Complex(MathLib.sinh(aa) / d, -MathLib.sin(bb) / d);
+        return new Complex(sinh(aa) / d, -sin(bb) / d);
     };
 
     /**
@@ -440,13 +443,13 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.csc = function () {
-        var a = this.re, b = this.im, d = MathLib.cos(2 * a) - MathLib.cosh(2 * b);
+        var a = this.re, b = this.im, d = cos(2 * a) - cosh(2 * b);
 
         if (this.isZero()) {
-            return new MathLib.Complex(Infinity);
+            return new Complex(Infinity);
         }
 
-        return new MathLib.Complex(-2 * MathLib.sin(a) * MathLib.cosh(b) / d, 2 * MathLib.cos(a) * MathLib.sinh(b) / d);
+        return new Complex(-2 * sin(a) * cosh(b) / d, 2 * cos(a) * sinh(b) / d);
     };
 
     /**
@@ -455,13 +458,13 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.csch = function () {
-        var a = this.re, b = this.im, d = MathLib.cosh(2 * a) - MathLib.cos(2 * b);
+        var a = this.re, b = this.im, d = cosh(2 * a) - cos(2 * b);
 
         if (this.isZero()) {
-            return new MathLib.Complex(Infinity);
+            return new Complex(Infinity);
         }
 
-        return new MathLib.Complex(2 * MathLib.sinh(a) * MathLib.cos(b) / d, -2 * MathLib.cosh(a) * MathLib.sin(b) / d);
+        return new Complex(2 * sinh(a) * cos(b) / d, -2 * cosh(a) * sin(b) / d);
     };
 
     /**
@@ -471,7 +474,7 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.divide = function (divisor) {
-        return this.times(MathLib.inverse(divisor));
+        return this.times(inverse(divisor));
     };
 
     /**
@@ -480,7 +483,7 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.exp = function () {
-        return new MathLib.Complex(MathLib.exp(this.re) * MathLib.cos(this.im), MathLib.exp(this.re) * MathLib.sin(this.im));
+        return new Complex(exp(this.re) * cos(this.im), exp(this.re) * sin(this.im));
     };
 
     /**
@@ -489,17 +492,17 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.inverse = function () {
-        var d = MathLib.plus(MathLib.pow(this.re, 2), MathLib.pow(this.im, 2));
+        var d = plus(pow(this.re, 2), pow(this.im, 2));
 
         if (this.isZero()) {
-            return new MathLib.Complex(Infinity);
+            return new Complex(Infinity);
         }
 
         if (this.re === Infinity) {
-            return new MathLib.Complex(0);
+            return new Complex(0);
         }
 
-        return new MathLib.Complex(MathLib.divide(this.re, d), MathLib.divide(MathLib.negative(this.im), d));
+        return new Complex(divide(this.re, d), divide(negative(this.im), d));
     };
 
     /**
@@ -510,13 +513,13 @@ var Complex = (function () {
     */
     Complex.prototype.isEqual = function (n) {
         if (n.type !== 'complex') {
-            if (MathLib.isZero(this.im)) {
-                return MathLib.isEqual.apply(null, MathLib.coerce(this.re, n));
+            if (isZero(this.im)) {
+                return isEqual.apply(null, coerce(this.re, n));
             } else {
                 return false;
             }
         } else {
-            return MathLib.isEqual(this.re, n.re) && MathLib.isEqual(this.im, n.im);
+            return isEqual(this.re, n.re) && isEqual(this.im, n.im);
         }
     };
 
@@ -526,7 +529,7 @@ var Complex = (function () {
     * @return {boolean}
     */
     Complex.prototype.isFinite = function () {
-        return MathLib.isFinite(this.re);
+        return isFinite(this.re);
     };
 
     /**
@@ -535,7 +538,7 @@ var Complex = (function () {
     * @return {boolean}
     */
     Complex.prototype.isZero = function () {
-        return MathLib.isZero(this.re) && MathLib.isZero(this.im);
+        return isZero(this.re) && isZero(this.im);
     };
 
     /*
@@ -545,9 +548,9 @@ var Complex = (function () {
     */
     Complex.prototype.ln = function () {
         if (this.re === Infinity) {
-            return new MathLib.Complex(Infinity);
+            return new Complex(Infinity);
         }
-        return new MathLib.Complex(MathLib.ln(this.abs()), this.arg());
+        return new Complex(ln(this.abs()), this.arg());
     };
 
     /**
@@ -557,7 +560,7 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.minus = function (subtrahend) {
-        return this.plus(MathLib.negative(subtrahend));
+        return this.plus(negative(subtrahend));
     };
 
     /**
@@ -566,7 +569,7 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.negative = function () {
-        return new MathLib.Complex(MathLib.negative(this.re), MathLib.negative(this.im));
+        return new Complex(negative(this.re), negative(this.im));
     };
 
     /**
@@ -577,9 +580,9 @@ var Complex = (function () {
     */
     Complex.prototype.plus = function (summand) {
         if (summand.type !== 'complex') {
-            return new MathLib.Complex(MathLib.plus.apply(null, MathLib.coerce(this.re, summand)), this.im);
+            return new Complex(plus.apply(null, coerce(this.re, summand)), this.im);
         } else {
-            return new MathLib.Complex(MathLib.plus(this.re, summand.re), MathLib.plus(this.im, summand.im));
+            return new Complex(plus(this.re, summand.re), plus(this.im, summand.im));
         }
     };
 
@@ -592,48 +595,48 @@ var Complex = (function () {
     Complex.prototype.pow = function (c) {
         var re, im, abs, arg;
 
-        if (MathLib.type(c) === 'complex') {
+        if (type(c) === 'complex') {
             re = c.re;
             im = c.im;
             abs = this.abs();
             arg = this.arg();
 
             // Fixes inf^(2+5i) = inf and 0^(2+5i) = 0
-            if ((this.isZero() || this.re === Infinity) && !(c.isZero() || c.re === Infinity || MathLib.isNaN(c.re))) {
-                return new MathLib.Complex(this.re, this.im);
+            if ((this.isZero() || this.re === Infinity) && !(c.isZero() || c.re === Infinity || isNaN(c.re))) {
+                return new Complex(this.re, this.im);
             }
 
-            return MathLib.Complex.polar(MathLib.times(MathLib.pow(abs, re), MathLib.exp(MathLib.negative(MathLib.times(im, arg)))), MathLib.plus(MathLib.times(re, arg), MathLib.times(im, MathLib.ln(abs))));
+            return Complex.polar(times(pow(abs, re), exp(negative(times(im, arg)))), plus(times(re, arg), times(im, ln(abs))));
         } else {
             // The naive pow method has some rounding errrors. For example
             // (2+5i)^3 = -142.00000000000006-64.99999999999999i
             // instead of -142-65i which are errors of magnitude around 1e-14.
             // This error increases quickly for increasing exponents.
             // (2+5i)^21 has an error of 5.8 in the real part
-            // return MathLib.Complex.polar(MathLib.pow(abs, c), MathLib.times(arg, c));
+            // return Complex.polar(pow(abs, c), times(arg, c));
             // The following algorithm uses a different approach for integer exponents,
             // where it yields exact results.
             // Non integer exponents are evaluated using the naive approach.
             // TODO: Improve the algorithm.
-            var i, int = MathLib.floor(Math.abs(c)), res = new MathLib.Complex(1), power = this, bin = int.toString(2);
+            var i, int = floor(Math.abs(c)), res = new Complex(1), power = this, bin = int.toString(2);
 
             // If the exponent is not an integer we use the naive approach
             if (c % 1) {
                 abs = this.abs();
                 arg = this.arg();
-                return MathLib.Complex.polar(MathLib.pow(abs, c), MathLib.times(arg, c));
+                return Complex.polar(pow(abs, c), times(arg, c));
             }
 
             // The imaginary part of (2+5i)^-0 should be -0 not +0.
-            if (MathLib.isZero(c)) {
-                return new MathLib.Complex(1, c);
+            if (isZero(c)) {
+                return new Complex(1, c);
             }
 
             for (i = bin.length - 1; i >= 0; i--) {
                 if (bin[i] === '1') {
-                    res = MathLib.times(res, power);
+                    res = times(res, power);
                 }
-                power = MathLib.times(power, power);
+                power = times(power, power);
             }
 
             if (c < 0) {
@@ -650,9 +653,9 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.sec = function () {
-        var a = this.re, b = this.im, d = MathLib.cos(2 * a) + MathLib.cosh(2 * b);
+        var a = this.re, b = this.im, d = cos(2 * a) + cosh(2 * b);
 
-        return new MathLib.Complex(2 * MathLib.cos(a) * MathLib.cosh(b) / d, 2 * MathLib.sin(a) * MathLib.sinh(b) / d);
+        return new Complex(2 * cos(a) * cosh(b) / d, 2 * sin(a) * sinh(b) / d);
     };
 
     /**
@@ -661,9 +664,9 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.sech = function () {
-        var a = this.re, b = this.im, d = MathLib.cosh(2 * a) + MathLib.cos(2 * b);
+        var a = this.re, b = this.im, d = cosh(2 * a) + cos(2 * b);
 
-        return new MathLib.Complex(2 * MathLib.cosh(a) * MathLib.cos(b) / d, -2 * MathLib.sinh(a) * MathLib.sin(b) / d);
+        return new Complex(2 * cosh(a) * cos(b) / d, -2 * sinh(a) * sin(b) / d);
     };
 
     /**
@@ -672,12 +675,12 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.sign = function () {
-        if (this.isZero() || MathLib.isNaN(this.re)) {
+        if (this.isZero() || isNaN(this.re)) {
             return this;
         } else if (this.re === Infinity) {
-            return new MathLib.Complex(NaN);
+            return new Complex(NaN);
         }
-        return MathLib.Complex.polar(1, this.arg());
+        return Complex.polar(1, this.arg());
     };
 
     /**
@@ -686,7 +689,7 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.sin = function () {
-        return new MathLib.Complex(MathLib.sin(this.re) * MathLib.cosh(this.im), MathLib.cos(this.re) * MathLib.sinh(this.im));
+        return new Complex(sin(this.re) * cosh(this.im), cos(this.re) * sinh(this.im));
     };
 
     /**
@@ -695,7 +698,7 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.sinh = function () {
-        return new MathLib.Complex(MathLib.cos(this.im) * MathLib.sinh(this.re), MathLib.sin(this.im) * MathLib.cosh(this.re));
+        return new Complex(cos(this.im) * sinh(this.re), sin(this.im) * cosh(this.re));
     };
 
     /**
@@ -704,7 +707,7 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.sqrt = function () {
-        return MathLib.Complex.polar(Math.sqrt(this.abs()), this.arg() / 2);
+        return Complex.polar(Math.sqrt(this.abs()), this.arg() / 2);
     };
 
     /**
@@ -713,9 +716,9 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.tan = function () {
-        var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cos(aa) + MathLib.cosh(bb);
+        var aa = 2 * this.re, bb = 2 * this.im, d = cos(aa) + cosh(bb);
 
-        return new MathLib.Complex(MathLib.sin(aa) / d, MathLib.sinh(bb) / d);
+        return new Complex(sin(aa) / d, sinh(bb) / d);
     };
 
     /**
@@ -724,9 +727,9 @@ var Complex = (function () {
     * @return {Complex}
     */
     Complex.prototype.tanh = function () {
-        var aa = 2 * this.re, bb = 2 * this.im, d = MathLib.cosh(aa) + MathLib.cos(bb);
+        var aa = 2 * this.re, bb = 2 * this.im, d = cosh(aa) + cos(bb);
 
-        return new MathLib.Complex(MathLib.sinh(aa) / d, MathLib.sin(bb) / d);
+        return new Complex(sinh(aa) / d, sin(bb) / d);
     };
 
     /**
@@ -738,27 +741,27 @@ var Complex = (function () {
     Complex.prototype.times = function (factor) {
         if (factor.type === 'complex') {
             if (this.re === Infinity) {
-                if (factor.isZero() || MathLib.isNaN(factor.re)) {
-                    return new MathLib.Complex(NaN);
+                if (factor.isZero() || isNaN(factor.re)) {
+                    return new Complex(NaN);
                 } else {
-                    return new MathLib.Complex(Infinity);
+                    return new Complex(Infinity);
                 }
             }
 
             if (factor.re === Infinity) {
-                if (this.isZero() || MathLib.isNaN(this.re)) {
-                    return new MathLib.Complex(NaN);
+                if (this.isZero() || isNaN(this.re)) {
+                    return new Complex(NaN);
                 } else {
-                    return new MathLib.Complex(Infinity);
+                    return new Complex(Infinity);
                 }
             }
 
-            return new MathLib.Complex(MathLib.minus(MathLib.times(this.re, factor.re), MathLib.times(this.im, factor.im)), MathLib.plus(MathLib.times(this.re, factor.im), MathLib.times(this.im, factor.re)));
+            return new Complex(minus(times(this.re, factor.re), times(this.im, factor.im)), plus(times(this.re, factor.im), times(this.im, factor.re)));
         } else if (factor.type === 'rational') {
             factor = factor.coerceTo('number');
         }
         if (typeof factor === 'number') {
-            return new MathLib.Complex(MathLib.times(this.re, factor), MathLib.times(this.im, factor));
+            return new Complex(times(this.re, factor), times(this.im, factor));
         }
     };
 
@@ -772,7 +775,7 @@ var Complex = (function () {
             return '<csymbol cd="nums1">' + (this.re === Infinity ? 'infinity' : 'NaN') + '</csymbol>';
         }
 
-        return '<apply><plus />' + MathLib.toContentMathML(this.re) + '<apply><times />' + MathLib.toContentMathML(this.im) + '<imaginaryi /></apply></apply>';
+        return '<apply><plus />' + toContentMathML(this.re) + '<apply><times />' + toContentMathML(this.im) + '<imaginaryi /></apply></apply>';
     };
 
     /**
@@ -783,13 +786,13 @@ var Complex = (function () {
     */
     Complex.prototype.toLaTeX = function (options) {
         if (typeof options === "undefined") { options = {}; }
-        var option, str = '', reFlag = !MathLib.isZero(this.re), passOptions = {};
+        var option, str = '', reFlag = !isZero(this.re), passOptions = {};
 
         if (!this.isFinite()) {
             return (options.sign ? '+' : '') + '\\text{Complex' + this.re + '}';
         }
 
-        if (!MathLib.isZero(this.im)) {
+        if (!isZero(this.im)) {
             for (option in options) {
                 if (options.hasOwnProperty(option) && option !== 'sign') {
                     passOptions[option] = options[option];
@@ -798,11 +801,11 @@ var Complex = (function () {
 
             passOptions.sign = reFlag || options.sign;
 
-            str += MathLib.toLaTeX(this.im, passOptions) + 'i';
+            str += toLaTeX(this.im, passOptions) + 'i';
         }
 
         if (reFlag || str.length === 0) {
-            str = MathLib.toLaTeX(this.re, options) + str;
+            str = toLaTeX(this.re, options) + str;
         }
 
         return str;
@@ -816,13 +819,13 @@ var Complex = (function () {
     */
     Complex.prototype.toMathML = function (options) {
         if (typeof options === "undefined") { options = {}; }
-        var str = '', option, reFlag = !MathLib.isZero(this.re), passOptions = {};
+        var str = '', option, reFlag = !isZero(this.re), passOptions = {};
 
         if (!this.isFinite()) {
             return (options.sign ? '<mo>+</mo>' : '') + '<mi>Complex' + this.re + '</mi>';
         }
 
-        if (!MathLib.isZero(this.im)) {
+        if (!isZero(this.im)) {
             for (option in options) {
                 if (options.hasOwnProperty(option) && option !== 'sign') {
                     passOptions[option] = options[option];
@@ -831,14 +834,14 @@ var Complex = (function () {
 
             if (reFlag || options.sign) {
                 passOptions.sign = false;
-                str += '<mo>' + MathLib.toString(this.im, { sign: true }).slice(0, 1) + '</mo><mrow>' + MathLib.toMathML(MathLib.abs(this.im), passOptions) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
+                str += '<mo>' + toString(this.im, { sign: true }).slice(0, 1) + '</mo><mrow>' + toMathML(abs(this.im), passOptions) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
             } else {
-                str += '<mrow>' + MathLib.toMathML(this.im, passOptions) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
+                str += '<mrow>' + toMathML(this.im, passOptions) + '<mo>&#x2062;</mo><mi>i</mi></mrow>';
             }
         }
 
         if (reFlag || str.length === 0) {
-            str = MathLib.toMathML(this.re, options) + str;
+            str = toMathML(this.re, options) + str;
         }
 
         return str;
@@ -850,11 +853,11 @@ var Complex = (function () {
     * @return {Point}
     */
     Complex.prototype.toPoint = function () {
-        if (this.re === Infinity || MathLib.isNaN(this.re)) {
-            return new MathLib.Point([0, 0, 0]);
+        if (this.re === Infinity || isNaN(this.re)) {
+            return new Point([0, 0, 0]);
         }
 
-        return new MathLib.Point([this.re, this.im, 1]);
+        return new Point([this.re, this.im, 1]);
     };
 
     /**
@@ -865,13 +868,13 @@ var Complex = (function () {
     */
     Complex.prototype.toString = function (options) {
         if (typeof options === "undefined") { options = {}; }
-        var str = '', option, reFlag = !MathLib.isZero(this.re), passOptions = {};
+        var str = '', option, reFlag = !isZero(this.re), passOptions = {};
 
         if (!this.isFinite()) {
             return (options.sign ? '+' : '') + 'Complex' + this.re;
         }
 
-        if (!MathLib.isZero(this.im)) {
+        if (!isZero(this.im)) {
             for (option in options) {
                 if (options.hasOwnProperty(option) && option !== 'sign') {
                     passOptions[option] = options[option];
@@ -880,22 +883,22 @@ var Complex = (function () {
 
             passOptions.sign = reFlag || options.sign;
 
-            str += MathLib.toString(this.im, passOptions) + 'i';
+            str += toString(this.im, passOptions) + 'i';
         }
 
         if (reFlag || str.length === 0) {
-            str = MathLib.toString(this.re, options) + str;
+            str = toString(this.re, options) + str;
         }
 
         return str;
     };
     Complex.polar = function (abs, arg) {
         if (abs === Infinity) {
-            return new MathLib.Complex(Infinity);
+            return new Complex(Infinity);
         }
-        return new MathLib.Complex(abs * Math.cos(arg), abs * Math.sin(arg));
+        return new Complex(abs * Math.cos(arg), abs * Math.sin(arg));
     };
     return Complex;
 })();
-export default = Complex;
+export default Complex;
 

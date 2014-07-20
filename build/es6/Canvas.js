@@ -1,8 +1,10 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Screen2D from './Screen2D';
+
+import {abs, isZero} from 'Functn';
+import {colorConvert, extendObject} from 'meta';
+
 
 /**
 * The Canvas renderer for 2D plotting
@@ -36,7 +38,7 @@ export var Canvas = {
 
         // Set the drawing options
         if (options) {
-            opts = MathLib.Canvas.convertOptions(options);
+            opts = Canvas.convertOptions(options);
             for (prop in opts) {
                 if (opts.hasOwnProperty(prop)) {
                     ctx[prop] = opts[prop];
@@ -89,9 +91,9 @@ export var Canvas = {
         var convertedOptions = {};
 
         if ('fillColor' in options) {
-            convertedOptions.fillStyle = MathLib.colorConvert(options.fillColor);
+            convertedOptions.fillStyle = colorConvert(options.fillColor);
         } else if ('color' in options) {
-            convertedOptions.fillStyle = MathLib.colorConvert(options.color);
+            convertedOptions.fillStyle = colorConvert(options.color);
         }
 
         if ('font' in options) {
@@ -103,9 +105,9 @@ export var Canvas = {
         }
 
         if ('lineColor' in options) {
-            convertedOptions.strokeStyle = MathLib.colorConvert(options.lineColor);
+            convertedOptions.strokeStyle = colorConvert(options.lineColor);
         } else if ('color' in options) {
-            convertedOptions.strokeStyle = MathLib.colorConvert(options.color);
+            convertedOptions.strokeStyle = colorConvert(options.color);
         }
 
         return convertedOptions;
@@ -127,7 +129,7 @@ export var Canvas = {
         ctx.lineWidth = (options.lineWidth || 4) / (screen.scale.x - screen.scale.y);
 
         // Don't try to draw the line at infinity
-        if (line.type === 'line' && MathLib.isZero(line[0]) && MathLib.isZero(line[1])) {
+        if (line.type === 'line' && isZero(line[0]) && isZero(line[1])) {
             return this;
         } else {
             points = this.screen.getLineEndPoints(line);
@@ -135,7 +137,7 @@ export var Canvas = {
 
         // Set the drawing options
         if (options) {
-            opts = MathLib.Canvas.convertOptions(options);
+            opts = Canvas.convertOptions(options);
             for (prop in opts) {
                 if (opts.hasOwnProperty(prop)) {
                     ctx[prop] = opts[prop];
@@ -186,7 +188,7 @@ export var Canvas = {
 
         // Set the drawing options
         if (options) {
-            opts = MathLib.Canvas.convertOptions(options);
+            opts = Canvas.convertOptions(options);
             for (prop in opts) {
                 if (opts.hasOwnProperty(prop)) {
                     ctx[prop] = opts[prop];
@@ -214,7 +216,7 @@ export var Canvas = {
                 // Check if we are drawing a (nearly) vertical line, which should not be there.
                 // i.e the vertical lines at π/2 for the tangent function
                 // TODO: Find a better check if there is a discontinuity.
-                if (fx !== fx || (MathLib.abs((fxold - fx) / step) >= 1e2 && (fx - curve(i - step / 2)) * (fxold - curve(i - step / 2)) >= 0)) {
+                if (fx !== fx || (abs((fxold - fx) / step) >= 1e2 && (fx - curve(i - step / 2)) * (fxold - curve(i - step / 2)) >= 0)) {
                     // Don't add empty subpaths
                     if (path.length) {
                         paths.push(path);
@@ -362,7 +364,7 @@ export var Canvas = {
 
         // Set the drawing options
         if (options) {
-            opts = MathLib.Canvas.convertOptions(options);
+            opts = Canvas.convertOptions(options);
 
             if (!('fillColor' in options) && !('color' in options)) {
                 opts.fillStyle = 'black';
@@ -426,7 +428,7 @@ export var Canvas = {
 
         ctx = this.ctx;
 
-        opts = MathLib.Canvas.convertOptions(MathLib.extendObject(defaults, options));
+        opts = Canvas.convertOptions(extendObject(defaults, options));
 
         for (prop in opts) {
             if (opts.hasOwnProperty(prop)) {
@@ -434,8 +436,8 @@ export var Canvas = {
             }
         }
 
-        ctx.fillStyle = MathLib.colorConvert(options.textColor || options.color || defaults.textColor);
-        ctx.strokeStyle = MathLib.colorConvert(options.textColor || options.color || defaults.textColor);
+        ctx.fillStyle = colorConvert(options.textColor || options.color || defaults.textColor);
+        ctx.strokeStyle = colorConvert(options.textColor || options.color || defaults.textColor);
 
         ctx.font = opts.fontSize + 'px ' + opts.font;
         ctx.textAlign = 'center';

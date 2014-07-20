@@ -16,6 +16,10 @@ var __extends = this.__extends || function (d, b) {
         }
     };
 
+    /*es6
+    import {extendObject} from 'meta';
+    import {Screen} from 'Screen';
+    es6*/
     define(['meta', 'Screen'], function(MathLib) {
     /**
     * Three dimensional plotting

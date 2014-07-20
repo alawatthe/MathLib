@@ -1,3 +1,13 @@
+/*es6
+import {} from 'Functn';
+import {colorConvert, extendObject} from 'meta';
+import {Circle} from 'Circle';
+import {Layer} from 'Layer';
+import {Matrix} from 'Matrix';
+import {Point} from 'Point';
+import {Screen} from 'Screen';
+es6*/
+
 /// import Screen
 
 /**

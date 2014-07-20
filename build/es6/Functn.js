@@ -1,13 +1,19 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Expression from './Expression';
+/* jshint -W079 */
+
+import {coerce, epsilon, goldenRatio, isNative, type} from 'meta';
+import {Expression} from 'Expression';
+
 
 var functnPrototype = {};
 
+
+var abs, arccos, arccot, arccsc, arcosh, arcoth, arcsch, arcsec, arcsin, arctan, arsech, arsinh, artanh, binomial, ceil, cbrt, conjugate, copy, cos, cosh, cot, coth, csc, csch, degToRad, exp, factorial, floor, identity, inverse, isFinite, isInt, isNaN, isNegZero, isOne, isPosZero, isPrime, isReal, isZero, lg, ln, logGamma, negative, not, radToDeg, rem, sec, sech, sign, sin, sinh, sqrt, tan, tanh, arctan2, divide, equivalent, implies, log, minus, mod, pow, root, divisors, factor, fallingFactorial, fibonacci, risingFactorial, round, trunc, and, arithMean, gcd, geoMean, harmonicMean, hypot, hypot2, isEqual, lcm, max, min, or, plus, times, xor;
+
 /**
-* MathLib.Functn is the MathLib implementation of mathematical functions
+* Functn is the MathLib implementation of mathematical functions
 *
 * Because 'Function' is a reserved word in JavaScript,
 * the class is called 'Functn'.
@@ -15,7 +21,7 @@ var functnPrototype = {};
 * @class
 * @this {Functn}
 */
-MathLib.Functn = function (f, options) {
+export var Functn = function (f, options) {
     options = options || {};
 
     var functn = function () {
@@ -24,11 +30,11 @@ MathLib.Functn = function (f, options) {
             args[_i] = arguments[_i + 0];
         }
         var firstArg, i, ii, x = args[0], arity = options.arity, isNumeric = function (arg) {
-            return ['complex', 'integer', 'number', 'rational'].indexOf(MathLib.type(arg)) !== -1;
+            return ['complex', 'integer', 'number', 'rational'].indexOf(type(arg)) !== -1;
         };
 
         if (args.length > 1 && args.every(isNumeric)) {
-            args = MathLib.coerce.apply(null, args);
+            args = coerce.apply(null, args);
         }
 
         firstArg = args[0];
@@ -88,7 +94,7 @@ MathLib.Functn = function (f, options) {
                 }
             }
 
-            return MathLib.Functn(function () {
+            return Functn(function () {
                 var j, jj, argus = [], argumentsIndex = 0;
 
                 for (j = 0, jj = args.length; j < jj; j++) {
@@ -126,10 +132,10 @@ MathLib.Functn = function (f, options) {
                 return expr;
             });
 
-            return new MathLib.Functn(function (y) {
+            return new Functn(function (y) {
                 return f(x(y));
             }, {
-                expression: new MathLib.Expression({
+                expression: new Expression({
                     subtype: 'functionDefinition',
                     args: x.expression.args,
                     content: composition.content
@@ -146,7 +152,7 @@ MathLib.Functn = function (f, options) {
             return f(firstArg.coerceTo('number'));
         } else if (x.type === 'set') {
             return x.map(f);
-        } else if (MathLib.type(firstArg) === 'array') {
+        } else if (type(firstArg) === 'array') {
             var ff, res = [];
 
             for (i = 0, ii = firstArg.length; i < ii; i++) {
@@ -170,7 +176,7 @@ MathLib.Functn = function (f, options) {
         }
     }
     functn.type = 'functn';
-    functn.constructor = MathLib.Functn;
+    functn.constructor = Functn;
 
     Object.defineProperties(functn, {
         args: { value: options.args },
@@ -232,7 +238,7 @@ fns.arccsc = {
 *
 */
 fns.arcosh = {
-    functn: MathLib.isNative(Math.acosh) || function (x) {
+    functn: isNative(Math.acosh) || function (x) {
         return Math.log(x + Math.sqrt(x * x - 1));
     },
     cdgroup: 'transc1',
@@ -246,7 +252,7 @@ fns.arcosh = {
 fns.arcoth = {
     functn: function (x) {
         // Handle ±∞
-        if (!MathLib.isFinite(x)) {
+        if (!isFinite(x)) {
             return 1 / x;
         }
         return 0.5 * Math.log((x + 1) / (x - 1));
@@ -262,7 +268,7 @@ fns.arcoth = {
 fns.arcsch = {
     functn: function (x) {
         // Handle ±0 and ±∞ separately
-        if (x === 0 || !MathLib.isFinite(x)) {
+        if (x === 0 || !isFinite(x)) {
             return 1 / x;
         }
         return Math.log(1 / x + Math.sqrt(1 / (x * x) + 1));
@@ -328,9 +334,9 @@ fns.arsech = {
 *
 */
 fns.arsinh = {
-    functn: MathLib.isNative(Math.asinh) || function (x) {
+    functn: isNative(Math.asinh) || function (x) {
         // Handle ±0 and ±∞ separately
-        if (x === 0 || !MathLib.isFinite(x)) {
+        if (x === 0 || !isFinite(x)) {
             return x;
         }
         return Math.log(x + Math.sqrt(x * x + 1));
@@ -344,7 +350,7 @@ fns.arsinh = {
 *
 */
 fns.artanh = {
-    functn: MathLib.isNative(Math.atanh) || function (x) {
+    functn: isNative(Math.atanh) || function (x) {
         // Handle ±0
         if (x === 0) {
             return x;
@@ -366,7 +372,7 @@ fns.binomial = {
         var binomial = 1, i, sign;
 
         // not finite means ±∞ or NaN
-        if (MathLib.isNaN(n) || !MathLib.isFinite(k)) {
+        if (isNaN(n) || !isFinite(k)) {
             return NaN;
         }
 
@@ -379,14 +385,14 @@ fns.binomial = {
             if (k < 0) {
                 // negative odd number % 2 = -1 and not +1
                 // This leads to the + 1 here.
-                return ((n + k) % 2 * 2 + 1) * MathLib.binomial(-k - 1, -n - 1);
+                return ((n + k) % 2 * 2 + 1) * binomial(-k - 1, -n - 1);
             } else {
                 if (k === 0) {
                     sign = 1;
                 } else {
                     sign = -(k % 2 * 2 - 1);
                 }
-                binomial = sign * MathLib.binomial(k - n - 1, k);
+                binomial = sign * binomial(k - n - 1, k);
             }
         }
 
@@ -419,13 +425,13 @@ fns.cbrt = {
         }
 
         // Get an approximation
-        a = MathLib.sign(x) * Math.pow(Math.abs(x), 1 / 3);
+        a = sign(x) * Math.pow(Math.abs(x), 1 / 3);
 
         while (true) {
             a3 = Math.pow(a, 3);
             a3x = a3 + x;
             an = a * (a3x + x) / (a3x + a3);
-            if (MathLib.isZero(an - a)) {
+            if (isZero(an - a)) {
                 break;
             }
             a = an;
@@ -534,8 +540,8 @@ fns.coth = {
         }
 
         // Handle ±∞
-        if (!MathLib.isFinite(x)) {
-            return MathLib.sign(x);
+        if (!isFinite(x)) {
+            return sign(x);
         }
 
         return (Math.exp(x) + Math.exp(-x)) / (Math.exp(x) - Math.exp(-x));
@@ -590,7 +596,7 @@ fns.degToRad = {
 */
 fns.divide = {
     functn: function (x, y) {
-        return MathLib.times(x, MathLib.inverse(y));
+        return times(x, inverse(y));
     },
     arity: 2,
     cdgroup: 'arith1',
@@ -631,10 +637,10 @@ fns.exp = {
 fns.factorial = {
     functn: function (x) {
         var factorial = 1, i;
-        if ((x > 170 && MathLib.isInt(x)) || x === Infinity) {
+        if ((x > 170 && isInt(x)) || x === Infinity) {
             return Infinity;
         }
-        if (x < 0 || !MathLib.isInt(x) || MathLib.isNaN(x)) {
+        if (x < 0 || !isInt(x) || isNaN(x)) {
             return NaN;
         }
         for (i = 1; i <= x; i++) {
@@ -824,7 +830,7 @@ fns.logGamma = {
 */
 fns.minus = {
     functn: function (x, y) {
-        return MathLib.plus(x, MathLib.negative(y));
+        return plus(x, negative(y));
     },
     arity: 2,
     cdgroup: 'arith1',
@@ -888,11 +894,11 @@ fns.pow = {
         }
 
         // Bugfix for Opera 12, where
-        //  > MathLib.pow(-0, -5) == -Infinity // should be Infinity
-        //  > MathLib.pow(-0, 5) == +0 // should be -0
+        //  > pow(-0, -5) == -Infinity // should be Infinity
+        //  > pow(-0, 5) == +0 // should be -0
         // Weirdly this problem occurs only sometimes, in a very random way...
         /* istanbul ignore if */
-        if (MathLib.isNegZero(x) && Math.abs(y % 2) === 1) {
+        if (isNegZero(x) && Math.abs(y % 2) === 1) {
             return y < 0 ? -Infinity : -0;
         }
         return Math.pow(x, y);
@@ -928,7 +934,7 @@ fns.rem = {
     functn: function (n, m) {
         var x = 4, y = -3;
 
-        if (!MathLib.isFinite(m)) {
+        if (!isFinite(m)) {
             return NaN;
         }
 
@@ -1022,7 +1028,7 @@ fns.sin = {
 *
 */
 fns.sinh = {
-    functn: MathLib.isNative(Math.sinh) || function (x) {
+    functn: isNative(Math.sinh) || function (x) {
         var ex;
 
         // sinh(-0) should be -0
@@ -1062,13 +1068,13 @@ fns.tan = {
 *
 */
 fns.tanh = {
-    functn: MathLib.isNative(Math.tanh) || function (x) {
+    functn: isNative(Math.tanh) || function (x) {
         var p;
 
         // Handle ±0 and ±∞ separately
         // Their values happen to coincide with sign
-        if (x === 0 || !MathLib.isFinite(x)) {
-            return MathLib.sign(x);
+        if (x === 0 || !isFinite(x)) {
+            return sign(x);
         }
 
         p = Math.exp(x);
@@ -1108,6 +1114,39 @@ functnPrototype.draw = function (screen, options) {
     }
 
     return this;
+};
+
+// Recursive function for the quad method
+var quadstep = function (f, a, b, fa, fc, fb, options) {
+    var h = b - a, c = (a + b) / 2, fd = f((a + c) / 2), fe = f((c + b) / 2), Q1 = (h / 6) * (fa + 4 * fc + fb), Q2 = (h / 12) * (fa + 4 * fd + 2 * fc + 4 * fe + fb), Q = Q2 + (Q2 - Q1) / 15;
+
+    options.calls = options.calls + 2;
+
+    // Infinite or Not-a-Number function value encountered
+    if (!isFinite(Q)) {
+        options.warn = Math.max(options.warn, 3);
+        return Q;
+    }
+
+    // Maximum function count exceeded; singularity likely
+    if (options.calls > options.maxCalls) {
+        options.warn = Math.max(options.warn, 2);
+        return Q;
+    }
+
+    // Accuracy over this subinterval is acceptable
+    if (Math.abs(Q2 - Q) <= options.tolerance) {
+        return Q;
+    }
+
+    // Minimum step size reached; singularity possible
+    if (Math.abs(h) < options.minStep || c === a || c === b) {
+        options.warn = Math.max(options.warn, 1);
+        return Q;
+    }
+
+    // Otherwise, divide the interval into two subintervals
+    return quadstep(f, a, c, fa, fd, fc, options) + quadstep(f, c, b, fc, fe, fb, options);
 };
 
 /**
@@ -1158,39 +1197,6 @@ functnPrototype.quad = function (a, b, options) {
     options.warnMessage = warnMessage[options.warn];
 
     return Q;
-};
-
-// Recursive function for the quad method
-var quadstep = function (f, a, b, fa, fc, fb, options) {
-    var h = b - a, c = (a + b) / 2, fd = f((a + c) / 2), fe = f((c + b) / 2), Q1 = (h / 6) * (fa + 4 * fc + fb), Q2 = (h / 12) * (fa + 4 * fd + 2 * fc + 4 * fe + fb), Q = Q2 + (Q2 - Q1) / 15;
-
-    options.calls = options.calls + 2;
-
-    // Infinite or Not-a-Number function value encountered
-    if (!MathLib.isFinite(Q)) {
-        options.warn = Math.max(options.warn, 3);
-        return Q;
-    }
-
-    // Maximum function count exceeded; singularity likely
-    if (options.calls > options.maxCalls) {
-        options.warn = Math.max(options.warn, 2);
-        return Q;
-    }
-
-    // Accuracy over this subinterval is acceptable
-    if (Math.abs(Q2 - Q) <= options.tolerance) {
-        return Q;
-    }
-
-    // Minimum step size reached; singularity possible
-    if (Math.abs(h) < options.minStep || c === a || c === b) {
-        options.warn = Math.max(options.warn, 1);
-        return Q;
-    }
-
-    // Otherwise, divide the interval into two subintervals
-    return quadstep(f, a, c, fa, fd, fc, options) + quadstep(f, c, b, fc, fe, fb, options);
 };
 
 /**
@@ -1318,7 +1324,7 @@ var functionList1 = {
     }
     }
     divisors.push(x);
-    return new MathLib.Set(divisors);
+    return new Set(divisors);
     },
     factor: function (n) {
     var factors = [],
@@ -1336,7 +1342,7 @@ var functionList1 = {
     }
     i += 2;
     }
-    return new MathLib.Set(factors, true);
+    return new Set(factors, true);
     },
     */
     fallingFactorial: function (n, m, s) {
@@ -1349,7 +1355,7 @@ var functionList1 = {
         return factorial;
     },
     fibonacci: function (n) {
-        return Math.floor(Math.pow(MathLib.goldenRatio, n) / Math.sqrt(5));
+        return Math.floor(Math.pow(goldenRatio, n) / Math.sqrt(5));
     },
     isFinite: function (x) {
         return Math.abs(x) < Infinity;
@@ -1361,7 +1367,7 @@ var functionList1 = {
         return 1 / x === -Infinity;
     },
     isOne: function (a) {
-        return Math.abs(a - 1) < MathLib.epsilon;
+        return Math.abs(a - 1) < epsilon;
     },
     isPosZero: function (x) {
         return 1 / x === Infinity;
@@ -1370,7 +1376,7 @@ var functionList1 = {
         return Math.abs(x) < Infinity;
     },
     isZero: function (x) {
-        return Math.abs(x) < MathLib.epsilon;
+        return Math.abs(x) < epsilon;
     },
     random: Math.random,
     risingFactorial: function (n, m, s) {
@@ -1403,7 +1409,7 @@ var createFunction1 = function (f, name) {
                 return f(x(y));
             };
         } else if (x.type === 'set') {
-            return new MathLib.Set(x.map(f));
+            return new Set(x.map(f));
         } else if (x.type === 'complex' || x.type === 'integer' || x.type === 'rational') {
             return x[name].apply(x, Array.prototype.slice.call(arguments, 1));
         } else if (Array.isArray(x)) {
@@ -1426,20 +1432,20 @@ for (func in functionList1) {
     }
 }
 
-MathLib.compare = function (a, b) {
-    if (MathLib.type(a) !== MathLib.type(b)) {
-        return MathLib.sign(MathLib.type(a).localeCompare(MathLib.type(b)));
+export var compare = function (a, b) {
+    if (type(a) !== type(b)) {
+        return sign(type(a).localeCompare(type(b)));
     } else if (typeof a === 'number') {
-        return MathLib.sign(a - b);
+        return sign(a - b);
     } else if (typeof a === 'string') {
         return a.localeCompare(b);
     }
     return a.compare(b);
 };
 
-MathLib.evaluate = function (x) {
+export var evaluate = function (x) {
     if (Array.isArray(x)) {
-        return x.map(MathLib.evaluate);
+        return x.map(evaluate);
     } else if (typeof x === 'object' && 'evaluate' in Object.getPrototypeOf(x)) {
         return x.evaluate();
     } else {
@@ -1447,7 +1453,7 @@ MathLib.evaluate = function (x) {
     }
 };
 
-MathLib.type = function (x) {
+export var type = function (x) {
     if (x === null) {
         return 'null';
     }
@@ -1457,7 +1463,7 @@ MathLib.type = function (x) {
     return x.type ? x.type : (x.constructor.name || Object.prototype.toString.call(x).slice(8, -1)).toLowerCase();
 };
 
-MathLib.is = function (obj, type) {
+export var is = function (obj, type) {
     var ucfirst = function (str) {
         return str.slice(0, 1).toUpperCase() + str.slice(1);
     }, global = global, window = window, glbl = {
@@ -1470,7 +1476,7 @@ MathLib.is = function (obj, type) {
         'point', 'polynomial', 'rational', 'screen', 'screen2d', 'screen3d', 'set', 'vector'
     ];
 
-    if (MathLib.type(obj) === type) {
+    if (type(obj) === type) {
         return true;
     } else if (classes.indexOf(type) !== -1) {
         return obj instanceof MathLib[ucfirst(type)];
@@ -1490,7 +1496,7 @@ MathLib.is = function (obj, type) {
 *
 * @return {boolean}
 */
-MathLib.isMathMLSupported = function () {
+export var isMathMLSupported = function () {
     var hasMathML = false, ns, div, mfrac;
 
     // If document is undefined (e.g. in Node) we return false
@@ -1509,13 +1515,13 @@ MathLib.isMathMLSupported = function () {
 };
 
 /**
-* ### MathLib.writeMathML()
+* ### writeMathML()
 * Writes MathML to an element.
 *
 * @param {string} id The id of the element in which the MathML should be inserted.
 * @param {string} math The MathML to be inserted.
 */
-MathLib.writeMathML = function (id, math) {
+export var writeMathML = function (id, math) {
     var formula;
     document.getElementById(id).innerHTML = '<math>' + math + '</math>';
     if (typeof MathJax !== 'undefined') {
@@ -1525,12 +1531,12 @@ MathLib.writeMathML = function (id, math) {
 };
 
 /**
-* ### MathLib.loadMathJax()
+* ### loadMathJax()
 * Loads MathJax dynamically.
 *
 * @param {string} config Optional config options
 */
-MathLib.loadMathJax = function (config) {
+export var loadMathJax = function (config) {
     var script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js';
@@ -1560,7 +1566,7 @@ var nAryFunctions = {
         });
     },
     arithMean: function (n) {
-        return MathLib.plus(n) / n.length;
+        return plus(n) / n.length;
     },
     gcd: function (a) {
         var min, reduction = function (x) {
@@ -1577,17 +1583,17 @@ var nAryFunctions = {
         }
 
         while (a.length > 1) {
-            min = MathLib.min(a);
+            min = min(a);
             a = a.map(reduction).filter(isntZero);
         }
         return a[0] || min;
     },
     geoMean: function (n) {
-        return MathLib.root(MathLib.times(n), n.length);
+        return root(times(n), n.length);
     },
     harmonicMean: function (n) {
-        return n.length / MathLib.plus(n.map(function (entry) {
-            return MathLib.inverse(entry);
+        return n.length / plus(n.map(function (entry) {
+            return inverse(entry);
         }));
     },
     hypot: function (n) {
@@ -1599,12 +1605,12 @@ var nAryFunctions = {
 
         if (n.length > 2) {
             return n.reduce(function (a, b) {
-                return MathLib.hypot(a, b);
+                return hypot(a, b);
             });
         }
 
-        a = MathLib.abs(n[0]);
-        b = MathLib.abs(n[1]);
+        a = abs(n[0]);
+        b = abs(n[1]);
 
         // Return Infinity if one value is infinite, even if the other value is NaN.
         // (see IEEE 754-2008, 9.2.1)
@@ -1634,7 +1640,7 @@ var nAryFunctions = {
         }, 0);
     },
     /**
-    * ### MathLib.isEqual()
+    * ### isEqual()
     * Determines if all arguments are equal.
     *
     * @param {...number|MathLib object} n Expects an arbitrary number of numbers or MathLib objects
@@ -1661,10 +1667,10 @@ var nAryFunctions = {
         if (n.length === 1) {
             return n[0];
         } else if (n.length === 2) {
-            return MathLib.times(n) / MathLib.gcd(n);
+            return times(n) / gcd(n);
         } else if (n.length > 2) {
             return n.reduce(function (x, y) {
-                return MathLib.lcm(x, y);
+                return lcm(x, y);
             });
         }
     },
@@ -1675,7 +1681,7 @@ var nAryFunctions = {
         return Math.min.apply(null, n);
     },
     /**
-    * ### MathLib.or()
+    * ### or()
     * Returns true iff at least one argument is true.
     *
     * @param {...boolean} args - Expects an arbitrary number of boolean arguments
@@ -1704,7 +1710,7 @@ var nAryFunctions = {
                     f1 = function () {
                         return a;
                     };
-                    aExpr = new MathLib.Expression({
+                    aExpr = new Expression({
                         value: a,
                         subtype: 'number'
                     });
@@ -1712,19 +1718,19 @@ var nAryFunctions = {
                     f2 = function () {
                         return b;
                     };
-                    bExpr = new MathLib.Expression({
+                    bExpr = new Expression({
                         value: b,
                         subtype: 'number'
                     });
                 }
-                return MathLib.Functn(function (x) {
-                    return MathLib.plus(f1(x), f2(x));
+                return Functn(function (x) {
+                    return plus(f1(x), f2(x));
                 }, {
-                    expression: new MathLib.Expression({
+                    expression: new Expression({
                         subtype: 'functionDefinition',
                         args: ['x'],
                         content: [
-                            new MathLib.Expression({
+                            new Expression({
                                 content: [aExpr, bExpr],
                                 subtype: 'naryOperator',
                                 value: '+',
@@ -1758,7 +1764,7 @@ var nAryFunctions = {
                     f1 = function () {
                         return a;
                     };
-                    aExpr = new MathLib.Expression({
+                    aExpr = new Expression({
                         value: a,
                         subtype: 'number'
                     });
@@ -1766,19 +1772,19 @@ var nAryFunctions = {
                     f2 = function () {
                         return b;
                     };
-                    bExpr = new MathLib.Expression({
+                    bExpr = new Expression({
                         value: b,
                         subtype: 'number'
                     });
                 }
-                return MathLib.Functn(function (x) {
-                    return MathLib.times(f1(x), f2(x));
+                return Functn(function (x) {
+                    return times(f1(x), f2(x));
                 }, {
-                    expression: new MathLib.Expression({
+                    expression: new Expression({
                         subtype: 'functionDefinition',
                         args: ['x'],
                         content: [
-                            new MathLib.Expression({
+                            new Expression({
                                 content: [aExpr, bExpr],
                                 subtype: 'naryOperator',
                                 value: '*',
@@ -1795,7 +1801,7 @@ var nAryFunctions = {
         });
     },
     /**
-    * ### MathLib.xor()
+    * ### xor()
     * Returns true iff an odd number of the arguments is true.
     *
     * @param {...boolean} args - Expects an arbitrary number of boolean arguments
@@ -1810,9 +1816,9 @@ var nAryFunctions = {
 
 var createNaryFunction = function (f) {
     return function (n) {
-        if (MathLib.type(n) === 'set') {
+        if (type(n) === 'set') {
             return f(n.slice());
-        } else if (MathLib.type(n) !== 'array') {
+        } else if (type(n) !== 'array') {
             n = Array.prototype.slice.apply(arguments);
         }
         return f(n);
@@ -1835,25 +1841,25 @@ for (var fnName in fns) {
 
         if ('args' in fn) {
             args = fn.args.map(function (x) {
-                return MathLib.Expression.variable(x);
+                return Expression.variable(x);
             });
         } else if ('arity' in fn) {
             args = ['x', 'y', 'z'].slice(0, fn.arity).map(function (x) {
-                return MathLib.Expression.variable(x);
+                return Expression.variable(x);
             });
         } else {
-            args = [MathLib.Expression.variable('x')];
+            args = [Expression.variable('x')];
         }
 
         Object.defineProperty(exports, fnName, {
-            value: MathLib.Functn(fns[fnName].functn, {
+            value: Functn(fns[fnName].functn, {
                 name: fnName,
                 arity: args.length,
-                expression: new MathLib.Expression({
+                expression: new Expression({
                     subtype: 'functionDefinition',
                     args: args,
                     content: [
-                        new MathLib.Expression({
+                        new Expression({
                             subtype: 'functionCall',
                             content: args,
                             value: fnName,

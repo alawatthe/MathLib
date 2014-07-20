@@ -1,3 +1,10 @@
+/*es6
+import {warning} from 'meta';
+import {Complex} from 'Complex';
+import {Integer} from 'Integer';
+import {Rational} from 'Rational';
+es6*/
+
 	export var version = '%MathLibVersion';
 	export var apery = 1.2020569031595942;
 	export var e = Math.E;
@@ -71,11 +78,11 @@
 
 
 	export var coerceTo = function (obj, type) {
-		
+
 		if (typeof obj === 'object') {
 			return obj.coerceTo(type);
 		}
-				
+
 		if (typeof obj === 'number') {
 			if (type === 'integer') {
 				return new MathLib.Integer(obj);
@@ -103,6 +110,6 @@
 						return numberTypes.indexOf(type(x));
 					})
 				)];
-				
+
 		return args.map(x => coerceTo(x, numberType));
 	};

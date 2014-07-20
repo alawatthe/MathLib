@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-19
+ * build date: 2014-07-20
  */
 
 declare module MathLib {
@@ -54,6 +54,14 @@ declare module MathLib {
     */
     var warning: (details: any) => void;
     /**
+    * Custom toString function
+    *
+    * @param {any} x - The value to which the String should be generated
+    * @param {object} [options] - Optional options to style the output
+    * @return {string}
+    */
+    var toString: (x: any, options?: toPresentationOptions) => string;
+    /**
     * A content MathML string representation
     *
     * @param {any} x - The value to which the MathML should be generated
@@ -77,14 +85,6 @@ declare module MathLib {
     * @return {string}
     */
     var toMathML: (x: any, options?: toPresentationOptions) => string;
-    /**
-    * Custom toString function
-    *
-    * @param {any} x - The value to which the String should be generated
-    * @param {object} [options] - Optional options to style the output
-    * @return {string}
-    */
-    var toString: (x: any, options?: toPresentationOptions) => string;
 
 
     var EvaluationError: (message: string, options: any) => any;

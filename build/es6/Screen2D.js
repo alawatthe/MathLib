@@ -1,14 +1,28 @@
 var __extends = this.__extends || function (d, b) {
-for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-function __() { this.constructor = d; }
-__.prototype = b.prototype;
-d.prototype = new __();
+	for (var p in b) {
+		if (b.hasOwnProperty(p)) {
+			d[p] = b[p];
+		}
+	}
+	function __() {
+		this.constructor = d;
+	}
+	__.prototype = b.prototype;
+	d.prototype = new __();
 };
 
-'use strict';
 
-import MathLib from './meta.js';
-import Screen from './Screen';
+/* jshint esnext:true */
+
+
+import {} from 'Functn';
+import {colorConvert, extendObject} from 'meta';
+import {Circle} from 'Circle';
+import {Layer} from 'Layer';
+import {Matrix} from 'Matrix';
+import {Point} from 'Point';
+import {Screen} from 'Screen';
+
 
 /**
 * Two dimensional plotting
@@ -68,12 +82,12 @@ var Screen2D = (function (_super) {
             range: { x: 1, y: 1 },
             figcaption: '',
             renderer: 'Canvas',
-            transformation: new MathLib.Matrix([
+            transformation: new Matrix([
                 [Math.min(this.height, this.width) / 2, 0, this.width / 2],
                 [0, -Math.min(this.height, this.width) / 2, this.height / 2],
                 [0, 0, 1]
             ])
-        }, opts = MathLib.extendObject(defaults, options), element, transformation = opts.transformation, that = this;
+        }, opts = extendObject(defaults, options), element, transformation = opts.transformation, that = this;
 
         this.options = opts;
         this.renderer = MathLib[opts.renderer];
@@ -255,7 +269,7 @@ var Screen2D = (function (_super) {
             background.setAttribute('width', this.width + 'px');
             background.setAttribute('height', this.height + 'px');
             background.setAttribute('stroke', 'transparent');
-            background.setAttribute('fill', 'background' in options ? MathLib.colorConvert(options.background) : 'white');
+            background.setAttribute('fill', 'background' in options ? colorConvert(options.background) : 'white');
             background.setAttribute('fill-opacity', '1');
             this.element.appendChild(background);
             // }
@@ -264,10 +278,10 @@ var Screen2D = (function (_super) {
         // Create the Layers
         // =================
         this.layer = [];
-        this.layer.back = new MathLib.Layer(this, 'back', 0);
-        this.layer.grid = new MathLib.Layer(this, 'grid', 1);
-        this.layer.axes = new MathLib.Layer(this, 'axes', 2);
-        this.layer.main = new MathLib.Layer(this, 'main', 3);
+        this.layer.back = new Layer(this, 'back', 0);
+        this.layer.grid = new Layer(this, 'grid', 1);
+        this.layer.axes = new Layer(this, 'axes', 2);
+        this.layer.main = new Layer(this, 'main', 3);
 
         this.wrapper.addEventListener('keydown', function (evt) {
             return _this.onkeydown(evt);
@@ -338,14 +352,14 @@ var Screen2D = (function (_super) {
             }
             return _this.renderer.text.apply(_this.layer.axes, args);
         }, options = {
-            lineColor: MathLib.colorConvert(this.options.axes.color),
+            lineColor: colorConvert(this.options.axes.color),
             'stroke-width': -1 / this.transformation[1][1]
         }, textOptions = {
             font: this.options.axes && 'label' in this.options.axes ? this.options.axes.label.font : '',
             fontSize: this.options.axes && 'label' in this.options.axes ? this.options.axes.label.fontSize : '',
             // fontSize: this.options.axes.label.fontSize,
-            strokeStyle: MathLib.colorConvert(this.options.axes.textColor),
-            fillStyle: MathLib.colorConvert(this.options.axes.textColor)
+            strokeStyle: colorConvert(this.options.axes.textColor),
+            fillStyle: colorConvert(this.options.axes.textColor)
         }, top = (-this.translation.y) / this.scale.y, bottom = (this.height - this.translation.y) / this.scale.y, left = (-this.translation.x) / this.scale.x, right = (this.width - this.translation.x) / this.scale.x, lengthX = 10 / this.transformation[0][0], lengthY = -10 / this.transformation[1][1], yExp = 1 - Math.floor(Math.log(-this.transformation[1][1]) / Math.LN10 - 0.3), xExp = 1 - Math.floor(Math.log(this.transformation[0][0]) / Math.LN10 - 0.3), yTick = Math.pow(10, yExp), xTick = Math.pow(10, xExp), xLen = Math.max(0, Math.min(20, -xExp)), yLen = Math.max(0, Math.min(20, -yExp));
 
         if (!this.options.axes) {
@@ -440,14 +454,14 @@ var Screen2D = (function (_super) {
             // The vertical lines
             if (this.options.grid.x) {
                 for (i = left - (left % xTick); i <= right; i += xTick) {
-                    line([[i, bottom], [i, top]], MathLib.extendObject(this.options.grid, this.options.grid.x), true);
+                    line([[i, bottom], [i, top]], extendObject(this.options.grid, this.options.grid.x), true);
                 }
             }
 
             // The horizontal lines
             if (this.options.grid.y) {
                 for (i = bottom - (bottom % yTick); i <= top; i += yTick) {
-                    line([[left, i], [right, i]], MathLib.extendObject(this.options.grid, this.options.grid.y), true);
+                    line([[left, i], [right, i]], extendObject(this.options.grid, this.options.grid.y), true);
                 }
             }
             // Test for logarithmic plots
@@ -464,13 +478,13 @@ var Screen2D = (function (_super) {
                 for (i = 0, ii = 2 * Math.PI; i < ii; i += this.options.grid.angle.tick) {
                     line([
                         [0, 0],
-                        [max * Math.cos(i), max * Math.sin(i)]], MathLib.extendObject(this.options.grid, this.options.grid.angle), true);
+                        [max * Math.cos(i), max * Math.sin(i)]], extendObject(this.options.grid, this.options.grid.angle), true);
                 }
             }
 
             if (this.options.grid.r) {
                 for (i = min; i <= max; i += Math.min(xTick, yTick)) {
-                    circle(new MathLib.Circle([0, 0, 1], i), MathLib.extendObject(this.options.grid, this.options.grid.r), true);
+                    circle(new Circle([0, 0, 1], i), extendObject(this.options.grid, this.options.grid.r), true);
                 }
             }
         }
@@ -499,7 +513,7 @@ var Screen2D = (function (_super) {
             y /= window.devicePixelRatio;
         }
 
-        return new MathLib.Point([x, y, 1]);
+        return new Point([x, y, 1]);
     };
 
     /**
@@ -654,7 +668,7 @@ var Screen2D = (function (_super) {
             p = this.transformation.inverse().times(this.getEventPoint(evt));
 
             // Compute new scale matrix in current mouse position
-            s = new MathLib.Matrix([[z, 0, p[0] - p[0] * z], [0, z, p[1] - p[1] * z], [0, 0, 1]]);
+            s = new Matrix([[z, 0, p[0] - p[0] * z], [0, z, p[1] - p[1] * z], [0, 0, 1]]);
 
             this.transformation = this.transformation.times(s);
 
@@ -684,12 +698,12 @@ var Screen2D = (function (_super) {
             this.layer.grid.element.width = width;
             this.layer.grid.element.height = height;
             this.layer.grid.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-            this.layer.grid.ctx.strokeStyle = MathLib.colorConvert(this.options.grid.color) || '#cccccc';
+            this.layer.grid.ctx.strokeStyle = colorConvert(this.options.grid.color) || '#cccccc';
 
             this.layer.axes.element.width = width;
             this.layer.axes.element.height = height;
             this.layer.axes.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-            this.layer.axes.ctx.strokeStyle = MathLib.colorConvert(this.options.axes.color) || '#000000';
+            this.layer.axes.ctx.strokeStyle = colorConvert(this.options.axes.color) || '#000000';
 
             this.layer.main.element.width = width;
             this.layer.main.element.height = height;
@@ -708,6 +722,6 @@ var Screen2D = (function (_super) {
         return this;
     };
     return Screen2D;
-})(MathLib.Screen);
-export default = Screen2D;
+})(Screen);
+export default Screen2D;
 

@@ -36,7 +36,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 (function (global) {
-	'use strict';
+	/* jshint esnext:true */
 
 	var elementPrototype = (global.HTMLElement || global.Element).prototype;
 	var getter;

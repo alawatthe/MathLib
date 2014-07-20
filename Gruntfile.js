@@ -165,7 +165,8 @@ module.exports = function (grunt) {
 				footer: '\n}}\n'
 			},
 			meta: {
-				src: ['src/meta/head.ts', 'src/meta/!(head).ts'],
+				src: ['src/meta/head.ts', 'src/meta/errorSystem.ts', 'src/meta/toString.ts',
+				'src/meta/toContentMathML.ts', 'src/meta/toLaTeX.ts', 'src/meta/toMathML.ts'],
 				dest: 'build/plain/meta.ts',
 				options: {
 					footer: '\n\'export MathLib\';\n// end meta\n}\n'
@@ -470,7 +471,7 @@ module.exports = function (grunt) {
 					concurrency: 3,
 					detailedError: true,
 					passed: true,
-					build: 106,
+					build: 107,
 					testReadyTimeout: 10000,
 					testname: 'MathLib QUnit test suite',
 					tags: ['MathLib', 'v<%= pkg.version %>'],
@@ -501,17 +502,15 @@ module.exports = function (grunt) {
 			},
 			benchmarks: {
 				src: ['benchmarks/*.js']
-			}
-			/*
+			},
 			es6: {
 				files: {
-					src: ['build/es6/*.js'],
+					src: ['build/es6/*.js']
 				},
 				options: {
 					esnext: true
 				}
 			}
-			*/
 		},
 
 
@@ -895,17 +894,14 @@ module.exports = function (grunt) {
 				src: ['build/es6/meta.js'],
 				actions: [
 					{
-						name: '',
 						search: /var MathLib;/,
-						replace: 'var MathLib = {};'
-					},
-					{
-						name: '',
-						search: /\(function \(_MathLib\) \{/,
 						replace: ''
 					},
 					{
-						name: '',
+						search: /\(function \(MathLib\) \{/,
+						replace: ''
+					},
+					{
 						search: '_MathLib',
 						replace: 'MathLib',
 						flag: 'g'
@@ -915,10 +911,22 @@ module.exports = function (grunt) {
 						replace: ''
 					},
 					{
-						name: '',
 						search: /'export MathLib';/,
-						replace: 'module.exports = MathLib',
+						replace: '',
 						flag: 'g'
+					},
+					{
+						search: /MathLib\.(\w+) =/g,
+						replace: 'export var $1 ='
+					}
+				]
+			},
+			es6Functn: {
+				src: ['build/es6/Functn.js'],
+				actions: [
+					{
+						search: /MathLib\.(\w+) = function/g,
+						replace: 'export var $1 = function'
 					}
 				]
 			},
@@ -941,20 +949,13 @@ module.exports = function (grunt) {
 					},
 					{
 						name: 'no import Statements',
-						search: /\/\/\/ no import/,
-						replace: 'import MathLib from \'./meta.js\';',
-						flags: 'g'
+						search: /\/\/\/ no import/g,
+						replace: ''
 					},
 					{
 						name: 'import Statements',
-						search: /\/\/\/ import (.*)/,
-						replace: function (_, match) {
-							return 'import MathLib from \'./meta.js\';' +
-							match.split(', ').reduce(function (old, cur) {
-								return old + '\nimport ' + cur  + ' from \'./' + cur + '\';';
-							}, '').slice(0, -1) + ';\n';
-						},
-						flags: 'g'
+						search: /\/\/\/ import (.*)/g,
+						replace: ''
 					},
 					{
 						search: '/// DOMParser',
@@ -963,7 +964,7 @@ module.exports = function (grunt) {
 					{
 						name: 'Export the contents',
 						search: /MathLib\.([^ ]+) = \1;/,
-						replace: 'export default = $1;',
+						replace: 'export default $1;',
 						flags: 'g'
 					},
 					{
@@ -973,6 +974,41 @@ module.exports = function (grunt) {
 					{
 						search: /MathLib\.(SVG|Canvas) = {/,
 						replace: 'export var $1 = {'
+					},
+					{
+						search: /'use strict';/,
+						replace: '/* jshint esnext:true */'
+					},
+					{
+						search: /MathLib\.(\w+)/g,
+						replace: '$1'
+					},
+					{
+						search: /\/\*es6/g,
+						replace: ''
+					},
+					{
+						search: /es6\*\//g,
+						replace: ''
+					},
+					{
+						search: /var __extends.*\n.*\n.*\n.*\n.*\n\};/g,
+						replace: 'var __extends = this.__extends || function (d, b) {\n' +
+							'	for (var p in b) {\n' +
+							'		if (b.hasOwnProperty(p)) {\n' +
+							'			d[p] = b[p];\n' +
+							'		}\n' +
+							'	}\n' +
+							'	function __() {\n' +
+							'		this.constructor = d;\n' +
+							'	}\n' +
+							'	__.prototype = b.prototype;\n' +
+							'	d.prototype = new __();\n' +
+							'};\n'
+					},
+					{
+						search: /(EvaluationError = error;)\n/g,
+						replace: 'export var $1'
 					},
 					{
 						name: 'remove closing parenthesis',
@@ -1066,7 +1102,7 @@ module.exports = function (grunt) {
 	]);
 	grunt.registerTask('generateAMD', ['copy:amd', 'regex-replace:amdHead', 'regex-replace:amd']);
 	grunt.registerTask('generateCommonjs', ['copy:commonjs', 'regex-replace:commonjsHead', 'regex-replace:commonjs']);
-	grunt.registerTask('generateES6', ['copy:es6', 'regex-replace:es6Head', 'regex-replace:es6']);
+	grunt.registerTask('generateES6', ['copy:es6', 'regex-replace:es6Head', 'regex-replace:es6Functn', 'regex-replace:es6']);
 	grunt.registerTask('generateDeclaration', ['concat:declaration', 'regex-replace:declaration']);
 	grunt.registerTask('generateTests', ['newer:concat:tests', 'newer:concat:testsAmd', 'concat:testsCommonjs']);
 	grunt.registerTask('generateAll', [

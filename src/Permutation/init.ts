@@ -1,3 +1,8 @@
+/*es6
+import {sign} from 'Functn';
+import {Matrix} from 'Matrix';
+es6*/
+
 /// import Functn, Matrix
 
 /**

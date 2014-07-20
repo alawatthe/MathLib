@@ -1,19 +1,23 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Point from './Point';
+
+import {isEqual, isZero, sign} from 'Functn';
+import {toLaTeX} from 'meta';
+import {Matrix} from 'Matrix';
+import {Point} from 'Point';
+
 
 /**
 * Creates a MathLib circle
-* MathLib.Circle expects two arguments.
-* First the center in the form of an Array or a MathLib.point.
+* Circle expects two arguments.
+* First the center in the form of an Array or a point.
 * The second argument should be the radius of the circle.
 * #### Simple use case:
 *
 * ```
 * // Create a circle with center (1, 2) and radius 3.
-* var c = new MathLib.Circle([1, 2], 3);
+* var c = new Circle([1, 2], 3);
 * c.center                   // The center of the circle (point)
 * c.radius                   // returns the radius of the circle
 * ```
@@ -25,7 +29,7 @@ var Circle = (function () {
     function Circle(center, radius) {
         this.type = 'circle';
         if (center.type === undefined) {
-            center = new MathLib.Point(center.concat(1));
+            center = new Point(center.concat(1));
         }
 
         this.center = center;
@@ -56,7 +60,7 @@ var Circle = (function () {
     * @return {number}
     */
     Circle.prototype.compare = function (circle) {
-        return MathLib.sign(this.center.compare(circle.center)) || MathLib.sign(this.radius - circle.radius);
+        return sign(this.center.compare(circle.center)) || sign(this.radius - circle.radius);
     };
 
     /**
@@ -85,7 +89,7 @@ var Circle = (function () {
     * @return {boolean}
     */
     Circle.prototype.isEqual = function (circle) {
-        return MathLib.isEqual(this.radius, circle.radius) && this.center.isEqual(circle.center);
+        return isEqual(this.radius, circle.radius) && this.center.isEqual(circle.center);
     };
 
     /**
@@ -98,7 +102,7 @@ var Circle = (function () {
         var diff;
         if (point.type === 'point' && point.dimension === 2) {
             diff = point.distanceTo(this.center) - this.radius;
-            if (MathLib.isZero(diff)) {
+            if (isZero(diff)) {
                 return 'on';
             } else if (diff < 0) {
                 return 'in';
@@ -114,7 +118,7 @@ var Circle = (function () {
     * @return {Circle}
     */
     Circle.prototype.reflectAt = function (a) {
-        return new MathLib.Circle(this.center.reflectAt(a), this.radius);
+        return new Circle(this.center.reflectAt(a), this.radius);
     };
 
     /**
@@ -123,7 +127,7 @@ var Circle = (function () {
     * @return {string}
     */
     Circle.prototype.toLaTeX = function () {
-        return 'B_{' + MathLib.toLaTeX(this.radius) + '}\\left(' + this.center.toLaTeX() + '\\right)';
+        return 'B_{' + toLaTeX(this.radius) + '}\\left(' + this.center.toLaTeX() + '\\right)';
     };
 
     /**
@@ -133,9 +137,9 @@ var Circle = (function () {
     */
     Circle.prototype.toMatrix = function () {
         var x = this.center[0] / this.center[2], y = this.center[1] / this.center[2], r = this.radius;
-        return new MathLib.Matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x * x + y * y - r * r]]);
+        return new Matrix([[1, 0, -x], [0, 1, -y], [-x, -y, x * x + y * y - r * r]]);
     };
     return Circle;
 })();
-export default = Circle;
+export default Circle;
 

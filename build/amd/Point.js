@@ -7,6 +7,13 @@ var __extends = this.__extends || function (d, b) {
 
     'use strict';
 
+    /*es6
+    import {hypot, isEqual, isZero} from 'Functn';
+    import {toLaTeX, toMathML, toString, warning} from 'meta';
+    import {Complex} from 'Complex';
+    import {Line} from 'Line';
+    import {Vector} from 'Vector';
+    es6*/
     define(['meta', 'Complex', 'Vector'], function(MathLib) {
     /**
     * The point implementation of MathLib makes calculations with point in

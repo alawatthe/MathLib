@@ -1,6 +1,16 @@
 
     'use strict';
 
+    /*es6
+    import {evaluate, negative, sign} from 'Functn';
+    import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {Complex} from 'Complex';
+    import {Functn} from 'Functn';
+    import {Integer} from 'Integer';
+    import {Matrix} from 'Matrix';
+    import {Rational} from 'Rational';
+    import {Vector} from 'Vector';
+    es6*/
     define(['meta'], function(MathLib) {
     // There is no DOMParser in Node, so we have to require one (done via a regexp replace)
     /// DOMParser

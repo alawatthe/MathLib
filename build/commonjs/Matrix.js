@@ -1,6 +1,16 @@
 
     'use strict';
 
+    /*es6
+    import {abs, conjugate, copy, divide, evaluate, hypot, inverse, is, isEqual, isOne, isReal, isZero, minus, plus, sign, times, times, toContentMathML, toLaTeX, toMathML, toString, type} from 'Functn';
+    import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {Circle} from 'Circle';
+    import {EvaluationError} from 'EvaluationError';
+    import {Expression} from 'Expression';
+    import {Permutation} from 'Permutation';
+    import {Point} from 'Point';
+    import {Vector} from 'Vector';
+    es6*/
     var MathLib = require('./meta.js'),
 		Functn = require('./Functn'),
 		Permutation = require('./Permutation');

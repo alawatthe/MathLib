@@ -1,11 +1,19 @@
 
     'use strict';
 
+    /* jshint -W079 */
+    /*es6
+    import {coerce, epsilon, goldenRatio, isNative, type} from 'meta';
+    import {Expression} from 'Expression';
+    es6*/
     var MathLib = require('./meta.js'),
 		Expression = require('./Expression');
 
     var functnPrototype = {};
 
+    /*es6
+    var abs, arccos, arccot, arccsc, arcosh, arcoth, arcsch, arcsec, arcsin, arctan, arsech, arsinh, artanh, binomial, ceil, cbrt, conjugate, copy, cos, cosh, cot, coth, csc, csch, degToRad, exp, factorial, floor, identity, inverse, isFinite, isInt, isNaN, isNegZero, isOne, isPosZero, isPrime, isReal, isZero, lg, ln, logGamma, negative, not, radToDeg, rem, sec, sech, sign, sin, sinh, sqrt, tan, tanh, arctan2, divide, equivalent, implies, log, minus, mod, pow, root, divisors, factor, fallingFactorial, fibonacci, risingFactorial, round, trunc, and, arithMean, gcd, geoMean, harmonicMean, hypot, hypot2, isEqual, lcm, max, min, or, plus, times, xor;
+    es6*/
     /**
     * MathLib.Functn is the MathLib implementation of mathematical functions
     *
@@ -1110,6 +1118,39 @@
         return this;
     };
 
+    // Recursive function for the quad method
+    var quadstep = function (f, a, b, fa, fc, fb, options) {
+        var h = b - a, c = (a + b) / 2, fd = f((a + c) / 2), fe = f((c + b) / 2), Q1 = (h / 6) * (fa + 4 * fc + fb), Q2 = (h / 12) * (fa + 4 * fd + 2 * fc + 4 * fe + fb), Q = Q2 + (Q2 - Q1) / 15;
+
+        options.calls = options.calls + 2;
+
+        // Infinite or Not-a-Number function value encountered
+        if (!MathLib.isFinite(Q)) {
+            options.warn = Math.max(options.warn, 3);
+            return Q;
+        }
+
+        // Maximum function count exceeded; singularity likely
+        if (options.calls > options.maxCalls) {
+            options.warn = Math.max(options.warn, 2);
+            return Q;
+        }
+
+        // Accuracy over this subinterval is acceptable
+        if (Math.abs(Q2 - Q) <= options.tolerance) {
+            return Q;
+        }
+
+        // Minimum step size reached; singularity possible
+        if (Math.abs(h) < options.minStep || c === a || c === b) {
+            options.warn = Math.max(options.warn, 1);
+            return Q;
+        }
+
+        // Otherwise, divide the interval into two subintervals
+        return quadstep(f, a, c, fa, fd, fc, options) + quadstep(f, c, b, fc, fe, fb, options);
+    };
+
     /**
     * Numeric evaluation of an integral using an adative simpson approach.
     *
@@ -1158,39 +1199,6 @@
         options.warnMessage = warnMessage[options.warn];
 
         return Q;
-    };
-
-    // Recursive function for the quad method
-    var quadstep = function (f, a, b, fa, fc, fb, options) {
-        var h = b - a, c = (a + b) / 2, fd = f((a + c) / 2), fe = f((c + b) / 2), Q1 = (h / 6) * (fa + 4 * fc + fb), Q2 = (h / 12) * (fa + 4 * fd + 2 * fc + 4 * fe + fb), Q = Q2 + (Q2 - Q1) / 15;
-
-        options.calls = options.calls + 2;
-
-        // Infinite or Not-a-Number function value encountered
-        if (!MathLib.isFinite(Q)) {
-            options.warn = Math.max(options.warn, 3);
-            return Q;
-        }
-
-        // Maximum function count exceeded; singularity likely
-        if (options.calls > options.maxCalls) {
-            options.warn = Math.max(options.warn, 2);
-            return Q;
-        }
-
-        // Accuracy over this subinterval is acceptable
-        if (Math.abs(Q2 - Q) <= options.tolerance) {
-            return Q;
-        }
-
-        // Minimum step size reached; singularity possible
-        if (Math.abs(h) < options.minStep || c === a || c === b) {
-            options.warn = Math.max(options.warn, 1);
-            return Q;
-        }
-
-        // Otherwise, divide the interval into two subintervals
-        return quadstep(f, a, c, fa, fd, fc, options) + quadstep(f, c, b, fc, fe, fb, options);
     };
 
     /**

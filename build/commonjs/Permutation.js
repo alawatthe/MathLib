@@ -1,6 +1,10 @@
 
     'use strict';
 
+    /*es6
+    import {sign} from 'Functn';
+    import {Matrix} from 'Matrix';
+    es6*/
     var MathLib = require('./meta.js'),
 		Functn = require('./Functn'),
 		Matrix = require('./Matrix');

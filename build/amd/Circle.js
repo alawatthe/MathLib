@@ -1,6 +1,12 @@
 
     'use strict';
 
+    /*es6
+    import {isEqual, isZero, sign} from 'Functn';
+    import {toLaTeX} from 'meta';
+    import {Matrix} from 'Matrix';
+    import {Point} from 'Point';
+    es6*/
     define(['meta', 'Point'], function(MathLib) {
     /**
     * Creates a MathLib circle

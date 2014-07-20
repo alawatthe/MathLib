@@ -1,15 +1,26 @@
 var __extends = this.__extends || function (d, b) {
-for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-function __() { this.constructor = d; }
-__.prototype = b.prototype;
-d.prototype = new __();
+	for (var p in b) {
+		if (b.hasOwnProperty(p)) {
+			d[p] = b[p];
+		}
+	}
+	function __() {
+		this.constructor = d;
+	}
+	__.prototype = b.prototype;
+	d.prototype = new __();
 };
 
-'use strict';
 
-import MathLib from './meta.js';
-import Complex from './Complex';
-import Vector from './Vector';
+/* jshint esnext:true */
+
+
+import {hypot, isEqual, isZero} from 'Functn';
+import {toLaTeX, toMathML, toString, warning} from 'meta';
+import {Complex} from 'Complex';
+import {Line} from 'Line';
+import {Vector} from 'Vector';
+
 
 /**
 * The point implementation of MathLib makes calculations with point in
@@ -18,9 +29,9 @@ import Vector from './Vector';
 * MathLib uses the homogeneous form of a point for calculations and storage.
 *
 * To create the point (4, 2) on the two dimensional plane use
-* `new MathLib.Point([4, 2, 1])`
+* `new Point([4, 2, 1])`
 * Alternatively you can use
-* `new MathLib.Point(4, 2)`
+* `new Point(4, 2)`
 * The 1 will be added for you.
 *
 * @class
@@ -60,11 +71,11 @@ var Point = (function (_super) {
     */
     Point.prototype.distanceTo = function (p) {
         if (arguments.length === 0) {
-            return MathLib.hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
+            return hypot.apply(null, this.slice(0, -1)) / Math.abs(this[this.dimension]);
         }
 
         if (p.type === 'point' && this.dimension === p.dimension) {
-            return MathLib.hypot.apply(null, this.normalize().minus(p.normalize()).slice(0, -1));
+            return hypot.apply(null, this.normalize().minus(p.normalize()).slice(0, -1));
         }
     };
 
@@ -104,7 +115,7 @@ var Point = (function (_super) {
         }
 
         return p.every(function (x, i) {
-            return MathLib.isEqual(x, q[i]);
+            return isEqual(x, q[i]);
         });
     };
 
@@ -114,7 +125,7 @@ var Point = (function (_super) {
     * @return {boolean}
     */
     Point.prototype.isFinite = function () {
-        return !MathLib.isZero(this[this.length - 1]);
+        return !isZero(this[this.length - 1]);
     };
 
     /**
@@ -127,7 +138,7 @@ var Point = (function (_super) {
         var line, p = this;
 
         if (this.dimension === 2 && q.dimension === 2) {
-            line = new MathLib.Line(this.vectorProduct(q).toArray());
+            line = new Line(this.vectorProduct(q).toArray());
 
             Object.defineProperties(line, {
                 '0': {
@@ -135,7 +146,7 @@ var Point = (function (_super) {
                         return p[1] * q[2] - p[2] * q[1];
                     },
                     set: function () {
-                        MathLib.warning({
+                        warning({
                             message: 'Trying to change the coordinates of a completely dependent line.',
                             method: 'Point#join'
                         });
@@ -147,7 +158,7 @@ var Point = (function (_super) {
                         return p[2] * q[0] - p[0] * q[2];
                     },
                     set: function () {
-                        MathLib.warning({
+                        warning({
                             message: 'Trying to change the coordinates of a completely dependent line.',
                             method: 'Point#join'
                         });
@@ -159,7 +170,7 @@ var Point = (function (_super) {
                         return p[0] * q[1] - p[1] * q[0];
                     },
                     set: function () {
-                        MathLib.warning({
+                        warning({
                             message: 'Trying to change the coordinates of a completely dependent line.',
                             method: 'Point#join'
                         });
@@ -200,7 +211,7 @@ var Point = (function (_super) {
                     reflectedPoint.push(2 * q[i] - p[i]);
                 }
                 reflectedPoint.push(1);
-                return new MathLib.Point(reflectedPoint);
+                return new Point(reflectedPoint);
             }
         }
     };
@@ -254,10 +265,10 @@ var Point = (function (_super) {
     */
     Point.prototype.toComplex = function () {
         if (this.dimension === 2) {
-            if (MathLib.isZero(this[2])) {
-                return new MathLib.Complex(Infinity);
+            if (isZero(this[2])) {
+                return new Complex(Infinity);
             }
-            return new MathLib.Complex(this[0] / this[2], this[1] / this[2]);
+            return new Complex(this[0] / this[2], this[1] / this[2]);
         }
     };
 
@@ -280,7 +291,7 @@ var Point = (function (_super) {
         var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
         return '\\begin{pmatrix}' + p.reduce(function (old, cur) {
-            return old + '\\\\' + MathLib.toLaTeX(cur);
+            return old + '\\\\' + toLaTeX(cur);
         }) + '\\end{pmatrix}';
     };
 
@@ -295,7 +306,7 @@ var Point = (function (_super) {
         var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
         return p.reduce(function (old, cur) {
-            return old + '<mtr><mtd>' + MathLib.toMathML(cur) + '</mtd></mtr>';
+            return old + '<mtr><mtd>' + toMathML(cur) + '</mtd></mtr>';
         }, '<mrow><mo>(</mo><mtable>') + '</mtable><mo>)</mo></mrow>';
     };
 
@@ -310,13 +321,13 @@ var Point = (function (_super) {
         var p = opt ? this.toArray() : this.normalize().slice(0, -1);
 
         return '(' + p.reduce(function (old, cur) {
-            return old + ', ' + MathLib.toString(cur);
+            return old + ', ' + toString(cur);
         }) + ')';
     };
-    Point.I = new Point([new MathLib.Complex(0, -1), 0, 1]);
+    Point.I = new Point([new Complex(0, -1), 0, 1]);
 
-    Point.J = new Point([new MathLib.Complex(0, 1), 0, 1]);
+    Point.J = new Point([new Complex(0, 1), 0, 1]);
     return Point;
-})(MathLib.Vector);
-export default = Point;
+})(Vector);
+export default Point;
 

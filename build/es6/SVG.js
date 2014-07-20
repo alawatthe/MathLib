@@ -1,8 +1,10 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Screen2D from './Screen2D';
+
+import {abs, hypot, isZero} from 'Functn';
+import {colorConvert, extendObject} from 'meta';
+
 
 /**
 * The SVG renderer for 2D plotting
@@ -36,7 +38,7 @@ export var SVG = {
 
         if (options) {
             svgCircle.setAttribute('stroke-width', (options.lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
-            opts = MathLib.SVG.convertOptions(options);
+            opts = SVG.convertOptions(options);
             for (prop in opts) {
                 if (opts.hasOwnProperty(prop)) {
                     svgCircle.setAttribute(prop, opts[prop]);
@@ -73,9 +75,9 @@ export var SVG = {
     convertOptions: function (options) {
         var convertedOptions = {};
         if ('fillColor' in options) {
-            convertedOptions.fill = MathLib.colorConvert(options.fillColor);
+            convertedOptions.fill = colorConvert(options.fillColor);
         } else if ('color' in options) {
-            convertedOptions.fill = MathLib.colorConvert(options.color);
+            convertedOptions.fill = colorConvert(options.color);
         }
 
         if ('font' in options) {
@@ -87,9 +89,9 @@ export var SVG = {
         }
 
         if ('lineColor' in options) {
-            convertedOptions.stroke = MathLib.colorConvert(options.lineColor);
+            convertedOptions.stroke = colorConvert(options.lineColor);
         } else if ('color' in options) {
-            convertedOptions.stroke = MathLib.colorConvert(options.color);
+            convertedOptions.stroke = colorConvert(options.color);
         }
 
         if ('dash' in options && options.dash.length !== 0) {
@@ -116,7 +118,7 @@ export var SVG = {
         var screen = this.screen, points, prop, opts, svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
 
         // Don't try to draw the line at infinity
-        if (line.type === 'line' && MathLib.isZero(line[0]) && MathLib.isZero(line[1])) {
+        if (line.type === 'line' && isZero(line[0]) && isZero(line[1])) {
             return this;
         } else {
             points = this.screen.getLineEndPoints(line);
@@ -129,7 +131,7 @@ export var SVG = {
 
         if (options) {
             svgLine.setAttribute('stroke-width', (options.lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
-            opts = MathLib.SVG.convertOptions(options);
+            opts = SVG.convertOptions(options);
             for (prop in opts) {
                 if (opts.hasOwnProperty(prop)) {
                     svgLine.setAttribute(prop, opts[prop]);
@@ -172,7 +174,7 @@ export var SVG = {
 
                 // Inline NaN test and disontinuity test
                 // For more info see the corresponding function for canvas
-                if (fx !== fx || (MathLib.abs((fxold - fx) / step) >= 1e2 && (fx - curve(i - step / 2)) * (fxold - curve(i - step / 2)) >= 0)) {
+                if (fx !== fx || (abs((fxold - fx) / step) >= 1e2 && (fx - curve(i - step / 2)) * (fxold - curve(i - step / 2)) >= 0)) {
                     // Don't add empty subpaths
                     if (path.length) {
                         paths.push(path);
@@ -223,7 +225,7 @@ export var SVG = {
         svgPathStroke.setAttribute('stroke-width', (options.lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
 
         if (options) {
-            opts = MathLib.SVG.convertOptions(options);
+            opts = SVG.convertOptions(options);
             for (prop in opts) {
                 if (opts.hasOwnProperty(prop)) {
                     svgPathFill.setAttribute(prop, opts[prop]);
@@ -340,7 +342,7 @@ export var SVG = {
 
         if (options) {
             svgPoint.setAttribute('stroke-width', (options.lineWidth || 4) / (screen.scale.x - screen.scale.y) + '');
-            opts = MathLib.SVG.convertOptions(options);
+            opts = SVG.convertOptions(options);
 
             if (!('fillOpacity' in options)) {
                 opts['fill-opacity'] = '1';
@@ -398,7 +400,7 @@ export var SVG = {
             screen.options.interaction.type = 'contextmenu';
             var x = svgPoint.cx.baseVal.value, y = svgPoint.cy.baseVal.value;
 
-            screen.contextMenu.innerHTML = '<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_is_disabled MathLib_is_centered">Point</div>' + '<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_hasSubmenu">Coordinates' + '<menu class="MathLib_menu MathLib_submenu">' + '<div class="MathLib_menuItem">cartesian: <span class="MathLib_is_selectable MathLib_is_right">(' + x.toFixed(3) + ', ' + y.toFixed(3) + ')</span></div>' + '<div class="MathLib_menuItem">polar: <span class="MathLib_is_selectable MathLib_is_right">(' + MathLib.hypot(x, y).toFixed(3) + ', ' + Math.atan2(y, x).toFixed(3) + ')</span></div>' + '</menu>' + '</div>' + '<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_hasSubmenu">Options' + '<menu class="MathLib_menu MathLib_submenu">' + '<div class="MathLib_menuItem">Moveable:' + '<input type="checkbox" class="MathLib_is_right">' + '</div>' + '<div class="MathLib_menuItem">Size:' + '<input type="spinner" class="MathLib_is_right">' + '</div>' + '<div class="MathLib_menuItem">Fill color:' + '<input type="color" class="MathLib_is_right">' + '</div>' + '<div class="MathLib_menuItem">Line color:' + '<input type="color" class="MathLib_is_right">' + '</div>' + '</menu>' + '</div>' + '<hr class="MathLib_separator MathLib_temporaryMenuItem">' + screen.contextMenu.innerHTML;
+            screen.contextMenu.innerHTML = '<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_is_disabled MathLib_is_centered">Point</div>' + '<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_hasSubmenu">Coordinates' + '<menu class="MathLib_menu MathLib_submenu">' + '<div class="MathLib_menuItem">cartesian: <span class="MathLib_is_selectable MathLib_is_right">(' + x.toFixed(3) + ', ' + y.toFixed(3) + ')</span></div>' + '<div class="MathLib_menuItem">polar: <span class="MathLib_is_selectable MathLib_is_right">(' + hypot(x, y).toFixed(3) + ', ' + Math.atan2(y, x).toFixed(3) + ')</span></div>' + '</menu>' + '</div>' + '<div class="MathLib_menuItem MathLib_temporaryMenuItem MathLib_hasSubmenu">Options' + '<menu class="MathLib_menu MathLib_submenu">' + '<div class="MathLib_menuItem">Moveable:' + '<input type="checkbox" class="MathLib_is_right">' + '</div>' + '<div class="MathLib_menuItem">Size:' + '<input type="spinner" class="MathLib_is_right">' + '</div>' + '<div class="MathLib_menuItem">Fill color:' + '<input type="color" class="MathLib_is_right">' + '</div>' + '<div class="MathLib_menuItem">Line color:' + '<input type="color" class="MathLib_is_right">' + '</div>' + '</menu>' + '</div>' + '<hr class="MathLib_separator MathLib_temporaryMenuItem">' + screen.contextMenu.innerHTML;
         });
 
         if (!redraw) {
@@ -431,7 +433,7 @@ export var SVG = {
             textColor: 'rgba(0, 0, 0, 1)'
         }, opts, screen = this.screen, svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text'), svgTspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
 
-        opts = MathLib.SVG.convertOptions(MathLib.extendObject(defaults, options));
+        opts = SVG.convertOptions(extendObject(defaults, options));
 
         svgTspan.textContent = str;
         svgTspan.setAttribute('x', x * screen.scale.x + '');
@@ -439,9 +441,9 @@ export var SVG = {
         svgText.setAttribute('transform', 'matrix(' + 1 / screen.scale.x + ', 0, 0, ' + 1 / screen.scale.y + ', 0, 0)');
         svgText.setAttribute('font-family', opts.font);
         svgText.setAttribute('font-size', opts.fontSize);
-        svgText.setAttribute('fill', MathLib.colorConvert(options.textColor || options.color) || defaults.textColor);
+        svgText.setAttribute('fill', colorConvert(options.textColor || options.color) || defaults.textColor);
         svgText.setAttribute('fill-opacity', '1');
-        svgText.setAttribute('stroke', MathLib.colorConvert(options.textColor || options.color) || defaults.textColor);
+        svgText.setAttribute('stroke', colorConvert(options.textColor || options.color) || defaults.textColor);
         svgText.setAttribute('text-anchor', 'middle');
 
         // alignment-baseline isn't defined for text elements,

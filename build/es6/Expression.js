@@ -1,11 +1,21 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
+
+import {evaluate, negative, sign} from 'Functn';
+import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+import {Complex} from 'Complex';
+import {Functn} from 'Functn';
+import {Integer} from 'Integer';
+import {Matrix} from 'Matrix';
+import {Rational} from 'Rational';
+import {Vector} from 'Vector';
+
+
 // There is no DOMParser in Node, so we have to require one (done via a regexp replace)
 
 /**
-* MathLib.Expression is the MathLib implementation of symbolic expressions
+* Expression is the MathLib implementation of symbolic expressions
 *
 * @class
 * @this {Expression}
@@ -17,7 +27,7 @@ var Expression = (function () {
         var prop;
 
         if (typeof expr === 'string') {
-            expr = MathLib.Expression.parse(expr);
+            expr = Expression.parse(expr);
         }
         for (prop in expr) {
             if (expr.hasOwnProperty(prop)) {
@@ -32,7 +42,7 @@ var Expression = (function () {
     * @return {Expression}
     */
     Expression.constant = function (n) {
-        return new MathLib.Expression({
+        return new Expression({
             subtype: 'constant',
             value: n
         });
@@ -45,7 +55,7 @@ var Expression = (function () {
     * @return {Expression}
     */
     Expression.number = function (n) {
-        return new MathLib.Expression({
+        return new Expression({
             subtype: 'number',
             value: n
         });
@@ -121,19 +131,19 @@ var Expression = (function () {
 
                 if (functnName === 'rational') {
                     var parsedChildren = parser(children);
-                    return new MathLib.Rational(parsedChildren[0], parsedChildren[1]);
+                    return new Rational(parsedChildren[0], parsedChildren[1]);
                 }
 
                 if (functnName === 'based_integer') {
                     var parsedChildren = parser(children);
-                    return new MathLib.Integer(parsedChildren[1], { base: parsedChildren[0] });
+                    return new Integer(parsedChildren[1], { base: parsedChildren[0] });
                 }
 
                 if (MathLib[functnName]) {
                     isMethod = false;
                 }
 
-                expr = new MathLib.Expression({
+                expr = new Expression({
                     subtype: 'functionCall',
                     value: functnName,
                     isMethod: isMethod,
@@ -169,7 +179,7 @@ var Expression = (function () {
                 return expr;
             },
             ci: function (node) {
-                return new MathLib.Expression({
+                return new Expression({
                     subtype: 'variable',
                     value: node.textContent
                 });
@@ -179,20 +189,20 @@ var Expression = (function () {
 
                 if (type === 'integer') {
                     var base = node.getAttribute('base') !== null ? Number(node.getAttributes('base')) : 10;
-                    return new MathLib.Integer(node.textContent.trim(), { base: base });
+                    return new Integer(node.textContent.trim(), { base: base });
                 } else if (type === 'real' || type === null || type === '') {
                     // TODO: adapt this, once the Real class exists
                     return Number(node.textContent);
                 } else if (type === 'double') {
                     return Number(node.textContent);
                 } else if (type === 'rational') {
-                    return new MathLib.Rational(new MathLib.Integer(node.childNodes[0].textContent), new MathLib.Integer(node.childNodes[2].textContent));
+                    return new Rational(new Integer(node.childNodes[0].textContent), new Integer(node.childNodes[2].textContent));
                 } else if (type === 'complex-cartesian') {
-                    return new MathLib.Complex(Number(node.childNodes[0].textContent), Number(node.childNodes[2].textContent));
+                    return new Complex(Number(node.childNodes[0].textContent), Number(node.childNodes[2].textContent));
                 } else if (type === 'complex-polar') {
-                    return MathLib.Complex.polar(Number(node.childNodes[0].textContent), Number(node.childNodes[2].textContent));
+                    return Complex.polar(Number(node.childNodes[0].textContent), Number(node.childNodes[2].textContent));
                     /*
-                    return new MathLib.Expression({
+                    return new Expression({
                     value: [parser(node.childNodes[0]), parser(node.childNodes[2])],
                     subtype: 'complexNumber',
                     mode: 'polar'
@@ -222,7 +232,7 @@ var Expression = (function () {
                 var doa, apply, bvar = [], i = 0;
 
                 while (node.childNodes[i].nodeName === 'bvar') {
-                    bvar.push(MathLib.Expression.variable(node.childNodes[i].childNodes[0].textContent));
+                    bvar.push(Expression.variable(node.childNodes[i].childNodes[0].textContent));
                     i++;
                 }
 
@@ -230,11 +240,11 @@ var Expression = (function () {
                     doa = node.childNodes[i].childNodes[0].nodeName;
 
                     if (doa === 'integers') {
-                        doa = MathLib.Integer;
+                        doa = Integer;
                     } else if (doa === 'rationals') {
-                        doa = MathLib.Rational;
+                        doa = Rational;
                     } else if (doa === 'complexes') {
-                        doa = MathLib.Complex;
+                        doa = Complex;
                     }
                     i++;
                 }
@@ -242,14 +252,14 @@ var Expression = (function () {
                 apply = node.childNodes[i];
 
                 if (doa) {
-                    return new MathLib.Expression({
+                    return new Expression({
                         subtype: 'functionDefinition',
                         domain: doa,
                         args: bvar,
                         content: [parser(apply)]
                     });
                 } else {
-                    return new MathLib.Expression({
+                    return new Expression({
                         subtype: 'functionDefinition',
                         args: bvar,
                         content: [parser(apply)]
@@ -263,25 +273,25 @@ var Expression = (function () {
                 return parser(node.childNodes[0]);
             },
             matrix: function (node) {
-                return new MathLib.Matrix(Array.prototype.slice.call(node.childNodes).map(handler.matrixrow));
+                return new Matrix(Array.prototype.slice.call(node.childNodes).map(handler.matrixrow));
             },
             matrixrow: function (node) {
                 return Array.prototype.map.call(node.childNodes, parser);
             },
             set: function (node) {
-                return new MathLib.Set(parser(Array.prototype.slice.call(node.childNodes)));
+                return new Set(parser(Array.prototype.slice.call(node.childNodes)));
             },
             '#text': function (node) {
                 return node.nodeValue;
             },
             vector: function (node) {
-                return new MathLib.Vector(parser(Array.prototype.slice.call(node.childNodes)));
+                return new Vector(parser(Array.prototype.slice.call(node.childNodes)));
             },
             false: function () {
                 return false;
             },
             pi: function () {
-                return MathLib.Expression.constant('pi');
+                return Expression.constant('pi');
             },
             true: function () {
                 return true;
@@ -307,7 +317,7 @@ var Expression = (function () {
     * @return {Expression}
     */
     Expression.variable = function (n) {
-        return new MathLib.Expression({
+        return new Expression({
             subtype: 'variable',
             value: n
         });
@@ -320,7 +330,7 @@ var Expression = (function () {
     * @return {number}
     */
     Expression.prototype.compare = function (expr) {
-        return MathLib.sign(this.toString().localeCompare(expr.toString()));
+        return sign(this.toString().localeCompare(expr.toString()));
     };
 
     /**
@@ -342,23 +352,23 @@ var Expression = (function () {
         if (this.subtype === 'assignment') {
             var value = this.value;
             this.content.forEach(function (variable) {
-                MathLib.Expression.variables[variable.value] = value;
+                Expression.variables[variable.value] = value;
             });
             return this.value;
         }
         if (this.subtype === 'binaryOperator') {
             return MathLib[this.name].apply(null, this.content.map(function (x) {
-                return MathLib.evaluate(x);
+                return evaluate(x);
             }));
         }
         if (this.subtype === 'brackets') {
-            return MathLib.evaluate(this.content);
+            return evaluate(this.content);
         }
         if (this.subtype === 'complexNumber') {
             if (this.mode === 'cartesian') {
-                return new MathLib.Complex(this.value[0].evaluate(), this.value[1].evaluate());
+                return new Complex(this.value[0].evaluate(), this.value[1].evaluate());
             } else if (this.mode === 'polar') {
-                return MathLib.Complex.polar(this.value[0].evaluate(), this.value[1].evaluate());
+                return Complex.polar(this.value[0].evaluate(), this.value[1].evaluate());
             }
         }
         if (this.subtype === 'constant') {
@@ -369,18 +379,18 @@ var Expression = (function () {
         if (this.subtype === 'functionCall') {
             if (this.isMethod) {
                 var args = this.content.map(function (x) {
-                    return MathLib.evaluate(x);
+                    return evaluate(x);
                 }), _this = args.shift();
 
                 return _this[this.value].apply(_this, args);
             } else {
                 return MathLib[this.value].apply(null, this.content.map(function (x) {
-                    return MathLib.evaluate(x);
+                    return evaluate(x);
                 }));
             }
         }
         if (this.subtype === 'functionDefinition') {
-            return MathLib.Functn(this.content[0].evaluate(), {
+            return Functn(this.content[0].evaluate(), {
                 name: 'f',
                 expression: this
             });
@@ -390,18 +400,18 @@ var Expression = (function () {
         }
         if (this.subtype === 'naryOperator') {
             return MathLib[this.name].apply(null, this.content.map(function (x) {
-                return MathLib.evaluate(x);
+                return evaluate(x);
             }));
         }
         if (this.subtype === 'variable') {
-            if (this.value in MathLib.Expression.variables) {
-                return MathLib.Expression.variables[this.value];
+            if (this.value in Expression.variables) {
+                return Expression.variables[this.value];
             }
             return this;
         }
         if (this.subtype === 'unaryOperator') {
             if (this.value === '-') {
-                return MathLib.negative(this.content.evaluate());
+                return negative(this.content.evaluate());
             }
             return this.content.evaluate();
         }
@@ -440,7 +450,7 @@ var Expression = (function () {
         }
 
         if (typeof mappedProperties === 'object') {
-            return new MathLib.Expression(mappedProperties);
+            return new Expression(mappedProperties);
         } else {
             return mappedProperties;
         }
@@ -455,7 +465,7 @@ var Expression = (function () {
         if (this.subtype === 'assignment') {
             var str, i, ii;
 
-            str = '<apply><csymbol cd="prog1">assignment</csymbol>' + this.content.map(MathLib.toContentMathML).join('<apply><csymbol cd="prog1">assignment</csymbol>') + MathLib.toContentMathML(this.value);
+            str = '<apply><csymbol cd="prog1">assignment</csymbol>' + this.content.map(toContentMathML).join('<apply><csymbol cd="prog1">assignment</csymbol>') + toContentMathML(this.value);
 
             for (i = 0, ii = this.content.length; i < ii; i++) {
                 str += '</apply>';
@@ -527,7 +537,7 @@ var Expression = (function () {
         var op, amsmath;
 
         if (this.subtype === 'assignment') {
-            return this.content.map(MathLib.toLaTeX).join(' := ') + ' := ' + MathLib.toLaTeX(this.value);
+            return this.content.map(toLaTeX).join(' := ') + ' := ' + toLaTeX(this.value);
         }
         if (this.subtype === 'binaryOperator') {
             var str;
@@ -586,7 +596,7 @@ var Expression = (function () {
             ];
             if (amsmath.indexOf(this.value) + 1) {
                 return '\\' + this.value + '\\left(' + (this.content.length ? this.content.reduce(function (old, cur, idx) {
-                    return old + (idx ? ', ' : '') + MathLib.toLaTeX(cur);
+                    return old + (idx ? ', ' : '') + toLaTeX(cur);
                 }, '') : 'x') + '\\right)';
             } else {
                 return '\\operatorname{' + this.value + '}\\left(' + (this.content.length ? this.content.reduce(function (old, cur, idx) {
@@ -609,7 +619,7 @@ var Expression = (function () {
     */
     Expression.prototype.toMathML = function () {
         if (this.subtype === 'assignment') {
-            return this.content.map(MathLib.toMathML).join('<mo>:=</mo>') + '<mo>:=</mo>' + MathLib.toMathML(this.value);
+            return this.content.map(toMathML).join('<mo>:=</mo>') + '<mo>:=</mo>' + toMathML(this.value);
         }
         if (this.subtype === 'binaryOperator') {
             if (this.value === '-') {
@@ -675,7 +685,7 @@ var Expression = (function () {
     Expression.prototype.toString = function () {
         var _this = this;
         if (this.subtype === 'assignment') {
-            return this.content.map(MathLib.toString).join(' := ') + ' := ' + MathLib.toString(this.value);
+            return this.content.map(toString).join(' := ') + ' := ' + toString(this.value);
         }
         if (this.subtype === 'binaryOperator') {
             return this.content[0].toString() + this.value + this.content[1].toString();
@@ -985,7 +995,7 @@ var Expression = (function () {
                     throw new SyntaxError('Expecting ) in a function call "' + name + '"');
                 }
 
-                expr = new MathLib.Expression({
+                expr = new Expression({
                     subtype: 'functionCall',
                     value: name,
                     content: args
@@ -1038,13 +1048,13 @@ var Expression = (function () {
                     if (matchOp(lexer.peek(), '(')) {
                         return parseFunctionCall(token.value);
                     } else {
-                        return MathLib.Expression.variable(token.value);
+                        return Expression.variable(token.value);
                     }
                 }
 
                 if (token.type === T.Number) {
                     token = lexer.next();
-                    return MathLib.Expression.number(token.value);
+                    return Expression.number(token.value);
                 }
 
                 if (matchOp(token, '(')) {
@@ -1054,7 +1064,7 @@ var Expression = (function () {
                     if (!matchOp(token, ')')) {
                         throw new SyntaxError('Expecting )');
                     }
-                    return new MathLib.Expression({
+                    return new Expression({
                         subtype: 'brackets',
                         value: 'brackets',
                         content: expr
@@ -1073,7 +1083,7 @@ var Expression = (function () {
                 if (matchOp(token, '-') || matchOp(token, '+')) {
                     token = lexer.next();
                     expr = parseUnary();
-                    return new MathLib.Expression({
+                    return new Expression({
                         subtype: 'unaryOperator',
                         value: token.value,
                         content: expr
@@ -1097,7 +1107,7 @@ var Expression = (function () {
 
                     // Exponentiation is right associative
                     // a^b^c should be a^(b^c) and not (a^b)^c
-                    return new MathLib.Expression({
+                    return new Expression({
                         subtype: 'binaryOperator',
                         value: '^',
                         content: [left, right],
@@ -1128,7 +1138,7 @@ var Expression = (function () {
                             r = r.content[0];
                         }
 
-                        r.content[0] = new MathLib.Expression({
+                        r.content[0] = new Expression({
                             subtype: token.value === '*' ? 'naryOperator' : 'binaryOperator',
                             content: [left, r.content[0]],
                             value: token.value,
@@ -1136,7 +1146,7 @@ var Expression = (function () {
                         });
                         return right;
                     } else {
-                        return new MathLib.Expression({
+                        return new Expression({
                             subtype: token.value === '*' ? 'naryOperator' : 'binaryOperator',
                             value: token.value,
                             name: token.value === '*' ? 'times' : 'divide',
@@ -1167,7 +1177,7 @@ var Expression = (function () {
                             r = r.content[0];
                         }
 
-                        r.content[0] = new MathLib.Expression({
+                        r.content[0] = new Expression({
                             subtype: token.value === '+' ? 'naryOperator' : 'binaryOperator',
                             content: [left, r.content[0]],
                             value: token.value,
@@ -1175,7 +1185,7 @@ var Expression = (function () {
                         });
                         return right;
                     } else {
-                        return new MathLib.Expression({
+                        return new Expression({
                             subtype: token.value === '+' ? 'naryOperator' : 'binaryOperator',
                             value: token.value,
                             name: token.value === '+' ? 'plus' : 'minus',
@@ -1206,7 +1216,7 @@ var Expression = (function () {
                             value = value.value;
                         }
 
-                        return new MathLib.Expression({
+                        return new Expression({
                             subtype: 'assignment',
                             content: content,
                             value: value
@@ -1234,7 +1244,7 @@ var Expression = (function () {
                     throw new SyntaxError('Unexpected token ' + token.value);
                 }
 
-                return new MathLib.Expression(expr);
+                return new Expression(expr);
             }
 
             return {
@@ -1248,5 +1258,5 @@ var Expression = (function () {
     Expression.variables = {};
     return Expression;
 })();
-export default = Expression;
+export default Expression;
 

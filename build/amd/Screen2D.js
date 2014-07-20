@@ -7,6 +7,15 @@ var __extends = this.__extends || function (d, b) {
 
     'use strict';
 
+    /*es6
+    import {} from 'Functn';
+    import {colorConvert, extendObject} from 'meta';
+    import {Circle} from 'Circle';
+    import {Layer} from 'Layer';
+    import {Matrix} from 'Matrix';
+    import {Point} from 'Point';
+    import {Screen} from 'Screen';
+    es6*/
     define(['meta', 'Screen'], function(MathLib) {
     /**
     * Two dimensional plotting

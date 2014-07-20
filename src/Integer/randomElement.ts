@@ -10,8 +10,7 @@
  * @return {Integer}
  */
 static randomElement(start : Integer, end? : Integer) : Integer {
-	var i, endMinusStart, sign,
-			done = false,
+	var i, endMinusStart,
 			arr = [],
 			base = Math.pow(2, 26);
 

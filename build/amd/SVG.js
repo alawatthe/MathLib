@@ -1,6 +1,10 @@
 
     'use strict';
 
+    /*es6
+    import {abs, hypot, isZero} from 'Functn';
+    import {colorConvert, extendObject} from 'meta';
+    es6*/
     define(['meta', 'Screen2D'], function(MathLib) {
     /**
     * The SVG renderer for 2D plotting

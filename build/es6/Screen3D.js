@@ -1,11 +1,18 @@
 var __extends = this.__extends || function (d, b) {
-for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-function __() { this.constructor = d; }
-__.prototype = b.prototype;
-d.prototype = new __();
+	for (var p in b) {
+		if (b.hasOwnProperty(p)) {
+			d[p] = b[p];
+		}
+	}
+	function __() {
+		this.constructor = d;
+	}
+	__.prototype = b.prototype;
+	d.prototype = new __();
 };
 
-'use strict';
+
+/* jshint esnext:true */
 
 // A function converting arrays to THREE.js vectors
 var to3js = function (x) {
@@ -16,8 +23,10 @@ var to3js = function (x) {
     }
 };
 
-import MathLib from './meta.js';
-import Screen from './Screen';
+
+import {extendObject} from 'meta';
+import {Screen} from 'Screen';
+
 
 /**
 * Three dimensional plotting
@@ -65,7 +74,7 @@ var Screen3D = (function (_super) {
             height: 500,
             renderer: 'WebGL',
             width: 500
-        }, opts = MathLib.extendObject(defaults, options), scene = new THREE.Scene(), camera, renderer, controls, viewAngle, aspect, near, far;
+        }, opts = extendObject(defaults, options), scene = new THREE.Scene(), camera, renderer, controls, viewAngle, aspect, near, far;
 
         this.options = opts;
         this.scene = scene;
@@ -253,7 +262,7 @@ var Screen3D = (function (_super) {
             material: {
                 type: 'MeshLambert'
             }
-        }, opts = MathLib.extendObject(defaults, options), Curve = THREE.Curve.create(function () {
+        }, opts = extendObject(defaults, options), Curve = THREE.Curve.create(function () {
         }, function (t) {
             t = (opts.max - opts.min) * t + opts.min;
             var ft = f(t);
@@ -311,7 +320,7 @@ var Screen3D = (function (_super) {
             xmax: 1,
             ymin: 0,
             ymax: 1
-        }, opts = MathLib.extendObject(defaults, options), map = function (u, v) {
+        }, opts = extendObject(defaults, options), map = function (u, v) {
             u = (opts.xmax - opts.xmin) * u + opts.xmin;
             v = (opts.ymax - opts.ymin) * v + opts.ymin;
             var fuv = f(u, v);
@@ -327,6 +336,6 @@ var Screen3D = (function (_super) {
         return this;
     };
     return Screen3D;
-})(MathLib.Screen);
-export default = Screen3D;
+})(Screen);
+export default Screen3D;
 

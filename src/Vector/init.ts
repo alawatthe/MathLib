@@ -1,3 +1,10 @@
+/*es6
+import {evaluate, hypot, isEqual, isZero, minus, negative, plus, root, sign, times, toContentMathML, toLaTeX, toMathML, toString} from 'Functn';
+import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+import {EvaluationError} from 'EvaluationError';
+import {Matrix} from 'Matrix';
+es6*/
+
 /// import Functn
 
 /**
@@ -7,9 +14,9 @@
  *
  * It is as easy as
  * `new MathLib.Vector([1, 2, 3])`
- * to create the following vector:  
- *    ⎛ 1 ⎞  
- *    ⎜ 2 ⎟  
+ * to create the following vector:
+ *    ⎛ 1 ⎞
+ *    ⎜ 2 ⎟
  *    ⎝ 3 ⎠
  *
  * @class

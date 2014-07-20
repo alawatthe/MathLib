@@ -7,6 +7,13 @@ var __extends = this.__extends || function (d, b) {
 
     'use strict';
 
+    /*es6
+    import {hypot, isEqual, isZero} from 'Functn';
+    import {toLaTeX, toMathML, toString, warning} from 'meta';
+    import {Complex} from 'Complex';
+    import {Line} from 'Line';
+    import {Vector} from 'Vector';
+    es6*/
     var MathLib = require('./meta.js'),
 		Complex = require('./Complex'),
 		Vector = require('./Vector');

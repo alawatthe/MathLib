@@ -1,6 +1,12 @@
 
     'use strict';
 
+    /*es6
+    import {abs, arccos, arcosh, coerce, coerceTo, copy, cos, cosh, divide, exp, floor, hypot, inverse, isEqual, isNegZero, isPosZero, isZero, ln, minus, negative, plus, pow, sign, sin, sinh, times, type} from 'Functn';
+    import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {Integer} from 'Integer';
+    import {Point} from 'Point';
+    es6*/
     var MathLib = require('./meta.js'),
 		Functn = require('./Functn'),
 		Point = require('./Point');

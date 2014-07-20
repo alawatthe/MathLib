@@ -45,6 +45,9 @@
     };
 
     /* tslint:enable */
+    /*es6
+    import {extendObject} from 'meta';
+    es6*/
     var MathLib = require('./meta.js');
     /**
     * This module contains the common methods of all drawing modules.
@@ -82,7 +85,7 @@
             this.contextMenuOverlay = container.getElementsByClassName('MathLib_contextMenuOverlay')[0];
             this.innerHTMLContextMenu = innerHTMLContextMenu;
 
-            this.wrapper.addEventListener('click', function (evt) {
+            this.wrapper.addEventListener('click', function () {
                 return _this.wrapper.focus();
             });
 

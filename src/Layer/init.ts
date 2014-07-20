@@ -1,3 +1,9 @@
+/*es6
+import {colorConvert} from 'meta';
+import {Canvas} from 'Canvas';
+import {SVG} from 'SVG';
+es6*/
+
 /// import Screen2D
 
 /**
@@ -55,7 +61,7 @@ export class Layer {
 				element.style['-ms-transformOrigin'] = 'top left';
 				element.style.transform = 'scale(' + 1 / devicePixelRatio + ')';
 				element.style['-ms-transform'] = 'scale(' + 1 / devicePixelRatio + ')';
-				element.style['-webkit-transform'] = 'translate(-' + screen.width / devicePixelRatio + 
+				element.style['-webkit-transform'] = 'translate(-' + screen.width / devicePixelRatio +
 					'px, -' + screen.height / devicePixelRatio + 'px) scale(' + 1 / devicePixelRatio + ')';
 			}
 
@@ -67,7 +73,7 @@ export class Layer {
 
 			this.applyTransformation =  function () {
 				var m = _this.transformation;
-				_this.ctx.setTransform(devicePixelRatio * m[0][0], m[1][0], m[0][1], 
+				_this.ctx.setTransform(devicePixelRatio * m[0][0], m[1][0], m[0][1],
 					devicePixelRatio * m[1][1], devicePixelRatio * m[0][2], devicePixelRatio * m[1][2]);
 			};
 			this.applyTransformation();
@@ -112,7 +118,7 @@ export class Layer {
 			}
 			else if (id === 'axes') {
 				this.ctx.strokeStyle = colorConvert(screen.options.axes.color) || '#000000';
-				
+
 				this.draw = function () {
 					_this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
 					_this.screen.drawAxes();
@@ -139,7 +145,7 @@ export class Layer {
 							_this[x.type](x.object, x.options, true);
 						}
 					});
-				
+
 				};
 			}
 
@@ -155,7 +161,7 @@ export class Layer {
 		else if (screen.options.renderer === 'SVG') {
 			var ctx = (<SVGGElement>document.createElementNS('http://www.w3.org/2000/svg', 'g')),
 					m = screen.transformation;
-			
+
 			ctx.className.baseVal = 'MathLib_layer_' + id;
 			ctx.setAttribute('transform',
 				'matrix(' + m[0][0] + ', ' + m[1][0] + ', ' + m[0][1] + ', ' + m[1][1] + ', ' + m[0][2] + ', ' + m[1][2] + ')' );
@@ -193,7 +199,7 @@ export class Layer {
 			}
 			else if (id === 'axes') {
 				ctx.setAttribute('stroke', colorConvert(screen.options.axes.color) || '#000000');
-				
+
 				this.draw = function () {
 					ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
 					_this.screen.drawAxes();

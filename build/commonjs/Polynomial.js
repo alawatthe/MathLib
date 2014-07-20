@@ -1,6 +1,13 @@
 
     'use strict';
 
+    /*es6
+    import {fallingFactorial, is, isEqual, isZero, negative, plus, sign, times, toContentMathML, toLaTeX, toMathML, toString, type} from 'Functn';
+    import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {Expression} from 'Expression';
+    import {Functn} from 'Functn';
+    import {Matrix} from 'Matrix';
+    es6*/
     var MathLib = require('./meta.js'),
 		Functn = require('./Functn');
 

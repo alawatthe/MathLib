@@ -1,3 +1,7 @@
+/*es6
+import {extendObject} from 'meta';
+es6*/
+
 /// no import
 
 /**
@@ -61,7 +65,7 @@ export class Screen {
 		this.innerHTMLContextMenu = innerHTMLContextMenu;
 
 
-		this.wrapper.addEventListener('click', evt => this.wrapper.focus());
+		this.wrapper.addEventListener('click', () => this.wrapper.focus());
 
 
 		if ((<any>options).contextMenu) {

@@ -1,6 +1,11 @@
 
     'use strict';
 
+    /*es6
+    import {coerce, divide, isEqual, isPosZero, minus, mod, plus, pow, sign, times} from 'Functn';
+    import {Complex} from 'Complex';
+    import {Rational} from 'Rational';
+    es6*/
     define(['meta', 'Functn'], function(MathLib) {
     /**
     * MathLib.Integer is the MathLib implementation of (arbitrary precision) integers.
@@ -108,7 +113,7 @@
         * @return {Integer}
         */
         Integer.randomElement = function (start, end) {
-            var i, endMinusStart, sign, done = false, arr = [], base = Math.pow(2, 26);
+            var i, endMinusStart, arr = [], base = Math.pow(2, 26);
 
             if (arguments.length === 1) {
                 endMinusStart = start;
@@ -298,7 +303,7 @@
         */
         Integer.prototype.digits = function (base) {
             if (typeof base === "undefined") { base = 10; }
-            var div, rem, temp, blocksize = Math.floor(Math.log(Math.pow(2, 26) - 1) / Math.log(base)), factor = new MathLib.Integer(base), n = this.abs(), digits = [];
+            var div, rem, temp, factor = new MathLib.Integer(base), n = this.abs(), digits = [];
 
             if (n.isZero()) {
                 return [0];

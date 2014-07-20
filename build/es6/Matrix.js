@@ -1,9 +1,16 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Functn from './Functn';
-import Permutation from './Permutation';
+
+import {abs, conjugate, copy, divide, evaluate, hypot, inverse, is, isEqual, isOne, isReal, isZero, minus, plus, sign, times, times, toContentMathML, toLaTeX, toMathML, toString, type} from 'Functn';
+import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+import {Circle} from 'Circle';
+import {EvaluationError} from 'EvaluationError';
+import {Expression} from 'Expression';
+import {Permutation} from 'Permutation';
+import {Point} from 'Point';
+import {Vector} from 'Vector';
+
 
 /**
 * The matrix implementation of MathLib makes calculations with matrices of
@@ -12,7 +19,7 @@ import Permutation from './Permutation';
 *
 * It is as easy as
 * ```
-* new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+* new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 * ```
 * to create the following matrix:
 *    ⎛ 1 2 3 ⎞
@@ -29,7 +36,7 @@ var Matrix = (function () {
         if (typeof matrix === 'string') {
             // If there is a < in the string we assume it's MathML
             if (matrix.indexOf('<') > -1) {
-                return MathLib.Expression.parseContentMathML(matrix).evaluate();
+                return Expression.parseContentMathML(matrix).evaluate();
             } else {
                 matrix = matrix.trim().replace(/;?\n/g, '],[');
                 matrix = JSON.parse('[[' + matrix + ']]');
@@ -71,18 +78,18 @@ var Matrix = (function () {
             // The elimination
             if (LU[k][k] !== 0) {
                 for (i = k + 1; i < m; i++) {
-                    LU[i][k] = MathLib.divide(LU[i][k], LU[k][k]);
+                    LU[i][k] = divide(LU[i][k], LU[k][k]);
                     for (j = k + 1; j < n; j++) {
-                        LU[i][j] = MathLib.minus(LU[i][j], MathLib.times(LU[i][k], LU[k][j]));
+                        LU[i][j] = minus(LU[i][j], times(LU[i][k], LU[k][j]));
                     }
                 }
             }
         }
-        LU = new MathLib.Matrix(LU);
+        LU = new Matrix(LU);
         this.LU = function () {
             return LU;
         };
-        this.LUpermutation = new MathLib.Permutation(permutation);
+        this.LUpermutation = new Permutation(permutation);
         return LU;
     };
 
@@ -93,7 +100,7 @@ var Matrix = (function () {
     */
     Matrix.prototype.adjoint = function () {
         return this.map(function (entry) {
-            return MathLib.conjugate(entry);
+            return conjugate(entry);
         }).transpose();
     };
 
@@ -104,7 +111,7 @@ var Matrix = (function () {
     */
     Matrix.prototype.adjugate = function () {
         return this.map(function (x, r, c, m) {
-            return MathLib.times(m.remove(c, r).determinant(), 1 - ((r + c) % 2) * 2);
+            return times(m.remove(c, r).determinant(), 1 - ((r + c) % 2) * 2);
         });
     };
 
@@ -127,14 +134,14 @@ var Matrix = (function () {
             for (j = 0; j < i; j++) {
                 sum = 0;
                 for (k = 0, kk = j; k < kk; k++) {
-                    sum = MathLib.plus(sum, MathLib.times(cholesky[i][k], cholesky[j][k]));
+                    sum = plus(sum, times(cholesky[i][k], cholesky[j][k]));
                 }
                 cholesky[i][j] = (this[i][j] - sum) / cholesky[j][j];
             }
 
             sum = 0;
             for (k = 0, kk = j; k < kk; k++) {
-                sum = MathLib.plus(sum, MathLib.times(cholesky[i][k], cholesky[i][k]));
+                sum = plus(sum, times(cholesky[i][k], cholesky[i][k]));
             }
             cholesky[i][j] = Math.sqrt(this[j][j] - sum);
 
@@ -142,7 +149,7 @@ var Matrix = (function () {
                 cholesky[i][j] = 0;
             }
         }
-        choleskyMatrix = new MathLib.Matrix(cholesky);
+        choleskyMatrix = new Matrix(cholesky);
 
         this.cholesky = function () {
             return choleskyMatrix;
@@ -160,17 +167,17 @@ var Matrix = (function () {
         var i, ii, j, jj;
 
         if (this.rows !== m.rows) {
-            return MathLib.sign(this.rows - m.rows);
+            return sign(this.rows - m.rows);
         }
 
         if (this.cols !== m.cols) {
-            return MathLib.sign(this.cols - m.cols);
+            return sign(this.cols - m.cols);
         }
 
         for (i = 0, ii = this.rows; i < ii; i++) {
             for (j = 0, jj = this.cols; j < jj; j++) {
                 if (this[i][j] - m[i][j]) {
-                    return MathLib.sign(this[i][j] - m[i][j]);
+                    return sign(this[i][j] - m[i][j]);
                 }
             }
         }
@@ -185,7 +192,7 @@ var Matrix = (function () {
     */
     Matrix.prototype.copy = function () {
         return this.map(function (entry) {
-            return MathLib.copy(entry);
+            return copy(entry);
         });
     };
 
@@ -199,7 +206,7 @@ var Matrix = (function () {
         var LU, determinant;
 
         if (!this.isSquare()) {
-            throw MathLib.EvaluationError('Determinant of non square matrix', {
+            throw EvaluationError('Determinant of non square matrix', {
                 method: 'Matrix.prototype.determinant'
             });
         }
@@ -208,7 +215,7 @@ var Matrix = (function () {
             determinant = 0;
         } else {
             LU = this.LU();
-            determinant = MathLib.times(this.LUpermutation.sgn(), MathLib.times.apply(null, LU.diag()));
+            determinant = times(this.LUpermutation.sgn(), times.apply(null, LU.diag()));
         }
 
         this.determinant = function () {
@@ -236,7 +243,7 @@ var Matrix = (function () {
     * @return {Matrix|number} n The number or Matrix to be inverted and multiplied
     */
     Matrix.prototype.divide = function (n) {
-        return this.times(MathLib.inverse(n));
+        return this.times(inverse(n));
     };
 
     /**
@@ -245,7 +252,7 @@ var Matrix = (function () {
     * @return {Matrix}
     */
     Matrix.prototype.evaluate = function () {
-        return this.map(MathLib.evaluate);
+        return this.map(evaluate);
     };
 
     /**
@@ -298,19 +305,19 @@ var Matrix = (function () {
 
         this.forEach(function (x, i, j) {
             if (i === j) {
-                if (MathLib.is(x, 'complex')) {
+                if (is(x, 'complex')) {
                     c.push(x.toPoint());
                 } else {
-                    c.push(new MathLib.Point([x, 0, 1]));
+                    c.push(new Point([x, 0, 1]));
                 }
             } else {
-                rc[j] += MathLib.abs(x);
-                rr[i] += MathLib.abs(x);
+                rc[j] += abs(x);
+                rr[i] += abs(x);
             }
         });
 
         for (i = 0, ii = this.rows; i < ii; i++) {
-            circles.push(new MathLib.Circle(c[i], Math.min(rc[i], rr[i])));
+            circles.push(new Circle(c[i], Math.min(rc[i], rr[i])));
         }
 
         return circles;
@@ -322,14 +329,14 @@ var Matrix = (function () {
     * @return {[Matrix, Matrix]}
     */
     Matrix.prototype.givens = function () {
-        var rows = this.rows, cols = this.cols, R = this.copy(), Q = MathLib.Matrix.identity(rows), c, s, rho, i, j, k, ri, rj, qi, qj;
+        var rows = this.rows, cols = this.cols, R = this.copy(), Q = Matrix.identity(rows), c, s, rho, i, j, k, ri, rj, qi, qj;
 
         for (i = 0; i < cols; i++) {
             for (j = i + 1; j < rows; j++) {
-                if (!MathLib.isZero(R[j][i])) {
+                if (!isZero(R[j][i])) {
                     // We can't use the sign function here, because we want the factor
                     // to be 1 if A[i][i] is zero.
-                    rho = (R[i][i] < 0 ? -1 : 1) * MathLib.hypot(R[i][i], R[j][i]);
+                    rho = (R[i][i] < 0 ? -1 : 1) * hypot(R[i][i], R[j][i]);
                     c = R[i][i] / rho;
                     s = R[j][i] / rho;
 
@@ -372,7 +379,7 @@ var Matrix = (function () {
         var i, ii, res, inverse, col = [], matrix = [], n = this.rows;
 
         if (!this.isSquare()) {
-            throw MathLib.EvaluationError('Inverse of non square matrix', { method: 'Matrix.prototype.inverse' });
+            throw EvaluationError('Inverse of non square matrix', { method: 'Matrix.prototype.inverse' });
         }
 
         for (i = 0, ii = n - 1; i < ii; i++) {
@@ -397,7 +404,7 @@ var Matrix = (function () {
             });
         }
 
-        inverse = new MathLib.Matrix(matrix);
+        inverse = new Matrix(matrix);
         this.inverse = function () {
             return inverse;
         };
@@ -418,7 +425,7 @@ var Matrix = (function () {
         }
 
         return this.every(function (x, i, j) {
-            return (i - l <= j && i + u >= j) || MathLib.isZero(x);
+            return (i - l <= j && i + u >= j) || isZero(x);
         });
         // for (i = 0, ii = this.rows; i < ii; i++) {
         //   for (j = 0, jj = this.cols; j < jj; j++) {
@@ -442,7 +449,7 @@ var Matrix = (function () {
         }
         for (i = 0, ii = this.rows; i < ii; i++) {
             for (j = 0, jj = this.cols; j < jj; j++) {
-                if (i !== j && !MathLib.isZero(this[i][j])) {
+                if (i !== j && !isZero(this[i][j])) {
                     return false;
                 }
             }
@@ -464,7 +471,7 @@ var Matrix = (function () {
         if (this.rows === matrix.rows && this.cols === matrix.cols) {
             for (i = 0, ii = this.rows; i < ii; i++) {
                 for (j = 0, jj = this.cols; j < jj; j++) {
-                    if (!MathLib.isEqual(this[i][j], matrix[i][j])) {
+                    if (!isEqual(this[i][j], matrix[i][j])) {
                         return false;
                     }
                 }
@@ -485,7 +492,7 @@ var Matrix = (function () {
         }
 
         var isIdentity = this.every(function (x, r, c) {
-            return r === c ? MathLib.isOne(x) : MathLib.isZero(x);
+            return r === c ? isOne(x) : isZero(x);
         });
 
         this.isIdentity = function () {
@@ -510,7 +517,7 @@ var Matrix = (function () {
     */
     Matrix.prototype.isLower = function () {
         return this.slice(0, -1).every(function (x, i) {
-            return x.slice(i + 1).every(MathLib.isZero);
+            return x.slice(i + 1).every(isZero);
         });
     };
 
@@ -553,7 +560,7 @@ var Matrix = (function () {
         var rows = [], cols = [];
 
         return this.every(function (x, r, c) {
-            if (MathLib.isOne(x)) {
+            if (isOne(x)) {
                 if (rows[r] || cols[c]) {
                     return false;
                 } else {
@@ -561,7 +568,7 @@ var Matrix = (function () {
                     cols[c] = true;
                     return true;
                 }
-            } else if (MathLib.isZero(x)) {
+            } else if (isZero(x)) {
                 return true;
             }
             return false;
@@ -591,7 +598,7 @@ var Matrix = (function () {
     * @return {boolean}
     */
     Matrix.prototype.isReal = function () {
-        return this.every(MathLib.isReal);
+        return this.every(isReal);
     };
 
     /**
@@ -611,7 +618,7 @@ var Matrix = (function () {
         }
         if (this.isDiag()) {
             for (i = 1, ii = this.rows; i < ii; i++) {
-                if (!MathLib.isEqual(diag[0], diag[i])) {
+                if (!isEqual(diag[0], diag[i])) {
                     return false;
                 }
             }
@@ -643,7 +650,7 @@ var Matrix = (function () {
             lp:
             for (i = 0, ii = this.rows; i < ii; i++) {
                 for (j = i + 1, jj = this.cols; j < jj; j++) {
-                    if (!MathLib.isEqual(this[i][j], this[j][i])) {
+                    if (!isEqual(this[i][j], this[j][i])) {
                         isSymmetric = false;
                         break lp;
                     }
@@ -664,7 +671,7 @@ var Matrix = (function () {
     */
     Matrix.prototype.isUpper = function () {
         return this.slice(1).every(function (x, i) {
-            return x.slice(0, i + 1).every(MathLib.isZero);
+            return x.slice(0, i + 1).every(isZero);
         });
     };
 
@@ -685,7 +692,7 @@ var Matrix = (function () {
     * @return {boolean}
     */
     Matrix.prototype.isZero = function () {
-        var isZero = this.every(MathLib.isZero);
+        var isZero = this.every(isZero);
 
         this.isZero = function () {
             return isZero;
@@ -705,7 +712,7 @@ var Matrix = (function () {
     */
     Matrix.prototype.map = function (f) {
         var m = this;
-        return new MathLib.Matrix(Array.prototype.map.call(this, function (x, i) {
+        return new Matrix(Array.prototype.map.call(this, function (x, i) {
             return Array.prototype.map.call(x, function (y, j) {
                 return f(y, i, j, m);
             });
@@ -733,7 +740,7 @@ var Matrix = (function () {
         if (this.rows === subtrahend.rows && this.cols === subtrahend.cols) {
             return this.plus(subtrahend.negative());
         } else {
-            throw MathLib.EvaluationError('Matrix sizes not matching', { method: 'Matrix.prototype.minus' });
+            throw EvaluationError('Matrix sizes not matching', { method: 'Matrix.prototype.minus' });
         }
     };
 
@@ -747,10 +754,10 @@ var Matrix = (function () {
 
         for (i = 0, ii = this.rows; i < ii; i++) {
             negative.push(this[i].map(function (entry) {
-                return MathLib.negative(entry);
+                return negative(entry);
             }));
         }
-        return new MathLib.Matrix(negative);
+        return new Matrix(negative);
     };
 
     /**
@@ -767,12 +774,12 @@ var Matrix = (function () {
             for (i = 0, ii = this.rows; i < ii; i++) {
                 sum[i] = [];
                 for (j = 0, jj = this.cols; j < jj; j++) {
-                    sum[i][j] = MathLib.plus(this[i][j], summand[i][j]);
+                    sum[i][j] = plus(this[i][j], summand[i][j]);
                 }
             }
-            return new MathLib.Matrix(sum);
+            return new Matrix(sum);
         } else {
-            throw MathLib.EvaluationError('Matrix sizes not matching', { method: 'Matrix.prototype.plus' });
+            throw EvaluationError('Matrix sizes not matching', { method: 'Matrix.prototype.plus' });
         }
     };
 
@@ -787,7 +794,7 @@ var Matrix = (function () {
         rankloop:
         for (i = Math.min(this.rows, this.cols) - 1; i >= 0; i--) {
             for (j = this.cols - 1; j >= i; j--) {
-                if (!MathLib.isZero(mat[i][j])) {
+                if (!isZero(mat[i][j])) {
                     rank = i + 1;
                     break rankloop;
                 }
@@ -845,7 +852,7 @@ var Matrix = (function () {
             });
         }
 
-        return new MathLib.Matrix(rest);
+        return new Matrix(rest);
     };
 
     /**
@@ -858,7 +865,7 @@ var Matrix = (function () {
 
         for (i = 0, ii = this.rows; i < ii; i++) {
             if (this.cols <= lead) {
-                return new MathLib.Matrix(rref);
+                return new Matrix(rref);
             }
 
             // Find the row with the biggest pivot element
@@ -869,7 +876,7 @@ var Matrix = (function () {
                     j = i;
                     lead++;
                     if (this.cols === lead) {
-                        return new MathLib.Matrix(rref);
+                        return new Matrix(rref);
                     }
                 }
             }
@@ -893,12 +900,12 @@ var Matrix = (function () {
                 }
                 factor = rref[j][lead];
                 for (k = 0, kk = this.cols; k < kk; k++) {
-                    rref[j][k] = MathLib.minus(rref[j][k], MathLib.times(factor, rref[i][k]));
+                    rref[j][k] = minus(rref[j][k], times(factor, rref[i][k]));
                 }
             }
             lead++;
         }
-        return new MathLib.Matrix(rref);
+        return new Matrix(rref);
     };
 
     /**
@@ -931,14 +938,14 @@ var Matrix = (function () {
         for (i = 0; i < n; i++) {
             y[i] = b[i];
             for (j = 0; j < i; j++) {
-                y[i] = MathLib.minus(y[i], MathLib.times(LU[i][j], y[j]));
+                y[i] = minus(y[i], times(LU[i][j], y[j]));
             }
         }
 
         for (i = n - 1; i >= 0; i--) {
             x[i] = y[i];
             for (j = i + 1; j < n; j++) {
-                x[i] = MathLib.minus(x[i], MathLib.times(LU[i][j], x[j]));
+                x[i] = minus(x[i], times(LU[i][j], x[j]));
             }
 
             if (LU[i][i] === 0) {
@@ -948,11 +955,11 @@ var Matrix = (function () {
                     x[i] = x[i];
                 }
             } else {
-                x[i] = MathLib.divide(x[i], LU[i][i]);
+                x[i] = divide(x[i], LU[i][i]);
             }
         }
 
-        if (MathLib.type(b) === 'array') {
+        if (type(b) === 'array') {
             return x;
         } else {
             return new b.constructor(x);
@@ -991,7 +998,7 @@ var Matrix = (function () {
         }
         if (typeof a === 'number' || a.type === 'complex') {
             return this.map(function (x) {
-                return MathLib.times(x, a);
+                return times(x, a);
             });
         } else if (a.type === 'matrix') {
             if (this.cols === a.rows) {
@@ -1001,21 +1008,21 @@ var Matrix = (function () {
                         entry = 0;
 
                         for (k = 0, kk = this.cols; k < kk; k++) {
-                            entry = MathLib.plus(entry, MathLib.times(this[i][k], a[k][j]));
+                            entry = plus(entry, times(this[i][k], a[k][j]));
                         }
                         product[i][j] = entry;
                     }
                 }
-                return new MathLib.Matrix(product);
+                return new Matrix(product);
             } else {
-                throw MathLib.EvaluationError('Matrix sizes not matching', { method: 'Matrix#times' });
+                throw EvaluationError('Matrix sizes not matching', { method: 'Matrix#times' });
             }
         } else if (a.type === 'point' || a.type === 'vector') {
             if (this.cols === a.length) {
                 for (i = 0, ii = this.rows; i < ii; i++) {
                     entry = 0;
                     for (j = 0, jj = this.cols; j < jj; j++) {
-                        entry = MathLib.plus(entry, MathLib.times(this[i][j], a[j]));
+                        entry = plus(entry, times(this[i][j], a[j]));
                     }
                     product.push(entry);
                 }
@@ -1032,7 +1039,7 @@ var Matrix = (function () {
     Matrix.prototype.toArray = function () {
         return Array.prototype.map.call(this, function (x) {
             return Array.prototype.map.call(x, function (y) {
-                return MathLib.copy(y);
+                return copy(y);
             });
         });
     };
@@ -1057,13 +1064,13 @@ var Matrix = (function () {
         if (options.strict) {
             return this.reduce(function (str, x) {
                 return str + '<apply><csymbol cd="linalg2">matrixrow</csymbol>' + x.map(function (entry) {
-                    return MathLib.toContentMathML(entry, options);
+                    return toContentMathML(entry, options);
                 }).join('') + '</apply>';
             }, '<apply><csymbol cd="linalg2">matrix</csymbol>') + '</apply>';
         } else {
             return this.reduce(function (str, x) {
                 return str + '<matrixrow>' + x.map(function (entry) {
-                    return MathLib.toContentMathML(entry, options);
+                    return toContentMathML(entry, options);
                 }).join('') + '</matrixrow>';
             }, '<matrix>') + '</matrix>';
         }
@@ -1081,7 +1088,7 @@ var Matrix = (function () {
 
         return '\\begin{pmatrix}\n' + this.reduce(function (str, x) {
             return str + x.map(function (entry) {
-                return MathLib.toLaTeX(entry, passOptions);
+                return toLaTeX(entry, passOptions);
             }).join(' & ') + '\\\n';
         }, '').slice(0, -2) + '\n\\end{pmatrix}';
     };
@@ -1098,7 +1105,7 @@ var Matrix = (function () {
 
         return this.reduce(function (str, x) {
             return str + '<mtr><mtd>' + x.map(function (entry) {
-                return MathLib.toMathML(entry, passOptions);
+                return toMathML(entry, passOptions);
             }).join('</mtd><mtd>') + '</mtd></mtr>';
         }, '<mrow><mo> ( </mo><mtable>') + '</mtable><mo> ) </mo></mrow>';
     };
@@ -1110,7 +1117,7 @@ var Matrix = (function () {
     */
     Matrix.prototype.toRowVectors = function () {
         return this.toArray().map(function (v) {
-            return new MathLib.Vector(v);
+            return new Vector(v);
         });
     };
 
@@ -1126,7 +1133,7 @@ var Matrix = (function () {
 
         return this.reduce(function (str, x) {
             return str + x.map(function (entry) {
-                return MathLib.toString(entry, passOptions);
+                return toString(entry, passOptions);
             }).join('\t') + '\n';
         }, '').slice(0, -1);
     };
@@ -1137,7 +1144,7 @@ var Matrix = (function () {
     * @return {number|Complex}
     */
     Matrix.prototype.trace = function () {
-        var trace = MathLib.plus.apply(null, this.diag());
+        var trace = plus.apply(null, this.diag());
 
         this.trace = function () {
             return trace;
@@ -1162,14 +1169,14 @@ var Matrix = (function () {
             transpose.push(row);
         }
 
-        transposedMatrix = new MathLib.Matrix(transpose);
+        transposedMatrix = new Matrix(transpose);
         this.transpose = function () {
             return transposedMatrix;
         };
         return transposedMatrix;
     };
     Matrix.givensMatrix = function (n, i, k, phi) {
-        var givens = MathLib.Matrix.identity(n);
+        var givens = Matrix.identity(n);
         givens[k][k] = givens[i][i] = Math.cos(phi);
         givens[i][k] = Math.sin(phi);
         givens[k][i] = -givens[i][k];
@@ -1191,7 +1198,7 @@ var Matrix = (function () {
             matrix.push(row.slice(n - i - 1, 2 * n - i - 1));
         }
 
-        return new MathLib.Matrix(matrix);
+        return new Matrix(matrix);
     };
 
     Matrix.numbers = function (n, r, c) {
@@ -1203,13 +1210,13 @@ var Matrix = (function () {
         for (i = 0, ii = r || 1; i < ii; i++) {
             matrix.push(row.slice(0));
         }
-        return new MathLib.Matrix(matrix);
+        return new Matrix(matrix);
     };
 
     Matrix.one = function (r, c) {
         if (typeof r === "undefined") { r = 1; }
         if (typeof c === "undefined") { c = r; }
-        return MathLib.Matrix.numbers(1, r, c);
+        return Matrix.numbers(1, r, c);
     };
 
     Matrix.random = function (r, c) {
@@ -1221,15 +1228,15 @@ var Matrix = (function () {
             }
             matrix.push(row);
         }
-        return new MathLib.Matrix(matrix);
+        return new Matrix(matrix);
     };
 
     Matrix.zero = function (r, c) {
         if (typeof r === "undefined") { r = 1; }
         if (typeof c === "undefined") { c = r; }
-        return MathLib.Matrix.numbers(0, r, c);
+        return Matrix.numbers(0, r, c);
     };
     return Matrix;
 })();
-export default = Matrix;
+export default Matrix;
 

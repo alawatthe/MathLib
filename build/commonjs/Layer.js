@@ -1,6 +1,11 @@
 
     'use strict';
 
+    /*es6
+    import {colorConvert} from 'meta';
+    import {Canvas} from 'Canvas';
+    import {SVG} from 'SVG';
+    es6*/
     var MathLib = require('./meta.js'),
 		Screen2D = require('./Screen2D');
 

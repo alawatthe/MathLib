@@ -1,3 +1,11 @@
+/*es6
+import {fallingFactorial, is, isEqual, isZero, negative, plus, sign, times, toContentMathML, toLaTeX, toMathML, toString, type} from 'Functn';
+import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+import {Expression} from 'Expression';
+import {Functn} from 'Functn';
+import {Matrix} from 'Matrix';
+es6*/
+
 /// import Functn
 
 /**
@@ -9,7 +17,7 @@
  * ```
  * new MathLib.Polynomial([1, 2, 3])
  * ```
- * to create the polynomial 1 + 2x + 3x²  
+ * to create the polynomial 1 + 2x + 3x²
  * The polynomial x¹⁰⁰ can be created with the following statement:
  * ```
  * new MathLib.Polynomial(100)

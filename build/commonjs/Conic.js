@@ -1,6 +1,12 @@
 
     'use strict';
 
+    /*es6
+    import {cbrt, isZero, sec, tan, warning} from 'Functn';
+    import {Line} from 'Line';
+    import {Matrix} from 'Matrix';
+    import {Point} from 'Point';
+    es6*/
     var MathLib = require('./meta.js'),
 		Functn = require('./Functn'),
 		Matrix = require('./Matrix');

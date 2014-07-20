@@ -6,7 +6,6 @@
  */
 digits(base = 10) : number[] {
 	var div, rem, temp,
-			blocksize = Math.floor(Math.log(Math.pow(2, 26) - 1) / Math.log(base)),
 			factor = new MathLib.Integer(base),
 			n = this.abs(),
 			digits = [];

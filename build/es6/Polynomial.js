@@ -1,8 +1,13 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Functn from './Functn';
+
+import {fallingFactorial, is, isEqual, isZero, negative, plus, sign, times, toContentMathML, toLaTeX, toMathML, toString, type} from 'Functn';
+import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+import {Expression} from 'Expression';
+import {Functn} from 'Functn';
+import {Matrix} from 'Matrix';
+
 
 /**
 * The polynomial implementation of MathLib makes calculations with polynomials.
@@ -11,12 +16,12 @@ import Functn from './Functn';
 *
 * It is as easy as
 * ```
-* new MathLib.Polynomial([1, 2, 3])
+* new Polynomial([1, 2, 3])
 * ```
 * to create the polynomial 1 + 2x + 3x²
 * The polynomial x¹⁰⁰ can be created with the following statement:
 * ```
-* new MathLib.Polynomial(100)
+* new Polynomial(100)
 * ```
 *
 * @class
@@ -46,7 +51,7 @@ var Polynomial = (function () {
         this.subdeg = (function (a) {
             var i = 0;
             if (a.length > 1 || a[0]) {
-                while (i < a.length && MathLib.isZero(a[i])) {
+                while (i < a.length && isZero(a[i])) {
                     i++;
                 }
                 return i;
@@ -60,7 +65,7 @@ var Polynomial = (function () {
     * @return {Polynomial}
     */
     Polynomial.interpolation = function (a, b) {
-        var basisPolynomial, interpolant = new MathLib.Polynomial([0]), n = a.length, i, j;
+        var basisPolynomial, interpolant = new Polynomial([0]), n = a.length, i, j;
 
         if (arguments.length === 2) {
             a = a.map(function (x, i) {
@@ -69,10 +74,10 @@ var Polynomial = (function () {
         }
 
         for (i = 0; i < n; i++) {
-            basisPolynomial = new MathLib.Polynomial([1]);
+            basisPolynomial = new Polynomial([1]);
             for (j = 0; j < n; j++) {
                 if (i !== j) {
-                    basisPolynomial = basisPolynomial.times(new MathLib.Polynomial([-a[j][0] / (a[i][0] - a[j][0]), 1 / (a[i][0] - a[j][0])]));
+                    basisPolynomial = basisPolynomial.times(new Polynomial([-a[j][0] / (a[i][0] - a[j][0]), 1 / (a[i][0] - a[j][0])]));
                 }
             }
             interpolant = interpolant.plus(basisPolynomial.times(a[i][1]));
@@ -108,7 +113,7 @@ var Polynomial = (function () {
 
         m = (length * xy - xi * yi) / (length * x2 - xi * xi);
         c = (yi * x2 - xy * xi) / (length * x2 - xi * xi);
-        return new MathLib.Polynomial([c, m]);
+        return new Polynomial([c, m]);
     };
 
     /**
@@ -120,8 +125,8 @@ var Polynomial = (function () {
     Polynomial.roots = function (zeros) {
         var elemSymPoly, i, ii, coef = [];
 
-        if (MathLib.type(zeros) === 'array') {
-            zeros = new MathLib.Set(zeros);
+        if (type(zeros) === 'array') {
+            zeros = new Set(zeros);
         }
 
         elemSymPoly = zeros.powerset();
@@ -131,18 +136,18 @@ var Polynomial = (function () {
 
         // Vieta's theorem
         elemSymPoly.slice(1).forEach(function (x) {
-            coef[ii - x.card] = MathLib.plus(coef[ii - x.card], x.times());
+            coef[ii - x.card] = plus(coef[ii - x.card], x.times());
         });
 
         coef = coef.map(function (x, i) {
             if ((ii - i) % 2) {
-                return MathLib.negative(x);
+                return negative(x);
             }
             return x;
         });
 
         coef.push(1);
-        return new MathLib.Polynomial(coef);
+        return new Polynomial(coef);
     };
 
     /**
@@ -155,12 +160,12 @@ var Polynomial = (function () {
         var i, ii;
 
         if (this.length !== p.length) {
-            return MathLib.sign(this.length - p.length);
+            return sign(this.length - p.length);
         }
 
         for (i = 0, ii = this.length; i < ii; i++) {
             if (p[i] - this[i]) {
-                return MathLib.sign(this[i] - p[i]);
+                return sign(this[i] - p[i]);
             }
         }
 
@@ -182,9 +187,9 @@ var Polynomial = (function () {
         }
 
         for (i = 0, ii = this.deg - n; i <= ii; i++) {
-            derivative[i] = MathLib.times(this[i + n], MathLib.fallingFactorial(i + n, n));
+            derivative[i] = times(this[i + n], fallingFactorial(i + n, n));
         }
-        return new MathLib.Polynomial(derivative);
+        return new Polynomial(derivative);
     };
 
     /**
@@ -230,7 +235,7 @@ var Polynomial = (function () {
         if (typeof n === "undefined") { n = 1; }
         var i, ii, antiderivative = [];
 
-        if (MathLib.isZero(n)) {
+        if (isZero(n)) {
             return this;
         }
 
@@ -239,9 +244,9 @@ var Polynomial = (function () {
         }
 
         for (i = 0, ii = this.deg; i <= ii; i++) {
-            antiderivative[i + n] = this[i] / MathLib.fallingFactorial(i + n, n);
+            antiderivative[i + n] = this[i] / fallingFactorial(i + n, n);
         }
-        return new MathLib.Polynomial(antiderivative);
+        return new Polynomial(antiderivative);
     };
 
     /**
@@ -256,7 +261,7 @@ var Polynomial = (function () {
             return false;
         }
         for (i = 0, ii = this.deg; i <= ii; i++) {
-            if (!MathLib.isEqual(this[i], p[i])) {
+            if (!isEqual(this[i], p[i])) {
                 return false;
             }
         }
@@ -270,7 +275,7 @@ var Polynomial = (function () {
     * @return {Polynomial}
     */
     Polynomial.prototype.map = function (f) {
-        return new MathLib.Polynomial(Array.prototype.map.call(this, f));
+        return new Polynomial(Array.prototype.map.call(this, f));
     };
 
     /**
@@ -279,8 +284,8 @@ var Polynomial = (function () {
     * @return {Polynomial}
     */
     Polynomial.prototype.negative = function () {
-        return new MathLib.Polynomial(this.map(function (entry) {
-            return MathLib.negative(entry);
+        return new Polynomial(this.map(function (entry) {
+            return negative(entry);
         }));
     };
 
@@ -294,14 +299,14 @@ var Polynomial = (function () {
         var plus = [], i;
         if (typeof a === 'number') {
             plus = this.slice();
-            plus[0] = MathLib.plus(plus[0], a);
+            plus[0] = plus(plus[0], a);
         } else if (a.type === 'polynomial') {
             for (i = 0; i <= Math.min(this.deg, a.deg); i++) {
-                plus[i] = MathLib.plus(this[i], a[i]);
+                plus[i] = plus(this[i], a[i]);
             }
             plus = plus.concat((this.deg > a.deg ? this : a).slice(i));
         }
-        return new MathLib.Polynomial(plus);
+        return new Polynomial(plus);
     };
 
     /**
@@ -329,17 +334,17 @@ var Polynomial = (function () {
         if (a.type === 'polynomial') {
             for (i = 0, ii = this.deg; i <= ii; i++) {
                 for (j = 0, jj = a.deg; j <= jj; j++) {
-                    product[i + j] = MathLib.plus((product[i + j] ? product[i + j] : 0), MathLib.times(this[i], a[j]));
+                    product[i + j] = plus((product[i + j] ? product[i + j] : 0), times(this[i], a[j]));
                 }
             }
-            return new MathLib.Polynomial(product);
+            return new Polynomial(product);
         } else if (a.type === 'rational') {
             a = a.coerceTo('number');
         }
 
         // we we multiply it to every coefficient
         return this.map(function (b) {
-            return MathLib.times(a, b);
+            return times(a, b);
         });
     };
 
@@ -351,15 +356,15 @@ var Polynomial = (function () {
     Polynomial.prototype.toContentMathML = function () {
         var str = '<apply><csymbol cd="arith1">plus</csymbol>', i;
         for (i = this.deg; i >= 0; i--) {
-            if (!MathLib.isZero(this[i])) {
+            if (!isZero(this[i])) {
                 if (i === 0) {
-                    str += MathLib.toContentMathML(this[i]);
+                    str += toContentMathML(this[i]);
                 } else {
-                    str += '<apply><csymbol cd="arith1">times</csymbol>' + MathLib.toContentMathML(this[i], true);
+                    str += '<apply><csymbol cd="arith1">times</csymbol>' + toContentMathML(this[i], true);
                 }
 
                 if (i > 1) {
-                    str += '<apply><csymbol cd="arith1">power</csymbol><ci>x</ci>' + MathLib.toContentMathML(i) + '</apply></apply>';
+                    str += '<apply><csymbol cd="arith1">power</csymbol><ci>x</ci>' + toContentMathML(i) + '</apply></apply>';
                 } else if (i === 1) {
                     str += '<ci>x</ci></apply>';
                 }
@@ -380,21 +385,21 @@ var Polynomial = (function () {
         var content = [], sum, i;
 
         for (i = this.deg; i >= 0; i--) {
-            if (!MathLib.isZero(this[i])) {
+            if (!isZero(this[i])) {
                 if (i > 1) {
-                    content.push(new MathLib.Expression({
+                    content.push(new Expression({
                         subtype: 'naryOperator',
                         value: '^',
                         name: 'pow',
                         content: [
-                            new MathLib.Expression({
+                            new Expression({
                                 subtype: 'naryOperator',
                                 content: [
-                                    new MathLib.Expression({
+                                    new Expression({
                                         subtype: 'number',
                                         value: this[i].toString()
                                     }),
-                                    new MathLib.Expression({
+                                    new Expression({
                                         subtype: 'variable',
                                         value: 'x'
                                     })
@@ -402,21 +407,21 @@ var Polynomial = (function () {
                                 value: '*',
                                 name: 'times'
                             }),
-                            new MathLib.Expression({
+                            new Expression({
                                 subtype: 'number',
                                 value: i.toString()
                             })
                         ]
                     }));
                 } else if (i === 1) {
-                    content.push(new MathLib.Expression({
+                    content.push(new Expression({
                         subtype: 'naryOperator',
                         content: [
-                            new MathLib.Expression({
+                            new Expression({
                                 subtype: 'number',
                                 value: this[i].toString()
                             }),
-                            new MathLib.Expression({
+                            new Expression({
                                 subtype: 'variable',
                                 value: 'x'
                             })
@@ -425,7 +430,7 @@ var Polynomial = (function () {
                         name: 'times'
                     }));
                 } else if (i === 0) {
-                    content.push(new MathLib.Expression({
+                    content.push(new Expression({
                         subtype: 'number',
                         value: this[i].toString()
                     }));
@@ -433,14 +438,14 @@ var Polynomial = (function () {
             }
         }
 
-        sum = new MathLib.Expression({
+        sum = new Expression({
             content: content,
             subtype: 'naryOperator',
             value: '+',
             name: 'plus'
         });
 
-        return new MathLib.Expression({
+        return new Expression({
             subtype: 'functionDefinition',
             args: ['x'],
             content: [sum]
@@ -455,22 +460,22 @@ var Polynomial = (function () {
     Polynomial.prototype.toFunctn = function () {
         var str = '', i, ii;
         for (i = 0, ii = this.deg; i <= ii; i++) {
-            if (!MathLib.isZero(this[i])) {
+            if (!isZero(this[i])) {
                 if (i === 0) {
-                    str += MathLib.toString(this[i]);
+                    str += toString(this[i]);
                 } else {
-                    str += MathLib.toString(this[i], { sign: true });
+                    str += toString(this[i], { sign: true });
                 }
 
                 if (i > 1) {
-                    str += ' * Math.pow(x, ' + MathLib.toString(i) + ')';
+                    str += ' * Math.pow(x, ' + toString(i) + ')';
                 } else if (i === 1) {
                     str += ' * x';
                 }
             }
         }
 
-        return MathLib.Functn(new Function('x', 'return ' + str), {
+        return Functn(new Function('x', 'return ' + str), {
             expression: this.toExpression()
         });
     };
@@ -481,19 +486,19 @@ var Polynomial = (function () {
     * @return {string}
     */
     Polynomial.prototype.toLaTeX = function () {
-        var str = MathLib.toString(this[this.deg]) + 'x^{' + this.deg + '}', i;
+        var str = toString(this[this.deg]) + 'x^{' + this.deg + '}', i;
 
         for (i = this.deg - 1; i >= 0; i--) {
-            if (!MathLib.isZero(this[i])) {
+            if (!isZero(this[i])) {
                 // if (i === 0) {
-                //   str += MathLib.toLaTeX(this[i]);
+                //   str += toLaTeX(this[i]);
                 // }
                 // else {
-                str += MathLib.toLaTeX(this[i], { sign: true });
+                str += toLaTeX(this[i], { sign: true });
 
                 // }
                 if (i > 1) {
-                    str += 'x^{' + MathLib.toLaTeX(i) + '}';
+                    str += 'x^{' + toLaTeX(i) + '}';
                 } else if (i === 1) {
                     str += 'x';
                 }
@@ -508,18 +513,18 @@ var Polynomial = (function () {
     * @return {string}
     */
     Polynomial.prototype.toMathML = function () {
-        var str = '<mrow>' + MathLib.toMathML(this[this.deg]) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(this.deg) + '</msup>', i;
+        var str = '<mrow>' + toMathML(this[this.deg]) + '<mo>&#x2062;</mo><msup><mi>x</mi>' + toMathML(this.deg) + '</msup>', i;
         for (i = this.deg - 1; i >= 0; i--) {
-            if (!MathLib.isZero(this[i])) {
+            if (!isZero(this[i])) {
                 // if (i === 0) {
-                //   str += MathLib.toMathML(this[i]);
+                //   str += toMathML(this[i]);
                 // }
                 // else {
-                str += MathLib.toMathML(this[i], { sign: true });
+                str += toMathML(this[i], { sign: true });
 
                 // }
                 if (i > 1) {
-                    str += '<mo>&#x2062;</mo><msup><mi>x</mi>' + MathLib.toMathML(i).slice(6, -7) + '</msup>';
+                    str += '<mo>&#x2062;</mo><msup><mi>x</mi>' + toMathML(i).slice(6, -7) + '</msup>';
                 } else if (i === 1) {
                     str += '<mo>&#x2062;</mo><mi>x</mi>';
                 }
@@ -537,14 +542,14 @@ var Polynomial = (function () {
     * @return {string}
     */
     Polynomial.prototype.toString = function () {
-        var i, str = MathLib.toString(this[this.deg]) + '*x^' + this.deg;
+        var i, str = toString(this[this.deg]) + '*x^' + this.deg;
 
         for (i = this.deg - 1; i >= 0; i--) {
-            if (!MathLib.isZero(this[i])) {
-                str += MathLib.toString(this[i], { sign: true });
+            if (!isZero(this[i])) {
+                str += toString(this[i], { sign: true });
 
                 if (i > 1) {
-                    str += '*x^' + MathLib.toString(i);
+                    str += '*x^' + toString(i);
                 } else if (i === 1) {
                     str += '*x';
                 }
@@ -561,11 +566,11 @@ var Polynomial = (function () {
     */
     Polynomial.prototype.valueAt = function (x) {
         // TODO: warn if x is non square matrix
-        var pot = MathLib.is(x, 'matrix') ? MathLib.Matrix.identity(x.rows) : 1, value = MathLib.is(x, 'matrix') ? MathLib.Matrix.zero(x.rows, x.cols) : 0, i, ii;
+        var pot = is(x, 'matrix') ? Matrix.identity(x.rows) : 1, value = is(x, 'matrix') ? Matrix.zero(x.rows, x.cols) : 0, i, ii;
 
         for (i = 0, ii = this.deg; i <= ii; i++) {
-            value = MathLib.plus(value, MathLib.times(this[i], pot));
-            pot = MathLib.times(pot, x);
+            value = plus(value, times(this[i], pot));
+            pot = times(pot, x);
         }
         return value;
     };
@@ -574,5 +579,5 @@ var Polynomial = (function () {
     Polynomial.zero = new Polynomial([0]);
     return Polynomial;
 })();
-export default = Polynomial;
+export default Polynomial;
 

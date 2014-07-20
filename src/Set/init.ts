@@ -1,3 +1,9 @@
+/* jshint -W079 */
+/*es6
+import {compare, evaluate, isEqual, plus, sign, times, toContentMathML, toLaTeX, toMathML, toString} from 'Functn';
+import {toLaTeX, toMathML, toString} from 'meta';
+es6*/
+
 /// no import
 
 /**

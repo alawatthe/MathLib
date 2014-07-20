@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-19
+ * build date: 2014-07-20
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -30,6 +30,13 @@ var __extends = this.__extends || function (d, b) {
 var MathLib = {};
 (function (MathLib) {
     'use strict';
+
+    /*es6
+    import {warning} from 'meta';
+    import {Complex} from 'Complex';
+    import {Integer} from 'Integer';
+    import {Rational} from 'Rational';
+    es6*/
     MathLib.version = '0.7.2';
     MathLib.apery = 1.2020569031595942;
     MathLib.e = Math.E;
@@ -136,6 +143,7 @@ var MathLib = {};
             return MathLib.coerceTo(x, numberType);
         });
     };
+
     var errors = [], warnings = [];
 
     /**
@@ -195,6 +203,63 @@ var MathLib = {};
         warnings.forEach(function (cb) {
             cb(details);
         });
+    };
+
+    /**
+    * Custom toString function
+    *
+    * @param {any} x - The value to which the String should be generated
+    * @param {object} [options] - Optional options to style the output
+    * @return {string}
+    */
+    MathLib.toString = function (x, options) {
+        if (typeof options === "undefined") { options = {}; }
+        var str, base = options.base || 10;
+
+        if (Array.isArray(x)) {
+            return '[' + x.map(function (entry) {
+                return MathLib.toString(entry, options);
+            }).join() + ']';
+        }
+
+        if (typeof x === 'object') {
+            return x.toString(options);
+        }
+
+        if (typeof x === 'number') {
+            if (!MathLib.isFinite(x)) {
+                return x.toString();
+            }
+
+            str = Math.abs(x).toString(base);
+
+            if (x < 0) {
+                str = '-' + str;
+            } else if (options.sign) {
+                str = '+' + str;
+            }
+
+            if (options.baseSubscript) {
+                if (base > 9) {
+                    str += '&#x208' + Math.floor(base / 10) + ';';
+                }
+                str += '&#x208' + (base % 10) + ';';
+            }
+
+            return str;
+        }
+
+        if (typeof x === 'boolean') {
+            return x.toString();
+        }
+
+        /* istanbul ignore else */
+        if (typeof x === 'string') {
+            if (options.quotes) {
+                return options.quotes[0] + x + options.quotes[1];
+            }
+            return '"' + x + '"';
+        }
     };
 
     /**
@@ -390,63 +455,6 @@ var MathLib = {};
             return '<ms>' + x + '</ms>';
         }
     };
-
-    /**
-    * Custom toString function
-    *
-    * @param {any} x - The value to which the String should be generated
-    * @param {object} [options] - Optional options to style the output
-    * @return {string}
-    */
-    MathLib.toString = function (x, options) {
-        if (typeof options === "undefined") { options = {}; }
-        var str, base = options.base || 10;
-
-        if (Array.isArray(x)) {
-            return '[' + x.map(function (entry) {
-                return MathLib.toString(entry, options);
-            }).join() + ']';
-        }
-
-        if (typeof x === 'object') {
-            return x.toString(options);
-        }
-
-        if (typeof x === 'number') {
-            if (!MathLib.isFinite(x)) {
-                return x.toString();
-            }
-
-            str = Math.abs(x).toString(base);
-
-            if (x < 0) {
-                str = '-' + str;
-            } else if (options.sign) {
-                str = '+' + str;
-            }
-
-            if (options.baseSubscript) {
-                if (base > 9) {
-                    str += '&#x208' + Math.floor(base / 10) + ';';
-                }
-                str += '&#x208' + (base % 10) + ';';
-            }
-
-            return str;
-        }
-
-        if (typeof x === 'boolean') {
-            return x.toString();
-        }
-
-        /* istanbul ignore else */
-        if (typeof x === 'string') {
-            if (options.quotes) {
-                return options.quotes[0] + x + options.quotes[1];
-            }
-            return '"' + x + '"';
-        }
-    };
     'export MathLib';
 })(MathLib);
 
@@ -481,6 +489,16 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {evaluate, negative, sign} from 'Functn';
+    import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {Complex} from 'Complex';
+    import {Functn} from 'Functn';
+    import {Integer} from 'Integer';
+    import {Matrix} from 'Matrix';
+    import {Rational} from 'Rational';
+    import {Vector} from 'Vector';
+    es6*/
     /// no import
     // There is no DOMParser in Node, so we have to require one (done via a regexp replace)
     /// DOMParser
@@ -1735,9 +1753,17 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /* jshint -W079 */
+    /*es6
+    import {coerce, epsilon, goldenRatio, isNative, type} from 'meta';
+    import {Expression} from 'Expression';
+    es6*/
     /// import Expression
     var functnPrototype = {};
 
+    /*es6
+    var abs, arccos, arccot, arccsc, arcosh, arcoth, arcsch, arcsec, arcsin, arctan, arsech, arsinh, artanh, binomial, ceil, cbrt, conjugate, copy, cos, cosh, cot, coth, csc, csch, degToRad, exp, factorial, floor, identity, inverse, isFinite, isInt, isNaN, isNegZero, isOne, isPosZero, isPrime, isReal, isZero, lg, ln, logGamma, negative, not, radToDeg, rem, sec, sech, sign, sin, sinh, sqrt, tan, tanh, arctan2, divide, equivalent, implies, log, minus, mod, pow, root, divisors, factor, fallingFactorial, fibonacci, risingFactorial, round, trunc, and, arithMean, gcd, geoMean, harmonicMean, hypot, hypot2, isEqual, lcm, max, min, or, plus, times, xor;
+    es6*/
     /**
     * MathLib.Functn is the MathLib implementation of mathematical functions
     *
@@ -2842,6 +2868,39 @@ var MathLib = {};
         return this;
     };
 
+    // Recursive function for the quad method
+    var quadstep = function (f, a, b, fa, fc, fb, options) {
+        var h = b - a, c = (a + b) / 2, fd = f((a + c) / 2), fe = f((c + b) / 2), Q1 = (h / 6) * (fa + 4 * fc + fb), Q2 = (h / 12) * (fa + 4 * fd + 2 * fc + 4 * fe + fb), Q = Q2 + (Q2 - Q1) / 15;
+
+        options.calls = options.calls + 2;
+
+        // Infinite or Not-a-Number function value encountered
+        if (!MathLib.isFinite(Q)) {
+            options.warn = Math.max(options.warn, 3);
+            return Q;
+        }
+
+        // Maximum function count exceeded; singularity likely
+        if (options.calls > options.maxCalls) {
+            options.warn = Math.max(options.warn, 2);
+            return Q;
+        }
+
+        // Accuracy over this subinterval is acceptable
+        if (Math.abs(Q2 - Q) <= options.tolerance) {
+            return Q;
+        }
+
+        // Minimum step size reached; singularity possible
+        if (Math.abs(h) < options.minStep || c === a || c === b) {
+            options.warn = Math.max(options.warn, 1);
+            return Q;
+        }
+
+        // Otherwise, divide the interval into two subintervals
+        return quadstep(f, a, c, fa, fd, fc, options) + quadstep(f, c, b, fc, fe, fb, options);
+    };
+
     /**
     * Numeric evaluation of an integral using an adative simpson approach.
     *
@@ -2890,39 +2949,6 @@ var MathLib = {};
         options.warnMessage = warnMessage[options.warn];
 
         return Q;
-    };
-
-    // Recursive function for the quad method
-    var quadstep = function (f, a, b, fa, fc, fb, options) {
-        var h = b - a, c = (a + b) / 2, fd = f((a + c) / 2), fe = f((c + b) / 2), Q1 = (h / 6) * (fa + 4 * fc + fb), Q2 = (h / 12) * (fa + 4 * fd + 2 * fc + 4 * fe + fb), Q = Q2 + (Q2 - Q1) / 15;
-
-        options.calls = options.calls + 2;
-
-        // Infinite or Not-a-Number function value encountered
-        if (!MathLib.isFinite(Q)) {
-            options.warn = Math.max(options.warn, 3);
-            return Q;
-        }
-
-        // Maximum function count exceeded; singularity likely
-        if (options.calls > options.maxCalls) {
-            options.warn = Math.max(options.warn, 2);
-            return Q;
-        }
-
-        // Accuracy over this subinterval is acceptable
-        if (Math.abs(Q2 - Q) <= options.tolerance) {
-            return Q;
-        }
-
-        // Minimum step size reached; singularity possible
-        if (Math.abs(h) < options.minStep || c === a || c === b) {
-            options.warn = Math.max(options.warn, 1);
-            return Q;
-        }
-
-        // Otherwise, divide the interval into two subintervals
-        return quadstep(f, a, c, fa, fd, fc, options) + quadstep(f, c, b, fc, fe, fb, options);
     };
 
     /**
@@ -3806,6 +3832,9 @@ var MathLib = {};
     };
 
     /* tslint:enable */
+    /*es6
+    import {extendObject} from 'meta';
+    es6*/
     /// no import
     /**
     * This module contains the common methods of all drawing modules.
@@ -3843,7 +3872,7 @@ var MathLib = {};
             this.contextMenuOverlay = container.getElementsByClassName('MathLib_contextMenuOverlay')[0];
             this.innerHTMLContextMenu = innerHTMLContextMenu;
 
-            this.wrapper.addEventListener('click', function (evt) {
+            this.wrapper.addEventListener('click', function () {
                 return _this.wrapper.focus();
             });
 
@@ -3984,6 +4013,11 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {colorConvert} from 'meta';
+    import {Canvas} from 'Canvas';
+    import {SVG} from 'SVG';
+    es6*/
     /// import Screen2D
     /**
     * Layers for two dimensional plotting
@@ -4175,6 +4209,10 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {abs, isZero} from 'Functn';
+    import {colorConvert, extendObject} from 'meta';
+    es6*/
     /// import Screen2D
     /**
     * The Canvas renderer for 2D plotting
@@ -4639,6 +4677,10 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {abs, hypot, isZero} from 'Functn';
+    import {colorConvert, extendObject} from 'meta';
+    es6*/
     /// import Screen2D
     /**
     * The SVG renderer for 2D plotting
@@ -5109,6 +5151,15 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {} from 'Functn';
+    import {colorConvert, extendObject} from 'meta';
+    import {Circle} from 'Circle';
+    import {Layer} from 'Layer';
+    import {Matrix} from 'Matrix';
+    import {Point} from 'Point';
+    import {Screen} from 'Screen';
+    es6*/
     /// import Screen
     /**
     * Two dimensional plotting
@@ -5826,6 +5877,10 @@ var MathLib = {};
         }
     };
 
+    /*es6
+    import {extendObject} from 'meta';
+    import {Screen} from 'Screen';
+    es6*/
     /// import Screen
     /**
     * Three dimensional plotting
@@ -6143,6 +6198,12 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {evaluate, hypot, isEqual, isZero, minus, negative, plus, root, sign, times, toContentMathML, toLaTeX, toMathML, toString} from 'Functn';
+    import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {EvaluationError} from 'EvaluationError';
+    import {Matrix} from 'Matrix';
+    es6*/
     /// import Functn
     /**
     * The vector implementation of MathLib makes calculations with vectors of
@@ -6518,6 +6579,12 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {isEqual, isZero, sign} from 'Functn';
+    import {toLaTeX} from 'meta';
+    import {Matrix} from 'Matrix';
+    import {Point} from 'Point';
+    es6*/
     /// import Point
     /**
     * Creates a MathLib circle
@@ -6659,6 +6726,12 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {abs, arccos, arcosh, coerce, coerceTo, copy, cos, cosh, divide, exp, floor, hypot, inverse, isEqual, isNegZero, isPosZero, isZero, ln, minus, negative, plus, pow, sign, sin, sinh, times, type} from 'Functn';
+    import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {Integer} from 'Integer';
+    import {Point} from 'Point';
+    es6*/
     /// import Functn, Point
     /**
     * MathLib.Complex is the MathLib implementation of complex numbers.
@@ -7559,6 +7632,11 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {coerce, divide, isEqual, isPosZero, minus, mod, plus, pow, sign, times} from 'Functn';
+    import {Complex} from 'Complex';
+    import {Rational} from 'Rational';
+    es6*/
     /// import Functn
     /**
     * MathLib.Integer is the MathLib implementation of (arbitrary precision) integers.
@@ -7666,7 +7744,7 @@ var MathLib = {};
         * @return {Integer}
         */
         Integer.randomElement = function (start, end) {
-            var i, endMinusStart, sign, done = false, arr = [], base = Math.pow(2, 26);
+            var i, endMinusStart, arr = [], base = Math.pow(2, 26);
 
             if (arguments.length === 1) {
                 endMinusStart = start;
@@ -7856,7 +7934,7 @@ var MathLib = {};
         */
         Integer.prototype.digits = function (base) {
             if (typeof base === "undefined") { base = 10; }
-            var div, rem, temp, blocksize = Math.floor(Math.log(Math.pow(2, 26) - 1) / Math.log(base)), factor = new MathLib.Integer(base), n = this.abs(), digits = [];
+            var div, rem, temp, factor = new MathLib.Integer(base), n = this.abs(), digits = [];
 
             if (n.isZero()) {
                 return [0];
@@ -8492,6 +8570,12 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {hypot, isEqual, isZero} from 'Functn';
+    import {warning} from 'meta';
+    import {Point} from 'Point';
+    import {Vector} from 'Vector';
+    es6*/
     /// import Functn, Vector
     /**
     * The line implementation of MathLib makes calculations with lines in the
@@ -8696,6 +8780,16 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {abs, conjugate, copy, divide, evaluate, hypot, inverse, is, isEqual, isOne, isReal, isZero, minus, plus, sign, times, times, toContentMathML, toLaTeX, toMathML, toString, type} from 'Functn';
+    import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {Circle} from 'Circle';
+    import {EvaluationError} from 'EvaluationError';
+    import {Expression} from 'Expression';
+    import {Permutation} from 'Permutation';
+    import {Point} from 'Point';
+    import {Vector} from 'Vector';
+    es6*/
     /// import Functn, Permutation
     /**
     * The matrix implementation of MathLib makes calculations with matrices of
@@ -9930,6 +10024,10 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {sign} from 'Functn';
+    import {Matrix} from 'Matrix';
+    es6*/
     /// import Functn, Matrix
     /**
     * The permutation class for MathLib
@@ -10150,6 +10248,12 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {cbrt, isZero, sec, tan, warning} from 'Functn';
+    import {Line} from 'Line';
+    import {Matrix} from 'Matrix';
+    import {Point} from 'Point';
+    es6*/
     /// import Functn, Matrix
     /**
     * The conic implementation of MathLib makes calculations with conics possible.
@@ -10690,6 +10794,13 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {hypot, isEqual, isZero} from 'Functn';
+    import {toLaTeX, toMathML, toString, warning} from 'meta';
+    import {Complex} from 'Complex';
+    import {Line} from 'Line';
+    import {Vector} from 'Vector';
+    es6*/
     /// import Complex, Vector
     /**
     * The point implementation of MathLib makes calculations with point in
@@ -11005,6 +11116,13 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {fallingFactorial, is, isEqual, isZero, negative, plus, sign, times, toContentMathML, toLaTeX, toMathML, toString, type} from 'Functn';
+    import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {Expression} from 'Expression';
+    import {Functn} from 'Functn';
+    import {Matrix} from 'Matrix';
+    es6*/
     /// import Functn
     /**
     * The polynomial implementation of MathLib makes calculations with polynomials.
@@ -11583,6 +11701,13 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /*es6
+    import {abs, coerce, copy, isEqual, isZero, minus, negative, plus, sign, times} from 'Functn';
+    import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {Complex} from 'Complex';
+    import {EvaluationError} from 'EvaluationError';
+    import {Integer} from 'Integer';
+    es6*/
     /// import Functn
     /**
     * MathLib.Rational is the MathLib implementation of rational numbers.
@@ -11930,6 +12055,11 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /* jshint -W079 */
+    /*es6
+    import {compare, evaluate, isEqual, plus, sign, times, toContentMathML, toLaTeX, toMathML, toString} from 'Functn';
+    import {toLaTeX, toMathML, toString} from 'meta';
+    es6*/
     /// no import
     /**
     * The Implementation of sets in MathLib

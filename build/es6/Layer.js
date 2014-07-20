@@ -1,8 +1,11 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Screen2D from './Screen2D';
+
+import {colorConvert} from 'meta';
+import {Canvas} from 'Canvas';
+import {SVG} from 'SVG';
+
 
 /**
 * Layers for two dimensional plotting
@@ -55,7 +58,7 @@ var Layer = (function () {
                     var top = (-screen.translation.y) / screen.scale.y, bottom = (screen.height - screen.translation.y) / screen.scale.y, left = (-screen.translation.x) / screen.scale.x, right = (screen.width - screen.translation.x) / screen.scale.x;
 
                     // Draw the background
-                    this.ctx.fillStyle = MathLib.colorConvert(screen.options.background);
+                    this.ctx.fillStyle = colorConvert(screen.options.background);
                     this.ctx.fillRect(left, bottom, right - left, top - bottom);
 
                     this.stack.forEach(function (x) {
@@ -71,7 +74,7 @@ var Layer = (function () {
                     });
                 };
             } else if (id === 'grid') {
-                this.ctx.strokeStyle = MathLib.colorConvert(screen.options.grid.color) || '#cccccc';
+                this.ctx.strokeStyle = colorConvert(screen.options.grid.color) || '#cccccc';
                 this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
 
                 this.draw = function () {
@@ -79,7 +82,7 @@ var Layer = (function () {
                     _this.screen.drawGrid();
                 };
             } else if (id === 'axes') {
-                this.ctx.strokeStyle = MathLib.colorConvert(screen.options.axes.color) || '#000000';
+                this.ctx.strokeStyle = colorConvert(screen.options.axes.color) || '#000000';
 
                 this.draw = function () {
                     _this.ctx.lineWidth = 4 / (screen.scale.x - screen.scale.y);
@@ -106,12 +109,12 @@ var Layer = (function () {
                 };
             }
 
-            this.circle = MathLib.Canvas.circle;
-            this.line = MathLib.Canvas.line;
-            this.path = MathLib.Canvas.path;
-            this.pixel = MathLib.Canvas.pixel;
-            this.point = MathLib.Canvas.point;
-            this.text = MathLib.Canvas.text;
+            this.circle = Canvas.circle;
+            this.line = Canvas.line;
+            this.path = Canvas.path;
+            this.pixel = Canvas.pixel;
+            this.point = Canvas.point;
+            this.text = Canvas.text;
         } else if (screen.options.renderer === 'SVG') {
             var ctx = document.createElementNS('http://www.w3.org/2000/svg', 'g'), m = screen.transformation;
 
@@ -136,14 +139,14 @@ var Layer = (function () {
                     });
                 };
             } else if (id === 'grid') {
-                ctx.setAttribute('stroke', MathLib.colorConvert(screen.options.grid.color) || '#cccccc');
+                ctx.setAttribute('stroke', colorConvert(screen.options.grid.color) || '#cccccc');
 
                 this.draw = function () {
                     ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
                     _this.screen.drawGrid();
                 };
             } else if (id === 'axes') {
-                ctx.setAttribute('stroke', MathLib.colorConvert(screen.options.axes.color) || '#000000');
+                ctx.setAttribute('stroke', colorConvert(screen.options.axes.color) || '#000000');
 
                 this.draw = function () {
                     ctx.setAttribute('stroke-width', 4 / (screen.scale.x - screen.scale.y) + '');
@@ -165,12 +168,12 @@ var Layer = (function () {
                 };
             }
 
-            this.circle = MathLib.SVG.circle;
-            this.line = MathLib.SVG.line;
-            this.path = MathLib.SVG.path;
-            this.pixel = MathLib.SVG.pixel;
-            this.point = MathLib.SVG.point;
-            this.text = MathLib.SVG.text;
+            this.circle = SVG.circle;
+            this.line = SVG.line;
+            this.path = SVG.path;
+            this.pixel = SVG.pixel;
+            this.point = SVG.point;
+            this.text = SVG.text;
         }
 
         // Insert the layer into the layer array of the screen object.
@@ -187,5 +190,5 @@ var Layer = (function () {
     };
     return Layer;
 })();
-export default = Layer;
+export default Layer;
 

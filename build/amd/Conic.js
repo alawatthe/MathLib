@@ -1,6 +1,12 @@
 
     'use strict';
 
+    /*es6
+    import {cbrt, isZero, sec, tan, warning} from 'Functn';
+    import {Line} from 'Line';
+    import {Matrix} from 'Matrix';
+    import {Point} from 'Point';
+    es6*/
     define(['meta', 'Functn', 'Matrix'], function(MathLib) {
     /**
     * The conic implementation of MathLib makes calculations with conics possible.

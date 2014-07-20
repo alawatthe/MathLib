@@ -1,3 +1,14 @@
+/*es6
+import {abs, conjugate, copy, divide, evaluate, hypot, inverse, is, isEqual, isOne, isReal, isZero, minus, plus, sign, times, times, toContentMathML, toLaTeX, toMathML, toString, type} from 'Functn';
+import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+import {Circle} from 'Circle';
+import {EvaluationError} from 'EvaluationError';
+import {Expression} from 'Expression';
+import {Permutation} from 'Permutation';
+import {Point} from 'Point';
+import {Vector} from 'Vector';
+es6*/
+
 /// import Functn, Permutation
 
 /**
@@ -9,9 +20,9 @@
  * ```
  * new MathLib.Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
  * ```
- * to create the following matrix:  
- *    ⎛ 1 2 3 ⎞  
- *    ⎜ 4 5 6 ⎟  
+ * to create the following matrix:
+ *    ⎛ 1 2 3 ⎞
+ *    ⎜ 4 5 6 ⎟
  *    ⎝ 7 8 9 ⎠
  *
  * @class

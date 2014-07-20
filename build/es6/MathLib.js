@@ -9,6 +9,8 @@
  * build date: 2013-12-29
  */
 
+/* jshint esnext:true */
+
 import MathLib from './meta.js';
 import Functn from './Functn.js';
 import Expression from './Expression.js';
@@ -50,9 +52,9 @@ MathLib.Rational = Rational;
 MathLib.Set = Set;
 
 for (var prop in Functn) {
-	if (Functn.hasOwnProperty(prop)) {		
+	if (Functn.hasOwnProperty(prop)) {
 		MathLib[prop] = Functn[prop];
 	}
 }
 
-export default = MathLib;
+export default MathLib;

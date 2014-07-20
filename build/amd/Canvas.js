@@ -1,6 +1,10 @@
 
     'use strict';
 
+    /*es6
+    import {abs, isZero} from 'Functn';
+    import {colorConvert, extendObject} from 'meta';
+    es6*/
     define(['meta', 'Screen2D'], function(MathLib) {
     /**
     * The Canvas renderer for 2D plotting

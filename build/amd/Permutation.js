@@ -1,6 +1,10 @@
 
     'use strict';
 
+    /*es6
+    import {sign} from 'Functn';
+    import {Matrix} from 'Matrix';
+    es6*/
     define(['meta', 'Functn', 'Matrix'], function(MathLib) {
     /**
     * The permutation class for MathLib

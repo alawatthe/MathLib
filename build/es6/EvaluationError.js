@@ -1,8 +1,8 @@
 
-'use strict';
+/* jshint esnext:true */
 
 /**
-* MathLib.EvaluationError is thrown if it is not possible to perform the Evaluation.
+* EvaluationError is thrown if it is not possible to perform the Evaluation.
 *
 */
 var error = function (message, options) {
@@ -19,7 +19,6 @@ var error = function (message, options) {
 var CustomError = function () {
 };
 CustomError.prototype = Error.prototype;
-MathLib.error.prototype = new CustomError();
+error.prototype = new CustomError();
 
-MathLib.EvaluationError = error;
-
+export var EvaluationError = error;

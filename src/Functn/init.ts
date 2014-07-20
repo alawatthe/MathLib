@@ -1,7 +1,17 @@
+/* jshint -W079 */
+/*es6
+import {coerce, epsilon, goldenRatio, isNative, type} from 'meta';
+import {Expression} from 'Expression';
+es6*/
+
 /// import Expression
 
 var functnPrototype : any = {};
 declare var MathJax : any;
+
+/*es6
+var abs, arccos, arccot, arccsc, arcosh, arcoth, arcsch, arcsec, arcsin, arctan, arsech, arsinh, artanh, binomial, ceil, cbrt, conjugate, copy, cos, cosh, cot, coth, csc, csch, degToRad, exp, factorial, floor, identity, inverse, isFinite, isInt, isNaN, isNegZero, isOne, isPosZero, isPrime, isReal, isZero, lg, ln, logGamma, negative, not, radToDeg, rem, sec, sech, sign, sin, sinh, sqrt, tan, tanh, arctan2, divide, equivalent, implies, log, minus, mod, pow, root, divisors, factor, fallingFactorial, fibonacci, risingFactorial, round, trunc, and, arithMean, gcd, geoMean, harmonicMean, hypot, hypot2, isEqual, lcm, max, min, or, plus, times, xor;
+es6*/
 
 
 /**
@@ -9,7 +19,7 @@ declare var MathJax : any;
  *
  * Because 'Function' is a reserved word in JavaScript,
  * the class is called 'Functn'.
- * 
+ *
  * @class
  * @this {Functn}
  */

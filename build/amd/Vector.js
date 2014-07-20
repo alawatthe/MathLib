@@ -1,6 +1,12 @@
 
     'use strict';
 
+    /*es6
+    import {evaluate, hypot, isEqual, isZero, minus, negative, plus, root, sign, times, toContentMathML, toLaTeX, toMathML, toString} from 'Functn';
+    import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {EvaluationError} from 'EvaluationError';
+    import {Matrix} from 'Matrix';
+    es6*/
     define(['meta', 'Functn'], function(MathLib) {
     /**
     * The vector implementation of MathLib makes calculations with vectors of

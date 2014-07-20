@@ -1,17 +1,20 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Functn from './Functn';
+
+import {coerce, divide, isEqual, isPosZero, minus, mod, plus, pow, sign, times} from 'Functn';
+import {Complex} from 'Complex';
+import {Rational} from 'Rational';
+
 
 /**
-* MathLib.Integer is the MathLib implementation of (arbitrary precision) integers.
+* Integer is the MathLib implementation of (arbitrary precision) integers.
 *
 *
 * #### Simple example:
 * ```
 * // Create the integer
-* var int = new MathLib.Integer('123456789');
+* var int = new Integer('123456789');
 * ```
 *
 * @class
@@ -33,7 +36,7 @@ var Integer = (function () {
 
         if (typeof integer === 'number') {
             if (integer === 0) {
-                sign = MathLib.isPosZero(integer) ? '+' : '-';
+                sign = isPosZero(integer) ? '+' : '-';
                 data.push(0);
             } else {
                 if (integer < 0) {
@@ -55,13 +58,13 @@ var Integer = (function () {
             blocksize = Math.floor(Math.log(Math.pow(2, 53)) / Math.log(inputBase));
 
             while (integer.length > blocksize) {
-                data.push(new MathLib.Integer(parseInt(integer.slice(-blocksize), inputBase)));
+                data.push(new Integer(parseInt(integer.slice(-blocksize), inputBase)));
                 integer = integer.slice(0, -blocksize);
             }
-            data.push(new MathLib.Integer(parseInt(integer, inputBase)));
+            data.push(new Integer(parseInt(integer, inputBase)));
 
             res = data[data.length - 1];
-            factor = new MathLib.Integer(Math.pow(inputBase, blocksize));
+            factor = new Integer(Math.pow(inputBase, blocksize));
             for (i = data.length - 2; i >= 0; i--) {
                 res = res.times(factor).plus(data[i]);
             }
@@ -95,7 +98,7 @@ var Integer = (function () {
     * @return {Integer}
     */
     Integer.characteristic = function () {
-        return new MathLib.Integer(0);
+        return new Integer(0);
     };
 
     /**
@@ -110,7 +113,7 @@ var Integer = (function () {
     * @return {Integer}
     */
     Integer.randomElement = function (start, end) {
-        var i, endMinusStart, sign, done = false, arr = [], base = Math.pow(2, 26);
+        var i, endMinusStart, arr = [], base = Math.pow(2, 26);
 
         if (arguments.length === 1) {
             endMinusStart = start;
@@ -125,9 +128,9 @@ var Integer = (function () {
         arr.push(Math.floor(Math.random() * (endMinusStart.data[endMinusStart.data.length - 1] + 1)));
 
         if (arguments.length === 1) {
-            return (new MathLib.Integer(arr, { sign: start.sign }));
+            return (new Integer(arr, { sign: start.sign }));
         } else {
-            return (new MathLib.Integer(arr)).plus(start);
+            return (new Integer(arr)).plus(start);
         }
     };
 
@@ -177,7 +180,7 @@ var Integer = (function () {
     * @return {Integer}
     */
     Integer.prototype.abs = function () {
-        return new MathLib.Integer(this.data, { sign: '+' });
+        return new Integer(this.data, { sign: '+' });
     };
 
     /**
@@ -203,7 +206,7 @@ var Integer = (function () {
         }
 
         if (type === 'rational') {
-            return new MathLib.Rational(this, 1);
+            return new Rational(this, 1);
         }
 
         if (type === 'number') {
@@ -220,7 +223,7 @@ var Integer = (function () {
         }
 
         if (type === 'complex') {
-            return new MathLib.Complex(this, 0);
+            return new Complex(this, 0);
         }
     };
 
@@ -243,17 +246,17 @@ var Integer = (function () {
 
         if (this.data.length !== n.data.length) {
             if (this.sign === '+') {
-                return MathLib.sign(this.data.length - n.data.length);
+                return sign(this.data.length - n.data.length);
             } else {
-                return MathLib.sign(n.data.length - this.data.length);
+                return sign(n.data.length - this.data.length);
             }
         } else {
             for (i = this.data.length - 1; i >= 0; i--) {
                 if (this.data[i] !== n.data[i]) {
                     if (this.sign === '+') {
-                        return MathLib.sign(this.data[i] - n.data[i]);
+                        return sign(this.data[i] - n.data[i]);
                     } else {
-                        return MathLib.sign(n.data[i] - this.data[i]);
+                        return sign(n.data[i] - this.data[i]);
                     }
                 }
             }
@@ -276,7 +279,7 @@ var Integer = (function () {
     * @return {Integer}
     */
     Integer.prototype.copy = function () {
-        return new MathLib.Integer(this.data, { sign: this.sign });
+        return new Integer(this.data, { sign: this.sign });
     };
 
     /**
@@ -287,7 +290,7 @@ var Integer = (function () {
     */
     Integer.prototype.digitSum = function (base) {
         if (typeof base === "undefined") { base = 10; }
-        return new MathLib.Integer(this.digits(base).reduce(function (x, y) {
+        return new Integer(this.digits(base).reduce(function (x, y) {
             return x + y;
         }));
     };
@@ -300,7 +303,7 @@ var Integer = (function () {
     */
     Integer.prototype.digits = function (base) {
         if (typeof base === "undefined") { base = 10; }
-        var div, rem, temp, blocksize = Math.floor(Math.log(Math.pow(2, 26) - 1) / Math.log(base)), factor = new MathLib.Integer(base), n = this.abs(), digits = [];
+        var div, rem, temp, factor = new Integer(base), n = this.abs(), digits = [];
 
         if (n.isZero()) {
             return [0];
@@ -328,7 +331,7 @@ var Integer = (function () {
         var divrem;
 
         if (divisor.type !== 'integer') {
-            return MathLib.divide.apply(null, MathLib.coerce(this, divisor));
+            return divide.apply(null, coerce(this, divisor));
         } else {
             divrem = this.divrem(divisor);
 
@@ -336,7 +339,7 @@ var Integer = (function () {
                 return divrem[0];
             }
 
-            return new MathLib.Rational(this, divisor);
+            return new Rational(this, divisor);
         }
     };
 
@@ -362,26 +365,26 @@ var Integer = (function () {
                 B1 = B.copy();
                 B1.data.unshift(0);
                 temp = subroutine(A.minus(B1), B);
-                return [temp[0].plus(new MathLib.Integer(base)), temp[1]];
+                return [temp[0].plus(new Integer(base)), temp[1]];
             }
 
             // Step 2
             // nothing to do
             // Step 3
-            q = new MathLib.Integer(Math.min(Math.floor((A.data[n] * base + A.data[n - 1]) / B.data[n - 1]), base - 1));
+            q = new Integer(Math.min(Math.floor((A.data[n] * base + A.data[n - 1]) / B.data[n - 1]), base - 1));
 
             // Step 4
             T = B.times(q);
 
             // Step 5
             if (T.compare(A) === 1) {
-                q = q.minus(new MathLib.Integer(1));
+                q = q.minus(new Integer(1));
                 T = T.minus(B);
             }
 
             // Step 6
             if (T.compare(A) === 1) {
-                q = q.minus(new MathLib.Integer(1));
+                q = q.minus(new Integer(1));
                 T = T.minus(B);
             }
 
@@ -395,15 +398,15 @@ var Integer = (function () {
 
             // Step 1
             if (m < n) {
-                return [new MathLib.Integer(0), A.copy()];
+                return [new Integer(0), A.copy()];
             }
 
             // Step 2
             if (m === n) {
                 if (A.compare(B) === -1) {
-                    return [new MathLib.Integer(0), A.copy()];
+                    return [new Integer(0), A.copy()];
                 } else {
-                    return [new MathLib.Integer(1), A.minus(B)];
+                    return [new Integer(1), A.minus(B)];
                 }
             }
 
@@ -414,8 +417,8 @@ var Integer = (function () {
 
             // Step 4
             // A1 = floor(A / base^(m-n-1))
-            A1 = new MathLib.Integer(A.data.slice(m - n - 1));
-            s = new MathLib.Integer(A.data.slice(0, m - n - 1));
+            A1 = new Integer(A.data.slice(m - n - 1));
+            s = new Integer(A.data.slice(0, m - n - 1));
 
             // Step 5
             temp = subroutine(A1, B);
@@ -423,23 +426,23 @@ var Integer = (function () {
             r1 = temp[1];
 
             // Step 6
-            temp = main(new MathLib.Integer(s.data.concat(r1.data)), B);
+            temp = main(new Integer(s.data.concat(r1.data)), B);
             q = temp[0];
             r = temp[1];
 
             // Step 7
-            return [new MathLib.Integer(q.data.concat(q1.data)), r];
+            return [new Integer(q.data.concat(q1.data)), r];
         };
 
         if (this.isZero()) {
-            return [new MathLib.Integer(0), new MathLib.Integer(0)];
+            return [new Integer(0), new Integer(0)];
         }
 
         if (divisor.data[divisor.data.length - 1] < base / 2) {
-            mult = new MathLib.Integer(Math.ceil(base / (2 * divisor.data[divisor.data.length - 1])));
+            mult = new Integer(Math.ceil(base / (2 * divisor.data[divisor.data.length - 1])));
             temp = main(this.abs().times(mult), divisor.abs().times(mult));
             quot = temp[0];
-            rem = new MathLib.Integer(temp[1].data[0] / mult.data[0]);
+            rem = new Integer(temp[1].data[0] / mult.data[0]);
         } else {
             temp = main(this.abs(), divisor.abs());
             quot = temp[0];
@@ -447,7 +450,7 @@ var Integer = (function () {
         }
 
         if (this.sign === '-' && !rem.isZero()) {
-            quot = quot.plus(new MathLib.Integer(1));
+            quot = quot.plus(new Integer(1));
             rem = divisor.abs().minus(rem);
         }
 
@@ -465,18 +468,18 @@ var Integer = (function () {
     */
     Integer.prototype.factorial = function () {
         if (this.isZero()) {
-            return new MathLib.Integer('1');
+            return new Integer('1');
         }
 
         if (this.sign === '-') {
-            return new MathLib.Complex(Infinity);
+            return new Complex(Infinity);
         }
 
-        var factorial = this, n = this.minus(new MathLib.Integer('1'));
+        var factorial = this, n = this.minus(new Integer('1'));
 
         while (!n.isZero()) {
             factorial = factorial.times(n);
-            n = n.minus(new MathLib.Integer('1'));
+            n = n.minus(new Integer('1'));
         }
 
         return factorial;
@@ -501,7 +504,7 @@ var Integer = (function () {
         var i, ii;
 
         if (n.type !== 'integer') {
-            return MathLib.isEqual(MathLib.coerce(this, n));
+            return isEqual(coerce(this, n));
         } else {
             if (this.sign !== n.sign) {
                 if (this.isZero() && n.isZero()) {
@@ -580,7 +583,7 @@ var Integer = (function () {
     * @return {Integer}
     */
     Integer.prototype.isqrt = function () {
-        var y, two = new MathLib.Integer('2'), numberofbits = ((this.data.length - 1) * 25 + 1 + Math.log(this.data[this.data.length - 1]) / Math.log(2)), x = (new MathLib.Integer(2)).pow(new MathLib.Integer(Math.ceil(numberofbits / 2)));
+        var y, two = new Integer('2'), numberofbits = ((this.data.length - 1) * 25 + 1 + Math.log(this.data[this.data.length - 1]) / Math.log(2)), x = (new Integer(2)).pow(new Integer(Math.ceil(numberofbits / 2)));
 
         while (true) {
             y = x.plus(this.divrem(x)[0]).divrem(two)[0];
@@ -602,7 +605,7 @@ var Integer = (function () {
         var i, ii, temp, resPos, A, B, data = [], carry = 0, sign = '+', base = Math.pow(2, 26);
 
         if (n.type !== 'integer') {
-            return MathLib.minus.apply(null, MathLib.coerce(this, n));
+            return minus.apply(null, coerce(this, n));
         } else {
             if (this.sign === '-') {
                 if (n.sign === '-') {
@@ -635,7 +638,7 @@ var Integer = (function () {
                     }
                 }
                 if (typeof resPos === 'undefined') {
-                    return new MathLib.Integer(0);
+                    return new Integer(0);
                 }
             }
 
@@ -652,10 +655,10 @@ var Integer = (function () {
             for (i = 0, ii = A.data.length; i < ii; i++) {
                 temp = A.data[i] - B.data[i] + carry;
                 carry = Math.floor(temp / base);
-                data[i] = MathLib.mod(temp, base);
+                data[i] = mod(temp, base);
             }
 
-            return new MathLib.Integer(data, { sign: sign });
+            return new Integer(data, { sign: sign });
         }
     };
 
@@ -667,7 +670,7 @@ var Integer = (function () {
     */
     Integer.prototype.mod = function (n) {
         if (n.type !== 'integer') {
-            return MathLib.mod.apply(null, MathLib.coerce(this, n));
+            return mod.apply(null, coerce(this, n));
         } else {
             return this.divrem(n)[1];
         }
@@ -679,7 +682,7 @@ var Integer = (function () {
     * @return {Integer}
     */
     Integer.prototype.negative = function () {
-        return new MathLib.Integer(this.data, { sign: this.sign === '-' ? '+' : '-' });
+        return new Integer(this.data, { sign: this.sign === '-' ? '+' : '-' });
     };
 
     /**
@@ -692,7 +695,7 @@ var Integer = (function () {
         var i, ii, temp, data = [], carry = 0, base = Math.pow(2, 26);
 
         if (n.type !== 'integer') {
-            return MathLib.plus(MathLib.coerce(this, n));
+            return plus(coerce(this, n));
         } else {
             if (this.sign === '-') {
                 if (n.sign === '+') {
@@ -722,7 +725,7 @@ var Integer = (function () {
                 data[i] = carry;
             }
 
-            return new MathLib.Integer(data, { sign: this.sign });
+            return new Integer(data, { sign: this.sign });
         }
     };
 
@@ -736,7 +739,7 @@ var Integer = (function () {
         var powInt, result;
 
         if (exponent.type !== 'integer') {
-            return MathLib.pow.apply(null, MathLib.coerce(this, exponent));
+            return pow.apply(null, coerce(this, exponent));
         } else {
             powInt = function (b, e) {
                 var res, i, half = [], carry = 0;
@@ -755,7 +758,7 @@ var Integer = (function () {
                     }
                 }
 
-                res = powInt(b, new MathLib.Integer(half));
+                res = powInt(b, new Integer(half));
                 res = res.times(res);
 
                 if (e.data[0] % 2) {
@@ -766,13 +769,13 @@ var Integer = (function () {
             };
 
             if (exponent.isZero()) {
-                return new MathLib.Integer(1);
+                return new Integer(1);
             }
 
             result = powInt(this, exponent);
 
             if (exponent.sign === '-') {
-                return new MathLib.Rational(new MathLib.Integer('1'), result);
+                return new Rational(new Integer('1'), result);
             }
 
             return result;
@@ -789,7 +792,7 @@ var Integer = (function () {
         var i, ii, j, jj, temp, data = [], carry = 0, base = Math.pow(2, 26);
 
         if (n.type !== 'integer') {
-            return MathLib.times(MathLib.coerce(this, n));
+            return times(coerce(this, n));
         } else {
             for (i = 0, ii = this.data.length; i < ii; i++) {
                 for (j = 0, jj = n.data.length; j < jj; j++) {
@@ -808,7 +811,7 @@ var Integer = (function () {
             }
             data[i] = carry;
 
-            return new MathLib.Integer(data, { sign: this.sign === n.sign ? '+' : '-' });
+            return new Integer(data, { sign: this.sign === n.sign ? '+' : '-' });
         }
     };
 
@@ -892,7 +895,7 @@ var Integer = (function () {
     */
     Integer.prototype.toString = function (options) {
         if (typeof options === "undefined") { options = {}; }
-        var div, rem, temp, base = options.base || 10, blocksize = Math.floor(Math.log(Math.pow(2, 26) - 1) / Math.log(base)), factor = new MathLib.Integer(Math.pow(base, blocksize)), n = this.abs(), str = '';
+        var div, rem, temp, base = options.base || 10, blocksize = Math.floor(Math.log(Math.pow(2, 26) - 1) / Math.log(base)), factor = new Integer(Math.pow(base, blocksize)), n = this.abs(), str = '';
 
         if (n.isZero()) {
             str = '0';
@@ -928,5 +931,5 @@ var Integer = (function () {
     };
     return Integer;
 })();
-export default = Integer;
+export default Integer;
 

@@ -1,13 +1,18 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
+/* jshint -W079 */
+
+import {compare, evaluate, isEqual, plus, sign, times, toContentMathML, toLaTeX, toMathML, toString} from 'Functn';
+import {toLaTeX, toMathML, toString} from 'meta';
+
+
 /**
 * The Implementation of sets in MathLib
 *
 * To generate the set {1, 2, 3, 4, 5} you simply need to type
 * ```
-* new MathLib.Set([1, 2, 3, 4, 5])
+* new Set([1, 2, 3, 4, 5])
 * ```
 * @class
 * @this {Set}
@@ -48,8 +53,8 @@ var Set = (function () {
             elements = [];
         }
 
-        elements = elements.sort(MathLib.compare).filter(function (x, i, a) {
-            return (a.length === i + 1) || !MathLib.isEqual(x, a[i + 1]) || (typeof x.isEqual !== 'undefined' && !x.isEqual(a[i + 1]));
+        elements = elements.sort(compare).filter(function (x, i, a) {
+            return (a.length === i + 1) || !isEqual(x, a[i + 1]) || (typeof x.isEqual !== 'undefined' && !x.isEqual(a[i + 1]));
         });
 
         elements.forEach(function (x, i) {
@@ -68,10 +73,10 @@ var Set = (function () {
         var a, i, ii;
 
         if (this.card !== x.card) {
-            return MathLib.sign(this.card - x.card);
+            return sign(this.card - x.card);
         } else {
             for (i = 0, ii = this.card; i < ii; i++) {
-                a = MathLib.compare(this[i], x[i]);
+                a = compare(this[i], x[i]);
                 if (a !== 0) {
                     return a;
                 }
@@ -86,7 +91,7 @@ var Set = (function () {
     * @return {Set}
     */
     Set.prototype.evaluate = function () {
-        return this.map(MathLib.evaluate);
+        return this.map(evaluate);
     };
 
     /**
@@ -112,7 +117,7 @@ var Set = (function () {
         for (var _i = 0; _i < (arguments.length - 0); _i++) {
             args[_i] = arguments[_i + 0];
         }
-        return new MathLib.Set(Array.prototype.filter.apply(this, args));
+        return new Set(Array.prototype.filter.apply(this, args));
     };
 
     /**
@@ -174,7 +179,7 @@ var Set = (function () {
             return false;
         } else {
             return this.every(function (y, i) {
-                return MathLib.isEqual(y, set[i]);
+                return isEqual(y, set[i]);
             });
         }
     };
@@ -226,7 +231,7 @@ var Set = (function () {
     * @return {Set}
     */
     Set.prototype.map = function (callback, thisArg) {
-        return new MathLib.Set(Array.prototype.map.call(this, callback, thisArg));
+        return new Set(Array.prototype.map.call(this, callback, thisArg));
     };
 
     /**
@@ -241,14 +246,14 @@ var Set = (function () {
         if (n.type === 'set') {
             this.forEach(function (x) {
                 n.forEach(function (y) {
-                    sum.push(MathLib.plus(x, y));
+                    sum.push(plus(x, y));
                 });
             });
 
-            return new MathLib.Set(sum);
+            return new Set(sum);
         } else {
             return this.map(function (x) {
-                return MathLib.plus(x, n);
+                return plus(x, n);
             });
         }
     };
@@ -269,10 +274,10 @@ var Set = (function () {
                     subset.push(this[j]);
                 }
             }
-            powerset.push(new MathLib.Set(subset));
+            powerset.push(new Set(subset));
         }
 
-        return new MathLib.Set(powerset);
+        return new Set(powerset);
     };
 
     /**
@@ -350,7 +355,7 @@ var Set = (function () {
     */
     Set.prototype.times = function (n) {
         return this.map(function (x) {
-            return MathLib.times(x, n);
+            return times(x, n);
         });
     };
 
@@ -376,7 +381,7 @@ var Set = (function () {
                 return '<csymbol cd="set1">emptyset</csymbol>';
             } else {
                 return this.reduce(function (old, cur) {
-                    return old + MathLib.toContentMathML(cur, options);
+                    return old + toContentMathML(cur, options);
                 }, '<apply><csymbol cd="set1">set</csymbol>') + '</apply>';
             }
         } else {
@@ -384,7 +389,7 @@ var Set = (function () {
                 return '<emptyset/>';
             } else {
                 return this.reduce(function (old, cur) {
-                    return old + MathLib.toContentMathML(cur, options);
+                    return old + toContentMathML(cur, options);
                 }, '<set>') + '</set>';
             }
         }
@@ -402,7 +407,7 @@ var Set = (function () {
             return '\\emptyset';
         } else {
             return this.reduce(function (old, cur) {
-                return old + MathLib.toLaTeX(cur, options) + ', ';
+                return old + toLaTeX(cur, options) + ', ';
             }, '\\left{').slice(0, -2) + '\\right}';
         }
     };
@@ -419,7 +424,7 @@ var Set = (function () {
             return '<mi>&#x2205;</mi>';
         } else {
             return this.reduce(function (old, cur) {
-                return old + MathLib.toMathML(cur, options) + '<mo>,</mo>';
+                return old + toMathML(cur, options) + '<mo>,</mo>';
             }, '<mrow><mo>{</mo>').slice(0, -10) + '<mo>}</mo></mrow>';
         }
     };
@@ -436,7 +441,7 @@ var Set = (function () {
             return '∅';
         } else {
             return this.reduce(function (old, cur) {
-                return old + MathLib.toString(cur, options) + ', ';
+                return old + toString(cur, options) + ', ';
             }, '{').slice(0, -2) + '}';
         }
     };
@@ -448,28 +453,28 @@ var Set = (function () {
     * @return {Set|any}
     */
     Set.prototype.total = function () {
-        return MathLib.plus.apply(null, this.toArray());
+        return plus.apply(null, this.toArray());
     };
     Set.createSetOperation = function (left, both, right) {
         return function (a) {
             var set = [], i = 0, j = 0, tl = this.card, al = a.card;
 
             while (i < tl && j < al) {
-                if (MathLib.compare(this[i], a[j]) < 0) {
+                if (compare(this[i], a[j]) < 0) {
                     if (left) {
                         set.push(this[i]);
                     }
                     i++;
                     continue;
                 }
-                if (MathLib.compare(this[i], a[j]) > 0) {
+                if (compare(this[i], a[j]) > 0) {
                     if (right) {
                         set.push(a[j]);
                     }
                     j++;
                     continue;
                 }
-                if (MathLib.isEqual(this[i], a[j])) {
+                if (isEqual(this[i], a[j])) {
                     if (both) {
                         set.push(this[i]);
                     }
@@ -483,7 +488,7 @@ var Set = (function () {
             } else if (right && i === tl) {
                 set = set.concat(a.slice(j));
             }
-            return new MathLib.Set(set);
+            return new Set(set);
         };
     };
 
@@ -495,10 +500,10 @@ var Set = (function () {
             for (i = start; i <= end; i += step) {
                 set.push(i);
             }
-            return new MathLib.Set(set);
+            return new Set(set);
         }
     };
     return Set;
 })();
-export default = Set;
+export default Set;
 

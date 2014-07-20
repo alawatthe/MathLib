@@ -1,9 +1,10 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Functn from './Functn';
-import Matrix from './Matrix';
+
+import {sign} from 'Functn';
+import {Matrix} from 'Matrix';
+
 
 /**
 * The permutation class for MathLib
@@ -115,12 +116,12 @@ var Permutation = (function () {
         var i, ii;
 
         if (this.length !== p.length) {
-            return MathLib.sign(this.length - p.length);
+            return sign(this.length - p.length);
         }
 
         for (i = 0, ii = this.length; i < ii; i++) {
             if (p[i] - this[i]) {
-                return MathLib.sign(this[i] - p[i]);
+                return sign(this[i] - p[i]);
             }
         }
 
@@ -137,7 +138,7 @@ var Permutation = (function () {
         cycle.reverse().forEach(function (e) {
             e.reverse();
         });
-        return new MathLib.Permutation(cycle);
+        return new Permutation(cycle);
     };
 
     /**
@@ -150,7 +151,7 @@ var Permutation = (function () {
         for (var _i = 0; _i < (arguments.length - 0); _i++) {
             args[_i] = arguments[_i + 0];
         }
-        return new MathLib.Permutation(Array.prototype.map.apply(this, args));
+        return new Permutation(Array.prototype.map.apply(this, args));
     };
 
     /**
@@ -199,7 +200,7 @@ var Permutation = (function () {
             index = n - this.applyTo(i) - 1;
             matrix.push(row.slice(index, index + n));
         }
-        return new MathLib.Matrix(matrix);
+        return new Matrix(matrix);
     };
 
     /**
@@ -217,5 +218,5 @@ var Permutation = (function () {
     Permutation.id = new Permutation([[]]);
     return Permutation;
 })();
-export default = Permutation;
+export default Permutation;
 

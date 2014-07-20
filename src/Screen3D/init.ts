@@ -11,6 +11,11 @@ var to3js = function (x) {
 	}
 };
 
+/*es6
+import {extendObject} from 'meta';
+import {Screen} from 'Screen';
+es6*/
+
 /// import Screen
 
 /**

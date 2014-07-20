@@ -1,6 +1,13 @@
 
     'use strict';
 
+    /*es6
+    import {abs, coerce, copy, isEqual, isZero, minus, negative, plus, sign, times} from 'Functn';
+    import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {Complex} from 'Complex';
+    import {EvaluationError} from 'EvaluationError';
+    import {Integer} from 'Integer';
+    es6*/
     var MathLib = require('./meta.js'),
 		Functn = require('./Functn');
 

@@ -1,3 +1,9 @@
+/*es6
+import {coerce, divide, isEqual, isPosZero, minus, mod, plus, pow, sign, times} from 'Functn';
+import {Complex} from 'Complex';
+import {Rational} from 'Rational';
+es6*/
+
 /// import Functn
 
 /**

@@ -1,3 +1,11 @@
+/*es6
+import {hypot, isEqual, isZero} from 'Functn';
+import {toLaTeX, toMathML, toString, warning} from 'meta';
+import {Complex} from 'Complex';
+import {Line} from 'Line';
+import {Vector} from 'Vector';
+es6*/
+
 /// import Complex, Vector
 
 /**

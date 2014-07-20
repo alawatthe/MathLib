@@ -1,16 +1,21 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Functn from './Functn';
+
+import {abs, coerce, copy, isEqual, isZero, minus, negative, plus, sign, times} from 'Functn';
+import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+import {Complex} from 'Complex';
+import {EvaluationError} from 'EvaluationError';
+import {Integer} from 'Integer';
+
 
 /**
-* MathLib.Rational is the MathLib implementation of rational numbers.
+* Rational is the MathLib implementation of rational numbers.
 *
 * #### Simple use case:
 * ```
 * // Create the rational number 2/3
-* var r = new MathLib.Rational(2, 3);
+* var r = new Rational(2, 3);
 * ```
 *
 * @class
@@ -20,25 +25,25 @@ var Rational = (function () {
     function Rational(numerator, denominator) {
         if (typeof denominator === "undefined") { denominator = 1; }
         this.type = 'rational';
-        if (MathLib.isZero(denominator)) {
-            throw MathLib.EvaluationError('The denominator of a rational number cannot be zero.', {
+        if (isZero(denominator)) {
+            throw EvaluationError('The denominator of a rational number cannot be zero.', {
                 method: 'Rational.constructor'
             });
         }
-        if (MathLib.isNaN(numerator)) {
-            throw MathLib.EvaluationError('The numerator of a rational number cannot be NaN.', {
+        if (isNaN(numerator)) {
+            throw EvaluationError('The numerator of a rational number cannot be NaN.', {
                 method: 'Rational.constructor'
             });
         }
-        if (MathLib.isNaN(denominator)) {
-            throw MathLib.EvaluationError('The denominator of a rational number cannot be NaN.', {
+        if (isNaN(denominator)) {
+            throw EvaluationError('The denominator of a rational number cannot be NaN.', {
                 method: 'Rational.constructor'
             });
         }
 
         if ((typeof denominator === 'number' && denominator < 0) || (denominator.type === 'integer' && denominator.sign === '-')) {
-            numerator = MathLib.negative(numerator);
-            denominator = MathLib.negative(denominator);
+            numerator = negative(numerator);
+            denominator = negative(denominator);
         }
 
         this.numerator = numerator;
@@ -50,7 +55,7 @@ var Rational = (function () {
     * @return {Integer}
     */
     Rational.characteristic = function () {
-        return new MathLib.Integer(0);
+        return new Integer(0);
     };
 
     /**
@@ -102,7 +107,7 @@ var Rational = (function () {
     Rational.prototype.coerceTo = function (type) {
         if (type === 'integer') {
             if (this.denominator === 1) {
-                return new MathLib.Integer(this.numerator);
+                return new Integer(this.numerator);
             }
             // TODO: coercion error
         }
@@ -116,8 +121,8 @@ var Rational = (function () {
         }
 
         if (type === 'complex') {
-            // return new MathLib.Complex(this, new MathLib.Rational(0));
-            return new MathLib.Complex(this, 0);
+            // return new Complex(this, new Rational(0));
+            return new Complex(this, 0);
         }
     };
 
@@ -128,7 +133,7 @@ var Rational = (function () {
     * @return {number}
     */
     Rational.prototype.compare = function (rational) {
-        return MathLib.sign(this.numerator * rational.denominator - this.denominator * rational.numerator);
+        return sign(this.numerator * rational.denominator - this.denominator * rational.numerator);
     };
 
     /**
@@ -137,7 +142,7 @@ var Rational = (function () {
     * @return {Rational}
     */
     Rational.prototype.copy = function () {
-        return new MathLib.Rational(MathLib.copy(this.numerator), MathLib.copy(this.denominator));
+        return new Rational(copy(this.numerator), copy(this.denominator));
     };
 
     /**
@@ -148,9 +153,9 @@ var Rational = (function () {
     */
     Rational.prototype.divide = function (divisor) {
         if (divisor.type === 'rational') {
-            return new MathLib.Rational(MathLib.times(this.numerator, divisor.denominator), MathLib.times(this.denominator, divisor.numerator));
+            return new Rational(times(this.numerator, divisor.denominator), times(this.denominator, divisor.numerator));
         } else if (typeof divisor === 'number') {
-            return new MathLib.Rational(this.numerator, MathLib.times(this.denominator, divisor));
+            return new Rational(this.numerator, times(this.denominator, divisor));
         } else {
             return divisor.inverse().times(this);
         }
@@ -162,8 +167,8 @@ var Rational = (function () {
     * @return {Rational}
     */
     Rational.prototype.inverse = function () {
-        if (!MathLib.isZero(this.numerator)) {
-            return new MathLib.Rational(this.denominator, this.numerator);
+        if (!isZero(this.numerator)) {
+            return new Rational(this.denominator, this.numerator);
         }
     };
 
@@ -175,9 +180,9 @@ var Rational = (function () {
     */
     Rational.prototype.isEqual = function (n) {
         if (n.type !== 'rational') {
-            return MathLib.isEqual.apply(null, MathLib.coerce(this, n));
+            return isEqual.apply(null, coerce(this, n));
         } else {
-            return MathLib.isEqual(MathLib.times(this.numerator, n.denominator), MathLib.times(this.denominator, n.numerator));
+            return isEqual(times(this.numerator, n.denominator), times(this.denominator, n.numerator));
         }
     };
 
@@ -187,7 +192,7 @@ var Rational = (function () {
     * @return {boolean}
     */
     Rational.prototype.isZero = function () {
-        return MathLib.isZero(this.numerator);
+        return isZero(this.numerator);
     };
 
     /**
@@ -198,9 +203,9 @@ var Rational = (function () {
     */
     Rational.prototype.minus = function (subtrahend) {
         if (subtrahend.type !== 'rational') {
-            return MathLib.minus.apply(null, MathLib.coerce(this, subtrahend));
+            return minus.apply(null, coerce(this, subtrahend));
         } else {
-            return new MathLib.Rational(MathLib.minus(MathLib.times(this.numerator, subtrahend.denominator), MathLib.times(this.denominator, subtrahend.numerator)), MathLib.times(this.denominator, subtrahend.denominator));
+            return new Rational(minus(times(this.numerator, subtrahend.denominator), times(this.denominator, subtrahend.numerator)), times(this.denominator, subtrahend.denominator));
         }
     };
 
@@ -210,7 +215,7 @@ var Rational = (function () {
     * @return {Rational}
     */
     Rational.prototype.negative = function () {
-        return new MathLib.Rational(-this.numerator, this.denominator);
+        return new Rational(-this.numerator, this.denominator);
     };
 
     /**
@@ -221,9 +226,9 @@ var Rational = (function () {
     */
     Rational.prototype.plus = function (summand) {
         if (summand.type !== 'rational') {
-            return MathLib.plus.apply(null, MathLib.coerce(this, summand));
+            return plus.apply(null, coerce(this, summand));
         } else {
-            return new MathLib.Rational(MathLib.plus(MathLib.times(this.denominator, summand.numerator), MathLib.times(this.numerator, summand.denominator)), MathLib.times(this.denominator, summand.denominator));
+            return new Rational(plus(times(this.denominator, summand.numerator), times(this.numerator, summand.denominator)), times(this.denominator, summand.denominator));
         }
     };
 
@@ -233,8 +238,8 @@ var Rational = (function () {
     * @return {Rational}
     */
     Rational.prototype.reduce = function () {
-        var gcd = MathLib.sign(this.denominator) * MathLib.gcd([this.numerator, this.denominator]);
-        return new MathLib.Rational(this.numerator / gcd, this.denominator / gcd);
+        var gcd = sign(this.denominator) * gcd([this.numerator, this.denominator]);
+        return new Rational(this.numerator / gcd, this.denominator / gcd);
     };
 
     /**
@@ -245,9 +250,9 @@ var Rational = (function () {
     */
     Rational.prototype.times = function (factor) {
         if (factor.type === 'rational') {
-            return new MathLib.Rational(MathLib.times(this.numerator, factor.numerator), MathLib.times(this.denominator, factor.denominator));
+            return new Rational(times(this.numerator, factor.numerator), times(this.denominator, factor.denominator));
         } else if (typeof factor === 'number') {
-            return new MathLib.Rational(MathLib.times(this.numerator, factor), this.denominator);
+            return new Rational(times(this.numerator, factor), this.denominator);
         } else {
             return factor.times(this);
         }
@@ -264,10 +269,10 @@ var Rational = (function () {
         var base;
 
         if (options.strict) {
-            return '<apply><csymbol cd="nums1">rational</csymbol>' + MathLib.toContentMathML(this.numerator, options) + MathLib.toContentMathML(this.denominator, options) + '</apply>';
+            return '<apply><csymbol cd="nums1">rational</csymbol>' + toContentMathML(this.numerator, options) + toContentMathML(this.denominator, options) + '</apply>';
         } else {
             base = (options.base || 10);
-            return '<cn type="rational"' + ((base !== 10) ? ' base="' + base + '"' : '') + '>' + MathLib.toString(this.numerator, { base: base }) + '<sep/>' + MathLib.toString(this.denominator, { base: base }) + '</cn>';
+            return '<cn type="rational"' + ((base !== 10) ? ' base="' + base + '"' : '') + '>' + toString(this.numerator, { base: base }) + '<sep/>' + toString(this.denominator, { base: base }) + '</cn>';
         }
     };
 
@@ -288,13 +293,13 @@ var Rational = (function () {
         }
 
         if (options.sign) {
-            str = MathLib.toString(this.numerator, { sign: true }).slice(0, 1);
-            numerator = MathLib.toLaTeX(MathLib.abs(this.numerator), passOptions);
+            str = toString(this.numerator, { sign: true }).slice(0, 1);
+            numerator = toLaTeX(abs(this.numerator), passOptions);
         } else {
-            numerator = MathLib.toLaTeX(this.numerator, passOptions);
+            numerator = toLaTeX(this.numerator, passOptions);
         }
 
-        return str + '\\frac{' + numerator + '}{' + MathLib.toLaTeX(this.denominator, passOptions) + '}';
+        return str + '\\frac{' + numerator + '}{' + toLaTeX(this.denominator, passOptions) + '}';
     };
 
     /**
@@ -314,13 +319,13 @@ var Rational = (function () {
         }
 
         if (options.sign) {
-            str = '<mo>' + MathLib.toString(this.numerator, { sign: true }).slice(0, 1) + '</mo>';
-            numerator = MathLib.toMathML(MathLib.abs(this.numerator), passOptions);
+            str = '<mo>' + toString(this.numerator, { sign: true }).slice(0, 1) + '</mo>';
+            numerator = toMathML(abs(this.numerator), passOptions);
         } else {
-            numerator = MathLib.toMathML(this.numerator, passOptions);
+            numerator = toMathML(this.numerator, passOptions);
         }
 
-        return str + '<mfrac>' + numerator + MathLib.toMathML(this.denominator, passOptions) + '</mfrac>';
+        return str + '<mfrac>' + numerator + toMathML(this.denominator, passOptions) + '</mfrac>';
     };
 
     /**
@@ -339,9 +344,9 @@ var Rational = (function () {
             }
         }
 
-        return MathLib.toString(this.numerator, options) + '/' + MathLib.toString(this.denominator, passOptions);
+        return toString(this.numerator, options) + '/' + toString(this.denominator, passOptions);
     };
     return Rational;
 })();
-export default = Rational;
+export default Rational;
 

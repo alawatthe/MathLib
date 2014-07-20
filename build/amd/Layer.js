@@ -1,6 +1,11 @@
 
     'use strict';
 
+    /*es6
+    import {colorConvert} from 'meta';
+    import {Canvas} from 'Canvas';
+    import {SVG} from 'SVG';
+    es6*/
     define(['meta', 'Screen2D'], function(MathLib) {
     /**
     * Layers for two dimensional plotting

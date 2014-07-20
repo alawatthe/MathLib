@@ -1,6 +1,10 @@
 
     'use strict';
 
+    /*es6
+    import {abs, hypot, isZero} from 'Functn';
+    import {colorConvert, extendObject} from 'meta';
+    es6*/
     var MathLib = require('./meta.js'),
 		Screen2D = require('./Screen2D');
 

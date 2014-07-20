@@ -1,9 +1,12 @@
 
-'use strict';
+/* jshint esnext:true */
 
-import MathLib from './meta.js';
-import Functn from './Functn';
-import Matrix from './Matrix';
+
+import {cbrt, isZero, sec, tan, warning} from 'Functn';
+import {Line} from 'Line';
+import {Matrix} from 'Matrix';
+import {Point} from 'Point';
+
 
 /**
 * The conic implementation of MathLib makes calculations with conics possible.
@@ -15,7 +18,7 @@ var Conic = (function () {
     function Conic(primal, dual) {
         this.type = 'conic';
         if (primal.type !== 'matrix') {
-            primal = new MathLib.Matrix(primal);
+            primal = new Matrix(primal);
         }
         this.primal = primal;
 
@@ -52,7 +55,7 @@ var Conic = (function () {
     * @return {Conic}
     */
     Conic.throughFivePoints = function (p, q, r, s, t) {
-        var conic = new MathLib.Conic(new MathLib.Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]));
+        var conic = new Conic(new Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]));
 
         Object.defineProperties(conic, {
             'primal': {
@@ -151,10 +154,10 @@ var Conic = (function () {
 
                     screen.path([
                         function (t) {
-                            return cx + cos * MathLib.sec(t) * A - sin * MathLib.tan(t) * C * sgn(t);
+                            return cx + cos * sec(t) * A - sin * tan(t) * C * sgn(t);
                         },
                         function (t) {
-                            return cy + sin * MathLib.sec(t) * A + cos * MathLib.tan(t) * C * sgn(t);
+                            return cy + sin * sec(t) * A + cos * tan(t) * C * sgn(t);
                         }
                     ], options, redraw);
                 }
@@ -299,17 +302,17 @@ var Conic = (function () {
 
         if (x.type === 'line') {
             var setter = function () {
-                MathLib.warning({
+                warning({
                     message: 'Trying to change the coordinates of a completely dependent point.',
                     method: 'Conic#meet'
                 });
             }, recalculate = function () {
-                Ml = new MathLib.Matrix([[0, x[2], -x[1]], [-x[2], 0, x[0]], [x[1], -x[0], 0]]);
+                Ml = new Matrix([[0, x[2], -x[1]], [-x[2], 0, x[0]], [x[1], -x[0], 0]]);
                 B = Ml.transpose().times(A).times(Ml);
 
-                if (!MathLib.isZero(x[0])) {
+                if (!isZero(x[0])) {
                     alpha = Math.sqrt(B[2][1] * B[1][2] - B[1][1] * B[2][2]) / x[0];
-                } else if (!MathLib.isZero(x[1])) {
+                } else if (!isZero(x[1])) {
                     alpha = Math.sqrt(B[0][2] * B[2][0] - B[2][2] * B[0][0]) / x[1];
                 } else {
                     alpha = Math.sqrt(B[1][0] * B[0][1] - B[0][0] * B[1][1]) / x[2];
@@ -329,7 +332,7 @@ var Conic = (function () {
 
             recalculate();
 
-            p1 = new MathLib.Point(C[i]);
+            p1 = new Point(C[i]);
             Object.defineProperties(p1, {
                 '0': {
                     get: function () {
@@ -357,7 +360,7 @@ var Conic = (function () {
                 }
             });
 
-            p2 = new MathLib.Point([C[0][j], C[1][j], C[2][j]]);
+            p2 = new Point([C[0][j], C[1][j], C[2][j]]);
             Object.defineProperties(p2, {
                 '0': {
                     get: function () {
@@ -389,14 +392,14 @@ var Conic = (function () {
         } else if (x.type === 'conic') {
             B = x.primal;
             a = A.determinant();
-            b = (new MathLib.Matrix([A[0], A[1], B[2]])).plus(new MathLib.Matrix([A[0], B[1], A[2]])).plus(new MathLib.Matrix([B[0], A[1], A[2]])).determinant();
-            c = (new MathLib.Matrix([A[0], B[1], B[2]])).plus(new MathLib.Matrix([B[0], A[1], B[2]])).plus(new MathLib.Matrix([B[0], B[1], A[2]])).determinant();
+            b = (new Matrix([A[0], A[1], B[2]])).plus(new Matrix([A[0], B[1], A[2]])).plus(new Matrix([B[0], A[1], A[2]])).determinant();
+            c = (new Matrix([A[0], B[1], B[2]])).plus(new Matrix([B[0], A[1], B[2]])).plus(new Matrix([B[0], B[1], A[2]])).determinant();
             d = B.determinant();
             Delta0 = b * b - 3 * a * c;
             Delta1 = 2 * b * b - 9 * a * b * c + 27 * a * a * d;
-            C = MathLib.cbrt((Delta1 + Math.sqrt(Math.pow(Delta1, 2) - 4 * Math.pow(Delta0, 3))) / 2);
+            C = cbrt((Delta1 + Math.sqrt(Math.pow(Delta1, 2) - 4 * Math.pow(Delta0, 3))) / 2);
             lambda = -(b + C + Delta0 / C) / (3 * a);
-            degenerated = new MathLib.Conic(B.times(lambda).plus(A));
+            degenerated = new Conic(B.times(lambda).plus(A));
             lines = degenerated.splitDegenerated();
 
             return this.meet(lines[0]).concat(this.meet(lines[1]));
@@ -429,7 +432,7 @@ var Conic = (function () {
             f = -1;
         }
 
-        return new MathLib.Conic(new MathLib.Matrix([[a, 0, d / 2], [0, c, e / 2], [d / 2, e / 2, f]]));
+        return new Conic(new Matrix([[a, 0, d / 2], [0, c, e / 2], [d / 2, e / 2, f]]));
     };
 
     /**
@@ -441,10 +444,10 @@ var Conic = (function () {
         var object, m, c = this;
 
         if (x.type === 'line') {
-            object = new MathLib.Point([0, 0, 0]);
+            object = new Point([0, 0, 0]);
             m = 'dual';
         } else if (x.type === 'point') {
-            object = new MathLib.Line([0, 0, 0]);
+            object = new Line([0, 0, 0]);
             m = 'primal';
         }
 
@@ -454,7 +457,7 @@ var Conic = (function () {
                     return c[m][0][0] * x[0] + c[m][0][1] * x[1] + c[m][0][2] * x[2];
                 },
                 set: function () {
-                    MathLib.warning({
+                    warning({
                         message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.',
                         method: 'Conic#polarity'
                     });
@@ -466,7 +469,7 @@ var Conic = (function () {
                     return c[m][1][0] * x[0] + c[m][1][1] * x[1] + c[m][1][2] * x[2];
                 },
                 set: function () {
-                    MathLib.warning({
+                    warning({
                         message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.',
                         method: 'Conic#polarity'
                     });
@@ -478,7 +481,7 @@ var Conic = (function () {
                     return c[m][2][0] * x[0] + c[m][2][1] * x[1] + c[m][2][2] * x[2];
                 },
                 set: function () {
-                    MathLib.warning({
+                    warning({
                         message: 'Trying to change the coordinates of a completely dependent ' + object.type + '.',
                         method: 'Conic#polarity'
                     });
@@ -524,17 +527,17 @@ var Conic = (function () {
             p0 = B[0][n] / Math.sqrt(B[n][n]);
             p1 = B[1][n] / Math.sqrt(B[n][n]);
             p2 = B[2][n] / Math.sqrt(B[n][n]);
-            C = this.primal.plus(new MathLib.Matrix([[0, p2, -p1], [-p2, 0, p0], [p1, -p0, 0]]));
+            C = this.primal.plus(new Matrix([[0, p2, -p1], [-p2, 0, p0], [p1, -p0, 0]]));
 
             nonZeroSearch(C);
 
-            return [new MathLib.Line(C[i]), new MathLib.Line([C[0][j], C[1][j], C[2][j]])];
+            return [new Line(C[i]), new Line([C[0][j], C[1][j], C[2][j]])];
         } else if (rank === 1) {
             nonZeroSearch(this.primal);
-            return [new MathLib.Line(this.primal[i]), new MathLib.Line(this.primal[i])];
+            return [new Line(this.primal[i]), new Line(this.primal[i])];
         }
     };
     return Conic;
 })();
-export default = Conic;
+export default Conic;
 
