@@ -30,7 +30,8 @@ module.exports = function (grunt) {
 	// require('time-grunt')(grunt);
 
 	require('jit-grunt')(grunt, {
-		jscs: 'grunt-jscs-checker'
+		jscs: 'grunt-jscs-checker',
+		'saucelabs-qunit': 'grunt-saucelabs'
 	});
 
 	grunt.initConfig({
