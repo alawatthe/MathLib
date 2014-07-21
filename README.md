@@ -94,5 +94,5 @@ New functionality should always be added with proper testing and documentation.
 
 
 ## License
-Copyright (c) 2013 Alexander Zeilmann  
+Copyright (c) 2012-2014 Alexander Zeilmann  
 Licensed under the MIT license.
