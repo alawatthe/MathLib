@@ -405,7 +405,7 @@
             }
             if (this.subtype === 'variable') {
                 if (this.value in MathLib.Expression.variables) {
-                    return MathLib.Expression.variables[this.value];
+                    return MathLib.evaluate(MathLib.Expression.variables[this.value]);
                 }
                 return this;
             }

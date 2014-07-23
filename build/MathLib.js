@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-20
+ * build date: 2014-07-23
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -893,7 +893,7 @@ var MathLib = {};
             }
             if (this.subtype === 'variable') {
                 if (this.value in MathLib.Expression.variables) {
-                    return MathLib.Expression.variables[this.value];
+                    return MathLib.evaluate(MathLib.Expression.variables[this.value]);
                 }
                 return this;
             }

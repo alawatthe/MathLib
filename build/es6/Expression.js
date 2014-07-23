@@ -405,7 +405,7 @@ var Expression = (function () {
         }
         if (this.subtype === 'variable') {
             if (this.value in Expression.variables) {
-                return Expression.variables[this.value];
+                return evaluate(Expression.variables[this.value]);
             }
             return this;
         }

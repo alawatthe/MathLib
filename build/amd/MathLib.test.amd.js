@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-20
+ * build date: 2014-07-23
  */
 
 require(['../build/amd/MathLib.js'], function(MathLib) {
@@ -2393,6 +2393,11 @@ test('.compare()', 3, function () {
 	equal(e1.compare(e3), 1, '.compare()');
 	equal(e1.compare(e4), -1,  '.compare()');
 });
+test('.evaluate()', 1, function () {
+	MathLib.Expression.parse('a := 3').evaluate();
+	equal((new MathLib.Expression('a+2')).evaluate(), 5);
+});
+
 test('.toContentMathML', 10, function () {
 	equal(MathLib.Expression.parse('123.456E-7').toContentMathML(), '<cn>123.456E-7</cn>', '("123.456E-7").toContentMathML()');
 	equal(MathLib.Expression.parse('1+2').toContentMathML(), '<apply><csymbol ' +
