@@ -11,6 +11,6 @@ plus(v : Vector) : Vector {
 		}));
 	}
 	else {
-		throw MathLib.EvaluationError('Vector sizes not matching', {method: 'Vector#plus'});
+		throw new MathLib.EvaluationError('Vector sizes not matching', {method: 'Vector#plus'});
 	}
 }

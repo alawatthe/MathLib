@@ -1,7 +1,7 @@
 /**
  * Calculates the difference of two vectors.
  *
- * @param {Vector} v The vector to be subtracted.  
+ * @param {Vector} v The vector to be subtracted.
  * @return {Vector}
  */
 minus(v : Vector) : Vector {
@@ -9,6 +9,6 @@ minus(v : Vector) : Vector {
 		return this.plus(v.negative());
 	}
 	else {
-		throw MathLib.EvaluationError('Vector sizes not matching', {method: 'Vector#minus'});
+		throw new MathLib.EvaluationError('Vector sizes not matching', {method: 'Vector#minus'});
 	}
 }

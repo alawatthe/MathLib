@@ -11,11 +11,13 @@
 
 var MathLib = require('./meta.js'),
 		Functn = require('./Functn.js');
-		
+
 for (var prop in Functn) {
 	MathLib[prop] = Functn[prop];
 }
 
+MathLib.CoercionError = require('./CoercionError.js');
+MathLib.EvaluationError = require('./EvaluationError.js');
 MathLib.Expression = require('./Expression.js');
 MathLib.Screen = require('./Screen.js');
 MathLib.Layer = require('./Layer.js');

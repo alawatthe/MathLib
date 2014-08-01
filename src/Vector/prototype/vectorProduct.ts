@@ -1,7 +1,7 @@
 /**
  * Calculates the vector product of two vectors.
  *
- * @param {Vector} v The second vector to calculate the vector product with. 
+ * @param {Vector} v The second vector to calculate the vector product with.
  * @return {Vector}
  */
 vectorProduct(v : Vector) : Vector {
@@ -14,6 +14,6 @@ vectorProduct(v : Vector) : Vector {
 		]);
 	}
 	else {
-		throw MathLib.EvaluationError('Vectors are not three-dimensional', {method: 'Vector.prototype.vectorProduct'});
+		throw new MathLib.EvaluationError('Vectors are not three-dimensional', {method: 'Vector.prototype.vectorProduct'});
 	}
 }

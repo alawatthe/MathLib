@@ -8,5 +8,5 @@ test('.determinant()', 4, function () {
 	equal(n.determinant(), 42, 'Determinant of 1x1 matrix');
 	throws(function () {
 		p.determinant();
-	}, 'Determinant of 2x3 matrix should be undefined');
+	}, /Determinant of non square matrix/, 'Calculating the determinant of a non square matrix should throw an error.');
 });

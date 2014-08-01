@@ -2,6 +2,7 @@
 import {abs, coerce, copy, isEqual, isZero, minus, negative, plus, sign, times} from 'Functn';
 import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
 import {Complex} from 'Complex';
+import {CoercionError} from 'CoercionError';
 import {EvaluationError} from 'EvaluationError';
 import {Integer} from 'Integer';
 es6*/
@@ -29,17 +30,17 @@ export class Rational implements FieldElement, Printable {
 
 	constructor (numerator, denominator = (<any>1)) {
 		if (MathLib.isZero(denominator)) {
-			throw MathLib.EvaluationError('The denominator of a rational number cannot be zero.', {
+			throw new MathLib.EvaluationError('The denominator of a rational number cannot be zero.', {
 				method: 'Rational.constructor'
 			});
 		}
 		if (MathLib.isNaN(numerator)) {
-			throw MathLib.EvaluationError('The numerator of a rational number cannot be NaN.', {
+			throw new MathLib.EvaluationError('The numerator of a rational number cannot be NaN.', {
 				method: 'Rational.constructor'
 			});
 		}
 		if (MathLib.isNaN(denominator)) {
-			throw MathLib.EvaluationError('The denominator of a rational number cannot be NaN.', {
+			throw new MathLib.EvaluationError('The denominator of a rational number cannot be NaN.', {
 				method: 'Rational.constructor'
 			});
 		}

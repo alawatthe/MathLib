@@ -206,7 +206,7 @@ var Matrix = (function () {
         var LU, determinant;
 
         if (!this.isSquare()) {
-            throw EvaluationError('Determinant of non square matrix', {
+            throw new EvaluationError('Determinant of non square matrix', {
                 method: 'Matrix.prototype.determinant'
             });
         }

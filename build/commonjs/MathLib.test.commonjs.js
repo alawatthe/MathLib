@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-23
+ * build date: 2014-08-01
  */
 
 var MathLib = require('./MathLib.js'),
@@ -1136,6 +1136,29 @@ test('.artanh()', 28, function () {
 	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).artanh(), new MathLib.Complex(0.17328679513998632735, 1.17809724509617246442)));
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).artanh(), new MathLib.Complex(-0.1175009073114338884, 1.4099210495965755225)));
 });
+test('.prototype.coerceTo()', 8, function () {
+	var c1 = new MathLib.Complex(3, 0),
+			c2 = new MathLib.Complex(3, 2);
+
+	ok(MathLib.isEqual(c1.coerceTo('integer'), new MathLib.Integer(3)), 'integer');
+	ok(MathLib.isEqual(c1.coerceTo('rational'), new MathLib.Rational(3, 1)), 'rational');
+	ok(MathLib.isEqual(c1.coerceTo('complex'), new MathLib.Complex(3, 0)), 'complex');
+	ok(MathLib.isEqual(c1.coerceTo('number'), 3), 'number');
+
+	throws(function () {
+		c2.coerceTo('integer');
+	}, /Cannot coerce the complex number to an integer, since the imaginary part is not zero./, 'integer');
+	throws(function () {
+		c2.coerceTo('rational');
+	}, /Cannot coerce the complex number to a rational number, since the imaginary part is not zero./, 'rational');
+	throws(function () {
+		c2.coerceTo('number');
+	}, /Cannot coerce the complex number to a number, since the imaginary part is not zero./, 'number');
+	throws(function () {
+		c2.coerceTo('notImplemented');
+	}, /Cannot coerce the complex number to "notImplemented"./, 'notImplemented');
+});
+
 test('.compare()', 9, function () {
 	var c = new MathLib.Complex(3, 2),
 			d = new MathLib.Complex(1, 1),
@@ -4241,7 +4264,7 @@ test('prototype.abs()', 5, function () {
 test('.prototype.ceil()', 1, function () {
 	ok((new MathLib.Integer('1234')).ceil().isEqual(new MathLib.Integer('1234')));
 });
-test('.prototype.coerceTo()', 11, function () {
+test('.prototype.coerceTo()', 12, function () {
 	// Integer
 	ok(MathLib.isEqual((new MathLib.Integer('1234')).coerceTo('integer'), new MathLib.Integer('1234')));
 
@@ -4260,7 +4283,12 @@ test('.prototype.coerceTo()', 11, function () {
 	ok(MathLib.isEqual((new MathLib.Integer('0')).coerceTo('complex'), new MathLib.Complex(0)));
 	ok(MathLib.isEqual((new MathLib.Integer('+1234')).coerceTo('complex'), new MathLib.Complex(1234)));
 	ok(MathLib.isEqual((new MathLib.Integer('-1234')).coerceTo('complex'), new MathLib.Complex(-1234)));
+
+	throws(function () {
+		(new MathLib.Integer(1)).coerceTo('notImplemented');
+	}, /Cannot coerce the integer to "notImplemented"./, 'notImplemented');
 });
+
 test('.prototype.compare()', 15, function () {
 	equal((new MathLib.Integer('0')).compare(new MathLib.Integer('-0')), 0);
 
@@ -4833,7 +4861,7 @@ test('.determinant()', 4, function () {
 	equal(n.determinant(), 42, 'Determinant of 1x1 matrix');
 	throws(function () {
 		p.determinant();
-	}, 'Determinant of 2x3 matrix should be undefined');
+	}, /Determinant of non square matrix/, 'Calculating the determinant of a non square matrix should throw an error.');
 });
 
 test('.every()', 2, function () {
@@ -5611,13 +5639,13 @@ test('init', 7, function () {
 	equal(p.denominator, 1, 'Testing the denominator');
 	throws(function () {
 		new MathLib.Rational(2, 0);
-	}, 'Setting the denominator to zero should throw an error.');
+	}, /The denominator of a rational number cannot be zero./, 'Setting the denominator to zero should throw an error.');
 	throws(function () {
 		new MathLib.Rational(NaN, 2);
-	}, 'Setting the numerator to NaN should throw an error.');
+	}, /The numerator of a rational number cannot be NaN./, 'Setting the numerator to NaN should throw an error.');
 	throws(function () {
 		new MathLib.Rational(2, NaN);
-	}, 'Setting the denominator to NaN should throw an error.');
+	}, /The denominator of a rational number cannot be NaN./, 'Setting the denominator to NaN should throw an error.');
 });
 
 
@@ -5651,13 +5679,23 @@ test('.toMathML()', 1, function () {
 test('.toString()', 1, function () {
 	equal(MathLib.Rational.toString(), 'Rational Field ℚ');
 });
-test('.prototype.coerceTo()', 2, function () {
-	var r1 = new MathLib.Rational(3, 1);
+test('.prototype.coerceTo()', 5, function () {
+	var r1 = new MathLib.Rational(3, 1),
+			r2 = new MathLib.Rational(3, 2);
 
 	ok(MathLib.isEqual(r1.coerceTo('integer'), new MathLib.Integer(3)), 'integer');
 	ok(MathLib.isEqual(r1.coerceTo('rational'), new MathLib.Rational(3, 1)), 'rational');
 	// ok(MathLib.isEqual(r1.coerceTo('complex'), new MathLib.Complex(new MathLib.Rational(3, 1), 0)), 'complex');
+	ok(MathLib.isEqual(r1.coerceTo('number'), 3), 'number');
+
+	throws(function () {
+		r2.coerceTo('integer');
+	}, /Cannot coerce the rational number to an integer, since the denominator is not 1/, 'integer');
+	throws(function () {
+		r2.coerceTo('notImplemented');
+	}, /Cannot coerce the rational number to "notImplemented"./, 'notImplemented');
 });
+
 test('.prototype.compare()', 3, function () {
 	var r1 = new MathLib.Rational(3, 2),
 			r2 = new MathLib.Rational(6, 4),
@@ -6174,7 +6212,7 @@ test('.minus()', 2, function () {
 	equal(v.minus(w).isEqual(new MathLib.Vector([2, -4, -5])), true, '.minus()');
 	throws(function () {
 		v.minus(u);
-	}, '.minus()');
+	}, /Vector sizes not matching/, '.minus()');
 });
 
 test('.neagtive()', 1, function () {
@@ -6205,7 +6243,7 @@ test('.plus()', 2, function () {
 	equal(v.plus(w).isEqual(new MathLib.Vector([4, 6, 13])), true, '.plus()');
 	throws(function () {
 		v.plus(u);
-	}, '.plus()');
+	}, /Vector sizes not matching/, '.plus()');
 });
 
 test('.reduce()', 1, function () {
@@ -6225,10 +6263,10 @@ test('.scalarProduct()', 3, function () {
 	equal(v.scalarProduct(w), 44, '.scalarProduct()');
 	throws(function () {
 		u.scalarProduct(w);
-	}, '.scalarProduct()');
+	}, /Vector sizes not matching/, '.scalarProduct()');
 	throws(function () {
 		v.scalarProduct(u);
-	}, '.scalarProduct()');
+	}, /Vector sizes not matching/, '.scalarProduct()');
 });
 
 test('.slice()', 2, function () {
@@ -6285,8 +6323,8 @@ test('.vectorProduct()', 3, function () {
 	equal(v.vectorProduct(w).isEqual(res), true, '.vectorProduct()');
 	throws(function () {
 		u.vectorProduct(w);
-	}, '.vectorProduct()');
+	}, /Vectors are not three-dimensional/, '.vectorProduct()');
 	throws(function () {
 		v.vectorProduct(u);
-	}, '.vectorProduct()');
+	}, /Vectors are not three-dimensional/, '.vectorProduct()');
 });

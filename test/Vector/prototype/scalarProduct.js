@@ -6,8 +6,8 @@ test('.scalarProduct()', 3, function () {
 	equal(v.scalarProduct(w), 44, '.scalarProduct()');
 	throws(function () {
 		u.scalarProduct(w);
-	}, '.scalarProduct()');
+	}, /Vector sizes not matching/, '.scalarProduct()');
 	throws(function () {
 		v.scalarProduct(u);
-	}, '.scalarProduct()');
+	}, /Vector sizes not matching/, '.scalarProduct()');
 });

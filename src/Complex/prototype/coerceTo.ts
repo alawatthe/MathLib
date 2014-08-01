@@ -10,12 +10,29 @@ coerceTo(type : string) {
 		return this.copy();
 	}
 
-	if (this.im === 0) {
+	if (MathLib.isZero(this.im)) {
 		return MathLib.coerceTo(this.re, type);
 	}
-	/*
 	else {
-		// TODO: coercion error
+		if (type === 'integer') {
+			throw new MathLib.CoercionError('Cannot coerce the complex number to an integer, since the imaginary part is not zero.', {
+				method: 'Complex.prototype.coerceTo'
+			});
+		}
+		else if (type === 'rational') {
+			throw new MathLib.CoercionError('Cannot coerce the complex number to a rational number, since the imaginary part is not zero.', {
+				method: 'Complex.prototype.coerceTo'
+			});
+		}
+		else if (type === 'number') {
+			throw new MathLib.CoercionError('Cannot coerce the complex number to a number, since the imaginary part is not zero.', {
+				method: 'Complex.prototype.coerceTo'
+			});
+		}
+		else {
+			throw new MathLib.CoercionError('Cannot coerce the complex number to "' + type + '".', {
+				method: 'Complex.prototype.coerceTo'
+			});
+		}
 	}
-	*/
 }

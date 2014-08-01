@@ -4,6 +4,7 @@
 
 import {abs, arccos, arcosh, coerce, coerceTo, copy, cos, cosh, divide, exp, floor, hypot, inverse, isEqual, isNegZero, isPosZero, isZero, ln, minus, negative, plus, pow, sign, sin, sinh, times, type} from 'Functn';
 import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+import {CoercionError} from 'CoercionError';
 import {Integer} from 'Integer';
 import {Point} from 'Point';
 
@@ -335,14 +336,27 @@ var Complex = (function () {
             return this.copy();
         }
 
-        if (this.im === 0) {
+        if (isZero(this.im)) {
             return coerceTo(this.re, type);
+        } else {
+            if (type === 'integer') {
+                throw new CoercionError('Cannot coerce the complex number to an integer, since the imaginary part is not zero.', {
+                    method: 'Complex.prototype.coerceTo'
+                });
+            } else if (type === 'rational') {
+                throw new CoercionError('Cannot coerce the complex number to a rational number, since the imaginary part is not zero.', {
+                    method: 'Complex.prototype.coerceTo'
+                });
+            } else if (type === 'number') {
+                throw new CoercionError('Cannot coerce the complex number to a number, since the imaginary part is not zero.', {
+                    method: 'Complex.prototype.coerceTo'
+                });
+            } else {
+                throw new CoercionError('Cannot coerce the complex number to "' + type + '".', {
+                    method: 'Complex.prototype.coerceTo'
+                });
+            }
         }
-        /*
-        else {
-        // TODO: coercion error
-        }
-        */
     };
 
     /**

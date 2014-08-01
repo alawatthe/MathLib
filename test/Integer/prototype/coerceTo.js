@@ -1,4 +1,4 @@
-test('.prototype.coerceTo()', 11, function () {
+test('.prototype.coerceTo()', 12, function () {
 	// Integer
 	ok(MathLib.isEqual((new MathLib.Integer('1234')).coerceTo('integer'), new MathLib.Integer('1234')));
 
@@ -17,4 +17,8 @@ test('.prototype.coerceTo()', 11, function () {
 	ok(MathLib.isEqual((new MathLib.Integer('0')).coerceTo('complex'), new MathLib.Complex(0)));
 	ok(MathLib.isEqual((new MathLib.Integer('+1234')).coerceTo('complex'), new MathLib.Complex(1234)));
 	ok(MathLib.isEqual((new MathLib.Integer('-1234')).coerceTo('complex'), new MathLib.Complex(-1234)));
+
+	throws(function () {
+		(new MathLib.Integer(1)).coerceTo('notImplemented');
+	}, /Cannot coerce the integer to "notImplemented"./, 'notImplemented');
 });

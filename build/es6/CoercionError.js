@@ -3,12 +3,12 @@
 
 
 /**
-* EvaluationError is thrown if it is not possible to perform the Evaluation.
-.*
+* CoercionError is thrown if it is not possible to perform the coercion.
+*
 */
-var EvaluationError = function (message, options) {
+var CoercionError = function (message, options) {
     var tmp = Error.apply(this, arguments);
-    tmp.name = this.name = 'EvaluationError';
+    tmp.name = this.name = 'CoercionError';
 
     this.stack = tmp.stack;
     this.message = tmp.message;
@@ -18,5 +18,5 @@ var EvaluationError = function (message, options) {
 var CustomError = function () {
 };
 CustomError.prototype = Error.prototype;
-EvaluationError.prototype = new CustomError();
+CoercionError.prototype = new CustomError();
 

@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-23
+ * build date: 2014-08-01
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -462,27 +462,48 @@ var MathLib = {};
 (function (MathLib) {
     'use strict';
 
+    /// no import
     /**
-    * MathLib.EvaluationError is thrown if it is not possible to perform the Evaluation.
+    * MathLib.CoercionError is thrown if it is not possible to perform the coercion.
     *
     */
-    var error = function (message, options) {
+    MathLib.CoercionError = function (message, options) {
+        var tmp = Error.apply(this, arguments);
+        tmp.name = this.name = 'CoercionError';
+
+        this.stack = tmp.stack;
+        this.message = tmp.message;
+        this.method = options.method;
+    };
+
+    var CustomError = function () {
+    };
+    CustomError.prototype = Error.prototype;
+    MathLib.CoercionError.prototype = new CustomError();
+})(MathLib);
+
+
+(function (MathLib) {
+    'use strict';
+
+    /// no import
+    /**
+    * MathLib.EvaluationError is thrown if it is not possible to perform the Evaluation.
+    .*
+    */
+    MathLib.EvaluationError = function (message, options) {
         var tmp = Error.apply(this, arguments);
         tmp.name = this.name = 'EvaluationError';
 
         this.stack = tmp.stack;
         this.message = tmp.message;
         this.method = options.method;
-
-        return this;
     };
 
     var CustomError = function () {
     };
     CustomError.prototype = Error.prototype;
-    MathLib.error.prototype = new CustomError();
-
-    MathLib.EvaluationError = error;
+    MathLib.EvaluationError.prototype = new CustomError();
 })(MathLib);
 
 
@@ -6324,7 +6345,7 @@ var MathLib = {};
             if (this.length === v.length) {
                 return this.plus(v.negative());
             } else {
-                throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#minus' });
+                throw new MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#minus' });
             }
         };
 
@@ -6384,7 +6405,7 @@ var MathLib = {};
                     return MathLib.plus(x, v[i]);
                 }));
             } else {
-                throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#plus' });
+                throw new MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#plus' });
             }
         };
 
@@ -6413,7 +6434,7 @@ var MathLib = {};
                     return MathLib.plus(old, MathLib.times(w[i], v[i]));
                 }, 0);
             } else {
-                throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#scalarProduct' });
+                throw new MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#scalarProduct' });
             }
         };
 
@@ -6544,7 +6565,7 @@ var MathLib = {};
                     MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0]))
                 ]);
             } else {
-                throw MathLib.EvaluationError('Vectors are not three-dimensional', { method: 'Vector.prototype.vectorProduct' });
+                throw new MathLib.EvaluationError('Vectors are not three-dimensional', { method: 'Vector.prototype.vectorProduct' });
             }
         };
         Vector.areLinearIndependent = function (vectors) {
@@ -6729,6 +6750,7 @@ var MathLib = {};
     /*es6
     import {abs, arccos, arcosh, coerce, coerceTo, copy, cos, cosh, divide, exp, floor, hypot, inverse, isEqual, isNegZero, isPosZero, isZero, ln, minus, negative, plus, pow, sign, sin, sinh, times, type} from 'Functn';
     import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
+    import {CoercionError} from 'CoercionError';
     import {Integer} from 'Integer';
     import {Point} from 'Point';
     es6*/
@@ -7060,14 +7082,27 @@ var MathLib = {};
                 return this.copy();
             }
 
-            if (this.im === 0) {
+            if (MathLib.isZero(this.im)) {
                 return MathLib.coerceTo(this.re, type);
+            } else {
+                if (type === 'integer') {
+                    throw new MathLib.CoercionError('Cannot coerce the complex number to an integer, since the imaginary part is not zero.', {
+                        method: 'Complex.prototype.coerceTo'
+                    });
+                } else if (type === 'rational') {
+                    throw new MathLib.CoercionError('Cannot coerce the complex number to a rational number, since the imaginary part is not zero.', {
+                        method: 'Complex.prototype.coerceTo'
+                    });
+                } else if (type === 'number') {
+                    throw new MathLib.CoercionError('Cannot coerce the complex number to a number, since the imaginary part is not zero.', {
+                        method: 'Complex.prototype.coerceTo'
+                    });
+                } else {
+                    throw new MathLib.CoercionError('Cannot coerce the complex number to "' + type + '".', {
+                        method: 'Complex.prototype.coerceTo'
+                    });
+                }
             }
-            /*
-            else {
-            // TODO: coercion error
-            }
-            */
         };
 
         /**
@@ -7634,10 +7669,11 @@ var MathLib = {};
 
     /*es6
     import {coerce, divide, isEqual, isPosZero, minus, mod, plus, pow, sign, times} from 'Functn';
+    import {CoercionError} from 'CoercionError';
     import {Complex} from 'Complex';
     import {Rational} from 'Rational';
     es6*/
-    /// import Functn
+    /// import Functn, CoercionError
     /**
     * MathLib.Integer is the MathLib implementation of (arbitrary precision) integers.
     *
@@ -7834,13 +7870,11 @@ var MathLib = {};
 
             if (type === 'integer') {
                 return this.copy();
-            }
-
-            if (type === 'rational') {
+            } else if (type === 'rational') {
                 return new MathLib.Rational(this, 1);
-            }
-
-            if (type === 'number') {
+            } else if (type === 'complex') {
+                return new MathLib.Complex(this, 0);
+            } else if (type === 'number') {
                 // TODO: Warn when the number is bigger that 2^53
                 num = this.data.reduce(function (old, cur, i) {
                     return old + cur * Math.pow(1e7, i);
@@ -7851,10 +7885,10 @@ var MathLib = {};
                 }
 
                 return num;
-            }
-
-            if (type === 'complex') {
-                return new MathLib.Complex(this, 0);
+            } else {
+                throw new MathLib.CoercionError('Cannot coerce the integer to "' + type + '".', {
+                    method: 'Integer.prototype.coerceTo'
+                });
             }
         };
 
@@ -8985,7 +9019,7 @@ var MathLib = {};
             var LU, determinant;
 
             if (!this.isSquare()) {
-                throw MathLib.EvaluationError('Determinant of non square matrix', {
+                throw new MathLib.EvaluationError('Determinant of non square matrix', {
                     method: 'Matrix.prototype.determinant'
                 });
             }
@@ -11705,6 +11739,7 @@ var MathLib = {};
     import {abs, coerce, copy, isEqual, isZero, minus, negative, plus, sign, times} from 'Functn';
     import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
     import {Complex} from 'Complex';
+    import {CoercionError} from 'CoercionError';
     import {EvaluationError} from 'EvaluationError';
     import {Integer} from 'Integer';
     es6*/
@@ -11726,17 +11761,17 @@ var MathLib = {};
             if (typeof denominator === "undefined") { denominator = 1; }
             this.type = 'rational';
             if (MathLib.isZero(denominator)) {
-                throw MathLib.EvaluationError('The denominator of a rational number cannot be zero.', {
+                throw new MathLib.EvaluationError('The denominator of a rational number cannot be zero.', {
                     method: 'Rational.constructor'
                 });
             }
             if (MathLib.isNaN(numerator)) {
-                throw MathLib.EvaluationError('The numerator of a rational number cannot be NaN.', {
+                throw new MathLib.EvaluationError('The numerator of a rational number cannot be NaN.', {
                     method: 'Rational.constructor'
                 });
             }
             if (MathLib.isNaN(denominator)) {
-                throw MathLib.EvaluationError('The denominator of a rational number cannot be NaN.', {
+                throw new MathLib.EvaluationError('The denominator of a rational number cannot be NaN.', {
                     method: 'Rational.constructor'
                 });
             }
@@ -11799,7 +11834,7 @@ var MathLib = {};
         };
 
         /**
-        * Coerces the rational to some other data type
+        * Coerces the rational number to some other data type
         *
         * @param {string} type The type to coerce the rational number into
         * @return {Integer|Rational|number|Complex}
@@ -11809,20 +11844,20 @@ var MathLib = {};
                 if (this.denominator === 1) {
                     return new MathLib.Integer(this.numerator);
                 }
-                // TODO: coercion error
-            }
-
-            if (type === 'rational') {
+                throw new MathLib.CoercionError('Cannot coerce the rational number to an integer, since the denominator is not 1.', {
+                    method: 'Rational.prototype.coerceTo'
+                });
+            } else if (type === 'rational') {
                 return this.copy();
-            }
-
-            if (type === 'number') {
-                return this.numerator / this.denominator;
-            }
-
-            if (type === 'complex') {
+            } else if (type === 'complex') {
                 // return new MathLib.Complex(this, new MathLib.Rational(0));
                 return new MathLib.Complex(this, 0);
+            } else if (type === 'number') {
+                return this.numerator / this.denominator;
+            } else {
+                throw new MathLib.CoercionError('Cannot coerce the rational number to "' + type + '".', {
+                    method: 'Rational.prototype.coerceTo'
+                });
             }
         };
 

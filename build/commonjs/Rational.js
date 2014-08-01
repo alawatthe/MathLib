@@ -5,6 +5,7 @@
     import {abs, coerce, copy, isEqual, isZero, minus, negative, plus, sign, times} from 'Functn';
     import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
     import {Complex} from 'Complex';
+    import {CoercionError} from 'CoercionError';
     import {EvaluationError} from 'EvaluationError';
     import {Integer} from 'Integer';
     es6*/
@@ -28,17 +29,17 @@
             if (typeof denominator === "undefined") { denominator = 1; }
             this.type = 'rational';
             if (MathLib.isZero(denominator)) {
-                throw MathLib.EvaluationError('The denominator of a rational number cannot be zero.', {
+                throw new MathLib.EvaluationError('The denominator of a rational number cannot be zero.', {
                     method: 'Rational.constructor'
                 });
             }
             if (MathLib.isNaN(numerator)) {
-                throw MathLib.EvaluationError('The numerator of a rational number cannot be NaN.', {
+                throw new MathLib.EvaluationError('The numerator of a rational number cannot be NaN.', {
                     method: 'Rational.constructor'
                 });
             }
             if (MathLib.isNaN(denominator)) {
-                throw MathLib.EvaluationError('The denominator of a rational number cannot be NaN.', {
+                throw new MathLib.EvaluationError('The denominator of a rational number cannot be NaN.', {
                     method: 'Rational.constructor'
                 });
             }
@@ -101,7 +102,7 @@
         };
 
         /**
-        * Coerces the rational to some other data type
+        * Coerces the rational number to some other data type
         *
         * @param {string} type The type to coerce the rational number into
         * @return {Integer|Rational|number|Complex}
@@ -111,20 +112,20 @@
                 if (this.denominator === 1) {
                     return new MathLib.Integer(this.numerator);
                 }
-                // TODO: coercion error
-            }
-
-            if (type === 'rational') {
+                throw new MathLib.CoercionError('Cannot coerce the rational number to an integer, since the denominator is not 1.', {
+                    method: 'Rational.prototype.coerceTo'
+                });
+            } else if (type === 'rational') {
                 return this.copy();
-            }
-
-            if (type === 'number') {
-                return this.numerator / this.denominator;
-            }
-
-            if (type === 'complex') {
+            } else if (type === 'complex') {
                 // return new MathLib.Complex(this, new MathLib.Rational(0));
                 return new MathLib.Complex(this, 0);
+            } else if (type === 'number') {
+                return this.numerator / this.denominator;
+            } else {
+                throw new MathLib.CoercionError('Cannot coerce the rational number to "' + type + '".', {
+                    method: 'Rational.prototype.coerceTo'
+                });
             }
         };
 

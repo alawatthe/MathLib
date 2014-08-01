@@ -91,7 +91,8 @@ module.exports = function (grunt) {
 
 
 	grunt.registerTask('generatePlain', ['clean:plain', 'newer:concat:meta', 'newer:concat:Interfaces',
-		'newer:concat:EvaluationError', 'newer:concat:Expression', 'newer:concat:Functn', 'newer:concat:Screen', 'newer:concat:Layer',
+		'newer:concat:CoercionError', 'newer:concat:EvaluationError', 'newer:concat:Expression',
+		'newer:concat:Functn', 'newer:concat:Screen', 'newer:concat:Layer',
 		'newer:concat:Canvas', 'newer:concat:SVG', 'newer:concat:Screen2D', 'newer:concat:Screen3D',
 		'newer:concat:Vector', 'newer:concat:Circle', 'newer:concat:Complex', 'newer:concat:Integer',
 		'newer:concat:Line', 'newer:concat:Matrix', 'newer:concat:Permutation', 'newer:concat:Conic',

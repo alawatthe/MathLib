@@ -5,7 +5,7 @@ var grunt = require('../node_modules/grunt'),
 			'test/meta/general.js', 'test/meta/!(general).js'
 		],
 		modules = [
-			'Circle', 'Complex', 'Conic', 'Expression', 'EvaluationError', 'Functn', 'Integer',
+			'Circle', 'CoercionError', 'Complex', 'Conic', 'Expression', 'EvaluationError', 'Functn', 'Integer',
 			'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial',
 			'Rational', 'Screen', 'Screen2D', 'Set', 'Vector'
 		],
@@ -38,6 +38,13 @@ module.exports = {
 		options: {
 			banner: '',
 			footer: '\n'
+		}
+	},
+	CoercionError: {
+		src: createModuleArray('CoercionError'),
+		dest: 'build/plain/CoercionError.ts',
+		options: {
+			footer: '\n}\n'
 		}
 	},
 	EvaluationError: {
@@ -142,7 +149,7 @@ module.exports = {
 
 	plain: {
 		src: [
-			'meta', 'EvaluationError', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
+			'meta', 'CoercionError', 'EvaluationError', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
 			'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Integer', 'Line',
 			'Matrix', 'Permutation', 'Conic', 'Point', 'Polynomial', 'Rational', 'Set'
 		].map(function (module) {
@@ -156,7 +163,7 @@ module.exports = {
 	},
 
 	declaration: {
-		src: ['meta', 'EvaluationError', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
+		src: ['meta', 'CoercionError', 'EvaluationError', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
 			'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Integer', 'Line',
 			'Matrix', 'Permutation', 'Conic', 'Point', 'Polynomial', 'Rational', 'Set'
 		].map(function (module) {

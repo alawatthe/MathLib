@@ -13,6 +13,8 @@
 requirejs.config({
 	paths: {
 		meta: './meta',
+		CoercionError: './CoercionError',
+		EvaluationError: './EvaluationError',
 		Expression: './Expression',
 		Functn: './Functn',
 		Screen: './Screen',
@@ -36,10 +38,10 @@ requirejs.config({
 		shimFullscreen: './fullscreen',
 		shimLineDash: './lineDash'
 	}
-})
+});
 
-define(['meta', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG', 
-	'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Integer', 'Line', 'Matrix', 
+define(['meta', 'CoercionError', 'EvaluationError', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
+	'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Integer', 'Line', 'Matrix',
 	'Permutation', 'Conic', 'Point', 'Polynomial', 'Rational', 'Set'], function (MathLib) {
 	return MathLib;
-})
+});

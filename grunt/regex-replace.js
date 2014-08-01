@@ -140,6 +140,14 @@ module.exports = {
 				search: /\(MathLib \|\| \(MathLib = \{\}\)\)/,
 				replace: '',
 				flags: 'g'
+			},
+			{
+				search: /MathLib\.CoercionError\.prototype = new CustomError();/g,
+				replace: 'MathLib.CoercionError.prototype = new CustomError();\nreturn MathLib;'
+			},
+			{
+				search: /MathLib\.EvaluationError\.prototype = new CustomError();/g,
+				replace: 'MathLib.EvaluationError.prototype = new CustomError();\nreturn MathLib;'
 			}
 		]
 	},
@@ -221,6 +229,14 @@ module.exports = {
 				search: /\}\)\(MathLib \|\| \(MathLib = \{\}\)\);/,
 				replace: '',
 				flags: 'g'
+			},
+			{
+				search: /MathLib\.CoercionError = function/g,
+				replace: 'module.exports = MathLib.CoercionError = function'
+			},
+			{
+				search: /MathLib\.EvaluationError = function/g,
+				replace: 'module.exports = MathLib.EvaluationError = function'
 			}
 		]
 	},
@@ -352,6 +368,22 @@ module.exports = {
 				search: /\}\)\(MathLib \|\| \(MathLib = \{\}\)\);/,
 				replace: '',
 				flags: 'g'
+			},
+			{
+				search: /CoercionError = function/g,
+				replace: 'var CoercionError = function'
+			},
+			{
+				search: /EvaluationError = function/g,
+				replace: 'var EvaluationError = function'
+			},
+			{
+				search: /MathLib\.CoercionError\.prototype = new CustomError();/g,
+				replace: 'MathLib.CoercionError.prototype = new CustomError();\nexport CoercionError;'
+			},
+			{
+				search: /MathLib\.EvaluationError\.prototype = new CustomError();/g,
+				replace: 'MathLib.EvaluationError.prototype = new CustomError();\nexport EvaluationError;'
 			}
 		]
 	},

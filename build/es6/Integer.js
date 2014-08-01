@@ -3,6 +3,7 @@
 
 
 import {coerce, divide, isEqual, isPosZero, minus, mod, plus, pow, sign, times} from 'Functn';
+import {CoercionError} from 'CoercionError';
 import {Complex} from 'Complex';
 import {Rational} from 'Rational';
 
@@ -203,13 +204,11 @@ var Integer = (function () {
 
         if (type === 'integer') {
             return this.copy();
-        }
-
-        if (type === 'rational') {
+        } else if (type === 'rational') {
             return new Rational(this, 1);
-        }
-
-        if (type === 'number') {
+        } else if (type === 'complex') {
+            return new Complex(this, 0);
+        } else if (type === 'number') {
             // TODO: Warn when the number is bigger that 2^53
             num = this.data.reduce(function (old, cur, i) {
                 return old + cur * Math.pow(1e7, i);
@@ -220,10 +219,10 @@ var Integer = (function () {
             }
 
             return num;
-        }
-
-        if (type === 'complex') {
-            return new Complex(this, 0);
+        } else {
+            throw new CoercionError('Cannot coerce the integer to "' + type + '".', {
+                method: 'Integer.prototype.coerceTo'
+            });
         }
     };
 

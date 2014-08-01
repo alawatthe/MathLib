@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-23
+ * build date: 2014-08-01
  */
 
 declare module MathLib {
@@ -87,7 +87,18 @@ declare module MathLib {
     var toMathML: (x: any, options?: toPresentationOptions) => string;
 
 
-    var EvaluationError: (message: string, options: any) => any;
+    /**
+    * MathLib.CoercionError is thrown if it is not possible to perform the coercion.
+    *
+    */
+    var CoercionError: (message: string, options: any) => void;
+
+
+    /**
+    * MathLib.EvaluationError is thrown if it is not possible to perform the Evaluation.
+    .*
+    */
+    var EvaluationError: (message: string, options: any) => void;
 
 
     /**
@@ -2504,7 +2515,7 @@ declare var Integer: Ring;
         */
         static toString(): string;
         /**
-        * Coerces the rational to some other data type
+        * Coerces the rational number to some other data type
         *
         * @param {string} type The type to coerce the rational number into
         * @return {Integer|Rational|number|Complex}

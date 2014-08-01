@@ -127,7 +127,7 @@
             if (this.length === v.length) {
                 return this.plus(v.negative());
             } else {
-                throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#minus' });
+                throw new MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#minus' });
             }
         };
 
@@ -187,7 +187,7 @@
                     return MathLib.plus(x, v[i]);
                 }));
             } else {
-                throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#plus' });
+                throw new MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#plus' });
             }
         };
 
@@ -216,7 +216,7 @@
                     return MathLib.plus(old, MathLib.times(w[i], v[i]));
                 }, 0);
             } else {
-                throw MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#scalarProduct' });
+                throw new MathLib.EvaluationError('Vector sizes not matching', { method: 'Vector#scalarProduct' });
             }
         };
 
@@ -347,7 +347,7 @@
                     MathLib.minus(MathLib.times(this[0], v[1]), MathLib.times(this[1], v[0]))
                 ]);
             } else {
-                throw MathLib.EvaluationError('Vectors are not three-dimensional', { method: 'Vector.prototype.vectorProduct' });
+                throw new MathLib.EvaluationError('Vectors are not three-dimensional', { method: 'Vector.prototype.vectorProduct' });
             }
         };
         Vector.areLinearIndependent = function (vectors) {

@@ -7,8 +7,8 @@ test('.vectorProduct()', 3, function () {
 	equal(v.vectorProduct(w).isEqual(res), true, '.vectorProduct()');
 	throws(function () {
 		u.vectorProduct(w);
-	}, '.vectorProduct()');
+	}, /Vectors are not three-dimensional/, '.vectorProduct()');
 	throws(function () {
 		v.vectorProduct(u);
-	}, '.vectorProduct()');
+	}, /Vectors are not three-dimensional/, '.vectorProduct()');
 });

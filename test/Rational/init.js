@@ -9,13 +9,13 @@ test('init', 7, function () {
 	equal(p.denominator, 1, 'Testing the denominator');
 	throws(function () {
 		new MathLib.Rational(2, 0);
-	}, 'Setting the denominator to zero should throw an error.');
+	}, /The denominator of a rational number cannot be zero./, 'Setting the denominator to zero should throw an error.');
 	throws(function () {
 		new MathLib.Rational(NaN, 2);
-	}, 'Setting the numerator to NaN should throw an error.');
+	}, /The numerator of a rational number cannot be NaN./, 'Setting the numerator to NaN should throw an error.');
 	throws(function () {
 		new MathLib.Rational(2, NaN);
-	}, 'Setting the denominator to NaN should throw an error.');
+	}, /The denominator of a rational number cannot be NaN./, 'Setting the denominator to NaN should throw an error.');
 });
 
 

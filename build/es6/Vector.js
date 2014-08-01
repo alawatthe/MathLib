@@ -127,7 +127,7 @@ var Vector = (function () {
         if (this.length === v.length) {
             return this.plus(v.negative());
         } else {
-            throw EvaluationError('Vector sizes not matching', { method: 'Vector#minus' });
+            throw new EvaluationError('Vector sizes not matching', { method: 'Vector#minus' });
         }
     };
 
@@ -187,7 +187,7 @@ var Vector = (function () {
                 return plus(x, v[i]);
             }));
         } else {
-            throw EvaluationError('Vector sizes not matching', { method: 'Vector#plus' });
+            throw new EvaluationError('Vector sizes not matching', { method: 'Vector#plus' });
         }
     };
 
@@ -216,7 +216,7 @@ var Vector = (function () {
                 return plus(old, times(w[i], v[i]));
             }, 0);
         } else {
-            throw EvaluationError('Vector sizes not matching', { method: 'Vector#scalarProduct' });
+            throw new EvaluationError('Vector sizes not matching', { method: 'Vector#scalarProduct' });
         }
     };
 
@@ -347,7 +347,7 @@ var Vector = (function () {
                 minus(times(this[0], v[1]), times(this[1], v[0]))
             ]);
         } else {
-            throw EvaluationError('Vectors are not three-dimensional', { method: 'Vector.prototype.vectorProduct' });
+            throw new EvaluationError('Vectors are not three-dimensional', { method: 'Vector.prototype.vectorProduct' });
         }
     };
     Vector.areLinearIndependent = function (vectors) {

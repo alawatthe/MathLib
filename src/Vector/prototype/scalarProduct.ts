@@ -1,7 +1,7 @@
 /**
  * Calculates the scalar product of two vectors.
  *
- * @param {Vector} v The second vector to calculate the scalar product with. 
+ * @param {Vector} v The second vector to calculate the scalar product with.
  * @return {number|Complex}
  */
 scalarProduct(v : Vector) : any {
@@ -11,6 +11,6 @@ scalarProduct(v : Vector) : any {
 		}, 0);
 	}
 	else {
-		throw MathLib.EvaluationError('Vector sizes not matching', {method: 'Vector#scalarProduct'});
+		throw new MathLib.EvaluationError('Vector sizes not matching', {method: 'Vector#scalarProduct'});
 	}
 }

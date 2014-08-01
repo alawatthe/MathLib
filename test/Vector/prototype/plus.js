@@ -6,5 +6,5 @@ test('.plus()', 2, function () {
 	equal(v.plus(w).isEqual(new MathLib.Vector([4, 6, 13])), true, '.plus()');
 	throws(function () {
 		v.plus(u);
-	}, '.plus()');
+	}, /Vector sizes not matching/, '.plus()');
 });

@@ -5,6 +5,7 @@
 import {abs, coerce, copy, isEqual, isZero, minus, negative, plus, sign, times} from 'Functn';
 import {toContentMathML, toLaTeX, toMathML, toString} from 'meta';
 import {Complex} from 'Complex';
+import {CoercionError} from 'CoercionError';
 import {EvaluationError} from 'EvaluationError';
 import {Integer} from 'Integer';
 
@@ -26,17 +27,17 @@ var Rational = (function () {
         if (typeof denominator === "undefined") { denominator = 1; }
         this.type = 'rational';
         if (isZero(denominator)) {
-            throw EvaluationError('The denominator of a rational number cannot be zero.', {
+            throw new EvaluationError('The denominator of a rational number cannot be zero.', {
                 method: 'Rational.constructor'
             });
         }
         if (isNaN(numerator)) {
-            throw EvaluationError('The numerator of a rational number cannot be NaN.', {
+            throw new EvaluationError('The numerator of a rational number cannot be NaN.', {
                 method: 'Rational.constructor'
             });
         }
         if (isNaN(denominator)) {
-            throw EvaluationError('The denominator of a rational number cannot be NaN.', {
+            throw new EvaluationError('The denominator of a rational number cannot be NaN.', {
                 method: 'Rational.constructor'
             });
         }
@@ -99,7 +100,7 @@ var Rational = (function () {
     };
 
     /**
-    * Coerces the rational to some other data type
+    * Coerces the rational number to some other data type
     *
     * @param {string} type The type to coerce the rational number into
     * @return {Integer|Rational|number|Complex}
@@ -109,20 +110,20 @@ var Rational = (function () {
             if (this.denominator === 1) {
                 return new Integer(this.numerator);
             }
-            // TODO: coercion error
-        }
-
-        if (type === 'rational') {
+            throw new CoercionError('Cannot coerce the rational number to an integer, since the denominator is not 1.', {
+                method: 'Rational.prototype.coerceTo'
+            });
+        } else if (type === 'rational') {
             return this.copy();
-        }
-
-        if (type === 'number') {
-            return this.numerator / this.denominator;
-        }
-
-        if (type === 'complex') {
+        } else if (type === 'complex') {
             // return new Complex(this, new Rational(0));
             return new Complex(this, 0);
+        } else if (type === 'number') {
+            return this.numerator / this.denominator;
+        } else {
+            throw new CoercionError('Cannot coerce the rational number to "' + type + '".', {
+                method: 'Rational.prototype.coerceTo'
+            });
         }
     };
 

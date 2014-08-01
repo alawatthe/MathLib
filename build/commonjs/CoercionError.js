@@ -3,12 +3,12 @@
 
     var MathLib = require('./meta.js');
     /**
-    * MathLib.EvaluationError is thrown if it is not possible to perform the Evaluation.
-    .*
+    * MathLib.CoercionError is thrown if it is not possible to perform the coercion.
+    *
     */
-    module.exports = MathLib.EvaluationError = function (message, options) {
+    module.exports = MathLib.CoercionError = function (message, options) {
         var tmp = Error.apply(this, arguments);
-        tmp.name = this.name = 'EvaluationError';
+        tmp.name = this.name = 'CoercionError';
 
         this.stack = tmp.stack;
         this.message = tmp.message;
@@ -18,5 +18,5 @@
     var CustomError = function () {
     };
     CustomError.prototype = Error.prototype;
-    MathLib.EvaluationError.prototype = new CustomError();
+    MathLib.CoercionError.prototype = new CustomError();
 
