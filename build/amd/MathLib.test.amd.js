@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-07-31
+ * build date: 2014-08-02
  */
 
 require(['../build/amd/MathLib.js'], function(MathLib) {
@@ -402,6 +402,44 @@ test('.toMatrix()', 1, function () {
 
 	deepEqual(c.toMatrix(), new MathLib.Matrix([[1, 0, -1], [0, 1, -2], [-1, -2, 1]]), '');
 });
+module('CoercionError');
+test('init', 2, function () {
+	var e = new MathLib.CoercionError('message', {method: 'method'});
+
+	equal(e.message, 'message', 'Testing .message');
+	equal(e.method, 'method', 'Testing .method');
+});
+
+
+// Properties
+test('.constructor', 1, function () {
+	var e = new MathLib.CoercionError('message', {method: 'method'});
+
+	equal(e.constructor, MathLib.CoercionError, 'Testing .constructor');
+});
+
+
+test('.type', 1, function () {
+	var e = new MathLib.CoercionError('message', {method: 'method'});
+
+	equal(e.type, 'coercionError', 'Testing .type');
+});
+
+
+test('.stack', 1, function () {
+	var e = new MathLib.CoercionError('message', {method: 'method'});
+
+	equal(e.stack, 'string', 'Testing .stack');
+});
+
+
+test('intanceof', 2, function () {
+	var e = new MathLib.CoercionError('message', {method: 'method'});
+
+	ok(e instanceof MathLib.CoercionError, 'instanceof MathLib.CoercionError');
+	ok(e instanceof Error, 'instanceof Error');
+});
+
 module('Complex');
 test('init (1 Number)', 2, function () {
 	var c = new MathLib.Complex(3);

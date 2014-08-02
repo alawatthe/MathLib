@@ -8,11 +8,11 @@ export var CoercionError = function (message : string, options) {
 	var tmp = Error.apply(this, arguments);
 	tmp.name = this.name = 'CoercionError';
 
-	this.stack = tmp.stack;
+	this.constructor = CoercionError;
 	this.message = tmp.message;
 	this.method = options.method;
+	this.stack = tmp.stack;
+	this.type = 'coercionError';
 };
 
-var CustomError = function () {};
-CustomError.prototype = Error.prototype;
-CoercionError.prototype = new CustomError();
+CoercionError.prototype = new Error();

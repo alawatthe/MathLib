@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-08-01
+ * build date: 2014-08-03
  */
 
 var MathLib = require('./MathLib.js'),
@@ -418,6 +418,37 @@ test('.toMatrix()', 1, function () {
 
 	deepEqual(c.toMatrix(), new MathLib.Matrix([[1, 0, -1], [0, 1, -2], [-1, -2, 1]]), '');
 });
+module('CoercionError');
+test('init', 2, function () {
+	var e = new MathLib.CoercionError('message', {method: 'method'});
+
+	equal(e.message, 'message', 'Testing .message');
+	equal(e.method, 'method', 'Testing .method');
+});
+
+
+// Properties
+test('.constructor', 1, function () {
+	var e = new MathLib.CoercionError('message', {method: 'method'});
+
+	equal(e.constructor, MathLib.CoercionError, 'Testing .constructor');
+});
+
+
+test('.type', 1, function () {
+	var e = new MathLib.CoercionError('message', {method: 'method'});
+
+	equal(e.type, 'coercionError', 'Testing .type');
+});
+
+
+test('intanceof', 2, function () {
+	var e = new MathLib.CoercionError('message', {method: 'method'});
+
+	ok(e instanceof MathLib.CoercionError, 'instanceof MathLib.CoercionError');
+	ok(e instanceof Error, 'instanceof Error');
+});
+
 module('Complex');
 test('init (1 Number)', 2, function () {
 	var c = new MathLib.Complex(3);
@@ -2539,6 +2570,37 @@ test('.toString', 14, function () {
 	equal(MathLib.Expression.parseContentMathML('<math xmlns="http://www.w3.org/1998/Math/MathML">' +
 		'<vector><cn>1</cn><cn>2</cn><cn>3</cn></vector></math>').toString(), '(1, 2, 3)', 'toString() vector');
 });
+module('EvaluationError');
+test('init', 2, function () {
+	var e = new MathLib.EvaluationError('message', {method: 'method'});
+
+	equal(e.message, 'message', 'Testing .message');
+	equal(e.method, 'method', 'Testing .method');
+});
+
+
+// Properties
+test('.constructor', 1, function () {
+	var e = new MathLib.EvaluationError('message', {method: 'method'});
+
+	equal(e.constructor, MathLib.EvaluationError, 'Testing .constructor');
+});
+
+
+test('.type', 1, function () {
+	var e = new MathLib.EvaluationError('message', {method: 'method'});
+
+	equal(e.type, 'evaluationError', 'Testing .type');
+});
+
+
+test('intanceof', 2, function () {
+	var e = new MathLib.EvaluationError('message', {method: 'method'});
+
+	ok(e instanceof MathLib.EvaluationError, 'instanceof MathLib.EvaluationError');
+	ok(e instanceof Error, 'instanceof Error');
+});
+
 module('Functn');
 test('execution', 4, function () {
 	equal(MathLib.sin(0), 0, 'MathLib.sin(0) should be 0');

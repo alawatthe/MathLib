@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-08-01
+ * build date: 2014-08-03
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -471,15 +471,14 @@ var MathLib = {};
         var tmp = Error.apply(this, arguments);
         tmp.name = this.name = 'CoercionError';
 
-        this.stack = tmp.stack;
+        this.constructor = MathLib.CoercionError;
         this.message = tmp.message;
         this.method = options.method;
+        this.stack = tmp.stack;
+        this.type = 'coercionError';
     };
 
-    var CustomError = function () {
-    };
-    CustomError.prototype = Error.prototype;
-    MathLib.CoercionError.prototype = new CustomError();
+    MathLib.CoercionError.prototype = new Error();
 })(MathLib);
 
 
@@ -495,15 +494,14 @@ var MathLib = {};
         var tmp = Error.apply(this, arguments);
         tmp.name = this.name = 'EvaluationError';
 
-        this.stack = tmp.stack;
+        this.constructor = MathLib.EvaluationError;
         this.message = tmp.message;
         this.method = options.method;
+        this.stack = tmp.stack;
+        this.type = 'evaluationError';
     };
 
-    var CustomError = function () {
-    };
-    CustomError.prototype = Error.prototype;
-    MathLib.EvaluationError.prototype = new CustomError();
+    MathLib.EvaluationError.prototype = new Error();
 })(MathLib);
 
 

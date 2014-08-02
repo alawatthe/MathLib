@@ -10,13 +10,12 @@
         var tmp = Error.apply(this, arguments);
         tmp.name = this.name = 'CoercionError';
 
-        this.stack = tmp.stack;
+        this.constructor = MathLib.CoercionError;
         this.message = tmp.message;
         this.method = options.method;
+        this.stack = tmp.stack;
+        this.type = 'coercionError';
     };
 
-    var CustomError = function () {
-    };
-    CustomError.prototype = Error.prototype;
-    MathLib.CoercionError.prototype = new CustomError();
+    MathLib.CoercionError.prototype = new Error();
 

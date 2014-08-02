@@ -8,11 +8,11 @@ export var EvaluationError = function (message : string, options) {
 	var tmp = Error.apply(this, arguments);
 	tmp.name = this.name = 'EvaluationError';
 
-	this.stack = tmp.stack;
+	this.constructor = EvaluationError;
 	this.message = tmp.message;
 	this.method = options.method;
+	this.stack = tmp.stack;
+	this.type = 'evaluationError';
 };
 
-var CustomError = function () {};
-CustomError.prototype = Error.prototype;
-EvaluationError.prototype = new CustomError();
+EvaluationError.prototype = new Error();

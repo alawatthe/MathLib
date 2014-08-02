@@ -10,13 +10,12 @@
         var tmp = Error.apply(this, arguments);
         tmp.name = this.name = 'EvaluationError';
 
-        this.stack = tmp.stack;
+        this.constructor = MathLib.EvaluationError;
         this.message = tmp.message;
         this.method = options.method;
+        this.stack = tmp.stack;
+        this.type = 'evaluationError';
     };
 
-    var CustomError = function () {
-    };
-    CustomError.prototype = Error.prototype;
-    MathLib.EvaluationError.prototype = new CustomError();
+    MathLib.EvaluationError.prototype = new Error();
 

@@ -11,7 +11,7 @@ module.exports = {
 			concurrency: 3,
 			detailedError: true,
 			passed: true,
-			build: 110,
+			build: 111,
 			maxRetries: 3,
 			'max-duration': 600,
 			testReadyTimeout: 10000,
