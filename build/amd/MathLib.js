@@ -1,12 +1,12 @@
 /*!
- * MathLib JavaScript Library v0.6.1
+ * MathLib JavaScript Library v0.7.3
  * http://mathlib.de/
  *
- * Copyright 2012, 2013 Alexander Zeilmann
+ * Copyright 2012 - 2014 Alexander Zeilmann
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2013-12-29
+ * build date: 2014-08-15
  */
 
 

@@ -1,12 +1,12 @@
 /*!
- * MathLib JavaScript Library v0.7.2
+ * MathLib JavaScript Library v0.7.3
  * http://mathlib.de/
  *
  * Copyright 2012 - 2014 Alexander Zeilmann
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-08-03
+ * build date: 2014-08-15
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -37,7 +37,7 @@ var MathLib = {};
     import {Integer} from 'Integer';
     import {Rational} from 'Rational';
     es6*/
-    MathLib.version = '0.7.2';
+    MathLib.version = '0.7.3';
     MathLib.apery = 1.2020569031595942;
     MathLib.e = Math.E;
 

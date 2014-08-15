@@ -12,7 +12,7 @@ define([], function () {
     import {Integer} from 'Integer';
     import {Rational} from 'Rational';
     es6*/
-    MathLib.version = '0.7.2';
+    MathLib.version = '0.7.3';
     MathLib.apery = 1.2020569031595942;
     MathLib.e = Math.E;
 

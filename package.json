@@ -1,6 +1,6 @@
 {
 	"name": "mathlib",
-	"version": "0.7.2",
+	"version": "0.7.3",
 	"description": "JavaScript library for mathematical computations.",
 	"main": "./build/MathLib.js",
 	"directories": {

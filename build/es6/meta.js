@@ -12,7 +12,7 @@ import {Complex} from 'Complex';
 import {Integer} from 'Integer';
 import {Rational} from 'Rational';
 
-export var version = '0.7.2';
+export var version = '0.7.3';
 export var apery = 1.2020569031595942;
 export var e = Math.E;
 
