@@ -6097,27 +6097,37 @@ test('.toContentMathML()', 4, function () {
 	equal(e.toContentMathML({strict: true}), '<csymbol cd="set1">emptyset</csymbol>',
 		'Testing .toContentMathML() (empty set)');
 });
-test('.toLaTeX()', 2, function () {
+test('.toLaTeX()', 3, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
 			e = new MathLib.Set();
 
 	equal(s.toLaTeX(), '\\left{2, 3, 4, 8, 9\\right}', 'Testing .toLaTeX() (set)');
+	equal(s.toLaTeX({base: 2}), '\\left{10, 11, 100, 1000, 1001\\right}', 'Testing .toLaTeX() (set)');
 	equal(e.toLaTeX(), '\\emptyset', 'Testing .toLaTeX() (empty set)');
 });
-test('.toMathML()', 2, function () {
+
+test('.toMathML()', 3, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
 			e = new MathLib.Set();
+
 	equal(s.toMathML(), '<mrow><mo>{</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,' +
 		'</mo><mn>4</mn><mo>,</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>}</mo></mrow>',
 		'Testing .toMathML() (set)');
+	equal(s.toMathML({base: 2}), '<mrow><mo>{</mo><mn>10</mn><mo>,</mo><mn>11</mn><mo>,' +
+		'</mo><mn>100</mn><mo>,</mo><mn>1000</mn><mo>,</mo><mn>1001</mn><mo>}</mo></mrow>',
+		'Testing .toMathML() (set)');
 	equal(e.toMathML(), '<mi>&#x2205;</mi>', 'Testing .toMathML() (empty set)');
 });
-test('.toString()', 2, function () {
+
+test('.toString()', 3, function () {
 	var s = new MathLib.Set([3, 3, 4, 9, 2, 8, 2]),
 			e = new MathLib.Set();
+
 	equal(s.toString(), '{2, 3, 4, 8, 9}', 'Testing .toString() (set)');
+	equal(s.toString({base: 2}), '{10, 11, 100, 1000, 1001}', 'Testing .toString() (set)');
 	equal(e.toString(), '∅', 'Testing .toString() (empty set)');
 });
+
 test('.total()', 1, function () {
 	var s = new MathLib.Set([1, 2, 3, 4]);
 
