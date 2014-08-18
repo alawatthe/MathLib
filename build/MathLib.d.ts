@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-08-15
+ * build date: 2014-08-18
  */
 
 declare module MathLib {

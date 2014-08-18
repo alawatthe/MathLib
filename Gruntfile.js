@@ -31,7 +31,6 @@ module.exports = function (grunt) {
 
 	require('jit-grunt')(grunt, {
 		qunit: 'grunt-qunit-istanbul',
-		jscs: 'grunt-jscs-checker',
 		'saucelabs-qunit': 'grunt-saucelabs'
 	});
 
