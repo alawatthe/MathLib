@@ -89,16 +89,14 @@ module.exports = function (grunt) {
 	grunt.registerTask('generateTemplate', require('./grunt/generateTemplate.js'));
 
 
-	grunt.registerTask('generatePlain', ['clean:plain', 'newer:concat:meta', 'newer:concat:Interfaces',
-		'newer:concat:CoercionError', 'newer:concat:EvaluationError', 'newer:concat:Expression',
-		'newer:concat:Functn', 'newer:concat:Screen', 'newer:concat:Layer',
-		'newer:concat:Canvas', 'newer:concat:SVG', 'newer:concat:Screen2D', 'newer:concat:Screen3D',
-		'newer:concat:Vector', 'newer:concat:Circle', 'newer:concat:Complex', 'newer:concat:Integer',
-		'newer:concat:Line', 'newer:concat:Matrix', 'newer:concat:Permutation', 'newer:concat:Conic',
-		'newer:concat:Point', 'newer:concat:Polynomial', 'newer:concat:Rational', 'newer:concat:Set', 'ts',
-		'copy:shims', 'regex-replace:plainHead', 'concat:plain', 'uglify', 'regex-replace:plainBefore',
-		'clean:reference'
-	]);
+	grunt.registerTask('generatePlain', ['clean:plain', 'newer:concat:meta', 'newer:concat:Interfaces'].concat(
+			require('./grunt/modules.js').map(function (module) {
+				return 'newer:concat:' + module;
+			}),
+			['ts', 'copy:shims', 'regex-replace:plainHead', 'concat:plain', 'uglify',
+			'regex-replace:plainBefore', 'clean:reference']
+		)
+	);
 	grunt.registerTask('generateAMD', ['copy:amd', 'regex-replace:amdHead', 'regex-replace:amd']);
 	grunt.registerTask('generateCommonjs', ['copy:commonjs', 'regex-replace:commonjsHead', 'regex-replace:commonjs']);
 	grunt.registerTask('generateES6', ['copy:es6', 'regex-replace:es6Head', 'regex-replace:es6Functn', 'regex-replace:es6']);

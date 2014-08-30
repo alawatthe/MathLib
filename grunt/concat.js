@@ -4,10 +4,10 @@ var grunt = require('../node_modules/grunt'),
 		testFiles = [
 			'test/meta/general.js', 'test/meta/!(general).js'
 		],
+		// SVG, Canvas, Screen3D & Layer are missing in this array compared to ./modules.js
 		modules = [
 			'Circle', 'CoercionError', 'Complex', 'Conic', 'Expression', 'EvaluationError', 'Functn', 'Integer',
-			'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial',
-			'Rational', 'Screen', 'Screen2D', 'Set', 'Vector'
+			'Line', 'Matrix', 'Permutation', 'Point', 'Polynomial', 'Rational', 'Screen', 'Screen2D', 'Set', 'Vector'
 		],
 
 		createModuleArray = function (module) {
@@ -148,11 +148,7 @@ module.exports = {
 	},
 
 	plain: {
-		src: [
-			'meta', 'CoercionError', 'EvaluationError', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
-			'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Integer', 'Line',
-			'Matrix', 'Permutation', 'Conic', 'Point', 'Polynomial', 'Rational', 'Set'
-		].map(function (module) {
+		src: ['meta'].concat(require('./modules.js')).map(function (module) {
 			return 'build/plain/' + module + '.js';
 		}),
 		dest: 'build/MathLib.js',
@@ -163,10 +159,7 @@ module.exports = {
 	},
 
 	declaration: {
-		src: ['meta', 'CoercionError', 'EvaluationError', 'Expression', 'Functn', 'Screen', 'Layer', 'Canvas', 'SVG',
-			'Screen2D', 'Screen3D', 'Vector', 'Circle', 'Complex', 'Integer', 'Line',
-			'Matrix', 'Permutation', 'Conic', 'Point', 'Polynomial', 'Rational', 'Set'
-		].map(function (module) {
+		src: ['meta'].concat(require('./modules.js')).map(function (module) {
 			return 'build/plain/' + module + '.d.ts';
 		}),
 		dest: 'build/MathLib.d.ts',
