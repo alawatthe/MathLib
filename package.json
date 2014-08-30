@@ -25,23 +25,23 @@
 		"cli-color": "~0.3.2",
 		"doxx": "~0.7.4",
 		"grunt-coveralls": "~1.0.0",
-		"grunt-jscs": "~0.6.2",
+		"grunt-jscs": "~0.7.0",
 		"grunt-newer": "~0.7.0",
 		"grunt-notify": "~0.3.0",
 		"grunt-qunit-amd": "~0.1.1",
 		"grunt-qunit-istanbul": "~0.4.0",
 		"grunt-regex-replace" : "~0.2.6",
 		"grunt-saucelabs": "~8.3.1",
-		"grunt-shell": "~0.7.0",
+		"grunt-shell": "~1.0.1",
 		"grunt-stamp": "~0.1.0",
 		"grunt-ts": "~1.11.2",
 		"grunt-tslint": "~0.4.1",
 		"jit-grunt": "~0.8.0",
-		"jscs-jsdoc": "0.0.6",
+		"jscs-jsdoc": "0.0.9",
 		"qunitjs": "~1.15.0",
 		"requirejs": "~2.1.11",
-		"three": "~0.68.0",
-		"time-grunt": "~0.4.0"
+		"three": "~0.67.0",
+		"time-grunt": "~1.0.0"
 	},
 	"scripts": {
 		"test": "grunt continuousIntegration"

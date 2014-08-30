@@ -86,7 +86,12 @@
 		"checkReturnTypes": true,
 		"checkRedundantReturns": true,
 		"requireReturnTypes": true,
-		"checkTypes": true
+		"checkTypes": true,
+		"requireReturnTypes": true,
+		"checkRedundantReturns": true,
+		"checkRedundantAccess": true,
+		"leadingUnderscoreAccess": "private"
+		// "enforceExistence": true
 	},
 
 
@@ -96,6 +101,9 @@
 	// Requires blocks to begin and end with a newline,
 	// except if there is only one statement in them.
 	"requireBlocksOnNewline": 1,
+
+	// Disallows newline before opening curly brace of all block statements.
+	"disallowNewlineBeforeBlockStatements": true,
 
 	// Disallows blocks from beginning and ending with 2 newlines.
 	"disallowPaddingNewlinesInBlocks": true,
@@ -124,7 +132,7 @@
 	// ===========
 
 	"maximumLineLength": {
- 		"value": 140, // lines should be at most the number of characters specified
+		"value": 140, // lines should be at most the number of characters specified
 		"tabSize": 2, // considered the tab character as number of specified spaces
 		"allowComments": true, // allows comments to break the rule
 		"allowUrlComments": true, // allows comments with long urls to break the rule
@@ -178,4 +186,10 @@
 
 	// Disallows empty blocks (except for catch blocks).
 	"disallowEmptyBlocks": true
+
+
+	// Unused
+	// ======
+
+	// (require|disallow)AnonymousFunctions
 }
