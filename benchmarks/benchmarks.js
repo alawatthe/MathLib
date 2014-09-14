@@ -7,7 +7,14 @@ var Benchmark = require('benchmark'),
 			return fileName.match(/\.js$/) && fileName !== 'benchmarks.js' && fileName !== 'utilities.js';
 		}),
 		foundBetterImplementation = false,
-		counter, i, j, implemented, suite, test;
+		counter, i, j, implemented, suite, test,
+		repeat = function (str, n) {
+			var res = '';
+			for (var i = 0; i < n; i++) {
+				res += str;
+			}
+			return res;
+		};
 
 
 console.log(clc.bold('\nStarted benchmark suite'));
@@ -41,6 +48,25 @@ for (i = 0; i < suites.length; i++) {
 					implemented + '").'
 				)
 			);
+
+			var line;
+			var fastest = this.filter('fastest').pluck('name');
+			var slowest = this.filter('slowest').pluck('name');
+
+			for (var i = 0; i < this.length; i++) {
+				line = '\n' + this[i].name + repeat(' ', 20 - this[i].name.length) +
+				repeat(' ', 12 - this[i].hz.toFixed(2).length) + this[i].hz.toFixed(2) + ' hz'
+
+				if (fastest.indexOf(this[i].name) !== -1) {
+					process.stdout.write(clc.greenBright(line));
+				}
+				else if (slowest.indexOf(this[i].name) !== -1) {
+					process.stdout.write(clc.redBright(line));
+				}
+				else {
+					process.stdout.write(line);
+				}
+			}
 		}
 	})
 	.run({
