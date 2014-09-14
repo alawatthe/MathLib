@@ -3,8 +3,7 @@
 var randomNumber = require('./utilities').randomNumber;
 var MathLib = require('../build/commonjs/MathLib');
 
-var not_cached = function (x) {
-
+var notCached = function (x) {
 	if (x === 0 || !MathLib.isFinite(x)) {
 		return MathLib.sign(x);
 	}
@@ -12,7 +11,7 @@ var not_cached = function (x) {
 	return (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));
 };
 
-var both_with_exp = function (x) {
+var bothWithExp = function (x) {
 	var n, p;
 
 	if (x === 0 || !MathLib.isFinite(x)) {
@@ -24,7 +23,7 @@ var both_with_exp = function (x) {
 	return (p - n) / (p + n);
 };
 
-var one_with_inverse = function (x) {
+var oneWithInverse = function (x) {
 	var n, p;
 
 	if (x === 0 || !MathLib.isFinite(x)) {
@@ -36,7 +35,7 @@ var one_with_inverse = function (x) {
 	return (p - n) / (p + n);
 };
 
-var inlined_inverse = function (x) {
+var inlinedInverse = function (x) {
 	var p;
 
 	if (x === 0 || !MathLib.isFinite(x)) {
@@ -47,7 +46,7 @@ var inlined_inverse = function (x) {
 	return (p - 1 / p) / (p + 1 / p);
 };
 
-var inlined_squares = function (x) {
+var inlinedSquares = function (x) {
 	var p;
 
 	if (x === 0 || !MathLib.isFinite(x)) {
@@ -103,32 +102,32 @@ var variations = [
 		{
 			name: 'not cached',
 			fn: function () {
-				return not_cached(randomNumber());
+				return notCached(randomNumber());
 			}
 		},
 		{
 			name: 'both with exp',
 			fn: function () {
-				return both_with_exp(randomNumber());
+				return bothWithExp(randomNumber());
 			}
 		},
 		{
 			name: 'one with inverse',
 			fn: function () {
-				return one_with_inverse(randomNumber());
+				return oneWithInverse(randomNumber());
 			}
 		},
 		{
 			name: 'inlined inverse',
 			fn: function () {
-				return inlined_inverse(randomNumber());
+				return inlinedInverse(randomNumber());
 			}
 		},
 		{
 			implemented: true,
 			name: 'inlined squares',
 			fn: function () {
-				return inlined_squares(randomNumber());
+				return inlinedSquares(randomNumber());
 			}
 		},
 		{

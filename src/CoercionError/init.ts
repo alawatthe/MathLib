@@ -9,7 +9,7 @@ export var CoercionError = function (message : string, options) {
 	tmp.name = this.name = 'CoercionError';
 
 	this.constructor = CoercionError;
-	this.message = tmp.message;
+	this.message = message;
 	this.method = options.method;
 	this.stack = tmp.stack;
 	this.type = 'coercionError';

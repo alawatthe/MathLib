@@ -11,7 +11,7 @@
         tmp.name = this.name = 'CoercionError';
 
         this.constructor = MathLib.CoercionError;
-        this.message = tmp.message;
+        this.message = message;
         this.method = options.method;
         this.stack = tmp.stack;
         this.type = 'coercionError';

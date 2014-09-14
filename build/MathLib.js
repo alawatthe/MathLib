@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-08-30
+ * build date: 2014-09-14
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -472,7 +472,7 @@ var MathLib = {};
         tmp.name = this.name = 'CoercionError';
 
         this.constructor = MathLib.CoercionError;
-        this.message = tmp.message;
+        this.message = message;
         this.method = options.method;
         this.stack = tmp.stack;
         this.type = 'coercionError';

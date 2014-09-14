@@ -55,7 +55,7 @@ for (i = 0; i < suites.length; i++) {
 
 			for (var i = 0; i < this.length; i++) {
 				line = '\n' + this[i].name + repeat(' ', 20 - this[i].name.length) +
-				repeat(' ', 12 - this[i].hz.toFixed(2).length) + this[i].hz.toFixed(2) + ' hz'
+				repeat(' ', 12 - this[i].hz.toFixed(2).length) + this[i].hz.toFixed(2) + ' hz';
 
 				if (fastest.indexOf(this[i].name) !== -1) {
 					process.stdout.write(clc.greenBright(line));
