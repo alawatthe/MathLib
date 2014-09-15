@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-09-14
+ * build date: 2014-09-15
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -4068,7 +4068,7 @@ var MathLib = {};
                     element.style['-ms-transformOrigin'] = 'top left';
                     element.style.transform = 'scale(' + 1 / devicePixelRatio + ')';
                     element.style['-ms-transform'] = 'scale(' + 1 / devicePixelRatio + ')';
-                    element.style['-webkit-transform'] = 'translate(-' + screen.width / devicePixelRatio + 'px, -' + screen.height / devicePixelRatio + 'px) scale(' + 1 / devicePixelRatio + ')';
+                    element.style['-webkit-transform'] = 'scale(' + 1 / devicePixelRatio + ')';
                 }
 
                 screen.wrapper.appendChild(element);

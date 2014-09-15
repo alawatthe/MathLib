@@ -37,7 +37,7 @@
                     element.style['-ms-transformOrigin'] = 'top left';
                     element.style.transform = 'scale(' + 1 / devicePixelRatio + ')';
                     element.style['-ms-transform'] = 'scale(' + 1 / devicePixelRatio + ')';
-                    element.style['-webkit-transform'] = 'translate(-' + screen.width / devicePixelRatio + 'px, -' + screen.height / devicePixelRatio + 'px) scale(' + 1 / devicePixelRatio + ')';
+                    element.style['-webkit-transform'] = 'scale(' + 1 / devicePixelRatio + ')';
                 }
 
                 screen.wrapper.appendChild(element);
