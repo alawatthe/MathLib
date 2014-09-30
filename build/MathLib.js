@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-09-15
+ * build date: 2014-09-30
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -469,7 +469,7 @@ var MathLib = {};
     */
     MathLib.CoercionError = function (message, options) {
         var tmp = Error.apply(this, arguments);
-        tmp.name = this.name = 'CoercionError';
+        this.name = 'CoercionError';
 
         this.constructor = MathLib.CoercionError;
         this.message = message;
@@ -488,14 +488,14 @@ var MathLib = {};
     /// no import
     /**
     * MathLib.EvaluationError is thrown if it is not possible to perform the Evaluation.
-    .*
+    *
     */
     MathLib.EvaluationError = function (message, options) {
         var tmp = Error.apply(this, arguments);
-        tmp.name = this.name = 'EvaluationError';
+        this.name = 'EvaluationError';
 
         this.constructor = MathLib.EvaluationError;
-        this.message = tmp.message;
+        this.message = message;
         this.method = options.method;
         this.stack = tmp.stack;
         this.type = 'evaluationError';

@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-09-15
+ * build date: 2014-09-30
  */
 
 declare module MathLib {
@@ -96,7 +96,7 @@ declare module MathLib {
 
     /**
     * MathLib.EvaluationError is thrown if it is not possible to perform the Evaluation.
-    .*
+    *
     */
     var EvaluationError: (message: string, options: any) => void;
 

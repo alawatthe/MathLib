@@ -8,7 +8,7 @@
     */
     module.exports = MathLib.CoercionError = function (message, options) {
         var tmp = Error.apply(this, arguments);
-        tmp.name = this.name = 'CoercionError';
+        this.name = 'CoercionError';
 
         this.constructor = MathLib.CoercionError;
         this.message = message;
