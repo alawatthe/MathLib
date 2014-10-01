@@ -21,6 +21,16 @@ es6*/
 	export var goldenRatio = 1.618033988749895;
 	export var pi = Math.PI;
 
+	// Polyfill for IE9
+	if (typeof window !== 'undefined') {
+		if (!window.console) {
+			window.console = (<any>{
+				log: function () {},
+				info: function () {},
+				warn: function () {}
+			});
+		}
+	}
 
 	export var isNative = function (fn) {
 		return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;

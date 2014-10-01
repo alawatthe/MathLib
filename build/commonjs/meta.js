@@ -29,6 +29,20 @@ var MathLib = {};
     MathLib.goldenRatio = 1.618033988749895;
     MathLib.pi = Math.PI;
 
+    // Polyfill for IE9
+    if (typeof window !== 'undefined') {
+        if (!window.console) {
+            window.console = {
+                log: function () {
+                },
+                info: function () {
+                },
+                warn: function () {
+                }
+            };
+        }
+    }
+
     MathLib.isNative = function (fn) {
         return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
     };

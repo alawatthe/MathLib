@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-09-30
+ * build date: 2014-10-01
  */
 
 var __extends = this.__extends || function (d, b) {
@@ -53,6 +53,20 @@ var MathLib = {};
     MathLib.eulerMascheroni = 0.5772156649015329;
     MathLib.goldenRatio = 1.618033988749895;
     MathLib.pi = Math.PI;
+
+    // Polyfill for IE9
+    if (typeof window !== 'undefined') {
+        if (!window.console) {
+            window.console = {
+                log: function () {
+                },
+                info: function () {
+                },
+                warn: function () {
+                }
+            };
+        }
+    }
 
     MathLib.isNative = function (fn) {
         return fn && /^[^{]+\{\s*\[native \w/.test(fn.toString()) ? fn : false;
