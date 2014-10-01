@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://mathlib.de/en/license
  *
- * build date: 2014-08-15
+ * build date: 2014-10-01
  */
 
 module('MathLib');
@@ -610,13 +610,14 @@ test('.arccot()', 25, function () {
 
 
 	ok(MathLib.isPosZero(p0p2.re), '(+0 +2i).arccot().re = +0');
-	equal(p0p2.im, -0.54930614433405484570, '(+0 +2i).arccot().im = -0.54930614433405484570');
+	ok(MathLib.isEqual(p0p2.im, -0.54930614433405484570), '(+0 +2i).arccot().im = -0.54930614433405484570');
 	ok(MathLib.isNegZero(n0p2.re), '(-0 +2i).arccot().re = -0');
-	equal(n0p2.im, -0.54930614433405484570, '(-0 +2i).arccot().im = -0.54930614433405484570');
+	ok(MathLib.isEqual(n0p2.im, -0.54930614433405484570), '(-0 +2i).arccot().im = -0.54930614433405484570');
 
 	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arccot(), new MathLib.Complex(0.23182380450040305811, -0.40235947810852509365)));
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arccot(), new MathLib.Complex(-0.12248933156343207709, -0.15899719167999917436)));
 });
+
 test('.arccsc()', 17, function () {
 	var n1p0 = (new MathLib.Complex(-1, +0)).arccsc(),
 			n1n0 = (new MathLib.Complex(-1, -0)).arccsc(),
@@ -939,9 +940,9 @@ test('.arctan()', 28, function () {
 	equal(n0n1.re, Infinity);
 
 	ok(MathLib.isPosZero(p0n5.re), '(+0 -0.5i).arctan().re = +0');
-	equal(p0n5.im, -0.5493061443340548457, '(+0 -0.5i).arctan().im = +0.549');
+	ok(MathLib.isEqual(p0n5.im, -0.5493061443340548457), '(+0 -0.5i).arctan().im = +0.549');
 	ok(MathLib.isNegZero(n0n5.re), '(-0 -0.5i).arctan().re = -0');
-	equal(n0n5.im, -0.5493061443340548457, '(-0 -0.5i).arctan().im = -0.549');
+	ok(MathLib.isEqual(n0n5.im, -0.5493061443340548457), '(-0 -0.5i).arctan().im = -0.549');
 
 	ok(MathLib.isPosZero(p0p0.re), '(+0 +0i).arctan().re = +0');
 	ok(MathLib.isPosZero(p0p0.im), '(+0 +0i).arctan().im = +0');
@@ -966,6 +967,7 @@ test('.arctan()', 28, function () {
 	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arctan(), new MathLib.Complex(1.33897252229449356112, 0.40235947810852509365)));
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arctan(), new MathLib.Complex(-1.4483069952314645421, 0.1589971916799991744)));
 });
+
 test('.arg()', 6, function () {
 	var c1 = new MathLib.Complex(1, 1),
 			c2 = new MathLib.Complex(1, -1),
@@ -2773,9 +2775,10 @@ test('.arcoth()', 11, function () {
 	equal(MathLib.isNaN(MathLib.arcoth(-0.5)), true, 'Spec. 6: MathLib.arcoth(x) = NaN if x > -1 and x < 1');
 
 	// Spec. 7: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x
-	equal(MathLib.arcoth(2), 0.5493061443340549, 'Spec. 9: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x');
-	equal(MathLib.arcoth(10), 0.10033534773107562, 'Spec. 9: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x');
+	ok(MathLib.isEqual(MathLib.arcoth(2), 0.5493061443340549), 'Spec. 9: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x');
+	ok(MathLib.isEqual(MathLib.arcoth(10), 0.10033534773107562), 'Spec. 9: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x');
 });
+
 test('.arcsch()', 7, function () {
 	// Spec. 1: MathLib.arcsch(NaN) = NaN
 	equal(MathLib.isNaN(MathLib.arcsch(NaN)), true, 'Spec. 1: MathLib.arcsch(NaN) = NaN');
@@ -2989,9 +2992,10 @@ test('.artanh()', 11, function () {
 	equal(MathLib.isNaN(MathLib.artanh(-2)), true, 'Spec. 8: MathLib.artanh(x) = NaN if x < -1 or x > 1');
 
 	// Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x
-	equal(MathLib.artanh(0.5), 0.5493061443340549, 'Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x');
-	equal(MathLib.artanh(0.75), 0.9729550745276566, 'Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x');
+	ok(MathLib.isEqual(MathLib.artanh(0.5), 0.5493061443340549), 'Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x');
+	ok(MathLib.isEqual(MathLib.artanh(0.75), 0.9729550745276566), 'Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x');
 });
+
 test('.binomial()', 52, function () {
 	equal(MathLib.isNaN(MathLib.binomial(NaN, NaN)), true, 'binomial(NaN, NaN)');
 	equal(MathLib.isNaN(MathLib.binomial(NaN, Infinity)), true, 'binomial(NaN, ∞)');

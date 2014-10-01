@@ -25,6 +25,6 @@ test('.artanh()', 11, function () {
 	equal(MathLib.isNaN(MathLib.artanh(-2)), true, 'Spec. 8: MathLib.artanh(x) = NaN if x < -1 or x > 1');
 
 	// Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x
-	equal(MathLib.artanh(0.5), 0.5493061443340549, 'Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x');
-	equal(MathLib.artanh(0.75), 0.9729550745276566, 'Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x');
+	ok(MathLib.isEqual(MathLib.artanh(0.5), 0.5493061443340549), 'Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x');
+	ok(MathLib.isEqual(MathLib.artanh(0.75), 0.9729550745276566), 'Spec. 9: otherwise MathLib.artanh(x) = inverse hyperbolic tangent of x');
 });

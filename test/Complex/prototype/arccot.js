@@ -38,9 +38,9 @@ test('.arccot()', 25, function () {
 
 
 	ok(MathLib.isPosZero(p0p2.re), '(+0 +2i).arccot().re = +0');
-	equal(p0p2.im, -0.54930614433405484570, '(+0 +2i).arccot().im = -0.54930614433405484570');
+	ok(MathLib.isEqual(p0p2.im, -0.54930614433405484570), '(+0 +2i).arccot().im = -0.54930614433405484570');
 	ok(MathLib.isNegZero(n0p2.re), '(-0 +2i).arccot().re = -0');
-	equal(n0p2.im, -0.54930614433405484570, '(-0 +2i).arccot().im = -0.54930614433405484570');
+	ok(MathLib.isEqual(n0p2.im, -0.54930614433405484570), '(-0 +2i).arccot().im = -0.54930614433405484570');
 
 	ok(MathLib.isEqual((new MathLib.Complex(1, 2)).arccot(), new MathLib.Complex(0.23182380450040305811, -0.40235947810852509365)));
 	ok(MathLib.isEqual((new MathLib.Complex(-3, 4)).arccot(), new MathLib.Complex(-0.12248933156343207709, -0.15899719167999917436)));

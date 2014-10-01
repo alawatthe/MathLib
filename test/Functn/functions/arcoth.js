@@ -21,6 +21,6 @@ test('.arcoth()', 11, function () {
 	equal(MathLib.isNaN(MathLib.arcoth(-0.5)), true, 'Spec. 6: MathLib.arcoth(x) = NaN if x > -1 and x < 1');
 
 	// Spec. 7: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x
-	equal(MathLib.arcoth(2), 0.5493061443340549, 'Spec. 9: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x');
-	equal(MathLib.arcoth(10), 0.10033534773107562, 'Spec. 9: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x');
+	ok(MathLib.isEqual(MathLib.arcoth(2), 0.5493061443340549), 'Spec. 9: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x');
+	ok(MathLib.isEqual(MathLib.arcoth(10), 0.10033534773107562), 'Spec. 9: otherwise MathLib.arcoth(x) = inverse hyperbolic cotangent of x');
 });

@@ -26,9 +26,9 @@ test('.arctan()', 28, function () {
 	equal(n0n1.re, Infinity);
 
 	ok(MathLib.isPosZero(p0n5.re), '(+0 -0.5i).arctan().re = +0');
-	equal(p0n5.im, -0.5493061443340548457, '(+0 -0.5i).arctan().im = +0.549');
+	ok(MathLib.isEqual(p0n5.im, -0.5493061443340548457), '(+0 -0.5i).arctan().im = +0.549');
 	ok(MathLib.isNegZero(n0n5.re), '(-0 -0.5i).arctan().re = -0');
-	equal(n0n5.im, -0.5493061443340548457, '(-0 -0.5i).arctan().im = -0.549');
+	ok(MathLib.isEqual(n0n5.im, -0.5493061443340548457), '(-0 -0.5i).arctan().im = -0.549');
 
 	ok(MathLib.isPosZero(p0p0.re), '(+0 +0i).arctan().re = +0');
 	ok(MathLib.isPosZero(p0p0.im), '(+0 +0i).arctan().im = +0');
