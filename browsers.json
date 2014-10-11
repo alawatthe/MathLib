@@ -1,7 +1,7 @@
 [
 	{
 		"browserName": "googlechrome",
-		"version": "35",
+		"version": "dev",
 		"platform": "Windows 8.1"
 	},
 	{
@@ -11,7 +11,13 @@
 	},
 	{
 		"browserName": "googlechrome",
-		"version": "35",
+		"version": "37",
+		"platform": "Windows 8.1"
+	},
+
+	{
+		"browserName": "googlechrome",
+		"version": "dev",
 		"platform": "Windows 8"
 	},
 	{
@@ -21,7 +27,13 @@
 	},
 	{
 		"browserName": "googlechrome",
-		"version": "35",
+		"version": "37",
+		"platform": "Windows 8"
+	},
+
+	{
+		"browserName": "googlechrome",
+		"version": "dev",
 		"platform": "Windows 7"
 	},
 	{
@@ -31,7 +43,13 @@
 	},
 	{
 		"browserName": "googlechrome",
-		"version": "35",
+		"version": "37",
+		"platform": "Windows 7"
+	},
+
+	{
+		"browserName": "googlechrome",
+		"version": "dev",
 		"platform": "Windows XP"
 	},
 	{
@@ -41,7 +59,13 @@
 	},
 	{
 		"browserName": "googlechrome",
-		"version": "35",
+		"version": "37",
+		"platform": "Windows XP"
+	},
+
+	{
+		"browserName": "googlechrome",
+		"version": "dev",
 		"platform": "OS X 10.6"
 	},
 	{
@@ -51,7 +75,13 @@
 	},
 	{
 		"browserName": "googlechrome",
-		"version": "35",
+		"version": "37",
+		"platform": "OS X 10.6"
+	},
+
+	{
+		"browserName": "googlechrome",
+		"version": "dev",
 		"platform": "OS X 10.8"
 	},
 	{
@@ -59,14 +89,31 @@
 		"version": "beta",
 		"platform": "OS X 10.8"
 	},
+	{
+		"browserName": "googlechrome",
+		"version": "37",
+		"platform": "OS X 10.8"
+	},
+
 	{
 		"browserName": "googlechrome",
 		"version": "35",
 		"platform": "OS X 10.9"
 	},
+
 	{
 		"browserName": "googlechrome",
-		"version": "35",
+		"version": "dev",
+		"platform": "Linux"
+	},
+	{
+		"browserName": "googlechrome",
+		"version": "beta",
+		"platform": "Linux"
+	},
+	{
+		"browserName": "googlechrome",
+		"version": "36",
 		"platform": "Linux"
 	},
 
@@ -75,37 +122,113 @@
 
 	{
 		"browserName": "firefox",
-		"version": "30",
+		"version": "dev",
 		"platform": "Windows 8.1"
 	},
 	{
 		"browserName": "firefox",
-		"version": "30",
+		"version": "beta",
+		"platform": "Windows 8.1"
+	},
+	{
+		"browserName": "firefox",
+		"version": "32",
+		"platform": "Windows 8.1"
+	},
+
+	{
+		"browserName": "firefox",
+		"version": "dev",
 		"platform": "Windows 8"
 	},
 	{
 		"browserName": "firefox",
-		"version": "30",
+		"version": "beta",
+		"platform": "Windows 8"
+	},
+	{
+		"browserName": "firefox",
+		"version": "32",
+		"platform": "Windows 8"
+	},
+
+	{
+		"browserName": "firefox",
+		"version": "dev",
 		"platform": "Windows 7"
 	},
 	{
 		"browserName": "firefox",
-		"version": "30",
+		"version": "beta",
+		"platform": "Windows 7"
+	},
+	{
+		"browserName": "firefox",
+		"version": "32",
+		"platform": "Windows 7"
+	},
+
+	{
+		"browserName": "firefox",
+		"version": "dev",
 		"platform": "Windows XP"
 	},
 	{
 		"browserName": "firefox",
-		"version": "30",
+		"version": "beta",
+		"platform": "Windows XP"
+	},
+	{
+		"browserName": "firefox",
+		"version": "32",
+		"platform": "Windows XP"
+	},
+
+	{
+		"browserName": "firefox",
+		"version": "dev",
 		"platform": "OS X 10.6"
 	},
 	{
 		"browserName": "firefox",
-		"version": "30",
+		"version": "beta",
+		"platform": "OS X 10.6"
+	},
+	{
+		"browserName": "firefox",
+		"version": "32",
+		"platform": "OS X 10.6"
+	},
+
+	{
+		"browserName": "firefox",
+		"version": "dev",
 		"platform": "OS X 10.9"
 	},
 	{
 		"browserName": "firefox",
-		"version": "30",
+		"version": "beta",
+		"platform": "OS X 10.9"
+	},
+	{
+		"browserName": "firefox",
+		"version": "32",
+		"platform": "OS X 10.9"
+	},
+
+	{
+		"browserName": "firefox",
+		"version": "dev",
+		"platform": "Linux"
+	},
+	{
+		"browserName": "firefox",
+		"version": "beta",
+		"platform": "Linux"
+	},
+	{
+		"browserName": "firefox",
+		"version": "32",
 		"platform": "Linux"
 	},
 
@@ -196,6 +319,11 @@
 
 	{
 		"browserName": "android",
+		"version": "4.4",
+		"platform": "Linux"
+	},
+	{
+		"browserName": "android",
 		"version": "4.3",
 		"platform": "Linux"
 	},
@@ -216,7 +344,11 @@
 	},
 
 
-
+	{
+		"browserName": "iphone",
+		"version": "8.0",
+		"platform": "OS X 10.9"
+	},
 	{
 		"browserName": "iphone",
 		"version": "7.1",
@@ -240,7 +372,11 @@
 
 
 
-
+	{
+		"browserName": "ipad",
+		"version": "8.0",
+		"platform": "OS X 10.9"
+	},
 	{
 		"browserName": "ipad",
 		"version": "7.1",
