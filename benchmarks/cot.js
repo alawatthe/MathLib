@@ -17,6 +17,9 @@ var taninv = function (x) {
 };
 
 
+var cossin = function (x) {
+	return Math.cos(x) / Math.sin(x);
+};
 
 var variations = [
 		{
@@ -30,6 +33,12 @@ var variations = [
 			implemented: true,
 			fn: function () {
 				return tanpi2(randomNumber());
+			}
+		},
+		{
+			name: 'cos(x) / sin(x)',
+			fn: function () {
+				return cossin(randomNumber());
 			}
 		}
 	];
