@@ -30,7 +30,9 @@ define([], function () {
     MathLib.pi = Math.PI;
 
     // Polyfill for IE9
+    /* istanbul ignore else */
     if (typeof window !== 'undefined') {
+        /* istanbul ignore if */
         if (!window.console) {
             window.console = {
                 log: function () {

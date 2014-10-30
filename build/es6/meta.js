@@ -30,7 +30,9 @@ export var goldenRatio = 1.618033988749895;
 export var pi = Math.PI;
 
 // Polyfill for IE9
+/* istanbul ignore else */
 if (typeof window !== 'undefined') {
+    /* istanbul ignore if */
     if (!window.console) {
         window.console = {
             log: function () {
